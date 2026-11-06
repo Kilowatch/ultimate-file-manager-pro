@@ -1213,13 +1213,12 @@ class FileAdapter(
             }
 
             if (file.isDirectoryCached()) {
-                imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
                 val tintColor = if (isTv) {
                     DefaultIconColorManager.getTvIconTint(context)
                 } else {
                     DefaultIconColorManager.getMobileIconTint(context)
                 }
-                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                IconCustomizationManager.applyFolderIcon(context, imgIcon, isNetwork = false, defaultTint = tintColor)
                 if (isGrid && !isTv) {
                     val gridStyle = za.kilowatch.ultimatefilemanager.settings.ViewStyleManager.getGridStyle(context, viewMode)
                     val iconPadPx = (gridStyle.iconPaddingDp * context.resources.displayMetrics.density + 0.5f).toInt()
@@ -1316,13 +1315,12 @@ class FileAdapter(
                     if (isFastNavigating && !isCached) {
                         hasLoadedThumbnail = false
                         if (isAudio) {
-                            imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
                             val tintColor = if (isTv) {
                                 DefaultIconColorManager.getTvIconTint(context)
                             } else {
                                 DefaultIconColorManager.getMobileIconTint(context)
                             }
-                            imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                            IconCustomizationManager.applyFileIcon(context, imgIcon, file, defaultTint = tintColor)
                             imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                             imgIcon.clipToOutline = false
                         } else {
@@ -1351,13 +1349,12 @@ class FileAdapter(
                         iconContainer?.setBackgroundResource(0)
                         imgIcon.setPadding(0, 0, 0, 0)
                     }
-                    imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
                     val tintColor = if (isTv) {
                         DefaultIconColorManager.getTvIconTint(context)
                     } else {
                         DefaultIconColorManager.getMobileIconTint(context)
                     }
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                    IconCustomizationManager.applyFileIcon(context, imgIcon, file, defaultTint = tintColor)
                     val baseDate = formatDate(context, file.lastModifiedCached())
                     val storage = storageLabels[file.absolutePath]
                     val detailedInfo = if (storage != null) "$storage · $baseDate" else baseDate
@@ -1378,13 +1375,12 @@ class FileAdapter(
                         if (isFastNavigating && !isCached) {
                             hasLoadedThumbnail = false
                             if (isAudio) {
-                                imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
                                 val tintColor = if (isTv) {
                                     DefaultIconColorManager.getTvIconTint(context)
                                 } else {
                                     DefaultIconColorManager.getMobileIconTint(context)
                                 }
-                                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                                IconCustomizationManager.applyFileIcon(context, imgIcon, file, defaultTint = tintColor)
                                 imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                                 imgIcon.clipToOutline = false
                             } else {
@@ -1397,13 +1393,12 @@ class FileAdapter(
                         }
                     } else {
                         iconContainer?.setBackgroundResource(0)
-                        imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
                         val tintColor = if (isTv) {
                             DefaultIconColorManager.getTvIconTint(context)
                         } else {
                             DefaultIconColorManager.getMobileIconTint(context)
                         }
-                        imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                        IconCustomizationManager.applyFileIcon(context, imgIcon, file, defaultTint = tintColor)
                         imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                         imgIcon.clipToOutline = false
                         if (isGrid && !isTv) {

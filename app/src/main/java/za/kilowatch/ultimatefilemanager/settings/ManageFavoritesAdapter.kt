@@ -75,11 +75,20 @@ class ManageFavoritesAdapter(
             txtPath.text = displayPath
             val iconTint = if (isTv) ctx.getColor(R.color.tv_accent) else ThemeColors.primary(ctx)
             if (item.isFolder) {
-                imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(ctx, "folder_default", R.drawable.ic_folder))
-                imgIcon.setColorFilter(iconTint)
+                val isNetwork = !item.path.startsWith("/") && !item.path.startsWith("content://")
+                val isCustomBitmap = IconCustomizationManager.applyFolderIcon(ctx, imgIcon, isNetwork = isNetwork, defaultTint = iconTint)
+                if (isCustomBitmap) {
+                    imgIcon.clearColorFilter()
+                } else {
+                    imgIcon.setColorFilter(iconTint)
+                }
             } else {
-                imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(item.path.substringAfterLast('.', "")))
-                imgIcon.setColorFilter(iconTint)
+                val isCustomBitmap = IconCustomizationManager.applyFileExtensionIcon(ctx, imgIcon, item.path.substringAfterLast('.', ""), defaultTint = iconTint)
+                if (isCustomBitmap) {
+                    imgIcon.clearColorFilter()
+                } else {
+                    imgIcon.setColorFilter(iconTint)
+                }
             }
 
             val deleteAction = { onDeleteClick(item) }

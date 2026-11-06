@@ -163,8 +163,8 @@ class RecycleBinAdapter(
             val iconRes = FileTypeIconProvider.iconForExtension(itemView.context, ext)
 
             if (entity.isDirectory) {
-                imgFileIcon.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                imgFileIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(itemView.context, "folder_default", R.drawable.ic_folder))
+                imgFileIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                IconCustomizationManager.applyFolderIcon(itemView.context, imgFileIcon, isNetwork = !isLocal)
                 apkJob?.cancel()
                 apkJob = GlobalScope.launch(Dispatchers.IO) {
                     try {
@@ -257,13 +257,13 @@ class RecycleBinAdapter(
                             imgFileIcon.setImageResource(iconRes)
                         }
                         else -> {
-                            imgFileIcon.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                            imgFileIcon.setImageResource(iconRes)
+                            imgFileIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                            IconCustomizationManager.applyFileExtensionIcon(itemView.context, imgFileIcon, ext)
                         }
                     }
                 } else {
-                    imgFileIcon.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                    imgFileIcon.setImageResource(iconRes)
+                    imgFileIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                    IconCustomizationManager.applyFileExtensionIcon(itemView.context, imgFileIcon, ext)
                 }
             } else {
                 val isMedia = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS ||
@@ -308,8 +308,8 @@ class RecycleBinAdapter(
                         } catch (_: Exception) {}
                     }
                 } else {
-                    imgFileIcon.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                    imgFileIcon.setImageResource(iconRes)
+                    imgFileIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+                    IconCustomizationManager.applyFileExtensionIcon(itemView.context, imgFileIcon, ext)
                 }
             }
 

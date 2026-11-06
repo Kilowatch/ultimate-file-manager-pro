@@ -1037,9 +1037,8 @@ class NetworkFileAdapter(
                         }
                     }
                 } else {
-                    imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
                     val iconTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(iconTintColor)
+                    IconCustomizationManager.applyFolderIcon(context, imgIcon, isNetwork = true, defaultTint = iconTintColor)
                     if (!isTv && !isGrid) {
                         iconContainer?.setBackgroundResource(R.drawable.bg_squircle_file_bubble)
                         val padPx = (9 * context.resources.displayMetrics.density + 0.5f).toInt()
@@ -1077,9 +1076,8 @@ class NetworkFileAdapter(
                 )
 
                 if (!isCached) {
-                    imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, file.name.substringAfterLast('.', "")))
                     val fileTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(fileTintColor)
+                    IconCustomizationManager.applyFileExtensionIcon(context, imgIcon, file.name.substringAfterLast('.', ""), defaultTint = fileTintColor)
                     if (!isTv && !isGrid) {
                         iconContainer?.setBackgroundResource(R.drawable.bg_squircle_file_bubble)
                         val padPx = (9 * context.resources.displayMetrics.density + 0.5f).toInt()
@@ -1465,10 +1463,8 @@ class NetworkFileAdapter(
                         // Ensure we show the standard file-type icon and apply the usual tint
                         // Clear tag because we're showing a static drawable
                         imgIcon.tag = null
-                        imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, ext))
-                        imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                            if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
-                        )
+                        val fileTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                        IconCustomizationManager.applyFileExtensionIcon(context, imgIcon, ext, defaultTint = fileTintColor)
                         imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                         imgIcon.clipToOutline = false
                     }
@@ -1479,10 +1475,8 @@ class NetworkFileAdapter(
                         if (isAudio) {
                             za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.markNoArt(file.path)
                         }
-                        imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, ext))
-                        imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                            if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
-                        )
+                        val fileTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                        IconCustomizationManager.applyFileExtensionIcon(context, imgIcon, ext, defaultTint = fileTintColor)
                         imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                         imgIcon.clipToOutline = false
                     }

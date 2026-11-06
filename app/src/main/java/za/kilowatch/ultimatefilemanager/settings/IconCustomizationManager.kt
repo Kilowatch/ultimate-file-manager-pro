@@ -1,12 +1,15 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import android.util.LruCache
 import android.widget.ImageView
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.storage.TileIconManager
+import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import java.io.File
 import java.io.FileOutputStream
 import za.kilowatch.ultimatefilemanager.R
@@ -90,6 +93,15 @@ object IconCustomizationManager {
     private const val MAX_SIZE_BYTES = 1 * 1024 * 1024
     private const val ICON_DIR = "custom_icons"
 
+    @Volatile
+    private var cachedOverrides: Map<String, IconOverride>? = null
+    private val bitmapCache = LruCache<String, Bitmap>(32)
+
+    fun invalidateCache() {
+        cachedOverrides = null
+        bitmapCache.evictAll()
+    }
+
     // ── Read ─────────────────────────────────────────────────────────
 
     fun getOverride(context: Context, iconId: String): IconOverride? {
@@ -122,6 +134,94 @@ object IconCustomizationManager {
         return defaultRes
     }
 
+    fun applyCustomOrBuiltinIcon(
+        context: Context,
+        view: ImageView,
+        iconId: String,
+        defaultRes: Int,
+        defaultTint: Int? = null
+    ): Boolean {
+        val override = getOverride(context, iconId)
+        if (override != null) {
+            if (!override.customPath.isNullOrEmpty()) {
+                val bitmap = loadCustomBitmap(override.customPath)
+                if (bitmap != null) {
+                    view.setImageBitmap(bitmap)
+                    view.imageTintList = null
+                    view.scaleType = ImageView.ScaleType.FIT_CENTER
+                    return true
+                }
+            }
+            if (override.builtinRes != 0) {
+                view.setImageResource(override.builtinRes)
+                view.imageTintList = defaultTint?.let { ColorStateList.valueOf(it) }
+                return false
+            }
+        }
+        // For tile icons, check TileIconManager as fallback
+        if (iconId.startsWith("tile_")) {
+            val tileId = iconId.removePrefix("tile_")
+            val customPath = TileIconManager.getTileIcon(context, tileId)
+            if (!customPath.isNullOrEmpty()) {
+                val bitmap = loadCustomBitmap(customPath)
+                if (bitmap != null) {
+                    view.setImageBitmap(bitmap)
+                    view.imageTintList = null
+                    view.scaleType = ImageView.ScaleType.FIT_CENTER
+                    return true
+                }
+            }
+            val tileRes = TileIconManager.getTileIconRes(context, tileId)
+            if (tileRes != 0) {
+                view.setImageResource(tileRes)
+                view.imageTintList = defaultTint?.let { ColorStateList.valueOf(it) }
+                return false
+            }
+        }
+        view.setImageResource(defaultRes)
+        view.imageTintList = defaultTint?.let { ColorStateList.valueOf(it) }
+        return false
+    }
+
+    fun applyFolderIcon(
+        context: Context,
+        view: ImageView,
+        isNetwork: Boolean = false,
+        defaultTint: Int? = null
+    ): Boolean {
+        val iconId = if (isNetwork) {
+            val networkOverride = getOverride(context, "folder_network")
+            if (networkOverride != null && (networkOverride.builtinRes != 0 || !networkOverride.customPath.isNullOrEmpty())) {
+                "folder_network"
+            } else {
+                "folder_default"
+            }
+        } else {
+            "folder_default"
+        }
+        return applyCustomOrBuiltinIcon(context, view, iconId, R.drawable.ic_folder, defaultTint)
+    }
+
+    fun applyFileIcon(
+        context: Context,
+        view: ImageView,
+        file: File,
+        defaultTint: Int? = null
+    ): Boolean {
+        return applyFileExtensionIcon(context, view, file.extension, defaultTint)
+    }
+
+    fun applyFileExtensionIcon(
+        context: Context,
+        view: ImageView,
+        extension: String,
+        defaultTint: Int? = null
+    ): Boolean {
+        val iconId = FileTypeIconProvider.fileTypeIdForExtension(extension)
+        val defaultRes = FileTypeIconProvider.iconForExtension(extension)
+        return applyCustomOrBuiltinIcon(context, view, iconId, defaultRes, defaultTint)
+    }
+
     fun applyToView(context: Context, view: ImageView, iconId: String, defaultRes: Int) {
         val override = getOverride(context, iconId)
         if (override != null) {
@@ -129,6 +229,7 @@ object IconCustomizationManager {
                 val bitmap = loadCustomBitmap(override.customPath)
                 if (bitmap != null) {
                     view.setImageBitmap(bitmap)
+                    view.imageTintList = null
                     return
                 }
             }
@@ -145,6 +246,7 @@ object IconCustomizationManager {
                 val bitmap = loadCustomBitmap(customPath)
                 if (bitmap != null) {
                     view.setImageBitmap(bitmap)
+                    view.imageTintList = null
                     return
                 }
             }
@@ -166,35 +268,34 @@ object IconCustomizationManager {
 
     fun setCustomPath(context: Context, iconId: String, path: String?) {
         val entries = loadAllOverrides(context).toMutableMap()
-        val existing = entries[iconId]
         if (path.isNullOrEmpty()) {
-            if (existing != null && existing.builtinRes == 0) {
-                entries.remove(iconId)
-            } else {
-                entries[iconId] = IconOverride(null, existing?.builtinRes ?: 0)
-            }
+            entries.remove(iconId)
+            deleteCustomIcon(context, iconId)
         } else {
-            entries[iconId] = IconOverride(path, existing?.builtinRes ?: 0)
+            // Setting a custom path clears any previous built-in alternative
+            entries[iconId] = IconOverride(customPath = path, builtinRes = 0)
+            bitmapCache.remove(path)
         }
         saveAllOverrides(context, entries)
     }
 
     fun setBuiltinRes(context: Context, iconId: String, res: Int) {
         val entries = loadAllOverrides(context).toMutableMap()
-        val existing = entries[iconId]
-        if (res == 0 && existing?.customPath.isNullOrEmpty()) {
+        if (res == 0) {
             entries.remove(iconId)
         } else {
-            entries[iconId] = IconOverride(existing?.customPath, res)
+            // Setting a built-in alternative clears any previous custom path and deletes custom icon file
+            entries[iconId] = IconOverride(customPath = null, builtinRes = res)
         }
+        deleteCustomIcon(context, iconId)
         saveAllOverrides(context, entries)
     }
 
     fun clearOverride(context: Context, iconId: String) {
         val entries = loadAllOverrides(context).toMutableMap()
         entries.remove(iconId)
-        saveAllOverrides(context, entries)
         deleteCustomIcon(context, iconId)
+        saveAllOverrides(context, entries)
     }
 
     fun clearAll(context: Context) {
@@ -202,6 +303,7 @@ object IconCustomizationManager {
         for (iconId in entries.keys) {
             deleteCustomIcon(context, iconId)
         }
+        invalidateCache()
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .remove(KEY_OVERRIDES)
@@ -216,6 +318,7 @@ object IconCustomizationManager {
 
     private fun deleteCustomIcon(context: Context, iconId: String) {
         val file = File(iconsDir(context), "${sanitizeId(iconId)}.png")
+        bitmapCache.remove(file.absolutePath)
         if (file.exists()) file.delete()
     }
 
@@ -230,6 +333,7 @@ object IconCustomizationManager {
         FileOutputStream(outFile).use { out ->
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
         }
+        bitmapCache.remove(outFile.absolutePath)
         return outFile.absolutePath
     }
 
@@ -245,9 +349,15 @@ object IconCustomizationManager {
     }
 
     private fun loadCustomBitmap(path: String): Bitmap? {
+        val cached = bitmapCache.get(path)
+        if (cached != null) return cached
         val file = File(path)
         if (!file.exists()) return null
-        return BitmapFactory.decodeFile(path)
+        val bm = decodeIconFile(file) ?: decodeBitmapWithBounds(file) ?: BitmapFactory.decodeFile(path)
+        if (bm != null) {
+            bitmapCache.put(path, bm)
+        }
+        return bm
     }
 
     private fun decodeBitmapWithBounds(file: File): Bitmap? {
@@ -347,58 +457,71 @@ object IconCustomizationManager {
     // ── Persistence ──────────────────────────────────────────────────
 
     private fun loadAllOverrides(context: Context): Map<String, IconOverride> {
-        val raw = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .getString(KEY_OVERRIDES, null) ?: return emptyMap()
-        return try {
-            val json = JSONObject(raw)
-            val result = mutableMapOf<String, IconOverride>()
-            var needsMigration = false
+        cachedOverrides?.let { return it }
+        synchronized(this) {
+            cachedOverrides?.let { return it }
+            val raw = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getString(KEY_OVERRIDES, null)
+            if (raw == null) {
+                val empty = emptyMap<String, IconOverride>()
+                cachedOverrides = empty
+                return empty
+            }
+            return try {
+                val json = JSONObject(raw)
+                val result = mutableMapOf<String, IconOverride>()
+                var needsMigration = false
 
-            json.keys().forEach { id ->
-                val value = json.get(id)
-                if (value is JSONObject) {
-                    val path = value.optString("path", null)?.takeIf { it.isNotEmpty() }
+                json.keys().forEach { id ->
+                    val value = json.get(id)
+                    if (value is JSONObject) {
+                        val path = value.optString("path", "").takeIf { it.isNotEmpty() }
 
-                    // Prefer stable name (new format)
-                    val resName = value.optString("res_name", null)?.takeIf { it.isNotEmpty() }
-                    val resolvedRes: Int
-                    if (resName != null) {
-                        resolvedRes = TileIconManager.resolveResId(context, resName)
-                    } else {
-                        // Legacy: raw numeric ID — resolve to name and flag for migration
-                        val legacyRes = value.optInt("res", 0)
-                        resolvedRes = if (legacyRes != 0) {
-                            val resolved = TileIconManager.resolveResName(context, legacyRes)
-                            if (resolved != null) {
-                                needsMigration = true
-                                TileIconManager.resolveResId(context, resolved)
-                            } else {
-                                Log.w("IconCustomizationManager",
-                                    "Dropping stale builtinRes 0x${legacyRes.toString(16)} " +
-                                    "for icon '$id' — drawable no longer exists")
-                                needsMigration = true
-                                0
-                            }
-                        } else 0
-                    }
+                        // Prefer stable name (new format)
+                        val resName = value.optString("res_name", "").takeIf { it.isNotEmpty() }
+                        val resolvedRes: Int
+                        if (resName != null) {
+                            resolvedRes = TileIconManager.resolveResId(context, resName)
+                        } else {
+                            // Legacy: raw numeric ID — resolve to name and flag for migration
+                            val legacyRes = value.optInt("res", 0)
+                            resolvedRes = if (legacyRes != 0) {
+                                val resolved = TileIconManager.resolveResName(context, legacyRes)
+                                if (resolved != null) {
+                                    needsMigration = true
+                                    TileIconManager.resolveResId(context, resolved)
+                                } else {
+                                    Log.w("IconCustomizationManager",
+                                        "Dropping stale builtinRes 0x${legacyRes.toString(16)} " +
+                                        "for icon '$id' — drawable no longer exists")
+                                    needsMigration = true
+                                    0
+                                }
+                            } else 0
+                        }
 
-                    if (path != null || resolvedRes != 0) {
-                        result[id] = IconOverride(customPath = path, builtinRes = resolvedRes)
+                        if (path != null || resolvedRes != 0) {
+                            result[id] = IconOverride(customPath = path, builtinRes = resolvedRes)
+                        }
                     }
                 }
-            }
 
-            if (needsMigration) {
-                saveAllOverrides(context, result)
-            }
+                if (needsMigration) {
+                    saveAllOverrides(context, result)
+                }
 
-            result
-        } catch (_: Exception) {
-            emptyMap()
+                cachedOverrides = result
+                result
+            } catch (_: Exception) {
+                val empty = emptyMap<String, IconOverride>()
+                cachedOverrides = empty
+                empty
+            }
         }
     }
 
     private fun saveAllOverrides(context: Context, entries: Map<String, IconOverride>) {
+        cachedOverrides = entries
         val json = JSONObject()
         entries.forEach { (id, entry) ->
             val obj = JSONObject()

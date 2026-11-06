@@ -282,7 +282,8 @@ class IconCustomizationActivity : AppCompatActivity() {
                     if (res == 0 && path == null) {
                         IconCustomizationManager.clearOverride(this, id)
                     } else if (path != null) {
-                        IconCustomizationManager.setCustomPath(this, id, path)
+                        val privatePath = IconCustomizationManager.copyToPrivateStorage(this, id, path)
+                        IconCustomizationManager.setCustomPath(this, id, privatePath ?: path)
                     } else if (res != 0) {
                         IconCustomizationManager.setBuiltinRes(this, id, res)
                     }

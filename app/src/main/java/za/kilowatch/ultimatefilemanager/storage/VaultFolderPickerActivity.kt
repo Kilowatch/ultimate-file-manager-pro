@@ -218,22 +218,20 @@ class VaultFolderPickerActivity : AppCompatActivity() {
             holder.txtPath.text = if (isDir) file.absolutePath else file.extension.uppercase().ifBlank { "FILE" }
 
             val ctx = holder.itemView.context
+            val accentColor = ctx.getColor(R.color.tv_accent)
+            val hintColor = ctx.getColor(R.color.tv_text_hint)
+            val tvTint = if (isTv) (if (isDir) accentColor else hintColor) else null
 
             // Set the icon resource
-            holder.imgIcon.setImageResource(
-                if (isDir) IconCustomizationManager.getEffectiveIconRes(ctx, "folder_default", R.drawable.ic_folder)
-                else FileTypeIconProvider.iconForFile(ctx, file)
-            )
+            if (isDir) {
+                IconCustomizationManager.applyFolderIcon(ctx, holder.imgIcon, isNetwork = false, defaultTint = tvTint)
+            } else {
+                IconCustomizationManager.applyFileIcon(ctx, holder.imgIcon, file, defaultTint = tvTint)
+            }
 
             // TV: apply custom tinting and focus states
             // Mobile: tint is set via app:tint in XML, no override needed
             if (isTv) {
-                val accentColor = ctx.getColor(R.color.tv_accent)
-                val hintColor = ctx.getColor(R.color.tv_text_hint)
-                holder.imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                    if (isDir) accentColor else hintColor
-                )
-
                 // TV focus: yellow background + black text on focused folder rows
                 if (isDir) {
                     val yellow = ColorblindPalette.focusFill(ctx)
@@ -246,9 +244,12 @@ class VaultFolderPickerActivity : AppCompatActivity() {
                         holder.itemView.setBackgroundColor(if (hasFocus) yellow else glassBg)
                         holder.txtName.setTextColor(if (hasFocus) black else white)
                         holder.txtPath.setTextColor(if (hasFocus) black else hint)
-                        holder.imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                            if (hasFocus) black else accentColor
-                        )
+                        val isCustomBitmap = IconCustomizationManager.getOverride(ctx, "folder_default")?.customPath != null
+                        if (!isCustomBitmap) {
+                            holder.imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
+                                if (hasFocus) black else accentColor
+                            )
+                        }
                     }
                 }
             }
