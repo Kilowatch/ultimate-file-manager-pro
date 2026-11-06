@@ -109,6 +109,24 @@ data class StorageItem(
          isNotepadTile || isScannerTile || isSmartSortTile || isSupportTile ||
          isRecentFilesTile || isAddStorageLocationTile || isOtherStorageTile || isDocumentProviderTile || isSafCustomLocation))
 
+    /**
+     * True for actual storage locations (Internal Storage, SD Card, USB, Network shares,
+     * SAF custom locations, Cloud mounts) eligible to be pinned as home screen favorites.
+     * Excludes feature/virtual tiles, custom tile groups, and category headers.
+     */
+    val isActualStorage: Boolean get() =
+        !isCategoryHeader && !isCustomTile &&
+        !isAppsTile && !isRemoteTile && !isTvRemoteTile && !isSearchTile &&
+        !isAnalyzerTile && !isVaultTile && !isLegalTile && !isRateUsTile &&
+        !isSafTile && !isNetworkTile && !isPairedDevicesTile && !isExtractsTile &&
+        !isTipJarTile && !isSyncTile && !isAdvancedSyncTile && !isTwinWindowTile &&
+        !isShizukuTile && !isTerminalTile && !isFileServerTile && !isSupportTile &&
+        !isAboutTile && !isNotepadTile && !isRecycleBinTile && !isScannerTile &&
+        !isSmartSortTile && !isOnlineStoragesTile && !isFavoriteTile &&
+        !isRecentFilesTile && !isSettingsTile && !isAddStorageLocationTile &&
+        !isOtherStorageTile && !isRootTile &&
+        (!isUnmounted && (mountPath.isNotEmpty() || isSafCustomLocation || networkShare != null || onlineStorage != null || isDocumentProviderTile))
+
 
     val usagePercent: Int get() {
         if (totalBytes <= 0) return 0

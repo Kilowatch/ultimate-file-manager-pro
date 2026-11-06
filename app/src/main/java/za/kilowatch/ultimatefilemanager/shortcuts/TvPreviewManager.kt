@@ -143,14 +143,15 @@ class TvPreviewManager : TvHomeDelegate {
             // Build and publish the preview program
             try {
                 val posterUri = FavoritePosterRenderer.getPosterUri(context, item)
-                val deepLinkUri = Uri.parse("ufm://open?favId=${Uri.encode(item.id)}")
+                val launchIntent = FavoriteHomeScreenManager.createLaunchIntent(context, item)
+                val programIntentUri = Uri.parse(launchIntent.toUri(Intent.URI_INTENT_SCHEME))
 
                 val builder = PreviewProgram.Builder()
                     .setChannelId(channelId)
                     .setType(TvContractCompat.PreviewPrograms.TYPE_CLIP)
                     .setTitle(item.label)
                     .setDescription(item.path)
-                    .setIntentUri(deepLinkUri)
+                    .setIntentUri(programIntentUri)
                     .setInternalProviderId(item.id)
 
                 if (posterUri != null) {

@@ -32,12 +32,15 @@ class FavoriteShortcutActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyZeroAnimationTransition()
         super.onCreate(savedInstanceState)
 
         val uri = intent?.data
         val favId = uri?.getQueryParameter("favId")
             ?: intent?.getStringExtra("favId")
             ?: intent?.getStringExtra("id")
+        val pathParam = uri?.getQueryParameter("path")
+            ?: intent?.getStringExtra("path")
 
         val isManageFavorites = uri?.getQueryParameter("type") == "manageFavorites" ||
                 uri?.getQueryParameter("manageFavorites") == "true"
@@ -48,15 +51,12 @@ class FavoriteShortcutActivity : AppCompatActivity() {
             return
         }
 
-        if (favId.isNullOrEmpty()) {
-            Log.w(TAG, "No favId found in deep link: $uri")
-            showErrorAndFinish()
-            return
-        }
+        val allFavorites = FavoritesManager.getFavorites(this)
+        val favorite = (if (!favId.isNullOrEmpty()) allFavorites.firstOrNull { it.id == favId } else null)
+            ?: (if (!pathParam.isNullOrEmpty()) allFavorites.firstOrNull { it.path == pathParam } else null)
 
-        val favorite = FavoritesManager.getFavorites(this).firstOrNull { it.id == favId }
         if (favorite == null) {
-            Log.w(TAG, "Favorite not found for id=$favId")
+            Log.w(TAG, "Favorite not found for id=$favId, path=$pathParam")
             showErrorAndFinish()
             return
         }
@@ -113,6 +113,19 @@ class FavoriteShortcutActivity : AppCompatActivity() {
     }
 
     private fun routeLocalFavorite(item: FavoritesManager.FavoriteItem) {
+        if (item.path.startsWith("content://") || item.path.startsWith("saf://")) {
+            val intent = Intent(this, FileBrowserActivity::class.java).apply {
+                putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.path)
+                putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, item.path)
+                putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, "saf_custom")
+                putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+            startActivity(intent)
+            finish()
+            return
+        }
+
         val targetFile = File(item.path)
         if (!targetFile.exists()) {
             showErrorAndFinish()
@@ -153,6 +166,21 @@ class FavoriteShortcutActivity : AppCompatActivity() {
         FavShortcutErrorSheet.show(this, customMsg) {
             finish()
         }
+    }
+
+    private fun applyZeroAnimationTransition() {
+        if (android.os.Build.VERSION.SDK_INT >= 34) {
+            overrideActivityTransition(android.app.Activity.OVERRIDE_TRANSITION_OPEN, 0, 0)
+            overrideActivityTransition(android.app.Activity.OVERRIDE_TRANSITION_CLOSE, 0, 0)
+        } else {
+            @Suppress("DEPRECATION")
+            overridePendingTransition(0, 0)
+        }
+    }
+
+    override fun finish() {
+        super.finish()
+        applyZeroAnimationTransition()
     }
 
     override fun onStop() {

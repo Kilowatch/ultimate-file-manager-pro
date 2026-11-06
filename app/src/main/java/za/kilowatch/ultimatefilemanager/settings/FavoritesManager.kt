@@ -25,7 +25,8 @@ object FavoritesManager {
         val shareId: String? = null,
         val isPinnedMobile: Boolean = false,
         val isPinnedTv: Boolean = false,
-        val tvProgramUri: String? = null
+        val tvProgramUri: String? = null,
+        val isStorageTileFavorite: Boolean = false
     ) {
         fun toJson(): JSONObject {
             val json = JSONObject()
@@ -38,6 +39,7 @@ object FavoritesManager {
             json.put("isPinnedMobile", isPinnedMobile)
             json.put("isPinnedTv", isPinnedTv)
             json.put("tvProgramUri", tvProgramUri)
+            json.put("isStorageTileFavorite", isStorageTileFavorite)
             return json
         }
 
@@ -53,7 +55,8 @@ object FavoritesManager {
                         shareId = if (json.has("shareId") && !json.isNull("shareId")) json.optString("shareId", null) else null,
                         isPinnedMobile = json.optBoolean("isPinnedMobile", false),
                         isPinnedTv = json.optBoolean("isPinnedTv", false),
-                        tvProgramUri = if (json.has("tvProgramUri") && !json.isNull("tvProgramUri")) json.optString("tvProgramUri", null) else null
+                        tvProgramUri = if (json.has("tvProgramUri") && !json.isNull("tvProgramUri")) json.optString("tvProgramUri", null) else null,
+                        isStorageTileFavorite = json.optBoolean("isStorageTileFavorite", false)
                     )
                 } catch (e: Exception) {
                     null
@@ -86,8 +89,19 @@ object FavoritesManager {
 
     fun addFavorite(context: Context, favorite: FavoriteItem) {
         val currentFavorites = getFavorites(context).toMutableList()
-        // Prevent exact duplicates (by path)
-        if (currentFavorites.none { it.path == favorite.path }) {
+        val existingIndex = currentFavorites.indexOfFirst { it.path == favorite.path }
+        if (existingIndex != -1) {
+            val existing = currentFavorites[existingIndex]
+            val merged = favorite.copy(
+                id = existing.id,
+                isPinnedMobile = favorite.isPinnedMobile || existing.isPinnedMobile,
+                isPinnedTv = favorite.isPinnedTv || existing.isPinnedTv,
+                isStorageTileFavorite = favorite.isStorageTileFavorite || existing.isStorageTileFavorite
+            )
+            currentFavorites[existingIndex] = merged
+            saveFavorites(context, currentFavorites)
+            notifyWidget(context)
+        } else {
             currentFavorites.add(favorite)
             saveFavorites(context, currentFavorites)
             notifyWidget(context)

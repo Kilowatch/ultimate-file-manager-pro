@@ -5743,6 +5743,14 @@
     <string name="viewer_transfer_moved_success">Moved to %1$s</string>
     <string name="viewer_transfer_same_folder">Source and destination are the same folder</string>
     <string name="backup_pref_viewer_transfer">Viewer Transfer Destination</string>
+
+    <!-- Main Menu Storage Tile Home Screen Favorites -->
+    <string name="storage_fav_dialog_title">Add to Home Screen</string>
+    <string name="storage_fav_dialog_hint">Shortcut Name</string>
+    <string name="storage_fav_already_pinned_title">Storage Shortcut</string>
+    <string name="storage_fav_already_pinned_msg">\"%1$s\" is already pinned to your home screen.</string>
+    <string name="storage_fav_add_btn">Add to Home Screen</string>
+    <string name="storage_fav_name_empty">Shortcut name cannot be empty</string>
 </resources>
 
 

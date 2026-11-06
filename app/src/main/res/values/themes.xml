@@ -388,12 +388,13 @@
     </style>
 
     <!-- Transparent pass-through theme for shortcut handler activities -->
-    <style name="Theme.UFM.Transparent" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.UFM.Transparent" parent="Theme.UltimateFileManager">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
     <!-- TV Yellow Focus style for buttons/spinners -->
     <style name="TvYellowFocusStyle">

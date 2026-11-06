@@ -1294,6 +1294,11 @@ private fun ImageView.safeSetIcon(resId: Int) {
                                                 onEditModeClick?.invoke(item)
                                                 true
                                             }
+                                            isEditMode && item.isActualStorage -> {
+                                                // Storage tile in Edit Mode: short OK opens Favorite dialog
+                                                onEditModeClick?.invoke(item)
+                                                true
+                                            }
                                             isEditMode && item.isHideable -> {
                                                 onHideClick?.invoke(item)
                                                 true

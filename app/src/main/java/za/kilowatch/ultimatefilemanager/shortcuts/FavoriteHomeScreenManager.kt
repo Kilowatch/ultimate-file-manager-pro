@@ -9,8 +9,12 @@ import android.widget.Toast
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
+import za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity
 import za.kilowatch.ultimatefilemanager.settings.FavoritesManager
+import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import java.io.File
 
 /**
  * Central orchestrator for favorites home-screen presence across Mobile (pinned shortcuts)
@@ -37,6 +41,74 @@ object FavoriteHomeScreenManager {
     }
 
     /**
+     * Builds the direct or trampoline intent used by launcher shortcuts and TV preview programs.
+     * Folders and storage volumes launch directly into FileBrowserActivity or NetworkBrowserActivity,
+     * while individual files route through FavoriteShortcutActivity to evaluate default open actions.
+     */
+    fun createLaunchIntent(context: Context, item: FavoritesManager.FavoriteItem): Intent {
+        return if (item.isNetwork) {
+            val shareId = item.shareId
+            if (item.isFolder && !shareId.isNullOrEmpty()) {
+                Intent(context, NetworkBrowserActivity::class.java).apply {
+                    action = Intent.ACTION_VIEW
+                    putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
+                    putExtra(NetworkBrowserActivity.EXTRA_INITIAL_PATH, item.path)
+                    putExtra("favId", item.id)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
+            } else {
+                createTrampolineIntent(context, item)
+            }
+        } else {
+            if (item.path.startsWith("content://") || item.path.startsWith("saf://")) {
+                Intent(context, FileBrowserActivity::class.java).apply {
+                    action = Intent.ACTION_VIEW
+                    putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.path)
+                    putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, item.path)
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, "saf_custom")
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    putExtra("favId", item.id)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
+            } else {
+                val targetFile = File(item.path)
+                if (item.isFolder || targetFile.isDirectory) {
+                    val (resolvedSid, resolvedStype, resolvedRoot) = IndexingRepository.resolveStorageForPath(targetFile.absolutePath)
+                    Intent(context, FileBrowserActivity::class.java).apply {
+                        action = Intent.ACTION_VIEW
+                        putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, resolvedRoot)
+                        putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, targetFile.absolutePath)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, resolvedSid)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, resolvedStype)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra("favId", item.id)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    }
+                } else {
+                    createTrampolineIntent(context, item)
+                }
+            }
+        }
+    }
+
+    /**
+     * Fallback intent routing through FavoriteShortcutActivity with full metadata.
+     */
+    fun createTrampolineIntent(context: Context, item: FavoritesManager.FavoriteItem): Intent {
+        return Intent(context, FavoriteShortcutActivity::class.java).apply {
+            action = Intent.ACTION_VIEW
+            data = Uri.parse("ufm://open?favId=${Uri.encode(item.id)}&path=${Uri.encode(item.path)}&label=${Uri.encode(item.label)}&isFolder=${item.isFolder}&isNetwork=${item.isNetwork}&shareId=${Uri.encode(item.shareId ?: "")}")
+            putExtra("favId", item.id)
+            putExtra("path", item.path)
+            putExtra("label", item.label)
+            putExtra("isFolder", item.isFolder)
+            putExtra("isNetwork", item.isNetwork)
+            putExtra("shareId", item.shareId)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+    }
+
+    /**
      * Requests the launcher to pin a shortcut for the favorite item.
      * Uses optimistic tracking; reconciled on next resume.
      */
@@ -47,17 +119,13 @@ object FavoriteHomeScreenManager {
         }
 
         try {
-            val deepLinkIntent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse("ufm://open?favId=${Uri.encode(item.id)}")
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            }
-
+            val launchIntent = createLaunchIntent(context, item)
             val icon = FavoriteIconComposer.createShortcutIcon(context, item)
             val shortcut = ShortcutInfoCompat.Builder(context, item.id)
                 .setShortLabel(item.label.take(12))
                 .setLongLabel(item.label)
                 .setIcon(icon)
-                .setIntent(deepLinkIntent)
+                .setIntent(launchIntent)
                 .build()
 
             val pinned = ShortcutManagerCompat.requestPinShortcut(context, shortcut, null)

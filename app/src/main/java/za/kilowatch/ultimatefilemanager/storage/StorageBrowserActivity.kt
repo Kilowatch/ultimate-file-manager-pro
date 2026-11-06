@@ -78,6 +78,9 @@ import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.indexing.IndexingUiHelper
 import za.kilowatch.ultimatefilemanager.smartsort.SmartSortActivity
 import za.kilowatch.ultimatefilemanager.support.CrashReportDialogHelper
+import za.kilowatch.ultimatefilemanager.settings.FavoritesManager
+import za.kilowatch.ultimatefilemanager.shortcuts.FavoriteHomeScreenManager
+import za.kilowatch.ultimatefilemanager.util.DialogInputHelper
 import androidx.lifecycle.lifecycleScope
 import android.widget.RadioButton
 import com.google.android.material.card.MaterialCardView
@@ -531,6 +534,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             // ── Favorites ──────────────────────────────────────────────────
             val favorites = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavorites(context)
             for (fav in favorites) {
+                if (fav.isStorageTileFavorite) continue
                 val netShare: za.kilowatch.ultimatefilemanager.network.NetworkShare? = if (fav.isNetwork && fav.shareId != null) {
                     if (fav.shareId.startsWith("tv_")) {
                         val deviceId = fav.shareId.removePrefix("tv_")
@@ -2268,6 +2272,14 @@ class StorageBrowserActivity : AppCompatActivity() {
                 } else if (item.isCustomTile) {
                     // Gear icon on custom tile → open Edit/Delete dialog
                     showCustomTileOptionsMenu(item)
+                } else if (item.isActualStorage) {
+                    val existingFav = findExistingStorageFavorite(item)
+                    val isPinned = existingFav != null && (if (isTv) existingFav.isPinnedTv else existingFav.isPinnedMobile)
+                    if (isPinned) {
+                        showStorageAlreadyPinnedDialog(item, existingFav!!)
+                    } else {
+                        showAddStorageFavoriteDialog(item)
+                    }
                 } else {
                     showPremiumSnackbar(getString(R.string.tile_color_title_select))
                 }
@@ -4605,6 +4617,15 @@ class StorageBrowserActivity : AppCompatActivity() {
         if (customTiles.isNotEmpty() && !item.isCustomTile) {
             options.add(getString(R.string.move_to_custom_tile))
         }
+        if (item.isActualStorage) {
+            val existingFav = findExistingStorageFavorite(item)
+            val isPinned = existingFav != null && existingFav.isPinnedTv
+            if (isPinned) {
+                options.add(getString(R.string.fav_home_options_title))
+            } else {
+                options.add(getString(R.string.storage_fav_dialog_title))
+            }
+        }
         if (item.isSafCustomLocation) {
             options.add(getString(R.string.remove_storage_location_confirm))
         }
@@ -4625,6 +4646,15 @@ class StorageBrowserActivity : AppCompatActivity() {
                 when {
                     which == 0 -> enterTvReorderMode(item)
                     selected == getString(R.string.move_to_custom_tile) -> showMoveToCustomTileDialogTv(item)
+                    selected == getString(R.string.fav_home_options_title) -> {
+                        val existingFav = findExistingStorageFavorite(item)
+                        if (existingFav != null) {
+                            showStorageAlreadyPinnedDialog(item, existingFav)
+                        }
+                    }
+                    selected == getString(R.string.storage_fav_dialog_title) -> {
+                        showAddStorageFavoriteDialog(item)
+                    }
                     selected == getString(R.string.remove_storage_location_confirm) -> showRemoveStorageLocationDialog(item)
                     selected == getString(R.string.doc_provider_remove_confirm) -> showRemoveDocumentProviderDialog(item)
                     selected == getString(R.string.safely_remove_unmount_action) -> {
@@ -4642,6 +4672,138 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.cancel, null)
             .safeShow()
+    }
+
+    private fun findExistingStorageFavorite(item: StorageItem): FavoritesManager.FavoriteItem? {
+        val allFavs = FavoritesManager.getFavorites(this)
+        return allFavs.firstOrNull { fav ->
+            when {
+                item.networkShare != null -> fav.shareId == item.networkShare.id
+                item.onlineStorage != null -> fav.shareId == item.onlineStorage.id
+                item.isSafCustomLocation -> fav.path == (item.safLocation?.treeUriString ?: item.mountPath) || fav.path == item.mountPath
+                else -> fav.path == item.mountPath
+            }
+        }
+    }
+
+    private fun showAddStorageFavoriteDialog(item: StorageItem) {
+        val isOnTv = isTv || DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isOnTv) R.layout.dialog_storage_favorite_add_tv else R.layout.dialog_storage_favorite_add
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val imgHeroIcon = dialogView.findViewById<ImageView>(R.id.imgHeroIcon)
+        val txtOriginalName = dialogView.findViewById<TextView>(R.id.txtOriginalName)
+        val edtFavoriteName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFavoriteName)
+        val btnSaveFavorite = dialogView.findViewById<View>(R.id.btnSaveFavorite)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        if (item.iconRes != 0) {
+            imgHeroIcon?.setImageResource(item.iconRes)
+        }
+
+        val displaySubtitle: String = when {
+            item.isSafCustomLocation -> item.safLocation?.displayName ?: item.mountPath
+            item.networkShare != null -> item.networkShare.name.ifEmpty { item.networkShare.host }
+            item.onlineStorage != null -> item.onlineStorage.email.ifEmpty { item.onlineStorage.displayName }
+            else -> item.mountPath
+        }
+        txtOriginalName?.text = displaySubtitle
+        edtFavoriteName?.setText(item.label)
+        edtFavoriteName?.selectAll()
+
+        btnSaveFavorite?.setOnClickListener {
+            val name = edtFavoriteName?.text?.toString()?.trim().orEmpty()
+            if (name.isEmpty()) {
+                showPremiumSnackbar(getString(R.string.storage_fav_name_empty))
+                return@setOnClickListener
+            }
+
+            val effectivePath: String = when {
+                item.isSafCustomLocation -> item.safLocation?.treeUriString ?: item.mountPath
+                item.networkShare != null -> item.networkShare.remotePath.ifEmpty { "/" }
+                item.onlineStorage != null -> "/"
+                else -> item.mountPath
+            }
+            val isNetwork = item.networkShare != null || item.onlineStorage != null
+            val shareId = item.networkShare?.id ?: item.onlineStorage?.id
+            val existingFav = findExistingStorageFavorite(item)
+            val favId = existingFav?.id ?: java.util.UUID.randomUUID().toString()
+
+            val favorite = FavoritesManager.FavoriteItem(
+                id = favId,
+                path = effectivePath,
+                label = name,
+                isFolder = true,
+                isNetwork = isNetwork,
+                shareId = shareId,
+                isPinnedMobile = !isOnTv,
+                isPinnedTv = isOnTv,
+                isStorageTileFavorite = true
+            )
+
+            FavoritesManager.addFavorite(this, favorite)
+            FavoriteHomeScreenManager.pinOrSchedule(this, favorite, this)
+            showPremiumSnackbar(getString(R.string.favorite_added))
+            dialog.dismiss()
+        }
+
+        btnCancel?.setOnClickListener { dialog.dismiss() }
+
+        dialog.safeShow()
+        if (dialog.isShowing) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            if (isOnTv) {
+                btnSaveFavorite?.requestFocus()
+            }
+            DialogInputHelper.setupDialogInput(dialog, edtFavoriteName) {
+                btnSaveFavorite?.performClick()
+            }
+        }
+    }
+
+    private fun showStorageAlreadyPinnedDialog(item: StorageItem, favorite: FavoritesManager.FavoriteItem) {
+        val isOnTv = isTv || DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isOnTv) R.layout.dialog_favorite_home_options_tv else R.layout.dialog_favorite_home_options
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtLabel = dialogView.findViewById<TextView>(R.id.txtFavoriteLabel)
+        val btnRemoveFromHome = dialogView.findViewById<View>(R.id.btnRemoveFromHome)
+        val btnDeleteFavorite = dialogView.findViewById<View>(R.id.btnDeleteFavorite)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtLabel?.text = favorite.label
+
+        btnRemoveFromHome?.setOnClickListener {
+            dialog.dismiss()
+            if (isOnTv) {
+                FavoriteHomeScreenManager.removeProgram(this, favorite)
+            } else {
+                FavoriteHomeScreenManager.disableShortcut(this, favorite)
+            }
+            showPremiumSnackbar(getString(R.string.fav_shortcut_disabled_toast))
+        }
+
+        btnDeleteFavorite?.setOnClickListener {
+            dialog.dismiss()
+            FavoritesManager.removeFavorite(this, favorite.path)
+            showPremiumSnackbar(getString(R.string.manage_favorites_removed, favorite.label))
+        }
+
+        btnCancel?.setOnClickListener { dialog.dismiss() }
+
+        dialog.safeShow()
+        if (dialog.isShowing) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            if (isOnTv) {
+                btnRemoveFromHome?.requestFocus()
+            }
+        }
     }
 
     private fun showMoveToCustomTileDialogTv(item: StorageItem) {
@@ -5290,6 +5452,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             val networkShareRepo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this@StorageBrowserActivity)
             val pairedDeviceRepo = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this@StorageBrowserActivity)
             for (fav in favorites) {
+                if (fav.isStorageTileFavorite) continue
                 if (fav.isNetwork && fav.shareId != null) {
                     if (!fav.shareId.startsWith("tv_")) {
                         val netShare = networkShareRepo.getById(fav.shareId)
