@@ -54,6 +54,27 @@ class FavoriteShortcutActivity : AppCompatActivity() {
         val allFavorites = FavoritesManager.getFavorites(this)
         val favorite = (if (!favId.isNullOrEmpty()) allFavorites.firstOrNull { it.id == favId } else null)
             ?: (if (!pathParam.isNullOrEmpty()) allFavorites.firstOrNull { it.path == pathParam } else null)
+            ?: run {
+                val effectivePath = pathParam ?: uri?.getQueryParameter("path") ?: intent?.getStringExtra("path")
+                val shareId = uri?.getQueryParameter("shareId") ?: intent?.getStringExtra("shareId")
+                if (!effectivePath.isNullOrEmpty() || !shareId.isNullOrEmpty()) {
+                    val label = uri?.getQueryParameter("label") ?: intent?.getStringExtra("label") ?: ""
+                    val isFolder = uri?.getBooleanQueryParameter("isFolder", true)
+                        ?: intent?.getBooleanExtra("isFolder", true)
+                        ?: true
+                    val isNetwork = uri?.getBooleanQueryParameter("isNetwork", false)
+                        ?: intent?.getBooleanExtra("isNetwork", false)
+                        ?: (!shareId.isNullOrEmpty())
+                    FavoritesManager.FavoriteItem(
+                        id = favId ?: java.util.UUID.randomUUID().toString(),
+                        path = effectivePath ?: "/",
+                        label = label,
+                        isFolder = isFolder,
+                        isNetwork = isNetwork,
+                        shareId = shareId
+                    )
+                } else null
+            }
 
         if (favorite == null) {
             Log.w(TAG, "Favorite not found for id=$favId, path=$pathParam")
@@ -79,21 +100,35 @@ class FavoriteShortcutActivity : AppCompatActivity() {
             return
         }
 
-        val netRepo = NetworkShareRepository.getInstance(this)
-        val netShare = netRepo.getById(shareId)
-        val onlineRepo = OnlineStorageRepository.getInstance(this)
-        val onlineShare = if (netShare == null) onlineRepo.getById(shareId) else null
+        val isTvPaired = shareId.startsWith("tv_")
+        val pairedDevice = if (isTvPaired) {
+            val deviceId = shareId.removePrefix("tv_")
+            za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this).getPairedDevice(deviceId)
+        } else null
 
-        if (netShare == null && onlineShare == null) {
+        val netRepo = NetworkShareRepository.getInstance(this)
+        val netShare = if (!isTvPaired) netRepo.getById(shareId) else null
+        val onlineRepo = OnlineStorageRepository.getInstance(this)
+        val onlineShare = if (!isTvPaired && netShare == null) onlineRepo.getById(shareId) else null
+
+        if (!isTvPaired && netShare == null && onlineShare == null) {
             showErrorAndFinish("Network share is no longer configured or available.")
             return
         }
 
         if (item.isFolder) {
             val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
+                if (isTvPaired) {
+                    putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, pairedDevice?.deviceId ?: shareId.removePrefix("tv_"))
+                } else {
+                    putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
+                }
                 putExtra(NetworkBrowserActivity.EXTRA_INITIAL_PATH, item.path)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                if (onlineShare != null) {
+                    putExtra("isOnlineStorage", true)
+                }
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             startActivity(intent)
             finish()
@@ -101,11 +136,15 @@ class FavoriteShortcutActivity : AppCompatActivity() {
             // CL-07: Navigate to parent folder with target file focused
             val parentPath = item.path.substringBeforeLast('/', "")
             val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
+                if (isTvPaired) {
+                    putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, pairedDevice?.deviceId ?: shareId.removePrefix("tv_"))
+                } else {
+                    putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
+                }
                 putExtra(NetworkBrowserActivity.EXTRA_INITIAL_PATH, parentPath)
                 putExtra(NetworkBrowserActivity.EXTRA_OPEN_FILE_PATH, item.path)
                 putExtra(NetworkBrowserActivity.EXTRA_OPEN_FILE_NAME, item.path.substringAfterLast('/'))
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             startActivity(intent)
             finish()
@@ -119,7 +158,7 @@ class FavoriteShortcutActivity : AppCompatActivity() {
                 putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, item.path)
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, "saf_custom")
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             startActivity(intent)
             finish()
@@ -127,37 +166,39 @@ class FavoriteShortcutActivity : AppCompatActivity() {
         }
 
         val targetFile = File(item.path)
-        if (!targetFile.exists()) {
-            showErrorAndFinish()
-            return
-        }
-
-        if (item.isFolder || targetFile.isDirectory) {
+        if (item.isFolder || item.isStorageTileFavorite || targetFile.isDirectory) {
             val (resolvedSid, resolvedStype, resolvedRoot) = IndexingRepository.resolveStorageForPath(targetFile.absolutePath)
             val intent = Intent(this, FileBrowserActivity::class.java).apply {
                 putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, resolvedRoot)
                 putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, targetFile.absolutePath)
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, resolvedSid)
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, resolvedStype)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             startActivity(intent)
             finish()
+            return
+        }
+
+        if (!targetFile.exists()) {
+            showErrorAndFinish()
+            return
+        }
+
+        // Local file: dispatch via FileViewerRouter
+        val ext = targetFile.extension.lowercase()
+        val defaultAction = za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager.getDefaultAction(this, ext, isNetwork = false)
+        if (defaultAction != za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager.Action.ASK) {
+            FileViewerRouter.openFile(this, targetFile)
+            finish()
         } else {
-            // Local file: dispatch via FileViewerRouter
-            val ext = targetFile.extension.lowercase()
-            val defaultAction = za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager.getDefaultAction(this, ext, isNetwork = false)
-            if (defaultAction != za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager.Action.ASK) {
-                FileViewerRouter.openFile(this, targetFile)
-                finish()
-            } else {
-                // When ASK is required, let the user choose.
-                // onCancel finishes this activity if the user dismisses the chooser without picking an option.
-                // onStop finishes this activity once a viewer activity is launched.
-                val handled = FileViewerRouter.openFile(this, targetFile, onCancel = { finish() })
-                if (!handled) {
-                    FileViewerRouter.showOpenWithDialog(this, targetFile, onCancel = { finish() })
-                }
+            // When ASK is required, let the user choose.
+            // onCancel finishes this activity if the user dismisses the chooser without picking an option.
+            // onStop finishes this activity once a viewer activity is launched.
+            val handled = FileViewerRouter.openFile(this, targetFile, onCancel = { finish() })
+            if (!handled) {
+                FileViewerRouter.showOpenWithDialog(this, targetFile, onCancel = { finish() })
             }
         }
     }

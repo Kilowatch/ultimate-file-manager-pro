@@ -1487,6 +1487,14 @@ class StorageBrowserActivity : AppCompatActivity() {
         if (!isTv) {
             updateFloatingBarUi()
             updateHeaderActionButtons()
+        } else {
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    FavoriteHomeScreenManager.reconcileTv(this@StorageBrowserActivity, FavoritesManager.getFavorites(this@StorageBrowserActivity))
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to reconcile TV shortcuts on resume: ${e.message}")
+                }
+            }
         }
 
         

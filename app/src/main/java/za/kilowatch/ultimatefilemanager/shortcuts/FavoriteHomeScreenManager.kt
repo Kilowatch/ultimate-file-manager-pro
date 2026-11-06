@@ -49,12 +49,22 @@ object FavoriteHomeScreenManager {
         return if (item.isNetwork) {
             val shareId = item.shareId
             if (item.isFolder && !shareId.isNullOrEmpty()) {
+                val isTvPaired = shareId.startsWith("tv_")
+                val isOnline = !isTvPaired && za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(context).getById(shareId) != null
                 Intent(context, NetworkBrowserActivity::class.java).apply {
                     action = Intent.ACTION_VIEW
-                    putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
+                    if (isTvPaired) {
+                        putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, shareId.removePrefix("tv_"))
+                    } else {
+                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
+                    }
+                    if (isOnline) {
+                        putExtra("isOnlineStorage", true)
+                    }
                     putExtra(NetworkBrowserActivity.EXTRA_INITIAL_PATH, item.path)
+                    putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
                     putExtra("favId", item.id)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
             } else {
                 createTrampolineIntent(context, item)
@@ -68,11 +78,11 @@ object FavoriteHomeScreenManager {
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, "saf_custom")
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
                     putExtra("favId", item.id)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
             } else {
                 val targetFile = File(item.path)
-                if (item.isFolder || targetFile.isDirectory) {
+                if (item.isFolder || item.isStorageTileFavorite || targetFile.isDirectory) {
                     val (resolvedSid, resolvedStype, resolvedRoot) = IndexingRepository.resolveStorageForPath(targetFile.absolutePath)
                     Intent(context, FileBrowserActivity::class.java).apply {
                         action = Intent.ACTION_VIEW
@@ -82,7 +92,7 @@ object FavoriteHomeScreenManager {
                         putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, resolvedStype)
                         putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
                         putExtra("favId", item.id)
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }
                 } else {
                     createTrampolineIntent(context, item)

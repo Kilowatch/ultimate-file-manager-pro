@@ -142,6 +142,16 @@ class TvPreviewManager : TvHomeDelegate {
 
             // Build and publish the preview program
             try {
+                // Remove previous program for this ID if present to avoid stale/duplicate entries
+                try {
+                    val where = "${TvContractCompat.PreviewPrograms.COLUMN_INTERNAL_PROVIDER_ID} = ?"
+                    context.contentResolver.delete(
+                        TvContractCompat.PreviewPrograms.CONTENT_URI,
+                        where,
+                        arrayOf(item.id)
+                    )
+                } catch (_: Exception) {}
+
                 val posterUri = FavoritePosterRenderer.getPosterUri(context, item)
                 val launchIntent = FavoriteHomeScreenManager.createLaunchIntent(context, item)
                 val programIntentUri = Uri.parse(launchIntent.toUri(Intent.URI_INTENT_SCHEME))
@@ -250,7 +260,8 @@ class TvPreviewManager : TvHomeDelegate {
         val existingProgramIds = mutableSetOf<String>()
         try {
             val projection = arrayOf(
-                TvContractCompat.PreviewPrograms.COLUMN_INTERNAL_PROVIDER_ID
+                TvContractCompat.PreviewPrograms.COLUMN_INTERNAL_PROVIDER_ID,
+                TvContractCompat.PreviewPrograms.COLUMN_INTENT_URI
             )
             context.contentResolver.query(
                 TvContractCompat.PreviewPrograms.CONTENT_URI,
@@ -260,9 +271,37 @@ class TvPreviewManager : TvHomeDelegate {
                 null
             )?.use { cursor ->
                 val idIdx = cursor.getColumnIndex(TvContractCompat.PreviewPrograms.COLUMN_INTERNAL_PROVIDER_ID)
+                val uriIdx = cursor.getColumnIndex(TvContractCompat.PreviewPrograms.COLUMN_INTENT_URI)
                 while (cursor.moveToNext()) {
                     if (idIdx != -1) {
-                        cursor.getString(idIdx)?.let { existingProgramIds.add(it) }
+                        val favId = cursor.getString(idIdx)
+                        if (!favId.isNullOrEmpty()) {
+                            existingProgramIds.add(favId)
+                            if (uriIdx != -1) {
+                                val currentUri = cursor.getString(uriIdx)
+                                val matchingFav = favorites.firstOrNull { it.id == favId }
+                                if (matchingFav != null) {
+                                    val targetIntent = FavoriteHomeScreenManager.createLaunchIntent(context, matchingFav)
+                                    val targetUri = targetIntent.toUri(Intent.URI_INTENT_SCHEME)
+                                    if (currentUri != targetUri) {
+                                        val values = android.content.ContentValues().apply {
+                                            put(TvContractCompat.PreviewPrograms.COLUMN_INTENT_URI, targetUri)
+                                        }
+                                        try {
+                                            context.contentResolver.update(
+                                                TvContractCompat.PreviewPrograms.CONTENT_URI,
+                                                values,
+                                                "${TvContractCompat.PreviewPrograms.COLUMN_INTERNAL_PROVIDER_ID} = ?",
+                                                arrayOf(favId)
+                                            )
+                                            Log.d(TAG, "Synchronized TV preview program intentUri for ${matchingFav.label}")
+                                        } catch (e: Exception) {
+                                            Log.w(TAG, "Failed to update TV preview program for $favId: ${e.message}")
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

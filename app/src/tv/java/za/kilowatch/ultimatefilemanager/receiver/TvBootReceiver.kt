@@ -34,6 +34,10 @@ class TvBootReceiver : BroadcastReceiver() {
                 try {
                     if (DeviceUtils.isTvDevice(context.applicationContext)) {
                         TvServerForegroundService.start(context.applicationContext)
+                        za.kilowatch.ultimatefilemanager.shortcuts.FavoriteHomeScreenManager.reconcileTv(
+                            context.applicationContext,
+                            za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavorites(context.applicationContext)
+                        )
                     }
                 } catch (e: Exception) {
                     Log.e("TvBootReceiver", "Failed to start TV server foreground service on TV boot", e)
