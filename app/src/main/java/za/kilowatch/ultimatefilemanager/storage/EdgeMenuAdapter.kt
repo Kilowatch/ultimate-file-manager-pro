@@ -16,7 +16,6 @@ import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
-import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import java.io.File
 
 /**
@@ -101,8 +100,6 @@ class EdgeMenuAdapter(
         }
         holder.txtSubtitle.setTextColor(ContextCompat.getColor(context, R.color.mobile_card_text_secondary))
 
-        val catIconTint = DefaultIconColorManager.getMobileIconTint(context)
-
         if (config != null && config.iconBgColor != Color.TRANSPARENT) {
             val density = context.resources.displayMetrics.density
             val customBg = android.graphics.drawable.GradientDrawable().apply {
@@ -133,7 +130,7 @@ class EdgeMenuAdapter(
             holder.card.setStrokeColor(ContextCompat.getColor(context, R.color.mobile_glass_stroke))
         }
 
-        bindTileIcon(item, holder.imgIcon, catIconTint)
+        bindTileIcon(item, holder.imgIcon)
 
         holder.itemView.setOnClickListener {
             onTileClick(item)
@@ -142,7 +139,7 @@ class EdgeMenuAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    private fun bindTileIcon(item: StorageItem, imgView: ImageView, defaultIconTint: Int) {
+    private fun bindTileIcon(item: StorageItem, imgView: ImageView) {
         val customPath = tileIcons[item.id]
         val customRes = tileIconRes[item.id]
 
@@ -152,19 +149,30 @@ class EdgeMenuAdapter(
                 if (bmp != null) {
                     imgView.setImageBitmap(bmp)
                     imgView.colorFilter = null
+                    imgView.imageTintList = null
                     return
                 }
             } catch (_: Exception) {}
+        }
+
+        if (item.isDocumentProviderTile && item.documentProviderInfo != null) {
+            val docIcon = item.documentProviderInfo?.icon
+            if (docIcon != null) {
+                imgView.setImageDrawable(docIcon)
+                imgView.colorFilter = null
+                imgView.imageTintList = null
+                return
+            }
         }
 
         val iconRes = if (customRes != null && customRes != 0) customRes else item.iconRes
         imgView.setImageResource(iconRes)
 
         val config = tileColors[item.id]
-        if (config != null && config.iconColor != 0) {
+        if (config != null && config.iconColor != 0 && config.iconColor != Color.TRANSPARENT) {
             imgView.colorFilter = PorterDuffColorFilter(config.iconColor, PorterDuff.Mode.SRC_IN)
         } else {
-            imgView.colorFilter = PorterDuffColorFilter(defaultIconTint, PorterDuff.Mode.SRC_IN)
+            imgView.colorFilter = PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
         }
     }
 

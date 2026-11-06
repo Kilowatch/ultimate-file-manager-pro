@@ -39,7 +39,7 @@
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
                 android:importantForAccessibility="no"
-                app:tint="@color/mobile_icon_tint"
+                app:tint="#FFFFFFFF"
                 tools:src="@drawable/ic_storage_internal" />
         </FrameLayout>
 
