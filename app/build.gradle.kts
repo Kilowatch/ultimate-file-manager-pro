@@ -489,6 +489,12 @@ dependencies {
     }
     implementation(libs.jaudiotagger)
     implementation(libs.androidx.webkit)
+    // libtorrent4j: native BitTorrent client engine & platform splits
+    implementation(libs.libtorrent4j.core)
+    implementation(libs.libtorrent4j.arm)
+    implementation(libs.libtorrent4j.arm64)
+    implementation(libs.libtorrent4j.x86)
+    implementation(libs.libtorrent4j.x8664)
     // Android TV Preview Channels & Programs
     implementation(libs.androidx.tvprovider)
     // libnfs: native NFS v2/v3/v4 client via JNI (built from source in src/main/cpp/)

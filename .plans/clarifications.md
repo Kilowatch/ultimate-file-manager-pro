@@ -1,64 +1,63 @@
-# Clarifications: UFM Media Player Loop and Continuous Playback Control
+# Clarifications: Download Manager — Torrent, Magnet & Direct HTTP/HTTPS
 
 ## Status
-Clarifications confirmed — ready for /plan and /tasks
+All clarifications confirmed by user — ready for `/plan`.
 
 ---
 
-## Questions & Confirmed Answers
+## Questions & Confirmed Decisions
 
-### 1. Repeat Mode Cycle Order
-- **Question**: What cycle order should tapping the Repeat button follow?
-- **Decision**: **`Repeat Off` → `Repeat All` → `Repeat One` → `Repeat Off`**.
-  - Tapping cycles through standard media player modes in that exact sequence.
+### 1. Default Download Destination
+- **Question**: What should be the default download destination before the user changes it?
+- **Decision**: **System Downloads folder (`/storage/emulated/0/Download`)**.
+  - Matches user expectations for standard Android file storage.
+  - Can be changed at any time to internal subfolders, SD card, or USB OTG drives using the canonical FAB Folder Picker.
 
-### 2. Default Repeat State
-- **Question**: What should the default repeat mode be for new installs and initial playback?
-- **Decision**: **`Repeat Off` (plays once and stops)**.
-  - Ensures newly opened files play once without unwanted infinite looping.
+### 2. Network Usage Policy & Dedicated Settings Section
+- **Question**: How should mobile data vs. Wi-Fi usage be handled?
+- **Decision**:
+  - **Default Mode**: **Wi-Fi Only**.
+  - **Dedicated Settings Section**: Add a separated **"Download Manager"** section in `SettingsActivity` (conforming to UFMStandard card styling).
+  - **Network Toggle**: Users can switch between:
+    - **"Wi-Fi only"** (Default)
+    - **"All networks"** (Wi-Fi, Ethernet, and Mobile Data)
+  - **Cellular / Offline Warning Dialog (UFMStandard)**:
+    - If a user attempts to start a download while not connected to Wi-Fi (and "Wi-Fi only" is active), present a modern UFMStandard dialog:
+      - **Action 1: "Enable Mobile" / "Settings"**: Navigates directly to Settings → Download Manager to allow mobile data transfer.
+      - **Action 2: "Queue"**: Enqueues the transfer in a `Queued` state; once the device connects to an active Wi-Fi network, the download automatically resumes/starts.
+      - **Action 3: "Cancel"**: Cancels and dismisses the download action.
 
-### 3. Queue Population with Auto-Play Disabled
-- **Question**: When Auto-play Next is disabled, how should the folder playlist/queue behave?
-- **Decision**: **Load all sibling media files into the queue, but stop automatically when the track ends**.
-  - All sibling audio/video tracks remain accessible in the queue drawer for manual Next/Previous navigation and playlist selection, but automatic progression at track end is inhibited.
+### 3. Entry Points & Main Menu Placement
+- **Question**: Should the Download Manager also be added to the browser selection Tools FAB & Quick Action Bar?
+- **Decision**: **Main Menu tile under "Utilities" + File/Magnet intent handler only**.
+  - The Tools FAB remains dedicated to selected file manipulation (Copy, Move, Compress, Encrypt, etc.).
+  - The feature is exposed via the **Download Manager** tile in the **Utilities** category (`CATEGORY_UTILITIES`) on the Main Menu, and via system intent filters for `.torrent` files and `magnet:` links.
 
-### 4. Auto-Play Next Toggle Location
-- **Question**: Where should the Auto-play Next toggle be accessible?
-- **Decision**: **Persist in Settings only (`Settings → Media Player`)**.
-  - Keeps the player toolbar and HUD clean and uncluttered.
+### 4. Direct Downloads (HTTP / HTTPS) Inclusion
+- **Question**: Will HTTP / HTTPS downloads be included as per the layout example?
+- **Decision**: **Yes, fully included**.
+  - Dashboard features two top action cards: **Direct Downloads (HTTP / HTTPS)** and **Torrent Downloads (Magnet / Torrent)**.
+  - Both stream into the same active transfers list, foreground service, and storage destination.
 
-### 5. Repeat Mode Persistence
-- **Question**: Should the selected Repeat Mode persist across app/player launches?
-- **Decision**: **Persist globally in Player preferences (`PlayerPreferencesManager`)**.
-  - The chosen repeat mode survives player exits, process recreation, and subsequent file opens until explicitly changed by the user.
+### 5. Storage Pre-Flight Validation (FAT32 & Capacity)
+- **Question**: How should storage limitations be handled?
+- **Decision**:
+  - **Available Free Space**: Check available disk capacity (+100 MB safety buffer) before starting any download. If insufficient, disable the Start button and offer a 1-tap UFMStandard dialog to choose a new location via the FAB folder picker.
+  - **FAT32 4 GB Limit**: If an individual file $\ge$ 4 GB is targeted to a FAT32 filesystem (e.g. an 11 GB file), block the transfer upfront and display a UFMStandard dialog with a 1-tap "Choose Location" redirect.
 
-### 6. Video vs. Audio Parity
-- **Question**: Should this behavior apply to both audio and video files in UFM Player?
-- **Decision**: **Yes, apply identically to both audio and video playback**.
-  - Unified playback engine behavior across all media types in `UFMPlayerActivity` and `UFMPlaybackService`.
+### 6. Security & Sandboxing Guarantee
+- **Question**: How to ensure no files or folders are exposed during torrent usage?
+- **Decision**:
+  - Zero-seeding and complete inbound peer isolation: swarm peers can never access, read, or request any existing files, media, Encrypted Vaults, or directories on the device.
+  - Path traversal (Zip-Slip) defense and protected directory blacklisting (Vault, app-private databases).
+  - Immediate complete swarm disconnection at 100% completion terminating IP visibility.
 
-### 7. Android TV Parity
-- **Question**: Should the 3-state repeat and auto-play controls be synchronized on Android TV?
-- **Decision**: **Yes, full parity on Android TV**.
-  - Android TV player UI supports D-pad remote cycling of the 3-state repeat button with TV HUD toast confirmations matching Mobile.
+### 7. Policy & Date Updates
+- **Decision**:
+  - Terms & Privacy Policy dates bumped to **November 2026** across website HTML files and in-app strings.
+  - Translation cleanup: Delete modified string keys from all 17 non-English translation files per `AGENTS.md`.
 
 ---
 
-## Plan & Implementation Impact
-1. **`PlayerPreferencesManager.kt`**:
-   - Add `RepeatMode` enum (`OFF`, `ALL`, `ONE`).
-   - Store `repeat_mode` with default `RepeatMode.OFF`.
-   - Provide getter, setter, and cycle helper functions.
-2. **`UFMPlaybackService.kt`**:
-   - Track completion listener (`STATE_ENDED`):
-     - If `RepeatMode.ONE`: Replay current track (seek 0 + play).
-     - If `RepeatMode.ALL`: If queue has items, advance to next; if at last track, wrap around to 0.
-     - If `RepeatMode.OFF`:
-       - If `AutoplayPreferenceManager.isEnabled(...)` is `false`: **STOP** immediately (pause, release audio focus, safeStopForeground).
-       - If `AutoplayPreferenceManager.isEnabled(...)` is `true`: Advance to next track, but if at the end of the queue (`currentIndex >= queue.size - 1`), **STOP** instead of wrapping to 0.
-   - Suppress `NextTrackOverlayView` countdown when auto-play next is disabled.
-3. **`QueueManager.kt`**:
-   - Adjust `nextIndex()` logic or call-site handling so repeat-off does not wrap around to index 0 on track completion.
-4. **Icons & UI (Mobile + Android TV)**:
-   - Provide visual indication for `ic_repeat` (Repeat All) vs `ic_repeat_one` (Repeat One) vs dimmed/inactive (Repeat Off).
-   - Add string resources for toasts: `player_toast_repeat_off`, `player_toast_repeat_all`, `player_toast_repeat_one`.
+## Next Steps
+Proceed to `/plan` to design the technical architecture and draft the detailed file-by-file changes in [.plans/plan.md](file:///F:/Share/UFM/.plans/plan.md).

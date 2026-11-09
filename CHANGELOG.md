@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.5] — 2026-11-09
 
 ### Added
+- **Native Download Manager (Mobile & Android TV)**: Integrated a native, privacy-hardened Download Manager accessible directly from the Main Menu under "Utilities" (*"Torrent, Magnet & HTTP downloads"*) with direct file opening, folder navigation, status filters, and speed / ETA tracking.
+- **Direct HTTP / HTTPS Downloads**: Resumable HTTP/HTTPS file downloads supporting Range headers, automatic redirect handling, and direct streaming without external dependencies.
+- **Privacy-Hardened BitTorrent & Magnet Downloads (`libtorrent4j`)**: High-performance BitTorrent 2.1 transfer engine strictly configured with zero-seeding (`active_seeds = 0`, upload rate limit 1 B/s, forced Protocol Encryption) and instant swarm disconnection upon 100% download completion (immediately drops peer sockets, deregisters DHT announcements, and prevents IP swarm retention).
+- **Storage Pre-Flight Validation & FAT32 Limit Enforcement**: Pre-flight validation verifying destination storage before starting downloads; detects FAT32/VFAT file systems and enforces the 4 GB single-file ceiling (`4_294_967_295L`) with a UFMStandard dialog offering 1-tap redirect to pick an exFAT / NTFS / internal storage location.
+- **Storage Usability & Safety Margin Checks**: Checks available disk space with an added 100 MB safety buffer to prevent storage exhaustion, and blocks path traversal attempts into sensitive system or private application directories.
+- **UFM Canonical FAB Folder Picker Flow**: Integrated location selection leveraging the canonical FAB folder picker (`EXTRA_TORRENT_DOWNLOAD_LOCATION_PICKER`) for choosing custom download destinations across local drives and SAF volumes.
+- **Settings & Network Policy Integration**: Added Download Manager settings under SettingsActivity to configure download directories, review acceptable use legal covenants, and set Network Policy (`Wi-Fi Only` vs `All Networks`) with automatic pause on cellular and immediate auto-resumption when reconnecting to Wi-Fi.
+- **UFMStandard Legal Compliance & Anti-Piracy Gate**: Interactive compliance gate presented on first launch requiring explicit user acceptance of the Non-Piracy and Acceptable Use Policy before transfers can be initiated.
+- **Foreground Download Service (`dataSync`)**: Foreground service displaying ongoing download progress, speed, ETA, and quick Pause/Cancel notification controls.
+- **Open-Source & Policy Updates**: Bumped terms and privacy policy documents (`WEBSITE/UFMPrivacyPolicy.html`, `WEBSITE/UFMTerms.html`, `strings_policy.xml`) to November 2026, documenting peer-to-peer decentralization, local file sandboxing guarantees, and registered `libtorrent4j` under Open Source Licenses (`LicensesActivity`).
 - **UFM Media Player Three-State Repeat Mode**: Added full 3-state Repeat Mode (`Repeat Off`, `Repeat All`, and `Repeat One`) with distinct iconography (`ic_repeat_one`), HUD toast feedback announcements, and full Android TV D-pad remote support.
 
 ### Fixed

@@ -128,18 +128,19 @@ To comply with open-source software guidelines and maximize privacy, the **FOSS 
 
 ## 📦 App Size & Storage Footprint
 
-The standalone FOSS release is packaged as a universal, all-in-one APK (**~240 MB**) that includes native support for all 4 major Android CPU architectures (**ARM64**, **ARMv7**, **x86_64**, and **x86**). When installed on a device, only the device's specific architecture is used, resulting in an installed device footprint of **~100–185 MB**.
+The standalone FOSS release is packaged as a universal, all-in-one APK (**~300 MB**) that includes native support for all 4 major Android CPU architectures (**ARM64**, **ARMv7**, **x86_64**, and **x86**). When installed on a device, only the device's specific architecture is used, resulting in an installed device footprint of **~120–210 MB**.
 
 Instead of a barebones file explorer that offloads file operations to external cloud servers or requires 3rd-party companion apps, UFM is a **complete, 100% offline, privacy-first standalone workstation**:
 
 | Component / Layer | Download Size | Installed Footprint | What It Does |
 | :--- | :---: | :---: | :--- |
-| ☁️ **Native Go Cloud & SMB Engine** | **~96 MB** *(All 4 ABIs)* | **~24 MB** | High-performance Go runtime, Rclone cloud sync & pure Go SMB2/3 |
+| ☁️ **Native Go Cloud & SMB Engine** | **~97 MB** *(All 4 ABIs)* | **~24 MB** | High-performance Go runtime, Rclone cloud sync & pure Go SMB2/3 |
+| 📥 **Native BitTorrent Engine** | **~59 MB** *(All 4 ABIs)* | **~13–15 MB** | High-performance C++ `libtorrent` engine with zero-seeding compliance |
 | 🎬 **FFmpeg Video Thumbnailer** | **~42 MB** *(ARM ABIs)* | **~22 MB** | Built-in offline MKV, MP4, AVI, FLV thumbnail generator |
 | 🖼️ **Modern Image Decoders (JXL & AVIF)** | **~75 MB** *(All 4 ABIs)* | **~17 MB** | Native JPEG XL and AVIF image decoding engines |
 | 🗜️ **Archives, NFS & Network Engine** | **~4 MB** *(All 4 ABIs)* | **~1 MB** | High-speed ZSTD compression, native NFS v2/v3/v4 mounts |
 | ⚡ **App Core, UI & Translations** | **~25 MB** | **~35–80 MB** *(with ART cache)* | 18 full language translations, PDF/Office viewers, Wi-Fi PC server |
-| **TOTAL FOOTPRINT** | **~240 MB** *(Universal APK)* | **~100–185 MB** *(Device)* | **Saves 300 MB+ compared to installing 5+ separate apps** |
+| **TOTAL FOOTPRINT** | **~300 MB** *(Universal APK)* | **~120–210 MB** *(Device)* | **Saves 350 MB+ compared to installing 6+ separate apps** |
 
 > 📖 *For a detailed non-technical and technical cross-architecture breakdown, see [`size.md`](size.md).*
 

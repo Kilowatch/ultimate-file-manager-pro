@@ -1,207 +1,284 @@
-# Implementation Plan: UFM Media Player Loop and Continuous Playback Control
+# Implementation Plan: Unified Download Manager (Torrent, Magnet & HTTP/HTTPS)
 
-## Goals
-Implement precise playback control in UFM Media Player to resolve issues reported in `error.txt`:
-1. Prevent unintended repeating and continuous auto-advance by strictly honoring the "Auto-play next in UFM Player" setting (`AutoplayPreferenceManager`).
-2. Replace the binary repeat toggle with a robust 3-state Repeat Mode (`RepeatMode.OFF`, `RepeatMode.ALL`, `RepeatMode.ONE`).
-3. Ensure that when Auto-play Next is disabled, opening an audio or video file plays that file once and stops automatically upon completion.
-4. Guarantee that when Auto-play Next is enabled with Repeat Off, reaching the end of the playlist stops playback cleanly without wrapping around to track 1.
-5. Provide seamless Mobile and Android TV parity with distinct iconography, D-pad control, and HUD toast announcements.
-6. Persist user playback mode preferences globally across sessions and restarts.
+## Goal Description
+Build and integrate a native, high-performance, and privacy-hardened **Download Manager** into **Ultimate File Manager Pro (UFM)** for Mobile and Android TV. The system provides unified management for both **BitTorrent / Magnet** downloads (via `libtorrent4j:2.1.0-39` with strict zero-seeding and immediate post-download swarm ejection) and **Direct HTTP/HTTPS** file downloads.
+
+The feature will be exposed via a new **Download Manager** tile under the **Utilities** category on the Main Menu, modeled visually after [`images/layout.jpeg`](file:///F:/Share/UFM/images/layout.jpeg), backed by UFM's canonical **Folder Picker Standard** with Floating Action Button (FAB) confirmation, pre-flight FAT32 / capacity checks, and full compliance with UFM's legal, privacy, and non-piracy policies (dated November 2026).
 
 ---
 
-## Architecture Overview
+## User Review Required
+
+> [!IMPORTANT]
+> **Strict Zero-Seeding & Instant Swarm Ejection**:
+> The BitTorrent engine enforces `active_seeds = 0`, `seeding_outgoing_connections = false`, and `upload_rate_limit = 1`. The millisecond a download reaches 100%, all peer sockets are severed, trackers receive `event=stopped`, and DHT unregisters the info-hash so the user's IP address ceases being exposed in the swarm.
+
+> [!IMPORTANT]
+> **Mandatory First-Use Legal Gate**:
+> Users are gated on first access by a modern UFMStandard glass dialog requiring an explicit interactive tick acknowledging lawful use only, P2P IP visibility, and prohibition of piracy. The **Continue** button remains disabled until checked.
+
+> [!NOTE]
+> **Translation Cleanup Requirement**:
+> Per project rules in [.agents/AGENTS.md](file:///F:/Share/UFM/.agents/AGENTS.md), modifying `policy_last_updated` to November 2026 and adding new policy entries in `strings_policy.xml` requires deleting those modified keys from all 17 non-English translation files (`values-*/strings_policy.xml`).
+
+---
+
+## Architecture & Data Flow
 
 ```mermaid
 flowchart TD
-    A["Track Playback Ends (STATE_ENDED)"] --> B{"Check RepeatMode"}
-    B -->|"ONE"| C["Seek to 0 and Replay Current Track"]
-    B -->|"ALL"| D{"Has > 1 Track?"}
-    D -->|"Yes"| E["Advance to Next Track (skipToNext / Wrap)"]
-    D -->|"No"| C
-    B -->|"OFF"| F{"Autoplay Next Enabled?"}
-    F -->|"No"| G["Stop Playback Cleanly (Pause, Release WakeLock, Stop Foreground)"]
-    F -->|"Yes"| H{"Current Index < Last Index?"}
-    H -->|"Yes"| I["Advance to Next Track in Queue"]
-    H -->|"No (End of Playlist)"| G
+    subgraph UI ["User Interface Layer"]
+        MM["Main Menu (Utilities Tile)"] --> DMA["DownloadManagerActivity (Mobile/TV)"]
+        EXT["External Intent (.torrent / magnet:)"] --> LG["DownloadLegalGateHelper"]
+        LG --> DMA
+        DMA --> DLD["Direct Downloads Card (HTTP/HTTPS)"]
+        DMA --> TLD["Torrent Downloads Card (Magnet/Torrent)"]
+        DMA --> LOC["Download Location Row"]
+        LOC --> SBA["StorageBrowserActivity (Picker Extra)"]
+        SBA --> FBA["FileBrowserActivity (FAB Confirmation)"]
+    end
+
+    subgraph PreFlight ["Pre-Flight Validation Layer"]
+        VAL["StoragePreflightValidator"]
+        VAL --> FAT32["Check FAT32 4 GB Single-File Limit"]
+        VAL --> SPACE["Check Free Usable Space + 100MB Margin"]
+        VAL --> SEC["Path Traversal & Protected Dir Sanitizer"]
+    end
+
+    subgraph Engine ["Engine & Service Layer"]
+        DTM["DownloadTransferManager (Singleton)"]
+        DS["DownloadService (Foreground dataSync)"]
+        TE["TorrentEngine (libtorrent4j:2.1.0-39)"]
+        HE["HttpDownloadEngine (OkHttp Streamer)"]
+        DTM --> DS
+        DTM --> TE
+        DTM --> HE
+    end
+
+    DMA --> VAL
+    VAL --> DTM
+    TE -->|100% Complete| TE_STOP["Sever Peer Sockets + event=stopped + DHT Stop"]
+    TE_STOP --> MS["MediaScannerConnection.scanFile()"]
 ```
 
-### Key Components:
-1. **Preferences Layer (`PlayerPreferencesManager.kt`)**:
-   - Introduce `RepeatMode` enum (`OFF`, `ALL`, `ONE`).
-   - Manage `player_repeat_mode` key in `ufm_player_prefs` SharedPreferences.
-   - Default mode is `RepeatMode.OFF`.
-   - Provide `cycleRepeatMode()` helper to transition `OFF` → `ALL` → `ONE` → `OFF`.
-2. **Playback Engine (`UFMPlaybackService.kt`)**:
-   - Bind `repeatMode` state directly to `PlayerPreferencesManager`.
-   - In `Player.Listener.onPlaybackStateChanged(STATE_ENDED)`:
-     - Check `AutoplayPreferenceManager.isEnabled(this)`.
-     - Route strictly according to active `RepeatMode` and autoplay status.
-     - Release audio focus, wake locks, and foreground notification when stopping.
-   - Provide `cycleRepeatMode(): RepeatMode` service binder method.
-3. **Player UI Controller (`UFMPlayerActivity.kt`)**:
-   - Synchronize `btnRepeat` state:
-     - `OFF`: `ic_repeat` with inactive alpha (`0.4f` mobile / `0.5f` TV).
-     - `ALL`: `ic_repeat` with active alpha (`1.0f`).
-     - `ONE`: `ic_repeat_one` with active alpha (`1.0f`).
-   - Suppress `NextTrackOverlayView` countdown when auto-play next is disabled or `RepeatMode.ONE` is active.
-   - Display HUD toasts on mode changes (`player_toast_repeat_off`, `player_toast_repeat_all`, `player_toast_repeat_one`).
-4. **Drawables & Icon Palette Registry**:
-   - Add new Material vector drawable `ic_repeat_one.xml` (arrows with "1" numeral).
-   - Register `ic_repeat_one` in `IconCustomizationManager.kt`, `IconCustomizationActivity.kt`, `IconPackExportActivity.kt`, and `strings.xml`.
-5. **Strings & Localization Verification**:
-   - Add string resources: `player_toast_repeat_all`, `player_toast_repeat_one`, `icon_media_repeat_one`.
+---
+
+## Proposed Changes
+
+Grouped by component layer in order of execution.
 
 ---
 
-## Files to Create
+### 1. Dependencies & Build Configuration
 
-### `app/src/main/res/drawable/ic_repeat_one.xml`
-- **What**: Material vector drawable (24x24dp) representing "Repeat One" (standard looping arrows with numeral "1" enclosed).
-- **Key details**: Uses `#FFFFFFFF` fill color matching `ic_repeat.xml` and vector path `M7,7h10v3l4,-4 -4,-4v3H5v6h2V7zm10,10H7v-3l-4,4 4,4v-3h12v-6h-2v4zm-4,-2V9h-1l-2,1v1h1.5v4H13z`.
+#### [MODIFY] [gradle/libs.versions.toml](file:///F:/Share/UFM/gradle/libs.versions.toml)
+- Add `libtorrent4j = "2.1.0-39"` under `[versions]`.
+- Add libraries under `[libraries]`:
+  ```toml
+  libtorrent4j-core = { group = "org.libtorrent4j", name = "libtorrent4j", version.ref = "libtorrent4j" }
+  libtorrent4j-arm = { group = "org.libtorrent4j", name = "libtorrent4j-android-arm", version.ref = "libtorrent4j" }
+  libtorrent4j-arm64 = { group = "org.libtorrent4j", name = "libtorrent4j-android-arm64", version.ref = "libtorrent4j" }
+  libtorrent4j-x86 = { group = "org.libtorrent4j", name = "libtorrent4j-android-x86", version.ref = "libtorrent4j" }
+  libtorrent4j-x86_64 = { group = "org.libtorrent4j", name = "libtorrent4j-android-x86_64", version.ref = "libtorrent4j" }
+  ```
 
----
-
-## Files to Modify
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/PlayerPreferencesManager.kt`
-- **What**: Add `RepeatMode` enum and preference getters/setters/cycle methods.
-- **Key details**:
+#### [MODIFY] [app/build.gradle.kts](file:///F:/Share/UFM/app/build.gradle.kts)
+- Include `libtorrent4j` dependencies:
   ```kotlin
-  enum class RepeatMode(val value: String) {
-      OFF("off"),
-      ALL("all"),
-      ONE("one");
+  implementation(libs.libtorrent4j.core)
+  implementation(libs.libtorrent4j.arm)
+  implementation(libs.libtorrent4j.arm64)
+  implementation(libs.libtorrent4j.x86)
+  implementation(libs.libtorrent4j.x86.64)
+  ```
+- Ensure `licensee` configuration handles `libtorrent4j` (BSD-3-Clause and MIT are allowed; ignore auxiliary sub-artifacts if needed).
 
-      companion object {
-          fun fromValue(value: String): RepeatMode =
-              entries.firstOrNull { it.value == value } ?: OFF
-      }
+#### [MODIFY] [app/proguard-rules.pro](file:///F:/Share/UFM/app/proguard-rules.pro)
+- Add minimal, non-blanket keep rules conforming to R8 policy:
+  ```proguard
+  # libtorrent4j JNI bridge
+  -keep class org.libtorrent4j.swig.libtorrent_jni { *; }
+  -keepclassmembers class org.libtorrent4j.** {
+      public <init>(...);
   }
   ```
-  - `KEY_REPEAT_MODE = "player_repeat_mode"`
-  - `getRepeatMode(context: Context): RepeatMode` (default `RepeatMode.OFF`)
-  - `setRepeatMode(context: Context, mode: RepeatMode)`
-  - `cycleRepeatMode(context: Context): RepeatMode`
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/UFMPlaybackService.kt`
-- **What**: Connect `repeatMode` and `AutoplayPreferenceManager` to playback termination and track progression.
-- **Key details**:
-  - Replace `var isRepeat: Boolean` with `var repeatMode: RepeatMode = RepeatMode.OFF`. Provide `val isRepeat: Boolean get() = repeatMode != RepeatMode.OFF` for backward compatibility.
-  - In `onCreate()`, initialize `repeatMode = PlayerPreferencesManager.getRepeatMode(this)`.
-  - Add `fun cycleRepeatMode(): RepeatMode` calling `PlayerPreferencesManager.cycleRepeatMode(this)`.
-  - In `playerListener.onPlaybackStateChanged(state == Player.STATE_ENDED)`:
-    - Read `AutoplayPreferenceManager.isEnabled(this)`.
-    - If `RepeatMode.ONE`: Replay current track (seek 0 + play).
-    - If `RepeatMode.ALL`: If queue size > 1, call `skipToNext()` (which wraps around); if queue size == 1, seek 0 + play.
-    - If `RepeatMode.OFF`:
-      - If autoplay is disabled or `skipAutoplayOnce` is true: call `pause()` and `safeStopForeground(true)`.
-      - If autoplay is enabled:
-        - If `queueManager.currentIndex < queueManager.size - 1`: call `skipToNext()`.
-        - Else (last track in playlist reached): call `pause()` and `safeStopForeground(true)` cleanly.
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/UFMPlayerActivity.kt`
-- **What**: Update repeat button display, click handler, and next-track overlay countdown gating.
-- **Key details**:
-  - Add `updateRepeatButton(mode: RepeatMode)`:
-    - `RepeatMode.OFF`: sets `ic_repeat`, alpha inactive (`0.4f` mobile / `0.5f` TV).
-    - `RepeatMode.ALL`: sets `ic_repeat`, alpha active (`1.0f`).
-    - `RepeatMode.ONE`: sets `ic_repeat_one`, alpha active (`1.0f`).
-  - In `btnRepeat.setOnClickListener`:
-    - Call `val newMode = playbackService?.cycleRepeatMode() ?: PlayerPreferencesManager.cycleRepeatMode(this)`.
-    - Call `updateRepeatButton(newMode)`.
-    - Show HUD toast using `PlayerToastHelper.show(this, getString(toastRes))`.
-  - In `playbackCallback.onServiceConnected`: sync button with `playbackService.repeatMode`.
-  - In `updateProgressRunnable`: Gated check for `nextTrackOverlay`:
-    - Do not show next track countdown if `!AutoplayPreferenceManager.isEnabled(this)` or `repeatMode == RepeatMode.ONE` or `(repeatMode == RepeatMode.OFF && queue.currentIndex >= queue.size - 1)`.
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/IconCustomizationManager.kt`
-- **What**: Register `R.drawable.ic_repeat_one` in `ALL_BUILTIN_ICONS`.
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/IconCustomizationActivity.kt`
-- **What**: Register `IconItemData("media_repeat_one", ...)` in Media category.
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/IconPackExportActivity.kt`
-- **What**: Add `"media_repeat_one"` to `loadCategories()`.
-
-### `app/src/main/res/values/strings.xml`
-- **What**: Add string resources for repeat mode announcements and icon registry.
-- **Key details**:
-  - `<string name="player_toast_repeat_all">Repeat all</string>`
-  - `<string name="player_toast_repeat_one">Repeat current track</string>`
-  - `<string name="icon_media_repeat_one">Repeat One</string>`
-
-### `app/src/test/java/za/kilowatch/ultimatefilemanager/viewer/RepeatModeTest.kt`
-- **What**: Unit test for `RepeatMode` enum values, transitions, and cycling logic.
 
 ---
 
-## Data Model
-- New Enum:
+### 2. Legal, Terms, Privacy & Policy Documentation
+
+#### [MODIFY] [WEBSITE/UFMPrivacyPolicy.html](file:///F:/Share/UFM/WEBSITE/UFMPrivacyPolicy.html)
+- Update badge date: `<span class="policy-badge">Last Updated: August 2026</span>` → `<span class="policy-badge">Last Updated: November 2026</span>`.
+- Add subsection on **BitTorrent & P2P Swarm Communications**:
+  - Explain P2P decentralized mechanics and direct peer IP sharing during download.
+  - Detail post-download instant disconnection (`event=stopped` and peer socket teardown).
+  - Confirm local file sandboxing (no user media or Encrypted Vault files accessible to peers).
+
+#### [MODIFY] [WEBSITE/UFMTerms.html](file:///F:/Share/UFM/WEBSITE/UFMTerms.html)
+- Update badge date: `<span class="policy-badge">Last Updated: August 2026</span>` → `<span class="policy-badge">Last Updated: November 2026</span>`.
+- Add comprehensive section on **Download Manager — Acceptable Use & Non-Piracy Policy**:
+  - Sole intended use: lawful, open-source, public domain, and authorized content.
+  - Strict anti-piracy prohibition; user indemnity for copyright violations.
+  - Impartial tool disclaimer: KiloWatch hosts no swarms, trackers, or torrent content.
+
+#### [MODIFY] [app/src/main/res/values/strings_policy.xml](file:///F:/Share/UFM/app/src/main/res/values/strings_policy.xml)
+- Update `policy_last_updated`: `Last Updated: November 2026`.
+- Add Download Manager to `tc_features`.
+- Add anti-piracy obligation to `tc_s4`.
+- Add `libtorrent4j` attribution to `tc_opensource`.
+- Add string resources for Legal Gate dialog, storage limits, and Wi-Fi warnings.
+
+#### [DELETE] Translation keys from `app/src/main/res/values-*/strings_policy.xml`
+- Delete `policy_last_updated`, `tc_features`, `tc_s4`, and `tc_opensource` from all 17 non-English language files per the Translation Cleanup rule in `AGENTS.md`.
+
+#### [MODIFY] [app/src/main/java/za/kilowatch/ultimatefilemanager/ui/policy/LicensesActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/ui/policy/LicensesActivity.kt)
+- Add `libtorrent4j (org.libtorrent4j:libtorrent4j)` version `2.1.0-39`, `BSD-3-Clause / MIT` to `loadLibraries()` and `staticFallback()`.
+
+---
+
+### 3. Main Menu Tile Integration ("Utilities" Category)
+
+#### [MODIFY] [app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageItem.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageItem.kt)
+- Add property `val isDownloadsTile: Boolean = false`.
+
+#### [MODIFY] [app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageBrowserActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageBrowserActivity.kt)
+- In `loadStorageVolumes()`: add the `downloads_manager_tile` `StorageItem` (`R.string.download_manager_title`, `R.string.download_manager_subtitle`, `R.drawable.ic_download`).
+- In `buildAllKnownTiles()`: register `downloads_manager_tile` in the static registry.
+- In `onStorageTileClicked()`: add handler `item.isDownloadsTile` to launch `DownloadManagerActivity`.
+
+#### [MODIFY] [app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAdapter.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAdapter.kt)
+- In `categoryForTile()`: map `item.isDownloadsTile` to `MainMenuViewModeManager.CATEGORY_UTILITIES`.
+
+#### [MODIFY] [app/src/main/java/za/kilowatch/ultimatefilemanager/storage/TileOrderManager.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/TileOrderManager.kt)
+- In `isFeatureTile()`: add `item.isDownloadsTile`.
+
+---
+
+### 4. Canonical FAB Folder Picker Flow
+
+#### [MODIFY] [app/src/main/java/za/kilowatch/ultimatefilemanager/storage/FileBrowserActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/FileBrowserActivity.kt)
+- Define `const val EXTRA_TORRENT_DOWNLOAD_LOCATION_PICKER = "extra_torrent_download_location_picker"`.
+- Read boolean flag in `onCreate()`.
+- In `onResume()` mode-detection block (`applyPickerFabState`):
   ```kotlin
-  enum class RepeatMode(val value: String) {
-      OFF("off"),
-      ALL("all"),
-      ONE("one");
+  isTorrentDownloadLocationPicker -> {
+      fabPaste.setText(R.string.torrent_location_picker_fab_text)
+      fabPaste.setIconResource(R.drawable.ic_folder)
+      fabPaste.visibility = View.VISIBLE
+      fabPaste.setOnClickListener { showConfirmDownloadLocationDialog() }
   }
   ```
-- SharedPreferences key in `ufm_player_prefs`:
-  - `"player_repeat_mode"`: String value (`"off"`, `"all"`, or `"one"`), default `"off"`.
+- Implement `showConfirmDownloadLocationDialog()` returning `RESULT_SELECTED_LOCAL_PATH` with `RESULT_OK`.
+
+#### [MODIFY] [app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageBrowserActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageBrowserActivity.kt)
+- Forward `EXTRA_TORRENT_DOWNLOAD_LOCATION_PICKER` to `FileBrowserActivity` when launching volumes.
 
 ---
 
-## Dependencies
-- No new external dependencies required. Uses existing AndroidX Media3 ExoPlayer, SharedPreferences, and Material Components.
+### 5. Settings Integration & Network Policy
+
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/DownloadPreferencesManager.kt`
+- Manages:
+  - `KEY_DOWNLOAD_DIR`: Default target folder path (default: `/storage/emulated/0/Download`).
+  - `KEY_NETWORK_POLICY`: Network policy enum `WIFI_ONLY` (default) vs `ALL`.
+  - `KEY_LEGAL_ACCEPTED_TIME`: Timestamp when user accepted the legal disclaimer.
+
+#### [MODIFY] [app/src/main/java/za/kilowatch/ultimatefilemanager/settings/SettingsActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/settings/SettingsActivity.kt)
+- Add card `cardDownloadManager` displaying the current network policy (*"Wi-Fi only"* vs *"All networks"*).
+- Tapping opens UFMStandard dialog allowing the user to select the network policy and optionally review the Legal & Non-Piracy Notice.
 
 ---
 
-## Test Plan
+### 6. Storage Pre-Flight Validation & Security Sandboxing
+
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/StoragePreflightValidator.kt`
+- **FAT32 4 GB Limit Check**:
+  - Inspects `/proc/mounts` and `StorageVolume` for `vfat`, `fat32`, `msdos`, `fuse`.
+  - Compares file sizes against `4_294_967_295L`.
+- **Available Free Space Check**:
+  - Compares `targetFolder.usableSpace` against download size + 100 MB safety buffer.
+- **Path Traversal & Protected Directory Sanitizer**:
+  - Canonical path prefix check against `downloadDir.canonicalPath`.
+  - Blacklists `/vault`, `/data/data/...`, `/system`.
+
+---
+
+### 7. Engine & Service Layer
+
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/DownloadService.kt`
+- Dedicated foreground service (`foregroundServiceType="dataSync"`).
+- Holds `PowerManager.PARTIAL_WAKE_LOCK` and `WifiManager.WifiLock`.
+- Manages notification updates (speed, ETA, progress, Pause/Cancel actions).
+
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/TorrentEngine.kt`
+- Encapsulates `libtorrent4j.SessionManager`.
+- Applies zero-seeding `SettingsPack` (`active_seeds=0`, `upload_rate_limit=1`, `seeding_outgoing_connections=false`, `out_enc_policy=forced`).
+- Alert listener handles `torrent_finished_alert`: calls `handle.pause()`, dispatches `event=stopped` to trackers, stops DHT announcement, and triggers `MediaScannerConnection.scanFile()`.
+
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/HttpDownloadEngine.kt`
+- OkHttp-based streaming engine for direct HTTP/HTTPS links with chunked writing and `Range` header resumption.
+
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/DownloadTransferManager.kt`
+- Singleton transfer orchestrator coordinating active torrent and HTTP tasks, fast-resume persistence, and `NetworkCallback` auto-resumption when Wi-Fi connects.
+
+---
+
+### 8. User Interface & Dialogs
+
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/DownloadManagerActivity.kt`
+- Implements UFM Activity pattern: `attachBaseContext` locale wrapping, `enableEdgeToEdge()`, TV remote D-pad focus, and layout switching (`activity_download_manager.xml` vs `activity_download_manager_tv.xml`).
+- Direct implementation of [images/layout.jpeg](file:///F:/Share/UFM/images/layout.jpeg):
+  - Top action cards: Direct Downloads & Torrent Downloads.
+  - Active transfers list with file icons, percent pill badges, and green progress bars.
+  - Bottom "Download location" row launching the FAB picker.
+
+#### [NEW] UI Layouts & Drawables
+- `activity_download_manager.xml` & `activity_download_manager_tv.xml`
+- `item_download_transfer.xml` & `item_download_transfer_tv.xml`
+- `dialog_download_legal_gate.xml` & `dialog_download_legal_gate_tv.xml`
+- `dialog_torrent_inspect.xml` & `dialog_torrent_inspect_tv.xml`
+
+#### [MODIFY] [app/src/main/AndroidManifest.xml](file:///F:/Share/UFM/app/src/main/AndroidManifest.xml)
+- Register `DownloadManagerActivity` with intent filters for `scheme="magnet"`, `mimeType="application/x-bittorrent"`, and `.torrent` suffix.
+- Declare `DownloadService` with `foregroundServiceType="dataSync"`.
+
+---
+
+## Verification Plan
 
 ### Automated Tests
-1. **Unit Test Execution**:
-   ```bash
-   ./gradlew testMobileGoogleDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.viewer.RepeatModeTest"
-   ./gradlew testMobileGoogleDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.viewer.QueueManagerTest"
-   ```
-2. **Translation Verification**:
-   ```bash
-   python -u translate_strings.py verify
-   ```
-3. **Compilation Check**:
-   ```bash
-   ./gradlew assembleMobileGoogleDebug
-   ```
+1. **Unit & Logic Tests**:
+   - Verify `StoragePreflightValidator`: FAT32 4 GB limit detection and usable space calculation with safety margin.
+   - Verify path traversal sanitizer: Malicious paths (e.g. `../../vault/secret.txt`) trigger `SecurityException`.
+   - Command:
+     ```powershell
+     .\gradlew testMobileGoogleDebugUnitTest
+     ```
+2. **Build Variant Compilation**:
+   - Compile mobile and TV variants:
+     ```powershell
+     .\gradlew assembleMobileGoogleDebug assembleTvGoogleDebug
+     ```
 
 ### Manual Verification
-1. **Single File Play Once (The core bug in error.txt)**:
-   - Ensure "Auto-play next in UFM Player" is Disabled in Settings.
-   - Open an audio file in a folder containing multiple tracks.
-   - Fast-forward to near the end and let it play to completion.
-   - **Verify**: Playback stops completely; service releases audio focus; notification disappears/idles; subsequent tracks DO NOT play; current track DOES NOT repeat.
-2. **Repeat Cycle**:
-   - In UFM Player, tap Repeat button once: verify toast "Repeat all" and icon is active `ic_repeat`.
-   - Tap Repeat button again: verify toast "Repeat current track" and icon switches to `ic_repeat_one`.
-   - Tap Repeat button third time: verify toast "Repeat off" and icon returns to dimmed `ic_repeat`.
-3. **Repeat One Verification**:
-   - Set Repeat to "Repeat current track".
-   - Let track reach the end.
-   - **Verify**: Same track automatically restarts from 0:00 and continues playing.
-4. **Repeat All Verification**:
-   - Set Repeat to "Repeat all", Auto-play to Enabled.
-   - At end of last track in playlist, verify it wraps back to track 1 and continues.
-5. **Repeat Off with Auto-play Enabled**:
-   - Set Repeat to "Repeat off", Auto-play to Enabled.
-   - Let tracks play: track 1 advances to track 2, etc.
-   - At the end of the last track in the playlist, verify playback stops and does not loop back to track 1.
-6. **Android TV Parity**:
-   - Test Repeat button focus and cycling on Android TV with D-pad remote.
-   - Verify TV HUD toast appears on each press.
-
----
-
-## Risks & Mitigations
-- **Risk**: Stale in-memory playback service state when user changes Autoplay setting in Settings.
-  - **Mitigation**: `UFMPlaybackService` reads `AutoplayPreferenceManager.isEnabled(this)` dynamically on track completion rather than caching a static boolean at launch.
-- **Risk**: Legacy components expecting `isRepeat: Boolean`.
-  - **Mitigation**: Provide backward-compatible computed property `val isRepeat: Boolean get() = repeatMode != RepeatMode.OFF`.
+1. **First-Use Legal Gate**:
+   - Open Download Manager tile: verify frosted glass dialog appears with P2P explanation and anti-piracy warning.
+   - Confirm **Continue** button is disabled until **"I Agree"** is checked.
+   - Click **Cancel**: confirm action aborts cleanly.
+   - Check **"I Agree"** and tap **Continue**: confirm screen opens and preference persists on subsequent opens.
+2. **Layout & Folder Picker**:
+   - Confirm dashboard visual matches [images/layout.jpeg](file:///F:/Share/UFM/images/layout.jpeg).
+   - Tap **Download location**: confirm [StorageBrowserActivity](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageBrowserActivity.kt) opens, navigate to a folder, verify FAB displays *"Select as Download Folder"*, tap FAB, confirm dialog, and verify dashboard path updates.
+3. **Storage Pre-Flight Validation**:
+   - Select a FAT32 USB drive and attempt an 11 GB download: verify dialog warns of 4 GB limit and offers 1-tap "Choose Location".
+   - Select a drive with insufficient space: verify dialog warns of insufficient space and offers 1-tap "Choose Location".
+4. **Network Policy & Wi-Fi Only**:
+   - With Wi-Fi disconnected and policy set to "Wi-Fi only", start a download: verify cellular alert popup offers "Queue for Wi-Fi", "Settings", or "Cancel".
+   - Select "Queue for Wi-Fi", then connect to Wi-Fi: verify download resumes automatically.
+5. **Zero-Seeding & Swarm Disconnection**:
+   - Download a legal test torrent (e.g. Ubuntu minimal ISO).
+   - Verify active progress, speed, ETA, and notification.
+   - Once 100% complete, verify engine immediately disconnects, stops all peer sockets, dispatches `event=stopped`, and foreground service releases wake locks.
+6. **Website & Legal Pages**:
+   - Verify `UFMPrivacyPolicy.html` and `UFMTerms.html` reflect `Last Updated: November 2026`.
+   - Verify Open Source Licenses screen in app displays `libtorrent4j`.

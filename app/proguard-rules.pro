@@ -463,6 +463,13 @@
     public <init>(...);
 }
 
+# ── libtorrent4j (JNI native interface and model constructors) ───────────────
+-keep class org.libtorrent4j.swig.libtorrent_jni { *; }
+-keepclassmembers class org.libtorrent4j.** {
+    public <init>(...);
+}
+
+
 
 
 

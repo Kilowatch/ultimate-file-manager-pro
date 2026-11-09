@@ -116,7 +116,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode ||
                 isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode ||
                 isNetworkCachePickerMode || isLocalCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode ||
-                isNotepadFolderPicker || isScannerFolderPicker || isViewerDestPicker || isAutoBackupFolderPicker ||
+                isNotepadFolderPicker || isScannerFolderPicker || isViewerDestPicker || isTorrentDownloadLocationPicker || isAutoBackupFolderPicker ||
                 isSupportAttachmentPicker || isKeyfilePickerMode || isCertPickerMode || isDrivePicker ||
                 isSafCopyDestPickerMode
 
@@ -143,6 +143,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     private var isNotepadFolderPicker = false
     private var isScannerFolderPicker = false
     private var isViewerDestPicker = false
+    private var isTorrentDownloadLocationPicker = false
     private var isAutoBackupFolderPicker = false
     private var isSupportAttachmentPicker = false
     private var isTileIconPickerMode = false
@@ -583,6 +584,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             if (!isTv) {
                 items.add(StorageItem(id = "scanner_tile", label = context.getString(R.string.scanner_title), iconRes = R.drawable.ic_scanner, totalBytes = 0, usedBytes = 0, mountPath = "", isScannerTile = true, subtitle = context.getString(R.string.scanner_tile_subtitle)))
             }
+            items.add(StorageItem(id = "downloads_manager_tile", label = context.getString(R.string.download_manager_title), iconRes = R.drawable.ic_download, totalBytes = 0, usedBytes = 0, mountPath = "", isDownloadsTile = true, subtitle = context.getString(R.string.download_manager_subtitle)))
             items.add(StorageItem(id = "apps_tile", label = context.getString(R.string.perm_query_apps_title), iconRes = R.drawable.ic_apps, totalBytes = 0, usedBytes = 0, mountPath = "", isAppsTile = true))
             items.add(StorageItem(id = "remote_tile", label = context.getString(R.string.remote_manage_btn), iconRes = R.drawable.ic_remote_manage, totalBytes = 0, usedBytes = 0, mountPath = "", isRemoteTile = true))
             items.add(StorageItem(id = "search_tile", label = context.getString(R.string.search_title), iconRes = R.drawable.ic_search, totalBytes = 0, usedBytes = 0, mountPath = "", isSearchTile = true))
@@ -1384,6 +1386,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         isNotepadFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_NOTEPAD_FOLDER_PICKER, false)
         isScannerFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, false)
         isViewerDestPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_VIEWER_DEST_PICKER, false)
+        isTorrentDownloadLocationPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_TORRENT_DOWNLOAD_LOCATION_PICKER, false)
         isAutoBackupFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
         isSupportAttachmentPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SUPPORT_ATTACHMENT_PICKER, false)
         isTileIconPickerMode = intent.getBooleanExtra(EXTRA_TILE_ICON_PICKER, false)
@@ -1464,7 +1467,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode ||
                 isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode ||
                 isNetworkCachePickerMode || isLocalCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode ||
-                isNotepadFolderPicker || isScannerFolderPicker || isViewerDestPicker || isAutoBackupFolderPicker ||
+                isNotepadFolderPicker || isScannerFolderPicker || isViewerDestPicker || isTorrentDownloadLocationPicker || isAutoBackupFolderPicker ||
                 isSupportAttachmentPicker || isKeyfilePickerMode || isCertPickerMode || isDrivePicker
         if (!isAnyPickerActive) {
             za.kilowatch.ultimatefilemanager.storage.LastLocationManager.recordStorageBrowser(this)
@@ -2565,6 +2568,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             item.isRecentFilesTile             -> getString(R.string.recent_files_subtitle)
              item.isNotepadTile                 -> getString(R.string.notepad_tile_subtitle)
              item.isScannerTile                 -> getString(R.string.scanner_tile_subtitle)
+             item.isDownloadsTile               -> getString(R.string.download_manager_subtitle)
             item.isSmartSortTile               -> getString(R.string.smart_sort_tile_subtitle)
             item.isTerminalTile                 -> getString(R.string.adb_terminal_subtitle)
             item.isPairedDevicesTile            -> getString(R.string.manage_links_with_other_devices)
@@ -2757,6 +2761,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     if (isNotepadFolderPicker) putExtra(FileBrowserActivity.EXTRA_NOTEPAD_FOLDER_PICKER, true)
                     if (isScannerFolderPicker) putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
                     if (isViewerDestPicker) putExtra(FileBrowserActivity.EXTRA_VIEWER_DEST_PICKER, true)
+                    if (isTorrentDownloadLocationPicker) putExtra(FileBrowserActivity.EXTRA_TORRENT_DOWNLOAD_LOCATION_PICKER, true)
                     if (isAutoBackupFolderPicker) putExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
                     if (isSupportAttachmentPicker) putExtra(FileBrowserActivity.EXTRA_SUPPORT_ATTACHMENT_PICKER, true)
                     if (isKeyfilePickerMode) putExtra(StorageBrowserActivity.EXTRA_KEYFILE_PICKER, true)
@@ -2766,7 +2771,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     if (isSafCopyDestPickerMode) putExtra(FileBrowserActivity.EXTRA_SAF_COPY_DEST_PICKER, true)
                     if (isSafUploadFilePickerMode) putExtra(EXTRA_SAF_UPLOAD_FILE_PICKER, true)
             }
-                val isAnyPickerActive = isPickerMode || isSafCopyDestPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isLocalCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isViewerDestPicker || isAutoBackupFolderPicker || isSupportAttachmentPicker || isKeyfilePickerMode || isCertPickerMode || isLocationPickerMode || isDrivePicker
+                val isAnyPickerActive = isPickerMode || isSafCopyDestPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isLocalCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isViewerDestPicker || isTorrentDownloadLocationPicker || isAutoBackupFolderPicker || isSupportAttachmentPicker || isKeyfilePickerMode || isCertPickerMode || isLocationPickerMode || isDrivePicker
                 if (isAnyPickerActive) {
                     pickerLauncher.launch(intent)
                 } else {
@@ -2799,7 +2804,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                         isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode ||
                         isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode ||
                         isNetworkCachePickerMode || isLocalCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode ||
-                        isNotepadFolderPicker || isScannerFolderPicker || isViewerDestPicker || isAutoBackupFolderPicker ||
+                        isNotepadFolderPicker || isScannerFolderPicker || isViewerDestPicker || isTorrentDownloadLocationPicker || isAutoBackupFolderPicker ||
                         isSupportAttachmentPicker || isKeyfilePickerMode || isCertPickerMode || isSafCopyDestPickerMode
 
                     val intent = Intent(this, FileBrowserActivity::class.java).apply {
@@ -2830,6 +2835,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                         if (isNotepadFolderPicker) putExtra(FileBrowserActivity.EXTRA_NOTEPAD_FOLDER_PICKER, true)
                         if (isScannerFolderPicker) putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
                         if (isViewerDestPicker) putExtra(FileBrowserActivity.EXTRA_VIEWER_DEST_PICKER, true)
+                        if (isTorrentDownloadLocationPicker) putExtra(FileBrowserActivity.EXTRA_TORRENT_DOWNLOAD_LOCATION_PICKER, true)
                         if (isAutoBackupFolderPicker) putExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
                         if (isSupportAttachmentPicker) putExtra(FileBrowserActivity.EXTRA_SUPPORT_ATTACHMENT_PICKER, true)
                         if (isKeyfilePickerMode) putExtra(FileBrowserActivity.EXTRA_KEYFILE_PICKER, true)
@@ -2857,6 +2863,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             item.isScannerTile -> {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.scanner.DocumentScannerActivity::class.java))
                 showPremiumSnackbar(getString(R.string.opening_scanner))
+            }
+            item.isDownloadsTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.download.DownloadManagerActivity::class.java))
             }
             item.isExtractsTile -> checkAndNavigateToFileBrowser(item)
             item.isPairedDevicesTile -> {
@@ -3632,7 +3641,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     private fun navigateToFileBrowser(item: StorageItem, storageId: String, storageType: String) {
         val isDefaultTwinWindow = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isDefaultStartup(this)
         
-        if (isDefaultTwinWindow && !isPickerMode && !isSafCopyDestPickerMode && !isSyncFolderPickerMode && !isAdvancedSyncFolderPickerMode && !isAdvancedSyncDestPickerMode && !isCompressDestPickerMode && !isImageCompressDestPickerMode && !isGifCreatorDestPickerMode && !isExtractDestPickerMode && !isLocationPickerMode && !isNetworkCachePickerMode && !isLocalCachePickerMode && !isQuickTransferPickerMode && !isShareDestPickerMode && !isScannerFolderPicker && !isViewerDestPicker && !isAutoBackupFolderPicker && !isSupportAttachmentPicker) {
+        if (isDefaultTwinWindow && !isPickerMode && !isSafCopyDestPickerMode && !isSyncFolderPickerMode && !isAdvancedSyncFolderPickerMode && !isAdvancedSyncDestPickerMode && !isCompressDestPickerMode && !isImageCompressDestPickerMode && !isGifCreatorDestPickerMode && !isExtractDestPickerMode && !isLocationPickerMode && !isNetworkCachePickerMode && !isLocalCachePickerMode && !isQuickTransferPickerMode && !isShareDestPickerMode && !isScannerFolderPicker && !isViewerDestPicker && !isTorrentDownloadLocationPicker && !isAutoBackupFolderPicker && !isSupportAttachmentPicker) {
             val intent = Intent(this, TwinWindowActivity::class.java).apply {
                 putExtra(TwinWindowActivity.EXTRA_TOP_LOCAL_PATH, item.mountPath)
                 putExtra(TwinWindowActivity.EXTRA_TOP_LOCAL_LABEL, item.label)
@@ -3644,7 +3653,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             return
         }
 
-        if (!isPickerMode && !isSafCopyDestPickerMode && !isSyncFolderPickerMode && !isAdvancedSyncFolderPickerMode && !isAdvancedSyncDestPickerMode && !isCompressDestPickerMode && !isImageCompressDestPickerMode && !isGifCreatorDestPickerMode && !isExtractDestPickerMode && !isLocationPickerMode && !isNetworkCachePickerMode && !isLocalCachePickerMode && !isQuickTransferPickerMode && !isShareDestPickerMode && !isScannerFolderPicker && !isViewerDestPicker && !isAutoBackupFolderPicker && !isSupportAttachmentPicker && !DeviceUtils.isTvDevice(this) && za.kilowatch.ultimatefilemanager.tabs.TabSessionManager.hasSavedTabs(this)) {
+        if (!isPickerMode && !isSafCopyDestPickerMode && !isSyncFolderPickerMode && !isAdvancedSyncFolderPickerMode && !isAdvancedSyncDestPickerMode && !isCompressDestPickerMode && !isImageCompressDestPickerMode && !isGifCreatorDestPickerMode && !isExtractDestPickerMode && !isLocationPickerMode && !isNetworkCachePickerMode && !isLocalCachePickerMode && !isQuickTransferPickerMode && !isShareDestPickerMode && !isScannerFolderPicker && !isViewerDestPicker && !isTorrentDownloadLocationPicker && !isAutoBackupFolderPicker && !isSupportAttachmentPicker && !DeviceUtils.isTvDevice(this) && za.kilowatch.ultimatefilemanager.tabs.TabSessionManager.hasSavedTabs(this)) {
             val intent = Intent(this, za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity::class.java).apply {
                 putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_PATH, item.mountPath)
                 putExtra(za.kilowatch.ultimatefilemanager.tabs.TabbedBrowserActivity.EXTRA_INITIAL_ROOT_PATH, item.mountPath)
@@ -3718,6 +3727,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             if (isViewerDestPicker) {
                 putExtra(FileBrowserActivity.EXTRA_VIEWER_DEST_PICKER, true)
             }
+            if (isTorrentDownloadLocationPicker) {
+                putExtra(FileBrowserActivity.EXTRA_TORRENT_DOWNLOAD_LOCATION_PICKER, true)
+            }
             if (isAutoBackupFolderPicker) {
                 putExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
             }
@@ -3731,7 +3743,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 putExtra(EXTRA_SAF_UPLOAD_FILE_PICKER, true)
             }
         }
-        if (isPickerMode || isLocationPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isLocalCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isViewerDestPicker || isAutoBackupFolderPicker || isSupportAttachmentPicker || isSafCopyDestPickerMode) {
+        if (isPickerMode || isLocationPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isGifCreatorDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isLocalCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isViewerDestPicker || isTorrentDownloadLocationPicker || isAutoBackupFolderPicker || isSupportAttachmentPicker || isSafCopyDestPickerMode) {
             pickerLauncher.launch(intent)
         } else {
             za.kilowatch.ultimatefilemanager.util.AnimationHelper.startActivityWithTransition(this, intent)
@@ -5074,6 +5086,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val capturedIsCertPickerMode = isCertPickerMode
         val capturedIsScannerFolderPicker = isScannerFolderPicker
         val capturedIsViewerDestPicker = isViewerDestPicker
+        val capturedIsTorrentDownloadLocationPicker = isTorrentDownloadLocationPicker
         val capturedIsAutoBackupFolderPicker = isAutoBackupFolderPicker
         val capturedIsSupportAttachmentPicker = isSupportAttachmentPicker
         val capturedIsExtractDestPickerMode = isExtractDestPickerMode
@@ -5164,7 +5177,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             // Composite flag: feature tiles are suppressed in any picker mode
-            val showFeatureTiles = !capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsViewerDestPicker && !capturedIsAutoBackupFolderPicker && !capturedIsSupportAttachmentPicker && !capturedIsImageCompressDestPickerMode && !capturedIsGifCreatorDestPickerMode && !capturedIsPickerMode && !capturedIsCompressDestPickerMode && !capturedIsExtractDestPickerMode && !capturedIsLocationPickerMode && !capturedIsSyncFolderPickerMode && !capturedIsAdvancedSyncFolderPickerMode && !capturedIsAdvancedSyncDestPickerMode && !capturedIsNetworkCachePickerMode && !capturedIsLocalCachePickerMode && !capturedIsSearchFolderPicker && !capturedIsSafCopyDestPickerMode
+            val showFeatureTiles = !capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsViewerDestPicker && !capturedIsTorrentDownloadLocationPicker && !capturedIsAutoBackupFolderPicker && !capturedIsSupportAttachmentPicker && !capturedIsImageCompressDestPickerMode && !capturedIsGifCreatorDestPickerMode && !capturedIsPickerMode && !capturedIsCompressDestPickerMode && !capturedIsExtractDestPickerMode && !capturedIsLocationPickerMode && !capturedIsSyncFolderPickerMode && !capturedIsAdvancedSyncFolderPickerMode && !capturedIsAdvancedSyncDestPickerMode && !capturedIsNetworkCachePickerMode && !capturedIsLocalCachePickerMode && !capturedIsSearchFolderPicker && !capturedIsSafCopyDestPickerMode
 
             // Add Twin Window tile at the very top (first in list)
             if (showFeatureTiles) {
@@ -5219,6 +5232,19 @@ class StorageBrowserActivity : AppCompatActivity() {
                     mountPath = "",
                     isScannerTile = true,
                     subtitle = getString(R.string.scanner_tile_subtitle)
+                ))
+            }
+
+            if (showFeatureTiles) {
+                storageItems.add(StorageItem(
+                    id = "downloads_manager_tile",
+                    label = getString(R.string.download_manager_title),
+                    iconRes = R.drawable.ic_download,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isDownloadsTile = true,
+                    subtitle = getString(R.string.download_manager_subtitle)
                 ))
             }
 

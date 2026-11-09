@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Download Manager Network Policy Choice Dialog — Android TV Layout (UFMStandard)
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="650dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="26dp"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Header with Icon, Title, and Subtitle -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="20dp">
+
+        <FrameLayout
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_network_wifi"
+                app:tint="@color/tv_accent"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_pref_network_policy_title"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black"
+            android:textAlignment="center"
+            android:layout_marginTop="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_pref_network_policy_subtitle"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="13.5sp"
+            android:textAlignment="center"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+
+    <!-- Option 1: Wi-Fi Only -->
+    <LinearLayout
+        android:id="@+id/cardPolicyWifi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_tv_reindex_option_card"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:nextFocusDown="@id/cardPolicyAll"
+        android:layout_marginBottom="10dp">
+
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="14dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_network_wifi"
+                app:tint="@color/tv_accent"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download_pref_network_policy_wifi_only"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="15.5sp"
+                android:fontFamily="sans-serif-bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download_pref_network_policy_wifi_only_desc"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="12.5sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/checkPolicyWifi"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_check"
+            app:tint="@color/tv_accent"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:importantForAccessibility="no" />
+    </LinearLayout>
+
+    <!-- Option 2: All Networks (Wi-Fi & Cellular) -->
+    <LinearLayout
+        android:id="@+id/cardPolicyAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_tv_reindex_option_card"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:nextFocusUp="@id/cardPolicyWifi"
+        android:nextFocusDown="@id/cardReviewLegal"
+        android:layout_marginBottom="10dp">
+
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="14dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_network"
+                app:tint="@color/tv_accent"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download_pref_network_policy_all"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="15.5sp"
+                android:fontFamily="sans-serif-bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download_pref_network_policy_all_desc"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="12.5sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/checkPolicyAll"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_check"
+            app:tint="@color/tv_accent"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:importantForAccessibility="no" />
+    </LinearLayout>
+
+    <!-- Option 3: Review Legal & Non-Piracy Notice -->
+    <LinearLayout
+        android:id="@+id/cardReviewLegal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_tv_reindex_option_card"
+        android:padding="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:nextFocusUp="@id/cardPolicyAll"
+        android:nextFocusDown="@id/btnCancelPolicy"
+        android:layout_marginBottom="18dp">
+
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="14dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_shield_check"
+                app:tint="@color/tv_accent"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download_pref_review_legal"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="15.5sp"
+                android:fontFamily="sans-serif-bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download_pref_review_legal_desc"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="12.5sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/tv_icon_tint"
+            android:alpha="0.7"
+            android:importantForAccessibility="no" />
+    </LinearLayout>
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelPolicy"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/cancel"
+        android:textColor="@color/tv_text_secondary"
+        android:nextFocusUp="@id/cardReviewLegal" />
+
+</LinearLayout>

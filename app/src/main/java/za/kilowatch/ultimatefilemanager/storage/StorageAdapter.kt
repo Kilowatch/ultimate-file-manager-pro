@@ -161,7 +161,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
             // Category 5: Utilities
             item.isScannerTile || item.isNotepadTile || item.isAppsTile ||
-            item.isExtractsTile || item.isTwinWindowTile -> MainMenuViewModeManager.CATEGORY_UTILITIES
+            item.isExtractsTile || item.isTwinWindowTile || item.isDownloadsTile -> MainMenuViewModeManager.CATEGORY_UTILITIES
 
             // Category 6: Security & Advanced
             item.isVaultTile || item.isTerminalTile || item.isShizukuTile -> MainMenuViewModeManager.CATEGORY_SECURITY

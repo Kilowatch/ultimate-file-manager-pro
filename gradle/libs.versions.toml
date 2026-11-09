@@ -42,6 +42,7 @@ exifinterface = "1.4.2"
 libsu = "6.0.0"
 jaudiotagger = "2.2.3"
 webkit = "1.16.0"
+libtorrent4j = "2.1.0-39"
 [libraries]
 androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -99,6 +100,11 @@ libsu-service = { group = "com.github.topjohnwu.libsu", name = "service", versio
 libsu-nio = { group = "com.github.topjohnwu.libsu", name = "nio", version.ref = "libsu" }
 jaudiotagger = { group = "com.github.AdrienPoupa", name = "jaudiotagger", version.ref = "jaudiotagger" }
 androidx-webkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
+libtorrent4j-core = { group = "org.libtorrent4j", name = "libtorrent4j", version.ref = "libtorrent4j" }
+libtorrent4j-arm = { group = "org.libtorrent4j", name = "libtorrent4j-android-arm", version.ref = "libtorrent4j" }
+libtorrent4j-arm64 = { group = "org.libtorrent4j", name = "libtorrent4j-android-arm64", version.ref = "libtorrent4j" }
+libtorrent4j-x86 = { group = "org.libtorrent4j", name = "libtorrent4j-android-x86", version.ref = "libtorrent4j" }
+libtorrent4j-x8664 = { group = "org.libtorrent4j", name = "libtorrent4j-android-x86_64", version.ref = "libtorrent4j" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

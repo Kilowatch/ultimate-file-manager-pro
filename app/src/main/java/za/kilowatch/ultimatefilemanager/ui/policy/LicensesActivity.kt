@@ -214,6 +214,9 @@ class LicensesActivity : AppCompatActivity() {
             if (list.none { it.name.contains("zstd", ignoreCase = true) }) {
                 list.add(LibInfo("zstd-jni (com.github.luben:zstd-jni)", "1.5.7-16", "BSD-2-Clause", "https://github.com/luben/zstd-jni"))
             }
+            if (list.none { it.name.contains("libtorrent4j", ignoreCase = true) }) {
+                list.add(LibInfo("libtorrent4j (org.libtorrent4j)", "2.1.0-39", "BSD-3-Clause / MIT", "https://github.com/frostwire/frostwire-jlibtorrent"))
+            }
             if (list.none { it.name.contains("junrar", ignoreCase = true) }) {
                 list.add(LibInfo("Junrar (com.github.junrar:junrar)", "7.5.5", "BSD-3-Clause", "https://github.com/junrar/junrar"))
             }
@@ -255,6 +258,7 @@ class LicensesActivity : AppCompatActivity() {
         // nouns: a translated library name would be wrong, and the sibling entries here do the same.
         LibInfo("Porter SDK (com.github.d4rken-org.porter-api)", "0.1.0", "Apache-2.0 / MIT", "https://github.com/d4rken-org/porter-api"),
         LibInfo("Shizuku API (rikka.shizuku, bundled in the Porter SDK)", "", "MIT", "https://github.com/RikkaApps/Shizuku-API"),
+        LibInfo("libtorrent4j (org.libtorrent4j)", "2.1.0-39", "BSD-3-Clause / MIT", "https://github.com/frostwire/frostwire-jlibtorrent"),
     )
 
     // ── View builders ─────────────────────────────────────────────────────────

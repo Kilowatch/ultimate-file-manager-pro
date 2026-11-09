@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="@color/mobile_glass_card"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/mobile_glass_stroke">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <!-- Header row: Icon, Name, Action buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <FrameLayout
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_btn_icon_frosted">
+
+                <ImageView
+                    android:id="@+id/imgTransferIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_download"
+                    app:tint="?attr/colorPrimary"
+                    android:contentDescription="Transfer type" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/txtTransferTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="8dp"
+                android:text="ubuntu-24.04-desktop-amd64.iso"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="14.5sp"
+                android:fontFamily="sans-serif-medium"
+                android:singleLine="true"
+                android:ellipsize="middle" />
+
+            <!-- Pause / Resume button -->
+            <ImageView
+                android:id="@+id/btnTransferPauseResume"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_pause"
+                app:tint="?attr/colorControlNormal"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Pause/Resume transfer" />
+
+            <!-- Cancel / Delete button -->
+            <ImageView
+                android:id="@+id/btnTransferCancel"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_close"
+                app:tint="@color/mobile_text_secondary"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Cancel transfer" />
+        </LinearLayout>
+
+        <!-- Progress Row (Bar + Percentage) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp">
+
+            <ProgressBar
+                android:id="@+id/progressTransfer"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="6dp"
+                android:layout_weight="1"
+                android:progress="45"
+                android:max="100"
+                android:progressTint="#00E676"
+                android:progressBackgroundTint="@color/mobile_glass_stroke" />
+
+            <TextView
+                android:id="@+id/txtTransferPercent"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:text="45%"
+                android:textColor="#00E676"
+                android:textSize="12.5sp"
+                android:fontFamily="sans-serif-bold"
+                android:textAlignment="viewEnd"
+                android:gravity="end"
+                android:layout_marginStart="10dp" />
+        </LinearLayout>
+
+        <!-- Row 1: xx/xx Downloaded • Speed -->
+        <TextView
+            android:id="@+id/txtTransferSizeSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1.2 GB / 4.5 GB • 3.2 MB/s"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="12.5sp"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+        <!-- Row 2: ETA • Peers & Seeds -->
+        <TextView
+            android:id="@+id/txtTransferEtaPeers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ETA: 12m 30s • Peers: 8 (45 in swarm) • Seeds: 12"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="11.5sp"
+            android:layout_marginTop="2dp"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

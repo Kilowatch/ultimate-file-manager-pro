@@ -96,6 +96,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var switchQuickTransfer: SwitchMaterial
     private lateinit var txtQuickTransferSubtitle: TextView
+    private var txtDownloadManagerSubtitle: TextView? = null
 
     private lateinit var switchNetworkOpenCache: SwitchMaterial
     private lateinit var txtNetworkOpenCacheSubtitle: TextView
@@ -473,6 +474,14 @@ class SettingsActivity : AppCompatActivity() {
 
         cardQuickTransfer.setOnClickListener { toggleQuickTransfer() }
         switchQuickTransfer.setOnCheckedChangeListener(null)
+
+        // Download Manager Network Policy
+        val cardDownloadManager = findViewById<View>(R.id.cardDownloadManager)
+        if (cardDownloadManager != null) {
+            txtDownloadManagerSubtitle = findViewById(R.id.txtDownloadManagerSubtitle)
+            updateDownloadManagerSubtitle()
+            cardDownloadManager.setOnClickListener { showDownloadManagerPolicyDialog() }
+        }
 
         // Network Open Cache toggle
         val cardNetworkOpenCache = findViewById<View>(R.id.cardNetworkOpenCache)
@@ -905,6 +914,7 @@ class SettingsActivity : AppCompatActivity() {
             setupTvCardFocus(cardNetworkThumbnails)
             setupTvCardFocus(cardCacheCopy)
             findViewById<View>(R.id.cardQuickTransfer)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardDownloadManager)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardNetworkOpenCache)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardNetworkTransferThreads)?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardTvBackgroundServer)?.let { setupTvCardFocus(it) }
@@ -1102,6 +1112,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onResume()
         applyListSize()
         updateColorblindSubtitle()
+        updateDownloadManagerSubtitle()
         // Refresh the font size subtitle
         val txtFontSizeSubtitle = findViewById<TextView?>(R.id.txtFontSizeSubtitle)
         txtFontSizeSubtitle?.text = when (FontSizeHelper.getSavedSize(this)) {
@@ -1941,6 +1952,64 @@ class SettingsActivity : AppCompatActivity() {
         } else {
             getString(R.string.settings_quick_transfer_subtitle_off)
         }
+    }
+
+    private fun updateDownloadManagerSubtitle() {
+        val policy = za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager.getNetworkPolicy(this)
+        val textRes = when (policy) {
+            za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager.NetworkPolicy.WIFI_ONLY ->
+                R.string.download_pref_network_policy_wifi_only
+            za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager.NetworkPolicy.ALL_NETWORKS ->
+                R.string.download_pref_network_policy_all
+        }
+        txtDownloadManagerSubtitle?.setText(textRes)
+    }
+
+    private fun showDownloadManagerPolicyDialog() {
+        val layoutRes = if (isTv) R.layout.dialog_download_network_policy_tv else R.layout.dialog_download_network_policy
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val currentPolicy = za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager.getNetworkPolicy(this)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val checkWifi = dialogView.findViewById<ImageView>(R.id.checkPolicyWifi)
+        val checkAll = dialogView.findViewById<ImageView>(R.id.checkPolicyAll)
+
+        checkWifi?.visibility = if (currentPolicy == za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager.NetworkPolicy.WIFI_ONLY) View.VISIBLE else View.GONE
+        checkAll?.visibility = if (currentPolicy == za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager.NetworkPolicy.ALL_NETWORKS) View.VISIBLE else View.GONE
+
+        dialogView.findViewById<View>(R.id.cardPolicyWifi)?.setOnClickListener {
+            za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager.setNetworkPolicy(
+                this,
+                za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager.NetworkPolicy.WIFI_ONLY
+            )
+            updateDownloadManagerSubtitle()
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.cardPolicyAll)?.setOnClickListener {
+            za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager.setNetworkPolicy(
+                this,
+                za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager.NetworkPolicy.ALL_NETWORKS
+            )
+            updateDownloadManagerSubtitle()
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<View>(R.id.cardReviewLegal)?.setOnClickListener {
+            dialog.dismiss()
+            za.kilowatch.ultimatefilemanager.download.DownloadLegalGateHelper.showLegalNoticeDialog(this)
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancelPolicy)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun toggleNetworkOpenCache() {
@@ -2793,6 +2862,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardNetworkThumbnails, "settings_network_thumbnails", R.drawable.ic_cloud),
             CardIcon(R.id.cardCacheCopy, "settings_cache_copy", R.drawable.ic_copy),
             CardIcon(R.id.cardQuickTransfer, "settings_quick_transfer", R.drawable.ic_copy),
+            CardIcon(R.id.cardDownloadManager, "settings_download_manager", R.drawable.ic_download),
             CardIcon(R.id.cardNetworkOpenCache, "settings_network_open_cache", R.drawable.ic_cloud),
             CardIcon(R.id.cardTvBackgroundServer, "settings_tv_background_server", R.drawable.ic_tv),
             CardIcon(R.id.cardSideBySideVideo, "settings_side_by_side_video", R.drawable.ic_play),

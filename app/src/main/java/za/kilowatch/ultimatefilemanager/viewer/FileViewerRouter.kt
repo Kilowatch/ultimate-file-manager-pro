@@ -167,12 +167,14 @@ object FileViewerRouter {
         "mxf", "dv", "divx", "xvid", "mk3d"
     )
 
+    val DOWNLOAD_EXTENSIONS: Set<String> = setOf("torrent")
+
     /** All extensions this router can handle internally. */
     val ALL_SUPPORTED: Set<String> = TEXT_EXTENSIONS + SUBTITLE_EXTENSIONS +
         PRESENTATION_EXTENSIONS + DAT_EXTENSIONS +
         OFFICE_OOXML_EXTENSIONS + OFFICE_LEGACY_EXTENSIONS + SPREADSHEET_EXTENSIONS +
         IMAGE_EXTENSIONS + PDF_EXTENSIONS + EPUB_EXTENSIONS + ZIP_EXTENSIONS +
-        AUDIO_EXTENSIONS + VIDEO_EXTENSIONS + PACKAGE_EXTENSIONS
+        AUDIO_EXTENSIONS + VIDEO_EXTENSIONS + PACKAGE_EXTENSIONS + DOWNLOAD_EXTENSIONS
 
     fun canOpenInternally(extension: String): Boolean =
         extension.lowercase() in ALL_SUPPORTED
@@ -205,6 +207,24 @@ object FileViewerRouter {
      */
     fun openFile(context: Context, file: File, transitionView: android.view.View? = null, isNetwork: Boolean = false, onCancel: (() -> Unit)? = null): Boolean {
         val ext = file.extension.lowercase()
+        if (ext == "torrent") {
+            val intent = Intent(context, za.kilowatch.ultimatefilemanager.download.DownloadManagerActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+                data = try {
+                    FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+                } catch (_: Exception) {
+                    Uri.fromFile(file)
+                }
+                putExtra("extra_torrent_path", file.absolutePath)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                if (context !is Activity) {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+            }
+            context.startActivity(intent)
+            return true
+        }
+
         if (ext !in ALL_SUPPORTED && !isDotConfigFile(file.name)) {
             if (hasExternalHandler(context, file)) {
                 showOpenWithDialog(context, file, isNetwork = isNetwork, onCancel = onCancel)

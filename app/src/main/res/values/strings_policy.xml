@@ -6,7 +6,7 @@
     ═══════════════════════════════════════════════════════════ -->
     <string name="policy_app_name">Ultimate File Manager Pro</string>
     <string name="policy_company">KiloWatch</string>
-    <string name="policy_last_updated">Last Updated: August 2026</string>
+    <string name="policy_last_updated">Last Updated: November 2026</string>
     <string name="policy_play_store_url">https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager</string>
     <string name="policy_contact_email">support@kilowatch.co.za</string>
 
@@ -106,6 +106,7 @@
         <item>GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.</item>
         <item>Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.</item>
         <item>Music Tag Editor (Mobile) — inspect, edit, clean, and batch-update audio metadata descriptions (title, artist, album, year, genre, lyrics) and embedded album art directly inside audio files.</item>
+        <item>Download Manager — download files via direct HTTP/HTTPS URLs and peer-to-peer Magnet links or .torrent files for open-source distributions, public domain media, and authorized content.</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -159,6 +160,7 @@
         <item>Don\'t attempt to reverse-engineer, decompile, or tamper with the app.</item>
         <item>Manage your indexed records responsibly — you can delete records or ignore specific drives at any time via Settings -> Storage Indexer.</item>
         <item>Verify the authenticity and safety of any APK files before installing them.</item>
+        <item>Don\'t use the Download Manager, BitTorrent engine, or HTTP streamer to download, share, transmit, or facilitate infringement of copyrighted material without authorization from the copyright holder. You assume sole liability for downloaded content.</item>
     </string-array>
 
     <!-- Permissions table (Section 5) — label|detail pairs -->
@@ -252,6 +254,7 @@
         <item>Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)</item>
         <item>jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)</item>
         <item>AndroidX WebKit (androidx.webkit) — library providing WebViewAssetLoader for secure, local-only rendering of SMIL animated SVG/SVGZ files in UFM Media Player without external network access or file-scheme vulnerabilities. (Apache-2.0)</item>
+        <item>libtorrent4j (org.libtorrent4j) — Java and Kotlin JNI wrapper around Rasterbar libtorrent for zero-seeding peer-to-peer BitTorrent downloading. (BSD-3-Clause / MIT)</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
