@@ -555,14 +555,18 @@ class TwinWindowActivity : AppCompatActivity() {
                         }.map { it.path }
                     } else null
 
+                    val cacheKey = if (!playlist.isNullOrEmpty()) {
+                        za.kilowatch.ultimatefilemanager.viewer.PlaylistCache.put(playlist)
+                    } else null
+
                     val intent = Intent(this, za.kilowatch.ultimatefilemanager.viewer.UFMPlayerActivity::class.java).apply {
                         putExtra("shareId", shareId)
                         putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH, remotePath)
                         putExtra("shareHost", share.host)
                         putExtra("shareName", share.name)
                         putExtra("initialPath", filePath)
-                        if (!playlist.isNullOrEmpty()) {
-                            putStringArrayListExtra("playlist", ArrayList(playlist))
+                        if (cacheKey != null) {
+                            putExtra("playlistCacheKey", cacheKey)
                         }
                     }
                     startActivity(intent)

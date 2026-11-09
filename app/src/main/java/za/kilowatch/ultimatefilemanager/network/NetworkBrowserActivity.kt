@@ -6350,6 +6350,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         }.map { it.path }
         
         val sizesMap = currentFiles.associate { it.path to it.size }
+        val cacheKey = za.kilowatch.ultimatefilemanager.viewer.PlaylistCache.put(playlist, sizesMap)
         
         val intent = android.content.Intent(this, za.kilowatch.ultimatefilemanager.viewer.UFMPlayerActivity::class.java).apply {
             putExtra("shareId", share.id)
@@ -6362,8 +6363,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             putExtra("allowInsecureTls", share.allowInsecureTls)
             putExtra("initialPath", file.path)
             putExtra("initialSize", file.size)
-            putExtra("sizesMap", java.util.HashMap(sizesMap))
-            putStringArrayListExtra("playlist", java.util.ArrayList(playlist))
+            putExtra("playlistCacheKey", cacheKey)
         }
         startActivity(intent)
     }
@@ -6373,6 +6373,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val sortedFiles = filesToConsider.sortedWith(comparator)
         val playlist = sortedFiles.map { it.path }
         val sizesMap = sortedFiles.associate { it.path to it.size }
+        val cacheKey = za.kilowatch.ultimatefilemanager.viewer.PlaylistCache.put(playlist, sizesMap)
         val intent = android.content.Intent(this, za.kilowatch.ultimatefilemanager.viewer.SlideShowActivity::class.java).apply {
             putExtra("shareId", share.id)
             putExtra(EXTRA_REMOTE_PATH, share.remotePath)
@@ -6382,8 +6383,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             putExtra("allowInsecureTls", share.allowInsecureTls)
             putExtra("initialPath", file.path)
             putExtra("initialSize", file.size)
-            putExtra("sizesMap", java.util.HashMap(sizesMap))
-            putStringArrayListExtra("playlist", java.util.ArrayList(playlist))
+            putExtra("playlistCacheKey", cacheKey)
         }
         startActivity(intent)
     }

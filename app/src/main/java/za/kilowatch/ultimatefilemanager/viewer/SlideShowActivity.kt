@@ -369,11 +369,22 @@ class SlideShowActivity : AppCompatActivity() {
         initialFileSize = intent.getLongExtra("initialSize", 0L)
         remotePathExtra = intent.getStringExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH) ?: ""
         initialPath = intent.getStringExtra("initialPath") ?: ""
-        @Suppress("UNCHECKED_CAST")
-        sizesMap = (intent.getSerializableExtra("sizesMap") as? HashMap<String, Long>) ?: HashMap()
+        val cacheKey = intent.getStringExtra("playlistCacheKey") ?: ""
+        val cachedSizes = PlaylistCache.getSizes(cacheKey)
+        sizesMap = when {
+            cachedSizes != null -> HashMap(cachedSizes)
+            intent.hasExtra("sizesMap") -> {
+                try {
+                    @Suppress("UNCHECKED_CAST", "DEPRECATION")
+                    (intent.getSerializableExtra("sizesMap") as? HashMap<String, Long>) ?: HashMap()
+                } catch (_: Exception) {
+                    HashMap()
+                }
+            }
+            else -> HashMap()
+        }
         
         // Prefer cache to avoid TransactionTooLargeException for large folders
-        val cacheKey = intent.getStringExtra("playlistCacheKey") ?: ""
         val cachedPlaylist = PlaylistCache.take(cacheKey)
 
         playlist = when {

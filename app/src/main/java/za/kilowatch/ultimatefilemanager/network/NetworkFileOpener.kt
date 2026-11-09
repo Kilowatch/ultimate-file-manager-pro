@@ -40,6 +40,7 @@ import za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
 import za.kilowatch.ultimatefilemanager.viewer.MediaIntentHelper
 import za.kilowatch.ultimatefilemanager.viewer.NetworkSaveBridge
+import za.kilowatch.ultimatefilemanager.viewer.PlaylistCache
 import za.kilowatch.ultimatefilemanager.viewer.SlideShowActivity
 import za.kilowatch.ultimatefilemanager.viewer.TextViewerActivity
 import za.kilowatch.ultimatefilemanager.viewer.UFMPlayerActivity
@@ -386,6 +387,7 @@ object NetworkFileOpener {
         }.map { it.path }
 
         val sizesMap = currentFiles.associate { it.path to it.size }
+        val cacheKey = PlaylistCache.put(playlist, sizesMap)
 
         val intent = Intent(activity, UFMPlayerActivity::class.java).apply {
             putExtra("shareId", share.id)
@@ -398,8 +400,7 @@ object NetworkFileOpener {
             putExtra("allowInsecureTls", share.allowInsecureTls)
             putExtra("initialPath", file.path)
             putExtra("initialSize", file.size)
-            putExtra("sizesMap", HashMap(sizesMap))
-            putStringArrayListExtra("playlist", ArrayList(playlist))
+            putExtra("playlistCacheKey", cacheKey)
         }
         activity.startActivity(intent)
     }
@@ -414,6 +415,7 @@ object NetworkFileOpener {
         val toConsiderSet = filesToConsider.map { it.path }.toSet()
         val playlist = sortedFiles.filter { it.path in toConsiderSet }.map { it.path }
         val sizesMap = filesToConsider.associate { it.path to it.size }
+        val cacheKey = PlaylistCache.put(playlist, sizesMap)
         val intent = Intent(activity, SlideShowActivity::class.java).apply {
             putExtra("shareId", share.id)
             putExtra(NetworkBrowserActivity.EXTRA_REMOTE_PATH, share.remotePath)
@@ -423,8 +425,7 @@ object NetworkFileOpener {
             putExtra("allowInsecureTls", share.allowInsecureTls)
             putExtra("initialPath", file.path)
             putExtra("initialSize", file.size)
-            putExtra("sizesMap", HashMap(sizesMap))
-            putStringArrayListExtra("playlist", ArrayList(playlist))
+            putExtra("playlistCacheKey", cacheKey)
         }
         activity.startActivity(intent)
     }

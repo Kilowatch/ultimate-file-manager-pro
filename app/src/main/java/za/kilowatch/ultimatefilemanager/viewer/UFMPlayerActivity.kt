@@ -775,10 +775,21 @@ class UFMPlayerActivity : AppCompatActivity() {
                 if (f.exists() && f.isFile) initialFileSize = f.length()
             } catch (_: Exception) {}
         }
-        @Suppress("UNCHECKED_CAST")
-        sizesMap = (intent.getSerializableExtra("sizesMap") as? java.util.HashMap<String, Long>) ?: emptyMap()
-        // Prefer cache to avoid TransactionTooLargeException for large folders
         val cacheKey = intent.getStringExtra("playlistCacheKey") ?: ""
+        val cachedSizes = PlaylistCache.getSizes(cacheKey)
+        sizesMap = when {
+            cachedSizes != null -> cachedSizes
+            intent.hasExtra("sizesMap") -> {
+                try {
+                    @Suppress("UNCHECKED_CAST", "DEPRECATION")
+                    (intent.getSerializableExtra("sizesMap") as? java.util.HashMap<String, Long>) ?: emptyMap()
+                } catch (_: Exception) {
+                    emptyMap()
+                }
+            }
+            else -> emptyMap()
+        }
+        // Prefer cache to avoid TransactionTooLargeException for large folders
         val cachedPlaylist = PlaylistCache.get(cacheKey)
 
         playlist = when {
@@ -799,7 +810,7 @@ class UFMPlayerActivity : AppCompatActivity() {
             intent.putExtra("playlistCacheKey", cacheKey)
             intent.putExtra("serviceCacheKey", cacheKey)
         } else if (playlist.isNotEmpty()) {
-            val newKey = PlaylistCache.put(playlist)
+            val newKey = PlaylistCache.put(playlist, sizesMap)
             intent.putExtra("playlistCacheKey", newKey)
             intent.putExtra("serviceCacheKey", newKey)
         }
@@ -2888,7 +2899,14 @@ class UFMPlayerActivity : AppCompatActivity() {
                 updateSvgControlsVisibility(false)
             }
             intent.putExtra("initialPath", path)
-            intent.putStringArrayListExtra("playlist", playlist)
+            val serviceKey = intent.getStringExtra("playlistCacheKey") ?: PlaylistCache.put(playlist, sizesMap)
+            intent.putExtra("playlistCacheKey", serviceKey)
+            intent.putExtra("serviceCacheKey", serviceKey)
+            if (playlist.size <= 50) {
+                intent.putStringArrayListExtra("playlist", playlist)
+            } else {
+                intent.removeExtra("playlist")
+            }
             UFMPlaybackService.start(this, intent)
             bindService(Intent(this, UFMPlaybackService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         }
