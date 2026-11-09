@@ -33,7 +33,9 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.session.MediaSession
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.network.*
+import za.kilowatch.ultimatefilemanager.settings.AutoplayPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.PlayerPreferencesManager
+import za.kilowatch.ultimatefilemanager.settings.RepeatMode
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
@@ -55,8 +57,9 @@ class UFMPlaybackService : Service() {
     // ── State ───────────────────────────────────────────────────────
     var isShuffle = false
         private set
-    var isRepeat = false
+    var repeatMode: RepeatMode = RepeatMode.OFF
         private set
+    val isRepeat: Boolean get() = repeatMode != RepeatMode.OFF
     var skipAutoplayOnce = false
         private set
 
@@ -236,6 +239,7 @@ class UFMPlaybackService : Service() {
     override fun onCreate() {
         super.onCreate()
         alive.set(true)
+        repeatMode = PlayerPreferencesManager.getRepeatMode(this)
         createNotificationChannel()
         safeStartForeground(buildNotification())
         registerHeadsetPlugReceiver()
@@ -497,7 +501,13 @@ class UFMPlaybackService : Service() {
     }
 
     fun toggleRepeat() {
-        isRepeat = !isRepeat
+        cycleRepeatMode()
+    }
+
+    fun cycleRepeatMode(): RepeatMode {
+        val next = PlayerPreferencesManager.cycleRepeatMode(this)
+        repeatMode = next
+        return next
     }
 
     fun setSkipAutoplayOnce(value: Boolean) {
@@ -677,31 +687,69 @@ class UFMPlaybackService : Service() {
 
             if (state == Player.STATE_ENDED) {
                 handler.post {
-                    if (isRepeat) {
-                        if (isCurrentLocal) {
-                            p?.seekTo(0)
-                            p?.play()
-                        } else {
-                            playCurrent()
+                    val autoplayEnabled = AutoplayPreferenceManager.isEnabled(this@UFMPlaybackService)
+                    when (repeatMode) {
+                        RepeatMode.ONE -> {
+                            if (isCurrentLocal) {
+                                p.seekTo(0)
+                                p.play()
+                            } else {
+                                playCurrent()
+                            }
                         }
-                    } else if (skipAutoplayOnce) {
-                        // Cancel was tapped earlier — stop here
-                        skipAutoplayOnce = false
-                        pause()
-                        safeStopForeground(true)
-                        PlayerStateManager.saveState(
-                            this@UFMPlaybackService,
-                            queueManager.queue,
-                            queueManager.currentIndex,
-                            p.currentPosition,
-                            false, isShuffle, isRepeat
-                        )
-                    } else if (queueManager.size > 1) {
-                        skipToNext()
-                    } else {
-                        // Last item and no autoplay
-                        pause()
-                        safeStopForeground(true)
+                        RepeatMode.ALL -> {
+                            if (skipAutoplayOnce) {
+                                skipAutoplayOnce = false
+                                pause()
+                                abandonAudioFocus()
+                                safeStopForeground(true)
+                                PlayerStateManager.saveState(
+                                    this@UFMPlaybackService,
+                                    queueManager.queue,
+                                    queueManager.currentIndex,
+                                    p.currentPosition,
+                                    false, isShuffle, isRepeat
+                                )
+                            } else if (queueManager.size > 1) {
+                                skipToNext()
+                            } else {
+                                if (isCurrentLocal) {
+                                    p.seekTo(0)
+                                    p.play()
+                                } else {
+                                    playCurrent()
+                                }
+                            }
+                        }
+                        RepeatMode.OFF -> {
+                            if (!autoplayEnabled || skipAutoplayOnce) {
+                                skipAutoplayOnce = false
+                                pause()
+                                abandonAudioFocus()
+                                safeStopForeground(true)
+                                PlayerStateManager.saveState(
+                                    this@UFMPlaybackService,
+                                    queueManager.queue,
+                                    queueManager.currentIndex,
+                                    p.currentPosition,
+                                    false, isShuffle, isRepeat
+                                )
+                            } else if (queueManager.size > 1 && queueManager.currentIndex < queueManager.size - 1) {
+                                skipToNext()
+                            } else {
+                                // Reached the end of playlist with Repeat OFF — stop cleanly
+                                pause()
+                                abandonAudioFocus()
+                                safeStopForeground(true)
+                                PlayerStateManager.saveState(
+                                    this@UFMPlaybackService,
+                                    queueManager.queue,
+                                    queueManager.currentIndex,
+                                    p.currentPosition,
+                                    false, isShuffle, isRepeat
+                                )
+                            }
+                        }
                     }
                 }
             }

@@ -74,6 +74,8 @@ import za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.PlayerPreferencesManager
 import za.kilowatch.ultimatefilemanager.settings.BackgroundVideoMode
+import za.kilowatch.ultimatefilemanager.settings.AutoplayPreferenceManager
+import za.kilowatch.ultimatefilemanager.settings.RepeatMode
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
@@ -317,6 +319,9 @@ class UFMPlayerActivity : AppCompatActivity() {
                 p?.let { pl ->
                     if (pl.isPlaying) handler.post(progressUpdater)
                 }
+                // Sync shuffle and repeat button state
+                updateAlpha(btnShuffle, svc.isShuffle)
+                updateRepeatButton(svc.repeatMode)
                 // Update queue display
                 playbackCallback.onQueueChanged(svc.queueManager.queue)
             }
@@ -692,9 +697,14 @@ class UFMPlayerActivity : AppCompatActivity() {
                     // ── Next-track overlay check ──
                     val remaining = dur - pos
                     val queue = svc.queueManager
-                    if (remaining <= 5000 && remaining > 0 && queue.size > 1 &&
-                        queue.currentIndex < queue.size - 1 && !hasPendingNextTrack) {
-                        val nextItem = queue.get(queue.currentIndex + 1)
+                    val autoplayEnabled = AutoplayPreferenceManager.isEnabled(this@UFMPlayerActivity)
+                    val repeatMode = svc.repeatMode
+                    val canAutoAdvance = autoplayEnabled && repeatMode != RepeatMode.ONE &&
+                        (repeatMode == RepeatMode.ALL || queue.currentIndex < queue.size - 1)
+
+                    if (canAutoAdvance && remaining <= 5000 && remaining > 0 && queue.size > 1 && !hasPendingNextTrack) {
+                        val nextIdx = queue.nextIndex(svc.isShuffle) ?: (queue.currentIndex + 1)
+                        val nextItem = queue.get(nextIdx)
                         if (nextItem != null) {
                             hasPendingNextTrack = true
                             val nextDur = if (nextItem.duration > 0) formatTime(nextItem.duration.toInt()) else ""
@@ -713,8 +723,8 @@ class UFMPlayerActivity : AppCompatActivity() {
                                 }
                             )
                         }
-                    } else if (remaining > 5000 && hasPendingNextTrack) {
-                        // Reset if user seeks backwards
+                    } else if ((remaining > 5000 || !canAutoAdvance) && hasPendingNextTrack) {
+                        // Reset if user seeks backwards or conditions no longer allow auto advance
                         hasPendingNextTrack = false
                         nextTrackOverlay.hideImmediately()
                     }
@@ -1414,7 +1424,8 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         // Shuffle/repeat initial state from service
         updateAlpha(btnShuffle, playbackService?.isShuffle ?: false)
-        updateAlpha(btnRepeat, playbackService?.isRepeat ?: false)
+        val initialRepeatMode = playbackService?.repeatMode ?: PlayerPreferencesManager.getRepeatMode(this)
+        updateRepeatButton(initialRepeatMode)
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -1593,10 +1604,14 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         btnRepeat.setOnClickListener {
             resetHideTimer()
-            playbackService?.toggleRepeat()
-            val on = playbackService?.isRepeat ?: false
-            updateAlpha(btnRepeat, on)
-            PlayerToastHelper.show(this, getString(if (on) R.string.player_toast_repeat_on else R.string.player_toast_repeat_off))
+            val newMode = playbackService?.cycleRepeatMode() ?: PlayerPreferencesManager.cycleRepeatMode(this)
+            updateRepeatButton(newMode)
+            val toastRes = when (newMode) {
+                RepeatMode.OFF -> R.string.player_toast_repeat_off
+                RepeatMode.ALL -> R.string.player_toast_repeat_all
+                RepeatMode.ONE -> R.string.player_toast_repeat_one
+            }
+            PlayerToastHelper.show(this, getString(toastRes))
         }
 
         btnAudioTrack.setOnClickListener {
@@ -1791,6 +1806,24 @@ class UFMPlayerActivity : AppCompatActivity() {
             view.alpha = if (isActive) 1.0f else 0.5f
         } else {
             view.alpha = if (isActive) 1.0f else 0.4f
+        }
+    }
+
+    private fun updateRepeatButton(mode: RepeatMode) {
+        if (!::btnRepeat.isInitialized) return
+        when (mode) {
+            RepeatMode.OFF -> {
+                btnRepeat.setImageResource(R.drawable.ic_repeat)
+                updateAlpha(btnRepeat, false)
+            }
+            RepeatMode.ALL -> {
+                btnRepeat.setImageResource(R.drawable.ic_repeat)
+                updateAlpha(btnRepeat, true)
+            }
+            RepeatMode.ONE -> {
+                btnRepeat.setImageResource(R.drawable.ic_repeat_one)
+                updateAlpha(btnRepeat, true)
+            }
         }
     }
 

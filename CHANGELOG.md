@@ -5,6 +5,14 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.5] — 2026-11-09
+
+### Added
+- **UFM Media Player Three-State Repeat Mode**: Added full 3-state Repeat Mode (`Repeat Off`, `Repeat All`, and `Repeat One`) with distinct iconography (`ic_repeat_one`), HUD toast feedback announcements, and full Android TV D-pad remote support.
+
+### Fixed
+- **UFM Media Player Auto-play Next & Infinite Looping Enforcement**: Fixed an issue where audio and video files repeated automatically or continuously auto-advanced through subsequent files when "Auto-play next" was disabled in Settings (`AutoplayPreferenceManager`). When disabled, playback now cleanly stops at track completion, releases audio focus and wake locks, and suppresses the next-track countdown overlay.
+
 ## [2.2.4] — 2026-11-05
 
 ### Added

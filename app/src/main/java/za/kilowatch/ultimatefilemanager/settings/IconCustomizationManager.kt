@@ -60,6 +60,7 @@ val ALL_BUILTIN_ICONS = intArrayOf(
     // Media Player
     R.drawable.ic_play, R.drawable.ic_pause, R.drawable.ic_skip_next,
     R.drawable.ic_skip_previous, R.drawable.ic_shuffle, R.drawable.ic_repeat,
+    R.drawable.ic_repeat_one,
     R.drawable.ic_fullscreen, R.drawable.ic_fullscreen_exit,
     R.drawable.ic_volume_down, R.drawable.ic_volume_off,
     // Status / Alert

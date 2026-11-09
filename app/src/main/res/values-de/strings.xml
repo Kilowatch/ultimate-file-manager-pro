@@ -10944,6 +10944,9 @@ Zufallswiedergabe
     <string name="icon_media_repeat">
 Wiederholen
 </string>
+    <string name="icon_media_repeat_one">
+Repeat One
+</string>
     <string name="icon_media_fullscreen">
 Vollbild
 </string>
@@ -11993,6 +11996,12 @@ Wiederholung ein
 </string>
     <string name="player_toast_repeat_off">
 Wiederholung aus
+</string>
+    <string name="player_toast_repeat_all">
+Repeat all
+</string>
+    <string name="player_toast_repeat_one">
+Repeat current track
 </string>
     <string name="player_toast_audio_track">
 Tonspur

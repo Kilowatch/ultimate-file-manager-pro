@@ -10956,6 +10956,9 @@ Karıştır
     <string name="icon_media_repeat">
 Tekrarla
 </string>
+    <string name="icon_media_repeat_one">
+Repeat One
+</string>
     <string name="icon_media_fullscreen">
 Tam Ekran
 </string>
@@ -12005,6 +12008,12 @@ Tekrar açık
 </string>
     <string name="player_toast_repeat_off">
 Tekrar kapalı
+</string>
+    <string name="player_toast_repeat_all">
+Repeat all
+</string>
+    <string name="player_toast_repeat_one">
+Repeat current track
 </string>
     <string name="player_toast_audio_track">
 Ses parçası

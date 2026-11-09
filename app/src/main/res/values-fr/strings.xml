@@ -10956,6 +10956,9 @@ Aléatoire
     <string name="icon_media_repeat">
 Répéter
 </string>
+    <string name="icon_media_repeat_one">
+Repeat One
+</string>
     <string name="icon_media_fullscreen">
 Plein écran
 </string>
@@ -12005,6 +12008,12 @@ Répétition activée
 </string>
     <string name="player_toast_repeat_off">
 Répétition désactivée
+</string>
+    <string name="player_toast_repeat_all">
+Repeat all
+</string>
+    <string name="player_toast_repeat_one">
+Repeat current track
 </string>
     <string name="player_toast_audio_track">
 Piste audio

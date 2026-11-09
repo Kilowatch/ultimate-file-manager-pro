@@ -3835,6 +3835,7 @@
     <string name="icon_media_skip_previous">Skip Previous</string>
     <string name="icon_media_shuffle">Shuffle</string>
     <string name="icon_media_repeat">Repeat</string>
+    <string name="icon_media_repeat_one">Repeat One</string>
     <string name="icon_media_fullscreen">Fullscreen</string>
     <string name="icon_media_fullscreen_exit">Fullscreen Exit</string>
     <string name="icon_media_volume">Volume</string>
@@ -4209,6 +4210,8 @@
     <string name="player_toast_shuffle_off">Shuffle off</string>
     <string name="player_toast_repeat_on">Repeat on</string>
     <string name="player_toast_repeat_off">Repeat off</string>
+    <string name="player_toast_repeat_all">Repeat all</string>
+    <string name="player_toast_repeat_one">Repeat current track</string>
     <string name="player_toast_audio_track">Audio track</string>
     <string name="player_toast_subtitles">Subtitles</string>
     <string name="player_toast_mute">Mute</string>

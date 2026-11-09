@@ -466,6 +466,7 @@ class IconCustomizationActivity : AppCompatActivity() {
                 IconItemData("media_skip_previous", getString(R.string.icon_media_skip_previous), R.drawable.ic_skip_previous, emptyList()),
                 IconItemData("media_shuffle", getString(R.string.icon_media_shuffle), R.drawable.ic_shuffle, emptyList()),
                 IconItemData("media_repeat", getString(R.string.icon_media_repeat), R.drawable.ic_repeat, emptyList()),
+                IconItemData("media_repeat_one", getString(R.string.icon_media_repeat_one), R.drawable.ic_repeat_one, emptyList()),
                 IconItemData("media_fullscreen", getString(R.string.icon_media_fullscreen), R.drawable.ic_fullscreen, emptyList()),
                 IconItemData("media_fullscreen_exit", getString(R.string.icon_media_fullscreen_exit), R.drawable.ic_fullscreen_exit, emptyList()),
                 IconItemData("media_volume", getString(R.string.icon_media_volume), R.drawable.ic_volume_down, emptyList()),

@@ -10962,6 +10962,9 @@ XML/标记
     <string name="icon_media_repeat">
 重复
 </string>
+    <string name="icon_media_repeat_one">
+Repeat One
+</string>
     <string name="icon_media_fullscreen">
 全屏
 </string>
@@ -12011,6 +12014,12 @@ Customize colors, size &amp; appearance
 </string>
     <string name="player_toast_repeat_off">
 重复关闭
+</string>
+    <string name="player_toast_repeat_all">
+Repeat all
+</string>
+    <string name="player_toast_repeat_one">
+Repeat current track
 </string>
     <string name="player_toast_audio_track">
 音轨

@@ -10956,6 +10956,9 @@ Aleatório
     <string name="icon_media_repeat">
 Repetir
 </string>
+    <string name="icon_media_repeat_one">
+Repeat One
+</string>
     <string name="icon_media_fullscreen">
 Tela Cheia
 </string>
@@ -12005,6 +12008,12 @@ Repetir ativado
 </string>
     <string name="player_toast_repeat_off">
 Repetir desativado
+</string>
+    <string name="player_toast_repeat_all">
+Repeat all
+</string>
+    <string name="player_toast_repeat_one">
+Repeat current track
 </string>
     <string name="player_toast_audio_track">
 Faixa de áudio

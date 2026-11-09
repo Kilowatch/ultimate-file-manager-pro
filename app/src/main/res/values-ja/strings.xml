@@ -10956,6 +10956,9 @@ XML / マークアップ
     <string name="icon_media_repeat">
 リピート
 </string>
+    <string name="icon_media_repeat_one">
+Repeat One
+</string>
     <string name="icon_media_fullscreen">
 全画面
 </string>
@@ -12005,6 +12008,12 @@ Customize colors, size &amp; appearance
 </string>
     <string name="player_toast_repeat_off">
 リピートオフ
+</string>
+    <string name="player_toast_repeat_all">
+Repeat all
+</string>
+    <string name="player_toast_repeat_one">
+Repeat current track
 </string>
     <string name="player_toast_audio_track">
 音声トラック

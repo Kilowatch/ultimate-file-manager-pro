@@ -177,7 +177,7 @@ class IconPackExportActivity : AppCompatActivity() {
         categories.add(CategorySelection(
             "media_player", getString(R.string.category_media_player),
             listOf("media_play", "media_pause", "media_skip_next", "media_skip_previous",
-                "media_shuffle", "media_repeat", "media_fullscreen",
+                "media_shuffle", "media_repeat", "media_repeat_one", "media_fullscreen",
                 "media_fullscreen_exit", "media_volume", "media_volume_off")
         ))
 

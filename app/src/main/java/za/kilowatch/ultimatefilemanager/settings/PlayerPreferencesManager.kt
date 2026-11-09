@@ -13,6 +13,17 @@ enum class BackgroundVideoMode(val value: String) {
     }
 }
 
+enum class RepeatMode(val value: String) {
+    OFF("off"),
+    ALL("all"),
+    ONE("one");
+
+    companion object {
+        fun fromValue(value: String): RepeatMode =
+            entries.firstOrNull { it.value == value } ?: OFF
+    }
+}
+
 /**
  * Manages all UFM Media Player settings in a single SharedPreferences file.
  *
@@ -22,6 +33,7 @@ object PlayerPreferencesManager {
 
     private const val PREFS_NAME = "ufm_player_prefs"
     private const val KEY_BACKGROUND_VIDEO_MODE = "background_video_mode"
+    private const val KEY_REPEAT_MODE = "player_repeat_mode"
     private const val KEY_MINI_PLAYER_ENABLED = "mini_player_enabled"
     private const val KEY_RESUME_AFTER_INTERRUPTION = "resume_after_interruption"
     private const val KEY_SKIP_LENGTH = "skip_length_seconds"
@@ -52,6 +64,34 @@ object PlayerPreferencesManager {
             BackgroundVideoMode.AUDIO_ONLY -> BackgroundVideoMode.PIP
         }
         setBackgroundVideoMode(context, next)
+        return next
+    }
+
+    // ── Repeat Mode ─────────────────────────────────────────────────
+
+    fun getRepeatMode(context: Context): RepeatMode {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return RepeatMode.fromValue(
+            prefs.getString(KEY_REPEAT_MODE, RepeatMode.OFF.value) ?: RepeatMode.OFF.value
+        )
+    }
+
+    fun setRepeatMode(context: Context, mode: RepeatMode) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putString(KEY_REPEAT_MODE, mode.value)
+            .apply()
+    }
+
+    /** Cycle to the next mode (OFF → ALL → ONE → OFF). */
+    fun cycleRepeatMode(context: Context): RepeatMode {
+        val current = getRepeatMode(context)
+        val next = when (current) {
+            RepeatMode.OFF -> RepeatMode.ALL
+            RepeatMode.ALL -> RepeatMode.ONE
+            RepeatMode.ONE -> RepeatMode.OFF
+        }
+        setRepeatMode(context, next)
         return next
     }
 

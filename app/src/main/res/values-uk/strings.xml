@@ -10962,6 +10962,9 @@ XML / Розмітка
     <string name="icon_media_repeat">
 Повторити
 </string>
+    <string name="icon_media_repeat_one">
+Repeat One
+</string>
     <string name="icon_media_fullscreen">
 На весь екран
 </string>
@@ -12011,6 +12014,12 @@ Customize colors, size &amp; appearance
 </string>
     <string name="player_toast_repeat_off">
 Повтор вимкнено
+</string>
+    <string name="player_toast_repeat_all">
+Repeat all
+</string>
+    <string name="player_toast_repeat_one">
+Repeat current track
 </string>
     <string name="player_toast_audio_track">
 Аудіодоріжка
