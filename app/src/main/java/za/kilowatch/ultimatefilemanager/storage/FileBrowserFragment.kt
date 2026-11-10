@@ -30,6 +30,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.CancellationException
@@ -3166,7 +3167,19 @@ class FileBrowserFragment : Fragment() {
                 try {
                     val db = UfmIndexingDatabase.getInstance(requireContext().applicationContext)
                     val dao = db.fileIndexDao()
-                    dao.getFilesInFolderFlow(targetDir.absolutePath).collectLatest { fileIndices ->
+                    dao.getFilesInFolderFlow(targetDir.absolutePath)
+                        .distinctUntilChanged { old, new ->
+                            if (old.size != new.size) return@distinctUntilChanged false
+                            for (i in old.indices) {
+                                val a = old[i]
+                                val b = new[i]
+                                if (a.path != b.path || a.lastModified != b.lastModified || a.size != b.size || a.isDirectory != b.isDirectory) {
+                                    return@distinctUntilChanged false
+                                }
+                            }
+                            true
+                        }
+                        .collectLatest { fileIndices ->
                         withContext(Dispatchers.IO) {
                             val showHidden = effectiveShowHidden()
                             val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(requireContext().applicationContext).hiddenFileDao().getAllPaths().toSet()
@@ -3255,33 +3268,24 @@ class FileBrowserFragment : Fragment() {
 
         val isTv = DeviceUtils.isTvDevice(safeContext)
 
-        // 1. Capture scroll position for same-folder reloads
-        val lm = if (!isNavigatingFolder && !isTv) recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager else null
-        val sameFolderPosition = lm?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
-        val sameFolderOffset = if (sameFolderPosition != RecyclerView.NO_POSITION) {
-            lm?.findViewByPosition(sameFolderPosition)?.top ?: 0
-        } else 0
-
-        // 2. Lookup saved scroll state if returning to a previously visited folder
+        // Lookup saved scroll state if returning to a previously visited folder
         val restoredFolderState = if (isNavigatingFolder) folderScrollStates[currentPath] else null
 
         val restoreScroll = {
-            if (!isNavigatingFolder && sameFolderPosition != RecyclerView.NO_POSITION) {
-                recyclerFiles.post {
-                    (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
-                        ?.scrollToPositionWithOffset(sameFolderPosition, sameFolderOffset)
-                }
-            } else if (restoredFolderState != null && !isTv) {
-                recyclerFiles.post {
-                    (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
-                        ?.scrollToPositionWithOffset(restoredFolderState.position, restoredFolderState.offset)
-                }
-            } else if (isNavigatingFolder && !isTv) {
-                recyclerFiles.post {
-                    (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
-                        ?.scrollToPositionWithOffset(0, 0)
+            if (isNavigatingFolder && !isTv) {
+                if (restoredFolderState != null) {
+                    recyclerFiles.post {
+                        (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
+                            ?.scrollToPositionWithOffset(restoredFolderState.position, restoredFolderState.offset)
+                    }
+                } else {
+                    recyclerFiles.post {
+                        (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
+                            ?.scrollToPositionWithOffset(0, 0)
+                    }
                 }
             }
+            // For same-folder updates (!isNavigatingFolder), DiffUtil natively maintains viewport stability without jitter.
         }
 
         val updateAdapter = {
@@ -3411,13 +3415,31 @@ class FileBrowserFragment : Fragment() {
             }
             val actualFilePaths = actualFiles.map { it.absolutePath }.toSet()
             
-            val fileIndices = actualFiles.map { 
-                metadataExtractor.extractMetadata(it, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE) 
-            }
-            if (fileIndices.isNotEmpty()) dao.insertAll(fileIndices)
-            
+            // 2. Fetch existing DB entries to compare against physical files before writing
             val existingInDb = dao.getFilesInFolder(directory.absolutePath)
-            existingInDb.filter { it.path !in actualFilePaths }.forEach { dao.deleteByPath(it.path) }
+            val existingByPath = existingInDb.associateBy { it.path }
+
+            // 3. Identify only new or modified files
+            val toInsertOrUpdate = mutableListOf<za.kilowatch.ultimatefilemanager.indexing.FileIndex>()
+            for (file in actualFiles) {
+                val existing = existingByPath[file.absolutePath]
+                val fileLen = file.length()
+                val fileLastMod = file.lastModified()
+                val fileIsDir = file.isDirectory
+                if (existing == null || existing.lastModified != fileLastMod || existing.size != fileLen || existing.isDirectory != fileIsDir) {
+                    toInsertOrUpdate.add(metadataExtractor.extractMetadata(file, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
+                }
+            }
+
+            if (toInsertOrUpdate.isNotEmpty()) {
+                dao.insertAll(toInsertOrUpdate)
+            }
+            
+            // 4. Remove DB entries that are physically gone
+            val stalePaths = existingInDb.map { it.path }.filter { it !in actualFilePaths }
+            if (stalePaths.isNotEmpty()) {
+                dao.deleteByPaths(stalePaths)
+            }
         } catch (e: Exception) {
             Log.e("FileBrowser", "Sync error: ${e.message}")
         }

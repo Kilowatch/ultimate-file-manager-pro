@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil3.asImage
 import coil3.load
@@ -69,6 +70,69 @@ class FileAdapter(
 
     companion object {
         private const val TAG = "FileAdapter"
+
+        const val PAYLOAD_METADATA = "payload_metadata"
+        const val PAYLOAD_SELECTION = "payload_selection"
+
+        data class FileMeta(val isDirectory: Boolean, val size: Long, val lastModified: Long)
+
+        class FileDiffCallback(
+            private val oldList: List<ListItem>,
+            private val newList: List<ListItem>,
+            private val selectedPaths: Set<String>,
+            private val focusedPath: String?,
+            private val childCounts: Map<String, Int>,
+            private val folderSizes: Map<String, Long>,
+            private val metaCache: Map<String, FileMeta> = emptyMap()
+        ) : DiffUtil.Callback() {
+
+            override fun getOldListSize(): Int = oldList.size
+            override fun getNewListSize(): Int = newList.size
+
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                val oldItem = oldList[oldItemPosition]
+                val newItem = newList[newItemPosition]
+                return when {
+                    oldItem is ListItem.FileEntry && newItem is ListItem.FileEntry ->
+                        oldItem.javaFile.absolutePath == newItem.javaFile.absolutePath
+                    oldItem is ListItem.Header && newItem is ListItem.Header ->
+                        oldItem.year == newItem.year && oldItem.month == newItem.month
+                    oldItem is ListItem.NetworkEntry && newItem is ListItem.NetworkEntry ->
+                        oldItem.file.path == newItem.file.path
+                    oldItem is ListItem.EmptyBuffer && newItem is ListItem.EmptyBuffer ->
+                        oldItemPosition == newItemPosition
+                    else -> false
+                }
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                val oldItem = oldList[oldItemPosition]
+                val newItem = newList[newItemPosition]
+                if (oldItem is ListItem.FileEntry && newItem is ListItem.FileEntry) {
+                    val f1 = oldItem.javaFile
+                    val f2 = newItem.javaFile
+                    val m1 = metaCache[f1.absolutePath]
+                    val m2 = metaCache[f2.absolutePath]
+                    val lastMod1 = m1?.lastModified ?: f1.lastModified()
+                    val lastMod2 = m2?.lastModified ?: f2.lastModified()
+                    val len1 = m1?.size ?: f1.length()
+                    val len2 = m2?.size ?: f2.length()
+                    val isDir1 = m1?.isDirectory ?: f1.isDirectory
+                    val isDir2 = m2?.isDirectory ?: f2.isDirectory
+                    return lastMod1 == lastMod2 && len1 == len2 && isDir1 == isDir2
+                }
+                return oldItem == newItem
+            }
+
+            override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+                val oldItem = oldList[oldItemPosition]
+                val newItem = newList[newItemPosition]
+                if (oldItem is ListItem.FileEntry && newItem is ListItem.FileEntry) {
+                    return PAYLOAD_METADATA
+                }
+                return null
+            }
+        }
 
         private val videoCache = android.util.LruCache<String, android.graphics.Bitmap>(64)
         val thumbnailPathCache = java.util.concurrent.ConcurrentHashMap<String, String>()
@@ -345,7 +409,6 @@ class FileAdapter(
      * `LinearLayoutManager` layout). The cache is only touched on the main thread, so no
      * synchronisation is needed.
      */
-    private data class FileMeta(val isDirectory: Boolean, val size: Long, val lastModified: Long)
 
     private var fileMetaCache = mutableMapOf<String, FileMeta>()
 
@@ -454,13 +517,15 @@ class FileAdapter(
         }
         fileMetaCache = metaSnapshot
 
-        items.clear()
+        val oldItems = items.toList()
+        val newItems = mutableListOf<ListItem>()
+
         if (isGroupedByDate) {
             val folders = filesCopy.filter { it.isDirectoryCached() }
             val fileList = filesCopy.filter { !it.isDirectoryCached() }
             
             // Add folders first, ungrouped
-            items.addAll(folders.map { ListItem.FileEntry(it) })
+            newItems.addAll(folders.map { ListItem.FileEntry(it) })
             
             val collapsedSet = attachedContext?.let {
                 za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.getCollapsedGroups(it)
@@ -477,22 +542,60 @@ class FileAdapter(
                 val groupKey = "${key.first}-${key.second}"
                 val isCollapsed = collapsedSet.contains(groupKey)
                 
-                items.add(ListItem.Header(key.first, key.second, groupFiles.size, isCollapsed))
+                newItems.add(ListItem.Header(key.first, key.second, groupFiles.size, isCollapsed))
                 
                 if (!isCollapsed) {
-                    items.addAll(groupFiles.map { ListItem.FileEntry(it) })
+                    newItems.addAll(groupFiles.map { ListItem.FileEntry(it) })
                 }
             }
         } else {
-            items.addAll(filesCopy.map { ListItem.FileEntry(it) })
+            newItems.addAll(filesCopy.map { ListItem.FileEntry(it) })
         }
 
-        if (!isTv && isSelectionMode && items.isNotEmpty()) {
-            items.add(ListItem.EmptyBuffer)
-            items.add(ListItem.EmptyBuffer)
+        if (!isTv && isSelectionMode && newItems.isNotEmpty()) {
+            newItems.add(ListItem.EmptyBuffer)
+            newItems.add(ListItem.EmptyBuffer)
         }
 
-        notifyDataSetChanged()
+        val isIdentical = oldItems.size == newItems.size && oldItems.indices.all { i ->
+            val o = oldItems[i]
+            val n = newItems[i]
+            when {
+                o is ListItem.FileEntry && n is ListItem.FileEntry ->
+                    o.javaFile.absolutePath == n.javaFile.absolutePath &&
+                    o.javaFile.lastModifiedCached() == n.javaFile.lastModifiedCached() &&
+                    o.javaFile.lengthCached() == n.javaFile.lengthCached() &&
+                    o.javaFile.isDirectoryCached() == n.javaFile.isDirectoryCached()
+                o is ListItem.Header && n is ListItem.Header -> o == n
+                o is ListItem.EmptyBuffer && n is ListItem.EmptyBuffer -> true
+                else -> false
+            }
+        }
+
+        if (isIdentical) {
+            return
+        }
+
+        if (oldItems.isEmpty()) {
+            items.clear()
+            items.addAll(newItems)
+            notifyDataSetChanged()
+        } else {
+            val diffResult = DiffUtil.calculateDiff(
+                FileDiffCallback(
+                    oldList = oldItems,
+                    newList = newItems,
+                    selectedPaths = selectedPaths,
+                    focusedPath = focusedPath,
+                    childCounts = childCountCache,
+                    folderSizes = folderSizeCache,
+                    metaCache = fileMetaCache
+                )
+            )
+            items.clear()
+            items.addAll(newItems)
+            diffResult.dispatchUpdatesTo(this)
+        }
 
         // Re-apply selection by stable identifier after the fresh listing lands, and
         // silently drop any selected path that is no longer present (deleted, moved,
@@ -570,7 +673,12 @@ class FileAdapter(
                     if (!isActive) return@withContext
                     childCountCache.putAll(counts)
                     folderSizeCache.putAll(sizes)
-                    notifyDataSetChanged()
+                    for (i in items.indices) {
+                        val item = items[i]
+                        if (item is ListItem.FileEntry && item.javaFile.isDirectoryCached()) {
+                            notifyItemChanged(i, PAYLOAD_METADATA)
+                        }
+                    }
                 }
             }
         }
@@ -818,6 +926,24 @@ class FileAdapter(
         }
     }
 
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
+        if (payloads.isNotEmpty()) {
+            if (payloads.contains(PAYLOAD_METADATA)) {
+                if (holder is FileViewHolder) {
+                    holder.bindMetadataOnly(items.getOrNull(position) as? ListItem.FileEntry)
+                    return
+                }
+            }
+            if (payloads.contains(PAYLOAD_SELECTION)) {
+                if (holder is FileViewHolder) {
+                    holder.bindSelectionOnly(items.getOrNull(position) as? ListItem.FileEntry)
+                    return
+                }
+            }
+        }
+        super.onBindViewHolder(holder, position, payloads)
+    }
+
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
         if (holder is FileViewHolder) {
@@ -956,6 +1082,60 @@ class FileAdapter(
             imgAppBadge?.visibility = View.GONE
             hasLoadedThumbnail = false
             boundFile = null
+        }
+
+        fun bindMetadataOnly(item: ListItem.FileEntry?) {
+            val file = item?.javaFile ?: boundFile ?: return
+            if (!file.isDirectoryCached()) return
+            val context = itemView.context
+            val relativePath = searchBasePath?.let { base ->
+                file.parentFile?.absolutePath?.removePrefix(base)?.trimStart('/')
+            }?.takeIf { it.isNotEmpty() }
+
+            val childCount = childCountCache[file.absolutePath] ?: 0
+            val itemsText = "$childCount item${if (childCount != 1) "s" else ""}"
+            val (storageId, _, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(file.absolutePath)
+            val isIndexed = showAllAsIndexed || file.absolutePath in indexedPaths || (storageId.isNotEmpty() && za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.isStorageFullyIndexed(storageId))
+            val folderSize = folderSizeCache[file.absolutePath]
+            val sizeText = if (isIndexed && folderSize != null) {
+                Formatter.formatFileSize(context, folderSize)
+            } else null
+
+            val baseInfo = if (sizeText != null) {
+                "$itemsText · $sizeText · ${formatDate(context, file.lastModifiedCached())}"
+            } else {
+                "$itemsText · ${formatDate(context, file.lastModifiedCached())}"
+            }
+            val storage = storageLabels[file.absolutePath]
+            val detailedInfo = if (storage != null) "$storage · $baseInfo" else baseInfo
+            txtInfo.text = if (relativePath != null) "$relativePath\n$detailedInfo" else detailedInfo
+        }
+
+        fun bindSelectionOnly(item: ListItem.FileEntry?) {
+            val file = item?.javaFile ?: boundFile ?: return
+            val context = itemView.context
+            val isGrid = ViewModeManager.isGrid(viewMode)
+            val isSelected = file.absolutePath in selectedPaths
+            val showCheckbox = isSelectionMode && (isTv || za.kilowatch.ultimatefilemanager.settings.SelectionCheckboxPreferenceManager.isEnabled(context))
+            checkSelect.visibility = if (showCheckbox) View.VISIBLE else View.GONE
+            checkSelect.isChecked = isSelected
+
+            val isFocused = file.absolutePath == focusedPath
+            if (isSelected || isFocused) {
+                if (isGrid) {
+                    itemView.findViewById<View>(R.id.viewSelectionOverlay)?.visibility = View.VISIBLE
+                } else {
+                    val color = if (isFocused) ColorblindPalette.focusGlow(context)
+                                else ColorblindPalette.selectionFill(context)
+                    layoutRow.setBackgroundColor(color)
+                }
+            } else {
+                if (isGrid) {
+                    itemView.findViewById<View>(R.id.viewSelectionOverlay)?.visibility = View.GONE
+                } else {
+                    layoutRow.setBackgroundColor(0x00000000)
+                }
+            }
         }
 
         fun loadPendingThumbnail() {

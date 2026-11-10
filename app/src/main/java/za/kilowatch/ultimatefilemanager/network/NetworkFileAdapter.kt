@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
@@ -57,6 +58,63 @@ class NetworkFileAdapter(
     private val cacheManager = NetworkThumbnailCacheManager(context)
 
     companion object {
+        const val PAYLOAD_METADATA = "payload_metadata"
+        const val PAYLOAD_SELECTION = "payload_selection"
+
+        class NetworkDiffCallback(
+            private val oldList: List<za.kilowatch.ultimatefilemanager.storage.ListItem>,
+            private val newList: List<za.kilowatch.ultimatefilemanager.storage.ListItem>,
+            private val selectedPaths: Set<String>,
+            private val focusedPath: String?,
+            private val childCounts: Map<String, Int>
+        ) : DiffUtil.Callback() {
+
+            override fun getOldListSize(): Int = oldList.size
+            override fun getNewListSize(): Int = newList.size
+
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                val oldItem = oldList[oldItemPosition]
+                val newItem = newList[newItemPosition]
+                return when {
+                    oldItem is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry && newItem is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry ->
+                        oldItem.file.path == newItem.file.path
+                    oldItem is za.kilowatch.ultimatefilemanager.storage.ListItem.Header && newItem is za.kilowatch.ultimatefilemanager.storage.ListItem.Header ->
+                        oldItem.year == newItem.year && oldItem.month == newItem.month
+                    oldItem is za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer && newItem is za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer ->
+                        oldItemPosition == newItemPosition
+                    else -> false
+                }
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                val oldItem = oldList[oldItemPosition]
+                val newItem = newList[newItemPosition]
+                if (oldItem is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry && newItem is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry) {
+                    val f1 = oldItem.file
+                    val f2 = newItem.file
+                    return f1.path == f2.path &&
+                           f1.name == f2.name &&
+                           f1.size == f2.size &&
+                           f1.lastModified == f2.lastModified &&
+                           f1.isDirectory == f2.isDirectory &&
+                           f1.freeSpace == f2.freeSpace &&
+                           f1.isToggled == f2.isToggled &&
+                           f1.iconRes == f2.iconRes &&
+                           f1.subtitle == f2.subtitle
+                }
+                return oldItem == newItem
+            }
+
+            override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+                val oldItem = oldList[oldItemPosition]
+                val newItem = newList[newItemPosition]
+                if (oldItem is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry && newItem is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry) {
+                    return PAYLOAD_METADATA
+                }
+                return null
+            }
+        }
+
         private val thumbnailPathCache = java.util.concurrent.ConcurrentHashMap<String, String>()
 
         fun putCachedPath(path: String, diskPath: String) {
@@ -291,13 +349,15 @@ class NetworkFileAdapter(
         }
         longPressAnchorIndex = RecyclerView.NO_POSITION
 
-        items.clear()
+        val oldItems = items.toList()
+        val newItems = mutableListOf<za.kilowatch.ultimatefilemanager.storage.ListItem>()
+
         if (isGroupedByDate) {
             val folders = newFiles.filter { it.isDirectory }
             val fileList = newFiles.filter { !it.isDirectory }
             
             // Add folders first, ungrouped
-            items.addAll(folders.map { za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry(it) })
+            newItems.addAll(folders.map { za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry(it) })
             
             val collapsedSet = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.getCollapsedGroups(context)
             
@@ -312,22 +372,61 @@ class NetworkFileAdapter(
                 val groupKey = "${key.first}-${key.second}"
                 val isCollapsed = collapsedSet.contains(groupKey)
                 
-                items.add(za.kilowatch.ultimatefilemanager.storage.ListItem.Header(key.first, key.second, groupFiles.size, isCollapsed))
+                newItems.add(za.kilowatch.ultimatefilemanager.storage.ListItem.Header(key.first, key.second, groupFiles.size, isCollapsed))
                 
                 if (!isCollapsed) {
-                    items.addAll(groupFiles.map { za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry(it) })
+                    newItems.addAll(groupFiles.map { za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry(it) })
                 }
             }
         } else {
-            items.addAll(newFiles.map { za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry(it) })
+            newItems.addAll(newFiles.map { za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry(it) })
         }
         
-        if (!isTv && isSelectionMode && items.isNotEmpty()) {
-            items.add(za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer)
-            items.add(za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer)
+        if (!isTv && isSelectionMode && newItems.isNotEmpty()) {
+            newItems.add(za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer)
+            newItems.add(za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer)
         }
 
-        notifyDataSetChanged()
+        val isIdentical = oldItems.size == newItems.size && oldItems.indices.all { i ->
+            val o = oldItems[i]
+            val n = newItems[i]
+            if (o is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry && n is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry) {
+                o.file.path == n.file.path &&
+                o.file.name == n.file.name &&
+                o.file.size == n.file.size &&
+                o.file.lastModified == n.file.lastModified &&
+                o.file.isDirectory == n.file.isDirectory &&
+                o.file.freeSpace == n.file.freeSpace &&
+                o.file.isToggled == n.file.isToggled &&
+                o.file.iconRes == n.file.iconRes &&
+                o.file.subtitle == n.file.subtitle
+            } else {
+                o == n
+            }
+        }
+
+        if (isIdentical) {
+            return
+        }
+
+        if (oldItems.isEmpty()) {
+            items.clear()
+            items.addAll(newItems)
+            notifyDataSetChanged()
+        } else {
+            val diffResult = DiffUtil.calculateDiff(
+                NetworkDiffCallback(
+                    oldItems,
+                    newItems,
+                    selectedFiles.mapTo(HashSet()) { it.path },
+                    focusedPath,
+                    childCountCache
+                )
+            )
+            items.clear()
+            items.addAll(newItems)
+            diffResult.dispatchUpdatesTo(this)
+        }
 
         // Pre-compute directory child counts off the main thread
         childCountJob?.cancel()
@@ -376,7 +475,12 @@ class NetworkFileAdapter(
                 withContext(Dispatchers.Main) {
                     if (!isActive) return@withContext
                     childCountCache.putAll(counts)
-                    notifyDataSetChanged()
+                    for (i in items.indices) {
+                        val item = items[i]
+                        if (item is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry && item.file.isDirectory) {
+                            notifyItemChanged(i, PAYLOAD_METADATA)
+                        }
+                    }
                 }
             }
         }
@@ -558,6 +662,24 @@ class NetworkFileAdapter(
         }
     }
 
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
+        if (payloads.isNotEmpty()) {
+            if (payloads.contains(PAYLOAD_METADATA)) {
+                if (holder is ViewHolder) {
+                    holder.bindMetadataOnly(items.getOrNull(position) as? za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry)
+                    return
+                }
+            }
+            if (payloads.contains(PAYLOAD_SELECTION)) {
+                if (holder is ViewHolder) {
+                    holder.bindSelectionOnly(items.getOrNull(position) as? za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry)
+                    return
+                }
+            }
+        }
+        super.onBindViewHolder(holder, position, payloads)
+    }
+
     override fun getItemCount() = items.size
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
@@ -566,6 +688,7 @@ class NetworkFileAdapter(
             holder.itemView.findViewById<TextView>(R.id.txtFileName)?.let {
                 ScrollingTextHelper.cancelScrolling(it)
             }
+            holder.unbind()
         }
     }
 
@@ -658,6 +781,11 @@ class NetworkFileAdapter(
         private val imgClipboardBadge: ImageView? = itemView.findViewById(R.id.imgClipboardBadge)
         private val imgFavoriteBadge: ImageView? = itemView.findViewById(R.id.imgFavoriteBadge)
         private val context: Context = itemView.context
+        private var boundFile: NetworkFile? = null
+
+        fun unbind() {
+            boundFile = null
+        }
 
         init {
             itemView.setOnClickListener {
@@ -701,14 +829,14 @@ class NetworkFileAdapter(
                             // Already in selection mode but no anchor (e.g. after selectAll/deselectAll)
                             longPressAnchorIndex = pos
                             selectedFiles.add(file)
-                            notifyItemRangeChanged(0, itemCount)
+                            notifyItemRangeChanged(0, itemCount, PAYLOAD_SELECTION)
                             onSelectionChanged(selectedFiles.size)
                         } else if (longPressAnchorIndex != RecyclerView.NO_POSITION) {
                             // Second (or subsequent) long press while in selection mode:
                             // range-select from anchor to this position, then update anchor
                             selectRange(longPressAnchorIndex, pos)
                             longPressAnchorIndex = pos
-                            notifyItemRangeChanged(0, itemCount)
+                            notifyItemRangeChanged(0, itemCount, PAYLOAD_SELECTION)
                             onSelectionChanged(selectedFiles.size)
                         }
                     }
@@ -728,9 +856,56 @@ class NetworkFileAdapter(
                 selectedFiles.add(file)
             }
             if (isSelectionMode) {
-                notifyItemChanged(bindingAdapterPosition)
+                notifyItemChanged(bindingAdapterPosition, PAYLOAD_SELECTION)
             }
             onSelectionChanged(selectedFiles.size)
+        }
+
+        fun bindMetadataOnly(item: za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry?) {
+            val file = item?.file ?: boundFile ?: return
+            if (!file.isDirectory) return
+            val isGrid = ViewModeManager.isGrid(viewMode)
+            if (!isGrid) {
+                val childCount = childCountCache[file.path]
+                val dateStr = if (file.lastModified > 0) formatDate(file.lastModified) else ""
+                if (childCount != null) {
+                    val itemsText = "$childCount item${if (childCount != 1) "s" else ""}"
+                    txtDetails.text = if (dateStr.isNotEmpty()) "$itemsText · $dateStr" else itemsText
+                } else {
+                    txtDetails.text = dateStr
+                }
+            }
+        }
+
+        fun bindSelectionOnly(item: za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry?) {
+            val file = item?.file ?: boundFile ?: return
+            val isGrid = ViewModeManager.isGrid(viewMode)
+            val isSelected = isSelectionMode && selectedFiles.contains(file)
+            val isFocused = isSelectionMode && bindingAdapterPosition == longPressAnchorIndex
+            val showCheckbox = isSelectionMode && (isTv || za.kilowatch.ultimatefilemanager.settings.SelectionCheckboxPreferenceManager.isEnabled(context))
+            checkSelect?.visibility = if (showCheckbox) View.VISIBLE else View.GONE
+            checkSelect?.isChecked = isSelected
+
+            val layoutRow = itemView.findViewById<View>(R.id.layoutFileRow) ?: itemView
+
+            if (isSelected || isFocused) {
+                if (isGrid) {
+                    itemView.findViewById<View>(R.id.viewSelectionOverlay)?.apply {
+                        visibility = View.VISIBLE
+                        setBackgroundColor(za.kilowatch.ultimatefilemanager.settings.ColorblindPalette.selectionFill(context))
+                    }
+                } else {
+                    val color = if (isFocused) za.kilowatch.ultimatefilemanager.settings.ColorblindPalette.focusGlow(context)
+                                else za.kilowatch.ultimatefilemanager.settings.ColorblindPalette.selectionFill(context)
+                    layoutRow.setBackgroundColor(color)
+                }
+            } else {
+                if (isGrid) {
+                    itemView.findViewById<View>(R.id.viewSelectionOverlay)?.visibility = View.GONE
+                } else {
+                    layoutRow.setBackgroundColor(0x00000000)
+                }
+            }
         }
 
         private fun startPulse() {
@@ -761,6 +936,7 @@ class NetworkFileAdapter(
         }
 
         fun bind(file: NetworkFile) {
+            boundFile = file
             // Cancel any previous Coil request or thumbnail job attached to this ViewHolder
             // to avoid stale images on recycled ViewHolders.
             try { itemView.findViewById<ImageView>(R.id.imgFileIcon)?.let { (it as ImageView).let { /* no-op */ } } } catch (e: Exception) {}
