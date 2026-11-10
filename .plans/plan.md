@@ -1,139 +1,88 @@
-# Implementation Plan: Folder File List Stability & Background Sync Optimization
+# Implementation Plan: Immediate Other Storage Export Validation & WebDAV Folder Performance Optimization
 
-## Goals
-Eliminate the bug described in `error.txt` where opening a folder causes the file list to become laggy and autonomously jump/scroll up and down without user interaction.
-- Ensure the file list remains 100% stationary when untouched.
-- Replace disruptive `notifyDataSetChanged()` with granular `DiffUtil` calculations in `FileAdapter`.
-- Optimize `childCountJob` to use targeted metadata payloads (`notifyItemChanged(pos, PAYLOAD_METADATA)`).
-- Prevent redundant SQLite/Room invalidation loops by adding smart diff checks before database writes in `syncFolderWithIndex`.
-- Deduplicate Room Flow emissions using `distinctUntilChanged` on folder file lists.
-- Maintain TV focus strictly on the currently selected item without synthetic focus jumps or unwanted re-scrolling.
+## Goal Description
+Resolve the severe 15–30+ second delays reported in `error.txt` when using "Upload to Other Storage" on remote network shares (WebDAV, SMB, NFS) and browsing WebDAV servers:
+1. **Instant Other Storage Pre-Check**: Ensure that tapping `Upload to Other Storage` checks mounted document providers immediately. If unconfigured (`mountedProviders.isEmpty()`), immediately show the toast and open `OtherStorageActivity` in <100ms with **0 bytes** downloaded.
+2. **Deferred Staging with Telemetry**: When providers exist, prompt the user for destination and export format (Single File, Zip, Provider App) *before* downloading remote content. When confirmed, download with `ArchiveProgressDialog` showing item progress, percentage, and cancellation support.
+3. **WebDAV & Remote Network Subfolder Navigation Acceleration**: Eliminate the background subdirectory child-count storm in `NetworkFileAdapter` that executes sequential `listFiles` calls on every subfolder, restoring instantaneous folder opening on WebDAV, SMB, NFS, and Cloud storage.
 
 ---
 
-## Architecture Overview
+## User Review Required
+> [!IMPORTANT]
+> - `NetworkFileAdapter` will no longer query remote subdirectories over the network to count child items. Folder subtitles in network views will display their modification date (and any cached count) without blocking network I/O.
+> - "Upload to Other Storage" for network items will prompt for the destination provider and export mode upfront before downloading data over the network.
 
-```mermaid
-flowchart TD
-    subgraph UI ["User Interface Layer"]
-        RV["RecyclerView (recyclerFiles)"]
-        FA["FileAdapter"]
-        Diff["DiffUtil.calculateDiff(FileDiffCallback)"]
-    end
+---
 
-    subgraph DataSync ["Folder Sync & Flow Control"]
-        FBA["FileBrowserActivity / FileBrowserFragment"]
-        Flow["dao.getFilesInFolderFlow(targetDir)"]
-        Dedupe["distinctUntilChanged { old, new -> ... }"]
-        SmartSync["syncFolderWithIndex(targetDir)"]
-    end
+## Proposed Changes
 
-    subgraph RoomDB ["Room Indexing Database"]
-        Dao["FileIndexDao"]
-        DB[("file_index Table")]
-    end
+### Component 1: Document Provider Export Helper (`storage/DocumentProviderExportHelper.kt`)
+#### [MODIFY] `DocumentProviderExportHelper.kt`
+- Extract a reusable `handleExportChoice` dialog helper that takes item count, has-directory flag, single file name, and destination provider.
+- Keep `handleExportToProvider(activity, files, ...)` for local `File` workflows, delegating to `handleExportChoice`.
+- Allow `showSelectMountedProviderDialog` to be called safely with empty local files, bypassing unneeded disk cleanup when remote downloads have not yet occurred.
 
-    FBA --> Flow
-    Flow --> Dedupe
-    Dedupe -->|Emit ONLY on genuine changes| FBA
-    FBA -->|submitList| FA
-    FA --> Diff
-    Diff -->|Granular in-place updates| RV
+---
 
-    SmartSync -->|1. Inspect DB entries for folder| Dao
-    Dao -->|Read existing| SmartSync
-    SmartSync -->|2. Compare timestamps & sizes| SmartSync
-    SmartSync -->|3. Write ONLY added/changed/deleted files| Dao
-    Dao --> DB
+### Component 2: Standalone Network Browser (`network/NetworkBrowserActivity.kt`)
+#### [MODIFY] `NetworkBrowserActivity.kt`
+- Refactor `uploadNetworkFilesToOtherStorage(files: List<NetworkFile>)`:
+  1. Synchronously query `val mounted = DocumentProviderRepository.getMountedProviders(this)`.
+  2. If `mounted.isEmpty()`, immediately show `no_mounted_doc_providers_toast` and launch `OtherStorageActivity`. Exit immediately (0ms delay, 0 network downloads).
+  3. If `mounted.isNotEmpty()`, present `showSelectMountedProviderDialog`.
+  4. Once provider is selected, invoke `DocumentProviderExportHelper.handleExportChoice(...)`.
+  5. If user chooses:
+     - **Single file export**: Show `ArchiveProgressDialog`, download the single file to temp staging, and launch SAF `ACTION_CREATE_DOCUMENT`.
+     - **Export as ZIP**: Show `ArchiveProgressDialog`, recursively download selected items to temp staging, compress to ZIP via `ArchiveManager`, and launch SAF `ACTION_CREATE_DOCUMENT`.
+     - **Upload via Provider App**: Show `ArchiveProgressDialog`, download selected items to temp staging, and launch share sheet with `exportFilesViaProviderApp`.
+  6. Support cancel on `ArchiveProgressDialog`: aborts coroutine and deletes temp staging folder immediately.
+
+---
+
+### Component 3: Tabbed & Twin-Window Network Browser (`network/NetworkBrowserFragment.kt`)
+#### [MODIFY] `NetworkBrowserFragment.kt`
+- Apply the identical refactored workflow to `NetworkBrowserFragment.uploadNetworkFilesToOtherStorage(files: List<NetworkFile>)`.
+- Ensure strict adherence to Fragment rules (no `(activity as? NetworkBrowserActivity)` casts, self-contained lifecycle handling via `viewLifecycleOwner.lifecycleScope`).
+
+---
+
+### Component 4: Remote Subfolder Child-Count Suppression (`network/NetworkFileAdapter.kt`)
+#### [MODIFY] `NetworkFileAdapter.kt`
+- Remove the sequential `childCountJob` background launch that issues `listFiles` across all directory entries over WebDAV, SMB, NFS, and Cloud storage.
+- Keep `childCountCache` lookup in `bindDetails` and `bindItem` so cached counts (if previously opened) still display, while falling back gracefully to `dateStr` for unprobed folders.
+- Ensure `childCountJob?.cancel()` is maintained.
+
+---
+
+### Component 5: Local & SAF Browser Parity (`storage/FileBrowserActivity.kt` & `FileBrowserFragment.kt`)
+#### [MODIFY] `FileBrowserActivity.kt` & `FileBrowserFragment.kt`
+- Verify that `upload_other_storage` pre-checks `mountedProviders.isEmpty()` before opening any dialogs, ensuring consistent instant-navigation behavior.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+Run unit tests for network share models, diff callbacks, and file helpers:
+```powershell
+./gradlew testDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.network.*"
 ```
 
-### Architectural Decisions & Root Cause Resolution
-1. **Root Cause 1 — Unconditional Database Writes in `syncFolderWithIndex`**:
-   Whenever a folder was loaded, `syncFolderWithIndex(directory)` unconditionally called `dao.insertAll(fileIndices)`. This triggered Room's `InvalidationTracker` for the entire `file_index` table, which immediately triggered `dao.getFilesInFolderFlow(directory)` again.
-   *Resolution*: Perform a smart pre-flight diff against `dao.getFilesInFolder(directory.absolutePath)` before writing. If all physical files match the database snapshot in path, size, and lastModified timestamp, **skip database writes entirely** (0 SQLite writes, 0 table invalidations).
-2. **Root Cause 2 — Room Table-Level Flow Invalidation Loop**:
-   Room queries emit whenever the underlying table is written to, even if the result of `WHERE folderPath = :folderPath` is identical. When startup reconcile or background indexing touched *any* file on the device, every open folder's Flow emitted.
-   *Resolution*: Add `.distinctUntilChanged { old, new -> ... }` comparing item paths, sizes, timestamps, and directory flags. Identical list emissions are dropped immediately before reaching the Main thread.
-3. **Root Cause 3 — Disruptive Full List Clears & `notifyDataSetChanged()` in `FileAdapter`**:
-   `FileAdapter.submitList` called `items.clear(); items.addAll(); notifyDataSetChanged()`. This reset the `RecyclerView` view holder cache and scroll position to 0, which fought with asynchronous `post { scrollToPositionWithOffset(...) }` calls, resulting in visible vertical jitter and layout thrashing.
-   *Resolution*:
-   - Early return `if (oldItems == newItems) return` when data has not changed.
-   - Use `DiffUtil.calculateDiff(FileDiffCallback(oldItems, newItems))` to compute surgical item insertions, removals, moves, and payload updates.
-   - Dispatch updates natively to the adapter via `diffResult.dispatchUpdatesTo(this)`.
-4. **Root Cause 4 — Child Count and Folder Size Calculation Invalidation**:
-   `childCountJob` computed directory child counts and sizes asynchronously, and when finished, called `notifyDataSetChanged()`, causing another full layout re-bind and jitter.
-   *Resolution*: Update only directory rows using `notifyItemChanged(position, PAYLOAD_METADATA)` and bind metadata in `onBindViewHolder(holder, position, payloads)`. Non-directory rows and view holders remain completely untouched.
-5. **Root Cause 5 — Redundant Asynchronous Scroll Overriding**:
-   In `submitAdapterList`, `recyclerFiles.post { scrollToPositionWithOffset(...) }` was called on same-folder updates. With `DiffUtil`, RecyclerView natively preserves scroll position. We remove the synthetic scroll post on same-folder updates, eliminating the bounce.
-
----
-
-## Files to Modify
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/FileAdapter.kt`
-- **What**:
-  - Implement `FileDiffCallback` extending `DiffUtil.Callback` comparing `ListItem.FileEntry`, `ListItem.Header`, and `ListItem.EmptyBuffer`.
-  - Add `PAYLOAD_METADATA = "payload_metadata"` and `PAYLOAD_SELECTION = "payload_selection"`.
-  - Update `submitList` to early-return on identical content and use `DiffUtil.calculateDiff` instead of `notifyDataSetChanged()`.
-  - Refactor `childCountJob` to dispatch granular `notifyItemChanged(pos, PAYLOAD_METADATA)` only for affected directory items.
-  - Implement `onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>)` to update only `txtSubtitle` when `PAYLOAD_METADATA` is received.
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/FileBrowserActivity.kt`
-- **What**:
-  - In `loadDirectory`:
-    - Add `.distinctUntilChanged` to `dao.getFilesInFolderFlow(targetDir.absolutePath)`.
-  - In `syncFolderWithIndex`:
-    - Query `existingInDb = dao.getFilesInFolder(directory.absolutePath)` before writing.
-    - Compare `actualFiles` against `existingInDb` by `path`, `size`, `lastModified`, and `isDirectory`.
-    - Only insert new/modified files (`toInsertOrUpdate`) and delete stale paths (`stalePaths`) if non-empty.
-  - In `submitAdapterList`:
-    - Only perform scroll restoration when navigating between different directories (`isNavigatingFolder`).
-    - Remove redundant same-folder `scrollToPositionWithOffset` post-calls, letting `DiffUtil` retain viewport stability natively.
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/FileBrowserFragment.kt`
-- **What**:
-  - Apply the exact same optimizations to `FileBrowserFragment` to guarantee identical stability across Tabbed Browser and Twin Window Mode:
-    - Add `.distinctUntilChanged` to `dao.getFilesInFolderFlow`.
-    - Apply smart diff in `syncFolderWithIndex` before database writes.
-    - Remove redundant same-folder scroll posts in `submitAdapterList`.
-
----
-
-## Files to Create
-
-### `app/src/test/java/za/kilowatch/ultimatefilemanager/storage/FileDiffCallbackTest.kt`
-- **What**: Unit test for `FileDiffCallback` and smart folder synchronization diff logic.
-- **Key details**: Tests that identical lists produce empty diffs, additions/removals/modifications produce exact changes, and metadata payloads are generated correctly.
-
----
-
-## Data Model
-No changes to SQLite database schema or entity definitions. Existing `FileIndex` and `file_index` table structure remain unchanged.
-
----
-
-## Dependencies
-No new third-party dependencies required. Uses standard Android Jetpack `androidx.recyclerview.widget.DiffUtil` and Kotlin Coroutines Flow `distinctUntilChanged`.
-
----
-
-## Test Plan
-1. **Automated Unit Tests**:
-   - Run `./gradlew testMobileGoogleDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.storage.FileDiffCallbackTest"`.
-   - Run full unit test suite to verify no regressions: `./gradlew testMobileGoogleDebugUnitTest`.
-2. **Build Verification**:
-   - Compile debug build: `./gradlew assembleMobileGoogleDebug`.
-3. **Manual Verification**:
-   - Open the app, navigate into a folder with mixed files and subdirectories.
-   - Wait 10 seconds without touching the screen. Verify the list remains 100% stationary with zero autonomous movement or twitching.
-   - Verify folder sizes and item counts populate cleanly in-place.
-   - Verify scrolling is smooth at 60/120 fps.
-   - Verify on Android TV that focus stays locked on the selected item without bouncing.
-
----
-
-## Risks & Mitigations
-- **Risk**: DiffUtil calculation on very large directories (e.g. 5,000+ items) taking too long on the main thread.
-  - **Mitigation**: Add an early-return check `if (oldItems == newItems) return` to avoid running DiffUtil when nothing changed. For lists $\ge 1,000$ items, DiffUtil runs quickly on lightweight `ListItem` references, but we can also dispatch calculation via background dispatcher if needed.
-- **Risk**: Stale selection state when items are modified.
-  - **Mitigation**: `FileDiffCallback` includes selection state in `areContentsTheSame` and provides `PAYLOAD_SELECTION` so selected items update accurately without list jumps.
+### Manual Verification
+1. **Upload to Other Storage (No Provider Configured)**:
+   - Clear/unmount any Other Storage provider.
+   - In Network Browser (WebDAV / SMB), select a folder or file.
+   - Tap `Tools -> Upload to Other Storage`.
+   - **Verify**: Toast "No storage provider added. Select a provider to add." appears instantly (<100ms) and navigates to Other Storage screen. No remote download occurs.
+2. **Upload to Other Storage (Provider Configured)**:
+   - Configure an Other Storage provider.
+   - Select a folder on WebDAV and tap `Upload to Other Storage`.
+   - **Verify**: Destination dialog opens instantly.
+   - Select format (ZIP or App).
+   - **Verify**: `ArchiveProgressDialog` appears showing download progress with an active Cancel button.
+   - Test pressing **Cancel**: download stops immediately, temp directory is deleted.
+3. **WebDAV Folder Navigation**:
+   - Open WebDAV share with multiple subfolders (especially HTTPS with self-signed certificate).
+   - Enter root and subfolders.
+   - **Verify**: Listing opens immediately without 15–30s child-count lag.

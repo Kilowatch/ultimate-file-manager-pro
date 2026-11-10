@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -28,6 +29,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -3375,6 +3377,7 @@ class NetworkBrowserFragment : Fragment() {
                 ShareType.DLNA -> DlnaShareClient.listFiles(share, cleanNetPath)
             }
             for (child in children) {
+                if (!kotlinx.coroutines.currentCoroutineContext().isActive) throw kotlinx.coroutines.CancellationException()
                 downloadNetworkEntry(child, localFile, onStatusUpdate)
             }
         } else {
@@ -3394,7 +3397,12 @@ class NetworkBrowserFragment : Fragment() {
             }
             inStream.use { inp ->
                 FileOutputStream(localFile).use { out ->
-                    inp.copyTo(out)
+                    val buf = ByteArray(64 * 1024)
+                    var read: Int
+                    while (inp.read(buf).also { read = it } >= 0) {
+                        if (!kotlinx.coroutines.currentCoroutineContext().isActive) throw kotlinx.coroutines.CancellationException()
+                        out.write(buf, 0, read)
+                    }
                 }
             }
         }
@@ -3728,62 +3736,146 @@ class NetworkBrowserFragment : Fragment() {
     private fun uploadNetworkFilesToOtherStorage(files: List<NetworkFile>) {
         if (files.isEmpty()) return
         val ctx = context ?: return
-        progressBar.visibility = View.VISIBLE
         if (::fileAdapter.isInitialized) {
             fileAdapter.exitSelectionMode()
         }
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            val tempDir = File(ctx.cacheDir, "upload_other_${System.currentTimeMillis()}")
-            tempDir.mkdirs()
-            stagedExportTempDir = tempDir
+        val mounted = DocumentProviderRepository.getMountedProviders(ctx)
+        if (mounted.isEmpty()) {
+            Toast.makeText(ctx, getString(R.string.no_mounted_doc_providers_toast), Toast.LENGTH_SHORT).show()
+            startActivity(Intent(ctx, OtherStorageActivity::class.java))
+            return
+        }
+        showSelectMountedProviderForExportDialog(files, mounted)
+    }
+
+    private fun showSelectMountedProviderForExportDialog(files: List<NetworkFile>, mountedProviders: List<MountedDocumentProvider>) {
+        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return
+        DocumentProviderExportHelper.showSelectMountedProviderDialog(act, emptyList(), mountedProviders) { provider ->
+            handleExportToProvider(files, provider)
+        }
+    }
+
+    private fun handleExportToProvider(files: List<NetworkFile>, provider: MountedDocumentProvider) {
+        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return
+        val hasDirectory = files.any { it.isDirectory }
+        val firstName = files.firstOrNull()?.name.orEmpty()
+        DocumentProviderExportHelper.handleExportChoice(
+            activity = act,
+            itemCount = files.size,
+            hasDirectory = hasDirectory,
+            firstName = firstName,
+            provider = provider,
+            onExportSingleFile = { prov ->
+                stageNetworkFilesWithProgress(files, prov) { stagedFiles ->
+                    val single = stagedFiles.firstOrNull() ?: return@stageNetworkFilesWithProgress
+                    exportSingleFileToProvider(single, prov)
+                }
+            },
+            onExportZip = { prov ->
+                stageNetworkFilesWithProgress(files, prov) { stagedFiles ->
+                    exportFilesAsZipToProvider(stagedFiles, prov)
+                }
+            },
+            onExportShareSheet = { prov ->
+                stageNetworkFilesWithProgress(files, prov) { stagedFiles ->
+                    DocumentProviderExportHelper.exportFilesViaProviderApp(act, stagedFiles, prov)
+                }
+            }
+        )
+    }
+
+    private fun stageNetworkFilesWithProgress(
+        files: List<NetworkFile>,
+        provider: MountedDocumentProvider,
+        onStaged: (List<File>) -> Unit
+    ) {
+        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return
+        val ctx = context ?: return
+        val tempDir = File(ctx.cacheDir, "upload_other_${System.currentTimeMillis()}")
+        tempDir.mkdirs()
+        stagedExportTempDir = tempDir
+
+        val initialFileName = files.firstOrNull()?.name.orEmpty()
+        val progressTitle = getString(R.string.downloading_netfilename, initialFileName)
+        val progressDialog = za.kilowatch.ultimatefilemanager.archive.ArchiveProgressDialog(
+            act,
+            initialTitle = progressTitle,
+            initialArchiveName = provider.displayName
+        )
+        progressDialog.show(
+            operation = za.kilowatch.ultimatefilemanager.archive.ArchiveOperationType.ADD,
+            archiveName = provider.displayName,
+            totalFiles = files.size
+        )
+
+        var isCancelled = false
+        val downloadJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val localFiles = mutableListOf<File>()
+            var fileIndex = 0
             for (nf in files) {
+                if (!isActive || isCancelled) break
+                fileIndex++
+                val pct = if (files.isNotEmpty()) ((fileIndex * 100) / files.size) else 0
+                progressDialog.update(
+                    za.kilowatch.ultimatefilemanager.archive.ArchiveProgress(
+                        operation = za.kilowatch.ultimatefilemanager.archive.ArchiveOperationType.ADD,
+                        archiveName = provider.displayName,
+                        currentFileName = nf.name,
+                        fileIndex = fileIndex,
+                        totalFiles = files.size,
+                        percentage = pct
+                    )
+                )
                 try {
-                    val localEntry = downloadNetworkEntry(nf, tempDir)
+                    val localEntry = downloadNetworkEntry(nf, tempDir) { statusMsg ->
+                        if (isActive && !isCancelled) {
+                            progressDialog.update(
+                                za.kilowatch.ultimatefilemanager.archive.ArchiveProgress(
+                                    operation = za.kilowatch.ultimatefilemanager.archive.ArchiveOperationType.ADD,
+                                    archiveName = provider.displayName,
+                                    currentFileName = statusMsg,
+                                    fileIndex = fileIndex,
+                                    totalFiles = files.size,
+                                    percentage = pct
+                                )
+                            )
+                        }
+                    }
                     if (localEntry.exists()) {
                         localFiles.add(localEntry)
                     }
                 } catch (e: Exception) {
-                    za.kilowatch.ultimatefilemanager.util.GoRoLog.w("NetworkBrowser", "Failed to download ${nf.name}: ${e.message}")
+                    if (e is kotlinx.coroutines.CancellationException) {
+                        isCancelled = true
+                        break
+                    }
+                    za.kilowatch.ultimatefilemanager.util.GoRoLog.w("NetworkBrowserFrag", "Failed to download ${nf.name}: ${e.message}")
                 }
             }
+
             withContext(Dispatchers.Main) {
-                progressBar.visibility = View.GONE
+                progressDialog.dismiss()
+                if (isCancelled || !isActive) {
+                    stagedExportTempDir = null
+                    tempDir.deleteRecursively()
+                    return@withContext
+                }
                 if (localFiles.isNotEmpty()) {
-                    val mounted = DocumentProviderRepository.getMountedProviders(ctx)
-                    showSelectMountedProviderForExportDialog(localFiles, mounted)
+                    onStaged(localFiles)
                 } else {
-                    view?.let { Snackbar.make(it, getString(R.string.share_error), Snackbar.LENGTH_SHORT).show() }
+                    view?.let { com.google.android.material.snackbar.Snackbar.make(it, getString(R.string.share_error), com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show() }
                     stagedExportTempDir = null
                     tempDir.deleteRecursively()
                 }
             }
         }
-    }
 
-    private fun showSelectMountedProviderForExportDialog(files: List<File>, mountedProviders: List<MountedDocumentProvider>) {
-        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return
-        DocumentProviderExportHelper.showSelectMountedProviderDialog(act, files, mountedProviders) { provider ->
-            handleExportToProvider(files, provider)
+        progressDialog.setOnCancelListener {
+            isCancelled = true
+            downloadJob.cancel()
+            stagedExportTempDir = null
+            tempDir.deleteRecursively()
         }
-    }
-
-    private fun handleExportToProvider(files: List<File>, provider: MountedDocumentProvider) {
-        val act = activity as? androidx.appcompat.app.AppCompatActivity ?: return
-        DocumentProviderExportHelper.handleExportToProvider(
-            activity = act,
-            files = files,
-            provider = provider,
-            onExportSingleFile = { file, prov ->
-                exportSingleFileToProvider(file, prov)
-            },
-            onExportZip = { items, prov ->
-                exportFilesAsZipToProvider(items, prov)
-            },
-            onExportShareSheet = { items, prov ->
-                DocumentProviderExportHelper.exportFilesViaProviderApp(act, items, prov)
-            }
-        )
     }
 
     private fun exportSingleFileToProvider(file: File, provider: MountedDocumentProvider) {

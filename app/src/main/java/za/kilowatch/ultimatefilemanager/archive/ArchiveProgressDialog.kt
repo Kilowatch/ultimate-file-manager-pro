@@ -177,7 +177,11 @@ class ArchiveProgressDialog(
                 }
                 ArchiveOperationType.ADD -> {
                     txtBadge?.setText(R.string.archive_badge_adding)
-                    txtTitle?.setText(R.string.archive_progress_adding)
+                    if (customTitle != null) {
+                        txtTitle?.text = customTitle
+                    } else {
+                        txtTitle?.setText(R.string.archive_progress_adding)
+                    }
                     imgHeroIcon?.setImageResource(R.drawable.ic_copy)
                 }
                 ArchiveOperationType.DELETE -> {

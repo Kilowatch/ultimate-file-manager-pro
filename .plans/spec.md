@@ -1,59 +1,79 @@
-# Specification: Folder File List Stability & Background Sync Optimization (Fix Ghost Scrolling & Lag)
+# Specification: Immediate Other Storage Export Validation & WebDAV Folder Performance Optimization
 
 ## Overview
-This specification addresses an issue where entering any folder causes the file list to become laggy and autonomously jump/scroll up and down without user interaction. The root problem arises from background operations (such as startup indexing reconciliation, folder synchronization, and asynchronous directory child/size calculations) repeatedly triggering full list invalidations and conflicting scroll adjustments, resulting in visual jitter and interface lag. This document defines the requirements to guarantee a completely stationary list when untouched, seamless in-place updates, and fluid scrolling performance.
+This specification addresses two critical issues reported during network and remote storage operations (specifically WebDAV, SMB, and NFS):
+1. **Unvalidated Pre-Download on "Upload to Other Storage"**: When a user selects a file or folder on a remote network share (WebDAV, SMB, NFS, etc.) and triggers `Tools -> Upload to Other Storage`, the application currently downloads the entire file or recursively downloads the whole directory structure over the network into local cache *before* verifying if any external Document Provider is configured. When no provider is mounted ("Other Storage" not selected), the user experiences a 15–30+ second delay before abruptly seeing "No storage provider added. Select a provider to add." and being navigated to `OtherStorageActivity`, wasting bandwidth, time, and device flash storage.
+2. **WebDAV First Connection & Subfolder Navigation Latency**: Browsing WebDAV shares (particularly Windows 11 IIS/WebDAV with HTTPS and self-signed certificates) experiences excessive latency (>15s to >30s) when entering folders and subfolders. This is amplified by adapter-level sequential child-count queries across all subdirectories, lack of connection/session reuse, and unthrottled network probing.
+
+This specification establishes the requirements for instant pre-flight provider validation, deferred on-demand downloading with cancellation telemetry, and WebDAV directory listing acceleration.
 
 ---
 
 ## User Stories
-- **As a user opening any folder**, I want the file list to remain completely stationary until I choose to scroll it myself, so that I can comfortably view and select items without disorienting automatic jumps.
-- **As a user viewing a directory while background indexing or folder synchronization is running**, I want visible items to update silently and seamlessly without resetting scroll position, stuttering, or dropping frames.
-- **As a user scrolling through large folders**, I want smooth, fluid 60/120 fps scrolling with zero lag or frame drops.
-- **As a user navigating back and forth between folders**, I want my exact scroll position and item focus to be accurately maintained without bouncing or shifting.
-- **As an Android TV user**, I want focused list items to remain stably centered in focus without unexpected focus hopping or screen jumping.
+- **As a user attempting to upload remote files or folders to Other Storage without any providers configured**, I want the app to immediately inform me and open the Other Storage setup screen in 0 milliseconds without downloading any network data.
+- **As a user uploading remote files or folders to a configured Other Storage provider**, I want to select the destination provider and export options *before* any remote downloading starts, with a visible, cancellable progress dialog showing transfer progress.
+- **As a user browsing WebDAV servers (including Windows 11 with HTTPS and self-signed certificates)**, I want folder and subfolder listings to open promptly without 15–30 second hangs or blocking child-count storms.
+- **As a user navigating across SMB, NFS, WebDAV, and Cloud storages**, I want consistent, responsive feedback across standalone, tabbed, and twin-window browser modes.
 
 ---
 
 ## Functional Requirements
-- **FR-01: Stationary List State (Zero Autonomous Movement)**: When a user enters any folder and does not touch the screen, the list must remain completely still. No ghost scrolling, jitter, or jumping up and down shall occur under any circumstances.
-- **FR-02: Redundant Update Suppression**: Background operations (such as storage indexing, startup reconciliation, or folder synchronization) that do not alter the visible files or directories of the currently open folder must not cause re-rendering, layout recalculation, or scroll adjustments.
-- **FR-03: Seamless In-Place Content Updates**: When background operations detect genuine changes in visible folder contents (e.g. a file is added, deleted, or renamed, or metadata like folder size/item count is resolved), changes must update in-place without resetting scroll offset or jarring the user's viewport.
-- **FR-04: Viewport & Scroll Position Stability**: During same-folder content updates, the user's current scroll position and relative viewport offset must be strictly preserved without resetting to the top or drifting across updates.
-- **FR-05: Non-Disruptive Asynchronous Metadata Resolution**: Background metadata resolution (including directory child counts, total folder sizes, and thumbnail caching) must complete asynchronously and apply updates smoothly without triggering full list invalidations or visible layout shifts.
-- **FR-06: Cross-Browser Parity**: File list stillness, smooth scrolling, and scroll position stability must be consistent across all browser implementations:
-  - Standalone File Browser (`FileBrowserActivity`)
-  - Tabbed Browser and Twin Window Mode (`FileBrowserFragment`)
-  - Both Mobile touch interfaces and Android TV D-pad navigation
+
+### 1. Instant Pre-Flight Validation for "Upload to Other Storage"
+- **FR-01: Zero-Delay Provider Verification**: Before initiating any file downloads, recursive directory traversal, or temporary file staging, the system must immediately check `DocumentProviderRepository.getMountedProviders(context)`.
+- **FR-02: Instant Setup Navigation on Empty Providers**: If no document providers are mounted (`mountedProviders.isEmpty()`):
+  - Display the `no_mounted_doc_providers_toast` toast ("No storage provider added. Select a provider to add.").
+  - Immediately launch `OtherStorageActivity`.
+  - Zero bytes of remote data must be transferred or staged to disk.
+- **FR-03: Upfront Destination Selection**: If mounted document providers exist:
+  - The provider selection dialog (and single-file vs zip export options where applicable) must be presented to the user **prior** to downloading the remote content.
+  - If the user cancels the provider selection or export dialog, no network download shall take place.
+- **FR-04: Deferred Streaming / Staging with Progress Dialog**:
+  - Once the user confirms the export destination, remote download and staging must execute with a canonical modal progress dialog (`ArchiveProgressDialog` or standard UFM progress dialog) displaying current item name, file counter, and an explicit **Cancel** button.
+  - If the user cancels the operation during download, remote streaming must immediately abort and any partially downloaded files in `cacheDir` must be pruned cleanly.
+- **FR-05: Multi-Browser & Multi-Protocol Parity**: This pre-flight validation and deferred download workflow must be synchronized across:
+  - `NetworkBrowserActivity.kt` (Standalone Network/Cloud Browser)
+  - `NetworkBrowserFragment.kt` (Tabbed & Twin Window Network/Cloud Browser)
+  - `FileBrowserActivity.kt` (Standalone Local & SAF Browser)
+  - `FileBrowserFragment.kt` (Tabbed & Twin Window Local & SAF Browser)
+  - Applicable to all network protocols: WebDAV, SMB, NFS, FTP, SFTP, and Cloud providers.
+
+### 2. WebDAV Connection & Subfolder Navigation Optimization
+- **FR-06: Elimination of Subfolder Listing Storms**:
+  - `NetworkFileAdapter` must not execute sequential blocking `listFiles` queries over WebDAV (and slow remote protocols) for every subdirectory in the folder view solely to count child items.
+  - Subdirectory child counts for remote WebDAV/SMB/NFS shares must either be disabled, fetched lazily on viewport visibility, or limited with a tight per-folder timeout and concurrency limiter to avoid starving connection threads.
+- **FR-07: WebDAV Connection Re-use & Keep-Alive**:
+  - In `WebDavShareClient`, ensure connection parameters and client sessions maintain persistent HTTPS connections across requests to eliminate repetitive SSL handshakes and TCP connection overhead to the same host.
+- **FR-08: Cancellation & Stale Job Pruning**:
+  - When the user navigates into a subfolder or back out of a folder, any running background listings or child count jobs for the previous path must be cancelled immediately.
 
 ---
 
 ## Non-Functional Requirements
-- **NFR-01: Rendering Performance & Fluidity**: File list rendering must achieve smooth 60/120 fps scrolling. Background operations and database updates must not block the main thread, cause dropped frames, or introduce perceptible UI lag.
-- **NFR-02: Zero Layout Thrashing**: Layout passes must be minimized. The adapter and layout manager must not perform repeated layout passes or post conflicting scroll commands when list data has not changed.
-- **NFR-03: Resource & Battery Efficiency**: Background folder synchronization and database queries must operate with low CPU and memory footprint, preventing UI thread starvation on lower-end hardware and Android TV devices.
+- **NFR-01: Response Time**: "Upload to Other Storage" when unconfigured must transition to `OtherStorageActivity` within 100 milliseconds of user tap.
+- **NFR-02: Bandwidth & Flash Storage Preservation**: No network traffic or disk cache writes shall occur for unconfigured or cancelled export actions.
+- **NFR-03: Robust Cleanup**: Any temporary staging folder created under `cacheDir/upload_other_*` must be reliably deleted upon completion, failure, or cancellation.
+- **NFR-04: Standard Conformance**: All dialogs, toasts, progress indicators, and navigation flows must conform strictly to `UFMStandard` (glass styling, embedded buttons, dark/light themes, TV D-pad focusability).
 
 ---
 
 ## Edge Cases & Error States
-- **Empty Folders**: An empty folder undergoing background sync or indexing must remain in a stable empty state without flickering or resetting empty-state animations.
-- **Large Directories (1,000+ items)**: Background metadata extraction and child counting in large folders must not cause memory pressure or repeated layout recalculations that freeze the list.
-- **Rapid Navigation**: Navigating quickly between multiple nested folders before background sync completes must cancel obsolete sync and scroll jobs cleanly, preventing cross-folder scroll state leakage.
-- **Active User Touch / Drag Gesture**: If the user is actively dragging, flinging, or scrolling the list when a content update occurs, the ongoing gesture must not be interrupted, aborted, or jerked.
-- **External Storage / SAF / Protected Storage**: Directory listing on slower storage media (USB OTG, SD cards, SAF document trees) must maintain the same scroll stability and non-laggy behavior as internal storage.
-- **Device Orientation & Configuration Changes**: Screen rotation or window resizing in split-screen/tablet mode must preserve scroll position without triggering recursive reload cycles.
+- **Rapid Tap / Double Click**: Rapid taps on "Upload to Other Storage" must not trigger concurrent duplicate export or download jobs.
+- **Network Disconnect Mid-Transfer**: If the remote server disconnects while downloading staged items, the progress dialog must dismiss gracefully, show an error snackbar/dialog, and clean up temporary partial files.
+- **Low Local Disk Space**: Before staging large remote folders, verify sufficient local cache space exists. If space is insufficient, notify the user and cancel before filling flash memory.
+- **Self-Signed Certificates & Untrusted TLS**: Ensure `allowInsecureTls` remains honored across all WebDAV staging and listing calls without triggering connection resets or SSL handshake hangs.
 
 ---
 
 ## Out of Scope
-- Modifying the underlying SQLite indexing database schema or storage tables.
-- Altering the visual design, typography, or styling of file list item rows.
-- Network or cloud storage browsers (e.g. SMB, WebDAV, Cloud Drive) which do not use local Room database indexing flows.
+- Rebuilding or restructuring the underlying `rclone.aar` or Go WebDAV binary.
+- Modifying third-party document provider apps (Google Drive, Proton Drive, Nextcloud apps).
 
 ---
 
 ## Success Criteria
-- [ ] Navigating into any folder and waiting without touching the screen leaves the list 100% stationary with zero autonomous movement.
-- [ ] The file list does not jump, twitch, or reset its scroll position when background operations run.
-- [ ] Scrolling through folders is smooth and responsive with no noticeable lag or stutter.
-- [ ] Folder child counts, sizes, and thumbnails load progressively without causing list jumps.
-- [ ] Verified across both Mobile and Android TV interfaces.
+- [ ] Tapping `Upload to Other Storage` on WebDAV, SMB, NFS, or Local storage when no provider is mounted immediately opens `OtherStorageActivity` with the toast in <100ms, with zero network download activity.
+- [ ] When providers are mounted, provider and export format selection dialogs appear before remote downloading begins.
+- [ ] Downloading remote files for export displays a progress dialog with cancel capability and cleans up temporary files on exit.
+- [ ] Navigating into WebDAV folders and subfolders is responsive and no longer suffers 15–30+ second delays caused by adapter child-count storms.
+- [ ] Tested and verified across Mobile touch and Android TV D-pad interfaces in Standalone, Tabbed, and Twin Window modes.

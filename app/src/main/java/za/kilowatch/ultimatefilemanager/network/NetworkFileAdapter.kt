@@ -428,62 +428,9 @@ class NetworkFileAdapter(
             diffResult.dispatchUpdatesTo(this)
         }
 
-        // Pre-compute directory child counts off the main thread
+        // Remote shares: do not recursively probe subdirectories over the network (WebDAV, SMB, NFS, Cloud)
+        // to pre-compute child counts, preventing 15-30+ second connection delays and network saturation.
         childCountJob?.cancel()
-        if (share.isServerMode && share.remotePath.isEmpty()) {
-            // At server mode root (discovered shares list) — skip pre-computing child counts
-            return
-        }
-        val dirs = newFiles.filter { it.isDirectory && it.freeSpace < 0 && it.iconRes == 0 }
-        if (dirs.isNotEmpty()) {
-            childCountJob = adapterScope.launch(Dispatchers.IO) {
-                val counts = mutableMapOf<String, Int>()
-                for (dir in dirs) {
-                    if (!isActive) return@launch
-                    try {
-                        val effectiveShare = if (share.isServerMode && share.remotePath.isEmpty()) {
-                            share.copy(remotePath = dir.path)
-                        } else {
-                            share
-                        }
-                        val rawFiles = when (effectiveShare.type) {
-                            za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.listFiles(effectiveShare, if (share.isServerMode && share.remotePath.isEmpty()) "" else dir.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.listFiles(share, dir.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, dir.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.listFiles(share, dir.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.listFiles(share, dir.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.listFiles(share, dir.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.listFiles(share, dir.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, dir.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, dir.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, dir.path)
-                            za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.listFiles(share, dir.path)
-                        }
-                        val visibleCount = if (this@NetworkFileAdapter.showHidden) {
-                            rawFiles.size
-                        } else {
-                            rawFiles.count {
-                                !za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isJunkOrHidden(it.name)
-                            }
-                        }
-                        counts[dir.path] = visibleCount
-                    } catch (e: Exception) {
-                        if (e is kotlinx.coroutines.CancellationException) return@launch
-                        za.kilowatch.ultimatefilemanager.util.GoRoLog.w("NetworkFileAdapter", "Failed to count files for directory ${dir.path}: ${e.message}")
-                    }
-                }
-                withContext(Dispatchers.Main) {
-                    if (!isActive) return@withContext
-                    childCountCache.putAll(counts)
-                    for (i in items.indices) {
-                        val item = items[i]
-                        if (item is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry && item.file.isDirectory) {
-                            notifyItemChanged(i, PAYLOAD_METADATA)
-                        }
-                    }
-                }
-            }
-        }
 
         // Pre-warm thumbnail cache and prune stale entries asynchronously
         if (NetworkThumbnailPreferenceManager.isEnabled(context)) {

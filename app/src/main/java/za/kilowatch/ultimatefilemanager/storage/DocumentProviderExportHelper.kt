@@ -118,9 +118,24 @@ object DocumentProviderExportHelper {
         mountedProviders: List<MountedDocumentProvider>,
         onProviderSelected: (MountedDocumentProvider) -> Unit
     ) {
+        showSelectMountedProviderDialog(activity, files, mountedProviders, null, onProviderSelected)
+    }
+
+    /**
+     * Shows a canonical UFMStandard dialog allowing the user to select which mounted Document Provider
+     * to export files/folders into, or navigate to Other Storage.
+     */
+    fun showSelectMountedProviderDialog(
+        activity: AppCompatActivity,
+        files: List<File>,
+        mountedProviders: List<MountedDocumentProvider>,
+        onDismissWithoutSelection: (() -> Unit)? = null,
+        onProviderSelected: (MountedDocumentProvider) -> Unit
+    ) {
         if (mountedProviders.isEmpty()) {
             Toast.makeText(activity, activity.getString(R.string.no_mounted_doc_providers_toast), Toast.LENGTH_SHORT).show()
             activity.startActivity(Intent(activity, OtherStorageActivity::class.java))
+            onDismissWithoutSelection?.invoke()
             return
         }
 
@@ -159,6 +174,7 @@ object DocumentProviderExportHelper {
             providerSelected = true
             dialog.dismiss()
             cleanupTempFiles(activity, files)
+            onDismissWithoutSelection?.invoke()
             activity.startActivity(Intent(activity, OtherStorageActivity::class.java))
         }
 
@@ -169,11 +185,147 @@ object DocumentProviderExportHelper {
         dialog.setOnDismissListener {
             if (!providerSelected) {
                 cleanupTempFiles(activity, files)
+                onDismissWithoutSelection?.invoke()
             }
         }
 
         if (isTv) {
             setupCardTvFocus(cardOtherStorage, ContextCompat.getColor(activity, R.color.tv_glass_border))
+            (btnCancel as? MaterialButton)?.let { btn ->
+                val glassCsl = ColorStateList.valueOf(0x26FFFFFF)
+                val yellowCsl = ColorStateList.valueOf(ContextCompat.getColor(activity, R.color.tv_accent))
+                btn.backgroundTintList = glassCsl
+                btn.setTextColor(Color.WHITE)
+                btn.setOnFocusChangeListener { _, hasFocus ->
+                    btn.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
+                    btn.setTextColor(if (hasFocus) Color.BLACK else Color.WHITE)
+                }
+            }
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
+    /**
+     * Determines whether items require compression (multiple items or any directory)
+     * and shows a canonical UFMStandard export choice dialog, or calls [onExportSingleFile] directly.
+     * Can be invoked with either local files or remote network items prior to downloading.
+     */
+    fun handleExportChoice(
+        activity: AppCompatActivity,
+        itemCount: Int,
+        hasDirectory: Boolean,
+        firstName: String,
+        provider: MountedDocumentProvider,
+        onExportSingleFile: (MountedDocumentProvider) -> Unit,
+        onExportZip: (MountedDocumentProvider) -> Unit,
+        onExportShareSheet: (MountedDocumentProvider) -> Unit,
+        onDismissWithoutSelection: (() -> Unit)? = null
+    ) {
+        val isSingleRegularFile = itemCount == 1 && !hasDirectory
+
+        if (isSingleRegularFile) {
+            onExportSingleFile(provider)
+            return
+        }
+
+        val isTv = DeviceUtils.isTvDevice(activity)
+        val layoutRes = if (isTv) R.layout.dialog_export_multi_choice_tv else R.layout.dialog_export_multi_choice
+        val dialogView = LayoutInflater.from(activity).inflate(layoutRes, null)
+
+        val dialog = MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtExportChoiceTitle)
+        val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtExportChoiceSubtitle)
+        val cardZip = dialogView.findViewById<MaterialCardView>(R.id.cardExportZip)
+        val cardShareSheet = dialogView.findViewById<MaterialCardView>(R.id.cardExportShareSheet)
+        val txtZipDesc = dialogView.findViewById<TextView>(R.id.txtExportZipSubtitle)
+        val txtShareTitle = dialogView.findViewById<TextView>(R.id.txtExportShareSheetTitle)
+        val txtShareDesc = dialogView.findViewById<TextView>(R.id.txtExportShareSheetSubtitle)
+        val imgShareIcon = dialogView.findViewById<ImageView>(R.id.imgExportShareSheetIcon)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        if (itemCount == 1 && hasDirectory) {
+            txtTitle.text = activity.getString(R.string.share_export_folder_title)
+            txtSubtitle.text = activity.getString(R.string.share_export_folder_msg, firstName, provider.displayName)
+        } else {
+            txtTitle.text = activity.getString(R.string.share_export_multi_zip_title)
+            txtSubtitle.text = activity.getString(R.string.share_export_multi_zip_msg, itemCount, provider.displayName)
+        }
+
+        txtShareTitle?.text = activity.getString(R.string.share_export_via_app, provider.displayName)
+        if (hasDirectory) {
+            txtZipDesc?.text = activity.getString(R.string.share_export_as_zip_folder_desc, provider.displayName)
+            txtShareDesc?.text = activity.getString(R.string.share_export_via_app_folder_desc, provider.displayName)
+        } else {
+            txtZipDesc?.text = activity.getString(R.string.share_export_as_zip_desc, provider.displayName)
+            txtShareDesc?.text = activity.getString(R.string.share_export_via_app_desc, provider.displayName)
+        }
+
+        // Resolve app icon for Option 2 (Upload via Provider App)
+        val iconDrawable = try {
+            if (provider.packageName.isNotEmpty()) {
+                activity.packageManager.getApplicationIcon(provider.packageName)
+            } else null
+        } catch (_: Exception) { null }
+
+        if (iconDrawable != null && imgShareIcon != null) {
+            imgShareIcon.setImageDrawable(iconDrawable)
+            imgShareIcon.imageTintList = null
+        }
+
+        var optionSelected = false
+
+        cardZip.setOnClickListener {
+            optionSelected = true
+            dialog.dismiss()
+            onExportZip(provider)
+        }
+
+        cardShareSheet.setOnClickListener {
+            if (hasDirectory) {
+                val title = activity.getString(R.string.folder_upload_notice_title)
+                val msg = if (itemCount == 1) {
+                    activity.getString(R.string.folder_upload_notice_single_msg, firstName, provider.displayName)
+                } else {
+                    activity.getString(R.string.folder_upload_notice_multi_msg, provider.displayName)
+                }
+                za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
+                    context = activity,
+                    title = title,
+                    message = msg,
+                    iconRes = R.drawable.ic_warning,
+                    positiveText = activity.getString(R.string.btn_upload_files_only),
+                    negativeText = activity.getString(R.string.cancel),
+                    onPositive = {
+                        optionSelected = true
+                        dialog.dismiss()
+                        onExportShareSheet(provider)
+                    }
+                )
+            } else {
+                optionSelected = true
+                dialog.dismiss()
+                onExportShareSheet(provider)
+            }
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setOnDismissListener {
+            if (!optionSelected) {
+                onDismissWithoutSelection?.invoke()
+            }
+        }
+
+        if (isTv) {
+            setupCardTvFocus(cardZip, ContextCompat.getColor(activity, R.color.tv_accent))
+            setupCardTvFocus(cardShareSheet, ContextCompat.getColor(activity, R.color.tv_glass_border))
             (btnCancel as? MaterialButton)?.let { btn ->
                 val glassCsl = ColorStateList.valueOf(0x26FFFFFF)
                 val yellowCsl = ColorStateList.valueOf(ContextCompat.getColor(activity, R.color.tv_accent))
@@ -203,123 +355,27 @@ object DocumentProviderExportHelper {
         onExportShareSheet: (List<File>, MountedDocumentProvider) -> Unit
     ) {
         val hasDirectory = files.any { it.isDirectory }
-        val isSingleRegularFile = files.size == 1 && !hasDirectory
-
-        if (isSingleRegularFile) {
-            onExportSingleFile(files.first(), provider)
-            return
-        }
-
-        val isTv = DeviceUtils.isTvDevice(activity)
-        val layoutRes = if (isTv) R.layout.dialog_export_multi_choice_tv else R.layout.dialog_export_multi_choice
-        val dialogView = LayoutInflater.from(activity).inflate(layoutRes, null)
-
-        val dialog = MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
-            .setView(dialogView)
-            .create()
-
-        val txtTitle = dialogView.findViewById<TextView>(R.id.txtExportChoiceTitle)
-        val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtExportChoiceSubtitle)
-        val cardZip = dialogView.findViewById<MaterialCardView>(R.id.cardExportZip)
-        val cardShareSheet = dialogView.findViewById<MaterialCardView>(R.id.cardExportShareSheet)
-        val txtZipDesc = dialogView.findViewById<TextView>(R.id.txtExportZipSubtitle)
-        val txtShareTitle = dialogView.findViewById<TextView>(R.id.txtExportShareSheetTitle)
-        val txtShareDesc = dialogView.findViewById<TextView>(R.id.txtExportShareSheetSubtitle)
-        val imgShareIcon = dialogView.findViewById<ImageView>(R.id.imgExportShareSheetIcon)
-        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
-
-        if (files.size == 1 && files.first().isDirectory) {
-            txtTitle.text = activity.getString(R.string.share_export_folder_title)
-            txtSubtitle.text = activity.getString(R.string.share_export_folder_msg, files.first().name, provider.displayName)
-        } else {
-            txtTitle.text = activity.getString(R.string.share_export_multi_zip_title)
-            txtSubtitle.text = activity.getString(R.string.share_export_multi_zip_msg, files.size, provider.displayName)
-        }
-
-        txtShareTitle?.text = activity.getString(R.string.share_export_via_app, provider.displayName)
-        if (files.any { it.isDirectory }) {
-            txtZipDesc?.text = activity.getString(R.string.share_export_as_zip_folder_desc, provider.displayName)
-            txtShareDesc?.text = activity.getString(R.string.share_export_via_app_folder_desc, provider.displayName)
-        } else {
-            txtZipDesc?.text = activity.getString(R.string.share_export_as_zip_desc, provider.displayName)
-            txtShareDesc?.text = activity.getString(R.string.share_export_via_app_desc, provider.displayName)
-        }
-
-        // Resolve app icon for Option 2 (Upload via Provider App)
-        val iconDrawable = try {
-            if (provider.packageName.isNotEmpty()) {
-                activity.packageManager.getApplicationIcon(provider.packageName)
-            } else null
-        } catch (_: Exception) { null }
-
-        if (iconDrawable != null && imgShareIcon != null) {
-            imgShareIcon.setImageDrawable(iconDrawable)
-            imgShareIcon.imageTintList = null
-        }
-
-        var optionSelected = false
-
-        cardZip.setOnClickListener {
-            optionSelected = true
-            dialog.dismiss()
-            onExportZip(files, provider)
-        }
-
-        cardShareSheet.setOnClickListener {
-            if (files.any { it.isDirectory }) {
-                val title = activity.getString(R.string.folder_upload_notice_title)
-                val msg = if (files.size == 1 && files.first().isDirectory) {
-                    activity.getString(R.string.folder_upload_notice_single_msg, files.first().name, provider.displayName)
-                } else {
-                    activity.getString(R.string.folder_upload_notice_multi_msg, provider.displayName)
-                }
-                za.kilowatch.ultimatefilemanager.ui.UfmDialogHelper.showConfirmation(
-                    context = activity,
-                    title = title,
-                    message = msg,
-                    iconRes = R.drawable.ic_warning,
-                    positiveText = activity.getString(R.string.btn_upload_files_only),
-                    negativeText = activity.getString(R.string.cancel),
-                    onPositive = {
-                        optionSelected = true
-                        dialog.dismiss()
-                        onExportShareSheet(files, provider)
-                    }
-                )
-            } else {
-                optionSelected = true
-                dialog.dismiss()
-                onExportShareSheet(files, provider)
-            }
-        }
-
-        btnCancel.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.setOnDismissListener {
-            if (!optionSelected) {
+        val firstName = files.firstOrNull()?.name.orEmpty()
+        handleExportChoice(
+            activity = activity,
+            itemCount = files.size,
+            hasDirectory = hasDirectory,
+            firstName = firstName,
+            provider = provider,
+            onExportSingleFile = { prov ->
+                val firstFile = files.firstOrNull() ?: return@handleExportChoice
+                onExportSingleFile(firstFile, prov)
+            },
+            onExportZip = { prov ->
+                onExportZip(files, prov)
+            },
+            onExportShareSheet = { prov ->
+                onExportShareSheet(files, prov)
+            },
+            onDismissWithoutSelection = {
                 cleanupTempFiles(activity, files)
             }
-        }
-
-        if (isTv) {
-            setupCardTvFocus(cardZip, ContextCompat.getColor(activity, R.color.tv_accent))
-            setupCardTvFocus(cardShareSheet, ContextCompat.getColor(activity, R.color.tv_glass_border))
-            (btnCancel as? MaterialButton)?.let { btn ->
-                val glassCsl = ColorStateList.valueOf(0x26FFFFFF)
-                val yellowCsl = ColorStateList.valueOf(ContextCompat.getColor(activity, R.color.tv_accent))
-                btn.backgroundTintList = glassCsl
-                btn.setTextColor(Color.WHITE)
-                btn.setOnFocusChangeListener { _, hasFocus ->
-                    btn.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                    btn.setTextColor(if (hasFocus) Color.BLACK else Color.WHITE)
-                }
-            }
-        }
-
-        dialog.show()
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        )
     }
 
     /**

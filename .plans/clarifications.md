@@ -1,38 +1,33 @@
-# Clarifications: Folder File List Stability & Background Sync Optimization (Fix Ghost Scrolling & Lag)
+# Clarifications: Immediate Other Storage Export Validation & WebDAV Folder Performance Optimization
 
-## Status
-Answers received — ready for /tasks
+## Date: 2026-11-10
 
-## Questions and Answers
-
-### UI and RecyclerView Update Behavior
-**Q1.** How should FileAdapter handle directory list submissions and refreshes?
-**A:** Adopt DiffUtil and early-return if contents are identical (`if (oldList == newList) return`) to preserve scroll position, view holders, and touch drag state natively without resets or jumping.
-
-**Q2.** When folder child counts and total sizes finish computing in the background, how should the adapter update?
-**A:** Update only directory rows using granular payloads (`notifyItemChanged(pos, PAYLOAD_COUNT)`), leaving other rows untouched, avoiding full adapter re-binds.
-
-### Data and State Synchronization
-**Q3.** How should background folder sync (`syncFolderWithIndex`) and Room Flow emissions be optimized?
-**A:** Apply both:
-1. Compare physical file timestamps, sizes, and paths against existing database rows before writing to Room (`syncFolderWithIndex`), avoiding redundant table invalidations for untouched folders.
-2. Deduplicate Room Flow emissions using `distinctUntilChanged` on folder file lists so identical database notifications never trigger UI updates.
-
-### Gestures and Scrolling
-**Q4.** What should happen if a background update arrives while the user is actively touching or flinging the list?
-**A:** Apply updates silently in-place via DiffUtil without interrupting active touch drags or fling velocity.
-
-### TV and Focus Handling
-**Q5.** On Android TV, how should item focus be preserved when background sync completes?
-**A:** Keep focus strictly locked on the currently selected item without posting synthetic focus requests or re-scrolling.
+### Clarification 1: Remote Download Timing for "Upload to Other Storage"
+- **Question**: For 'Upload to Other Storage' on remote network shares (when providers exist), at what stage should the remote files/folders be downloaded?
+- **Decision**: **Only download after provider & export format selection**.
+- **Rationale**:
+  1. If no provider is mounted, immediately show toast and open `OtherStorageActivity` without downloading any remote data.
+  2. When providers exist, the user first picks the destination provider (`showSelectMountedProviderDialog`).
+  3. If multiple items or a folder are selected, the user chooses between "Export as ZIP" and "Upload via Provider App" before any network transfer begins. If single file, proceeds directly.
+  4. If the user cancels at either dialog, zero bytes are downloaded.
+  5. Downloading to staging occurs strictly after confirmation, feeding directly into the export step.
 
 ---
 
-## Spec / Plan Impact
-- The answers align with and reinforce all functional and non-functional requirements in [`.plans/spec.md`](file:///F:/Share/UFM/.plans/spec.md).
-- No changes required to `spec.md`.
+### Clarification 2: Subdirectory Child Counting on Remote Network Shares
+- **Question**: How should directory child counts (item counts) be handled for subfolders in remote network shares (WebDAV, SMB, NFS, Cloud) in `NetworkFileAdapter`?
+- **Decision**: **Skip remote child counting**.
+- **Rationale**:
+  1. Precomputing child counts by recursively issuing `listFiles` on every subdirectory causes massive network storms (>15s to >30s delays on WebDAV, SMB, NFS, and Cloud).
+  2. For remote network shares (`share.type` is WebDAV, SMB, NFS, FTP, SFTV, Cloud, etc.), do not spawn sequential `listFiles` child-count background probes.
+  3. The directory item will display its standard folder label/subtitle (or cached count if already known), ensuring instantaneous folder opening and rendering.
 
 ---
 
-## Confirmed — Ready for /tasks
-All questions have been answered. The specifications and implementation decisions are finalized.
+### Clarification 3: Remote Staging Progress Dialog & Telemetry
+- **Question**: Which progress dialog should be shown while downloading remote files/folders for export to Other Storage?
+- **Decision**: **`ArchiveProgressDialog`**.
+- **Rationale**:
+  1. `ArchiveProgressDialog` is UFM's canonical `UFMStandard` glass progress dialog supporting title, file/item counter, percentage, indeterminate/determinate states, and explicit cancellation.
+  2. Adheres to TV and mobile dual-layout standards (`dialog_archive_progress.xml` and `dialog_archive_progress_tv.xml`).
+  3. Cancelling the dialog cleanly cancels the coroutine job, aborts remote streaming, and immediately deletes any temporary files staged under `cacheDir/upload_other_*`.
