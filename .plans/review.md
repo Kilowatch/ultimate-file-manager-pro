@@ -1,10 +1,7 @@
-# Code Review: Immediate Other Storage Export Validation & WebDAV Folder Performance Optimization
+# Code Review: Advanced Sync Remote Folder Target Resolution
 
 ## Summary
-The implementation successfully resolves the two major performance and UX issues reported in `error.txt`:
-1. **Instant Other Storage Validation**: Tapping `Upload to Other Storage` on network shares (WebDAV, SMB, NFS, etc.) immediately checks `DocumentProviderRepository.getMountedProviders(...)`. When no provider is mounted, it immediately shows the toast and navigates to `OtherStorageActivity` in <100ms with 0 bytes downloaded over the network.
-2. **Deferred Staging with Cancellation Telemetry**: When providers exist, destination provider and format selection dialogs are displayed *before* remote downloading begins. Remote file staging runs inside a coroutine with `ArchiveProgressDialog`, providing real-time progress and instantaneous cancellation that prunes temporary cache files.
-3. **WebDAV Subfolder Listing Acceleration**: Removed the sequential background `childCountJob` that issued recursive `listFiles` queries across all subdirectories on remote network shares in `NetworkFileAdapter`. Directory listings now open immediately on WebDAV, SMB, NFS, and Cloud shares without 15–30+ second connection delays or thread starvation.
+The implementation cleanly resolves the issue where Advanced Sync (and Classic Sync) defaulted to the root directory on WebDAV and other non-SMB shares. By extracting the path resolution logic into a standalone, pure Kotlin `SyncRemotePathResolver`, the SMB server-mode dynamic share logic is strictly isolated to SMB shares, while WebDAV, Nextcloud, SFTP, FTP, NFS, and Cloud storage backends correctly receive their user-selected subfolder paths. In addition, the download safety guard (`autoCreate = false`) ensures that missing remote folders fail gracefully without wiping local files. The code adheres strictly to Kotlin idioms, Android background work best practices, and project conventions.
 
 ---
 
@@ -19,21 +16,21 @@ The implementation successfully resolves the two major performance and UX issues
 ### 🟡 Minor
 *None.*
 
-### 🔵 Suggestions / Polish
-- **[RESOLVED] [`ArchiveProgressDialog.kt`](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/archive/ArchiveProgressDialog.kt)**: Added `customTitle` support to `ArchiveOperationType.ADD` in `ArchiveProgressDialog` to allow telemetry-driven custom download headers ("Downloading: <filename>") alongside standard progress badges.
-- **[RESOLVED] [`DocumentProviderExportHelper.kt`](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/DocumentProviderExportHelper.kt)**: Extracted `handleExportChoice` from `handleExportToProvider` so that both local `File` items and remote `NetworkFile` items share the identical `UFMStandard` export choice UI and validation rules without requiring pre-staging.
+### 🔵 Suggestions
+- **[`SyncRemotePathResolver.kt:47`](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/sync/SyncRemotePathResolver.kt#L47)**: *(Implemented)* When stripping leading SMB share names in standard SMB shares, added `ignoreCase = true` and `raw.substring(shareName.length + 1).trim('/')` to tolerate casing variations between share configuration and path selection. Verified with unit test in `SyncRemotePathResolverTest`.
 
 ---
 
 ## Checklist Coverage
-- [x] **Kotlin Correctness**: Clean type safety, proper default parameters, and backward-compatible method overloads.
-- [x] **Coroutines & Lifecycle**: Used `lifecycleScope` / `viewLifecycleOwner.lifecycleScope` with `Dispatchers.IO`, checking `currentCoroutineContext().isActive` on file copy loops for prompt cancellation.
-- [x] **UFM Fragment Rules**: In `NetworkBrowserFragment`, strictly avoided concrete Activity casts like `(activity as? NetworkBrowserActivity)`.
-- [x] **Tools FAB & Quick Bar Parity**: Synchronized behavior across `NetworkBrowserActivity` and `NetworkBrowserFragment`.
-- [x] **UI/UX & Telemetry**: Integrated canonical `ArchiveProgressDialog` with TV/Mobile glass layouts, item counters, progress percentage, and clean cancel handling.
-- [x] **Automated Tests**: Unit tests implemented in `OtherStorageExportTest` and passing cleanly; all network unit tests verified with `./gradlew testMobileGoogleDebugUnitTest`.
+- **Kotlin Correctness**: Clean. Explicit null safety, immutable `data class`, pure `object` utility, no raw unhandled exceptions.
+- **Coroutines & Flow**: Clean. Suspending functions execute within WorkManager's `CoroutineWorker` context with no `runBlocking` or `GlobalScope`.
+- **Jetpack Compose**: N/A (no Compose code touched).
+- **Android Lifecycle & Architecture**: Clean. Proper application context usage, no leaked contexts, WorkManager best practices respected.
+- **Performance**: High improvement. Prevents whole-share crawls by strictly bounding listing queries to the target directory.
+- **Architecture & Project Conventions**: Clean. Follows spec and plan, unit tests added and passing, no hardcoded UI strings.
+- **Tests**: Clean. 100% test pass across all protocol permutations in `SyncRemotePathResolverTest`.
 
 ---
 
 ## Verdict
-**Approve**. The code is well-structured, follows all project conventions, and is ready for `/securitycheck`.
+**Approve**. The changes are solid, correct, verified by automated unit tests and a successful Gradle build. Ready to proceed to `/securitycheck`.

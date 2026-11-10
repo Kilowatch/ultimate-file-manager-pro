@@ -1,33 +1,33 @@
-# Clarifications: Immediate Other Storage Export Validation & WebDAV Folder Performance Optimization
+# Clarifications: Advanced Sync Remote Folder Target Resolution
 
-## Date: 2026-11-10
+## Status
+Answers received — ready for /tasks
 
-### Clarification 1: Remote Download Timing for "Upload to Other Storage"
-- **Question**: For 'Upload to Other Storage' on remote network shares (when providers exist), at what stage should the remote files/folders be downloaded?
-- **Decision**: **Only download after provider & export format selection**.
-- **Rationale**:
-  1. If no provider is mounted, immediately show toast and open `OtherStorageActivity` without downloading any remote data.
-  2. When providers exist, the user first picks the destination provider (`showSelectMountedProviderDialog`).
-  3. If multiple items or a folder are selected, the user chooses between "Export as ZIP" and "Upload via Provider App" before any network transfer begins. If single file, proceeds directly.
-  4. If the user cancels at either dialog, zero bytes are downloaded.
-  5. Downloading to staging occurs strictly after confirmation, feeding directly into the export step.
+## Questions and Answers
 
----
+### Business Logic and Edge Cases
+**Q1.** When an Upload (local → remote) or Two-way sync job runs and the target remote folder does not exist on the server, what should happen?  
+**A:** Automatically create the remote folder hierarchy (`mkdir`) and proceed with sync.
 
-### Clarification 2: Subdirectory Child Counting on Remote Network Shares
-- **Question**: How should directory child counts (item counts) be handled for subfolders in remote network shares (WebDAV, SMB, NFS, Cloud) in `NetworkFileAdapter`?
-- **Decision**: **Skip remote child counting**.
-- **Rationale**:
-  1. Precomputing child counts by recursively issuing `listFiles` on every subdirectory causes massive network storms (>15s to >30s delays on WebDAV, SMB, NFS, and Cloud).
-  2. For remote network shares (`share.type` is WebDAV, SMB, NFS, FTP, SFTV, Cloud, etc.), do not spawn sequential `listFiles` child-count background probes.
-  3. The directory item will display its standard folder label/subtitle (or cached count if already known), ensuring instantaneous folder opening and rendering.
+**Q2.** When a Download (remote → local) sync job runs and the target remote folder does not exist on the server, what should happen?  
+**A:** Abort/fail the job with a descriptive notification without modifying or deleting any local files.
+
+### Scope & Engine Parity
+**Q3.** Which sync engines should be updated and verified?  
+**A:** Align both `AdvancedSyncWorker` and `SyncWorker` to ensure consistent remote path handling across both sync engines.
+
+### Protocol & Path Structure
+**Q4.** Should SMB server-mode share name stripping be strictly isolated to `ShareType.SMB`, while preserving the full `profile.remotePath` for WebDAV and all other protocols?  
+**A:** Yes, isolate SMB-specific share name stripping strictly to `ShareType.SMB` and preserve full `profile.remotePath` for WebDAV and other network/cloud protocols.
 
 ---
 
-### Clarification 3: Remote Staging Progress Dialog & Telemetry
-- **Question**: Which progress dialog should be shown while downloading remote files/folders for export to Other Storage?
-- **Decision**: **`ArchiveProgressDialog`**.
-- **Rationale**:
-  1. `ArchiveProgressDialog` is UFM's canonical `UFMStandard` glass progress dialog supporting title, file/item counter, percentage, indeterminate/determinate states, and explicit cancellation.
-  2. Adheres to TV and mobile dual-layout standards (`dialog_archive_progress.xml` and `dialog_archive_progress_tv.xml`).
-  3. Cancelling the dialog cleanly cancels the coroutine job, aborts remote streaming, and immediately deletes any temporary files staged under `cacheDir/upload_other_*`.
+## Spec / Plan Impact
+- **Engine Scope**: Expanded from `AdvancedSyncWorker` only to encompass both `AdvancedSyncWorker` (Advanced Sync engine) and `SyncWorker` (Classic 1-way Folder Sync engine) for architectural consistency.
+- **Upload Auto-Creation**: Defined that during Upload / Two-Way sync, missing remote folders will be created recursively before syncing files into them.
+- **Download Safety**: Defined that during Download sync, a missing remote folder will trigger an immediate failure with a notification, preventing any local data loss when "Sync deletions" is active.
+
+---
+
+## Confirmed — Ready for /tasks
+All questions have been answered and recorded. You can now run `/tasks` to proceed with task breakdown.

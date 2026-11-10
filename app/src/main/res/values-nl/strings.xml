@@ -15884,6 +15884,194 @@ Add to Home Screen
     <string name="storage_fav_name_empty">
 Shortcut name cannot be empty
 </string>
+
+    <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
+    <string name="download_manager_title">
+Download Manager
+</string>
+    <string name="download_manager_subtitle">
+Torrent, Magnet &amp; HTTP downloads
+</string>
+    <string name="download_manager_desc">
+High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+</string>
+    <string name="download_no_transfers">
+No active downloads
+</string>
+    <string name="torrent_location_picker_fab_text">
+Select as Download Folder
+</string>
+    <string name="torrent_location_confirm_title">
+Download Folder
+</string>
+    <string name="torrent_location_confirm_subtitle">
+Confirm Download Location
+</string>
+    <string name="torrent_location_confirm_desc">
+Downloads will be saved directly into this directory.
+</string>
+    <string name="download_direct_downloads">
+Direct Downloads
+</string>
+    <string name="download_torrent_downloads">
+Torrent Downloads
+</string>
+    <string name="download_location_label">
+Download location
+</string>
+    <string name="download_change_location">
+Change
+</string>
+    <string name="download_action_start">
+Start
+</string>
+    <string name="download_action_pause">
+Pause
+</string>
+    <string name="download_action_resume">
+Resume
+</string>
+    <string name="download_action_cancel">
+Cancel
+</string>
+    <string name="download_action_delete">
+Delete
+</string>
+    <string name="download_enter_url_title">
+Direct Download URL
+</string>
+    <string name="download_enter_url_hint">
+https://example.com/file.iso
+</string>
+    <string name="download_enter_url_btn">
+Download
+</string>
+    <string name="download_enter_magnet_title">
+Torrent or Magnet Link
+</string>
+    <string name="download_enter_magnet_hint">
+magnet:?xt=urn:btih:...
+</string>
+    <string name="download_pick_torrent_file">
+Open .torrent File
+</string>
+    <string name="download_legal_gate_title">
+Download Manager &amp; P2P Notice
+</string>
+    <string name="download_legal_gate_subtitle">
+Acceptable Use &amp; Privacy Information
+</string>
+    <string name="download_legal_gate_agree_check">
+I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+</string>
+    <string name="download_storage_fat32_error_title">
+Storage Limit Exceeded
+</string>
+    <string name="download_storage_fat32_error_msg">
+The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+\n
+Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+</string>
+    <string name="download_storage_insufficient_title">
+Insufficient Storage Space
+</string>
+    <string name="download_storage_insufficient_msg">
+There is not enough free space on the selected storage drive.\n
+\n
+Required: %1$s\n
+Available: %2$s\n
+\n
+Please select another drive or free up space.
+</string>
+    <string name="download_storage_choose_new_location">
+Choose Location
+</string>
+    <string name="download_network_cellular_warning_title">
+Mobile Data Connection
+</string>
+    <string name="download_network_cellular_warning_msg">
+You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+\n
+Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+</string>
+    <string name="download_network_queue_wifi">
+Queue for Wi-Fi
+</string>
+    <string name="download_network_enable_mobile">
+Allow Mobile Data
+</string>
+    <string name="download_pref_network_policy_title">
+Network Policy
+</string>
+    <string name="download_pref_network_policy_subtitle">
+Choose network connection rules for downloads
+</string>
+    <string name="download_pref_network_policy_wifi_only">
+Wi-Fi Only (Recommended)
+</string>
+    <string name="download_pref_network_policy_wifi_only_desc">
+Only transfer downloads when connected to unmetered Wi-Fi
+</string>
+    <string name="download_pref_network_policy_all">
+All Networks (Wi-Fi &amp; Cellular)
+</string>
+    <string name="download_pref_network_policy_all_desc">
+Allow transfers over cellular mobile data and Wi-Fi networks
+</string>
+    <string name="download_pref_review_legal">
+Review Non-Piracy Terms
+</string>
+    <string name="download_pref_review_legal_desc">
+View P2P swarm disclosure, privacy, and zero-seeding terms
+</string>
+    <string name="download_legal_p2p_swarm_title">
+P2P Swarm &amp; IP Visibility
+</string>
+    <string name="download_legal_p2p_swarm_desc">
+BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+</string>
+    <string name="download_legal_zero_seeding_title">
+Zero-Seeding Privacy
+</string>
+    <string name="download_legal_zero_seeding_desc">
+UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+</string>
+    <string name="download_legal_lawful_use_title">
+Lawful Content Only
+</string>
+    <string name="download_legal_lawful_use_desc">
+You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+</string>
+    <string name="download_legal_continue">
+Agree &amp; Continue
+</string>
+    <string name="download_legal_understood">
+Understood
+</string>
+    <string name="download_state_downloading">
+Downloading
+</string>
+    <string name="download_state_paused">
+Paused
+</string>
+    <string name="download_state_queued">
+Queued for Wi-Fi
+</string>
+    <string name="download_state_completed">
+Completed
+</string>
+    <string name="download_state_error">
+Error
+</string>
+    <string name="download_notif_channel_name">
+Download Manager Transfers
+</string>
+    <string name="download_notif_channel_desc">
+Ongoing download progress and status updates
+</string>
+    <string name="download_timeout_stopped">
+Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+</string>
 </resources>
 
 

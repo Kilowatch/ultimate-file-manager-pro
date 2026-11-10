@@ -1,88 +1,127 @@
-# Implementation Plan: Immediate Other Storage Export Validation & WebDAV Folder Performance Optimization
+# Implementation Plan: Advanced Sync Remote Folder Target Resolution
 
-## Goal Description
-Resolve the severe 15–30+ second delays reported in `error.txt` when using "Upload to Other Storage" on remote network shares (WebDAV, SMB, NFS) and browsing WebDAV servers:
-1. **Instant Other Storage Pre-Check**: Ensure that tapping `Upload to Other Storage` checks mounted document providers immediately. If unconfigured (`mountedProviders.isEmpty()`), immediately show the toast and open `OtherStorageActivity` in <100ms with **0 bytes** downloaded.
-2. **Deferred Staging with Telemetry**: When providers exist, prompt the user for destination and export format (Single File, Zip, Provider App) *before* downloading remote content. When confirmed, download with `ArchiveProgressDialog` showing item progress, percentage, and cancellation support.
-3. **WebDAV & Remote Network Subfolder Navigation Acceleration**: Eliminate the background subdirectory child-count storm in `NetworkFileAdapter` that executes sequential `listFiles` calls on every subfolder, restoring instantaneous folder opening on WebDAV, SMB, NFS, and Cloud storage.
+## Goals
+Ensure that Advanced Sync (and Classic Sync) profiles configured with a specific remote subfolder path strictly execute all sync operations (listing, uploading, downloading, deleting, and two-way conflict resolution) within the selected target directory rather than defaulting to the root of the remote share.
+
+Reference Spec Criteria:
+- Advanced Sync download profile targeting a WebDAV (Nextcloud) subfolder populates the local folder exclusively with files from that subfolder.
+- Root files are never downloaded or modified when a subfolder is selected.
+- Upload and two-way sync profiles correctly upload/sync into the remote subfolder and auto-create missing remote directories.
+- Download sync fails safely with an error notification if the target remote folder does not exist, preserving local files from accidental deletion.
+- Standard SMB and SMB Server-Mode path resolution remain fully functional without regressions.
+
+---
+
+## Architecture Overview
+
+### Root Cause Analysis
+In `AdvancedSyncWorker.kt`, the path resolution block previously used:
+```kotlin
+val syncRemotePath: String = when {
+    share.isServerMode || share.remotePath.isEmpty() -> "" // intended for SMB server-mode
+    share.type == ShareType.SMB -> { ... }
+    else -> profile.remotePath
+}
+```
+For WebDAV, SFTP, FTP, and S3 shares, `share.remotePath` is almost always empty (`""`) because non-SMB protocols do not divide paths into SMB share-name partitions. Consequently, `share.remotePath.isEmpty()` matched, causing `syncRemotePath` to become `""`. Because `WebDavShareClient` and other non-SMB clients take the target path as a method argument rather than reading `share.remotePath`, they received `""`, effectively targeting the root of the remote storage.
+
+### Solution Design
+1. **Extract Dedicated `SyncRemotePathResolver`**:
+   - Centralize path resolution logic in `za.kilowatch.ultimatefilemanager.sync.SyncRemotePathResolver`.
+   - Strictly isolate SMB server-mode dynamic share stripping to `ShareType.SMB && (share.isServerMode || share.remotePath.isEmpty())`.
+   - For all other protocols (WebDAV, Nextcloud, SFTP, FTP, NFS, S3, RClone), sanitize and preserve the user's `profile.remotePath.trim('/')`.
+   - Provide a safe `buildRemoteFilePath(basePath, fileName)` helper that avoids illegal leading slashes (`//` or `/$name` when basePath is empty).
+
+2. **Integrate into `AdvancedSyncWorker`**:
+   - Use `SyncRemotePathResolver.resolve(share, profile.remotePath)` to obtain `effectiveShare` and `syncRemotePath`.
+   - Parameterize `listRemoteFiles(share, remotePath, autoCreate = true/false)`.
+   - In `doDownload`, pass `autoCreate = false`. If the remote directory does not exist or fails to list, safely abort and display `R.string.failed_to_access_remote_path_for_profilename` without deleting local files.
+   - In `doUpload` and `doTwoway`, pass `autoCreate = true` (or auto-create via `mkdirByType`), ensuring missing remote directories are created before file transfers.
+   - Fix all remote file path concatenations across `doUpload`, `doDownload`, `doTwoway`, `resolveRemoteSize`, and deletion loops to use `buildRemoteFilePath`.
+
+3. **Align `SyncWorker` (Classic 1-Way Sync)**:
+   - Update `SyncWorker` to use `SyncRemotePathResolver`.
+   - Expand `SyncWorker` protocol handling to support WebDAV and SFTP in addition to SMB, NFS, and FTP.
 
 ---
 
 ## User Review Required
 > [!IMPORTANT]
-> - `NetworkFileAdapter` will no longer query remote subdirectories over the network to count child items. Folder subtitles in network views will display their modification date (and any cached count) without blocking network I/O.
-> - "Upload to Other Storage" for network items will prompt for the destination provider and export mode upfront before downloading data over the network.
+> - For **Download** sync jobs, if the designated remote directory is deleted or missing on the server, the job will fail safely with a notification rather than creating an empty remote folder. This prevents local files from being wiped when "Sync deletions" is enabled.
+> - For **Upload** and **Two-way** sync jobs, if the target remote directory does not exist, the sync engine will automatically create the remote folder structure (`mkdir`) and proceed.
 
 ---
 
 ## Proposed Changes
 
-### Component 1: Document Provider Export Helper (`storage/DocumentProviderExportHelper.kt`)
-#### [MODIFY] `DocumentProviderExportHelper.kt`
-- Extract a reusable `handleExportChoice` dialog helper that takes item count, has-directory flag, single file name, and destination provider.
-- Keep `handleExportToProvider(activity, files, ...)` for local `File` workflows, delegating to `handleExportChoice`.
-- Allow `showSelectMountedProviderDialog` to be called safely with empty local files, bypassing unneeded disk cleanup when remote downloads have not yet occurred.
+### Component 1: Path Resolution Engine (`sync/`)
+
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/sync/SyncRemotePathResolver.kt`
+- Encapsulates path resolution into a standalone, testable object.
+- Provides `resolve(share: NetworkShare, profileRemotePath: String): ResolvedSharePath`.
+- Provides `buildRemoteFilePath(basePath: String, fileName: String): String`.
 
 ---
 
-### Component 2: Standalone Network Browser (`network/NetworkBrowserActivity.kt`)
-#### [MODIFY] `NetworkBrowserActivity.kt`
-- Refactor `uploadNetworkFilesToOtherStorage(files: List<NetworkFile>)`:
-  1. Synchronously query `val mounted = DocumentProviderRepository.getMountedProviders(this)`.
-  2. If `mounted.isEmpty()`, immediately show `no_mounted_doc_providers_toast` and launch `OtherStorageActivity`. Exit immediately (0ms delay, 0 network downloads).
-  3. If `mounted.isNotEmpty()`, present `showSelectMountedProviderDialog`.
-  4. Once provider is selected, invoke `DocumentProviderExportHelper.handleExportChoice(...)`.
-  5. If user chooses:
-     - **Single file export**: Show `ArchiveProgressDialog`, download the single file to temp staging, and launch SAF `ACTION_CREATE_DOCUMENT`.
-     - **Export as ZIP**: Show `ArchiveProgressDialog`, recursively download selected items to temp staging, compress to ZIP via `ArchiveManager`, and launch SAF `ACTION_CREATE_DOCUMENT`.
-     - **Upload via Provider App**: Show `ArchiveProgressDialog`, download selected items to temp staging, and launch share sheet with `exportFilesViaProviderApp`.
-  6. Support cancel on `ArchiveProgressDialog`: aborts coroutine and deletes temp staging folder immediately.
+### Component 2: Advanced Sync Worker (`sync/advanced/`)
+
+#### [MODIFY] `app/src/main/java/za/kilowatch/ultimatefilemanager/sync/advanced/AdvancedSyncWorker.kt`
+- Replace inline path resolution with `SyncRemotePathResolver.resolve(share, profile.remotePath)`.
+- Update `listRemoteFiles` to accept `autoCreate: Boolean = true`.
+- In `doDownload`, handle missing remote directories by safely aborting and alerting the user via `R.string.failed_to_access_remote_path_for_profilename`.
+- In `resolveRemoteSize`, fix empty path concatenation from `"${remotePath.trimEnd('/')}/$fileName"` to `SyncRemotePathResolver.buildRemoteFilePath(remotePath, fileName)`.
 
 ---
 
-### Component 3: Tabbed & Twin-Window Network Browser (`network/NetworkBrowserFragment.kt`)
-#### [MODIFY] `NetworkBrowserFragment.kt`
-- Apply the identical refactored workflow to `NetworkBrowserFragment.uploadNetworkFilesToOtherStorage(files: List<NetworkFile>)`.
-- Ensure strict adherence to Fragment rules (no `(activity as? NetworkBrowserActivity)` casts, self-contained lifecycle handling via `viewLifecycleOwner.lifecycleScope`).
+### Component 3: Classic Sync Worker (`sync/`)
+
+#### [MODIFY] `app/src/main/java/za/kilowatch/ultimatefilemanager/sync/SyncWorker.kt`
+- Replace legacy SMB server-mode check with `SyncRemotePathResolver.resolve(share, profile.remotePath)`.
+- Add `ShareType.WEBDAV` and `ShareType.SFTP` / `ShareType.SCP` branches to connection testing, listing, directory creation, and output stream opening.
+- Use `SyncRemotePathResolver.buildRemoteFilePath` for remote file targets.
 
 ---
 
-### Component 4: Remote Subfolder Child-Count Suppression (`network/NetworkFileAdapter.kt`)
-#### [MODIFY] `NetworkFileAdapter.kt`
-- Remove the sequential `childCountJob` background launch that issues `listFiles` across all directory entries over WebDAV, SMB, NFS, and Cloud storage.
-- Keep `childCountCache` lookup in `bindDetails` and `bindItem` so cached counts (if previously opened) still display, while falling back gracefully to `dateStr` for unprobed folders.
-- Ensure `childCountJob?.cancel()` is maintained.
+### Component 4: Unit Tests (`test/sync/`)
 
----
-
-### Component 5: Local & SAF Browser Parity (`storage/FileBrowserActivity.kt` & `FileBrowserFragment.kt`)
-#### [MODIFY] `FileBrowserActivity.kt` & `FileBrowserFragment.kt`
-- Verify that `upload_other_storage` pre-checks `mountedProviders.isEmpty()` before opening any dialogs, ensuring consistent instant-navigation behavior.
+#### [NEW] `app/src/test/java/za/kilowatch/ultimatefilemanager/sync/SyncRemotePathResolverTest.kt`
+- Comprehensive unit tests verifying:
+  1. WebDAV with subfolder (`"Photos/Vacation"`) -> `effectiveShare` unchanged, `syncRemotePath = "Photos/Vacation"`.
+  2. WebDAV with root (`"/"` and `""`) -> `syncRemotePath = ""`.
+  3. WebDAV with messy slashes (`"/Nextcloud/Docs/"`) -> `syncRemotePath = "Nextcloud/Docs"`.
+  4. SMB Server Mode with empty share remotePath -> `effectiveShare.remotePath = profile.remotePath`, `syncRemotePath = ""`.
+  5. SMB Standard Share Mode with subfolder (`"Media/Movies"`) -> `syncRemotePath = "Movies"`.
+  6. SMB Standard Share Mode with share root (`"Media"`) -> `syncRemotePath = ""`.
+  7. SFTP, FTP, S3, NFS path normalization.
+  8. `buildRemoteFilePath` empty vs nested paths.
 
 ---
 
 ## Verification Plan
 
 ### Automated Tests
-Run unit tests for network share models, diff callbacks, and file helpers:
+Run unit tests for sync path resolution and helper classes:
 ```powershell
-./gradlew testDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.network.*"
+./gradlew testDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.sync.*"
+```
+
+Compile the standard debug build:
+```powershell
+./gradlew assembleMobileGoogleDebug
 ```
 
 ### Manual Verification
-1. **Upload to Other Storage (No Provider Configured)**:
-   - Clear/unmount any Other Storage provider.
-   - In Network Browser (WebDAV / SMB), select a folder or file.
-   - Tap `Tools -> Upload to Other Storage`.
-   - **Verify**: Toast "No storage provider added. Select a provider to add." appears instantly (<100ms) and navigates to Other Storage screen. No remote download occurs.
-2. **Upload to Other Storage (Provider Configured)**:
-   - Configure an Other Storage provider.
-   - Select a folder on WebDAV and tap `Upload to Other Storage`.
-   - **Verify**: Destination dialog opens instantly.
-   - Select format (ZIP or App).
-   - **Verify**: `ArchiveProgressDialog` appears showing download progress with an active Cancel button.
-   - Test pressing **Cancel**: download stops immediately, temp directory is deleted.
-3. **WebDAV Folder Navigation**:
-   - Open WebDAV share with multiple subfolders (especially HTTPS with self-signed certificate).
-   - Enter root and subfolders.
-   - **Verify**: Listing opens immediately without 15–30s child-count lag.
+1. **Advanced Sync (WebDAV / Nextcloud Download)**:
+   - Configure Advanced Sync download profile between local folder and a WebDAV subfolder (e.g., `/TestSync`).
+   - Run sync.
+   - Verify only files from `/TestSync` are downloaded to the phone.
+2. **Advanced Sync (WebDAV Upload)**:
+   - Configure Advanced Sync upload profile targeting a WebDAV subfolder.
+   - Run sync.
+   - Verify files are uploaded into `/TestSync` and not the root directory.
+3. **SMB Sync Regression**:
+   - Run sync against an SMB share in both server-mode and standard share-mode.
+   - Verify files continue to sync to the correct SMB share subfolder.
+4. **Missing Remote Folder Safety**:
+   - Delete the remote subfolder on WebDAV and trigger Download sync.
+   - Verify sync aborts safely with a notification and does not wipe local files.

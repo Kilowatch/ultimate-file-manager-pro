@@ -1,12 +1,17 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    
+    <!-- ═══════════════════════════════════════════════════════════
+         SHARED
+    ═══════════════════════════════════════════════════════════ -->
     <string name="policy_app_name">
 Ultimate File Manager Pro
 </string>
     <string name="policy_company">
 KiloWatch
+</string>
+    <string name="policy_last_updated">
+Last Updated: November 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -15,7 +20,9 @@ https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
 support@kilowatch.co.za
 </string>
 
-    
+    <!-- ═══════════════════════════════════════════════════════════
+         TERMS AND CONDITIONS
+    ═══════════════════════════════════════════════════════════ -->
     <string name="tc_screen_title">
 الشروط والأحكام
 </string>
@@ -23,7 +30,7 @@ support@kilowatch.co.za
 بتحميل أو استخدام Ultimate File Manager Pro، فإنك توافق على هذه الشروط. لقد كتبناها بأوضح صورة ممكنة وبأقل قدر من المصطلحات المعقدة.
 </string>
 
-    
+    <!-- Section titles -->
     <string name="tc_s1_title">
 1. ما الذي توافق عليه
 </string>
@@ -67,7 +74,7 @@ support@kilowatch.co.za
 11. أسئلة؟ تواصل معنا
 </string>
 
-    
+    <!-- Section body text -->
     <string name="tc_s1_body">
 بتحميل أو فتح Ultimate File Manager Pro من متجر Google Play، فإنك توافق على هذه الشروط. إذا كنت تفضل عدم قبولها، فما عليك سوى عدم تثبيت التطبيق أو استخدامه.
 </string>
@@ -170,7 +177,89 @@ Ultimate File Manager Pro هو تطبيق Android مجاني — متوفر عل
 باستخدام Ultimate File Manager Pro، فإنك تؤكد أنك قد قرأت وفهمت هذه الشروط والأحكام.
 </string>
 
-    
+    <!-- Feature list (Section 2) -->
+    <string-array name="tc_features">
+        <item>
+File Browser — browse, copy, move, rename, and delete files anywhere on your device.
+</item>
+        <item>
+Encrypted Vault — lock sensitive files behind AES-256-GCM encryption with your own PIN.
+</item>
+        <item>
+File Server — host an FTP or secure SFTP server directly on your device to share files across your local network.
+</item>
+        <item>
+Remote Management — manage files over your local Wi-Fi via a built-in HTTP server that supports uploading, downloading, and installing APKs remotely.
+</item>
+        <item>
+Network Shares — connect to SMB, FTP, and NFS servers on your local network to browse, download, and manage remote files.
+</item>
+        <item>
+Folder Sync — automatically back up local phone folders to an SMB or FTP network share on a schedule you choose (interval or specific time daily, weekly, or monthly).
+</item>
+        <item>
+Device Pairing — pair your mobile phone and Android TV over local Wi-Fi to transfer and install files.
+</item>
+        <item>
+ADB Terminal — connect to Android devices in Developer Mode over your local Wi-Fi using ADB (Android Debug Bridge) for direct shell access and advanced troubleshooting.
+</item>
+        <item>
+Built-in Viewers — view text files, PDFs, animated images (APNG, GIF, animated WebP, AVIF, SVG and more), archives, and other formats directly within the app.
+</item>
+        <item>
+Advanced ZIP Support — create and extract password-protected and AES-encrypted ZIP archives.
+</item>
+        <item>
+Remote Screenshots — capture the screen of your paired Android TV over local Wi-Fi via ADB and save it directly to your phone\'s storage.
+</item>
+        <item>
+7Z Archive Support — extract 7Z archives with LZMA/LZMA2 compression.
+</item>
+        <item>
+File Search — quickly find files and folders across your device storage.
+</item>
+        <item>
+Storage Analyser — see a visual breakdown of what\'s using your storage space.
+</item>
+        <item>
+App Manager — view and manage all apps installed on your device, with debloat recommendations for pre-installed apps.
+</item>
+        <item>
+APK Installer — install Android apps and split APKs (XAPK) directly from files saved locally.
+</item>
+        <item>
+Elevated Access (Porter, Shizuku, Shevery &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.
+</item>
+        <item>
+Root Access (Mobile) — elevated Superuser access for rooted devices to browse, manage, and inspect system-level partitions and protected directories.
+</item>
+        <item>
+Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.
+</item>
+        <item>
+Storage Access Framework — other apps can access your files through UFM\'s document provider.
+</item>
+        <item>
+Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.
+</item>
+        <item>
+UFM Media Player — play audio, video, and SMIL animated SVG/SVGZ vector files with background playback, notification controls, Picture-in-Picture mode, and playlist management.
+</item>
+        <item>
+GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.
+</item>
+        <item>
+Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.
+</item>
+        <item>
+Music Tag Editor (Mobile) — inspect, edit, clean, and batch-update audio metadata descriptions (title, artist, album, year, genre, lyrics) and embedded album art directly inside audio files.
+</item>
+        <item>
+Download Manager — download files via direct HTTP/HTTPS URLs and peer-to-peer Magnet links or .torrent files for open-source distributions, public domain media, and authorized content.
+</item>
+    </string-array>
+
+    <!-- Risk table (Section 3) — label|detail pairs -->
     <string-array name="tc_risk_labels">
         <item>
 فقدان البيانات
@@ -260,7 +349,59 @@ Porter وShizuku وShevery والوصول المُرفَّع
 </item>
     </string-array>
 
-    
+    <!-- Responsibilities list (Section 4) -->
+    <string-array name="tc_responsibilities">
+        <item>
+Keep regular backups of important files before performing bulk operations.
+</item>
+        <item>
+Store your Vault PIN and Recovery Code somewhere safe — we cannot retrieve them for you.
+</item>
+        <item>
+Keep your PIN private. Anyone who knows it can access your Vault.
+</item>
+        <item>
+Keep your network share credentials safe — they are stored locally on your device.
+</item>
+        <item>
+Review your Folder Sync remote paths carefully — syncing to an incorrect network folder may overwrite existing files.
+</item>
+        <item>
+Exercise caution when removing system apps based on debloat recommendations.
+</item>
+        <item>
+Only connect via ADB Terminal to devices you own or have explicit permission to access. Do not use ADB Terminal to gain unauthorized access to any device.
+</item>
+        <item>
+Keep any ADB, Porter, Shizuku, or Shevery pairing PINs private — share these only with people you trust to have access to your device.
+</item>
+        <item>
+Secure your Porter, Shizuku or Shevery Manager — granting UFM elevated access via any of these managers gives it power over restricted files. Only grant this access if you trust the app.
+</item>
+        <item>
+Exercise extreme caution when Root Access is active — never delete or modify system files unless you understand the consequences to your device OS.
+</item>
+        <item>
+Only use the app for lawful purposes. Don\'t store, share, or distribute illegal content.
+</item>
+        <item>
+Don\'t use Remote Management to access another person\'s device without their permission.
+</item>
+        <item>
+Don\'t attempt to reverse-engineer, decompile, or tamper with the app.
+</item>
+        <item>
+Manage your indexed records responsibly — you can delete records or ignore specific drives at any time via Settings -> Storage Indexer.
+</item>
+        <item>
+Verify the authenticity and safety of any APK files before installing them.
+</item>
+        <item>
+Don\'t use the Download Manager, BitTorrent engine, or HTTP streamer to download, share, transmit, or facilitate infringement of copyrighted material without authorization from the copyright holder. You assume sole liability for downloaded content.
+</item>
+    </string-array>
+
+    <!-- Permissions table (Section 5) — label|detail pairs -->
     <string-array name="tc_permission_labels">
         <item>
 الوصول إلى جميع الملفات
@@ -380,7 +521,149 @@ Porter وShizuku وShevery والوصول المُرفَّع
 </item>
     </string-array>
 
-    
+    <!-- Open-source list (Section 7) -->
+    <string-array name="tc_opensource">
+        <item>
+NanoHTTPD — lightweight HTTP server that powers Remote Management. (BSD-3-Clause)
+</item>
+        <item>
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3 client library for network share browsing and Folder Sync. (LGPL-2.1)
+</item>
+        <item>
+smbj (hierynomus/smbj) — SMB2/SMB3 Java implementation used for network share access. (Apache-2.0)
+</item>
+        <item>
+EMC ECS NFS Client (com.emc.ecs:nfs-client) — NFS v3 client library for network share access. (Apache-2.0)
+</item>
+        <item>
+libnfs (sahlberg/libnfs) — native NFS client library supporting NFSv2, NFSv3, and NFSv4. (LGPL-2.1 / BSD-2-Clause)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access and hosting. (Apache-2.0)
+</item>
+        <item>
+Apache FtpServer (org.apache.ftpserver) — 100% pure Java FTP server. (Apache-2.0)
+</item>
+        <item>
+Apache POI — document processing library for viewing office files. (Apache-2.0)
+</item>
+        <item>
+Firebase Analytics — Google\'s analytics platform that helps us understand app usage. (Apache-2.0)
+</item>
+        <item>
+AndroidX Libraries (incl. Leanback for Android TV) — Google\'s Jetpack components for modern Android development. (Apache-2.0)
+</item>
+        <item>
+Material Design Components — Google\'s UI library for a clean, consistent interface. (Apache-2.0)
+</item>
+        <item>
+Room Persistence Library — SQLite abstraction layer for local metadata indexing. (Apache-2.0)
+</item>
+        <item>
+zip4j (net.lingala.zip4j) — advanced ZIP library for password-protected and AES-encrypted archives. (Apache-2.0)
+</item>
+        <item>
+Apache Commons Compress — library for reading and writing various archive formats (7z, zip, tar, etc). (Apache-2.0)
+</item>
+        <item>
+XZ for Java (org.tukaani.xz) — implementation of XZ and LZMA compression. (Public Domain)
+</item>
+        <item>
+zstd-jni (com.github.luben:zstd-jni) — JNI bindings for Zstandard compression and extraction library. (BSD-2-Clause)
+</item>
+        <item>
+Junrar (com.github.junrar:junrar) — Java RAR extraction library. (BSD-3-Clause)
+</item>
+        <item>
+libadb-android (com.github.MuntashirAkon) — Android Debug Bridge library enabling secure connections to ADB-enabled devices for remote shell access and certificate-based pairing. (Apache-2.0)
+</item>
+        <item>
+libsu (com.github.topjohnwu.libsu) — complete Android su shell and root service solution. (Apache-2.0)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access. (Apache-2.0)
+</item>
+        <item>
+EdDSA for Java (net.i2p.crypto:eddsa) — implementation of EdDSA (Edwards-curve Digital Signature Algorithm) for Ed25519 SSH keys. (CC0-1.0)
+</item>
+        <item>
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding for Android used by the SSHD library. (MIT)
+</item>
+        <item>
+BouncyCastle (org.bouncycastle) — cryptography library for RSA/EdDSA keypair generation and X.509 certificate creation; version 1.83. (MIT-style License)
+</item>
+        <item>
+Google Play Billing Library — processes optional in-app tip purchases; governed by Google Play\'s Privacy Policy. (Apache-2.0)
+</item>
+        <item>
+Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)
+</item>
+        <item>
+Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, JXL, SVG) in the built-in image viewer. (Apache-2.0)
+</item>
+        <item>
+avif-coder (io.github.awxkee) — AVIF image decoding library providing native AVIF support on Android API 24–30; API 31+ uses the built-in ImageDecoder. (Apache-2.0)
+</item>
+        <item>
+jxl-coder (io.github.awxkee) — JPEG XL image decoding and encoding library providing native JXL support on Android API 21+. (Apache-2.0 / BSD-3-Clause)
+</item>
+        <item>
+APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)
+</item>
+        <item>
+Porter SDK (com.github.d4rken-org.porter-api) — Android SDK enabling elevated file system access via the Porter, Shizuku or Shevery Manager apps. It embeds the Shizuku API (rikka.shizuku), licensed under MIT. (Apache-2.0)
+</item>
+        <item>
+ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)
+</item>
+        <item>
+Lottie (com.airbnb.android:lottie) v6.3.0 — animation library for rendering Adobe After Effects animations natively on Android, used for smooth UI animations throughout the app. (Apache-2.0)
+</item>
+        <item>
+Ktor (io.ktor) — lightweight web framework used to power the local File Server. (Apache-2.0)
+</item>
+        <item>
+PDFBox-Android (com.tom-roush:pdfbox-android) — library for rendering and viewing PDF documents natively. (Apache-2.0)
+</item>
+        <item>
+ExoPlayer / Media3 (androidx.media3) — advanced media player for robust video and audio playback. (Apache-2.0)
+</item>
+        <item>
+Microsoft Authentication Library (MSAL) — handles OneDrive API authentication natively. (MIT)
+</item>
+        <item>
+OkHttp (com.squareup.okhttp3) — robust HTTP &amp; HTTP/2 client for cloud storage network requests. (Apache-2.0)
+</item>
+        <item>
+Gson (com.google.code.gson) — JSON processing library used for cloud storage integration. (Apache-2.0)
+</item>
+        <item>
+AndroidX Browser (androidx.browser) — Chrome Custom Tabs support for Google Drive API authentication. (Apache-2.0)
+</item>
+        <item>
+ZXing (com.google.zxing:core) — barcode image processing library. (Apache-2.0)
+</item>
+        <item>
+gifencoder (com.squareup:gifencoder) — pure Java GIF encoding library for creating animated GIF files from selected images. (Apache-2.0)
+</item>
+        <item>
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) — library for reading, writing, and stripping EXIF and GPS metadata across JPEG, PNG, WebP, HEIF, and DNG image formats. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+</item>
+        <item>
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
+</item>
+        <item>
+AndroidX WebKit (androidx.webkit) — library providing WebViewAssetLoader for secure, local-only rendering of SMIL animated SVG/SVGZ files in UFM Media Player without external network access or file-scheme vulnerabilities. (Apache-2.0)
+</item>
+        <item>
+libtorrent4j (org.libtorrent4j) — Java and Kotlin JNI wrapper around Rasterbar libtorrent for zero-seeding peer-to-peer BitTorrent downloading. (BSD-3-Clause / MIT)
+</item>
+    </string-array>
+
+    <!-- Contact items (Section 11) -->
     <string-array name="tc_contact_labels">
         <item>
 البريد الإلكتروني
@@ -393,7 +676,9 @@ support@kilowatch.co.za
     </string-array>
 
 
-    
+    <!-- ═══════════════════════════════════════════════════════════
+         PRIVACY POLICY
+    ═══════════════════════════════════════════════════════════ -->
     <string name="pp_screen_title">
 سياسة الخصوصية
 </string>
@@ -401,7 +686,7 @@ support@kilowatch.co.za
 ملفاتك تبقى على جهازك — نحن لا نراها أبدًا. بموافقتك، نجمع بيانات استخدام مجهولة عبر Firebase لتحسين التطبيق. لا إعلانات، لا بيع للبيانات، لا أعمال مشبوهة.
 </string>
 
-    
+    <!-- Section titles -->
     <string name="pp_s1_title">
 1. مقدمة
 </string>
@@ -456,7 +741,7 @@ support@kilowatch.co.za
     <string name="pd_dialog_body">
 يتيح تطبيق Ultimate File Manager Pro الوصول إلى قائمة التطبيقات المثبتة على جهازك عبر الإذن QUERY_ALL_PACKAGES لتوفير عرض تطبيق App Manager وميزات إزالة التطبيقات (Debloater) والإدارة عن بُعد عبر خادم الملفات البعيد (Remote File Server). تتم معالجة هذه المعلومات وتخزينها محليًا على جهازك. عند تفعيل خادم الملفات البعيد، قد يتم إرسال قائمة التطبيقات المثبتة وبياناتها الوصفية عبر شبكتك المحلية إلى الأجهزة الموثوقة عبر اتصال HTTPS مشفر بـ TLS. للحصول على التفاصيل الكاملة، يُرجى الرجوع إلى القسم 13ب من سياسة الخصوصية الخاصة بنا.
 </string>
-    
+    <!-- File Server Remote Apps Disclosure (FR-03) -->
     <string name="pd_remote_apps_title">
 الوصول إلى التطبيقات عن بُعد
 </string>
@@ -473,7 +758,7 @@ support@kilowatch.co.za
 14. اتصل بنا
 </string>
 
-    
+    <!-- Section body text -->
     <string name="pp_s1_body">
 Ultimate File Manager Pro هو تطبيق Android مستقل وليس تابعًا أو مصرحًا أو برعاية أو مؤيدًا من قبل مشروع Ultimate File Manager لنظام Windows (ultimatefilemanager.pl) أو أي منتج آخر يستخدم اسمًا مشابهًا. جميع أسماء المنتجات والعلامات التجارية الأخرى هي ملك لأصحابها.\n
 \n
@@ -554,7 +839,7 @@ Ultimate File Manager Pro هو تطبيق Android مستقل وليس تابعً
 أمان الإدارة عن بُعد
 </string>
 
-    
+    <!-- Section 6 — Google API Limited Use -->
     <string name="pp_s6_compliance_banner">
 يخضع استخدام Ultimate File Manager Pro للمعلومات الواردة من Google APIs لسياسة بيانات مستخدم Google API Services، بما في ذلك متطلبات الاستخدام المحدود.
 </string>
@@ -579,7 +864,7 @@ Ultimate File Manager Pro هو تطبيق Android مستقل وليس تابعً
     <string name="pp_s6_minimum_access">
 يطلب Ultimate File Manager Pro فقط الحد الأدنى من أذونات Google Drive اللازمة لأداء إجراءات إدارة الملفات التي تختارها. نحن لا نطلب أبدًا الوصول إلى Gmail أو جهات اتصال Google أو تقويم Google أو أي بيانات خدمات Google أخرى.
 </string>
-    
+    <!-- Section 6b — RClone Integration -->
     <string name="pp_s6b_compliance_banner">
 يدمج Ultimate File Manager Pro الواجهة الخلفية RClone لدعم الاتصال بأكثر من 100 مزود تخزين سحابي. تتم إدارة جميع التكوينات وبيانات الاعتماد مباشرة على جهازك.
 </string>
@@ -603,7 +888,7 @@ Ultimate File Manager Pro هو تطبيق Android مستقل وليس تابعً
 عمليات الملفات: تحميل، تنزيل، إعادة تسمية، نسخ، نقل، أو حذف الملفات على التخزين البعيد بناءً على طلبك الصريح.
 </item>
     </string-array>
-    
+    <!-- Section 6c — Rooted Devices & Superuser Access -->
     <string name="pp_s6c_compliance_banner">
 يعمل الوصول إلى الجذر على الأجهزة المحمولة المدعومة بشكل صارم على الجهاز باستخدام إطار عمل libsu. لا يتم جمع أو نقل أي بيانات أوامر مرتفعة أو ملفات نظام.
 </string>
@@ -627,7 +912,7 @@ Ultimate File Manager Pro هو تطبيق Android مستقل وليس تابعً
 عمليات الملفات المرتفعة: إجراء نسخ الملفات أو نقلها أو تحريرها أو حذفها في مواقع تخزين محمية عند طلب المستخدم.
 </item>
     </string-array>
-    
+    <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">
 نحن لا نبيع أو نؤجر أو نتبادل أو ننقل أو نكشف عن معلوماتك الشخصية أو بيانات مستخدم Google لأي طرف ثالث لأي غرض لا يرتبط مباشرة بتوفير ميزات إدارة الملفات في Ultimate File Manager Pro — نقطة انتهى.
 </string>
@@ -667,7 +952,7 @@ Ultimate File Manager Pro ليس مخصصًا للأطفال دون سن 13 عا
 تم تصميم هذا التطبيق ليتوافق مع معايير Google Play. جميع الأذونات المطلوبة ضرورية لوظائف التطبيق الأساسية. قبل طلب أي إذن حساس، يشرح التطبيق بوضوح سبب الحاجة إليه وكيف سيتم استخدامه. فيما يتعلق بتحديثات سياسة الصور والفيديو لشهر أكتوبر 2024: الوصول الواسع ضروري لأن هذا مدير ملفات شامل مصمم للعمليات الجماعية (النقل، إعادة التسمية، والمزامنة) عبر جميع وحدات التخزين، والتي لا يمكن تنفيذها بكفاءة باستخدام منتقي النظام القياسي.
 </string>
 
-    
+    <!-- Section 13b — Installed Application Information Prominent Disclosure -->
     <string name="pp_s13b_intro">
 يتطّلع تطبيق Ultimate File Manager Pro على القائمة الكاملة للتطبيقات المثبتة على جهازك من خلال إذن QUERY_ALL_PACKAGES لتوفير ميزات App Manager و Debloater و Remote File Server. يوضح هذا الإفصاح بالضبط البيانات التي يتم الوصول إليها، ولماذا، وأين تبقى.
 </string>
@@ -732,7 +1017,7 @@ Remote File Server: عرض قائمة التطبيقات المثبتة والب
 باستخدام Ultimate File Manager Pro، فإنك تؤكد أنك قد قرأت وفهمت سياسة الخصوصية هذه.
 </string>
 
-    
+    <!-- Local storage table (Section 2) -->
     <string-array name="pp_local_data_labels">
         <item>
 رمز PIN للخزنة (مهشم)
@@ -852,7 +1137,7 @@ Remote File Server: عرض قائمة التطبيقات المثبتة والب
 </item>
     </string-array>
 
-    
+    <!-- Analytics table (Section 2) -->
     <string-array name="pp_analytics_labels">
         <item>
 معلومات الجهاز
@@ -876,7 +1161,7 @@ Remote File Server: عرض قائمة التطبيقات المثبتة والب
 </item>
     </string-array>
 
-    
+    <!-- What we never collect (Section 2) -->
     <string-array name="pp_never_collect">
         <item>
 ملفاتك، مستنداتك، صورك، فيديوهاتك، أو أي وسائط
@@ -901,7 +1186,7 @@ Remote File Server: عرض قائمة التطبيقات المثبتة والب
 </item>
     </string-array>
 
-    
+    <!-- How we use data (Section 3) -->
     <string-array name="pp_use_local">
         <item>
 المصادقة على الوصول إلى الخزنة المشفرة
@@ -943,7 +1228,7 @@ Remote File Server: عرض قائمة التطبيقات المثبتة والب
 </item>
     </string-array>
 
-    
+    <!-- Storage permissions (Section 4) -->
     <string-array name="pp_storage_perm_labels">
         <item>
 MANAGE_EXTERNAL_STORAGE
@@ -967,7 +1252,7 @@ API 30+ · إدارة كاملة للملفات عبر جميع وحدات ال�
 </item>
     </string-array>
 
-    
+    <!-- Network permissions (Section 4) -->
     <string-array name="pp_network_perm_labels">
         <item>
 INTERNET
@@ -997,7 +1282,7 @@ CHANGE_WIFI_MULTICAST_STATE
 </item>
     </string-array>
 
-    
+    <!-- Other permissions (Section 4) -->
     <string-array name="pp_other_perm_labels">
         <item>
 POST_NOTIFICATIONS
@@ -1051,7 +1336,7 @@ WAKE_LOCK
 </item>
     </string-array>
 
-    
+    <!-- Encryption spec (Section 5) -->
     <string-array name="pp_encryption_labels">
         <item>
 الخوارزمية
@@ -1081,7 +1366,7 @@ Android Keystore — تخزين آمن مدعوم بالأجهزة
 </item>
     </string-array>
 
-    
+    <!-- Local data protection (Section 5) -->
     <string-array name="pp_local_protection">
         <item>
 جميع البيانات المحلية مخزنة في منطقة التخزين الخاصة بالتطبيق — لا يمكن للتطبيقات الأخرى الوصول إليها.
@@ -1106,7 +1391,7 @@ Android Keystore — تخزين آمن مدعوم بالأجهزة
 </item>
     </string-array>
 
-    
+    <!-- Remote security (Section 5) -->
     <string-array name="pp_remote_security">
         <item>
 وصول محمي برمز PIN — فقط الأشخاص المصرح لهم يمكنهم الاتصال.
@@ -1125,7 +1410,7 @@ Android Keystore — تخزين آمن مدعوم بالأجهزة
 </item>
     </string-array>
 
-    
+    <!-- Google Drive user data table (Section 6) -->
     <string-array name="pp_google_data_labels">
         <item>
 بيانات تعريف الملفات والمجلدات (الاسم، الحجم، نوع MIME، تاريخ التعديل، معرف Drive)
@@ -1159,7 +1444,7 @@ Android Keystore — تخزين آمن مدعوم بالأجهزة
 الحفاظ على جلسة المصادقة الخاصة بك دون الحاجة إلى تسجيل الدخول المتكرر
 </item>
     </string-array>
-    
+    <!-- Permitted uses of Google data (Section 6) -->
     <string-array name="pp_google_permitted">
         <item>
 تصفح Drive: جلب بيانات تعريف الملفات والمجلدات لعرض محتويات Drive.
@@ -1180,7 +1465,7 @@ Android Keystore — تخزين آمن مدعوم بالأجهزة
 مزامنة المجلدات: مزامنة مجلد محلي مع مجلد Drive وفقاً لملف تعريف المزامنة الذي قمت بتكوينه.
 </item>
     </string-array>
-    
+    <!-- Prohibited uses of Google data (Section 6) -->
     <string-array name="pp_google_prohibited">
         <item>
 الإعلانات المستهدفة أو المخصصة أو المعاد استهدافها أو القائمة على الاهتمامات
@@ -1204,7 +1489,7 @@ Android Keystore — تخزين آمن مدعوم بالأجهزة
 نقل بيانات مستخدم Google إلى أي طرف ثالث لأي سبب غير توفير أو تحسين ميزات إدارة الملفات في التطبيق، أو كما هو مطلوب قانوناً
 </item>
     </string-array>
-    
+    <!-- Third parties (Section 7) -->
     <string-array name="pp_third_party_names">
         <item>
 Firebase Analytics
@@ -1275,7 +1560,7 @@ Amazon Web Services والموفرون المتوافقون
 </item>
     </string-array>
 
-    
+    <!-- Data retention (Section 8) -->
     <string-array name="pp_retention_labels">
         <item>
 بيانات التطبيق المحلية
@@ -1317,7 +1602,7 @@ Amazon Web Services والموفرون المتوافقون
 </item>
     </string-array>
 
-    
+    <!-- Your rights (Section 9) -->
     <string-array name="pp_rights">
         <item>
 الوصول إلى بياناتك المخزنة محليًا مباشرةً من خلال التطبيق.
@@ -1342,7 +1627,7 @@ Amazon Web Services والموفرون المتوافقون
 </item>
     </string-array>
 
-    
+    <!-- Delete steps (Section 8) -->
     <string-array name="pp_delete_steps">
         <item>
 افتح إعدادات Android وانتقل إلى التطبيقات.
@@ -1355,7 +1640,7 @@ Amazon Web Services والموفرون المتوافقون
 </item>
     </string-array>
 
-    
+    <!-- Play Store compliance table (Section 12) -->
     <string-array name="pp_compliance_labels">
         <item>
 أذونات التخزين
@@ -1434,7 +1719,7 @@ Amazon Web Services والموفرون المتوافقون
     </string-array>
 
 
-    
+    <!-- Contact (Section 14) -->
     <string-array name="pp_contact_labels">
         <item>
 البريد الإلكتروني

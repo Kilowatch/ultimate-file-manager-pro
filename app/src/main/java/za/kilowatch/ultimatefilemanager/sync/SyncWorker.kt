@@ -17,9 +17,13 @@ import za.kilowatch.ultimatefilemanager.network.FtpShareClient
 import za.kilowatch.ultimatefilemanager.network.NetworkFile
 import za.kilowatch.ultimatefilemanager.network.NetworkShare
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
-import za.kilowatch.ultimatefilemanager.network.ShareType
 import za.kilowatch.ultimatefilemanager.network.NfsShareClient
+import za.kilowatch.ultimatefilemanager.network.RCloneShareClient
+import za.kilowatch.ultimatefilemanager.network.S3ShareClient
+import za.kilowatch.ultimatefilemanager.network.ShareType
 import za.kilowatch.ultimatefilemanager.network.SmbShareClient
+import za.kilowatch.ultimatefilemanager.network.SshShareClient
+import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -56,12 +60,8 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                 return Result.failure()
             }
 
-            // Resolve effective share: for server-mode SMB shares (or empty remotePath), combine with profile.remotePath
-            val effectiveShare = if (share.isServerMode || share.remotePath.isEmpty()) {
-                share.copy(remotePath = profile.remotePath, isServerMode = false)
-            } else {
-                share
-            }
+            // Resolve effective share and true remote sub-path using SyncRemotePathResolver
+            val (effectiveShare, syncRemotePath) = SyncRemotePathResolver.resolve(share, profile.remotePath)
 
             if (effectiveShare.remotePath.isEmpty() && effectiveShare.type == ShareType.SMB) {
                 android.util.Log.w("SyncWorker", "No SMB share path specified for profile '${profile.name}'")
@@ -72,11 +72,17 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             }
 
             // Test connection — null = success, non-null = error message
-            val connError = when (effectiveShare.type) {
-                ShareType.SMB -> SmbShareClient.testConnection(effectiveShare)
-                ShareType.NFS -> NfsShareClient.testConnection(effectiveShare)
-                ShareType.DLNA -> "DLNA does not support sync"
-                else -> FtpShareClient.testConnection(effectiveShare)
+            val connError = when {
+                RCloneShareClient.isRCloneShare(effectiveShare) -> null
+                else -> when (effectiveShare.type) {
+                    ShareType.SMB -> SmbShareClient.testConnection(effectiveShare)
+                    ShareType.NFS -> NfsShareClient.testConnection(effectiveShare)
+                    ShareType.SFTP, ShareType.SCP -> SshShareClient.testConnection(applicationContext, effectiveShare)
+                    ShareType.WEBDAV -> if (WebDavShareClient.testConnection(effectiveShare)) null else "WebDAV connection failed"
+                    ShareType.DLNA -> "DLNA does not support sync"
+                    ShareType.FTP -> FtpShareClient.testConnection(effectiveShare)
+                    else -> null
+                }
             }
 
             if (connError != null) {
@@ -100,11 +106,15 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             // 1. Get remote files
             var remoteFiles: List<NetworkFile>? = null
             try {
-                remoteFiles = when (effectiveShare.type) {
-                    ShareType.SMB -> SmbShareClient.listFiles(effectiveShare, profile.remotePath)
-                    ShareType.NFS -> NfsShareClient.listFiles(effectiveShare, profile.remotePath)
-                    ShareType.DLNA -> throw UnsupportedOperationException("DLNA does not support sync")
-                    else -> FtpShareClient.listFiles(effectiveShare, profile.remotePath)
+                remoteFiles = when {
+                    RCloneShareClient.isRCloneShare(effectiveShare) -> RCloneShareClient.listFiles(effectiveShare, syncRemotePath)
+                    effectiveShare.type == ShareType.SMB -> SmbShareClient.listFiles(effectiveShare, syncRemotePath)
+                    effectiveShare.type == ShareType.NFS -> NfsShareClient.listFiles(effectiveShare, syncRemotePath)
+                    effectiveShare.type == ShareType.SFTP || effectiveShare.type == ShareType.SCP -> SshShareClient.listFiles(effectiveShare, syncRemotePath)
+                    effectiveShare.type == ShareType.WEBDAV -> WebDavShareClient.listFiles(effectiveShare, syncRemotePath)
+                    effectiveShare.type == ShareType.AWS_S3 || effectiveShare.type == ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(effectiveShare, syncRemotePath)
+                    effectiveShare.type == ShareType.DLNA -> throw UnsupportedOperationException("DLNA does not support sync")
+                    else -> FtpShareClient.listFiles(effectiveShare, syncRemotePath)
                 }
             } catch (e: Exception) {
                 // Ignore initial failure, we'll try to create the directory
@@ -114,20 +124,25 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
             // Try creating the directory if the list call threw an exception (e.g., path not found)
             if (remoteFiles == null) {
                 try {
-                    when (effectiveShare.type) {
-                        ShareType.SMB -> {
-                            SmbShareClient.mkdir(effectiveShare, profile.remotePath)
-                            remoteFiles = SmbShareClient.listFiles(effectiveShare, profile.remotePath)
-                        }
-                        ShareType.NFS -> {
-                            NfsShareClient.mkdir(effectiveShare, profile.remotePath)
-                            remoteFiles = NfsShareClient.listFiles(effectiveShare, profile.remotePath)
-                        }
-                        ShareType.DLNA -> throw UnsupportedOperationException("DLNA does not support sync")
-                        else -> {
-                            FtpShareClient.mkdir(effectiveShare, profile.remotePath)
-                            remoteFiles = FtpShareClient.listFiles(effectiveShare, profile.remotePath)
-                        }
+                    when {
+                        RCloneShareClient.isRCloneShare(effectiveShare) -> RCloneShareClient.mkdir(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.SMB -> SmbShareClient.mkdir(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.NFS -> NfsShareClient.mkdir(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.SFTP || effectiveShare.type == ShareType.SCP -> SshShareClient.mkdir(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.WEBDAV -> WebDavShareClient.mkdir(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.AWS_S3 || effectiveShare.type == ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.DLNA -> throw UnsupportedOperationException("DLNA does not support sync")
+                        else -> FtpShareClient.mkdir(effectiveShare, syncRemotePath)
+                    }
+                    remoteFiles = when {
+                        RCloneShareClient.isRCloneShare(effectiveShare) -> RCloneShareClient.listFiles(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.SMB -> SmbShareClient.listFiles(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.NFS -> NfsShareClient.listFiles(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.SFTP || effectiveShare.type == ShareType.SCP -> SshShareClient.listFiles(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.WEBDAV -> WebDavShareClient.listFiles(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.AWS_S3 || effectiveShare.type == ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(effectiveShare, syncRemotePath)
+                        effectiveShare.type == ShareType.DLNA -> throw UnsupportedOperationException("DLNA does not support sync")
+                        else -> FtpShareClient.listFiles(effectiveShare, syncRemotePath)
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to create or access remote path after creation attempt", e)
@@ -155,7 +170,8 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                 // If the remote size is the unknown sentinel, query the server lazily for this file.
                 if (remoteSize == za.kilowatch.ultimatefilemanager.network.SmbShareClient.SIZE_UNKNOWN_SENTINEL && effectiveShare.type == za.kilowatch.ultimatefilemanager.network.ShareType.SMB) {
                     try {
-                        val candidate = za.kilowatch.ultimatefilemanager.network.SmbShareClient.getFileSize(effectiveShare, "${profile.remotePath.trimEnd('/')}/$name")
+                        val fullRemotePath = SyncRemotePathResolver.buildRemoteFilePath(syncRemotePath, name)
+                        val candidate = za.kilowatch.ultimatefilemanager.network.SmbShareClient.getFileSize(effectiveShare, fullRemotePath)
                         if (candidate != null) resolvedRemoteSize = candidate
                     } catch (e: Exception) {
                         Log.w(TAG, "Lazy size query failed for $name", e)
@@ -192,17 +208,21 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
 
                 try {
                     val sourceSize = SyncStorageHelper.getFileSize(applicationContext, fileToUpload)
-                    val remoteFilePath = "${profile.remotePath.trimEnd('/')}/$name"
+                    val remoteFilePath = SyncRemotePathResolver.buildRemoteFilePath(syncRemotePath, name)
                     val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
                         sourceName = name,
                         sourceSize = sourceSize,
                         verifyDestSize = { za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(effectiveShare, remoteFilePath) },
                         doCopy = {
                             val inStream = SyncStorageHelper.openInputStream(applicationContext, fileToUpload)
-                            val outStream: OutputStream = when (effectiveShare.type) {
-                                ShareType.SMB -> SmbShareClient.openOutputStream(effectiveShare, remoteFilePath)
-                                ShareType.NFS -> NfsShareClient.openOutputStream(effectiveShare, remoteFilePath)
-                                ShareType.DLNA -> throw UnsupportedOperationException("DLNA does not support sync")
+                            val outStream: OutputStream = when {
+                                RCloneShareClient.isRCloneShare(effectiveShare) -> RCloneShareClient.openOutputStream(effectiveShare, remoteFilePath)
+                                effectiveShare.type == ShareType.SMB -> SmbShareClient.openOutputStream(effectiveShare, remoteFilePath)
+                                effectiveShare.type == ShareType.NFS -> NfsShareClient.openOutputStream(effectiveShare, remoteFilePath)
+                                effectiveShare.type == ShareType.SFTP || effectiveShare.type == ShareType.SCP -> SshShareClient.openOutputStream(effectiveShare, remoteFilePath)
+                                effectiveShare.type == ShareType.WEBDAV -> WebDavShareClient.openOutputStream(effectiveShare, remoteFilePath)
+                                effectiveShare.type == ShareType.AWS_S3 || effectiveShare.type == ShareType.IDRIVE_E2 -> S3ShareClient.openOutputStream(effectiveShare, remoteFilePath)
+                                effectiveShare.type == ShareType.DLNA -> throw UnsupportedOperationException("DLNA does not support sync")
                                 else -> FtpShareClient.openOutputStream(effectiveShare, remoteFilePath)
                             }
                             inStream.use { input ->

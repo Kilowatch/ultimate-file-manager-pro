@@ -1,79 +1,60 @@
-# Specification: Immediate Other Storage Export Validation & WebDAV Folder Performance Optimization
+# Specification: Advanced Sync Remote Folder Target Resolution (WebDAV & Network Shares)
 
 ## Overview
-This specification addresses two critical issues reported during network and remote storage operations (specifically WebDAV, SMB, and NFS):
-1. **Unvalidated Pre-Download on "Upload to Other Storage"**: When a user selects a file or folder on a remote network share (WebDAV, SMB, NFS, etc.) and triggers `Tools -> Upload to Other Storage`, the application currently downloads the entire file or recursively downloads the whole directory structure over the network into local cache *before* verifying if any external Document Provider is configured. When no provider is mounted ("Other Storage" not selected), the user experiences a 15–30+ second delay before abruptly seeing "No storage provider added. Select a provider to add." and being navigated to `OtherStorageActivity`, wasting bandwidth, time, and device flash storage.
-2. **WebDAV First Connection & Subfolder Navigation Latency**: Browsing WebDAV shares (particularly Windows 11 IIS/WebDAV with HTTPS and self-signed certificates) experiences excessive latency (>15s to >30s) when entering folders and subfolders. This is amplified by adapter-level sequential child-count queries across all subdirectories, lack of connection/session reuse, and unthrottled network probing.
-
-This specification establishes the requirements for instant pre-flight provider validation, deferred on-demand downloading with cancellation telemetry, and WebDAV directory listing acceleration.
+When setting up an Advanced Sync profile between a local folder and a remote network share (such as WebDAV/Nextcloud, SMB, SFTP, FTP, or Cloud storage), the sync engine must strictly synchronize against the specific remote folder path selected by the user during profile setup. Currently, selecting a remote subfolder causes sync operations (especially download and upload) to target the root directory of the remote share instead of the chosen subfolder, improperly syncing unintended root-level files and ignoring the user's selected path.
 
 ---
 
 ## User Stories
-- **As a user attempting to upload remote files or folders to Other Storage without any providers configured**, I want the app to immediately inform me and open the Other Storage setup screen in 0 milliseconds without downloading any network data.
-- **As a user uploading remote files or folders to a configured Other Storage provider**, I want to select the destination provider and export options *before* any remote downloading starts, with a visible, cancellable progress dialog showing transfer progress.
-- **As a user browsing WebDAV servers (including Windows 11 with HTTPS and self-signed certificates)**, I want folder and subfolder listings to open promptly without 15–30 second hangs or blocking child-count storms.
-- **As a user navigating across SMB, NFS, WebDAV, and Cloud storages**, I want consistent, responsive feedback across standalone, tabbed, and twin-window browser modes.
+- **As a user synchronizing files between a local directory and a remote WebDAV/Nextcloud folder**, I want the download sync operation to only pull files from the specific remote folder I selected during setup, so that my local storage receives the intended folder contents and not files from the share root.
+- **As a user setting up upload or bidirectional Advanced Sync with a remote share**, I want files to be transferred to and from the designated remote folder path rather than the root directory, so that remote files outside the target directory remain untouched and protected.
+- **As a user configuring or editing an Advanced Sync profile**, I want the selected remote path displayed in the UI to accurately reflect and correspond 1:1 with the actual path used by the background sync worker.
 
 ---
 
 ## Functional Requirements
 
-### 1. Instant Pre-Flight Validation for "Upload to Other Storage"
-- **FR-01: Zero-Delay Provider Verification**: Before initiating any file downloads, recursive directory traversal, or temporary file staging, the system must immediately check `DocumentProviderRepository.getMountedProviders(context)`.
-- **FR-02: Instant Setup Navigation on Empty Providers**: If no document providers are mounted (`mountedProviders.isEmpty()`):
-  - Display the `no_mounted_doc_providers_toast` toast ("No storage provider added. Select a provider to add.").
-  - Immediately launch `OtherStorageActivity`.
-  - Zero bytes of remote data must be transferred or staged to disk.
-- **FR-03: Upfront Destination Selection**: If mounted document providers exist:
-  - The provider selection dialog (and single-file vs zip export options where applicable) must be presented to the user **prior** to downloading the remote content.
-  - If the user cancels the provider selection or export dialog, no network download shall take place.
-- **FR-04: Deferred Streaming / Staging with Progress Dialog**:
-  - Once the user confirms the export destination, remote download and staging must execute with a canonical modal progress dialog (`ArchiveProgressDialog` or standard UFM progress dialog) displaying current item name, file counter, and an explicit **Cancel** button.
-  - If the user cancels the operation during download, remote streaming must immediately abort and any partially downloaded files in `cacheDir` must be pruned cleanly.
-- **FR-05: Multi-Browser & Multi-Protocol Parity**: This pre-flight validation and deferred download workflow must be synchronized across:
-  - `NetworkBrowserActivity.kt` (Standalone Network/Cloud Browser)
-  - `NetworkBrowserFragment.kt` (Tabbed & Twin Window Network/Cloud Browser)
-  - `FileBrowserActivity.kt` (Standalone Local & SAF Browser)
-  - `FileBrowserFragment.kt` (Tabbed & Twin Window Local & SAF Browser)
-  - Applicable to all network protocols: WebDAV, SMB, NFS, FTP, SFTP, and Cloud providers.
+### 1. Accurate Remote Path Targeting in Sync Operations
+- **FR-01: Remote Folder Path Honor**: All sync directions (Download: remote → local, Upload: local → remote, and Two-way: bidirectional) must execute within the specific remote subfolder path specified in the `AdvancedSyncProfile` (`remotePath`).
+- **FR-02: Remote Share Listing Scoping**: When listing remote files for synchronization (for difference comparison, size verification, hash generation, and download queuing), the query must be scoped to the target remote directory. Files outside this directory must never be enumerated or transferred.
+- **FR-03: Remote Directory Creation & Scoping**: When uploading or syncing bidirectional changes into a remote directory that contains subfolders or does not yet exist, the sync worker must automatically create the missing remote folder hierarchy (`mkdir`) relative to the target remote directory.
+- **FR-04: Remote Deletion Isolation (Sync Deletions)**: When `syncDeletions` is enabled, file deletions must be strictly constrained within the configured target remote folder. Under no circumstances should files or folders located at the share root or outside the target path be deleted.
+- **FR-05: Protocol & Engine Consistency**: Remote path resolution must function consistently across both `AdvancedSyncWorker` and `SyncWorker`, covering all supported network protocols, including WebDAV (and Nextcloud/ownCloud), SMB/CIFS (server-mode and standard share), SFTP, FTP, NFS, and Cloud storage backends.
 
-### 2. WebDAV Connection & Subfolder Navigation Optimization
-- **FR-06: Elimination of Subfolder Listing Storms**:
-  - `NetworkFileAdapter` must not execute sequential blocking `listFiles` queries over WebDAV (and slow remote protocols) for every subdirectory in the folder view solely to count child items.
-  - Subdirectory child counts for remote WebDAV/SMB/NFS shares must either be disabled, fetched lazily on viewport visibility, or limited with a tight per-folder timeout and concurrency limiter to avoid starving connection threads.
-- **FR-07: WebDAV Connection Re-use & Keep-Alive**:
-  - In `WebDavShareClient`, ensure connection parameters and client sessions maintain persistent HTTPS connections across requests to eliminate repetitive SSL handshakes and TCP connection overhead to the same host.
-- **FR-08: Cancellation & Stale Job Pruning**:
-  - When the user navigates into a subfolder or back out of a folder, any running background listings or child count jobs for the previous path must be cancelled immediately.
+### 2. UI & Profile Configuration Fidelity
+- **FR-06: Profile Remote Path Display**: In Advanced Sync profile creation and editing, the selected remote path must clearly indicate the selected folder relative to the share root (e.g., `/Documents/Work` or `/` for share root).
+- **FR-07: Root Path Handling**: If the user explicitly selects the root of the remote share, the sync operation must correctly target the root directory without generating invalid path prefixes (such as leading double slashes `//` or empty path segments).
 
 ---
 
 ## Non-Functional Requirements
-- **NFR-01: Response Time**: "Upload to Other Storage" when unconfigured must transition to `OtherStorageActivity` within 100 milliseconds of user tap.
-- **NFR-02: Bandwidth & Flash Storage Preservation**: No network traffic or disk cache writes shall occur for unconfigured or cancelled export actions.
-- **NFR-03: Robust Cleanup**: Any temporary staging folder created under `cacheDir/upload_other_*` must be reliably deleted upon completion, failure, or cancellation.
-- **NFR-04: Standard Conformance**: All dialogs, toasts, progress indicators, and navigation flows must conform strictly to `UFMStandard` (glass styling, embedded buttons, dark/light themes, TV D-pad focusability).
+- **NFR-01: Data Safety & Integrity**: Syncing must never delete, overwrite, or mutate files outside the user's configured source and destination folders.
+- **NFR-02: Performance & Bandwidth**: Remote file listing must only fetch metadata for the targeted directory branch, avoiding full-share crawls and reducing network bandwidth and API request quotas.
+- **NFR-03: Backward Compatibility**: Existing Advanced Sync profiles saved with a custom remote path must immediately benefit from the correct path resolution on their next scheduled or manual run without requiring recreation.
 
 ---
 
 ## Edge Cases & Error States
-- **Rapid Tap / Double Click**: Rapid taps on "Upload to Other Storage" must not trigger concurrent duplicate export or download jobs.
-- **Network Disconnect Mid-Transfer**: If the remote server disconnects while downloading staged items, the progress dialog must dismiss gracefully, show an error snackbar/dialog, and clean up temporary partial files.
-- **Low Local Disk Space**: Before staging large remote folders, verify sufficient local cache space exists. If space is insufficient, notify the user and cancel before filling flash memory.
-- **Self-Signed Certificates & Untrusted TLS**: Ensure `allowInsecureTls` remains honored across all WebDAV staging and listing calls without triggering connection resets or SSL handshake hangs.
+- **Share Root vs Subfolder**: Explicit selection of the share root (`/` or `""`) must still work seamlessly without appending trailing or leading slashes incorrectly.
+- **Deeply Nested Subfolders**: Remote paths with multiple directory tiers (e.g. `Photos/2026/Vacation`) must be resolved properly across listing, downloading, uploading, and folder creation.
+- **Special Characters and Spaces**: Remote folder paths containing spaces, Unicode characters, accents, or special symbols must be resolved and URL/path-encoded appropriately according to the remote protocol requirements.
+- **Trailing / Leading Slashes**: Irregular slash formatting in stored profiles (e.g., `/folder/subfolder/`, `folder/subfolder`, `/folder/subfolder`) must be normalized consistently before path concatenation.
+- **Missing Remote Folder on Download**: If the selected remote folder has been deleted or moved on the remote server prior to download sync execution, the sync job must fail gracefully with a descriptive error notification without deleting or modifying any existing files in the local destination directory.
+- **Missing Remote Folder on Upload**: If the target remote folder does not exist during an upload or two-way sync, the sync engine must automatically create the remote folder hierarchy before transferring files.
 
 ---
 
 ## Out of Scope
-- Rebuilding or restructuring the underlying `rclone.aar` or Go WebDAV binary.
-- Modifying third-party document provider apps (Google Drive, Proton Drive, Nextcloud apps).
+- Adding new network share protocols or cloud providers.
+- Changing the layout or visual design of the Advanced Sync setup screens.
+- Altering the fundamental sync scheduling engine (WorkManager periodic/one-time scheduling).
 
 ---
 
 ## Success Criteria
-- [ ] Tapping `Upload to Other Storage` on WebDAV, SMB, NFS, or Local storage when no provider is mounted immediately opens `OtherStorageActivity` with the toast in <100ms, with zero network download activity.
-- [ ] When providers are mounted, provider and export format selection dialogs appear before remote downloading begins.
-- [ ] Downloading remote files for export displays a progress dialog with cancel capability and cleans up temporary files on exit.
-- [ ] Navigating into WebDAV folders and subfolders is responsive and no longer suffers 15–30+ second delays caused by adapter child-count storms.
-- [ ] Tested and verified across Mobile touch and Android TV D-pad interfaces in Standalone, Tabbed, and Twin Window modes.
+- [ ] Setting up an Advanced Sync download profile targeting a WebDAV (Nextcloud) subfolder populates the local folder exclusively with files from that subfolder.
+- [ ] No files or directories from the root of the remote share are downloaded when a specific subfolder is selected.
+- [ ] Upload and two-way sync profiles targeting a remote subfolder correctly upload/sync files into the remote subfolder and do not place files at the share root.
+- [ ] Profiles targeting the root directory continue to synchronize root files without regressions.
+- [ ] Deletion sync with subfolders never deletes files outside the designated remote folder.
+- [ ] Verified across WebDAV and other network storage types on mobile and TV form factors.
