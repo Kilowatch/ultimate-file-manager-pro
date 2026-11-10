@@ -1,39 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<!--
+    Download Manager Activity — Android TV Widescreen Split Layout (UFMStandard)
+    Widescreen 16:9 two-column layout with left action/location sidebar and
+    full-height hero transfers list on the right.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/bg_tv_gradient"
-    android:padding="32dp">
+    tools:context=".download.DownloadManagerActivity">
 
-    <!-- Top App Bar -->
+    <!-- TV Header Bar (60dp) -->
     <LinearLayout
+        android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="60dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingHorizontal="28dp"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:padding="10dp"
             android:src="@drawable/ic_arrow_back"
+            android:background="@drawable/selector_tv_icon_btn"
             android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="?attr/colorControlNormal"
-            android:contentDescription="@string/back" />
+            android:nextFocusDown="@+id/cardDirectDownloads"
+            android:nextFocusRight="@+id/recyclerDownloads"
+            android:contentDescription="@string/back"
+            app:tint="@color/tv_text_primary" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="16dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
 
             <TextView
                 android:id="@+id/txtTitle"
@@ -41,15 +53,15 @@
                 android:layout_height="wrap_content"
                 android:text="@string/download_manager_title"
                 android:textColor="@color/tv_text_primary"
-                android:textSize="26sp"
-                android:fontFamily="sans-serif-bold" />
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-black" />
 
             <TextView
                 android:id="@+id/txtSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="14sp"
+                android:textSize="12.5sp"
                 android:fontFamily="sans-serif-medium"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -57,235 +69,342 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Split Widescreen Content -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingTop="16dp">
+        android:orientation="horizontal"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:baselineAligned="false"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Top Cards: Direct Downloads vs Torrent Downloads -->
+        <!-- Left Sidebar: Actions & Save Location -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
+            android:layout_width="290dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginEnd="18dp">
+
+            <!-- Section Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ADD DOWNLOAD"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="11.5sp"
+                android:fontFamily="sans-serif-bold"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="8dp" />
 
             <!-- Direct Downloads Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardDirectDownloads"
-                android:layout_width="0dp"
-                android:layout_height="140dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/tv_glass_white_10"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="14dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/tv_glass_border"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:foreground="@drawable/selector_tv_card"
+                android:nextFocusUp="@id/btnBack"
+                android:nextFocusDown="@id/cardTorrentDownloads"
+                android:nextFocusRight="@id/recyclerDownloads"
+                android:layout_marginBottom="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="12dp">
 
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:src="@drawable/ic_link"
-                        app:tint="?attr/colorPrimary"
-                        android:contentDescription="@string/download_direct_downloads" />
+                    <FrameLayout
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginEnd="12dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_link"
+                            app:tint="@color/tv_accent"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/download_direct_downloads"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="18sp"
-                        android:fontFamily="sans-serif-medium" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/download_direct_downloads"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Paste HTTP / HTTPS URL"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="11.5sp"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Torrent Downloads Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardTorrentDownloads"
-                android:layout_width="0dp"
-                android:layout_height="140dp"
-                android:layout_weight="1"
-                android:layout_marginStart="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/tv_glass_white_10"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="14dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/tv_glass_border"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:foreground="@drawable/selector_tv_card"
+                android:nextFocusUp="@id/cardDirectDownloads"
+                android:nextFocusDown="@id/rowDownloadLocation"
+                android:nextFocusRight="@id/recyclerDownloads"
+                android:layout_marginBottom="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="16dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="12dp">
 
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:src="@drawable/ic_magnet"
-                        app:tint="?attr/colorPrimary"
-                        android:contentDescription="@string/download_torrent_downloads" />
+                    <FrameLayout
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginEnd="12dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_magnet"
+                            app:tint="@color/tv_accent"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/download_torrent_downloads"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="18sp"
-                        android:fontFamily="sans-serif-medium" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/download_torrent_downloads"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Magnet URI or .torrent file"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="11.5sp"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Spacer pushes Location to the bottom of the sidebar -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Location Section Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DOWNLOAD LOCATION"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-bold"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="6dp" />
+
+            <!-- Location Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/rowDownloadLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/selector_tv_card"
+                android:nextFocusUp="@id/cardTorrentDownloads"
+                android:nextFocusDown="@id/btnChangeLocation"
+                android:nextFocusRight="@id/recyclerDownloads">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_folder"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+
+                        <TextView
+                            android:id="@+id/txtDownloadLocationPath"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:text="/storage/emulated/0/Download"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:singleLine="true"
+                            android:ellipsize="middle" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnChangeLocation"
+                        style="@style/Widget.Material3.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/download_change_location"
+                        android:background="@drawable/selector_tv_button"
+                        app:backgroundTint="@null"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:textColor="@color/tv_button_text_selector"
+                        android:textSize="12sp"
+                        android:focusable="true"
+                        android:nextFocusUp="@id/rowDownloadLocation"
+                        android:nextFocusRight="@id/recyclerDownloads" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <!-- Transfers Header -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="12dp"
-            android:text="Transfers"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="16sp"
-            android:fontFamily="sans-serif-bold"
-            android:textAllCaps="true"
-            android:letterSpacing="0.08" />
-
-        <!-- Transfers List Container -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerDownloads"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <!-- Empty State Container -->
-            <LinearLayout
-                android:id="@+id/layoutEmptyContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="24dp">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_download"
-                    app:tint="?attr/colorPrimary"
-                    android:contentDescription="@null"
-                    android:layout_marginBottom="16dp" />
-
-                <TextView
-                    android:id="@+id/txtEmptyTransfers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No active downloads"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="18sp"
-                    android:fontFamily="sans-serif-bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Select Direct Downloads or Torrent Downloads above to start downloading."
-                    android:textColor="@color/tv_text_secondary"
-                    android:textSize="14sp"
-                    android:layout_marginTop="6dp" />
-            </LinearLayout>
-        </FrameLayout>
-    </LinearLayout>
-
-    <!-- Bottom: Download Location Row -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/rowDownloadLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/tv_glass_white_10"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/tv_glass_border"
-        android:clickable="true"
-        android:focusable="true">
-
+        <!-- Right Column: Hero Transfers List -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="14dp">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
+            <!-- Transfers Header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
 
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/ic_folder"
-                    app:tint="?attr/colorPrimary"
-                    android:contentDescription="@string/download_location_label" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:text="TRANSFERS"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="11.5sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.08" />
+            </LinearLayout>
+
+            <!-- Transfers List Container -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerDownloads"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:nextFocusLeft="@id/cardDirectDownloads"
+                    android:descendantFocusability="afterDescendants" />
+
+                <!-- Empty State Container -->
+                <LinearLayout
+                    android:id="@+id/layoutEmptyContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:layout_marginStart="16dp">
+                    android:gravity="center"
+                    android:padding="24dp">
+
+                    <FrameLayout
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_download"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/txtEmptyTransfers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No active downloads"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/download_location_label"
+                        android:text="Select Direct Downloads or Torrent Downloads on the left to start downloading."
                         android:textColor="@color/tv_text_secondary"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:id="@+id/txtDownloadLocationPath"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="/storage/emulated/0/Download"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="17sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:singleLine="true"
-                        android:ellipsize="middle" />
+                        android:textSize="12.5sp"
+                        android:layout_marginTop="4dp" />
                 </LinearLayout>
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnChangeLocation"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:minHeight="48dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/download_change_location"
-                android:textSize="14sp"
-                android:textColor="?attr/colorPrimary"
-                android:focusable="true" />
+            </FrameLayout>
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-</LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

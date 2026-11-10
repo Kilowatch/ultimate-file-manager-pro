@@ -46,8 +46,15 @@ object DownloadLegalGateHelper {
             }
         }
 
+        if (isTv) {
+            btnContinue?.alpha = 0.4f
+        }
+
         checkAgree?.setOnCheckedChangeListener { _, isChecked ->
             btnContinue?.isEnabled = isChecked
+            if (isTv) {
+                btnContinue?.alpha = if (isChecked) 1.0f else 0.4f
+            }
         }
 
         btnCancel?.setOnClickListener {
@@ -75,6 +82,19 @@ object DownloadLegalGateHelper {
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
+
+        if (isTv) {
+            val displayMetrics = activity.resources.displayMetrics
+            val targetWidth = minOf(
+                (displayMetrics.widthPixels * 0.75).toInt(),
+                (740 * displayMetrics.density).toInt()
+            )
+            dialog.window?.setLayout(
+                targetWidth,
+                android.view.WindowManager.LayoutParams.WRAP_CONTENT
+            )
+            cardAgree?.requestFocus()
+        }
     }
 
     /**
@@ -94,6 +114,9 @@ object DownloadLegalGateHelper {
         cardAgree?.visibility = View.GONE
         btnCancel?.visibility = View.GONE
         btnContinue?.isEnabled = true
+        if (isTv) {
+            btnContinue?.alpha = 1.0f
+        }
         btnContinue?.text = context.getString(R.string.download_legal_understood)
 
         var dialog: AlertDialog? = null
@@ -109,5 +132,18 @@ object DownloadLegalGateHelper {
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
+
+        if (isTv) {
+            val displayMetrics = context.resources.displayMetrics
+            val targetWidth = minOf(
+                (displayMetrics.widthPixels * 0.75).toInt(),
+                (740 * displayMetrics.density).toInt()
+            )
+            dialog.window?.setLayout(
+                targetWidth,
+                android.view.WindowManager.LayoutParams.WRAP_CONTENT
+            )
+            btnContinue?.requestFocus()
+        }
     }
 }

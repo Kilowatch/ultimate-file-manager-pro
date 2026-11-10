@@ -127,6 +127,11 @@ class DownloadTransferAdapter(
 
             btnPauseResume?.visibility = if (item.state == DownloadTransferManager.TransferState.COMPLETED) View.GONE else View.VISIBLE
 
+            itemView.setOnClickListener {
+                if (item.state != DownloadTransferManager.TransferState.COMPLETED) {
+                    onPauseResumeClicked(item)
+                }
+            }
             btnPauseResume?.setOnClickListener { onPauseResumeClicked(item) }
             btnCancel?.setOnClickListener { onCancelClicked(item) }
         }

@@ -4,19 +4,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    android:layout_marginBottom="8dp"
     app:cardBackgroundColor="@color/tv_glass_white_10"
     app:cardCornerRadius="14dp"
     app:cardElevation="0dp"
     app:strokeWidth="1dp"
     app:strokeColor="@color/tv_glass_border"
-    android:focusable="true">
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/selector_tv_card">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp">
 
         <!-- Header row: Icon, Name, Action buttons -->
         <LinearLayout
@@ -25,48 +28,56 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <ImageView
-                android:id="@+id/imgTransferIcon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/ic_download"
-                app:tint="?attr/colorPrimary"
-                android:contentDescription="Transfer type" />
+            <FrameLayout
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginEnd="10dp">
+
+                <ImageView
+                    android:id="@+id/imgTransferIcon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_download"
+                    app:tint="@color/tv_accent"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/txtTransferTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="14dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginEnd="8dp"
                 android:text="ubuntu-24.04-desktop-amd64.iso"
                 android:textColor="@color/tv_text_primary"
-                android:textSize="17sp"
-                android:fontFamily="sans-serif-medium"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-bold"
                 android:singleLine="true"
                 android:ellipsize="middle" />
 
             <ImageView
                 android:id="@+id/btnTransferPauseResume"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="7dp"
                 android:src="@drawable/ic_pause"
-                app:tint="?attr/colorControlNormal"
+                app:tint="@color/tv_text_primary"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/selector_tv_icon_btn"
                 android:contentDescription="Pause/Resume transfer" />
 
             <ImageView
                 android:id="@+id/btnTransferCancel"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="7dp"
+                android:layout_marginStart="4dp"
                 android:src="@drawable/ic_close"
                 app:tint="@color/tv_text_secondary"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/selector_tv_icon_btn"
                 android:contentDescription="Cancel transfer" />
         </LinearLayout>
 
@@ -76,14 +87,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="6dp">
 
             <ProgressBar
                 android:id="@+id/progressTransfer"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="0dp"
-                android:layout_height="8dp"
+                android:layout_height="6dp"
                 android:layout_weight="1"
                 android:progress="45"
                 android:max="100"
@@ -92,15 +103,15 @@
 
             <TextView
                 android:id="@+id/txtTransferPercent"
-                android:layout_width="55dp"
+                android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:text="45%"
                 android:textColor="#00E676"
-                android:textSize="14sp"
+                android:textSize="12.5sp"
                 android:fontFamily="sans-serif-bold"
                 android:textAlignment="viewEnd"
                 android:gravity="end"
-                android:layout_marginStart="12dp" />
+                android:layout_marginStart="10dp" />
         </LinearLayout>
 
         <!-- Row 1: xx/xx Downloaded • Speed -->
@@ -110,7 +121,7 @@
             android:layout_height="wrap_content"
             android:text="1.2 GB / 4.5 GB • 3.2 MB/s"
             android:textColor="@color/tv_text_primary"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:fontFamily="sans-serif-medium"
             android:singleLine="true"
             android:ellipsize="end" />
@@ -122,8 +133,8 @@
             android:layout_height="wrap_content"
             android:text="ETA: 12m 30s • Peers: 8 (45 in swarm) • Seeds: 12"
             android:textColor="@color/tv_text_secondary"
-            android:textSize="13sp"
-            android:layout_marginTop="3dp"
+            android:textSize="11sp"
+            android:layout_marginTop="2dp"
             android:singleLine="true"
             android:ellipsize="end" />
 

@@ -1,278 +1,319 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Download Manager & P2P Notice Dialog — Android TV Layout (UFMStandard)
+    Widescreen 16:9 layout with 3-column disclosure cards and horizontal action buttons
+    designed to fit completely on TV screens (540dp / 480dp) without vertical clipping.
 -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="680dp"
+    android:layout_width="720dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="26dp"
+    android:paddingHorizontal="22dp"
+    android:paddingVertical="16dp"
     android:background="@drawable/bg_dialog_glass">
 
-    <!-- Header with Icon & Title -->
+    <!-- Header with Icon & Title (Horizontal for TV height efficiency) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="16dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
 
         <FrameLayout
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_btn_icon_frosted"
-            android:layout_gravity="center_horizontal">
+            android:layout_marginEnd="12dp">
 
             <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_shield_check"
                 app:tint="@color/tv_accent"
                 android:importantForAccessibility="no" />
         </FrameLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/download_legal_gate_title"
-            android:textColor="@color/tv_text_primary"
-            android:textSize="22sp"
-            android:fontFamily="sans-serif-black"
-            android:textAlignment="center"
-            android:layout_marginTop="12dp" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/download_legal_gate_subtitle"
-            android:textColor="@color/tv_text_secondary"
-            android:textSize="13.5sp"
-            android:textAlignment="center"
-            android:layout_marginTop="4dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download_legal_gate_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/download_legal_gate_subtitle"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- Frosted Notice Card containing 3 structured disclosure points -->
-    <com.google.android.material.card.MaterialCardView
+    <!-- Scrollable content area for edge cases / low screen heights -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/tv_glass_white_10"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1.5dp"
-        app:strokeColor="@color/tv_glass_border_strong"
-        android:layout_marginBottom="16dp">
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <!-- Section 1: P2P Swarm & IP Visibility -->
+            <!-- Frosted Notice Card containing 3 structured disclosure points side-by-side -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="@color/tv_glass_border_strong"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="12dp">
+
+                    <!-- Section 1: P2P Swarm & IP Visibility -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_network"
+                                app:tint="@color/tv_accent"
+                                android:layout_marginEnd="6dp"
+                                android:importantForAccessibility="no" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/download_legal_p2p_swarm_title"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="13sp"
+                                android:fontFamily="sans-serif-bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/download_legal_p2p_swarm_desc"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="11sp"
+                            android:lineSpacingExtra="1.5dp"
+                            android:layout_marginTop="5dp" />
+                    </LinearLayout>
+
+                    <!-- Divider 1 -->
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/tv_divider"
+                        android:layout_marginHorizontal="10dp" />
+
+                    <!-- Section 2: Zero-Seeding Privacy -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_shield_check"
+                                app:tint="@color/tv_accent"
+                                android:layout_marginEnd="6dp"
+                                android:importantForAccessibility="no" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/download_legal_zero_seeding_title"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="13sp"
+                                android:fontFamily="sans-serif-bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/download_legal_zero_seeding_desc"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="11sp"
+                            android:lineSpacingExtra="1.5dp"
+                            android:layout_marginTop="5dp" />
+                    </LinearLayout>
+
+                    <!-- Divider 2 -->
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/tv_divider"
+                        android:layout_marginHorizontal="10dp" />
+
+                    <!-- Section 3: Lawful Use Only -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_check_circle"
+                                app:tint="@color/tv_accent"
+                                android:layout_marginEnd="6dp"
+                                android:importantForAccessibility="no" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/download_legal_lawful_use_title"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="13sp"
+                                android:fontFamily="sans-serif-bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/download_legal_lawful_use_desc"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="11sp"
+                            android:lineSpacingExtra="1.5dp"
+                            android:layout_marginTop="5dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Interactive Agreement Checkbox Row Card -->
             <LinearLayout
+                android:id="@+id/cardLegalAgree"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="top">
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_tv_reindex_option_card"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="9dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:nextFocusDown="@id/btnLegalContinue"
+                android:layout_marginBottom="12dp">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_network"
-                    app:tint="@color/tv_accent"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="12dp"
-                    android:importantForAccessibility="no" />
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/checkLegalAgree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:duplicateParentState="true"
+                    app:buttonTint="@color/selector_tv_button_text_yellow" />
 
-                <LinearLayout
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/download_legal_p2p_swarm_title"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="14.5sp"
-                        android:fontFamily="sans-serif-bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/download_legal_p2p_swarm_desc"
-                        android:textColor="@color/tv_text_secondary"
-                        android:textSize="12.5sp"
-                        android:lineSpacingExtra="2dp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
+                    android:layout_marginStart="8dp"
+                    android:text="@string/download_legal_gate_agree_check"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:duplicateParentState="true"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="1.5dp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/tv_divider"
-                android:layout_marginVertical="12dp" />
-
-            <!-- Section 2: Zero-Seeding Privacy -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="top">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_shield_check"
-                    app:tint="@color/tv_accent"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="12dp"
-                    android:importantForAccessibility="no" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/download_legal_zero_seeding_title"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="14.5sp"
-                        android:fontFamily="sans-serif-bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/download_legal_zero_seeding_desc"
-                        android:textColor="@color/tv_text_secondary"
-                        android:textSize="12.5sp"
-                        android:lineSpacingExtra="2dp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/tv_divider"
-                android:layout_marginVertical="12dp" />
-
-            <!-- Section 3: Lawful Use Only -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="top">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_check_circle"
-                    app:tint="@color/tv_accent"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="12dp"
-                    android:importantForAccessibility="no" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/download_legal_lawful_use_title"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="14.5sp"
-                        android:fontFamily="sans-serif-bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/download_legal_lawful_use_desc"
-                        android:textColor="@color/tv_text_secondary"
-                        android:textSize="12.5sp"
-                        android:lineSpacingExtra="2dp"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.core.widget.NestedScrollView>
 
-    <!-- Interactive Agreement Checkbox Row Card -->
+    <!-- TV Action Buttons (Horizontal: Cancel on left, Agree & Continue on right) -->
     <LinearLayout
-        android:id="@+id/cardLegalAgree"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="@drawable/bg_tv_reindex_option_card"
-        android:padding="14dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:nextFocusDown="@id/btnLegalContinue"
-        android:layout_marginBottom="18dp">
-
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/checkLegalAgree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:focusable="false" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:text="@string/download_legal_gate_agree_check"
-            android:textColor="@color/tv_text_primary"
-            android:textSize="13sp"
-            android:lineSpacingExtra="2dp" />
-    </LinearLayout>
-
-    <!-- Action Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLegalContinue"
-            style="@style/Widget.Material3Expressive.Button"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="@string/download_legal_continue"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:fontFamily="sans-serif-bold"
-            app:cornerRadius="12dp"
-            app:elevation="0dp"
-            android:focusable="true"
-            android:nextFocusUp="@id/cardLegalAgree"
-            android:nextFocusDown="@id/btnLegalCancel"
-            android:enabled="false" />
+        android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLegalCancel"
-            style="@style/Widget.Material3Expressive.Button.TextButton"
-            android:layout_width="match_parent"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="0dp"
             android:layout_height="44dp"
+            android:layout_weight="1"
             android:text="@string/cancel"
-            android:textColor="@color/tv_text_secondary"
+            android:background="@drawable/selector_tv_button"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="14sp"
             android:focusable="true"
-            android:nextFocusUp="@id/btnLegalContinue"
-            android:layout_marginTop="4dp" />
+            android:nextFocusUp="@id/cardLegalAgree"
+            android:nextFocusRight="@id/btnLegalContinue"
+            android:textAllCaps="false"
+            android:layout_marginEnd="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLegalContinue"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="@string/download_legal_continue"
+            android:background="@drawable/selector_tv_button_yellow"
+            app:backgroundTint="@null"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-bold"
+            android:focusable="true"
+            android:nextFocusUp="@id/cardLegalAgree"
+            android:nextFocusLeft="@id/btnLegalCancel"
+            android:enabled="false"
+            android:textAllCaps="false" />
     </LinearLayout>
 
 </LinearLayout>
