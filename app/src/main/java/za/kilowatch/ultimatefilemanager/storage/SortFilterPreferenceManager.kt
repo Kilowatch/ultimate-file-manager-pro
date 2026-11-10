@@ -58,14 +58,133 @@ object SortFilterPreferenceManager {
     private const val SUFFIX_VIEW_MODE   = "_view_mode"
     private const val SUFFIX_IS_RECURSIVE = "_is_recursive"
 
-    // ── Encrypted prefs singleton ─────────────────────────────────────────────
+    // ── Encrypted prefs singleton & in-memory cache ──────────────────────────
     @Volatile
     private var encryptedPrefs: SharedPreferences? = null
 
+    @Volatile
+    private var isLoaded: Boolean = false
+
+    private val initLock = Any()
+
+    private val folderCache = java.util.concurrent.ConcurrentHashMap<String, SortFilterState>()
+    private val labelCache = java.util.concurrent.ConcurrentHashMap<String, String>()
+    private val isNetworkCache = java.util.concurrent.ConcurrentHashMap<String, Boolean>()
+
+    /**
+     * Initializes and pre-warms the folder sort cache from encrypted preferences.
+     * Can be called safely from any thread. If invoked on the main looper, it dispatches
+     * asynchronously to avoid blocking the UI thread during Android Keystore / Tink init.
+     */
+    fun init(context: Context) {
+        if (isLoaded) return
+        if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
+            initAsync(context)
+        } else {
+            ensureLoaded(context)
+        }
+    }
+
+    /**
+     * Dispatches background initialization of folder sort preferences.
+     */
+    fun initAsync(context: Context) {
+        if (isLoaded) return
+        val appContext = context.applicationContext
+        Thread {
+            ensureLoaded(appContext)
+        }.apply {
+            name = "ufm-foldersort-init"
+            isDaemon = true
+            start()
+        }
+    }
+
+    /**
+     * Ensures folder sort preferences are initialized and cached in memory.
+     * Must be called on a background thread when initializing for the first time.
+     */
+    private fun ensureLoaded(context: Context): SharedPreferences? {
+        if (isLoaded) return encryptedPrefs
+        synchronized(initLock) {
+            if (isLoaded) return encryptedPrefs
+            val prefs = encryptedPrefs ?: buildEncryptedPrefs(context.applicationContext).also { encryptedPrefs = it }
+            if (prefs != null) {
+                try {
+                    val all = prefs.all
+                    val foundKeys = all.keys.filter { it.endsWith(SUFFIX_SORT_MODE) }
+                    for (sortModeKey in foundKeys) {
+                        val key = sortModeKey.removeSuffix(SUFFIX_SORT_MODE)
+                        val sortModeOrd = (all[key + SUFFIX_SORT_MODE] as? Number)?.toInt() ?: 0
+                        val sortOrderOrd = (all[key + SUFFIX_SORT_ORDER] as? Number)?.toInt() ?: 0
+                        val filterTypeOrd = (all[key + SUFFIX_FILTER_TYPE] as? Number)?.toInt() ?: 0
+                        val dateFilterOrd = (all[key + SUFFIX_DATE_FILTER] as? Number)?.toInt() ?: 0
+                        val sizeFilterOrd = (all[key + SUFFIX_SIZE_FILTER] as? Number)?.toInt() ?: 0
+                        val showHidden = (all[key + SUFFIX_SHOW_HIDDEN] as? Boolean) ?: false
+                        val groupByDate = (all[key + SUFFIX_GROUP_DATE] as? Boolean) ?: false
+                        val tagsRaw = (all[key + SUFFIX_TAGS] as? String) ?: ""
+                        val activeTags = if (tagsRaw.isEmpty()) emptySet() else tagsRaw.split(",").filter { it.isNotEmpty() }.toSet()
+                        val viewModeStr = all[key + SUFFIX_VIEW_MODE] as? String
+                        val viewMode = viewModeStr?.let {
+                            try { ViewModeManager.ViewMode.valueOf(it) } catch (_: Exception) { null }
+                        }
+                        val isRecursive = (all[key + SUFFIX_IS_RECURSIVE] as? Boolean) ?: false
+                        val label = (all[key + SUFFIX_LABEL] as? String) ?: key
+                        val isNetwork = (all[key + SUFFIX_IS_NETWORK] as? Boolean) ?: false
+
+                        val sortMode = SortFilterSheet.SortMode.entries.getOrElse(sortModeOrd) { SortFilterSheet.SortMode.NAME }
+                        val sortOrder = SortFilterSheet.SortOrder.entries.getOrElse(sortOrderOrd) { SortFilterSheet.SortOrder.ASC }
+                        val filterType = SortFilterSheet.FilterType.entries.getOrElse(filterTypeOrd) { SortFilterSheet.FilterType.ALL }
+                        val dateFilter = SortFilterSheet.DateFilter.entries.getOrElse(dateFilterOrd) { SortFilterSheet.DateFilter.ANY }
+                        val sizeFilter = SortFilterSheet.SizeFilter.entries.getOrElse(sizeFilterOrd) { SortFilterSheet.SizeFilter.ANY }
+
+                        val state = SortFilterState(
+                            sortMode = sortMode,
+                            sortOrder = sortOrder,
+                            filterType = filterType,
+                            showHidden = showHidden,
+                            groupByDate = groupByDate,
+                            activeTags = activeTags,
+                            viewMode = viewMode,
+                            isRecursive = isRecursive,
+                            dateFilter = dateFilter,
+                            sizeFilter = sizeFilter
+                        )
+                        folderCache[key] = state
+                        labelCache[key] = label
+                        isNetworkCache[key] = isNetwork
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error populating in-memory folder sort cache", e)
+                }
+            }
+            isLoaded = true
+            return prefs
+        }
+    }
+
     private fun getEncryptedPrefs(context: Context): SharedPreferences? {
-        encryptedPrefs?.let { return it }
-        return synchronized(this) {
-            encryptedPrefs ?: buildEncryptedPrefs(context.applicationContext).also { encryptedPrefs = it }
+        if (isLoaded) return encryptedPrefs
+        if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
+            initAsync(context)
+            return encryptedPrefs
+        }
+        return ensureLoaded(context)
+    }
+
+    @androidx.annotation.VisibleForTesting
+    fun initSync(context: Context) {
+        ensureLoaded(context)
+    }
+
+    @androidx.annotation.VisibleForTesting
+    fun resetForTests() {
+        synchronized(initLock) {
+            isLoaded = false
+            encryptedPrefs = null
+            folderCache.clear()
+            labelCache.clear()
+            isNetworkCache.clear()
         }
     }
 
@@ -154,7 +273,7 @@ object SortFilterPreferenceManager {
      * Must be called from a background thread (Dispatchers.IO).
      */
     fun restoreEntriesFromBackup(context: Context, entries: Map<String, Any?>) {
-        val prefs = getEncryptedPrefs(context) ?: return
+        val prefs = ensureLoaded(context) ?: return
         val editor = prefs.edit()
         for ((k, v) in entries) {
             if (k.startsWith("__androidx_security_crypto_")) continue
@@ -168,6 +287,13 @@ object SortFilterPreferenceManager {
             }
         }
         editor.commit()
+        synchronized(initLock) {
+            isLoaded = false
+            folderCache.clear()
+            labelCache.clear()
+            isNetworkCache.clear()
+            ensureLoaded(context)
+        }
     }
 
     // ── Folder key helpers ────────────────────────────────────────────────────
@@ -280,45 +406,33 @@ object SortFilterPreferenceManager {
      * Returns `true` if the folder identified by [key] has stored custom sort settings.
      */
     fun hasFolderSpecific(context: Context, key: String): Boolean {
-        val prefs = getEncryptedPrefs(context) ?: return false
-        return prefs.contains(key + SUFFIX_SORT_MODE)
+        if (isLoaded) {
+            return folderCache.containsKey(key)
+        }
+        if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
+            initAsync(context)
+            return folderCache.containsKey(key)
+        }
+        ensureLoaded(context)
+        return folderCache.containsKey(key)
     }
 
     /**
      * Load per-folder sort settings. Returns `null` if no override exists for [key],
      * which signals the caller to fall back to [loadGlobal].
      *
-     * Must be called on a background thread when accessed for the first time (prefs init).
+     * Cached in memory for sub-microsecond non-blocking UI thread reads.
      */
     fun loadForFolder(context: Context, key: String): SortFilterState? {
-        val prefs = getEncryptedPrefs(context) ?: return null
-        if (!prefs.contains(key + SUFFIX_SORT_MODE)) return null
-        val sortMode = SortFilterSheet.SortMode.entries.getOrElse(
-            prefs.getInt(key + SUFFIX_SORT_MODE, 0)
-        ) { SortFilterSheet.SortMode.NAME }
-        val sortOrder = SortFilterSheet.SortOrder.entries.getOrElse(
-            prefs.getInt(key + SUFFIX_SORT_ORDER, 0)
-        ) { SortFilterSheet.SortOrder.ASC }
-        val filterType = SortFilterSheet.FilterType.entries.getOrElse(
-            prefs.getInt(key + SUFFIX_FILTER_TYPE, 0)
-        ) { SortFilterSheet.FilterType.ALL }
-        val dateFilter = SortFilterSheet.DateFilter.entries.getOrElse(
-            prefs.getInt(key + SUFFIX_DATE_FILTER, 0)
-        ) { SortFilterSheet.DateFilter.ANY }
-        val sizeFilter = SortFilterSheet.SizeFilter.entries.getOrElse(
-            prefs.getInt(key + SUFFIX_SIZE_FILTER, 0)
-        ) { SortFilterSheet.SizeFilter.ANY }
-        val showHidden = prefs.getBoolean(key + SUFFIX_SHOW_HIDDEN, false)
-        val groupByDate = prefs.getBoolean(key + SUFFIX_GROUP_DATE, false)
-        val tagsRaw = prefs.getString(key + SUFFIX_TAGS, "") ?: ""
-        val activeTags = if (tagsRaw.isEmpty()) emptySet()
-        else tagsRaw.split(",").filter { it.isNotEmpty() }.toSet()
-        val viewModeStr = prefs.getString(key + SUFFIX_VIEW_MODE, null)
-        val viewMode = viewModeStr?.let {
-            try { ViewModeManager.ViewMode.valueOf(it) } catch (e: Exception) { null }
+        if (isLoaded) {
+            return folderCache[key]
         }
-        val isRecursive = prefs.getBoolean(key + SUFFIX_IS_RECURSIVE, false)
-        return SortFilterState(sortMode, sortOrder, filterType, showHidden, groupByDate, activeTags, viewMode, isRecursive, dateFilter, sizeFilter)
+        if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
+            initAsync(context)
+            return folderCache[key]
+        }
+        ensureLoaded(context)
+        return folderCache[key]
     }
 
     /**
@@ -337,7 +451,11 @@ object SortFilterPreferenceManager {
         state: SortFilterState,
         isNetwork: Boolean = false
     ) {
-        val prefs = getEncryptedPrefs(context) ?: run {
+        folderCache[key] = state
+        labelCache[key] = displayPath
+        isNetworkCache[key] = isNetwork
+
+        val prefs = ensureLoaded(context) ?: run {
             Log.w(TAG, "Encrypted prefs unavailable — falling back to global save")
             saveGlobal(context, state)
             return
@@ -369,7 +487,11 @@ object SortFilterPreferenceManager {
      * MUST be called from [kotlinx.coroutines.Dispatchers.IO].
      */
     fun clearFolderSpecific(context: Context, key: String) {
-        val prefs = getEncryptedPrefs(context) ?: return
+        folderCache.remove(key)
+        labelCache.remove(key)
+        isNetworkCache.remove(key)
+
+        val prefs = ensureLoaded(context) ?: return
         prefs.edit()
             .remove(key + SUFFIX_LABEL)
             .remove(key + SUFFIX_SORT_MODE)
@@ -391,7 +513,11 @@ object SortFilterPreferenceManager {
      * MUST be called from [kotlinx.coroutines.Dispatchers.IO].
      */
     fun clearAllFolderSpecific(context: Context) {
-        val prefs = getEncryptedPrefs(context) ?: return
+        folderCache.clear()
+        labelCache.clear()
+        isNetworkCache.clear()
+
+        val prefs = ensureLoaded(context) ?: return
         prefs.edit().clear().commit() // NOT apply() — see KDoc
     }
 
@@ -514,22 +640,17 @@ object SortFilterPreferenceManager {
 
     /**
      * Returns all stored folder entries for display in [FolderSortManagerActivity].
-     * Iterates the encrypted prefs, collects all entries that have a sort_mode key,
-     * then builds [FolderSortEntry] objects.
+     * Uses the in-memory cache if loaded; otherwise ensures preferences are loaded.
      *
      * Must be called on a background thread.
      */
     fun getAllFolderEntries(context: Context): List<FolderSortEntry> {
-        val prefs = getEncryptedPrefs(context) ?: return emptyList()
-        val allKeys = prefs.all.keys
-        // Collect unique entry keys (strip suffixes)
-        val entryKeys = allKeys
-            .filter { it.endsWith(SUFFIX_SORT_MODE) }
-            .map { it.removeSuffix(SUFFIX_SORT_MODE) }
-        return entryKeys.mapNotNull { key ->
-            val state = loadForFolder(context, key) ?: return@mapNotNull null
-            val label = prefs.getString(key + SUFFIX_LABEL, key) ?: key
-            val isNetwork = prefs.getBoolean(key + SUFFIX_IS_NETWORK, false)
+        if (!isLoaded) {
+            ensureLoaded(context)
+        }
+        return folderCache.entries.map { (key, state) ->
+            val label = labelCache[key] ?: key
+            val isNetwork = isNetworkCache[key] ?: false
             FolderSortEntry(key = key, displayPath = label, isNetwork = isNetwork, state = state)
         }.sortedBy { it.displayPath }
     }

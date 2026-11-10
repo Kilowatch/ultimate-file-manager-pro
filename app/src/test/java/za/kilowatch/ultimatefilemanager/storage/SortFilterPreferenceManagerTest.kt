@@ -1,11 +1,102 @@
 package za.kilowatch.ultimatefilemanager.storage
 
+import androidx.test.core.app.ApplicationProvider
+import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class)
 class SortFilterPreferenceManagerTest {
+
+    @Before
+    fun setUp() {
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        SortFilterPreferenceManager.resetForTests()
+    }
+
+    @After
+    fun tearDown() {
+        SortFilterPreferenceManager.resetForTests()
+    }
+
+    @Test
+    fun inMemoryCacheAndPersistenceLifecycle() {
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        val path = "/storage/emulated/0/Movies"
+        val key = SortFilterPreferenceManager.folderKey(path)
+
+        // Initially no override
+        assertFalse(SortFilterPreferenceManager.hasFolderSpecific(context, key))
+        assertNull(SortFilterPreferenceManager.loadForFolder(context, key))
+        assertFalse(SortFilterPreferenceManager.hasFolderOverride(context, path))
+
+        val state = SortFilterPreferenceManager.SortFilterState(
+            sortMode = SortFilterSheet.SortMode.DATE,
+            sortOrder = SortFilterSheet.SortOrder.DESC,
+            filterType = SortFilterSheet.FilterType.VIDEOS,
+            showHidden = true,
+            groupByDate = true
+        )
+
+        // Save folder specific
+        SortFilterPreferenceManager.saveFolderSpecific(context, key, path, state, isNetwork = false)
+
+        // Should be found immediately via in-memory cache
+        assertTrue(SortFilterPreferenceManager.hasFolderSpecific(context, key))
+        assertTrue(SortFilterPreferenceManager.hasFolderOverride(context, path))
+        val loaded = SortFilterPreferenceManager.loadForFolder(context, key)
+        assertNotNull(loaded)
+        assertEquals(SortFilterSheet.SortMode.DATE, loaded?.sortMode)
+        assertEquals(SortFilterSheet.SortOrder.DESC, loaded?.sortOrder)
+        assertEquals(SortFilterSheet.FilterType.VIDEOS, loaded?.filterType)
+        assertTrue(loaded?.showHidden == true)
+        assertTrue(loaded?.groupByDate == true)
+
+        // Verify getAllFolderEntries
+        val entries = SortFilterPreferenceManager.getAllFolderEntries(context)
+        assertEquals(1, entries.size)
+        assertEquals(key, entries[0].key)
+        assertEquals(path, entries[0].displayPath)
+
+        // Clear specific
+        SortFilterPreferenceManager.clearFolderSpecific(context, key)
+        assertFalse(SortFilterPreferenceManager.hasFolderSpecific(context, key))
+        assertFalse(SortFilterPreferenceManager.hasFolderOverride(context, path))
+        assertNull(SortFilterPreferenceManager.loadForFolder(context, key))
+    }
+
+    @Test
+    fun initPreWarmsCacheFromPrefs() {
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        val path = "/storage/emulated/0/Download"
+        val key = SortFilterPreferenceManager.folderKey(path)
+
+        val state = SortFilterPreferenceManager.SortFilterState(
+            sortMode = SortFilterSheet.SortMode.SIZE,
+            sortOrder = SortFilterSheet.SortOrder.ASC
+        )
+        SortFilterPreferenceManager.saveFolderSpecific(context, key, path, state, isNetwork = false)
+
+        // Reset in-memory cache
+        SortFilterPreferenceManager.resetForTests()
+
+        // Call initSync() to pre-warm synchronously in test
+        SortFilterPreferenceManager.initSync(context)
+
+        // Should now be cached
+        assertTrue(SortFilterPreferenceManager.hasFolderOverride(context, path))
+        val loaded = SortFilterPreferenceManager.loadForPath(context, path)
+        assertNotNull(loaded)
+        assertEquals(SortFilterSheet.SortMode.SIZE, loaded?.sortMode)
+    }
 
     @Test
     fun networkFolderKeyNormalizesSlashes() {

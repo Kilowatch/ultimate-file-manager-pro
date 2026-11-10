@@ -521,6 +521,16 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             } catch (e: Exception) {
                 Log.e(TAG, "ReviewPrefs pre-warm failed", e)
             }
+
+            // 11. Pre-warm SortFilterPreferenceManager on background thread
+            //     (avoids synchronous MasterKey.Builder / EncryptedSharedPreferences Keystore IPC
+            //     and Tink crypto initialization on the main thread during FileBrowserActivity.onResume)
+            try {
+                za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.init(this@UfmApplication)
+                Log.d(TAG, "SortFilterPreferenceManager pre-warmed successfully")
+            } catch (e: Exception) {
+                Log.e(TAG, "SortFilterPreferenceManager pre-warm failed", e)
+            }
             
         }.apply { name = "ufm-startup-io"; start() }
 
