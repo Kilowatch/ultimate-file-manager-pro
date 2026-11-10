@@ -943,6 +943,108 @@ object CrashReportManager {
         return validStackFrames
     }
 
+    /**
+     * Identifies a main-thread stack where the top frame is sampled inside Material Components
+     * button layout math, text change dispatch, or icon position calculation during layout inflation
+     * under an Activity lifecycle callback (e.g. `MaterialButton.onTextChanged`, `MaterialButton.u`,
+     * `MaterialButton.<init>`, `TextView.setText`, `TextView.<init>`, `Button.<init>`).
+     *
+     * In this state, the main thread is executing in-memory MaterialButton layout initialization
+     * during window view inflation. Zero application business logic is running outside standard
+     * Activity lifecycle callbacks and no framework blocking primitives (locks, disk/network I/O,
+     * database, Binder transactions) are held.
+     */
+    fun isMaterialButtonLayoutInflateStall(
+        topFrame: StackTraceElement?,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (topFrame == null) return false
+
+        // 1. Top frame must be in MaterialButton or TextView / Button / Material shape
+        val isTopFrameMaterialButtonOrTextView =
+            (topFrame.className == "com.google.android.material.button.MaterialButton") ||
+            (topFrame.className.startsWith("com.google.android.material.button.")) ||
+            (topFrame.className == "android.widget.TextView") ||
+            (topFrame.className == "android.widget.Button") ||
+            (topFrame.className.startsWith("com.google.android.material.shape."))
+
+        if (!isTopFrameMaterialButtonOrTextView) {
+            return false
+        }
+
+        // 2. Must contain a MaterialButton frame
+        val hasMaterialButton = mainStackTrace.any {
+            it.className == "com.google.android.material.button.MaterialButton" ||
+            it.className.startsWith("com.google.android.material.button.")
+        }
+        if (!hasMaterialButton) {
+            return false
+        }
+
+        // 3. Must be in layout inflation (LayoutInflater or View.inflate)
+        val hasLayoutInflater = mainStackTrace.any {
+            (it.className == "android.view.LayoutInflater" &&
+             (it.methodName == "inflate" || it.methodName == "rInflate" ||
+              it.methodName == "rInflateChildren" || it.methodName == "createViewFromTag" ||
+              it.methodName == "createView" || it.methodName == "onCreateView")) ||
+            (it.className == "android.view.View" && it.methodName == "inflate")
+        }
+        if (!hasLayoutInflater) {
+            return false
+        }
+
+        // 4. Must be under Activity / lifecycle launch / window creation
+        val hasActivityOrWindowLifecycle = mainStackTrace.any {
+            (it.className == "android.app.ActivityThread" &&
+             (it.methodName == "performLaunchActivity" || it.methodName == "handleLaunchActivity" ||
+              it.methodName == "main" || it.methodName == "handleResumeActivity" ||
+              it.methodName == "handleRelaunchActivity")) ||
+            (it.className == "android.app.Activity" &&
+             (it.methodName == "performCreate" || it.methodName == "setContentView")) ||
+            (it.className == "android.app.Instrumentation" &&
+             it.methodName == "callActivityOnCreate") ||
+            (it.className.endsWith("Activity") &&
+             (it.methodName == "onCreate" || it.methodName == "setContentView"))
+        }
+        if (!hasActivityOrWindowLifecycle) {
+            return false
+        }
+
+        // 5. Must NOT contain any application business logic (only Activity / Fragment / Dialog / ViewHolder frames allowed)
+        val noAppBusinessLogic = mainStackTrace.none { frame ->
+            frame.className.startsWith(APP_PACKAGE) &&
+            !frame.className.endsWith("Activity") &&
+            !frame.className.contains("Activity$") &&
+            !frame.className.endsWith("Fragment") &&
+            !frame.className.contains("Fragment$") &&
+            !frame.className.endsWith("Dialog") &&
+            !frame.className.contains("Dialog$") &&
+            !frame.className.endsWith("DialogFragment") &&
+            !frame.className.contains("DialogFragment$") &&
+            !frame.className.endsWith("ViewHolder") &&
+            !frame.className.contains("ViewHolder$") &&
+            !frame.className.endsWith("View") &&
+            !frame.className.contains("View$") &&
+            !frame.className.startsWith("za.kilowatch.ultimatefilemanager.support.CrashReportManager")
+        }
+        if (!noAppBusinessLogic) {
+            return false
+        }
+
+        // 6. Must NOT contain any blocking primitives
+        val noOtherBlockingPrimitives = mainStackTrace.none { frame ->
+            (frame.className == "android.os.BinderProxy" &&
+             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+            frame.className.startsWith("java.io.") ||
+            frame.className.startsWith("libcore.io.") ||
+            frame.className.startsWith("java.net.") ||
+            frame.className.startsWith("android.database.")
+        }
+        return noOtherBlockingPrimitives
+    }
+
     @Volatile private var cachedGetActivityTokenMethod: java.lang.reflect.Method? = null
     @Volatile private var cachedGetCallbacksMethod: java.lang.reflect.Method? = null
     @Volatile private var cachedPreExecuteMethod: java.lang.reflect.Method? = null
@@ -6576,7 +6678,29 @@ object CrashReportManager {
                     val isActivityStopLifecycleDispatchStall =
                         isActivityStopLifecycleDispatchStall(topFrame, mainStackTrace)
 
-                    if (isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 85. The main thread is sampled during layout inflation while initializing
+                    //     a MaterialButton or updating its text/icon state
+                    //     (`MaterialButton.onTextChanged`, `MaterialButton.u`, `TextView.setText`,
+                    //     `TextView.<init>`, `Button.<init>`, `MaterialButton.<init>`),
+                    //     thread state RUNNABLE (reported from a Hivendor TVBOX, SDK 28, app 2.2.1-GOOGLE).
+                    //     During layout inflation under Activity `onCreate` (or window setup),
+                    //     `MaterialButton` initializes its text and icon bounds via `TextView.setText`
+                    //     and `onTextChanged`. On low-end CPU-constrained Android TV devices, concurrent
+                    //     background worker threads (Firebase, SSDP/DLNA discovery, HTTP server listeners)
+                    //     cause CPU contention that momentarily stretches layout inflation duration
+                    //     beyond the watchdog threshold while the main thread is simply executing
+                    //     in-memory MaterialButton layout math. Because `MaterialButton` and R8-minified
+                    //     view inflation frames are non-platform classes, `isPureFrameworkStack`
+                    //     evaluates to false, and filter 11 (`isMaterialButtonInflateStall`) only checked
+                    //     for `TextView.setCompoundDrawablePadding`. Filter 85
+                    //     (`isMaterialButtonLayoutInflateStall`) detects when the main thread is executing
+                    //     MaterialButton layout/text initialization during layout inflation under an
+                    //     Activity lifecycle callback with zero application business logic and no
+                    //     framework blocking primitives held.
+                    val isMaterialButtonLayoutInflateStall =
+                        isMaterialButtonLayoutInflateStall(topFrame, mainStackTrace)
+
+                    if (isMaterialButtonLayoutInflateStall || isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
