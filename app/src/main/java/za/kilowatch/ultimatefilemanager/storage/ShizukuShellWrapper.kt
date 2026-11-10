@@ -236,6 +236,9 @@ object ShizukuShellWrapper {
 
     private fun resolvePrimaryPrefix(userId: String = "0"): String {
         cachedPrimaryPrefixes[userId]?.let { return it }
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            return "/storage/emulated/$userId"
+        }
 
         // Ordered by accessibility for UID 2000 / shell across Mobile and Android TV:
         // 1. /mnt/pass_through — Mobile FUSE passthrough (preserves exact proven mobile behavior)
@@ -293,6 +296,9 @@ object ShizukuShellWrapper {
 
     private fun resolveSdPrefix(uuid: String, userId: String = "0"): String {
         cachedSdPrefixes[uuid]?.let { return it }
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            return "/storage/$uuid"
+        }
 
         val candidates = listOf(
             "/mnt/media_rw/$uuid",
@@ -314,7 +320,20 @@ object ShizukuShellWrapper {
         return fallback
     }
 
+    /**
+     * Pre-warms path prefixes on a background thread so subsequent lookups are instant in-memory cache hits.
+     */
+    fun preWarm(userId: String = "0") {
+        try {
+            resolvePrimaryPrefix(userId)
+        } catch (_: Throwable) {}
+    }
+
     fun exists(path: String): Boolean {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            Log.w("ShizukuShellWrapper", "exists() invoked synchronously on Main Thread for $path - returning non-blocking check to prevent ANR")
+            return canUseShizukuForPath(path) || java.io.File(path).exists()
+        }
         val workingPath = getWorkingPath(path).trimEnd('/')
         val safePath = workingPath.replace("'", "'\\''")
         val (code, _) = runCommand("test -e '$safePath'")
@@ -322,6 +341,9 @@ object ShizukuShellWrapper {
     }
 
     fun getFileSize(path: String): Long {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            return 0L
+        }
         val workingPath = getWorkingPath(path).trimEnd('/')
         val safePath = workingPath.replace("'", "'\\''")
         val (code, output) = runCommand("stat -c \"%s\" '$safePath' 2>/dev/null")
@@ -329,6 +351,9 @@ object ShizukuShellWrapper {
     }
 
     fun getLastModified(path: String): Long {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            return 0L
+        }
         val workingPath = getWorkingPath(path).trimEnd('/')
         val safePath = workingPath.replace("'", "'\\''")
         val (code, output) = runCommand("stat -c \"%Y\" '$safePath' 2>/dev/null")
@@ -338,10 +363,13 @@ object ShizukuShellWrapper {
     /**
      * Executes a shell command via Porter, Shizuku or Shevery.
      * Returns a pair of (exitCode, stdout_lines).
+     *
+     * Guaranteed non-blocking: Never blocks the main UI thread with runBlocking on elevated IPC.
      */
     fun runCommand(cmd: String): Pair<Int, List<String>> {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            Log.w("ShizukuShellWrapper", "runCommand invoked synchronously on Main Thread: $cmd")
+            Log.w("ShizukuShellWrapper", "runCommand invoked synchronously on Main Thread: $cmd; returning non-blocking error to prevent ANR")
+            return Pair(-1, emptyList())
         }
         if (!isAuthorized()) return Pair(-1, emptyList())
         val connection = Porter.connection.value ?: return Pair(-1, emptyList())

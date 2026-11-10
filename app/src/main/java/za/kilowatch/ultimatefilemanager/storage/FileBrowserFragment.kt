@@ -2985,7 +2985,7 @@ class FileBrowserFragment : Fragment() {
             true
         } else if (isProtected) {
             if (canUseShizuku) {
-                if (targetDir is za.kilowatch.ultimatefilemanager.storage.ShizukuFile) true else za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(pathStr)
+                true
             } else if (isSaf) {
                 if (targetDir is za.kilowatch.ultimatefilemanager.storage.SafFile) true else za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, pathStr)
             } else {

@@ -531,6 +531,15 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             } catch (e: Exception) {
                 Log.e(TAG, "SortFilterPreferenceManager pre-warm failed", e)
             }
+
+            // 12. Pre-warm ShizukuShellWrapper working path prefix on background thread
+            //     (ensures protected /Android/data and /Android/obb path resolutions use instant in-memory cache)
+            try {
+                za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.preWarm()
+                Log.d(TAG, "ShizukuShellWrapper pre-warmed successfully")
+            } catch (e: Exception) {
+                Log.e(TAG, "ShizukuShellWrapper pre-warm failed", e)
+            }
             
         }.apply { name = "ufm-startup-io"; start() }
 

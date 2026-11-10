@@ -32,7 +32,11 @@ class ShizukuFile(
     override fun length(): Long = if (docLength > 0L) docLength else ShizukuShellWrapper.getFileSize(absolutePath)
     override fun lastModified(): Long = if (docLastModified > 0L) docLastModified else ShizukuShellWrapper.getLastModified(absolutePath)
     override fun exists(): Boolean {
-        return ShizukuShellWrapper.exists(absolutePath)
+        return if (android.os.Looper.myLooper() == android.os.Looper.getMainLooper()) {
+            true
+        } else {
+            ShizukuShellWrapper.exists(absolutePath)
+        }
     }
     override fun canRead(): Boolean = true
     override fun canWrite(): Boolean = true
