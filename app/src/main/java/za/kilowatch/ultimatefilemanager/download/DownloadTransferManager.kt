@@ -7,9 +7,13 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ProcessLifecycleOwner
 import org.libtorrent4j.TorrentInfo
 import org.libtorrent4j.swig.error_code
 import org.libtorrent4j.swig.libtorrent
@@ -50,6 +54,8 @@ object DownloadTransferManager {
     private val transfers = CopyOnWriteArrayList<TransferItem>()
     private val listeners = CopyOnWriteArrayList<TransferUpdateListener>()
 
+    @Volatile
+    private var appContext: Context? = null
     private var torrentEngine: TorrentEngine? = null
     private var httpEngine: HttpDownloadEngine? = null
     private var isNetworkCallbackRegistered = false
@@ -76,6 +82,7 @@ object DownloadTransferManager {
 
     private fun initEnginesIfNeeded(context: Context) {
         val appCtx = context.applicationContext
+        appContext = appCtx
         if (torrentEngine == null) {
             torrentEngine = TorrentEngine(appCtx).apply {
                 listener = object : TorrentEngine.TorrentListener {
@@ -430,9 +437,11 @@ object DownloadTransferManager {
             TransferType.TORRENT, TransferType.MAGNET -> torrentEngine?.pause(id)
         }
         notifyTransfersChanged()
+        appContext?.let { checkServiceState(it) }
     }
 
     fun resumeTransfer(context: Context, id: String) {
+        appContext = context.applicationContext
         val item = transfers.find { it.id == id } ?: return
         if (shouldQueueForWifi(context)) {
             item.state = TransferState.QUEUED_WIFI
@@ -463,6 +472,7 @@ object DownloadTransferManager {
         }
 
         notifyTransfersChanged()
+        appContext?.let { checkServiceState(it) }
     }
 
     private fun cleanupIncompleteFiles(item: TransferItem) {
@@ -496,13 +506,41 @@ object DownloadTransferManager {
     }
 
     private fun startServiceIfNeeded(context: Context) {
+        val appCtx = context.applicationContext
+        appContext = appCtx
         val active = transfers.any { it.state == TransferState.DOWNLOADING }
         if (active) {
-            val serviceIntent = Intent(context, DownloadService::class.java)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                context.startForegroundService(serviceIntent)
-            } else {
-                context.startService(serviceIntent)
+            val serviceIntent = Intent(appCtx, DownloadService::class.java)
+
+            // Prefer standard startService() when the app process is in foreground.
+            // When started via startService(), the service still promotes itself to foreground
+            // in onCreate() with safeStartForeground(), but Android DOES NOT arm the fatal
+            // 5-second ForegroundServiceDidNotStartInTimeException watchdog.
+            val isForeground = try {
+                ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(
+                    Lifecycle.State.STARTED
+                )
+            } catch (_: Exception) {
+                true
+            }
+
+            if (isForeground) {
+                try {
+                    appCtx.startService(serviceIntent)
+                    return
+                } catch (e: Exception) {
+                    Log.w(TAG, "startService failed in foreground (${e.message}), attempting startForegroundService fallback")
+                }
+            }
+
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    ContextCompat.startForegroundService(appCtx, serviceIntent)
+                } else {
+                    appCtx.startService(serviceIntent)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start DownloadService: ${e.message}")
             }
         }
     }
@@ -510,7 +548,34 @@ object DownloadTransferManager {
     private fun checkServiceState(context: Context) {
         val hasActive = transfers.any { it.state == TransferState.DOWNLOADING }
         if (!hasActive) {
-            context.stopService(Intent(context, DownloadService::class.java))
+            try {
+                val appCtx = context.applicationContext
+                appCtx.stopService(Intent(appCtx, DownloadService::class.java))
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to stop DownloadService: ${e.message}")
+            }
+        }
+    }
+
+    fun onServiceTimeout() {
+        mainHandler.post {
+            var anyChanged = false
+            for (item in transfers) {
+                if (item.state == TransferState.DOWNLOADING) {
+                    item.state = TransferState.PAUSED
+                    item.speedBytesPerSec = 0L
+                    item.errorMessage = "Paused: Android 6-hour execution limit reached"
+                    when (item.type) {
+                        TransferType.DIRECT_HTTP -> httpEngine?.pause(item.id)
+                        TransferType.TORRENT, TransferType.MAGNET -> torrentEngine?.pause(item.id)
+                    }
+                    anyChanged = true
+                }
+            }
+            if (anyChanged) {
+                notifyTransfersChanged()
+            }
+            appContext?.let { checkServiceState(it) }
         }
     }
 

@@ -5814,6 +5814,7 @@
     <string name="download_state_error">Error</string>
     <string name="download_notif_channel_name">Download Manager Transfers</string>
     <string name="download_notif_channel_desc">Ongoing download progress and status updates</string>
+    <string name="download_timeout_stopped">Downloads paused: Android 6-hour execution limit reached. Tap to resume.</string>
 </resources>
 
 
