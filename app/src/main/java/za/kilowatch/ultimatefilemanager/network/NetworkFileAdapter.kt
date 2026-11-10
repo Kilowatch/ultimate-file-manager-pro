@@ -1070,10 +1070,7 @@ class NetworkFileAdapter(
                 val isVideo = ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS
                 val isApk = ApkIconHelper.isApkOrBundle(ext)
                 val isAudio = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
-                val isCached = isEnabled && isMedia && (
-                    thumbnailPathCache[file.path]?.let { File(it).exists() } == true ||
-                    cacheManager.getExistingDiskThumbnail(share, file)?.also { thumbnailPathCache[file.path] = it } != null
-                )
+                val isCached = isEnabled && isMedia && (thumbnailPathCache[file.path] != null)
 
                 if (!isCached) {
                     val fileTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
@@ -1357,8 +1354,7 @@ class NetworkFileAdapter(
             za.kilowatch.ultimatefilemanager.util.GoRoLog.d("UFM_CACHE", "🚀 [GoRo] Attempting loadThumbnail for: ${file.name}, scope_active=${adapterScope.isActive}")
 
             val cachedPath = thumbnailPathCache[file.path]
-                ?: cacheManager.getExistingDiskThumbnail(share, file)?.also { thumbnailPathCache[file.path] = it }
-            if (cachedPath != null && File(cachedPath).exists()) {
+            if (cachedPath != null) {
                 imgIcon.imageTintList = null
                 iconContainer?.setBackgroundResource(0)
                 imgIcon.setPadding(0, 0, 0, 0)
@@ -1388,6 +1384,9 @@ class NetworkFileAdapter(
                         scale(Scale.FILL)
                     }
                     listener(
+                        onError = { _, _ ->
+                            thumbnailPathCache.remove(file.path)
+                        },
                         onSuccess = { _, _ ->
                             if (isGridMode) {
                                 updateTextColorForDrawable(imgIcon.drawable, true)

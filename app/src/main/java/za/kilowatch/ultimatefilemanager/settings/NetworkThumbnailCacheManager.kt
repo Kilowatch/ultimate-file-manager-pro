@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
 import android.os.Build
+import android.os.Looper
 import android.provider.MediaStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
@@ -119,6 +120,16 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                 // If it's in DB but not on disk, clean up DB
                 db.dao().delete(shareId, entity.networkPath)
             }
+        } else {
+            val cacheFolderPath = NetworkThumbnailPreferenceManager.getCachePath(context)
+            val md = MessageDigest.getInstance("MD5")
+            val input = shareId + normPath
+            val hashBytes = md.digest(input.toByteArray())
+            val hashName = hashBytes.joinToString("") { "%02x".format(it) } + ".webp"
+            val destFile = File(cacheFolderPath, hashName)
+            if (destFile.exists() && destFile.length() > 0) {
+                return@withContext destFile.absolutePath
+            }
         }
         return@withContext null
     }
@@ -143,10 +154,14 @@ class NetworkThumbnailCacheManager(private val context: Context) {
     }
 
     /**
-     * Fast synchronous check for existing remote thumbnail file on disk.
+     * Fast check for existing remote thumbnail file on disk.
      * Returns absolute path of cached .webp if present and non-empty.
+     * Never executes on the main thread to prevent UI freezing and ANRs.
      */
     fun getExistingDiskThumbnail(share: NetworkShare, networkFile: NetworkFile): String? {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            return null
+        }
         if (!NetworkThumbnailPreferenceManager.isEnabled(context)) return null
         try {
             val cacheFolderPath = NetworkThumbnailPreferenceManager.getCachePath(context)

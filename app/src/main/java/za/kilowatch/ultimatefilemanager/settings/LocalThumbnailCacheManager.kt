@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.media.ThumbnailUtils
 import android.os.Build
+import android.os.Looper
 import android.util.Size
 import androidx.core.graphics.drawable.toBitmap
 import kotlinx.coroutines.Dispatchers
@@ -75,10 +76,14 @@ class LocalThumbnailCacheManager(private val context: Context) {
     }
 
     /**
-     * Fast synchronous check for existing thumbnail file on disk.
+     * Fast check for existing thumbnail file on disk.
      * Returns absolute path of cached .webp if present and non-empty.
+     * Never executes on the main thread to prevent UI freezing and ANRs.
      */
     fun getExistingDiskThumbnail(file: File): String? {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            return null
+        }
         if (!ThumbnailPreferenceManager.isEnabled(context)) return null
         try {
             val cacheFolderPath = ThumbnailPreferenceManager.getCachePath(context)
@@ -103,7 +108,15 @@ class LocalThumbnailCacheManager(private val context: Context) {
         if (entity == null && normPath != file.path) {
             entity = db.dao().get(file.path)
         }
-        if (entity == null) return@withContext null
+        if (entity == null) {
+            val cacheFolderPath = ThumbnailPreferenceManager.getCachePath(context)
+            val hashName = getHashName(normPath)
+            val directFile = File(cacheFolderPath, hashName)
+            if (directFile.exists() && directFile.length() > 0) {
+                return@withContext directFile.absolutePath
+            }
+            return@withContext null
+        }
 
         val cacheFolderPath = ThumbnailPreferenceManager.getCachePath(context)
         val cacheFile = File(cacheFolderPath, entity.localFileName)

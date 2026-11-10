@@ -1284,10 +1284,7 @@ class FileAdapter(
                 val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
 
                 val isMedia = isImage || isVideo || isApk || (isAudio && !za.kilowatch.ultimatefilemanager.audio.AudioCoverHelper.isKnownNoArt(file.absolutePath))
-                val isCached = showThumbnails && isMedia && (
-                    thumbnailPathCache[file.absolutePath]?.let { File(it).exists() } == true ||
-                    za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager.getInstance(context).getExistingDiskThumbnail(file)?.also { thumbnailPathCache[file.absolutePath] = it } != null
-                )
+                val isCached = showThumbnails && isMedia && (thumbnailPathCache[file.absolutePath] != null)
 
                 if (!isGrid && showThumbnails && isMedia) {
                     // ── Thumbnail mode ────────────────────────────────────────
@@ -1695,9 +1692,8 @@ class FileAdapter(
             imgIcon.tag = file.absolutePath
             val cacheManager = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager.getInstance(itemView.context)
             val cachedPath = thumbnailPathCache[file.absolutePath]
-                ?: cacheManager.getExistingDiskThumbnail(file)?.also { thumbnailPathCache[file.absolutePath] = it }
 
-            if (cachedPath != null && File(cachedPath).exists()) {
+            if (cachedPath != null) {
                 coilDisposable = imgIcon.load(File(cachedPath)) {
                     size(128, 128)
                     precision(Precision.INEXACT)
@@ -1705,6 +1701,11 @@ class FileAdapter(
                     allowHardware(!isTv)
                     scale(Scale.FILL)
                     error(placeholderImage)
+                    listener(
+                        onError = { _, _ ->
+                            thumbnailPathCache.remove(file.absolutePath)
+                        }
+                    )
                 }
                 return
             }
@@ -2047,9 +2048,8 @@ class FileAdapter(
 
             val cacheManager = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager.getInstance(context)
             val cachedPath = thumbnailPathCache[file.absolutePath]
-                ?: cacheManager.getExistingDiskThumbnail(file)?.also { thumbnailPathCache[file.absolutePath] = it }
 
-            if (cachedPath != null && File(cachedPath).exists()) {
+            if (cachedPath != null) {
                 coilDisposable = imgIcon.load(File(cachedPath)) {
                     size(384, 384)
                     precision(Precision.INEXACT)
@@ -2058,6 +2058,9 @@ class FileAdapter(
                     scale(Scale.FILL)
                     error(placeholderImage)
                     listener(
+                        onError = { _, _ ->
+                            thumbnailPathCache.remove(file.absolutePath)
+                        },
                         onSuccess = { _, _ ->
                             if (!isTv) updateTextColorForDrawable(imgIcon.drawable, true)
                         }
