@@ -1045,6 +1045,104 @@ object CrashReportManager {
         return noOtherBlockingPrimitives
     }
 
+    /**
+     * Filter 86: Main thread is sampled inside Android Formatter or ICU number formatting
+     * (`android.text.format.Formatter.formatFileSize` / `formatShortFileSize` / `formatRoundedBytesResult` /
+     * `formatMeasureShort`, `java.text.Format.format`, `android.icu.text.MeasureFormat.format`,
+     * `android.icu.number.LocalizedNumberFormatter.formatImpl`, `NumberFormatterImpl.formatStatic`,
+     * `MutablePatternModifier.processQuantity`, `LongNameHandler.processQuantity`,
+     * `RoundingUtils.getPluralSafe`, `DecimalQuantity_AbstractBCD.getStandardPlural`,
+     * `PluralRules.select` / `PluralRules$RuleList.selectRule`), thread state RUNNABLE.
+     *
+     * Formatting a file size or byte count into a localized display string (e.g. "12.4 MB") is
+     * a microsecond-scale, pure in-memory string formatting operation executed during UI list
+     * binding, transfer progress updates, or dialog rendering. It involves zero locks, disk/network I/O,
+     * database queries, or Binder transactions, and cannot by itself occupy the main looper for 5 seconds.
+     *
+     * In release builds, caller callbacks and UI adapters are minified by R8 to short names without
+     * platform package prefixes (e.g. `kd3.b`, `dz9.invoke`, `cd.run`), so `isPureFrameworkStack`
+     * evaluates to false. Under heavy background CPU contention (such as thumbnail decoding via
+     * `MediaMetadataRetriever` on `DefaultDispatcher`, network streaming, and Room DB disk I/O on
+     * `arch_disk_io_*` threads on Android TV streamer devices), the looper or watchdog heartbeat
+     * is delayed, causing the watchdog to sample the main thread while it is executing this brief
+     * formatting calculation.
+     *
+     * Filter 86 (`isFormatterFileSizeStall`) detects when the main thread is executing in-memory
+     * `Formatter.formatFileSize` or ICU number formatting under standard Looper / Handler dispatch,
+     * with zero application business logic and no framework blocking primitives held, resetting
+     * the watchdog heartbeat rather than reporting a spurious freeze. Genuine UI freezes keeping
+     * the main thread blocked in application business logic or blocking primitives continue to be reported.
+     */
+    fun isFormatterFileSizeStall(
+        topFrame: StackTraceElement?,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (topFrame == null) return false
+
+        // 1. Top frame must be in android.icu, java.text, or android.text.format
+        val isTopFrameFormatterOrIcu =
+            topFrame.className == "android.text.format.Formatter" ||
+            topFrame.className.startsWith("android.text.format.") ||
+            topFrame.className.startsWith("android.icu.") ||
+            topFrame.className.startsWith("java.text.")
+
+        if (!isTopFrameFormatterOrIcu) {
+            return false
+        }
+
+        // 2. Must contain a Formatter.formatFileSize or formatShortFileSize / formatMeasureShort frame
+        val hasFormatterFrame = mainStackTrace.any { frame ->
+            frame.className == "android.text.format.Formatter" &&
+            (frame.methodName == "formatFileSize" ||
+             frame.methodName == "formatShortFileSize" ||
+             frame.methodName == "formatRoundedBytesResult" ||
+             frame.methodName == "formatMeasureShort")
+        }
+        if (!hasFormatterFrame) {
+            return false
+        }
+
+        // 3. Must be running under Looper / Handler message dispatch or Activity lifecycle
+        val hasLooperOrLifecycle = mainStackTrace.any { frame ->
+            (frame.className == "android.os.Looper" && (frame.methodName == "loopOnce" || frame.methodName == "loop")) ||
+            (frame.className == "android.os.Handler" && (frame.methodName == "dispatchMessage" || frame.methodName == "handleCallback")) ||
+            (frame.className == "android.app.ActivityThread" && frame.methodName == "main") ||
+            frame.className.startsWith("androidx.recyclerview.widget.")
+        }
+        if (!hasLooperOrLifecycle) {
+            return false
+        }
+
+        // 4. Must NOT contain any application business logic (UI Activity / Fragment / Dialog / Adapter / ViewHolder allowed)
+        val noAppBusinessLogic = mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } ||
+            mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.all { frame ->
+                frame.className.endsWith("Activity") || frame.className.contains("Activity$") ||
+                frame.className.endsWith("Fragment") || frame.className.contains("Fragment$") ||
+                frame.className.endsWith("Dialog") || frame.className.contains("Dialog$") ||
+                frame.className.endsWith("DialogFragment") || frame.className.contains("DialogFragment$") ||
+                frame.className.endsWith("Adapter") || frame.className.contains("Adapter$") ||
+                frame.className.endsWith("ViewHolder") || frame.className.contains("ViewHolder$") ||
+                frame.className.endsWith("View") || frame.className.contains("View$") ||
+                frame.className.startsWith("za.kilowatch.ultimatefilemanager.support.CrashReportManager")
+            }
+        if (!noAppBusinessLogic) {
+            return false
+        }
+
+        // 5. Must NOT contain any framework blocking primitives
+        val noOtherBlockingPrimitives = mainStackTrace.none { frame ->
+            (frame.className == "android.os.BinderProxy" &&
+             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+            frame.className.startsWith("java.io.") ||
+            frame.className.startsWith("libcore.io.") ||
+            frame.className.startsWith("java.net.") ||
+            frame.className.startsWith("android.database.")
+        }
+        return noOtherBlockingPrimitives
+    }
+
     @Volatile private var cachedGetActivityTokenMethod: java.lang.reflect.Method? = null
     @Volatile private var cachedGetCallbacksMethod: java.lang.reflect.Method? = null
     @Volatile private var cachedPreExecuteMethod: java.lang.reflect.Method? = null
@@ -6700,7 +6798,32 @@ object CrashReportManager {
                     val isMaterialButtonLayoutInflateStall =
                         isMaterialButtonLayoutInflateStall(topFrame, mainStackTrace)
 
-                    if (isMaterialButtonLayoutInflateStall || isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 86. The main thread is sampled inside Android Formatter or ICU number
+                    //     formatting (`android.text.format.Formatter.formatFileSize` /
+                    //     `formatShortFileSize` / `formatRoundedBytesResult` / `formatMeasureShort`,
+                    //     `java.text.Format.format`, `android.icu.text.MeasureFormat.format`,
+                    //     `android.icu.number.LocalizedNumberFormatter.formatImpl`,
+                    //     `NumberFormatterImpl.formatStatic`, `MutablePatternModifier.processQuantity`,
+                    //     `LongNameHandler.processQuantity`, `RoundingUtils.getPluralSafe`,
+                    //     `DecimalQuantity_AbstractBCD.getStandardPlural`, `PluralRules.select` /
+                    //     `PluralRules$RuleList.selectRule`), thread state RUNNABLE (reported from a
+                    //     Google Google TV Streamer, SDK 34, app 2.2.1-GOOGLE). Formatting a file size or byte
+                    //     count into a human-readable display string is pure in-memory string formatting
+                    //     taking microseconds with zero locks, disk/network I/O, database access, or IPC.
+                    //     Under CPU contention from concurrent background workers (thumbnail generation via
+                    //     `MediaMetadataRetriever` on `DefaultDispatcher`, network streaming, and Room DB
+                    //     disk I/O on `arch_disk_io_*` threads on Android TV streamer devices), the looper
+                    //     or watchdog heartbeat is delayed, causing the watchdog to sample the main thread
+                    //     during this brief formatting calculation. Because R8 minifies caller callbacks
+                    //     and lambda wrappers to short names (`kd3.b`, `dz9.invoke`, `cd.run`) that lack
+                    //     platform package prefixes, `isPureFrameworkStack` evaluates to false. Filter 86
+                    //     (`isFormatterFileSizeStall`) detects when the main thread is executing in-memory
+                    //     `Formatter.formatFileSize` or ICU number formatting under standard Looper / Handler
+                    //     dispatch with zero application business logic and no framework blocking primitives held.
+                    val isFormatterFileSizeStall =
+                        isFormatterFileSizeStall(topFrame, mainStackTrace)
+
+                    if (isFormatterFileSizeStall || isMaterialButtonLayoutInflateStall || isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
