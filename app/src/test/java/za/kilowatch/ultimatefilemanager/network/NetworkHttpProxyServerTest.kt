@@ -229,9 +229,18 @@ class NetworkHttpProxyServerTest {
         val session = sessions[uuid]
         assertNotNull(session)
 
+        // Wait for active stream count to reach 0 after disconnect
+        for (i in 0 until 50) {
+            if (session!!.activeStreamCount.get() == 0) break
+            Thread.sleep(20L)
+        }
+
         // Simulate idle timeout expiring
         session!!.scheduleIdleHandleCloseLocked(10L)
-        Thread.sleep(100L)
+        for (i in 0 until 50) {
+            if (firstHandle!!.isClosed) break
+            Thread.sleep(20L)
+        }
 
         // Handle should now be closed to reclaim server resources
         assertTrue("Handle should be closed when idle", firstHandle!!.isClosed)
@@ -247,5 +256,44 @@ class NetworkHttpProxyServerTest {
 
         assertEquals("Handle should reopen transparently on subsequent request", 2, openCount)
         assertNotNull("New handle should be present in session", session.handle)
+    }
+
+    @Test
+    fun evictedSessionRevivesTransparentlyFromPersistentMetadata() {
+        var openCount = 0
+        NetworkHttpProxyServer.handleFactory = {
+            openCount++
+            FakeRandomAccessFile(size = 8000L, fillByte = 'R'.code.toByte())
+        }
+        NetworkHttpProxyServer.shareResolver = { id ->
+            if (id == testShare.id) testShare else null
+        }
+
+        val urlString = NetworkHttpProxyServer.register(testShare, "history_replay.mp4", "video/mp4", 8000L)
+        val url = URL(urlString)
+        val uuid = url.path.trimStart('/').substringBefore('/')
+
+        // Simulate session eviction / unregister
+        NetworkHttpProxyServer.unregister(uuid)
+
+        // Find session in memory - should be absent
+        val sessionField = NetworkHttpProxyServer::class.java.getDeclaredField("sessions")
+        sessionField.isAccessible = true
+        @Suppress("UNCHECKED_CAST")
+        val sessions = sessionField.get(NetworkHttpProxyServer) as Map<String, NetworkHttpProxyServer.Session>
+        assertNull("Session must be absent from active memory after unregister", sessions[uuid])
+
+        // External player attempts to play from history using the same URL!
+        val conn = url.openConnection() as HttpURLConnection
+        conn.setRequestProperty("Range", "bytes=0-99")
+        assertEquals(206, conn.responseCode)
+        val data = conn.inputStream.readBytes()
+        assertEquals(100, data.size)
+        assertEquals('R'.code.toByte(), data[0])
+        conn.disconnect()
+
+        // Session was revived transparently and handle opened
+        assertTrue("Handle must be opened on revived session", openCount >= 1)
+        assertNotNull("Session must be restored into active memory", sessions[uuid])
     }
 }

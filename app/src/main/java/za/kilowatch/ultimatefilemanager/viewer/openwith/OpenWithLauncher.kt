@@ -21,6 +21,13 @@ object OpenWithLauncher {
 
     private const val TAG = "OpenWithLauncher"
 
+    private fun isOwnedAuthority(context: Context, uri: Uri): Boolean {
+        if (uri.scheme != "content") return false
+        val authority = uri.authority ?: return false
+        val pkg = context.packageName
+        return authority == "$pkg.fileprovider" || authority == "$pkg.documents"
+    }
+
     /**
      * Launches the chosen target application with full permission grants and extras.
      */
@@ -47,11 +54,23 @@ object OpenWithLauncher {
             return
         }
 
+        // Build base intent flags. Persistable permission is only valid for URIs owned by UFM
+        // (FileProvider/DocumentsProvider). MediaStore and external URIs reject persistable grants with SecurityException.
+        val isOwned = isOwnedAuthority(context, uri)
+        val baseFlags = if (isOwned) {
+            Intent.FLAG_GRANT_READ_URI_PERMISSION or
+            Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+            Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+        } else {
+            Intent.FLAG_GRANT_READ_URI_PERMISSION or
+            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        }
+
         // 2. Build explicit ACTION_VIEW intent targeting ComponentName
         val intent = Intent(Intent.ACTION_VIEW).apply {
             component = ComponentName(target.packageName, target.activityName)
             setDataAndType(uri, mimeType)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            addFlags(baseFlags)
 
             // Set ClipData to ensure content URI permissions pass through
             clipData = ClipData.newRawUri(fileName, uri)
@@ -61,15 +80,21 @@ object OpenWithLauncher {
             }
         }
 
-        // 3. Grant URI permission explicitly to the target package
-        try {
-            context.grantUriPermission(
-                target.packageName,
-                uri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            )
-        } catch (_: Exception) {
-            // Non-fatal if grantUriPermission is unsupported for this URI authority
+        // 3. Grant URI permission explicitly to the target package for content URIs
+        if (uri.scheme == "content") {
+            try {
+                context.grantUriPermission(target.packageName, uri, baseFlags)
+            } catch (_: Exception) {
+                try {
+                    context.grantUriPermission(
+                        target.packageName,
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                } catch (_: Exception) {
+                    // Non-fatal if grantUriPermission is unsupported for this URI authority
+                }
+            }
         }
 
         // 4. Attach media metadata and local/network subtitle extras
@@ -100,6 +125,16 @@ object OpenWithLauncher {
         // 7. Execute launch with graceful exception fallback
         try {
             context.startActivity(intent)
+        } catch (e: SecurityException) {
+            // If persistable permission flag was rejected by the platform, retry without it
+            try {
+                intent.flags = intent.flags and Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION.inv()
+                context.startActivity(intent)
+            } catch (e2: Exception) {
+                val errorMsg = context.getString(R.string.open_with_launch_failed, target.label)
+                Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
+                launchSystemChooser(context, uri, mimeType, fileName, file)
+            }
         } catch (e: Exception) {
             val errorMsg = context.getString(R.string.open_with_launch_failed, target.label)
             Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
@@ -117,9 +152,19 @@ object OpenWithLauncher {
         fileName: String,
         file: File? = null
     ) {
+        val isOwned = isOwnedAuthority(context, uri)
+        val baseFlags = if (isOwned) {
+            Intent.FLAG_GRANT_READ_URI_PERMISSION or
+            Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+            Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+        } else {
+            Intent.FLAG_GRANT_READ_URI_PERMISSION or
+            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        }
+
         val viewIntent = Intent(Intent.ACTION_VIEW).apply {
             setDataAndType(uri, mimeType)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            addFlags(baseFlags)
             clipData = ClipData.newRawUri(fileName, uri)
 
             if (context !is Activity) {
@@ -140,6 +185,16 @@ object OpenWithLauncher {
 
         try {
             context.startActivity(chooser)
+        } catch (e: SecurityException) {
+            try {
+                viewIntent.flags = viewIntent.flags and Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION.inv()
+                val safeChooser = Intent.createChooser(viewIntent, context.getString(R.string.open_with)).apply {
+                    if (context !is Activity) addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(safeChooser)
+            } catch (_: Exception) {
+                Toast.makeText(context, R.string.error_cannot_open_file, Toast.LENGTH_SHORT).show()
+            }
         } catch (_: Exception) {
             Toast.makeText(context, R.string.error_cannot_open_file, Toast.LENGTH_SHORT).show()
         }

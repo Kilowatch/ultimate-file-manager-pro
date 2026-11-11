@@ -5,6 +5,15 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.6] — 2026-11-11
+
+### Fixed
+- **External Video & Audio Player Playback History Tracking (Issue #67)**: Fixed an issue where videos and audio files opened from UFM in VLC for Android (and other external media players) failed to record in the external player's playback history and resume database. On Android 13–16+, external players holding standard `READ_MEDIA_VIDEO`/`READ_MEDIA_AUDIO` permissions could not resolve physical file paths from private `FileProvider` URIs, causing VLC's `libmedialibrary` to drop them from history. UFM now:
+  1. Prioritizes Android's system `MediaStore` content URIs (`content://media/external/...`) for local media files, allowing external players to verify and track playback history and resume points.
+  2. Implements a fast on-demand media scanner (`MediaScannerConnection.scanFile`) with a 250ms timeout to resolve MediaStore URIs for freshly downloaded or moved media before launch, falling back cleanly to `UfmFileProvider` with enhanced `_data` and metadata projections if unindexed.
+  3. Attaches `Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION` alongside read permissions so external players' history databases retain read authorization across device reboots without requiring any Play Console policy declarations.
+  4. Configures `NetworkHttpProxyServer` with preferred port `28842` and persistent session metadata with dynamic session revival, allowing network and cloud streams (SMB, SFTP, WebDAV, Cloud) to be reopened and resumed directly from VLC's history tab.
+
 ## [2.2.5] — 2026-11-09
 
 ### Added

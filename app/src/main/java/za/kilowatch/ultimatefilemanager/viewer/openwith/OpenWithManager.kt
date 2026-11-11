@@ -13,6 +13,7 @@ import za.kilowatch.ultimatefilemanager.storage.SafFile
 import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
 import za.kilowatch.ultimatefilemanager.util.MimeTypeHelper
 import za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager
+import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
 import za.kilowatch.ultimatefilemanager.viewer.MediaIntentHelper
 import java.io.File
 
@@ -55,11 +56,17 @@ object OpenWithManager {
             mimeType ?: MimeTypeHelper.getOrFallback(ext)
         )
 
-        // 2. Resolve content:// URI
+        // 2. Resolve content:// URI (prioritizing MediaStore for local media to preserve external player history)
         val resolvedUri: Uri = uri ?: run {
             if (file == null) return
             try {
-                if (SafTreeManager.isSaf(context, file)) {
+                val mediaStoreUri = if (!isNetwork && (FileViewerRouter.isVideo(ext) || FileViewerRouter.isAudio(ext))) {
+                    MediaStoreUriResolver.resolve(context, file, resolvedMime)
+                } else {
+                    null
+                }
+
+                mediaStoreUri ?: if (SafTreeManager.isSaf(context, file)) {
                     (file as? SafFile)?.documentUri
                         ?: SafTreeManager.getDocumentUriForPath(context, file.absolutePath)
                         ?: Uri.fromFile(file)

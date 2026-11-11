@@ -119,6 +119,7 @@ class UfmFileProvider : FileProvider() {
             OpenableColumns.DISPLAY_NAME,
             OpenableColumns.SIZE,
             MediaStore.MediaColumns.DATA,
+            MediaStore.MediaColumns._ID,
             "title"
         )
         val cols = projection ?: defaultCols
@@ -171,14 +172,18 @@ class UfmFileProvider : FileProvider() {
             }
             val title = fileName.substringBeforeLast('.').ifBlank { fileName }
 
+            val id = (filePath.hashCode().toLong() and 0x7FFFFFFF) + 1L
+
             for (col in cols) {
                 when (col) {
-                    OpenableColumns.DISPLAY_NAME, "display_name", MediaStore.MediaColumns.DISPLAY_NAME ->
+                    OpenableColumns.DISPLAY_NAME, "display_name", "_display_name", MediaStore.MediaColumns.DISPLAY_NAME ->
                         row.add(col, fileName)
-                    OpenableColumns.SIZE, "size", MediaStore.MediaColumns.SIZE ->
+                    OpenableColumns.SIZE, "size", "_size", MediaStore.MediaColumns.SIZE ->
                         row.add(col, fileSize)
-                    "_data", MediaStore.MediaColumns.DATA ->
+                    "_data", "data", MediaStore.MediaColumns.DATA ->
                         row.add(col, filePath)
+                    "_id", "id", MediaStore.MediaColumns._ID ->
+                        row.add(col, id)
                     "title", MediaStore.MediaColumns.TITLE ->
                         row.add(col, title)
                     "mime_type", MediaStore.MediaColumns.MIME_TYPE ->
@@ -202,10 +207,14 @@ class UfmFileProvider : FileProvider() {
             val title = fileName.substringBeforeLast('.').ifBlank { fileName }
             for (col in cols) {
                 when (col) {
-                    OpenableColumns.DISPLAY_NAME, "display_name", MediaStore.MediaColumns.DISPLAY_NAME ->
+                    OpenableColumns.DISPLAY_NAME, "display_name", "_display_name", MediaStore.MediaColumns.DISPLAY_NAME ->
                         row.add(col, fileName)
-                    OpenableColumns.SIZE, "size", MediaStore.MediaColumns.SIZE ->
+                    OpenableColumns.SIZE, "size", "_size", MediaStore.MediaColumns.SIZE ->
                         row.add(col, 0L)
+                    "_data", "data", MediaStore.MediaColumns.DATA ->
+                        row.add(col, uriPath)
+                    "_id", "id", MediaStore.MediaColumns._ID ->
+                        row.add(col, 1L)
                     "title", MediaStore.MediaColumns.TITLE ->
                         row.add(col, title)
                     else ->
@@ -231,7 +240,11 @@ class UfmFileProvider : FileProvider() {
                     val rel = uriPath.removePrefix("/cache/")
                     File(context.cacheDir, rel)
                 }
-                else -> null
+                uriPath.startsWith("/files/") -> {
+                    val rel = uriPath.removePrefix("/files/")
+                    File(context.filesDir, rel)
+                }
+                else -> File(uriPath)
             }
         } catch (_: Exception) {
             null

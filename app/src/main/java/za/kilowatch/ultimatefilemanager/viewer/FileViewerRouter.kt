@@ -915,6 +915,9 @@ object FileViewerRouter {
             val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, file)
             uri = if (isSaf) {
                 (file as? za.kilowatch.ultimatefilemanager.storage.SafFile)?.documentUri ?: za.kilowatch.ultimatefilemanager.storage.SafTreeManager.getDocumentUriForPath(context, file.absolutePath) ?: Uri.parse(file.absolutePath)
+            } else if (!isNetwork && (ext in AUDIO_EXTENSIONS || ext in VIDEO_EXTENSIONS)) {
+                za.kilowatch.ultimatefilemanager.viewer.openwith.MediaStoreUriResolver.resolve(context, file, mimeType)
+                    ?: FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             } else {
                 FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             }

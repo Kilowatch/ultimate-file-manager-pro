@@ -1,19 +1,20 @@
-# Task List: Advanced Sync Remote Folder Target Resolution
+# Task List: External Video Player Playback History Tracking (Issue #67)
 
-## Phase 1: Foundation — Pure Path Resolution Engine & Unit Tests
-- [x] [T001] [P] [app/src/main/java/za/kilowatch/ultimatefilemanager/sync/SyncRemotePathResolver.kt] Create `SyncRemotePathResolver` object with `resolve(share: NetworkShare, profileRemotePath: String): ResolvedSharePath` and `buildRemoteFilePath(basePath: String, fileName: String): String`. Strictly isolate SMB server-mode dynamic share stripping to `ShareType.SMB && (share.isServerMode || share.remotePath.isEmpty())`, while preserving the sanitized `profileRemotePath.trim('/')` for WebDAV, Nextcloud, SFTP, FTP, NFS, and Cloud storage.
-- [x] [T002] [P] [app/src/test/java/za/kilowatch/ultimatefilemanager/sync/SyncRemotePathResolverTest.kt] Create comprehensive unit test suite covering all path resolution permutations: WebDAV subfolder, WebDAV root, WebDAV with irregular slashes, SMB Server Mode, SMB standard share with subfolder, SMB standard share at root, SFTP/FTP/S3/NFS, and `buildRemoteFilePath` formatting.
+## Foundation (MediaStore Resolution & Fallback Projections)
+- [x] [T001] [P] Create `MediaStoreUriResolver.kt` in `za.kilowatch.ultimatefilemanager.viewer.openwith` resolving local video and audio files to system `MediaStore` content URIs, with fast on-demand `MediaScannerConnection` scan (250ms timeout).
+- [x] [T002] Create unit tests in `MediaStoreUriResolverTest.kt` verifying extension filtering, root/cache exclusions, and collection resolution.
+- [x] [T003] Enhance `UfmFileProvider.kt` `query()` cursor projections to map `_id` (`MediaStore.MediaColumns._ID`), `_display_name`, `_data`, and verify storage volume path resolution.
 
-## Phase 2: Advanced Sync Engine Integration & Safety Guards
-- [x] [T003] [P] [app/src/main/java/za/kilowatch/ultimatefilemanager/sync/advanced/AdvancedSyncWorker.kt] Integrate `SyncRemotePathResolver.resolve(share, profile.remotePath)` in `doWork()`, replacing the bugged inline `when` branch that caused non-SMB shares to target `""`.
-- [x] [T004] [app/src/main/java/za/kilowatch/ultimatefilemanager/sync/advanced/AdvancedSyncWorker.kt] Update `listRemoteFiles(share: NetworkShare, remotePath: String, autoCreate: Boolean = true)`: when `autoCreate == false`, throw exception on listing failure instead of attempting `mkdirByType`.
-- [x] [T005] [app/src/main/java/za/kilowatch/ultimatefilemanager/sync/advanced/AdvancedSyncWorker.kt] In `doDownload()`, query files with `autoCreate = false`. If the remote directory does not exist or fails to list, catch the error, show the `R.string.failed_to_access_remote_path_for_profilename` error notification, and abort safely without modifying or deleting local destination files.
-- [x] [T006] [app/src/main/java/za/kilowatch/ultimatefilemanager/sync/advanced/AdvancedSyncWorker.kt] Fix remote file path construction across `doUpload()`, `doDownload()`, `doTwoway()`, `resolveRemoteSize()`, and `deleteRemoteFileByType()` using `SyncRemotePathResolver.buildRemoteFilePath()` to eliminate accidental leading slashes on empty base paths.
+## Feature Implementation (Intent Dispatching & Permissions)
+- [x] [T004] [P] Update `OpenWithManager.kt` `show()` to resolve MediaStore URIs for local video and audio files before falling back to `UfmFileProvider`.
+- [x] [T005] Update `FileViewerRouter.kt` `openWithExternalApp()` to pass resolved MediaStore URIs into `OpenWithManager.show()`.
+- [x] [T006] Update `OpenWithLauncher.kt` (`launch()` and `launchSystemChooser()`) to add `FLAG_GRANT_PERSISTABLE_URI_PERMISSION` alongside read permissions with nested fallback.
 
-## Phase 3: Classic Sync Worker Parity
-- [x] [T007] [app/src/main/java/za/kilowatch/ultimatefilemanager/sync/SyncWorker.kt] Update `SyncWorker` to use `SyncRemotePathResolver.resolve(share, profile.remotePath)` and `buildRemoteFilePath()`, ensuring consistent path resolution across both sync engines.
-- [x] [T008] [app/src/main/java/za/kilowatch/ultimatefilemanager/sync/SyncWorker.kt] Expand `SyncWorker` connection testing (`testConnection`), listing (`listFiles`), directory creation (`mkdir`), and file writing (`openOutputStream`) to support `ShareType.WEBDAV` and `ShareType.SFTP` / `ShareType.SCP`.
+## Network Streaming Session Revival
+- [x] [T007] [P] Update `NetworkHttpProxyServer.kt` to bind to preferred port `28842` (with fallback to `0`), persist active session metadata in `proxy_streaming_sessions.json`, and dynamically revive expired/past sessions on demand via `NetworkShareRepository`.
+- [x] [T008] Add unit tests in `NetworkHttpProxyServerTest.kt` verifying on-demand session revival from stored metadata.
 
-## Phase 4: Automated Testing & Build Verification
-- [x] [T009] Execute unit tests (`./gradlew testDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.sync.*"`) to confirm path resolution across all protocols.
-- [x] [T010] Run `./gradlew assembleMobileGoogleDebug` to verify project compilation and zero regressions.
+## Version Bump & Repository Documentation
+- [x] [T009] Bump `appVersionName` to `"2.2.6"` and `appVersionCode` to `314` in `app/build.gradle.kts`.
+- [x] [T010] Update `CHANGELOG.md` with approved version header `[2.2.6] — 2026-11-11` and Issue #67 release notes.
+- [x] [T011] Run automated test suite (`./gradlew testDebugUnitTest`) to verify all unit tests pass.

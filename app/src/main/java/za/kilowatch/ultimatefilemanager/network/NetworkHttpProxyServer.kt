@@ -2,10 +2,13 @@ package za.kilowatch.ultimatefilemanager.network
 
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStreamReader
 import java.io.OutputStream
+import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
+import java.security.MessageDigest
 import java.security.SecureRandom
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -40,6 +43,19 @@ object NetworkHttpProxyServer {
     private const val SESSION_TTL_MS = 10 * 60 * 1000L // 10 minutes idle session TTL
     internal const val IDLE_HANDLE_CLOSE_MS = 60 * 1000L // 60s idle handle reclamation
     private const val CHUNK_SIZE = 256 * 1024
+    const val PREFERRED_PORT = 28842
+
+    internal data class PersistentSession(
+        val key: String,
+        val shareId: String,
+        val path: String,
+        val mimeType: String,
+        val fileSize: Long,
+        val authToken: String,
+        val updatedAt: Long = System.currentTimeMillis()
+    )
+
+    private val persistentSessions = ConcurrentHashMap<String, PersistentSession>()
 
     /** Max read attempts with a fresh handle before returning EOF. */
     private const val MAX_READ_ATTEMPTS = 4
@@ -150,14 +166,103 @@ object NetworkHttpProxyServer {
      */
     internal var handleFactory: (Session) -> IRandomAccessFile? = ::openHandleForSession
 
+    /**
+     * Share-lookup seam for dynamic session revival. Tests override to provide mock shares.
+     */
+    internal var shareResolver: (String) -> NetworkShare? = { id ->
+        val ctx = runCatching { za.kilowatch.ultimatefilemanager.UfmApplication.instance }.getOrNull()
+        if (ctx != null) NetworkShareRepository.getInstance(ctx).getById(id) else null
+    }
+
+    private fun getStorageFile(): File? {
+        val ctx = runCatching { za.kilowatch.ultimatefilemanager.UfmApplication.instance }.getOrNull() ?: return null
+        return File(ctx.filesDir, "proxy_streaming_sessions.json")
+    }
+
+    internal fun loadPersistentSessions() {
+        try {
+            val file = getStorageFile() ?: return
+            if (!file.exists()) return
+            val jsonStr = file.readText()
+            val array = org.json.JSONArray(jsonStr)
+            for (i in 0 until array.length()) {
+                val obj = array.getJSONObject(i)
+                val key = obj.getString("key")
+                val session = PersistentSession(
+                    key = key,
+                    shareId = obj.getString("shareId"),
+                    path = obj.getString("path"),
+                    mimeType = obj.optString("mimeType", "video/mp4"),
+                    fileSize = obj.optLong("fileSize", 0L),
+                    authToken = obj.getString("authToken"),
+                    updatedAt = obj.optLong("updatedAt", System.currentTimeMillis())
+                )
+                persistentSessions[key] = session
+            }
+        } catch (e: Exception) {
+            GoRoLog.w(TAG, "Failed to load persistent proxy sessions: ${e.message}")
+        }
+    }
+
+    private fun savePersistentSessionsAsync() {
+        executor.submit {
+            try {
+                val file = getStorageFile() ?: return@submit
+                val array = org.json.JSONArray()
+                val cutoff = System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L // 7-day persistent session retention
+                val sorted = persistentSessions.values
+                    .filter { it.updatedAt > cutoff }
+                    .sortedByDescending { it.updatedAt }
+                    .take(50)
+                for (s in sorted) {
+                    val obj = org.json.JSONObject().apply {
+                        put("key", s.key)
+                        put("shareId", s.shareId)
+                        put("path", s.path)
+                        put("mimeType", s.mimeType)
+                        put("fileSize", s.fileSize)
+                        put("authToken", s.authToken)
+                        put("updatedAt", s.updatedAt)
+                    }
+                    array.put(obj)
+                }
+                val tempFile = File(file.parentFile, "${file.name}.tmp")
+                tempFile.writeText(array.toString())
+                if (tempFile.exists()) {
+                    if (file.exists()) file.delete()
+                    tempFile.renameTo(file)
+                }
+            } catch (e: Exception) {
+                GoRoLog.w(TAG, "Failed to save persistent proxy sessions: ${e.message}")
+            }
+        }
+    }
+
+    internal fun tryReviveSession(uuid: String): Session? {
+        val meta = persistentSessions[uuid] ?: return null
+        val resolver = shareResolver
+        val share = resolver(meta.shareId) ?: return null
+        val revived = Session(share, meta.path, meta.mimeType, meta.fileSize, meta.authToken)
+        sessions[uuid] = revived
+        GoRoLog.i(TAG, "Revived persistent streaming session for $uuid → ${share.host}${meta.path}")
+        return revived
+    }
+
     @Synchronized
     fun start() {
         if (serverSocket != null) return
         try {
-            val ss = ServerSocket(0).apply { reuseAddress = true }
+            val loopback = InetAddress.getByName("127.0.0.1")
+            val ss = try {
+                ServerSocket(PREFERRED_PORT, 50, loopback).apply { reuseAddress = true }
+            } catch (e: Exception) {
+                GoRoLog.w(TAG, "Preferred port $PREFERRED_PORT unavailable (${e.message}); using ephemeral port")
+                ServerSocket(0, 50, loopback).apply { reuseAddress = true }
+            }
             serverSocket = ss
             port = ss.localPort
             GoRoLog.d(TAG, "HTTP proxy started on port $port")
+            loadPersistentSessions()
             executor.submit { acceptLoop(ss) }
             scheduleSessionEviction()
         } catch (e: Exception) {
@@ -191,6 +296,15 @@ object NetworkHttpProxyServer {
                 Session(share, path, mimeType, fileSize, authToken)
             }
         }
+        persistentSessions[key] = PersistentSession(
+            key = key,
+            shareId = share.id,
+            path = path,
+            mimeType = mimeType,
+            fileSize = fileSize,
+            authToken = authToken
+        )
+        savePersistentSessionsAsync()
         GoRoLog.d(TAG, "Registered session $key → ${share.host}$path (size=$fileSize)")
         val rawFileName = path.substringAfterLast('/').ifBlank { "media" }
         val fileName = android.net.Uri.encode(rawFileName)
@@ -223,6 +337,12 @@ object NetworkHttpProxyServer {
 
     private fun handleClient(socket: Socket) {
         try {
+            // Defense-in-depth: Reject any connection not originating from the local loopback interface
+            if (!socket.inetAddress.isLoopbackAddress) {
+                runCatching { socket.close() }
+                return
+            }
+
             socket.tcpNoDelay = true
             socket.soTimeout = 30_000
             runCatching { socket.sendBufferSize = 512 * 1024 }
@@ -239,9 +359,12 @@ object NetworkHttpProxyServer {
 
             val headers = mutableMapOf<String, String>()
             var line: String?
+            var headerCount = 0
             while (true) {
                 line = reader.readLine()
                 if (line.isNullOrBlank()) break
+                headerCount++
+                if (headerCount > 64) break // Bound maximum header count
                 val idx = line.indexOf(':')
                 if (idx > 0) headers[line.substring(0, idx).trim().lowercase()] = line.substring(idx + 1).trim()
             }
@@ -254,8 +377,14 @@ object NetworkHttpProxyServer {
             }.toMap()
 
             val uuid = pathWithoutQuery.substringBefore('/')
-            val session = sessions[uuid]
-            if (session == null || queryParams["auth"] != session.authToken) {
+            var session = sessions[uuid]
+            if (session == null) {
+                session = tryReviveSession(uuid)
+            }
+            val providedAuth = queryParams["auth"]
+            val authMatches = providedAuth != null && session != null &&
+                MessageDigest.isEqual(providedAuth.toByteArray(Charsets.UTF_8), session.authToken.toByteArray(Charsets.UTF_8))
+            if (session == null || !authMatches) {
                 send403(out); return
             }
             session.lastAccessMs = System.currentTimeMillis()
