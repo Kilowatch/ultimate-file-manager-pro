@@ -39,8 +39,10 @@ import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import android.system.ErrnoException
 import android.system.OsConstants
+import android.os.Looper
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withTimeoutOrNull
 import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
 import za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase
 
@@ -1113,47 +1115,57 @@ class UfmDocumentsProvider : DocumentsProvider() {
             return cached.files
         }
 
+        // CRITICAL: Never execute synchronous blocking network I/O on the main thread (causes ANR).
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            za.kilowatch.ultimatefilemanager.util.GoRoLog.w("UfmDocumentsProvider", "listNetworkFiles called on main thread for share=${share.host}, path=$path; returning cached or empty list to prevent ANR")
+            return cached?.files ?: emptyList()
+        }
+
         return try {
             val files = runBlocking(Dispatchers.IO) {
-                if (share.type == ShareType.SMB && share.isServerMode && (cleanPath.isEmpty() || cleanPath == "/")) {
-                    val shareNames = SmbDiscovery.listShares(
-                        share.host, share.username, share.password, share.domain
-                    )
-                    shareNames.map { name ->
-                        NetworkFile(name = name, path = "/$name", isDirectory = true)
-                    }
-                } else {
-                    when (share.type) {
-                        za.kilowatch.ultimatefilemanager.network.ShareType.SMB ->
-                            SmbShareClient.listFiles(share, path)
-                        za.kilowatch.ultimatefilemanager.network.ShareType.FTP ->
-                            FtpShareClient.listFiles(share, path)
-                        za.kilowatch.ultimatefilemanager.network.ShareType.TV ->
-                            za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, path)
-                        za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP ->
-                            za.kilowatch.ultimatefilemanager.network.SshShareClient.listFiles(share, path)
-                        za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE ->
-                            za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.listFiles(share, path)
-                        za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE ->
-                            za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.listFiles(share, path)
-                        za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX ->
-                            za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, path)
-                        za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 ->
-                            za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, path)
-                        za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV ->
-                            za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, path)
-                        za.kilowatch.ultimatefilemanager.network.ShareType.NFS ->
-                            NfsShareClient.listFiles(share, path)
-                        za.kilowatch.ultimatefilemanager.network.ShareType.DLNA ->
-                            DlnaShareClient.listFiles(share, path)
+                withTimeoutOrNull(10_000L) {
+                    if (share.type == ShareType.SMB && share.isServerMode && (cleanPath.isEmpty() || cleanPath == "/")) {
+                        val shareNames = SmbDiscovery.listShares(
+                            share.host, share.username, share.password, share.domain
+                        )
+                        shareNames.map { name ->
+                            NetworkFile(name = name, path = "/$name", isDirectory = true)
+                        }
+                    } else {
+                        when (share.type) {
+                            za.kilowatch.ultimatefilemanager.network.ShareType.SMB ->
+                                SmbShareClient.listFiles(share, path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.FTP ->
+                                FtpShareClient.listFiles(share, path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.TV ->
+                                za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP ->
+                                za.kilowatch.ultimatefilemanager.network.SshShareClient.listFiles(share, path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE ->
+                                OnedriveShareClient.listFiles(share, path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE ->
+                                GoogleDriveShareClient.listFiles(share, path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX ->
+                                DropboxShareClient.listFiles(share, path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 ->
+                                S3ShareClient.listFiles(share, path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV ->
+                                za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.NFS ->
+                                NfsShareClient.listFiles(share, path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.DLNA ->
+                                DlnaShareClient.listFiles(share, path)
+                        }
                     }
                 }
+            } ?: cached?.files ?: emptyList()
+            if (files.isNotEmpty()) {
+                netListCache[cacheKey] = CachedNetList(files, now)
             }
-            netListCache[cacheKey] = CachedNetList(files, now)
             files
         } catch (e: Exception) {
             za.kilowatch.ultimatefilemanager.util.GoRoLog.e("listNetworkFiles failed for share=${share.host}, path=$path", e)
-            emptyList()
+            cached?.files ?: emptyList()
         }
     }
 
@@ -1172,11 +1184,26 @@ class UfmDocumentsProvider : DocumentsProvider() {
         if (!isImage && !isVideo && !isApk) return null
 
         val ctx = context ?: return null
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            val cacheManager = za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(ctx)
+            val netFile = NetworkFile(name = fileName, path = path, isDirectory = false)
+            val existing = cacheManager.getExistingDiskThumbnail(share, netFile)
+            if (existing != null) {
+                val thumbFile = File(existing)
+                if (thumbFile.exists() && thumbFile.length() > 0) {
+                    val pfd = ParcelFileDescriptor.open(thumbFile, ParcelFileDescriptor.MODE_READ_ONLY)
+                    return AssetFileDescriptor(pfd, 0, AssetFileDescriptor.UNKNOWN_LENGTH)
+                }
+            }
+            return null
+        }
         return try {
             val cacheManager = za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(ctx)
             val netFile = NetworkFile(name = fileName, path = path, isDirectory = false)
             val thumbPath = runBlocking(Dispatchers.IO) {
-                cacheManager.getThumbnail(share, netFile, force = false)
+                withTimeoutOrNull(5_000L) {
+                    cacheManager.getThumbnail(share, netFile, force = false)
+                }
             }
             if (thumbPath != null && signal?.isCanceled != true) {
                 val thumbFile = File(thumbPath)
@@ -1207,10 +1234,24 @@ class UfmDocumentsProvider : DocumentsProvider() {
         if (!isImage && !isVideo && !isApk) return null
 
         val ctx = context ?: return null
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            val cacheManager = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager(ctx)
+            val existing = cacheManager.getExistingDiskThumbnail(localFile)
+            if (existing != null) {
+                val thumbFile = File(existing)
+                if (thumbFile.exists() && thumbFile.length() > 0) {
+                    val pfd = ParcelFileDescriptor.open(thumbFile, ParcelFileDescriptor.MODE_READ_ONLY)
+                    return AssetFileDescriptor(pfd, 0, AssetFileDescriptor.UNKNOWN_LENGTH)
+                }
+            }
+            return null
+        }
         return try {
             val cacheManager = za.kilowatch.ultimatefilemanager.settings.LocalThumbnailCacheManager(ctx)
             val thumbPath = runBlocking(Dispatchers.IO) {
-                cacheManager.getThumbnail(localFile, force = false)
+                withTimeoutOrNull(5_000L) {
+                    cacheManager.getThumbnail(localFile, force = false)
+                }
             }
             if (thumbPath != null && signal?.isCanceled != true) {
                 val thumbFile = File(thumbPath)

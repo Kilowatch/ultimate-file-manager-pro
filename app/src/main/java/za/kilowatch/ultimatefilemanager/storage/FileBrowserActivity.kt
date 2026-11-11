@@ -633,7 +633,7 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
                     false
                 }
             } else if (isInitSaf) {
-                SafTreeManager.exists(this, cleanInit)
+                cleanInit == rootPath || SafTreeManager.exists(this, cleanInit)
             } else {
                 File(cleanInit).exists()
             }

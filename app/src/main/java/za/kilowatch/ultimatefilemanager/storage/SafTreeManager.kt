@@ -606,6 +606,12 @@ object SafTreeManager {
 
     fun exists(context: Context, path: String): Boolean {
         val norm = normalizePath(path)
+        if (norm.startsWith("saf://")) {
+            val sub = norm.removePrefix("saf://")
+            if (!sub.contains('/')) {
+                return SafLocationRepository.getLocationById(context, sub) != null
+            }
+        }
         val docUri = getDocumentUriForPath(context, norm) ?: return false
         return try {
             context.contentResolver.query(

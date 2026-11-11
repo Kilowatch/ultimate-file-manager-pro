@@ -471,7 +471,7 @@ class FileBrowserFragment : Fragment() {
                 false
             }
         } else if (isInitSaf) {
-            context != null && SafTreeManager.exists(requireContext(), cleanInit!!)
+            cleanInit == rootPath || (context != null && SafTreeManager.exists(requireContext(), cleanInit!!))
         } else {
             cleanInit != null && File(cleanInit).exists()
         }
