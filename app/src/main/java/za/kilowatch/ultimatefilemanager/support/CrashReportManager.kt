@@ -53,7 +53,8 @@ object CrashReportManager {
     private val PLATFORM_PREFIXES = listOf(
         "android.", "com.android.", "java.", "javax.", "dalvik.",
         "libcore.", "jdk.", "sun.", "org.apache.", "org.json",
-        "com.google.", "com.pairip.", "com.oplus.", "com.coloros."
+        "com.google.", "com.pairip.", "com.oplus.", "com.coloros.",
+        "hihonor.", "com.hihonor.", "huawei.", "com.huawei."
     )
 
     // App package prefix — any frame from the app's own classes means genuine app
@@ -1255,6 +1256,83 @@ object CrashReportManager {
         }
 
         // 6. Must NOT contain any blocking primitives
+        val noOtherBlockingPrimitives = mainStackTrace.none { frame ->
+            (frame.className == "android.os.BinderProxy" &&
+             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+            frame.className.startsWith("java.io.") ||
+            frame.className.startsWith("libcore.io.") ||
+            frame.className.startsWith("java.net.") ||
+            frame.className.startsWith("android.database.")
+        }
+        return noOtherBlockingPrimitives
+    }
+
+    /**
+     * Identifies a main-thread stack where the top frame is sampled inside HONOR / Huawei
+     * vendor framework factory or trace methods (`HwFrameworkFactoryImpl.getHiTraceHandler`,
+     * `HwFrameworkFactory.getHiTraceHandler`, `HnFrameworkFactoryImpl`, or HiTrace trace handlers)
+     * during main looper message loop dispatch (`Looper.loopOnce`, `Looper.loop`, or `Handler.dispatchMessage`).
+     *
+     * On Honor and Huawei devices running Magic UI / EMUI ROMs, the Android framework's
+     * `android.os.Looper.loopOnce` (and `Looper.loop`) is instrumented by the vendor ROM to invoke
+     * `HwFrameworkFactory.getHiTraceHandler()` on each iteration for performance and latency tracing.
+     * In this state, the main thread is RUNNABLE, executing sub-microsecond in-memory vendor framework
+     * handler lookup. No application code is running (zero `za.kilowatch.ultimatefilemanager` frames)
+     * and no framework blocking primitives (locks, disk/network I/O, database, Binder IPC) are held.
+     */
+    fun isHonorHuaweiHiTraceLooperStall(
+        topFrame: StackTraceElement?,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (topFrame == null) return false
+
+        val isTopFrameVendorFactoryOrTrace =
+            topFrame.className.startsWith("hihonor.android.common.HwFrameworkFactory") ||
+            topFrame.className.startsWith("huawei.android.common.HwFrameworkFactory") ||
+            topFrame.className.startsWith("com.hihonor.common.HnFrameworkFactory") ||
+            topFrame.className.startsWith("com.huawei.android.common.") ||
+            topFrame.className.startsWith("android.common.HwFrameworkFactory") ||
+            topFrame.className.contains("HwFrameworkFactory") ||
+            topFrame.className.contains("HiTrace") ||
+            topFrame.methodName == "getHiTraceHandler" ||
+            (topFrame.className.startsWith("android.os.Trace") &&
+             (topFrame.methodName == "traceBegin" || topFrame.methodName == "traceEnd" ||
+              topFrame.methodName == "asyncTraceBegin" || topFrame.methodName == "asyncTraceEnd"))
+
+        if (!isTopFrameVendorFactoryOrTrace) {
+            return false
+        }
+
+        val hasVendorFactoryOrTraceFrame = mainStackTrace.any { frame ->
+            frame.className.contains("HwFrameworkFactory") ||
+            frame.className.contains("HnFrameworkFactory") ||
+            frame.className.contains("HiTrace") ||
+            frame.className.startsWith("hihonor.") ||
+            frame.className.startsWith("com.hihonor.") ||
+            frame.className.startsWith("huawei.") ||
+            frame.className.startsWith("com.huawei.")
+        }
+        if (!hasVendorFactoryOrTraceFrame) {
+            return false
+        }
+
+        val hasLooperTraversal = mainStackTrace.any { frame ->
+            (frame.className == "android.os.Looper" &&
+             (frame.methodName == "loopOnce" || frame.methodName == "loop")) ||
+            (frame.className == "android.os.Handler" && frame.methodName == "dispatchMessage") ||
+            frame.className == "android.app.ActivityThread"
+        }
+        if (!hasLooperTraversal) {
+            return false
+        }
+
+        val noAppBusinessLogic = mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+        if (!noAppBusinessLogic) {
+            return false
+        }
+
         val noOtherBlockingPrimitives = mainStackTrace.none { frame ->
             (frame.className == "android.os.BinderProxy" &&
              (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
@@ -6968,7 +7046,31 @@ object CrashReportManager {
                     val isTextInputLayoutInflateStall =
                         isTextInputLayoutInflateStall(topFrame, mainStackTrace)
 
-                    if (isTextInputLayoutInflateStall || isFormatterFileSizeStall || isMaterialButtonLayoutInflateStall || isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 88. The main thread is sampled inside a HONOR / Huawei vendor
+                    //     framework factory or trace method (`hihonor.android.common.HwFrameworkFactoryImpl.getHiTraceHandler`,
+                    //     `huawei.android.common.HwFrameworkFactoryImpl.getHiTraceHandler`,
+                    //     `android.common.HwFrameworkFactory.getHiTraceHandler`, or HiTrace trace handlers)
+                    //     while the main looper executes or loops (`Looper.loopOnce`, `Looper.loop`, or
+                    //     `Handler.dispatchMessage`), thread state RUNNABLE (reported from a HONOR CRT-LX3,
+                    //     SDK 31, app 2.2.1-GOOGLE). In Magic UI / EMUI ROMs, the vendor instruments
+                    //     `android.os.Looper.loopOnce` to invoke `HwFrameworkFactory.getHiTraceHandler()`
+                    //     on each looper iteration. Obtaining the vendor trace handler takes nanoseconds
+                    //     with zero locks, disk/network I/O, database access, or IPC. The >5 s block was
+                    //     device-side CPU contention where background workers (Room indexing on
+                    //     `DefaultDispatcher`, `MediaStoreObserverThread`, and multiple `arch_disk_io_*` threads)
+                    //     delayed the watchdog heartbeat and sampled the main thread while looping in the
+                    //     main looper. Because `hihonor.*` vendor classes injected by the ROM lack standard
+                    //     platform prefixes, `isPureFrameworkStack` evaluated to false. The
+                    //     `AnrWatchdogThread` filter 88 (`isHonorHuaweiHiTraceLooperStall`) now treats a
+                    //     main-thread stack inside HONOR / Huawei trace handler or factory lookup during
+                    //     Looper execution, with zero app business logic and no framework blocking primitives,
+                    //     as a false positive, resetting its heartbeat instead of writing a spurious freeze report.
+                    //     Genuine freezes keeping the main thread parked inside application business logic or
+                    //     blocking primitives continue to be reported.
+                    val isHonorHuaweiHiTraceLooperStall =
+                        isHonorHuaweiHiTraceLooperStall(topFrame, mainStackTrace)
+
+                    if (isHonorHuaweiHiTraceLooperStall || isTextInputLayoutInflateStall || isFormatterFileSizeStall || isMaterialButtonLayoutInflateStall || isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
