@@ -1157,6 +1157,9 @@ Große Dateien
     <string name="analyzer_tab_duplicates">
 Duplikate
 </string>
+    <string name="analyzer_tab_incomplete">
+Incomplete
+</string>
     <string name="analyzer_tab_junk">
 Junk &amp; Alt
 </string>
@@ -1180,6 +1183,12 @@ Vorschläge
 </string>
     <string name="analyzer_duplicate_saves">
 spart %1$s
+</string>
+    <string name="analyzer_no_incomplete_files">
+No incomplete or sparse downloads found
+</string>
+    <string name="analyzer_incomplete_file_allocated">
+Size on disk: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1281,6 +1290,18 @@ Preserves the most recently modified file and deletes older copies.
     <string name="analyzer_strategy_remember">
 Remember my choice
 </string>
+    <string name="analyzer_strategy_most_complete">
+Keep Most Complete
+</string>
+    <string name="analyzer_strategy_most_complete_desc">
+Preserves fully downloaded or most allocated files and deletes incomplete copies.
+</string>
+    <string name="analyzer_badge_partial">
+Partial (%1$.0f%%)
+</string>
+    <string name="analyzer_badge_sparse">
+Sparse
+</string>
     <string name="analyzer_bulk_delete_confirm_title">
 Delete %1$d Duplicate Files?
 </string>
@@ -1313,6 +1334,9 @@ Keep oldest file (Original)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
 Keep newest file
+</string>
+    <string name="settings_duplicate_retention_summary_most_complete">
+Keep most complete file
 </string>
     <string name="settings_duplicate_retention_summary_ask">
 Always ask
@@ -7285,6 +7309,12 @@ Große Dateien überprüfen
     <string name="found_bigfilessize_files_larger_than_512_mb">
 %1$d Dateien größer als 512 MB gefunden.
 </string>
+    <string name="analyzer_incomplete_downloads_title">
+Incomplete / Sparse Downloads
+</string>
+    <string name="analyzer_incomplete_downloads_desc">
+Found %1$d incomplete or sparse files consuming disk space.
+</string>
     <string name="old_unused_files">
 Alte ungenutzte Dateien
 </string>
@@ -12159,6 +12189,15 @@ Speicherort:
     <string name="properties_label_size">
 Größe:
 </string>
+    <string name="properties_label_size_on_disk">
+Size on disk:
+</string>
+    <string name="properties_sparse_badge">
+Partial Download (Sparse)
+</string>
+    <string name="properties_sparse_allocated_pct">
+%1$.1f%% allocated
+</string>
     <string name="properties_label_contains">
 Enthält:
 </string>
@@ -14579,6 +14618,12 @@ Dateien vergleichen
 </string>
     <string name="checksum_compare_diff_sizes">
 ✗ Dateien unterscheiden sich (unterschiedliche Größen: %1$s vs. %2$s)
+</string>
+    <string name="checksum_compare_partial_match">
+⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+</string>
+    <string name="checksum_compare_sparse_size_subtitle">
+Size on disk: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 Identische Größe (%1$s). Hashing zur Überprüfung von Inhalten…

@@ -1,14 +1,13 @@
-# Implementation Plan: External Video Player Playback History Tracking (Issue #67)
+# Implementation Plan: Actual vs. Nominal File Size Detection & Sparse/Incomplete File Handling
 
 ## Goals
-Ensure that video and audio files launched from UFM into external media players (such as VLC for Android, Just Player, Next Player, MPV, Nova Video Player, MX Player, and XPlayer) are properly recognized, indexed, and recorded in the external player's playback history and resume database. Enable external players to reopen and resume local media and remote network streams directly from their history tabs.
-
-Reference Spec & Clarification Criteria:
-- Local video and audio files prioritize Android system `MediaStore` content URIs (`content://media/external/.../<id>`) when launched into external players, allowing players with standard `READ_MEDIA_VIDEO` / `READ_MEDIA_AUDIO` permissions (like VLC using `libmedialibrary`) to index and track playback history.
-- Freshly created or unindexed local media triggers a fast on-demand scan via `MediaScannerConnection` (with a ~250ms timeout budget) before launching, falling back cleanly to `UfmFileProvider` if the scan times out or fails.
-- `UfmFileProvider` query projections are enhanced to return `_data`, `_id`, `_display_name`, `_size`, and metadata columns robustly for all storage locations.
-- `FLAG_GRANT_PERSISTABLE_URI_PERMISSION` is granted alongside `FLAG_GRANT_READ_URI_PERMISSION` to allow external players' history databases to retain read authorization across device reboots without requiring any Play Console policy declarations.
-- Network & cloud streams served by `NetworkHttpProxyServer` bind to a consistent preferred port and implement persistent session metadata with dynamic session revival, allowing external players to reopen and resume network streams from their history tab.
+Enable Ultimate File Manager to identify, display, and intelligently handle sparse and pre-allocated incomplete files (such as incomplete torrent downloads and sparse disk images) across the application. Specifically:
+- Expose both **Nominal (Logical) Size** and **Actual Allocated Disk Usage** in File Properties.
+- Differentiate between complete and partial downloads in the **Duplicate Finder**, displaying allocation badges and protecting complete files from accidental deletion.
+- Add an explicit **"Keep Most Complete"** duplicate retention policy preset.
+- Enhance **File Comparison** (`FileCompareDialogFragment`) to perform fast header (64 KB) and sampled block verification, reporting partial matches when nominal sizes match but hashes differ.
+- Add an **"Incomplete / Sparse Downloads"** cleanup recommendation card to **Storage Analyzer**.
+- Provide graceful degradation for cloud, network, and storage volumes where physical block allocation is unsupported.
 
 ---
 
@@ -16,154 +15,156 @@ Reference Spec & Clarification Criteria:
 
 ```mermaid
 flowchart TD
-    A["User launches Video/Audio in External Player"] --> B{"Local or Network File?"}
+    A["File System Target / Candidate File"] --> B["SparseFileUtils.getFileAllocation()"]
     
-    B -->|"Local File"| C["MediaStoreUriResolver.resolve()"]
-    C --> D{"Found in MediaStore?"}
-    D -->|"Yes"| E["Use MediaStore URI (content://media/...)"]
-    D -->|"No"| F["Fast on-demand MediaScanner scan (250ms timeout)"]
-    F --> G{"Scan succeeded?"}
-    G -->|"Yes"| E
-    G -->|"No / Timeout"| H["Fallback: UfmFileProvider URI with enhanced _data projection"]
+    B --> C{"Is Local Ext4/F2FS Storage?"}
+    C -->|"Yes"| D["android.system.Os.lstat() -> stat.st_blocks * 512"]
+    C -->|"No (Network, Cloud, FAT32/exFAT)"| E["Fallback: allocatedBytes = nominalSize (isSparse = false)"]
     
-    B -->|"Network File"| I["NetworkHttpProxyServer.registerPersistent()"]
-    I --> J["Preferred Port (28842) + Deterministic Session Key"]
-    J --> K["Persist Session Meta (shareId, path, mime, size)"]
-    K --> L["Return Stable HTTP Proxy URL"]
-
-    E --> M["OpenWithLauncher.launch()"]
-    H --> M
-    L --> M
-
-    M --> N["Add FLAG_GRANT_READ_URI_PERMISSION + FLAG_GRANT_PERSISTABLE_URI_PERMISSION"]
-    N --> O["Attach Media Extras (title, item_title, org.videolan.vlc.MediaTitle, subtitles)"]
-    O --> P["startActivity(Intent.ACTION_VIEW)"]
-    P --> Q["External Player (VLC / Just Player / XPlayer)"]
-    Q --> R["Playback History & Resume Recorded Successfully!"]
+    D --> F{"allocatedBytes < nominalSize * 0.98?"}
+    F -->|"Yes (Missing blocks)"| G["FileAllocationInfo(isSparse = true, pct, allocatedBytes)"]
+    F -->|"No (Fully allocated)"| H["FileAllocationInfo(isSparse = false, 100%, allocatedBytes)"]
+    
+    G --> I["File Properties: Dual Size + 'Partial Download' Badge"]
+    G --> J["Duplicate Finder: Group together + Tag 'Partial (X%)' + Protect Complete Files"]
+    G --> K["Retention Policy: 'Keep Most Complete' prioritizes 100% files"]
+    G --> L["File Compare: 64KB Header Match + Sampled Block Verification"]
+    G --> M["Storage Analyzer: 'Incomplete / Sparse Downloads' Cleanup Card"]
 ```
 
 ### Architectural Decisions
 
-1. **Extract Dedicated `MediaStoreUriResolver`**:
-   - Centralize all MediaStore lookup and on-demand indexing logic in `za.kilowatch.ultimatefilemanager.viewer.openwith.MediaStoreUriResolver`.
-   - Checks `MediaStore.Video.Media` for video files and `MediaStore.Audio.Media` for audio files.
-   - Handles on-demand scanner completion using Kotlin coroutines `withTimeoutOrNull(250L)`.
+1. **Strict Adherence to UFMStandard Dialogs & Styling**:
+   - All dialogs and bottom sheets (`FilePropertiesBottomSheet`, `FileCompareDialogFragment`, and any cleanup prompts) strictly adhere to **UFMStandard**:
+     - Dark frosted glassmorphic theme styling (`@drawable/bg_dialog_glass`, `@drawable/bg_card_frosted`, `@drawable/bg_btn_icon_frosted`).
+     - Dual-layout architecture for Mobile (`dialog_<name>.xml` / bottom sheet) and Android TV (`dialog_<name>_tv.xml` / 10-foot centered dialog).
+     - Android TV remote D-pad navigation with yellow focus highlights (`@drawable/selector_btn_glass_yellow` / `selector_card_glass_tv`).
+     - Standard action button hierarchy (primary action stacked above secondary/dismiss).
+     - Any user alert or confirmation prompts route through `UfmDialogHelper` for consistent UFMStandard glass rendering.
 
-2. **Enhance `UfmFileProvider` Projections**:
-   - Ensure `_id`, `_data`, `_display_name`, `_size`, `title`, `mime_type`, and `date_modified` are correctly populated for all mounted storage types (internal, SD card, root, and cache).
-   - Prevents null pointer or missing column crashes in 3rd party players querying provider cursors.
+2. **Lightweight POSIX Block Inspection (`SparseFileUtils`)**:
+   - Uses `android.system.Os.lstat(file.absolutePath)` via Android's Bionic C library binding.
+   - Calculates allocated bytes as `stat.st_blocks * 512L`.
+   - Compares against `stat.st_size` (nominal logical length).
+   - If `nominalSize > 64 KB` and `allocatedBytes < nominalSize * 0.98L` (or difference > 4096 bytes), the file is classified as sparse/partially allocated.
+   - For files on network protocols (SMB, SFTP, WebDAV, Cloud) or filesystems without block allocation support, `SparseFileUtils` falls back gracefully without errors or false positives.
 
-3. **Attach Persistable URI Permissions**:
-   - In `OpenWithLauncher.launch()` and `launchSystemChooser()`, add `Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION` to intent flags and `grantUriPermission()`.
-   - Wrap in graceful fallback so providers that reject persistable grants don't interrupt intent dispatching.
+2. **File Properties Dual Display (`FilePropertiesBottomSheet`)**:
+   - If a file is sparse, `FilePropertiesBottomSheet` displays both the nominal size and physical size on disk:
+     - `Size: 4.50 GB (4,831,838,208 bytes)`
+     - `Size on disk: 350.00 MB (367,001,600 bytes) — 7.2% allocated`
+     - Displays an amber warning chip/badge: `Partial Download (Sparse)`.
 
-4. **Network Streaming Persistent Session Revival in `NetworkHttpProxyServer`**:
-   - Bind preferred port `28842` (with fallback to ephemeral `0` if occupied) to ensure URLs stay stable across app lifecycles.
-   - Maintain a lightweight persistent session cache in `context.filesDir/proxy_streaming_sessions.json`.
-   - In `handleClient()`, if an incoming request contains a valid session key but the in-memory session was evicted or the app restarted, automatically query `NetworkShareRepository`, re-create the session, and resume streaming without returning 404.
+3. **Duplicate Finder Protection & Retention (`DuplicateRetentionManager` & `AnalyzerDuplicateAdapter`)**:
+   - In `AnalyzerDuplicateAdapter`, sparse files in a duplicate group display an amber badge: `Partial (X%)`.
+   - In automated retention selection (`KEEP_OLDEST`, `KEEP_NEWEST`), complete files are **always protected** from deletion over partial files. An incomplete file will never be chosen as the "keeper" when a 100% complete file exists in the same group.
+   - Add a new retention preset `KEEP_MOST_COMPLETE` (`mode = "most_complete"`), sorting by allocation percentage descending before applying timestamp tie-breakers.
+
+4. **File Comparison Header & Offset Matching (`FileCompareDialogFragment`)**:
+   - When comparing two files that have matching nominal sizes:
+     - If both files have identical nominal sizes but differ in allocated blocks or standard full-hash:
+     - Read the initial 64 KB header of both files.
+     - If headers match, sample non-zero data offsets from the partial file against the reference file.
+     - If matched, display a dedicated status: `Matching Header / Partial Copy (X% allocated vs Y% allocated)`.
+
+5. **Storage Analyzer Cleanup Recommendation**:
+   - In `StorageAnalyzerEngine`, scan indexed files for sparse downloads (`isSparse == true`).
+   - Emit a dedicated `CleanupRecommendation`:
+     - Title: `Incomplete / Sparse Downloads`
+     - Description: `Found X partially downloaded files wasting Y MB on disk`
+     - Risk level: `RiskLevel.MODERATE`
 
 ---
 
 ## Files to Create
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/openwith/MediaStoreUriResolver.kt` — MediaStore Content URI Resolver
-- **What:** Resolves local file paths to system `MediaStore` content URIs for video and audio files, with fast on-demand scanning for unindexed files.
-- **Key details:**
-  - `fun resolve(context: Context, file: File, mimeType: String? = null, timeoutMs: Long = 250L): Uri?`
-  - Direct database query against `MediaStore.Video.Media.EXTERNAL_CONTENT_URI` / `MediaStore.Audio.Media.EXTERNAL_CONTENT_URI` using `MediaStore.MediaColumns.DATA = ?`.
-  - On-demand `MediaScannerConnection.scanFile` fallback with non-blocking timeout.
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/util/SparseFileUtils.kt` — Core Utility
+- **What:** Provides POSIX-level block inspection, sparse allocation detection, and partial file comparison.
+- **Key Details:**
+  - `data class FileAllocation(val nominalSize: Long, val allocatedBytes: Long, val isSparse: Boolean, val allocationPercentage: Float)`
+  - `fun getFileAllocation(file: File): FileAllocation`
+  - `fun isSparseFile(file: File): Boolean`
+  - `sealed class PartialCompareResult { object MatchFull, data class MatchPartial(val pctA: Float, val pctB: Float), object HeaderMismatch, object SizeMismatch }`
+  - `fun comparePartialFiles(fileA: File, fileB: File): PartialCompareResult`
 
-### `app/src/test/java/za/kilowatch/ultimatefilemanager/viewer/openwith/MediaStoreUriResolverTest.kt` — Unit Tests
-- **What:** Unit tests for `MediaStoreUriResolver` verifying query filtering, non-media exclusion, root path exclusion, and timeout handling.
+### `app/src/test/java/za/kilowatch/ultimatefilemanager/util/SparseFileUtilsTest.kt` — Unit Tests
+- **What:** Unit tests for allocation math, percentage calculation, threshold logic, and partial header comparisons.
 
 ---
 
 ## Files to Modify
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/openwith/OpenWithManager.kt` — Entry Point URI Resolution
-- **What:** Update `OpenWithManager.show()` to resolve MediaStore URIs for local video and audio files before falling back to `FileProvider`.
-- **Key details:**
-  - Call `MediaStoreUriResolver.resolve(...)` when file is a local media file.
-  - Retain existing SAF document URI handling for SAF-only files.
+### `app/src/main/res/layout/dialog_file_properties.xml` — File Properties Layout
+- **What:** Add `rowSizeOnDisk` (TableRow) with `txtSizeOnDiskLabel`, `txtSizeOnDiskValue`, and `badgeSparseWarning` immediately beneath `rowSize`.
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/FileViewerRouter.kt` — External Open Flow
-- **What:** Update `openWithExternalApp()` to pass resolved MediaStore URIs to `OpenWithManager.show()`.
-- **Key details:**
-  - Ensure direct taps (with remembered external defaults) and dialog selections use the MediaStore URI.
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/FilePropertiesBottomSheet.kt` — File Properties Logic
+- **What:** Bind `rowSizeOnDisk` and evaluate `SparseFileUtils.getFileAllocation()`. Display actual size, allocated percentage, and sparse warning badge when `isSparse == true`.
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/openwith/OpenWithLauncher.kt` — Permission Grants & Flags
-- **What:** Add `FLAG_GRANT_PERSISTABLE_URI_PERMISSION` to intent flags and `grantUriPermission()` calls.
-- **Key details:**
-  - Safely handle `SecurityException` if a specific provider or device denies persistable grants.
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/DuplicateRetentionManager.kt` — Retention Policies
+- **What:**
+  - Add `MODE_MOST_COMPLETE = "most_complete"`
+  - Add `KEEP_MOST_COMPLETE` to `DuplicateRetentionPolicy` enum
+  - Update `fromKey()` to parse `MODE_MOST_COMPLETE`
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/UfmFileProvider.kt` — Provider Query Enhancement
-- **What:** Add `_id` and ensure `_data` and metadata columns resolve accurately for all storage locations.
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/AnalyzerDuplicateAdapter.kt` — Duplicate List UI & Selection
+- **What:**
+  - Update `selectAllDuplicates()`:
+    - Enforce protection of complete files (a complete file is never selected for deletion if a duplicate candidate is a partial download).
+    - Handle `DuplicateRetentionPolicy.KEEP_MOST_COMPLETE`.
+  - In `FileVH`: check if file is sparse. If sparse, display `txtDupSparseBadge` (`Partial (X%)`) and format `txtDupFileSize` with dual size.
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/network/NetworkHttpProxyServer.kt` — Persistent Sessions & Preferred Port
-- **What:** Add preferred port binding (28842), session metadata persistence to disk, and dynamic on-demand session revival when requests arrive for evicted sessions.
-- **Key details:**
-  - `PREFERRED_PORT = 28842`
-  - Persist session map `{key -> ShareId, path, mime, size, authToken}` in `proxy_streaming_sessions.json`.
-  - In `handleClient()`, resurrect session on demand via `NetworkShareRepository` if missing from in-memory cache.
+### `app/src/main/res/layout/item_analyzer_duplicate_file.xml` & `item_analyzer_duplicate_file_tv.xml` — Duplicate Item Layouts
+- **What:** Add `txtDupSparseBadge` TextView with amber warning background (`bg_badge_sparse`) next to `txtDupPreservedBadge`.
 
-### `app/src/test/java/za/kilowatch/ultimatefilemanager/network/NetworkHttpProxyServerTest.kt` — Streaming Proxy Tests
-- **What:** Add unit test for persistent session revival and deterministic key recreation.
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/checksum/FileCompareDialogFragment.kt` — File Comparison
+- **What:**
+  - Detect sparse files for local comparison targets.
+  - When nominal sizes match, invoke `SparseFileUtils.comparePartialFiles()`.
+  - Display partial match banner and allocation status when a complete and incomplete copy are compared.
 
----
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAnalyzerEngine.kt` — Storage Analyzer
+- **What:**
+  - Add `getIncompleteDownloads(storageId: String): List<FileIndex>`
+  - Emit an `Incomplete / Sparse Downloads` recommendation in `buildRecommendations()`.
 
-## Data Model
-New persistent session data structure for proxy streaming:
-```kotlin
-data class PersistentProxySession(
-    val key: String,
-    val shareId: String,
-    val path: String,
-    val mimeType: String,
-    val fileSize: Long,
-    val authToken: String,
-    val updatedAt: Long = System.currentTimeMillis()
-)
-```
-
----
-
-## Dependencies
-- Standard Android Framework `MediaStore`, `ContentUris`, `MediaScannerConnection`.
-- No new 3rd-party libraries needed. Zero DEX overhead.
+### `app/src/main/res/values/strings.xml` — English String Resources
+- **What:** Add strings for:
+  - `properties_label_size_on_disk`: `"Size on disk"`
+  - `properties_sparse_badge`: `"Partial Download (Sparse)"`
+  - `properties_sparse_allocated_pct`: `"%1$s (%2$.1f%% allocated)"`
+  - `duplicate_badge_partial`: `"Partial (%1$.0f%%)"`
+  - `retention_keep_most_complete`: `"Keep Most Complete"`
+  - `compare_result_partial_match`: `"Matching Header & Data — Incomplete Download (%1$.1f%% allocated)"`
+  - `analyzer_incomplete_downloads_title`: `"Incomplete / Sparse Downloads"`
+  - `analyzer_incomplete_downloads_desc`: `"Found %1$d incomplete or sparse files consuming disk space"`
 
 ---
 
-## Test Plan
+## Data Model Changes
+- No SQLite database schema changes required. `FileIndex` already tracks file path and nominal size. POSIX block queries are performed on candidate files on-demand during detailed inspections and duplicate resolution.
 
-### Unit Tests
-- `MediaStoreUriResolverTest`:
-  - Returns `null` for non-media extensions (e.g. `.txt`, `.pdf`, `.zip`).
-  - Returns `null` for non-existent or root/app-private paths.
-  - Queries correct collection (Video vs Audio).
-- `NetworkHttpProxyServerTest`:
-  - Verifies session revival from persistent metadata when in-memory session is removed.
-  - Verifies deterministic auth token and URL generation.
+---
+
+## Verification Plan
+
+### Automated Tests
+1. **`SparseFileUtilsTest`**:
+   - Run via `./gradlew testMobileGoogleDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.util.SparseFileUtilsTest"`
+   - Verifies allocation calculation, percentage clamping, and threshold logic.
+2. **`DuplicateRetentionTest`**:
+   - Run via `./gradlew testMobileGoogleDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionTest"`
+   - Verifies `KEEP_MOST_COMPLETE` policy and complete file protection under `KEEP_OLDEST` and `KEEP_NEWEST`.
 
 ### Manual Verification
-1. **Local Video in VLC**:
-   - Open a video in UFM using VLC.
-   - Exit playback after playing for 10 seconds.
-   - Open VLC -> History tab. Verify the video appears with its filename and resume timestamp.
-2. **Local Video in XPlayer / Just Player**:
-   - Open in XPlayer / Just Player. Verify history is recorded.
-3. **Local Audio in VLC / Poweramp**:
-   - Open an audio file in VLC. Verify audio playback history is recorded.
-4. **Network Streaming from History**:
-   - Play a video from SMB / WebDAV share in VLC via UFM.
-   - Close UFM.
-   - Open VLC -> History tab -> tap the streamed video. Verify it reconnects and plays without a 404 error.
-
----
-
-## Risks & Mitigations
-- **Risk:** `MediaScannerConnection.scanFile` takes too long on congested storage.
-  - **Mitigation:** Use strict `withTimeoutOrNull(250)` coroutine timeout; immediately fall back to `UfmFileProvider` if the budget expires.
-- **Risk:** Port 28842 is already occupied by another service on the device.
-  - **Mitigation:** Attempt port 28842 with a `try-catch`; if a `BindException` occurs, cleanly fall back to `ServerSocket(0)` (dynamic port).
-- **Risk:** `FLAG_GRANT_PERSISTABLE_URI_PERMISSION` fails on private FileProvider URIs.
-  - **Mitigation:** Nested try-catch in `grantUriPermission()` so failures are caught and standard read/write permissions remain active.
+1. **File Properties**:
+   - Inspect a complete local file: Verify standard single size line is shown.
+   - Inspect a partially downloaded torrent file: Verify `Size on disk` and `Partial Download` badge appear with correct percentage.
+2. **Duplicate Finder**:
+   - Run duplicate finder on a folder containing a complete file and a partial torrent download with the same nominal size.
+   - Verify the partial file is badged `Partial (X%)`.
+   - Verify `Select All Duplicates` marks the partial file for deletion while keeping the complete file preserved.
+3. **File Compare**:
+   - Select both the complete file and the partial download in Twin Window mode and choose **Compare**.
+   - Verify the dialog shows `Matching Header / Partial Copy (X% allocated)` instead of a generic hash failure.
+4. **Storage Analyzer**:
+   - Open Storage Analyzer: Verify the `Incomplete / Sparse Downloads` card appears in Suggestions if incomplete files exist on device.

@@ -376,8 +376,10 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
 
         val cardKeepOldest = dialogView.findViewById<View>(R.id.cardKeepOldest)
         val cardKeepNewest = dialogView.findViewById<View>(R.id.cardKeepNewest)
+        val cardKeepMostComplete = dialogView.findViewById<View>(R.id.cardKeepMostComplete)
         val checkKeepOldest = dialogView.findViewById<ImageView>(R.id.checkKeepOldest)
         val checkKeepNewest = dialogView.findViewById<ImageView>(R.id.checkKeepNewest)
+        val checkKeepMostComplete = dialogView.findViewById<ImageView>(R.id.checkKeepMostComplete)
         val checkRemember = dialogView.findViewById<CheckBox>(R.id.checkRememberStrategy)
         val btnConfirm = dialogView.findViewById<View>(R.id.btnConfirmStrategy)
         val btnCancel = dialogView.findViewById<View>(R.id.btnCancelStrategy)
@@ -387,10 +389,16 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
         fun updateSelection(policy: DuplicateRetentionManager.DuplicateRetentionPolicy) {
             selectedPolicy = policy
             val isOldest = policy == DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST
+            val isNewest = policy == DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_NEWEST
+            val isComplete = policy == DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_MOST_COMPLETE
+
             checkKeepOldest?.visibility = if (isOldest) View.VISIBLE else View.GONE
-            checkKeepNewest?.visibility = if (!isOldest) View.VISIBLE else View.GONE
+            checkKeepNewest?.visibility = if (isNewest) View.VISIBLE else View.GONE
+            checkKeepMostComplete?.visibility = if (isComplete) View.VISIBLE else View.GONE
+
             cardKeepOldest?.isSelected = isOldest
-            cardKeepNewest?.isSelected = !isOldest
+            cardKeepNewest?.isSelected = isNewest
+            cardKeepMostComplete?.isSelected = isComplete
         }
 
         updateSelection(DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST)
@@ -400,6 +408,9 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
         }
         cardKeepNewest?.setOnClickListener {
             updateSelection(DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_NEWEST)
+        }
+        cardKeepMostComplete?.setOnClickListener {
+            updateSelection(DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_MOST_COMPLETE)
         }
 
         btnConfirm?.setOnClickListener {

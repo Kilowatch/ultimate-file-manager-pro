@@ -128,7 +128,7 @@
             android:clickable="true"
             android:focusable="true"
             android:nextFocusUp="@id/cardKeepOldest"
-            android:nextFocusDown="@id/checkRememberStrategy">
+            android:nextFocusDown="@id/cardKeepMostComplete">
 
             <FrameLayout
                 android:layout_width="40dp"
@@ -182,6 +182,74 @@
                 android:layout_marginStart="8dp"
                 android:importantForAccessibility="no" />
         </LinearLayout>
+
+        <!-- Option: Keep Most Complete -->
+        <LinearLayout
+            android:id="@+id/cardKeepMostComplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_tv_reindex_option_card"
+            android:padding="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:nextFocusUp="@id/cardKeepNewest"
+            android:nextFocusDown="@id/checkRememberStrategy">
+
+            <FrameLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginEnd="14dp">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_check"
+                    app:tint="@color/selector_tv_icon_tint_yellow"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/analyzer_strategy_most_complete"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:duplicateParentState="true"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/analyzer_strategy_most_complete_desc"
+                    android:textColor="@color/selector_tv_btn_secondary_text"
+                    android:duplicateParentState="true"
+                    android:textSize="12.5sp"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/checkKeepMostComplete"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_check_circle"
+                app:tint="@color/selector_tv_icon_tint_yellow"
+                android:duplicateParentState="true"
+                android:visibility="gone"
+                android:layout_marginStart="8dp"
+                android:importantForAccessibility="no" />
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Remember Choice Checkbox -->
@@ -193,7 +261,7 @@
         android:textColor="@color/tv_text_secondary"
         android:textSize="13.5sp"
         android:focusable="true"
-        android:nextFocusUp="@id/cardKeepNewest"
+        android:nextFocusUp="@id/cardKeepMostComplete"
         android:nextFocusDown="@id/btnConfirmStrategy"
         app:buttonTint="@color/selector_tv_button_yellow"
         android:layout_marginBottom="22dp" />

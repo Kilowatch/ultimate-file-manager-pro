@@ -550,7 +550,8 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:stretchColumns="1">
+            android:stretchColumns="1"
+            android:shrinkColumns="1">
 
             <!-- Type of File Row -->
             <TableRow
@@ -640,6 +641,60 @@
                     android:textSize="14sp"
                     android:textStyle="bold"
                     tools:text="249 KB (255,420 bytes)" />
+            </TableRow>
+
+            <!-- Size on Disk Row (Sparse / Incomplete Pre-allocated Files) -->
+            <TableRow
+                android:id="@+id/rowSizeOnDisk"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/properties_label_size_on_disk"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtSizeOnDiskValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="350 MB (367,001,600 bytes)" />
+
+                    <TextView
+                        android:id="@+id/txtSizeOnDiskPercentage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/ufm_primary"
+                        android:textSize="12.5sp"
+                        android:fontFamily="sans-serif-bold"
+                        tools:text="7.7% allocated" />
+
+                    <TextView
+                        android:id="@+id/badgeSparseWarning"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/bg_badge_sparse"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="2dp"
+                        android:text="@string/properties_sparse_badge"
+                        android:textColor="#FFA726"
+                        android:textSize="10.5sp"
+                        android:fontFamily="sans-serif-bold" />
+                </LinearLayout>
             </TableRow>
 
             <!-- Contains Row (Folders / Multi Selection) -->

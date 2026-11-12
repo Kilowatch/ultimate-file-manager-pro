@@ -402,6 +402,7 @@
     <string name="analyzer_tab_overview">Overview</string>
     <string name="analyzer_tab_large">Large Files</string>
     <string name="analyzer_tab_duplicates">Duplicates</string>
+    <string name="analyzer_tab_incomplete">Incomplete</string>
     <string name="analyzer_tab_junk">Junk &amp; Old</string>
     <string name="analyzer_tab_suggestions">Suggestions</string>
     <string name="analyzer_old_files_desc">%1$d files not modified in over 180 days.</string>
@@ -410,6 +411,8 @@
     <string name="analyzer_duplicate_copy_singular">%1$d copy</string>
     <string name="analyzer_duplicate_copy_plural">%1$d copies</string>
     <string name="analyzer_duplicate_saves">saves %1$s</string>
+    <string name="analyzer_no_incomplete_files">No incomplete or sparse downloads found</string>
+    <string name="analyzer_incomplete_file_allocated">Size on disk: %1$s (%2$.1f%%)</string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">Inspect disk usage, explore categorized storage breakdown, and discover large files, duplicates, and cleanup suggestions.</string>
     <string name="analyzer_section_storage_breakdown">Storage Breakdown</string>
@@ -448,6 +451,10 @@
     <string name="analyzer_strategy_newest">Keep Newest</string>
     <string name="analyzer_strategy_newest_desc">Preserves the most recently modified file and deletes older copies.</string>
     <string name="analyzer_strategy_remember">Remember my choice</string>
+    <string name="analyzer_strategy_most_complete">Keep Most Complete</string>
+    <string name="analyzer_strategy_most_complete_desc">Preserves fully downloaded or most allocated files and deletes incomplete copies.</string>
+    <string name="analyzer_badge_partial">Partial (%1$.0f%%)</string>
+    <string name="analyzer_badge_sparse">Sparse</string>
     <string name="analyzer_bulk_delete_confirm_title">Delete %1$d Duplicate Files?</string>
     <string name="analyzer_bulk_delete_confirm_msg">One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.</string>
     <string name="analyzer_delete_completion_title">Cleanup Complete</string>
@@ -459,6 +466,7 @@
     <string name="settings_duplicate_retention_dialog_subtitle">Choose which copy to preserve when selecting duplicate files for cleanup.</string>
     <string name="settings_duplicate_retention_summary_oldest">Keep oldest file (Original)</string>
     <string name="settings_duplicate_retention_summary_newest">Keep newest file</string>
+    <string name="settings_duplicate_retention_summary_most_complete">Keep most complete file</string>
     <string name="settings_duplicate_retention_summary_ask">Always ask</string>
     <string name="settings_duplicate_retention_desc_ask">Prompt to choose retention strategy each time duplicate files are selected.</string>
     <string name="settings_duplicate_retention_toast">Duplicate retention strategy set to: %s</string>
@@ -2548,6 +2556,8 @@
     <string name="found_dupgroupssize_duplicate_groups_wasting_space">Found %1$d duplicate groups wasting space.</string>
     <string name="review_large_files">Review Large Files</string>
     <string name="found_bigfilessize_files_larger_than_512_mb">Found %1$d files larger than 512 MB.</string>
+    <string name="analyzer_incomplete_downloads_title">Incomplete / Sparse Downloads</string>
+    <string name="analyzer_incomplete_downloads_desc">Found %1$d incomplete or sparse files consuming disk space.</string>
     <string name="old_unused_files">Old Unused Files</string>
     <string name="connected_tv">Connected TV</string>
     <string name="connected_phone">Connected Phone</string>
@@ -4276,6 +4286,9 @@
     <string name="properties_label_opens_with">Opens with:</string>
     <string name="properties_label_location">Location:</string>
     <string name="properties_label_size">Size:</string>
+    <string name="properties_label_size_on_disk">Size on disk:</string>
+    <string name="properties_sparse_badge">Partial Download (Sparse)</string>
+    <string name="properties_sparse_allocated_pct">%1$.1f%% allocated</string>
     <string name="properties_label_contains">Contains:</string>
     <string name="properties_label_dimensions">Dimensions:</string>
     <string name="properties_label_modified">Modified:</string>
@@ -5147,6 +5160,8 @@
     <string name="checksum_compare_identical">✓ Files are identical</string>
     <string name="checksum_compare_different">✗ Files differ</string>
     <string name="checksum_compare_diff_sizes">✗ Files differ (different sizes: %1$s vs %2$s)</string>
+    <string name="checksum_compare_partial_match">⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)</string>
+    <string name="checksum_compare_sparse_size_subtitle">Size on disk: %1$s (%2$.1f%%)</string>
     <string name="checksum_compare_same_size">Identical size (%1$s). Hashing to verify content…</string>
     <string name="checksum_compare_select_hint">Select 1 file in each pane, or 2 files in one pane to compare</string>
     <string name="checksum_large_file_warning_title">Large File Warning</string>

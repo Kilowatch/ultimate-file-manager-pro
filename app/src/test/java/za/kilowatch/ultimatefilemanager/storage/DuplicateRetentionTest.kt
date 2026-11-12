@@ -185,4 +185,23 @@ class DuplicateRetentionTest {
         assertEquals(0, adapter.preservedPaths.size)
         assertEquals(0, selectionCountNotified)
     }
+
+    @Test
+    fun saveAndGetStrategyMostComplete() {
+        DuplicateRetentionManager.saveStrategy(context, DuplicateRetentionPolicy.KEEP_MOST_COMPLETE, remember = true)
+        assertEquals(DuplicateRetentionPolicy.KEEP_MOST_COMPLETE, DuplicateRetentionManager.getStrategy(context))
+        assertEquals(DuplicateRetentionManager.MODE_MOST_COMPLETE, DuplicateRetentionManager.getPreferenceMode(context))
+        assertTrue(DuplicateRetentionManager.isRemembered(context))
+    }
+
+    @Test
+    fun selectAllDuplicatesKeepsMostComplete() {
+        val f1 = makeFile("/storage/emulated/0/Downloads/movie.mkv", lastModified = 1000L)
+        val f2 = makeFile("/storage/emulated/0/Movies/movie.mkv", lastModified = 2000L)
+        val group = DuplicateGroup("h1", listOf(f1, f2), 1024L)
+        val adapter = AnalyzerDuplicateAdapter(listOf(group))
+        val count = adapter.selectAllDuplicates(DuplicateRetentionPolicy.KEEP_MOST_COMPLETE)
+        assertEquals(1, count)
+        assertEquals(1, adapter.preservedPaths.size)
+    }
 }

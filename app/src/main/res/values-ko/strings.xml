@@ -1157,6 +1157,9 @@ APK
     <string name="analyzer_tab_duplicates">
 중복 파일
 </string>
+    <string name="analyzer_tab_incomplete">
+Incomplete
+</string>
     <string name="analyzer_tab_junk">
 정크 및 오래된 파일
 </string>
@@ -1180,6 +1183,12 @@ APK
 </string>
     <string name="analyzer_duplicate_saves">
 %1$s 절약
+</string>
+    <string name="analyzer_no_incomplete_files">
+No incomplete or sparse downloads found
+</string>
+    <string name="analyzer_incomplete_file_allocated">
+Size on disk: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1281,6 +1290,18 @@ Preserves the most recently modified file and deletes older copies.
     <string name="analyzer_strategy_remember">
 Remember my choice
 </string>
+    <string name="analyzer_strategy_most_complete">
+Keep Most Complete
+</string>
+    <string name="analyzer_strategy_most_complete_desc">
+Preserves fully downloaded or most allocated files and deletes incomplete copies.
+</string>
+    <string name="analyzer_badge_partial">
+Partial (%1$.0f%%)
+</string>
+    <string name="analyzer_badge_sparse">
+Sparse
+</string>
     <string name="analyzer_bulk_delete_confirm_title">
 Delete %1$d Duplicate Files?
 </string>
@@ -1313,6 +1334,9 @@ Keep oldest file (Original)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
 Keep newest file
+</string>
+    <string name="settings_duplicate_retention_summary_most_complete">
+Keep most complete file
 </string>
     <string name="settings_duplicate_retention_summary_ask">
 Always ask
@@ -7289,6 +7313,12 @@ SAF 출력 스트림 실패
     <string name="found_bigfilessize_files_larger_than_512_mb">
 512MB보다 큰 %1$d개의 파일을 찾았습니다.
 </string>
+    <string name="analyzer_incomplete_downloads_title">
+Incomplete / Sparse Downloads
+</string>
+    <string name="analyzer_incomplete_downloads_desc">
+Found %1$d incomplete or sparse files consuming disk space.
+</string>
     <string name="old_unused_files">
 오래된 사용하지 않는 파일
 </string>
@@ -12171,6 +12201,15 @@ UFM 플레이어 설정
     <string name="properties_label_size">
 크기:
 </string>
+    <string name="properties_label_size_on_disk">
+Size on disk:
+</string>
+    <string name="properties_sparse_badge">
+Partial Download (Sparse)
+</string>
+    <string name="properties_sparse_allocated_pct">
+%1$.1f%% allocated
+</string>
     <string name="properties_label_contains">
 포함:
 </string>
@@ -14591,6 +14630,12 @@ AndroidManifest.xml을 디코딩할 수 없습니다.
 </string>
     <string name="checksum_compare_diff_sizes">
 ✗ 파일이 다름(다른 크기: %1$s 및 %2$s)
+</string>
+    <string name="checksum_compare_partial_match">
+⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+</string>
+    <string name="checksum_compare_sparse_size_subtitle">
+Size on disk: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 동일한 크기(%1$s). 콘텐츠 확인을 위한 해싱…

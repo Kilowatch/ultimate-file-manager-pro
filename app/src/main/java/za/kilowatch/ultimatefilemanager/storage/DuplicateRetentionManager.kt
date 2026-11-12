@@ -16,15 +16,18 @@ object DuplicateRetentionManager {
     const val MODE_ASK = "ask"
     const val MODE_OLDEST = "oldest"
     const val MODE_NEWEST = "newest"
+    const val MODE_MOST_COMPLETE = "most_complete"
 
     enum class DuplicateRetentionPolicy(val key: String) {
         KEEP_OLDEST(MODE_OLDEST),
-        KEEP_NEWEST(MODE_NEWEST);
+        KEEP_NEWEST(MODE_NEWEST),
+        KEEP_MOST_COMPLETE(MODE_MOST_COMPLETE);
 
         companion object {
             fun fromKey(key: String?): DuplicateRetentionPolicy? = when (key) {
                 MODE_OLDEST -> KEEP_OLDEST
                 MODE_NEWEST -> KEEP_NEWEST
+                MODE_MOST_COMPLETE -> KEEP_MOST_COMPLETE
                 else -> null
             }
         }

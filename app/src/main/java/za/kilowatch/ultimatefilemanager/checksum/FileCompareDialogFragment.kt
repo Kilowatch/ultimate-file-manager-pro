@@ -159,12 +159,30 @@ class FileCompareDialogFragment : DialogFragment() {
         txtLeftStorage.text = left.storageLabel
         txtLeftFileName.text = left.name
         val leftSizeFormatted = Formatter.formatFileSize(requireContext(), left.size)
-        txtLeftFileSize.text = leftSizeFormatted
 
         txtRightStorage.text = right.storageLabel
         txtRightFileName.text = right.name
         val rightSizeFormatted = Formatter.formatFileSize(requireContext(), right.size)
-        txtRightFileSize.text = rightSizeFormatted
+
+        val leftFile = (left as? LocalFileSource)?.file
+        val rightFile = (right as? LocalFileSource)?.file
+
+        val leftAlloc = leftFile?.let { za.kilowatch.ultimatefilemanager.util.SparseFileUtils.getFileAllocation(it) }
+        val rightAlloc = rightFile?.let { za.kilowatch.ultimatefilemanager.util.SparseFileUtils.getFileAllocation(it) }
+
+        if (leftAlloc != null && leftAlloc.isSparse) {
+            val allocatedFmt = Formatter.formatFileSize(requireContext(), leftAlloc.allocatedBytes)
+            txtLeftFileSize.text = "$leftSizeFormatted\n" + getString(R.string.checksum_compare_sparse_size_subtitle, allocatedFmt, leftAlloc.allocationPercentage)
+        } else {
+            txtLeftFileSize.text = leftSizeFormatted
+        }
+
+        if (rightAlloc != null && rightAlloc.isSparse) {
+            val allocatedFmt = Formatter.formatFileSize(requireContext(), rightAlloc.allocatedBytes)
+            txtRightFileSize.text = "$rightSizeFormatted\n" + getString(R.string.checksum_compare_sparse_size_subtitle, allocatedFmt, rightAlloc.allocationPercentage)
+        } else {
+            txtRightFileSize.text = rightSizeFormatted
+        }
 
         btnDismissCompare.setOnClickListener { dismiss() }
 
@@ -242,6 +260,11 @@ class FileCompareDialogFragment : DialogFragment() {
                     val rightHash = rightHashes[algo] ?: ""
                     val isMatch = leftHash.isNotEmpty() && leftHash.equals(rightHash, ignoreCase = true)
 
+                    // If hashes differ and both are local files, check partial match on background thread
+                    val partialResult = if (!isMatch && leftFile != null && rightFile != null) {
+                        za.kilowatch.ultimatefilemanager.util.SparseFileUtils.comparePartialFiles(leftFile, rightFile)
+                    } else null
+
                     withContext(Dispatchers.Main) {
                         layoutCompareProgress.visibility = View.GONE
                         layoutCompareResult.visibility = View.VISIBLE
@@ -254,6 +277,18 @@ class FileCompareDialogFragment : DialogFragment() {
                             txtCompareResultTitle.text = getString(R.string.checksum_compare_identical)
                             txtCompareResultTitle.setTextColor(ColorblindPalette.statusSuccess(requireContext()))
                             txtCompareResultDetail.text = "${algo.displayName}:\n$leftHash"
+                        } else if (partialResult is za.kilowatch.ultimatefilemanager.util.PartialCompareResult.PartialMatch) {
+                            val warningColor = ColorblindPalette.statusWarning(requireContext())
+                            imgCompareResultIcon.setImageResource(ColorblindPalette.statusIconOr(
+                                requireContext(), ColorblindPalette.StatusKind.WARNING, R.drawable.ic_warning_badge))
+                            imgCompareResultIcon.imageTintList = android.content.res.ColorStateList.valueOf(warningColor)
+                            txtCompareResultTitle.text = getString(
+                                R.string.checksum_compare_partial_match,
+                                partialResult.leftAllocation.allocationPercentage,
+                                partialResult.rightAllocation.allocationPercentage
+                            )
+                            txtCompareResultTitle.setTextColor(warningColor)
+                            txtCompareResultDetail.text = "Headers and sampled data blocks match.\nLeft: ${partialResult.leftAllocation.allocationPercentage.toInt()}% complete · Right: ${partialResult.rightAllocation.allocationPercentage.toInt()}% complete\nLeft (${algo.displayName}): $leftHash\nRight (${algo.displayName}): $rightHash"
                         } else {
                             imgCompareResultIcon.setImageResource(ColorblindPalette.statusIconOr(
                                 requireContext(), ColorblindPalette.StatusKind.ERROR, R.drawable.ic_close))

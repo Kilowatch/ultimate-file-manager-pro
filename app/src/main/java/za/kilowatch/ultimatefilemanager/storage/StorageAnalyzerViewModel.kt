@@ -65,11 +65,12 @@ class StorageAnalyzerViewModel(app: Application) : AndroidViewModel(app) {
                     currentReport = currentReport.copy(topFolders = folders, appUsage = apps)
                     _report.value = currentReport
 
-                    // Stage 4: Specialized lists (Large Files + Junk + Old)
+                    // Stage 4: Specialized lists (Large Files + Junk + Old + Incomplete)
                     val large = withContext(Dispatchers.IO) { engine.getLargeFiles(storageId) }
                     val junk  = withContext(Dispatchers.IO) { engine.getJunk(storageId) }
                     val old   = withContext(Dispatchers.IO) { engine.getOldFiles(storageId) }
-                    currentReport = currentReport.copy(largeFiles = large, junkReport = junk, oldFiles = old)
+                    val incomplete = withContext(Dispatchers.IO) { engine.getIncompleteDownloads(large) }
+                    currentReport = currentReport.copy(largeFiles = large, junkReport = junk, oldFiles = old, incompleteFiles = incomplete)
                     _report.value = currentReport
 
                     // Stage 5: Duplicates — two-phase (potentially heavy); signal the Duplicates tab

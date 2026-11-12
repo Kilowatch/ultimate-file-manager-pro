@@ -1,69 +1,81 @@
-# Specification: External Video Player Playback History Tracking (VLC & External Players)
+# Specification: Actual vs. Nominal File Size Detection & Sparse/Incomplete File Handling
 
 ## Overview
-When users launch media files (specifically video and audio) from Ultimate File Manager into external media players such as VLC for Android, the played media fails to record in the external player's playback history and resume database. While some players (like XPlayer) track playback history via intent display names or transient streams, VLC and multiple other Android players require identifiable media references (such as verifiable file paths or standard MediaStore projections) to record history and resume positions. This specification defines the requirements for ensuring video and audio handoff to external players provides all necessary media metadata and URI descriptors for reliable playback history recording.
+Files created by torrent clients, download managers, or virtual disk utilities are frequently written as sparse or pre-allocated files where the reported nominal (logical) size reflects the expected final size rather than the actual physical disk space allocated. Standard Android file managers and duplicate detection utilities only inspect nominal size, leading users to mistakenly delete complete files in favor of incomplete sparse downloads, or misjudge actual storage consumption. This specification defines requirements for detecting, displaying, and handling physical disk allocation (actual size) versus logical file size (nominal size) across file properties, file browsing, duplicate detection, storage analysis, and file comparison.
 
 ---
 
 ## User Stories
-- **As a user opening videos in VLC from UFM**, I want played videos to appear in VLC's "History" tab immediately after playback, so that I can easily see what I recently watched and resume unfinished videos directly from VLC.
-- **As a user using other external players (e.g., Just Player, Next Player, MPV, Nova Video Player, MX Player)**, I want media launched from UFM to register in their respective playback history and resume points consistently across storage types.
-- **As a user playing media from different storage sources (internal storage, SD card, USB OTG, SAF, and network shares)**, I want the app to provide the best possible media identity to external players so that local files retain persistent history and streamed network files display meaningful titles and playback state.
+- **As a user managing downloaded or torrented files**, I want to see both the actual disk space allocated and the nominal file size in file properties, so that I can immediately determine whether a file is partially downloaded or fully complete without needing command-line tools like Termux.
+- **As a user running the Duplicate Finder**, I want the tool to distinguish between fully completed files and partially downloaded sparse files of identical nominal size, so that I don't accidentally keep an incomplete download and delete the complete copy.
+- **As a user reviewing duplicate candidates**, I want the deduplication engine to prioritize retaining files with greater physical allocation (or completed downloads) and explicitly warn me if a candidate is a sparse/incomplete file.
+- **As a power user comparing two identically named files (e.g. in Twin Window or Compare)**, I want to compare actual allocated bytes, completion percentage, and header/content offset signatures rather than relying solely on nominal size and full hashes that inevitably mismatch.
+- **As a user analyzing storage usage in Storage Analyzer**, I want disk occupancy calculations and large file reports to reflect true allocated disk blocks rather than phantom nominal sizes, preventing distorted storage statistics.
 
 ---
 
 ## Functional Requirements
 
-### 1. Media Handoff & Identity Resolution
-- **FR-01: Verifiable Media Identity for Local Media**: When opening a local video or audio file in external players, the intent data must expose media identity attributes that external players' media libraries (such as VLC's `libmedialibrary`) can resolve to a physical or indexed media item.
-- **FR-02: Content Provider Projection Compatibility**: The content provider serving media URIs to external applications must support standard media data projections (including `_data` / `MediaStore.MediaColumns.DATA` and display metadata) when queried by external players, allowing players that attempt path resolution from content URIs to successfully obtain the underlying file path.
-- **FR-03: MediaStore URI Fallback / Integration**: For media files located on shared or indexed storage volumes, the application should resolve and prioritize standard media provider URIs (or compatible projections) when handing off to external players that reject private content provider authorities.
-- **FR-04: Intent Metadata Preservation**: All existing media metadata extras (`title`, `item_title`, `org.videolan.vlc.MediaTitle`, `android.intent.extra.TITLE`, `size`, `from_start = false`, and subtitle extras) must continue to be attached to ensure players that read intent extras for title and resume progress continue to function without regressions.
+### 1. Dual Size Representation (Actual vs. Nominal)
+- **FR-01: Physical Allocation & Nominal Size Exposure**: The file manager must be capable of inspecting both the file's nominal size (logical byte length) and actual physical allocation (blocks allocated on disk).
+- **FR-02: File Properties & Details Display**: When inspecting file details/properties:
+  - If actual size matches nominal size (within normal filesystem block-alignment tolerances), the standard size is displayed.
+  - If a discrepancy exists (e.g., actual size is substantially less than nominal size, indicating a sparse or incomplete file), both sizes must be shown: "Nominal Size: X GB" and "Actual Allocated: Y MB (Z% allocated)".
+  - A visual badge or status (e.g., "Sparse / Incomplete Pre-allocation") must indicate the partial allocation state.
+- **FR-03: File Browser List/Grid Metadata Option**: In file listings, provide an option or visual indicator (such as an icon overlay or secondary size subtitle) for files detected as sparse or incompletely allocated.
 
-### 2. Multi-Storage Environment Support
-- **FR-05: Local Storage (Internal & Removable SD/USB)**: Media opened from primary internal storage and secondary removable media must provide full path/MediaStore resolvability to external players.
-- **FR-06: SAF (Storage Access Framework) & Added Locations**: Media opened from SAF-granted trees must provide external players with the necessary query projections or streaming proxy descriptors so that player history tracking functions to the maximum extent supported by the Android security model.
-- **FR-07: Network & Cloud Media Streaming**: For network and cloud files streamed via the local proxy server (`NetworkHttpProxyServer`), the stream URL and intent extras must supply consistent titles and deterministic, persistent session identifiers. When an external player later reopens a stream directly from its playback history, `NetworkHttpProxyServer` must dynamically re-resolve the target share and resume streaming on demand.
+### 2. Duplicate Finder & Deduplication Integration
+- **FR-04: Sparse File Awareness in Duplicate Detection**: The duplicate finder must evaluate actual allocated size alongside nominal size during candidate grouping and verification.
+- **FR-05: Completed vs. Incomplete Grouping & Differentiation**:
+  - Files with matching nominal sizes but mismatched actual allocations must not be blindly treated as identical duplicates.
+  - The duplicate review UI must flag incomplete/sparse candidates with a clear warning tag (e.g., "Partial Download - 45% Allocated").
+- **FR-06: Intelligent Retention Policies for Partial Files**:
+  - Automatic selection and retention policies (Keep Oldest, Keep Newest, Keep in Folder X) must never recommend deleting a 100% complete file in favor of a partially allocated file.
+  - Introduce or adapt retention strategies to prioritize "Keep Most Complete / Fully Allocated" when resolving duplicates with identical nominal targets.
+- **FR-07: Partial Hash & Offset Comparison**: For files sharing the same nominal size and matching initial headers (e.g. media containers or archive headers) where one is incomplete, the system should identify that the files represent the same target asset at different completion stages rather than treating them as unrelated distinct files.
 
-### 3. Open With Flow Consistency
-- **FR-08: All Entry Points Synchronized**: The history-compatible media intent construction must be utilized across all avenues where media is launched into external players:
-  - Direct file tap (when default action is set to External App)
-  - "Open with" selection dialog / bottom sheet
-  - Context menu "Open with"
-  - Tools FAB / Quick Action Bar "Open with"
-  - Floating toolbar actions across Standalone, Tabbed Mode, and Twin Window Mode
+### 3. Storage Analyzer & Cleanup Integration
+- **FR-08: Accurate Disk Space Reporting in Analyzer**: Storage Analyzer must reflect actual disk usage rather than nominal file length when calculating category totals, top folders, and reclaimable space, avoiding reporting gigabytes of "used space" for sparsely populated files that only consume megabytes.
+- **FR-09: Dedicated "Incomplete / Sparse Downloads" Filter**: Storage Analyzer should provide a filter or report category identifying incomplete downloads / sparse files across the device, enabling users to easily clean up abandoned torrents and incomplete downloads.
+
+### 4. File Comparison & Twin Window Mode
+- **FR-10: Side-by-Side Allocation Comparison**: When comparing two files in Twin Window or via File Compare, the comparison screen must highlight:
+  - Nominal file size comparison
+  - Actual disk allocation comparison
+  - Allocation percentage comparison
+  - Content offset match status (whether non-zero allocated regions match the other file's data at the same offsets)
 
 ---
 
 ## Non-Functional Requirements
-- **NFR-01: Android Security & Scoped Storage Compliance**: Media intent and URI handling must fully comply with Android 10-16+ Scoped Storage requirements without triggering `FileUriExposedException` or violating sandbox boundaries.
-- **NFR-02: Privacy & Permission Scoping**: URI read permissions granted to external players must be strictly scoped to the target file and any associated subtitle files (`FLAG_GRANT_READ_URI_PERMISSION`).
-- **NFR-03: Backward Compatibility**: Existing behavior for non-media files (PDFs, archives, text documents, APKs) and built-in viewers must remain completely unaffected.
-- **NFR-04: Performance**: Resolving media identity or querying MediaStore identifiers must execute asynchronously or with near-zero latency (< 50ms) to prevent UI lag or launch delays when opening media.
+- **NFR-01: Performance**: Inspecting file allocation (stat/block queries) must be fast and lightweight, introducing no noticeable latency during directory listing or initial duplicate pre-filtering.
+- **NFR-02: Filesystem Compatibility**: Must work seamlessly across supported Android local storage filesystems (ext4, f2fs) and handle filesystems that do not support sparse files (e.g. FAT32/exFAT on SD cards/OTG) gracefully without false positives.
+- **NFR-03: Security & Sandbox Compliance**: Must operate entirely within standard Android user-space APIs and permissions without requiring root or external Termux shells.
+- **NFR-04: UI Consistency**: Sparse indicators, dual-size labels, and warnings must follow UFM's existing theme, design tokens, and dual-layout requirements (mobile and Android TV).
 
 ---
 
 ## Edge Cases & Error States
-- **Non-Indexed / Newly Created Files**: Video files freshly downloaded or created that have not yet been indexed by the Android MediaStore scanner must still open cleanly, either triggering an on-demand scan or providing compatible provider queries.
-- **Removable Media & OTG Drives**: USB drives and FAT32/exFAT SD cards where file paths may not follow standard `/storage/emulated/0` conventions.
-- **Files with Special / Unicode Characters**: Filenames containing emoji, non-ASCII characters, symbols, or URI-escaped characters must resolve correctly in external player history without title corruption.
-- **Player Lacks Storage Permissions**: If an external player lacks `MANAGE_EXTERNAL_STORAGE` or `READ_MEDIA_VIDEO` permissions, playback must still succeed via standard content URI streaming even if the player's internal history database fails to resolve the physical path.
-- **Transient Network Streams**: Network files played over the HTTP proxy where the IP/port may vary between launches.
+- **Block Allocation Rounding**: Filesystems allocate space in discrete block sizes (typically 4 KB). Small files may show allocated blocks slightly larger than nominal byte size; such minor variations must not trigger "sparse" or "discrepancy" status.
+- **Non-Sparse Partially Downloaded Files**: Some downloaders append sequentially to a file without pre-allocating. In such cases, nominal size equals actual size, but header checks against a completed copy reveal an incomplete file. The system should detect truncated files when comparing known headers.
+- **Zero-Byte Files & Empty Sparse Files**: A sparse file with 0 allocated blocks must be handled gracefully without division-by-zero errors when calculating allocation percentage.
+- **Removable Media / Non-Sparse Filesystems (FAT32/exFAT)**: On filesystems that do not support sparse allocation, torrent clients write zeros across the entire allocated space. The system should distinguish between true sparse files (block count < length) and zero-padded files where possible.
+- **Network and Cloud Storage**: Remote protocols (SMB, SFTP, WebDAV, Cloud) may not expose filesystem block allocation. In such environments, actual size detection must gracefully fall back to nominal size or indicate allocation status is unavailable.
+- **Read Permission Limits**: Files residing in directories with restricted access must display appropriate fallback states without crashing.
 
 ---
 
 ## Out of Scope
-- Modifying VLC for Android's internal application code or database logic (we can only adapt what UFM sends and provides via Android IPC).
-- Altering UFM's internal media player (`UFMPlayerActivity`) playback history or controls.
-- Changing non-media file routing or external open behaviors for documents, text files, or archives.
+- Creating or editing torrent/magnet files or functioning as a BitTorrent client.
+- Resuming or repairing broken downloads directly within UFM (must be handled by the original downloading app).
+- Modifying underlying kernel filesystem drivers or performing defragmentation.
 
 ---
 
 ## Success Criteria
-- [ ] Videos opened from UFM in VLC for Android appear in VLC's "History" tab after playback.
-- [ ] Videos opened from UFM in VLC can be resumed from their last playback position from VLC's history.
-- [ ] Videos opened in other external players (e.g. XPlayer, Just Player, MPV) continue to appear in history with correct titles and resume progress.
-- [ ] Videos streamed from network shares (SMB, SFTP, WebDAV, Cloud) can be reopened from VLC's history tab with automatic session revival.
-- [ ] No regression when opening media in UFM's built-in player or internal viewers.
-- [ ] No `FileUriExposedException` or security crashes on modern Android versions (Android 11 through Android 16/17).
-- [ ] Tested and verified across internal storage, SD card/USB OTG, and network storage.
+- [ ] Users can view both nominal size and actual allocated disk size in File Properties for any file on internal storage.
+- [ ] Sparse or partially allocated files are visually identified with an indicator/badge and allocation percentage.
+- [ ] The Duplicate Finder correctly differentiates between complete and partial downloads with identical nominal sizes.
+- [ ] Retention policies prevent the accidental deletion of complete files when duplicate candidates include sparse/incomplete files.
+- [ ] Storage Analyzer reports accurate physical disk consumption for sparse files and offers a way to locate incomplete downloads.
+- [ ] File Compare in Twin Window clearly highlights actual allocation differences between two copies of a file.

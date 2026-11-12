@@ -62,7 +62,7 @@ import android.widget.Spinner
  * Architecture:
  *  - Single storage selection (no "All Drives")
  *  - ⚡ spinner badge per indexed drive
- *  - 5-tab ViewPager2 (Overview, Large Files, Duplicates, Junk & Old, Suggestions)
+ *  - 6-tab ViewPager2 (Overview, Large Files, Duplicates, Incomplete, Junk & Old, Suggestions)
  *  - Indexed storage → all tabs via StorageAnalyzerEngine
  *  - Non-indexed → Overview tab only (filesystem walk), others show "not indexed" banner
  *  - Duplicate delete → calls IndexingRepository.deleteFromIndex() per file
@@ -149,12 +149,13 @@ class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost {
         viewPager.adapter = pagerAdapter
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {
-                TAB_OVERVIEW   -> getString(R.string.analyzer_tab_overview)
-                TAB_LARGE      -> getString(R.string.analyzer_tab_large)
-                TAB_DUPLICATES -> getString(R.string.analyzer_tab_duplicates)
-                TAB_JUNK       -> getString(R.string.analyzer_tab_junk)
+                TAB_OVERVIEW    -> getString(R.string.analyzer_tab_overview)
+                TAB_LARGE       -> getString(R.string.analyzer_tab_large)
+                TAB_DUPLICATES  -> getString(R.string.analyzer_tab_duplicates)
+                TAB_INCOMPLETE  -> getString(R.string.analyzer_tab_incomplete)
+                TAB_JUNK        -> getString(R.string.analyzer_tab_junk)
                 TAB_SUGGESTIONS -> getString(R.string.analyzer_tab_suggestions)
-                else           -> ""
+                else            -> ""
             }
         }.attach()
 
@@ -501,7 +502,7 @@ class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost {
                                 }
                             }
                         }
-                    } else if (currentTab == TAB_LARGE || currentTab == TAB_DUPLICATES || currentTab == TAB_JUNK || currentTab == TAB_SUGGESTIONS) {
+                    } else if (currentTab in TAB_LARGE..TAB_SUGGESTIONS) {
                         // Generic list logic: focus the first item in the recycler
                         val frag = if (::pagerAdapter.isInitialized) pagerAdapter.getFragment(currentTab) else null
                         val fv = frag?.view
@@ -785,8 +786,10 @@ class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost {
 
         val cardKeepOldest = dialogView.findViewById<View>(R.id.cardKeepOldest)
         val cardKeepNewest = dialogView.findViewById<View>(R.id.cardKeepNewest)
+        val cardKeepMostComplete = dialogView.findViewById<View>(R.id.cardKeepMostComplete)
         val checkKeepOldest = dialogView.findViewById<ImageView>(R.id.checkKeepOldest)
         val checkKeepNewest = dialogView.findViewById<ImageView>(R.id.checkKeepNewest)
+        val checkKeepMostComplete = dialogView.findViewById<ImageView>(R.id.checkKeepMostComplete)
         val checkRemember = dialogView.findViewById<CheckBox>(R.id.checkRememberStrategy)
         val btnConfirm = dialogView.findViewById<View>(R.id.btnConfirmStrategy)
         val btnCancel = dialogView.findViewById<View>(R.id.btnCancelStrategy)
@@ -796,10 +799,16 @@ class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost {
         fun updateSelection(policy: DuplicateRetentionManager.DuplicateRetentionPolicy) {
             selectedPolicy = policy
             val isOldest = policy == DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST
+            val isNewest = policy == DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_NEWEST
+            val isComplete = policy == DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_MOST_COMPLETE
+
             checkKeepOldest?.visibility = if (isOldest) View.VISIBLE else View.GONE
-            checkKeepNewest?.visibility = if (!isOldest) View.VISIBLE else View.GONE
+            checkKeepNewest?.visibility = if (isNewest) View.VISIBLE else View.GONE
+            checkKeepMostComplete?.visibility = if (isComplete) View.VISIBLE else View.GONE
+
             cardKeepOldest?.isSelected = isOldest
-            cardKeepNewest?.isSelected = !isOldest
+            cardKeepNewest?.isSelected = isNewest
+            cardKeepMostComplete?.isSelected = isComplete
         }
 
         updateSelection(DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST)
@@ -809,6 +818,9 @@ class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost {
         }
         cardKeepNewest?.setOnClickListener {
             updateSelection(DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_NEWEST)
+        }
+        cardKeepMostComplete?.setOnClickListener {
+            updateSelection(DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_MOST_COMPLETE)
         }
 
         btnConfirm?.setOnClickListener {
@@ -1001,6 +1013,7 @@ class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost {
             OverviewTabFragment.newInstance(),
             LargeFilesTabFragment.newInstance(),
             DuplicatesTabFragment.newInstance(),
+            IncompleteTabFragment.newInstance(),
             JunkOldTabFragment.newInstance(),
             SuggestionsTabFragment.newInstance()
         )
@@ -1016,11 +1029,12 @@ class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost {
     }
 
     companion object {
-        const val TAB_OVERVIEW   = 0
-        const val TAB_LARGE      = 1
-        const val TAB_DUPLICATES = 2
-        const val TAB_JUNK       = 3
-        const val TAB_SUGGESTIONS = 4
+        const val TAB_OVERVIEW    = 0
+        const val TAB_LARGE       = 1
+        const val TAB_DUPLICATES  = 2
+        const val TAB_INCOMPLETE  = 3
+        const val TAB_JUNK        = 4
+        const val TAB_SUGGESTIONS = 5
     }
 }
 
@@ -1395,6 +1409,45 @@ class DuplicatesTabFragment : AnalyzerTabFragment() {
     }
 }
 
+/* ── Incomplete Downloads Tab ───────────────────────────────────────────── */
+class IncompleteTabFragment : AnalyzerTabFragment() {
+
+    companion object { fun newInstance() = IncompleteTabFragment() }
+
+    override fun onCreateView(inf: LayoutInflater, container: ViewGroup?, state: Bundle?): View =
+        inf.inflate(R.layout.fragment_analyzer_list, container, false)
+
+    override fun bindReport(report: AnalyzerReport) {
+        val v = view ?: return
+        showNotIndexedIfNeeded(v, report)
+        if (!report.isIndexed) return
+
+        val empty = report.incompleteFiles.isEmpty()
+        v.findViewById<View>(R.id.layoutEmptyState)?.visibility = if (empty) View.VISIBLE else View.GONE
+        v.findViewById<TextView>(R.id.txtListEmptyState)?.text = getString(R.string.analyzer_no_incomplete_files)
+        v.findViewById<View>(R.id.layoutDuplicateControls)?.visibility = View.GONE
+
+        if (empty) {
+            v.findViewById<RecyclerView>(R.id.recyclerAnalyzerList)?.visibility = View.GONE
+            return
+        }
+
+        v.findViewById<RecyclerView>(R.id.recyclerAnalyzerList)?.visibility = View.VISIBLE
+        makeRecycler(v, R.id.recyclerAnalyzerList).adapter =
+            AnalyzerIncompleteAdapter(report.incompleteFiles, isTv) { file ->
+                val (sid, stype, volumeRoot) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(file.folderPath)
+                startActivity(Intent(requireContext(), FileBrowserActivity::class.java).apply {
+                    putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, volumeRoot)
+                    putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, file.folderPath)
+                    putExtra(FileBrowserActivity.EXTRA_FOCUS_PATH, file.path)
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, report.storageId.ifEmpty { sid })
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, (activity as? StorageAnalyzerActivity)?.getSelectedDriveLabel() ?: "")
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
+                })
+            }
+    }
+}
+
 /* ── Junk & Old Tab ──────────────────────────────────────────────────────── */
 class JunkOldTabFragment : AnalyzerTabFragment() {
 
@@ -1447,12 +1500,16 @@ class SuggestionsTabFragment : AnalyzerTabFragment() {
 /** Helper extension for tab fragments. */
 fun AnalyzerTabFragment.showNotIndexedIfNeeded(v: View, report: AnalyzerReport) {
     val banner = v.findViewById<TextView>(R.id.txtListNotIndexed)
+    val card = v.findViewById<View>(R.id.layoutNotIndexed)
     if (!report.isIndexed) {
         banner?.visibility = View.VISIBLE
+        card?.visibility = View.VISIBLE
         banner?.text = v.context.getString(R.string.analyzer_not_indexed_tab)
         v.findViewById<RecyclerView>(R.id.recyclerAnalyzerList)?.visibility = View.GONE
+        v.findViewById<View>(R.id.layoutEmptyState)?.visibility = View.GONE
     } else {
         banner?.visibility = View.GONE
+        card?.visibility = View.GONE
         v.findViewById<RecyclerView>(R.id.recyclerAnalyzerList)?.visibility = View.VISIBLE
     }
 }

@@ -55,6 +55,7 @@ class AnalyzerDuplicateAdapter(
 
     fun submitList(newGroups: List<DuplicateGroup>) {
         groups = newGroups
+        allocationCache.clear()
         refresh()
     }
 
@@ -63,9 +64,18 @@ class AnalyzerDuplicateAdapter(
         notifyDataSetChanged()
     }
 
+    private val allocationCache = mutableMapOf<String, za.kilowatch.ultimatefilemanager.util.FileAllocation>()
+
+    private fun getAllocation(path: String): za.kilowatch.ultimatefilemanager.util.FileAllocation {
+        return allocationCache.getOrPut(path) {
+            za.kilowatch.ultimatefilemanager.util.SparseFileUtils.getFileAllocation(java.io.File(path))
+        }
+    }
+
     /**
      * Selects all duplicate files across all groups based on [policy],
      * keeping exactly 1 original copy per group preserved.
+     * Enforces complete file protection (never auto-deletes complete files over incomplete files).
      *
      * @return count of selected files to delete.
      */
@@ -76,16 +86,28 @@ class AnalyzerDuplicateAdapter(
         for (g in groups) {
             if (g.files.size <= 1) continue
             val sorted = when (policy) {
-                DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST -> {
+                DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_MOST_COMPLETE -> {
                     g.files.sortedWith(
-                        compareBy<FileIndex> { it.lastModified }
+                        compareByDescending<FileIndex> { getAllocation(it.path).allocationPercentage }
+                            .thenBy { it.lastModified }
+                            .thenBy { it.path.length }
+                            .thenBy { it.path }
+                    )
+                }
+                DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_OLDEST -> {
+                    // Always protect complete files over incomplete/sparse files
+                    g.files.sortedWith(
+                        compareByDescending<FileIndex> { if (getAllocation(it.path).isSparse) 0 else 1 }
+                            .thenBy { it.lastModified }
                             .thenBy { it.path.length }
                             .thenBy { it.path }
                     )
                 }
                 DuplicateRetentionManager.DuplicateRetentionPolicy.KEEP_NEWEST -> {
+                    // Always protect complete files over incomplete/sparse files
                     g.files.sortedWith(
-                        compareByDescending<FileIndex> { it.lastModified }
+                        compareByDescending<FileIndex> { if (getAllocation(it.path).isSparse) 0 else 1 }
+                            .thenByDescending { it.lastModified }
                             .thenBy { it.path.length }
                             .thenBy { it.path }
                     )
@@ -185,6 +207,15 @@ class AnalyzerDuplicateAdapter(
                 val isPreserved = fi.path in preservedPaths && checkedFiles.isNotEmpty()
                 vh.txtPreservedBadge?.visibility = if (isPreserved) View.VISIBLE else View.GONE
 
+                // Sparse / incomplete download badge
+                val alloc = getAllocation(fi.path)
+                if (alloc.isSparse) {
+                    vh.txtSparseBadge?.visibility = View.VISIBLE
+                    vh.txtSparseBadge?.text = ctx.getString(R.string.analyzer_badge_partial, alloc.allocationPercentage)
+                } else {
+                    vh.txtSparseBadge?.visibility = View.GONE
+                }
+
                 if (!targetFolder.isNullOrEmpty()) {
                     val cleanFileFolder = fi.folderPath.trimEnd('/')
                     val cleanTarget = targetFolder.trimEnd('/')
@@ -263,6 +294,7 @@ class AnalyzerDuplicateAdapter(
         val txtPath          : TextView  = v.findViewById(R.id.txtDupFilePath)
         val txtSize          : TextView  = v.findViewById(R.id.txtDupFileSize)
         val txtPreservedBadge: TextView? = v.findViewById(R.id.txtDupPreservedBadge)
+        val txtSparseBadge   : TextView? = v.findViewById(R.id.txtDupSparseBadge)
         val txtLocationBadge : TextView  = v.findViewById(R.id.txtDupLocationBadge)
         val imgFileIcon      : ImageView? = v.findViewById(R.id.imgDupFileIcon)
         val checkbox         : CheckBox  = v.findViewById(R.id.checkDupFile)

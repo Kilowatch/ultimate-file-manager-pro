@@ -2113,6 +2113,7 @@ class SettingsActivity : AppCompatActivity() {
         val subtitleRes = when (mode) {
             za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_OLDEST -> R.string.settings_duplicate_retention_summary_oldest
             za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_NEWEST -> R.string.settings_duplicate_retention_summary_newest
+            za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_MOST_COMPLETE -> R.string.settings_duplicate_retention_summary_most_complete
             else -> R.string.settings_duplicate_retention_summary_ask
         }
         txtDuplicateRetentionSubtitle?.setText(subtitleRes)
@@ -2154,6 +2155,7 @@ class SettingsActivity : AppCompatActivity() {
                 val label = when (mode) {
                     za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_OLDEST -> getString(R.string.settings_duplicate_retention_summary_oldest)
                     za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_NEWEST -> getString(R.string.settings_duplicate_retention_summary_newest)
+                    za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionManager.MODE_MOST_COMPLETE -> getString(R.string.settings_duplicate_retention_summary_most_complete)
                     else -> getString(R.string.settings_duplicate_retention_summary_ask)
                 }
                 android.widget.Toast.makeText(

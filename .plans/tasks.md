@@ -1,20 +1,22 @@
-# Task List: External Video Player Playback History Tracking (Issue #67)
+# Task List: Actual vs. Nominal File Size Detection & Sparse/Incomplete File Handling
 
-## Foundation (MediaStore Resolution & Fallback Projections)
-- [x] [T001] [P] Create `MediaStoreUriResolver.kt` in `za.kilowatch.ultimatefilemanager.viewer.openwith` resolving local video and audio files to system `MediaStore` content URIs, with fast on-demand `MediaScannerConnection` scan (250ms timeout).
-- [x] [T002] Create unit tests in `MediaStoreUriResolverTest.kt` verifying extension filtering, root/cache exclusions, and collection resolution.
-- [x] [T003] Enhance `UfmFileProvider.kt` `query()` cursor projections to map `_id` (`MediaStore.MediaColumns._ID`), `_display_name`, `_data`, and verify storage volume path resolution.
+## Setup & Resources
+- [x] [T001] [P] Add string resources in `app/src/main/res/values/strings.xml` for dual size labels, sparse warning badges, retention policies, compare results, and analyzer cards — blocks UI integration.
+- [x] [T002] Create amber badge drawable `app/src/main/res/drawable/bg_badge_sparse.xml` for partial/incomplete download indicators.
 
-## Feature Implementation (Intent Dispatching & Permissions)
-- [x] [T004] [P] Update `OpenWithManager.kt` `show()` to resolve MediaStore URIs for local video and audio files before falling back to `UfmFileProvider`.
-- [x] [T005] Update `FileViewerRouter.kt` `openWithExternalApp()` to pass resolved MediaStore URIs into `OpenWithManager.show()`.
-- [x] [T006] Update `OpenWithLauncher.kt` (`launch()` and `launchSystemChooser()`) to add `FLAG_GRANT_PERSISTABLE_URI_PERMISSION` alongside read permissions with nested fallback.
+## Foundation & Core Utilities
+- [x] [T003] [P] Create `za.kilowatch.ultimatefilemanager.util.SparseFileUtils.kt` with POSIX `st_blocks` inspection, `FileAllocation` data model, and `comparePartialFiles()` — foundation for all sparse file detection.
+- [x] [T004] Create unit tests in `app/src/test/java/za/kilowatch/ultimatefilemanager/util/SparseFileUtilsTest.kt` verifying allocation calculation, percentage math, and threshold edge cases.
 
-## Network Streaming Session Revival
-- [x] [T007] [P] Update `NetworkHttpProxyServer.kt` to bind to preferred port `28842` (with fallback to `0`), persist active session metadata in `proxy_streaming_sessions.json`, and dynamically revive expired/past sessions on demand via `NetworkShareRepository`.
-- [x] [T008] Add unit tests in `NetworkHttpProxyServerTest.kt` verifying on-demand session revival from stored metadata.
+## Feature Implementation
+- [x] [T005] Update `app/src/main/res/layout/dialog_file_properties.xml` to add `rowSizeOnDisk` (label, formatted value, and `badgeSparseWarning`) adhering to UFMStandard glass theme.
+- [x] [T006] Update `FilePropertiesBottomSheet.kt` to query `SparseFileUtils.getFileAllocation()`, populate actual size on disk, and show the sparse warning badge.
+- [x] [T007] [P] Update `DuplicateRetentionManager.kt` to add `MODE_MOST_COMPLETE = "most_complete"` and `KEEP_MOST_COMPLETE` retention preset.
+- [x] [T008] Update `item_analyzer_duplicate_file.xml` and `item_analyzer_duplicate_file_tv.xml` to add `txtDupSparseBadge`.
+- [x] [T009] [P] Update `AnalyzerDuplicateAdapter.kt` to bind sparse badges and enforce complete file protection + `KEEP_MOST_COMPLETE` in `selectAllDuplicates()`.
+- [x] [T010] Update `FileCompareDialogFragment.kt`, `dialog_compare_files.xml`, and `dialog_compare_files_tv.xml` (strictly adhering to UFMStandard mobile/TV glass styling) to perform partial file header/offset checks and display partial match status.
+- [x] [T011] Update `StorageAnalyzerEngine.kt` to add `getIncompleteDownloads()` and generate the `Incomplete / Sparse Downloads` cleanup recommendation.
 
-## Version Bump & Repository Documentation
-- [x] [T009] Bump `appVersionName` to `"2.2.6"` and `appVersionCode` to `314` in `app/build.gradle.kts`.
-- [x] [T010] Update `CHANGELOG.md` with approved version header `[2.2.6] — 2026-11-11` and Issue #67 release notes.
-- [x] [T011] Run automated test suite (`./gradlew testDebugUnitTest`) to verify all unit tests pass.
+## Polish, Verification & Testing
+- [x] [T012] Update `app/src/test/java/za/kilowatch/ultimatefilemanager/storage/DuplicateRetentionTest.kt` with tests for `KEEP_MOST_COMPLETE` and complete file protection.
+- [x] [T013] Run unit test suite and execute debug build (`./gradlew assembleMobileGoogleDebug`) to verify zero compilation errors.

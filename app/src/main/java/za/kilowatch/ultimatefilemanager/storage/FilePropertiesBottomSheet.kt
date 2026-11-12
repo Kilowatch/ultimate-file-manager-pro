@@ -56,6 +56,10 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var rowSize: View
     private lateinit var txtSizeValue: TextView
+    private var rowSizeOnDisk: View? = null
+    private var txtSizeOnDiskValue: TextView? = null
+    private var txtSizeOnDiskPercentage: TextView? = null
+    private var badgeSparseWarning: TextView? = null
 
     private lateinit var rowContains: View
     private lateinit var txtContainsValue: TextView
@@ -257,6 +261,10 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
 
         rowSize = view.findViewById(R.id.rowSize)
         txtSizeValue = view.findViewById(R.id.txtSizeValue)
+        rowSizeOnDisk = view.findViewById(R.id.rowSizeOnDisk)
+        txtSizeOnDiskValue = view.findViewById(R.id.txtSizeOnDiskValue)
+        txtSizeOnDiskPercentage = view.findViewById(R.id.txtSizeOnDiskPercentage)
+        badgeSparseWarning = view.findViewById(R.id.badgeSparseWarning)
 
         rowContains = view.findViewById(R.id.rowContains)
         txtContainsValue = view.findViewById(R.id.txtContainsValue)
@@ -387,6 +395,24 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
             if (!isDirectory) {
                 rowContains.visibility = View.GONE
                 txtSizeValue.text = formatWindowsSize(fileSize)
+
+                // Inspect physical disk allocation (sparse / incomplete download)
+                if (!isNetwork) {
+                    val file = java.io.File(path)
+                    val alloc = za.kilowatch.ultimatefilemanager.util.SparseFileUtils.getFileAllocation(file)
+                    if (alloc.isSparse) {
+                        rowSizeOnDisk?.visibility = View.VISIBLE
+                        val formattedAlloc = formatWindowsSize(alloc.allocatedBytes)
+                        txtSizeOnDiskValue?.text = formattedAlloc
+                        txtSizeOnDiskPercentage?.text = getString(R.string.properties_sparse_allocated_pct, alloc.allocationPercentage)
+                        txtSizeOnDiskPercentage?.visibility = View.VISIBLE
+                        badgeSparseWarning?.visibility = View.VISIBLE
+                    } else {
+                        rowSizeOnDisk?.visibility = View.GONE
+                    }
+                } else {
+                    rowSizeOnDisk?.visibility = View.GONE
+                }
 
                 // Dimensions for images
                 val ext = name.substringAfterLast('.').lowercase()
@@ -644,6 +670,7 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
 
             rowContains.visibility = View.VISIBLE
             txtContainsValue.text = directBreakdown
+            rowSizeOnDisk?.visibility = View.GONE
 
             // 3. Size & Scanning
             if (isNetwork) {

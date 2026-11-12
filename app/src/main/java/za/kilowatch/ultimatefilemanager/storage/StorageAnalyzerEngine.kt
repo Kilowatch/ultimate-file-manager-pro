@@ -45,6 +45,7 @@ class StorageAnalyzerEngine(private val context: Context) {
             topFolders = emptyList(),
             largeFiles = emptyList(),
             duplicateGroups = emptyList(),
+            incompleteFiles = emptyList(),
             oldFiles = emptyList(),
             junkReport = JunkReport(0L, 0, emptyList()),
             downloadReport = DownloadReport(emptyList(), emptyList()),
@@ -119,6 +120,17 @@ class StorageAnalyzerEngine(private val context: Context) {
         return buildAppUsage(storageId)
     }
 
+    fun getIncompleteDownloads(candidates: List<FileIndex>): List<FileIndex> {
+        return candidates.filter { fileIndex ->
+            try {
+                val f = File(fileIndex.path)
+                f.exists() && f.isFile && za.kilowatch.ultimatefilemanager.util.SparseFileUtils.isSparseFile(f)
+            } catch (_: Throwable) {
+                false
+            }
+        }
+    }
+
     fun getRecommendations(
         dupGroups: List<DuplicateGroup>,
         largeFiles: List<FileIndex>,
@@ -138,6 +150,7 @@ class StorageAnalyzerEngine(private val context: Context) {
         val folders = getTopFolders(storageId)
         val large  = getLargeFiles(storageId)
         val dups   = getDuplicateGroupsReport(storageId)
+        val incomplete = getIncompleteDownloads(large)
         val old    = getOldFiles(storageId)
         val junk   = getJunk(storageId)
         val apps   = getAppUsage(storageId)
@@ -148,6 +161,7 @@ class StorageAnalyzerEngine(private val context: Context) {
             topFolders = folders,
             largeFiles = large,
             duplicateGroups = dups,
+            incompleteFiles = incomplete,
             oldFiles = old,
             junkReport = junk,
             appUsage = apps,
@@ -172,6 +186,7 @@ class StorageAnalyzerEngine(private val context: Context) {
             topFolders = emptyList(),
             largeFiles = emptyList(),
             duplicateGroups = emptyList(),
+            incompleteFiles = emptyList(),
             oldFiles = emptyList(),
             junkReport = JunkReport(0L, 0, emptyList()),
             downloadReport = DownloadReport(emptyList(), emptyList()),
@@ -514,6 +529,33 @@ class StorageAnalyzerEngine(private val context: Context) {
             ))
         }
 
+        // Incomplete / sparse downloads
+        val sparseCandidates = largeFiles.filter { fileIndex ->
+            try {
+                val f = File(fileIndex.path)
+                f.exists() && f.isFile && za.kilowatch.ultimatefilemanager.util.SparseFileUtils.isSparseFile(f)
+            } catch (_: Throwable) {
+                false
+            }
+        }
+        if (sparseCandidates.isNotEmpty()) {
+            val totalAllocated = sparseCandidates.sumOf {
+                try {
+                    za.kilowatch.ultimatefilemanager.util.SparseFileUtils.getFileAllocation(File(it.path)).allocatedBytes
+                } catch (_: Throwable) {
+                    it.size
+                }
+            }
+            recs.add(CleanupRecommendation(
+                title              = context.getString(R.string.analyzer_incomplete_downloads_title),
+                description        = context.getString(R.string.analyzer_incomplete_downloads_desc, sparseCandidates.size),
+                estimatedBytes     = totalAllocated,
+                riskLevel          = RiskLevel.MODERATE,
+                files              = sparseCandidates,
+                targetTab          = 3 // TAB_INCOMPLETE
+            ))
+        }
+
         // Old files — moderate/manual
         if (oldFiles.isNotEmpty()) {
             recs.add(CleanupRecommendation(
@@ -522,7 +564,7 @@ class StorageAnalyzerEngine(private val context: Context) {
                 estimatedBytes     = oldFiles.sumOf { it.size },
                 riskLevel          = RiskLevel.MODERATE,
                 files              = oldFiles,
-                targetTab          = 3 // TAB_JUNK
+                targetTab          = 4 // TAB_JUNK
             ))
         }
 
@@ -581,6 +623,7 @@ data class AnalyzerReport(
     val topFolders       : List<AnalyzerFolder>,
     val largeFiles       : List<FileIndex>,
     val duplicateGroups  : List<DuplicateGroup>,
+    val incompleteFiles  : List<FileIndex> = emptyList(),
     val oldFiles         : List<FileIndex>,
     val junkReport       : JunkReport,
     val downloadReport   : DownloadReport,
