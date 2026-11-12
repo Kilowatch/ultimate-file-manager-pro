@@ -236,12 +236,7 @@ class TextViewerActivity : AppCompatActivity() {
                 txtLineNumbers.textSize = textSize
                 updateCharWidths()
                 if (isEditMode) {
-                    val maxChars = txtContent.text?.lineSequence()?.maxOfOrNull { line ->
-                        var len = 0
-                        for (ch in line) len += if (ch == '\t') 4 else 1
-                        len
-                    } ?: 0
-                    applyExactWidths(maxChars, 0)
+                    applyExactWidths(lastMaxChars, 0)
                 } else {
                     val chunk = allChunks.getOrElse(currentPage) { "" }
                     val maxChars = chunk.lineSequence().maxOfOrNull { line ->
@@ -462,10 +457,35 @@ class TextViewerActivity : AppCompatActivity() {
                 }
             }
 
-            // ── Debounced re-highlight TextWatcher ────────────────────
+            // ── Debounced re-highlight & width adjustment TextWatcher ──────────
             highlightDebounceHandler = Handler(Looper.getMainLooper())
             val debounce = Runnable {
-                if (isEditMode && isHighlightedFile && currentLanguage != null) {
+                if (!isEditMode) return@Runnable
+                val snapshot = txtContent.text?.toString() ?: ""
+                lifecycleScope.launch(Dispatchers.Default) {
+                    var curMax = 0
+                    var currentLineLen = 0
+                    for (i in 0 until snapshot.length) {
+                        when (snapshot[i]) {
+                            '\n' -> {
+                                if (currentLineLen > curMax) curMax = currentLineLen
+                                currentLineLen = 0
+                            }
+                            '\r' -> {}
+                            '\t' -> currentLineLen += 4
+                            else -> currentLineLen += 1
+                        }
+                    }
+                    if (currentLineLen > curMax) curMax = currentLineLen
+
+                    withContext(Dispatchers.Main) {
+                        if (isEditMode && curMax > lastMaxChars) {
+                            lastMaxChars = curMax
+                            applyExactWidths(curMax, 0)
+                        }
+                    }
+                }
+                if (isHighlightedFile && currentLanguage != null) {
                     // In-place span update — no setText(), no cursor reset
                     // remap = false: this is the 300 ms debounced edit-mode
                     // re-highlight, the most perf-sensitive path in the feature.
@@ -484,17 +504,6 @@ class TextViewerActivity : AppCompatActivity() {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                 override fun afterTextChanged(s: Editable?) {
-                    s?.let { editable ->
-                        val curMax = editable.lineSequence().maxOfOrNull { line ->
-                            var len = 0
-                            for (ch in line) len += if (ch == '\t') 4 else 1
-                            len
-                        } ?: 0
-                        if (curMax > lastMaxChars) {
-                            lastMaxChars = curMax
-                            applyExactWidths(curMax, 0)
-                        }
-                    }
                     highlightDebounceRunnable?.let { r ->
                         highlightDebounceHandler?.removeCallbacks(r)
                         highlightDebounceHandler?.postDelayed(r, 300)
