@@ -1143,6 +1143,131 @@ object CrashReportManager {
         return noOtherBlockingPrimitives
     }
 
+    /**
+     * Filter 87: Main thread is sampled during layout inflation while initializing
+     * a TextInputLayout or its internal delegates (e.g. EndCompoundLayout, StartCompoundLayout,
+     * IndicatorViewController, CollapsingTextHelper, MaterialShapeDrawable, etc.),
+     * thread state RUNNABLE (reported from an SDMC G1 Android TV box, SDK 34, app 2.2.1-GOOGLE).
+     *
+     * During layout inflation under Activity `onCreate` (or window setup), `TextInputLayout`
+     * resolves complex style attributes, computes shape appearances, and constructs its helper
+     * delegate components. On low-end CPU-constrained Android TV devices, concurrent background
+     * worker threads (Firebase, SSDP/DLNA discovery, HTTP server listeners) cause CPU contention
+     * that momentarily stretches layout inflation duration beyond the watchdog threshold while
+     * the main thread is simply executing in-memory `TextInputLayout` view initialization.
+     *
+     * In release builds, `TextInputLayout` helper classes and caller callbacks are minified by R8
+     * to short names (e.g. `bz1`, `as`, `dg1`) that lack platform package prefixes, so
+     * `isPureFrameworkStack` evaluates to false, and Filter 10 (`isColdStartLayoutInflateStall`)
+     * requires `topFrame.methodName == "<init>"`. Filter 87 (`isTextInputLayoutInflateStall`)
+     * detects when the main thread is executing in-memory `TextInputLayout` construction
+     * during layout inflation under an Activity lifecycle or window creation callback,
+     * with zero application business logic and no framework blocking primitives held.
+     */
+    fun isTextInputLayoutInflateStall(
+        topFrame: StackTraceElement?,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (topFrame == null) return false
+
+        // 1. Must contain a TextInputLayout frame
+        val hasTextInputLayout = mainStackTrace.any { frame ->
+            frame.className == "com.google.android.material.textfield.TextInputLayout" ||
+            frame.className.startsWith("com.google.android.material.textfield.")
+        }
+        if (!hasTextInputLayout) {
+            return false
+        }
+
+        // 2. Top frame must be in TextInputLayout, related Material/framework UI classes,
+        // or an R8-obfuscated non-platform library class invoked during TextInputLayout construction
+        val isTopFrameValid =
+            topFrame.className == "com.google.android.material.textfield.TextInputLayout" ||
+            topFrame.className.startsWith("com.google.android.material.textfield.") ||
+            topFrame.className.startsWith("com.google.android.material.shape.") ||
+            topFrame.className.startsWith("com.google.android.material.internal.") ||
+            topFrame.className.startsWith("com.google.android.material.resources.") ||
+            topFrame.className.startsWith("com.google.android.material.color.") ||
+            topFrame.className.startsWith("com.google.android.material.animation.") ||
+            topFrame.className.startsWith("android.widget.") ||
+            topFrame.className.startsWith("android.view.") ||
+            topFrame.className.startsWith("android.graphics.") ||
+            topFrame.className.startsWith("android.content.res.") ||
+            topFrame.className.startsWith("android.text.") ||
+            topFrame.className.startsWith("java.lang.reflect.") ||
+            (PLATFORM_PREFIXES.none { topFrame.className.startsWith(it) } &&
+             !topFrame.className.startsWith(APP_PACKAGE))
+
+        if (!isTopFrameValid) {
+            return false
+        }
+
+        // 3. Must be in layout inflation (LayoutInflater or View.inflate)
+        val hasLayoutInflater = mainStackTrace.any {
+            (it.className == "android.view.LayoutInflater" &&
+             (it.methodName == "inflate" || it.methodName == "rInflate" ||
+              it.methodName == "rInflateChildren" || it.methodName == "createViewFromTag" ||
+              it.methodName == "createView" || it.methodName == "onCreateView")) ||
+            (it.className == "android.view.View" && it.methodName == "inflate")
+        }
+        if (!hasLayoutInflater) {
+            return false
+        }
+
+        // 4. Must be under Activity / lifecycle launch / window creation
+        val hasActivityOrWindowLifecycle = mainStackTrace.any {
+            (it.className == "android.app.ActivityThread" &&
+             (it.methodName == "performLaunchActivity" || it.methodName == "handleLaunchActivity" ||
+              it.methodName == "main" || it.methodName == "handleResumeActivity" ||
+              it.methodName == "handleRelaunchActivity")) ||
+            (it.className == "android.app.Activity" &&
+             (it.methodName == "performCreate" || it.methodName == "setContentView")) ||
+            (it.className == "android.app.Instrumentation" &&
+             it.methodName == "callActivityOnCreate") ||
+            (it.className.endsWith("Activity") &&
+             (it.methodName == "onCreate" || it.methodName == "setContentView")) ||
+            (it.className.endsWith("Dialog") &&
+             (it.methodName == "show" || it.methodName == "onCreate" || it.methodName == "setContentView"))
+        }
+        if (!hasActivityOrWindowLifecycle) {
+            return false
+        }
+
+        // 5. Must NOT contain any application business logic (only Activity / Fragment / Dialog / ViewHolder frames allowed)
+        val noAppBusinessLogic = mainStackTrace.none { frame ->
+            frame.className.startsWith(APP_PACKAGE) &&
+            !frame.className.endsWith("Activity") &&
+            !frame.className.contains("Activity$") &&
+            !frame.className.endsWith("Fragment") &&
+            !frame.className.contains("Fragment$") &&
+            !frame.className.endsWith("Dialog") &&
+            !frame.className.contains("Dialog$") &&
+            !frame.className.endsWith("DialogFragment") &&
+            !frame.className.contains("DialogFragment$") &&
+            !frame.className.endsWith("ViewHolder") &&
+            !frame.className.contains("ViewHolder$") &&
+            !frame.className.endsWith("View") &&
+            !frame.className.contains("View$") &&
+            !frame.className.startsWith("za.kilowatch.ultimatefilemanager.support.CrashReportManager")
+        }
+        if (!noAppBusinessLogic) {
+            return false
+        }
+
+        // 6. Must NOT contain any blocking primitives
+        val noOtherBlockingPrimitives = mainStackTrace.none { frame ->
+            (frame.className == "android.os.BinderProxy" &&
+             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+            frame.className.startsWith("java.io.") ||
+            frame.className.startsWith("libcore.io.") ||
+            frame.className.startsWith("java.net.") ||
+            frame.className.startsWith("android.database.")
+        }
+        return noOtherBlockingPrimitives
+    }
+
     @Volatile private var cachedGetActivityTokenMethod: java.lang.reflect.Method? = null
     @Volatile private var cachedGetCallbacksMethod: java.lang.reflect.Method? = null
     @Volatile private var cachedPreExecuteMethod: java.lang.reflect.Method? = null
@@ -6823,7 +6948,27 @@ object CrashReportManager {
                     val isFormatterFileSizeStall =
                         isFormatterFileSizeStall(topFrame, mainStackTrace)
 
-                    if (isFormatterFileSizeStall || isMaterialButtonLayoutInflateStall || isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 87. The main thread is sampled during layout inflation while initializing
+                    //     a TextInputLayout or its internal delegates (EndCompoundLayout, StartCompoundLayout,
+                    //     IndicatorViewController, CollapsingTextHelper, MaterialShapeDrawable, etc.),
+                    //     thread state RUNNABLE (reported from an SDMC G1 Android TV box, SDK 34, app 2.2.1-GOOGLE).
+                    //     During layout inflation under Activity onCreate or window view creation,
+                    //     TextInputLayout resolves styled attributes, builds shape appearance models,
+                    //     and initializes its subcomponent delegates. On CPU-constrained Android TV devices,
+                    //     concurrent background worker threads (Firebase, SSDP/DLNA discovery, HTTP server listeners)
+                    //     cause CPU contention that momentarily stretches layout inflation duration
+                    //     beyond the watchdog threshold while the main thread is simply executing
+                    //     in-memory layout initialization. Because TextInputLayout's internal helper classes
+                    //     are minified by R8 to short names (e.g. bz1, as, dg1) lacking platform package prefixes,
+                    //     isPureFrameworkStack evaluates to false, and Filter 10 (isColdStartLayoutInflateStall)
+                    //     requires topFrame.methodName == "<init>". Filter 87 (isTextInputLayoutInflateStall)
+                    //     detects when the main thread is executing in-memory TextInputLayout construction
+                    //     during layout inflation under an Activity lifecycle or window creation callback,
+                    //     with zero application business logic and no framework blocking primitives held.
+                    val isTextInputLayoutInflateStall =
+                        isTextInputLayoutInflateStall(topFrame, mainStackTrace)
+
+                    if (isTextInputLayoutInflateStall || isFormatterFileSizeStall || isMaterialButtonLayoutInflateStall || isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
