@@ -117,7 +117,7 @@ class CategoryFilesActivity : AppCompatActivity() {
             onSelectionChanged = { /* no selection here */ }
         )
 
-        recyclerFiles.layoutManager = LinearLayoutManager(this)
+        recyclerFiles.layoutManager = SafeLinearLayoutManager(this)
         recyclerFiles.adapter = fileAdapter
 
         loadFiles(filterType, drivePath)

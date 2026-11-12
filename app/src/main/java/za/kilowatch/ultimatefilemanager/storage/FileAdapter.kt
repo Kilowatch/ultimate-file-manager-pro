@@ -100,7 +100,7 @@ class FileAdapter(
                     oldItem is ListItem.NetworkEntry && newItem is ListItem.NetworkEntry ->
                         oldItem.file.path == newItem.file.path
                     oldItem is ListItem.EmptyBuffer && newItem is ListItem.EmptyBuffer ->
-                        oldItemPosition == newItemPosition
+                        true
                     else -> false
                 }
             }
@@ -508,6 +508,24 @@ class FileAdapter(
             childCountCache.clear()
         }
 
+        // Re-apply selection by stable identifier before building items and diffing, and
+        // silently drop any selected path that is no longer present (deleted, moved,
+        // filtered out, or otherwise removed). This ensures that if the selection becomes
+        // empty, isSelectionMode is reset BEFORE constructing newItems so buffer rows are
+        // cleanly removed via DiffUtil rather than mutating items directly after diff dispatch.
+        val prevSelectionSize = selectedPaths.size
+        if (isSelectionMode) {
+            val stillPresent = files.mapTo(HashSet<String>()) { it.absolutePath }
+            selectedPaths.retainAll(stillPresent)
+            if (selectedPaths.isEmpty()) {
+                isSelectionMode = false
+                longPressAnchorIndex = RecyclerView.NO_POSITION
+            }
+            if (selectedPaths.size != prevSelectionSize) {
+                onSelectionChanged(selectedPaths.size)
+            }
+        }
+
         // Snapshot each file's metadata (isDirectory / size / lastModified) once, so the
         // RecyclerView bind path below never re-runs File.stat() on the main thread. The
         // same snapshot is reused for the folders-first / date-grouping ordering here.
@@ -557,7 +575,7 @@ class FileAdapter(
             newItems.add(ListItem.EmptyBuffer)
         }
 
-        val isIdentical = oldItems.size == newItems.size && oldItems.indices.all { i ->
+        val isIdentical = prevSelectionSize == selectedPaths.size && oldItems.size == newItems.size && oldItems.indices.all { i ->
             val o = oldItems[i]
             val n = newItems[i]
             when {
@@ -595,22 +613,6 @@ class FileAdapter(
             items.clear()
             items.addAll(newItems)
             diffResult.dispatchUpdatesTo(this)
-        }
-
-        // Re-apply selection by stable identifier after the fresh listing lands, and
-        // silently drop any selected path that is no longer present (deleted, moved,
-        // filtered out, or otherwise removed). This keeps selection intact across a
-        // background/foreground reload, while navigation/operation reloads — which
-        // already cleared selection before reaching here — remain unaffected.
-        if (isSelectionMode) {
-            val stillPresent = files.mapTo(HashSet<String>()) { it.absolutePath }
-            selectedPaths.retainAll(stillPresent)
-            if (selectedPaths.isEmpty()) {
-                isSelectionMode = false
-                longPressAnchorIndex = RecyclerView.NO_POSITION
-                removeBufferRows()
-            }
-            onSelectionChanged(selectedPaths.size)
         }
 
         // Pre-warm local thumbnail cache and prune stale thumbnails asynchronously

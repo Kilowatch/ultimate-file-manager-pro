@@ -81,7 +81,7 @@ class NetworkFileAdapter(
                     oldItem is za.kilowatch.ultimatefilemanager.storage.ListItem.Header && newItem is za.kilowatch.ultimatefilemanager.storage.ListItem.Header ->
                         oldItem.year == newItem.year && oldItem.month == newItem.month
                     oldItem is za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer && newItem is za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer ->
-                        oldItemPosition == newItemPosition
+                        true
                     else -> false
                 }
             }
@@ -345,7 +345,6 @@ class NetworkFileAdapter(
         }
         if (selectedFiles.isEmpty() && isSelectionMode) {
             isSelectionMode = false
-            removeBufferRows()
         }
         longPressAnchorIndex = RecyclerView.NO_POSITION
 
@@ -387,7 +386,7 @@ class NetworkFileAdapter(
             newItems.add(za.kilowatch.ultimatefilemanager.storage.ListItem.EmptyBuffer)
         }
 
-        val isIdentical = oldItems.size == newItems.size && oldItems.indices.all { i ->
+        val isIdentical = prevSelectionSize == selectedFiles.size && oldItems.size == newItems.size && oldItems.indices.all { i ->
             val o = oldItems[i]
             val n = newItems[i]
             if (o is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry && n is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry) {

@@ -8507,9 +8507,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
             btnViewToggle?.setImageResource(ViewModeManager.iconRes(mode))
 
             val lm = if (!ViewModeManager.isGrid(mode)) {
-                androidx.recyclerview.widget.LinearLayoutManager(this)
+                za.kilowatch.ultimatefilemanager.storage.SafeLinearLayoutManager(this)
             } else {
-                androidx.recyclerview.widget.GridLayoutManager(
+                za.kilowatch.ultimatefilemanager.storage.SafeGridLayoutManager(
                     this, ViewModeManager.spanCount(this, mode)
                 ).apply {
                     spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {

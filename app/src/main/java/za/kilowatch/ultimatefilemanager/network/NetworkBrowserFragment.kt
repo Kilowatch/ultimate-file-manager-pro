@@ -2823,9 +2823,9 @@ class NetworkBrowserFragment : Fragment() {
                 val ctx = context ?: safeContext
                 fileAdapter.viewMode = mode
                 val lm = if (!ViewModeManager.isGrid(mode)) {
-                    androidx.recyclerview.widget.LinearLayoutManager(ctx)
+                    za.kilowatch.ultimatefilemanager.storage.SafeLinearLayoutManager(ctx)
                 } else {
-                    androidx.recyclerview.widget.GridLayoutManager(
+                    za.kilowatch.ultimatefilemanager.storage.SafeGridLayoutManager(
                         ctx, ViewModeManager.spanCount(ctx, mode)
                     ).apply {
                         spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {

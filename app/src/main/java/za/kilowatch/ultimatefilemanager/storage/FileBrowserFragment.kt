@@ -2197,9 +2197,9 @@ class FileBrowserFragment : Fragment() {
                 val ctx = context ?: safeContext
                 fileAdapter.viewMode = mode
                 val lm = if (!ViewModeManager.isGrid(mode)) {
-                    androidx.recyclerview.widget.LinearLayoutManager(ctx)
+                    SafeLinearLayoutManager(ctx)
                 } else {
-                    androidx.recyclerview.widget.GridLayoutManager(
+                    SafeGridLayoutManager(
                         ctx, ViewModeManager.spanCount(ctx, mode)
                     ).apply {
                         spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
