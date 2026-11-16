@@ -40,6 +40,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
@@ -326,19 +327,15 @@ class BookmarkHubActivity : AppCompatActivity() {
         val repo = BookmarkRepository.getInstance(this)
 
         lifecycleScope.launch {
-            repo.getAllGroups().collectLatest { groups ->
+            combine(repo.getAllGroups(), repo.getAllBookmarks()) { groups, bookmarks ->
+                Pair(groups, bookmarks)
+            }.collectLatest { (groups, bookmarks) ->
                 allGroups = groups
+                allBookmarks = bookmarks
                 if (selectedGroupId != null && groups.none { it.id == selectedGroupId }) {
                     selectedGroupId = null
                 }
                 populateGroupChips(groups)
-                updateToolbarSubtitle()
-            }
-        }
-
-        lifecycleScope.launch {
-            repo.getAllBookmarks().collectLatest { bookmarks ->
-                allBookmarks = bookmarks
                 applyFilterAndSort()
                 updateToolbarSubtitle()
             }

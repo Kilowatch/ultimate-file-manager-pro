@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.bookmarks.ui
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Outline
@@ -330,8 +331,41 @@ class BookmarkAdapter(
                 onActionDelete(item)
             }
 
-            val xOffset = -(popupWidth - anchor.width)
-            popupWindow.showAsDropDown(anchor, xOffset, (4 * context.resources.displayMetrics.density).toInt())
+            popupView.measure(
+                View.MeasureSpec.makeMeasureSpec(popupWidth, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            )
+            val popupHeight = popupView.measuredHeight
+            val location = IntArray(2)
+            anchor.getLocationOnScreen(location)
+            val anchorY = location[1]
+            val anchorHeight = anchor.height
+            val screenHeight = context.resources.displayMetrics.heightPixels
+            val marginBottom = (32 * context.resources.displayMetrics.density).toInt()
+            val spaceBelow = screenHeight - (anchorY + anchorHeight) - marginBottom
+            val neededScroll = popupHeight - spaceBelow
+
+            val recyclerView = itemView.parent as? RecyclerView
+            val canScrollDown = recyclerView?.canScrollVertically(1) == true
+
+            if (neededScroll > 0 && canScrollDown) {
+                val scrollAmount = neededScroll + (24 * context.resources.displayMetrics.density).toInt()
+                recyclerView?.smoothScrollBy(0, scrollAmount)
+                anchor.postDelayed({
+                    if ((context as? Activity)?.isFinishing != true && anchor.isAttachedToWindow) {
+                        val updatedXOffset = -(popupWidth - anchor.width)
+                        popupWindow.showAsDropDown(anchor, updatedXOffset, (4 * context.resources.displayMetrics.density).toInt())
+                    }
+                }, 160)
+            } else if (neededScroll > 0) {
+                // If list cannot scroll down any further, show popup anchored above the button
+                val xOffset = -(popupWidth - anchor.width)
+                val yOffset = -(popupHeight + anchorHeight + (4 * context.resources.displayMetrics.density).toInt())
+                popupWindow.showAsDropDown(anchor, xOffset, yOffset)
+            } else {
+                val xOffset = -(popupWidth - anchor.width)
+                popupWindow.showAsDropDown(anchor, xOffset, (4 * context.resources.displayMetrics.density).toInt())
+            }
         }
 
         private fun extractDomain(urlStr: String?): String {
