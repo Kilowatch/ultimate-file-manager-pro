@@ -373,6 +373,19 @@
             android:name=".smartsort.SmartSortTvActivity"
             android:exported="false" />
 
+        <!-- Smart Bookmark Hub (Mobile Only) -->
+        <activity
+            android:name=".bookmarks.ui.BookmarkHubActivity"
+            android:exported="false"
+            android:label="@string/bookmark_hub_title"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density" />
+
+        <activity
+            android:name=".bookmarks.ui.BookmarkReaderActivity"
+            android:exported="false"
+            android:label="@string/bookmark_reader_title"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density" />
+
         <!-- Category Files (from Analyzer) -->
         <activity
             android:name=".storage.CategoryFilesActivity"
@@ -783,6 +796,31 @@
             android:label="@string/share_target_save_to"
             android:theme="@style/Theme.UltimateFileManager"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+
+        <!-- Smart Bookmark Hub Share Receiver — handles incoming share intents (WhatsApp, Reddit, Web, etc.) -->
+        <activity
+            android:name=".bookmarks.ui.BookmarkReceiverActivity"
+            android:exported="true"
+            android:label="@string/share_target_bookmark"
+            android:icon="@drawable/ic_bookmark_hub"
+            android:theme="@style/Theme.UFM.Translucent"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />

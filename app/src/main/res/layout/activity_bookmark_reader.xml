@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_mobile_gradient">
+
+    <!-- UFMStandard Mobile Toolbar (56dp) -->
+    <LinearLayout
+        android:id="@+id/toolbarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/mobile_glass_header"
+        android:paddingHorizontal="16dp">
+
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtToolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bookmark_reader_title"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/txtToolbarDomain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:singleLine="true"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <!-- Open in Browser Action -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnOpenInBrowser"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                android:src="@drawable/ic_link"
+                android:contentDescription="@string/bookmark_action_open_browser"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+
+        <!-- Star / Favorite Action -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnStar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                android:src="@drawable/ic_star"
+                android:contentDescription="@string/toolbar_desc_favorite"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- Reading Controls Bar (Font Size, Themes) -->
+    <LinearLayout
+        android:id="@+id/readerControlsBar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:background="@drawable/bg_reindex_option_card"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bookmark_reader_font_size"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/btnFontSmaller"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="A-"
+            android:textStyle="bold"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="14sp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnFontBigger"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="A+"
+            android:textStyle="bold"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="14sp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginEnd="16dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- Theme Pickers -->
+        <View
+            android:id="@+id/btnThemeLight"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/bg_icon_circle_accent"
+            android:backgroundTint="#F5F5F5"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <View
+            android:id="@+id/btnThemeSepia"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/bg_icon_circle_accent"
+            android:backgroundTint="#EFE5CD"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <View
+            android:id="@+id/btnThemeDark"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/bg_icon_circle_accent"
+            android:backgroundTint="#181818"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+    <!-- Reading Content Area -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollArticle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/layoutReadingContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="16dp">
+
+            <TextView
+                android:id="@+id/txtArticleTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/txtArticleByline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="13sp"
+                android:layout_marginBottom="24dp" />
+
+            <TextView
+                android:id="@+id/txtArticleBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:lineSpacingMultiplier="1.5"
+                android:textIsSelectable="true" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Text-to-Speech (TTS) Player Bar -->
+    <LinearLayout
+        android:id="@+id/ttsPlayerBar"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/mobile_glass_header"
+        android:paddingHorizontal="16dp">
+
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnTtsPlayPause"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                android:src="@drawable/ic_play"
+                android:contentDescription="@string/bookmark_tts_play"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="?attr/colorPrimary" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnTtsStop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                android:src="@drawable/ic_stop"
+                android:contentDescription="@string/bookmark_tts_stop"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/txtTtsStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:text="@string/bookmark_tts_play"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTtsSpeed"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="1.0x"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

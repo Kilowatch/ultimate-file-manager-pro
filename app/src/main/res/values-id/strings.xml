@@ -16565,6 +16565,224 @@ Remove &amp; Delete Files
     <string name="transfer_delete_remove_files_desc">
 Permanently delete downloaded files from disk
 </string>
+
+    <!-- Smart Bookmark Hub (Mobile Only) -->
+    <string name="bookmark_hub_title">
+Smart Bookmarks
+</string>
+    <string name="bookmark_hub_subtitle">
+Organize saved links, media &amp; shares
+</string>
+    <string name="bookmark_hub_subtitle_count">
+%1$d items across %2$d groups
+</string>
+    <string name="bookmark_hub_subtitle_empty">
+No bookmarks saved yet
+</string>
+    <string name="share_target_bookmark">
+Bookmark with UFM
+</string>
+    <string name="bookmark_quick_save_title">
+Save Bookmark
+</string>
+    <string name="bookmark_shared_from">
+Shared from %1$s
+</string>
+    <string name="bookmark_field_title_hint">
+Title
+</string>
+    <string name="bookmark_field_group_hint">
+Collection / Group
+</string>
+    <string name="bookmark_field_notes_hint">
+Add personal note (optional)
+</string>
+    <string name="bookmark_btn_save">
+Save Bookmark
+</string>
+    <string name="bookmark_duplicate_notice">
+Already bookmarked — notes &amp; time updated
+</string>
+    <string name="bookmark_saved_success">
+Bookmark saved to %1$s
+</string>
+    <string name="bookmark_new_group">
++ Create New Group
+</string>
+    <string name="bookmark_dialog_new_group_title">
+New Bookmark Group
+</string>
+    <string name="bookmark_dialog_group_name_hint">
+Group Name
+</string>
+    <string name="bookmark_dialog_btn_create">
+Create Group
+</string>
+    <string name="bookmark_filter_all">
+All
+</string>
+    <string name="bookmark_filter_links">
+Links
+</string>
+    <string name="bookmark_filter_media">
+Media
+</string>
+    <string name="bookmark_filter_docs">
+Documents
+</string>
+    <string name="bookmark_filter_notes">
+Notes
+</string>
+    <string name="bookmark_filter_starred">
+Starred
+</string>
+    <string name="bookmark_search_hint">
+Search bookmarks, notes, or domains…
+</string>
+    <string name="bookmark_sort_title">
+Sort Bookmarks
+</string>
+    <string name="bookmark_sort_newest">
+Newest to Oldest
+</string>
+    <string name="bookmark_sort_oldest">
+Oldest to Newest
+</string>
+    <string name="bookmark_sort_title_az">
+Title (A–Z)
+</string>
+    <string name="bookmark_sort_size">
+File Size
+</string>
+    <string name="bookmark_action_open_reader">
+Read Article
+</string>
+    <string name="bookmark_action_open_browser">
+Open in Browser
+</string>
+    <string name="bookmark_action_open_file">
+Open File
+</string>
+    <string name="bookmark_action_copy_link">
+Copy Link
+</string>
+    <string name="bookmark_action_copy_text">
+Copy Text
+</string>
+    <string name="bookmark_action_save_to_storage">
+Save to Storage
+</string>
+    <string name="bookmark_action_move_group">
+Move to Group
+</string>
+    <string name="bookmark_action_delete">
+Delete
+</string>
+    <string name="bookmark_deleted_undo">
+Bookmark deleted
+</string>
+    <string name="bookmark_undo">
+Undo
+</string>
+    <string name="bookmark_batch_actions">
+Selected %1$d items
+</string>
+    <string name="bookmark_batch_move">
+Move
+</string>
+    <string name="bookmark_batch_delete">
+Delete
+</string>
+    <string name="bookmark_batch_export">
+Export
+</string>
+    <string name="bookmark_export_title">
+Export Bookmarks
+</string>
+    <string name="bookmark_export_html">
+Browser HTML Bookmarks (.html)
+</string>
+    <string name="bookmark_export_markdown">
+Markdown Document (.md)
+</string>
+    <string name="bookmark_export_success">
+Exported %1$d bookmarks to %2$s
+</string>
+    <string name="bookmark_reader_title">
+Reader Mode
+</string>
+    <string name="bookmark_reader_font_size">
+Text Size
+</string>
+    <string name="bookmark_reader_theme">
+Theme
+</string>
+    <string name="bookmark_reader_theme_light">
+Light
+</string>
+    <string name="bookmark_reader_theme_sepia">
+Sepia
+</string>
+    <string name="bookmark_reader_theme_dark">
+Dark
+</string>
+    <string name="bookmark_tts_play">
+Listen Aloud
+</string>
+    <string name="bookmark_tts_pause">
+Pause Reading
+</string>
+    <string name="bookmark_tts_stop">
+Stop Reading
+</string>
+    <string name="bookmark_tts_speed">
+Speed %1$sx
+</string>
+    <string name="bookmark_tts_initializing">
+Initializing voice engine…
+</string>
+    <string name="bookmark_tts_unsupported">
+Text-to-speech is not supported or not installed on this device
+</string>
+    <string name="bookmark_group_whatsapp">
+WhatsApp
+</string>
+    <string name="bookmark_group_reddit">
+Reddit
+</string>
+    <string name="bookmark_group_youtube">
+YouTube
+</string>
+    <string name="bookmark_group_twitter">
+Twitter / X
+</string>
+    <string name="bookmark_group_web">
+Web &amp; Articles
+</string>
+    <string name="bookmark_group_telegram">
+Telegram
+</string>
+    <string name="bookmark_group_files">
+Files &amp; Documents
+</string>
+    <string name="bookmark_vault_lock_group">
+Lock Group with Vault
+</string>
+    <string name="bookmark_vault_unlock_group">
+Unlock Group
+</string>
+    <string name="bookmark_vault_prompt">
+Authenticate to access locked bookmarks
+</string>
+    <string name="bookmark_empty_title">
+No Bookmarks Yet
+</string>
+    <string name="bookmark_empty_desc">
+Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+</string>
+    <string name="icon_feature_bookmark_hub">
+Bookmark Hub
+</string>
 </resources>
 
 

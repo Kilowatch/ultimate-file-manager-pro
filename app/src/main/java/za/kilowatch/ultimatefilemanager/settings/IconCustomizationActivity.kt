@@ -633,6 +633,7 @@ class IconCustomizationActivity : AppCompatActivity() {
             FeatureTile("sync_tile", R.string.sync_title, R.drawable.ic_sync),
             FeatureTile("advanced_sync_tile", R.string.advanced_sync_title, R.drawable.ic_sync_advanced),
             FeatureTile("smart_sort_tile", R.string.smart_sort_title, R.drawable.ic_sort),
+            FeatureTile("bookmark_hub_tile", R.string.bookmark_hub_title, R.drawable.ic_bookmark_hub),
             FeatureTile("terminal_tile", R.string.adb_terminal_title, R.drawable.ic_terminal),
             FeatureTile("network_tile", R.string.network_tile_title, R.drawable.ic_network),
             FeatureTile("about_tile", R.string.about_title, R.drawable.ic_about),

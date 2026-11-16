@@ -1,192 +1,283 @@
-# Implementation Plan: Torrent & Magnet Selective File Download & TV Focus Stability
+# Implementation Plan: Smart Bookmark Hub (Mobile Only)
 
-## Overview
-This plan defines the architectural design and implementation steps for:
-1. **Selective File & Folder Download Inspector**: Prior to initiating torrent or magnet downloads, inspect the torrent hierarchy in a scrollable, collapsible tree dialog. All items are selected by default, with one-tap "Select All" / "Deselect All", category filters (Videos, Audio, Docs, etc.), real-time size computation, and `libtorrent4j` priority masking (`Priority.DEFAULT` vs `Priority.IGNORE`).
-2. **Android TV Focus Stability & Transfer Action Dialog**: Fix the D-pad focus loss issue on Android TV where active downloads cause the RecyclerView to reset focus to the top toolbar every second. Implement granular payload updates, stable IDs, and a dedicated UFMStandard TV Transfer Action Dialog allowing users to pause, resume, open download folders, or delete transfers via D-pad remote.
+## Goal Description
+Implement the **Smart Bookmark Hub** for Ultimate File Manager Pro on mobile devices. The Bookmark Hub acts as a unified repository for shared links, media, files, and notes from external applications (WhatsApp, Reddit, YouTube, Twitter/X, Chrome, Telegram, Medium, etc.). 
 
-```mermaid
-flowchart TD
-    A["Add Torrent (.torrent file or magnet: link)"] --> B{"Input Type"}
-    B -->|".torrent File"| C["Parse TorrentInfo immediately"]
-    B -->|"magnet: Link"| D["Fetch Swarm Metadata (libtorrent4j fetchMagnet)"]
-    D -->|Received <20s| C
-    D -->|Timeout >20s| E["Timeout Dialog: Keep Waiting / Download All / Cancel"]
-    E -->|"Download All"| F["Queue Full Magnet Transfer"]
-    C --> G["Show Torrent Content Selection Dialog (UFMStandard)"]
-    G --> H["User selects/deselects files, folders, or filters"]
-    H --> I["Click Start Download"]
-    I --> J["Storage Preflight on Selected Bytes Only"]
-    J --> K["libtorrent4j SessionManager.download with Priority Array"]
-    K --> L["Download Active Transfers List"]
-    L --> M["Granular Payload Progress Updates (D-pad Focus Retained)"]
-    L --> N["D-pad OK / Click Transfer Card"]
-    N --> O["Show Transfer Action Dialog (Pause, Resume, Open Folder, Delete)"]
-```
+It introduces a third dedicated system share sheet target—**"Bookmark with UFM"**—alongside the existing "Open In..." and "Save to..." targets. Bookmarks are automatically organized into smart source groups, preserved permanently inside the app's private sandbox (`context.filesDir/bookmarks/media/`), presented in a visual dashboard with OpenGraph previews and thumbnails, and equipped with a distraction-free reader view, text-to-speech audio reader, biometric group locking, and export capabilities.
+
+The feature is accessible via a new tile in the Main Menu under the **"Organize"** category (`MainMenuViewModeManager.CATEGORY_ORGANIZE`) and is completely unrestricted with zero paywalls.
 
 ---
 
 ## User Review Required
-
 > [!IMPORTANT]
-> **Android TV Layout Split**: Android TV will use an **800dp wide two-column layout** (`dialog_torrent_file_selection_tv.xml`). The left column houses summary stats and action buttons, while the right column houses the scrollable file tree, ensuring instant D-pad accessibility without needing to scroll past hundreds of files.
+> **Strict Application Directory Sandbox Storage**:
+> All shared physical media, files, and downloaded thumbnails are stored strictly inside the application's internal private directory (`context.filesDir/bookmarks/media/` and `context.filesDir/bookmarks/thumbnails/`). 
+> - External file explorers, MTP, and Android MediaStore scanner cannot see or index these files.
+> - UFM's own general file browser and Recents list will explicitly ignore and not expose this directory.
+> - Files can only be exported to public user storage if the user explicitly triggers "Save to Storage" from the bookmark card.
 
-> [!IMPORTANT]
-> **Pre-download Scope Boundary**: File selection and priority masking happen prior to starting the transfer. Changing file priorities on already active in-progress downloads is deferred to a future milestone.
+> [!NOTE]
+> **Mobile Only Scope**:
+> In accordance with the specification, all activities, layouts, and tile registrations are built exclusively for Android mobile/tablet devices (`!DeviceUtils.isTvDevice(context)`). Android TV menus and share receivers do not display or load this feature.
+
+---
+
+## Key Decisions from /clarify
+1. **Default Tap Action on Links**: Tapping opens the **Distraction-Free Reader Mode** if readable article text is available, with a prominent button at the top to open in the user's external browser. If no readable article body exists, it launches directly in the external browser.
+2. **Duplicate Detection**: Sharing an existing link or file updates the bookmark's timestamp (bumping it to the top) and appends any new notes, preventing clutter.
+3. **Dynamic Auto-Grouping**: Shares from apps without predefined groups automatically create a new smart group titled after the app's display name (e.g., "Medium", "Threads", "Slack").
+4. **Deletion**: Deletion is immediate with a 5-second **Undo Snackbar**; once the snackbar times out, private files in `files/bookmarks/media/` and `files/bookmarks/thumbnails/` are permanently purged.
+5. **Private Sandbox Isolation**: Files remain strictly sandboxed in application storage and are invisible in standard file browsing unless explicitly exported via *"Save to Storage"*.
+
+---
+
+## Architecture & Data Flow
+
+```mermaid
+flowchart TD
+    subgraph ShareSheet["Android System Share Sheet"]
+        SS["External App Share\n(WhatsApp, Reddit, Web, etc.)"]
+    end
+
+    subgraph Receiver["Share Receiver & Quick Save"]
+        BRA["BookmarkReceiverActivity\n(ACTION_SEND / ACTION_SEND_MULTIPLE)"]
+        BS["BookmarkQuickSaveBottomSheet\n• Source App Detection\n• Auto-Selected Smart Group\n• Title & Notes Input\n• Duplicate Detection & Update\n• 1-Tap Save"]
+    end
+
+    subgraph Processing["Background Processing"]
+        Scraper["BookmarkMetadataScraper\n(OpenGraph Title, Description, Image,\nFavicon, Reader Text Parser)"]
+        Cloner["BookmarkFileCloner\n(Copies external content:// to\napp-private files/bookmarks/media/)"]
+    end
+
+    subgraph StorageLayer["Data & Persistence Layer"]
+        DB[("Room Database: ufm_bookmarks.db\n• BookmarkEntity\n• BookmarkGroupEntity")]
+        Sandbox["Private Sandbox Storage\n• files/bookmarks/media/\n• files/bookmarks/thumbnails/"]
+    end
+
+    subgraph UI["Mobile User Interface"]
+        Tile["Main Menu Organize Tile\n(StorageBrowserActivity)"]
+        Hub["BookmarkHubActivity\n• Filter Chips (All, Links, Media, Docs, Starred)\n• Group Tabs (WhatsApp, Reddit, Web, Custom)\n• Chronological Sort\n• Full-Text Search\n• Biometric Vault Lock\n• 5s Undo Snackbar on Delete"]
+        Reader["BookmarkReaderActivity\n• Clean Distraction-Free Typography\n• Text-to-Speech (TTS) Engine\n• 'Open in Browser' Action\n• Offline Reading Cache"]
+    end
+
+    SS --> BRA
+    BRA --> BS
+    BS --> Cloner
+    BS --> Scraper
+    Cloner --> Sandbox
+    Scraper --> Sandbox
+    Cloner --> DB
+    Scraper --> DB
+    Tile --> Hub
+    DB <--> Hub
+    Hub --> Reader
+```
 
 ---
 
 ## Proposed Changes
 
-### Component 1: Torrent Content Data Model & Hierarchy Parser
+### Component 1: Room Database & Data Models
+Create the persistence layer for bookmarks and groups inside package `za.kilowatch.ultimatefilemanager.bookmarks.db`.
 
-#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/TorrentFileNode.kt`
-- Data structure representing a node in the torrent file tree (either a folder or a file).
-- Contains:
-  - `id: Int`
-  - `path: String` (full relative path inside the torrent)
-  - `name: String` (leaf file or folder name)
-  - `sizeBytes: Long` (file size or accumulated directory size)
-  - `var isSelected: Boolean = true`
-  - `val isDirectory: Boolean`
-  - `val fileIndex: Int` (-1 for directories, >= 0 for leaf files corresponding to `TorrentInfo.files()`)
-  - `val children: MutableList<TorrentFileNode>`
-  - `var isExpanded: Boolean = true`
-- Companion object builder `fromTorrentInfo(torrentInfo: TorrentInfo): TorrentFileNode`:
-  - Parses flat file lists from `TorrentInfo` (e.g., `Season 1/Episode 01.mkv`) into nested nodes.
-  - Recursively aggregates folder sizes and child counts.
-  - Helper functions for recursive toggling:
-    - `setSelectionRecursive(selected: Boolean)`
-    - `isAllSelected(): Boolean`
-    - `isNoneSelected(): Boolean`
-    - `getSelectedBytes(): Long`
-    - `getSelectedFileIndices(): Set<Int>`
-    - `buildPriorityArray(totalFiles: Int): Array<Priority>`
+#### [NEW] [BookmarkEntity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/db/BookmarkEntity.kt)
+- Room entity for bookmarked items.
+- Fields: `id`, `title`, `url`, `filePath`, `thumbnailPath`, `faviconPath`, `contentType`, `sourcePackage`, `sourceAppName`, `groupId`, `groupName`, `notes`, `cachedArticleText`, `fileSizeBytes`, `isStarred`, `isRead`, `isLocked`, `createdAt`, `updatedAt`.
+- Indices on `groupId`, `contentType`, `sourcePackage`, `createdAt`, `isStarred`, `url`.
 
----
+#### [NEW] [BookmarkGroupEntity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/db/BookmarkGroupEntity.kt)
+- Room entity for smart and custom groups.
+- Fields: `id`, `name`, `iconResName`, `colorHex`, `isAutoGroup`, `associatedPackage`, `isLocked`, `sortOrder`, `createdAt`.
 
-### Component 2: Selective Torrent Engine Integration
+#### [NEW] [BookmarkDao.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/db/BookmarkDao.kt)
+- Reactive DAO queries using Kotlin `Flow` and `suspend` functions:
+  - `getAllBookmarks(sortOrder)`: Flow<List<BookmarkEntity>>
+  - `getBookmarksByGroup(groupId, sortOrder)`: Flow<List<BookmarkEntity>>
+  - `getBookmarksFiltered(groupId?, contentType?, isStarred?, query?, sortOrder)`: Flow<List<BookmarkEntity>>
+  - `getBookmarkById(id)`: suspend fun
+  - `getBookmarkByUrl(url)`: suspend fun (for duplicate detection)
+  - `insertBookmark(item)`, `updateBookmark(item)`, `deleteBookmark(item)`
+  - `getAllGroups()`: Flow<List<BookmarkGroupEntity>>
+  - `getGroupByPackage(pkg)`: suspend fun
+  - `getGroupById(id)`, `insertGroup(group)`, `updateGroup(group)`, `deleteGroup(group)`
+  - `getBookmarkCount()`: Flow<Int>
+  - `getGroupCount()`: Flow<Int>
 
-#### [MODIFY] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/TorrentEngine.kt`
-- Update `downloadTorrentFile(torrentFile: File, saveDir: File, filePriorities: Array<Priority>? = null)`:
-  - Pass `filePriorities` directly into `sessionManager.download(torrentInfo, saveDir, null, filePriorities, null, flags)`.
-- Implement `fetchMagnetMetadata(magnetUri: String, timeoutSeconds: Int = 20, onResult: (File?) -> Unit)`:
-  - Dispatches `sessionManager.fetchMagnet(magnetUri, timeoutSeconds, tempDir)` on an IO coroutine or worker thread.
-  - Caches the retrieved torrent bytes into a temporary `.torrent` file in `cacheDir/torrents/` and returns it for inspection.
-- Update `handleTorrentFinished(handle: TorrentHandle)`:
-  - Enforce zero-seeding compliance.
-  - Clean up any 0-byte boundary chunk files or empty directories left behind by deselected files (`Priority.IGNORE`).
-  - Scan only the downloaded files with `Priority > 0` into the Android MediaStore.
+#### [NEW] [BookmarkDatabase.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/db/BookmarkDatabase.kt)
+- Room database instance (`ufm_bookmarks.db`, version 1, `exportSchema = false`).
+- Companion singleton pattern matching `RecycleBinDatabase`.
 
-#### [MODIFY] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/DownloadTransferManager.kt`
-- Overload `startTorrentFileDownload`:
-  - Accept `selectedFileIndices: Set<Int>? = null` and `customTotalBytes: Long? = null`.
-  - Pass the calculated `effectiveTotalBytes` into `StoragePreflightValidator.validate`.
-  - Pass the generated `Priority[]` array to `TorrentEngine`.
-  - Update `TransferItem.totalBytes` to reflect the selected payload size.
+#### [NEW] [BookmarkRepository.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/db/BookmarkRepository.kt)
+- Repository coordinating database access, file operations, duplicate detection, and smart group provisioning.
+- `ensureDefaultGroups()`: Automatically provisions default groups on first run:
+  - WhatsApp (`com.whatsapp`)
+  - Reddit (`com.reddit.frontpage`)
+  - YouTube (`com.google.android.youtube`)
+  - Twitter / X (`com.twitter.android`)
+  - Web & Articles (Chrome/Browser)
+  - Telegram (`org.telegram.messenger`)
+  - Saved Files & Documents
+- `getOrCreateGroupForPackage(pkg, appName)`: Dynamically creates new auto-groups for unrecognized apps.
 
 ---
 
-### Component 3: File Selection UI & Adapters
+### Component 2: Background Scraper & Sandbox Cloner
+Create utilities for metadata extraction, offline article parsing, and file cloning inside `za.kilowatch.ultimatefilemanager.bookmarks.util`.
 
-#### [NEW] `app/src/main/res/layout/dialog_torrent_file_selection.xml` (Mobile)
-- Responsive UFMStandard glass layout (`@drawable/bg_dialog_glass`):
-  - Top Badge + Torrent Title + Summary Statistics (`Selected: X / Y files • A of B`).
-  - Destination Folder row with "Change" button.
-  - Search field (`TextInputLayout` OutlinedBox) + Category Filter Chips (All, Videos, Audio, Images, Archives, Docs).
-  - Quick action buttons: **Select All** and **Deselect All**.
-  - Scrollable `RecyclerView` with vertical scrollbars.
-  - Stacked action buttons: **Start Download** (Primary 50dp button) stacked on top of **Cancel** (44dp TextButton).
+#### [NEW] [BookmarkFileCloner.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/util/BookmarkFileCloner.kt)
+- Reads incoming `content://` or `file://` URIs and writes to `context.filesDir/bookmarks/media/` with secure UUID filenames and original extensions preserved.
+- Generates image/video thumbnails and writes to `context.filesDir/bookmarks/thumbnails/`.
+- Deletes associated physical files when a bookmark is deleted.
 
-#### [NEW] `app/src/main/res/layout/dialog_torrent_file_selection_tv.xml` (Android TV)
-- 800dp Widescreen Two-Column Split Layout:
-  - **Left Sidebar (290dp)**: Torrent Title, Selected Metrics Card, Storage/Location Card with Change button, Select All & Deselect All TV buttons, Primary Start Download TV button (`@drawable/selector_tv_button_yellow`), and Cancel button.
-  - **Right Pane (0dp, weight 1)**: Search input, Category filter row, full-height `RecyclerView` with D-pad navigation.
-
-#### [NEW] `app/src/main/res/layout/item_torrent_file.xml` & `item_torrent_folder.xml`
-- Custom checkable rows for files and collapsible folders.
-- Clean file type icons based on extension, formatted size, and D-pad TV focus selector.
-
-#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/TorrentFileSelectionAdapter.kt`
-- Tree-aware `RecyclerView.Adapter` rendering flat visible projections of `TorrentFileNode`.
-- Handles folder expansion/collapse animations.
-- Checkbox change listener triggering recursive parent/child updates and notifying dialog header metrics.
-- Text search and category filtering with instant diffing.
+#### [NEW] [BookmarkMetadataScraper.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/util/BookmarkMetadataScraper.kt)
+- Background coroutine utility to scrape OpenGraph metadata for URLs:
+  - Connects using `HttpURLConnection` with desktop/mobile User-Agent.
+  - Extracts `<meta property="og:title">`, `<meta property="og:description">`, `<meta property="og:image">`, `<link rel="icon">`.
+  - Downloads cover image and favicon to `context.filesDir/bookmarks/thumbnails/`.
+  - Extracts clean readable article body using readability container heuristic (strips ads, scripts, nav, footer) and caches text for offline reading.
 
 ---
 
-### Component 4: Android TV Focus Fix & Transfer Action Dialog
+### Component 3: Share Receiver & Quick Save Bottom Sheet
+Create the external share handler and confirmation sheet inside `za.kilowatch.ultimatefilemanager.bookmarks.ui`.
 
-#### [MODIFY] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/DownloadTransferAdapter.kt`
-- **Stable IDs**: Enable `setHasStableIds(true)` using hash of transfer item ID.
-- **Granular Payload Updates**:
-  - Replace whole-list `notifyDataSetChanged()` with item-level `notifyItemChanged(pos, PAYLOAD_PROGRESS)`.
-  - In `onBindViewHolder(holder, pos, payloads)`, if `PAYLOAD_PROGRESS` is present, update only progress bar, percent text, speed/ETA text without recreating the view or touching focus.
-- **Click & D-Pad OK Listener**:
-  - Add `onItemClicked: (DownloadTransferManager.TransferItem) -> Unit`.
-  - Pressing D-pad OK on TV or tapping the card on mobile triggers `onItemClicked`.
+#### [NEW] [BookmarkReceiverActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/ui/BookmarkReceiverActivity.kt)
+- Registered in `AndroidManifest.xml` with label `@string/share_target_bookmark` ("Bookmark with UFM").
+- Accepts `ACTION_SEND` and `ACTION_SEND_MULTIPLE` for `text/*` and `*/*`.
+- Extracts shared URLs, text, and stream URIs.
+- Resolves sending package using `callingPackage` and package manager.
+- Shows `BookmarkQuickSaveBottomSheet`.
 
-#### [NEW] `app/src/main/res/layout/dialog_transfer_action.xml` & `dialog_transfer_action_tv.xml`
-- UFMStandard glass dialog displaying:
-  - Transfer Icon, Title, Status Badge, Download Progress, Speed, ETA, Peers, Seeds, Save Path.
-  - Action button stack:
-    - **Pause / Resume** button.
-    - **Open Download Folder** button.
-    - **Delete / Remove Transfer** button.
-    - **Close / Dismiss** button.
-
-#### [MODIFY] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/DownloadManagerActivity.kt`
-- Hook `onItemClicked` in `DownloadTransferAdapter` to show `showTransferActionDialog(item)`.
-- When Delete is tapped, show dual options:
-  1. *"Remove Transfer Only (Keep Files)"* -> `DownloadTransferManager.cancelTransfer(item.id, deleteFiles = false)`
-  2. *"Remove Transfer & Delete Files"* -> `DownloadTransferManager.cancelTransfer(item.id, deleteFiles = true)`
-- Connect `.torrent` picker, file viewer router, and magnet input dialog to launch `showTorrentFileSelectionDialog(torrentInfo, torrentFile, targetDir)`.
-- Implement magnet metadata loading dialog with 20s timeout prompt.
+#### [NEW] [BookmarkQuickSaveBottomSheet.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/ui/BookmarkQuickSaveBottomSheet.kt)
+- Glassmorphism bottom sheet (`R.layout.bottom_sheet_bookmark_quick_save`).
+- Displays:
+  - Source app icon and label (e.g. "Shared from WhatsApp").
+  - Content preview (thumbnail, title, link/file size).
+  - Target group selector dropdown with auto-selected smart group.
+  - Optional title edit and note input.
+  - Duplicate check: If URL/file already exists, shows notice: *"Already bookmarked — will update note & move to top"*.
+  - "Save Bookmark" primary button with auto-dismiss toast.
 
 ---
 
-### Component 5: Localization & Strings
+### Component 4: Bookmark Hub Main Screen
+Create the main interface for browsing, searching, filtering, and managing bookmarks inside `za.kilowatch.ultimatefilemanager.bookmarks.ui`.
 
-#### [MODIFY] `app/src/main/res/values/strings.xml`
-- Add translatable strings:
-  - `torrent_select_all`, `torrent_deselect_all`, `torrent_selected_summary`
-  - `torrent_fetching_metadata`, `torrent_metadata_timeout_title`, `torrent_metadata_timeout_msg`
-  - `torrent_keep_waiting`, `torrent_download_all_direct`
-  - `transfer_action_title`, `transfer_action_pause`, `transfer_action_resume`, `transfer_action_open_folder`
-  - `transfer_action_delete_title`, `transfer_delete_keep_files`, `transfer_delete_remove_files`
-  - Category filter labels: `filter_all`, `filter_videos`, `filter_audio`, `filter_images`, `filter_archives`, `filter_docs`
+#### [NEW] [BookmarkHubActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/ui/BookmarkHubActivity.kt)
+- Main screen adhering to `UFMStandard`:
+  - 56dp frosted glass toolbar with back button, title, search action, sort action, export action, and multi-select toggle.
+  - Horizontal group tabs / chips (All, WhatsApp, Reddit, Web, Custom Groups, + Add Group).
+  - Horizontal content type filter chips (All, Links, Media, Documents, Notes, Starred).
+  - Sort menu (Newest to Oldest, Oldest to Newest, Title A-Z, Size).
+  - Search bar with live reactive filtering.
+  - Empty state with modern illustration and instructions.
+- RecyclerView using `BookmarkAdapter`.
+- Deletion flow: Immediate removal with 5-second **Undo Snackbar** before purging files from private storage.
+- Long press multi-select mode:
+  - Batch move to group.
+  - Batch delete.
+  - Batch export (HTML Netscape bookmarks / Markdown).
+- Vault lock integration: Checks `isLocked` on group; invokes `BiometricPrompt` before displaying sensitive items.
+
+#### [NEW] [BookmarkAdapter.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/ui/BookmarkAdapter.kt)
+- Glassmorphism item cards (`R.layout.item_bookmark_card` and `R.layout.item_bookmark_card_grid`).
+- Visual components:
+  - OpenGraph cover image / file thumbnail loaded via Coil.
+  - Title and domain / file size subtitle.
+  - Source app badge icon.
+  - Star toggle button.
+  - Tap card: Opens Reader Mode if readable text cached; opens browser or UFM viewer otherwise.
+  - 3-dot overflow menu: Open Original, Read Mode, Copy Link, Save to Storage (Export), Move, Delete.
+
+---
+
+### Component 5: Distraction-Free Reader Mode & Text-to-Speech
+Create the article reader inside `za.kilowatch.ultimatefilemanager.bookmarks.ui`.
+
+#### [NEW] [BookmarkReaderActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/ui/BookmarkReaderActivity.kt)
+- Pure typography reading screen (`R.layout.activity_bookmark_reader`):
+  - Reading container with adjustable margins and line height.
+  - Article title, domain, publication date, and clean body text.
+  - Top header action: *"Open in Browser"* to open live URL in Chrome/browser.
+  - Quick action toolbar:
+    - Text size adjustment (A- / A+).
+    - Font style toggle (Serif vs Sans).
+    - Theme switcher: Light (Paper), Warm Sepia, Dark (OLED).
+    - Star & Mark as Read toggles.
+  - **Text-to-Speech (TTS) Player Bar**:
+    - Android `TextToSpeech` integration.
+    - Play / Pause / Stop controls.
+    - Speed selector (0.75x, 1x, 1.25x, 1.5x, 2x).
+    - Paragraph progress indicator.
+
+---
+
+### Component 6: Main Menu Tile & Registration Checklist
+
+#### [MODIFY] [StorageItem.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageItem.kt)
+- Add `val isBookmarkHubTile: Boolean = false`.
+- Include `isBookmarkHubTile` in `isHideable` property.
+
+#### [MODIFY] [StorageAdapter.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAdapter.kt)
+- In `categorizeItem()`, map `item.isBookmarkHubTile` to `MainMenuViewModeManager.CATEGORY_ORGANIZE`.
+
+#### [MODIFY] [StorageBrowserActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageBrowserActivity.kt)
+- In `buildAllKnownTiles()`: Add `isBookmarkHubTile = true`.
+- In `loadStorageVolumes()`: When `!DeviceUtils.isTvDevice(this)`, instantiate and add `StorageItem(id = "bookmark_hub_tile", label = getString(R.string.bookmark_hub_title), iconRes = R.drawable.ic_bookmark_hub, isBookmarkHubTile = true)`.
+- In `getStorageSubtitle()`: Return formatted bookmark count.
+- In tile click router: Launch `BookmarkHubActivity`.
+
+#### [MODIFY] [TileOrderManager.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/TileOrderManager.kt)
+- Include `isBookmarkHubTile` in `isFeatureTile()` check.
+
+#### [MODIFY] [IconCustomizationManager.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/util/IconCustomizationManager.kt)
+- Add `R.drawable.ic_bookmark_hub` to `ALL_BUILTIN_ICONS`.
+
+#### [NEW] [ic_bookmark_hub.xml](file:///F:/Share/UFM/app/src/main/res/drawable/ic_bookmark_hub.xml)
+- Vector drawable icon for Bookmark Hub.
+
+#### [MODIFY] [strings.xml](file:///F:/Share/UFM/app/src/main/res/values/strings.xml)
+- Add all required localized strings:
+  - `bookmark_hub_title` ("Smart Bookmarks")
+  - `bookmark_hub_subtitle` ("Organize saved links, media & shares")
+  - `share_target_bookmark` ("Bookmark with UFM")
+  - Group names, filter chips, reader mode labels, TTS controls, and export options.
+
+#### [MODIFY] [AndroidManifest.xml](file:///F:/Share/UFM/app/src/main/AndroidManifest.xml)
+- Register `BookmarkReceiverActivity` with `ACTION_SEND` and `ACTION_SEND_MULTIPLE`.
+- Register `BookmarkHubActivity` and `BookmarkReaderActivity`.
 
 ---
 
 ## Verification Plan
 
-### Automated Tests
-1. **Tree Parsing & Selection Unit Tests**:
-   - Create `TorrentFileNodeTest.kt` verifying:
-     - Multi-level path parsing into folder hierarchies.
-     - Recursive folder selection and deselection.
-     - Parent state calculation (All selected, None selected, Partial).
-     - Byte accumulation and file priority array generation.
-   - Run:
-     ```powershell
-     ./gradlew testDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.download.*"
-     ```
-
-2. **Storage Preflight Unit Tests**:
-   - Verify `StoragePreflightValidator` correctly assesses space requirements when only a subset of files is chosen.
+### Automated Build Verification
+1. **Compilation Check**:
+   ```powershell
+   ./gradlew assembleDebug
+   ```
+2. **Room KSP Verification**:
+   Verify Room compiler generates DAO and database classes cleanly.
 
 ### Manual Verification
-1. **Selective Torrent Download on Mobile**:
-   - Open a multi-file `.torrent` (e.g. 5 files).
-   - Verify selection dialog appears with all 5 files checked.
-   - Uncheck 3 files, verify summary displays `Selected: 2 / 5 files` and updated size.
-   - Click "Start Download". Verify download completes, only the 2 chosen files exist on disk, and MediaStore scans only those 2 files.
-2. **Magnet Link Swarm Fetch**:
-   - Paste a magnet URL. Verify "Fetching metadata..." dialog displays.
-   - On resolution, verify selection dialog opens with complete file tree.
-3. **Android TV Remote Navigation & Focus**:
-   - On Android TV, start an active torrent transfer.
-   - Navigate D-pad focus down into the transfers list.
-   - Observe focus over 10 seconds: verify focus **stays firmly on the selected transfer** without jumping to the top toolbar every second.
-   - Press **D-pad OK** on the transfer card: verify Transfer Action Dialog opens with Pause, Open Folder, and Remove options.
-   - Test pausing, resuming, and deleting from the TV dialog.
+1. **Share Sheet Target**:
+   - Share URL from browser -> verify "Bookmark with UFM" appears and opens Quick Save bottom sheet.
+   - Share Reddit post -> verify auto-detected "Reddit" group.
+   - Share WhatsApp media -> verify auto-detected "WhatsApp" group and physical media cloned into `files/bookmarks/media/`.
+2. **Sandbox Isolation**:
+   - Verify files inside `context.filesDir/bookmarks/media/` are not visible in UFM's general file browser or gallery.
+   - Delete original photo in WhatsApp -> verify bookmark in UFM Bookmark Hub remains fully playable and intact.
+3. **Organize Tile**:
+   - Open UFM Main Menu on mobile -> scroll to "Organize" category -> verify "Smart Bookmarks" tile appears.
+   - Tap tile -> opens `BookmarkHubActivity`.
+4. **Sorting & Filtering**:
+   - Tap "Links" / "Media" / "Docs" filter chips -> items filter accordingly.
+   - Test "Newest to Oldest" vs "Oldest to Newest" chronological sort.
+5. **Reader Mode & TTS**:
+   - Open a bookmarked article in Reader View -> verify clean typography.
+   - Tap TTS Play button -> verify Android reads aloud at various speeds (1x, 1.5x).
+6. **Vault Lock**:
+   - Lock a bookmark group -> verify biometric/PIN prompt appears.
+7. **Export**:
+   - Export bookmarks to HTML -> import into Chrome -> verify bookmarks import cleanly.

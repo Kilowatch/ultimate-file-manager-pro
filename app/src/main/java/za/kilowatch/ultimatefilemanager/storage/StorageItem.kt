@@ -55,6 +55,7 @@ data class StorageItem(
     val isScannerTile: Boolean = false,
     val isDownloadsTile: Boolean = false,
     val isSmartSortTile: Boolean = false,
+    val isBookmarkHubTile: Boolean = false,
     val isRecentFilesTile: Boolean = false,
     val isSupportTile: Boolean = false,
     val isAddStorageLocationTile: Boolean = false,
@@ -107,7 +108,7 @@ data class StorageItem(
          isFavoriteTile || isTwinWindowTile || isTerminalTile || isShizukuTile || isRootTile ||
          isOnlineStoragesTile || isFileServerTile || isAboutTile ||
          isRecycleBinTile || isLegalTile || isRateUsTile || isTipJarTile ||
-         isNotepadTile || isScannerTile || isDownloadsTile || isSmartSortTile || isSupportTile ||
+         isNotepadTile || isScannerTile || isDownloadsTile || isSmartSortTile || isBookmarkHubTile || isSupportTile ||
          isRecentFilesTile || isAddStorageLocationTile || isOtherStorageTile || isDocumentProviderTile || isSafCustomLocation))
 
     /**
@@ -123,7 +124,7 @@ data class StorageItem(
         !isTipJarTile && !isSyncTile && !isAdvancedSyncTile && !isTwinWindowTile &&
         !isShizukuTile && !isTerminalTile && !isFileServerTile && !isSupportTile &&
         !isAboutTile && !isNotepadTile && !isRecycleBinTile && !isScannerTile &&
-        !isDownloadsTile && !isSmartSortTile && !isOnlineStoragesTile && !isFavoriteTile &&
+        !isDownloadsTile && !isSmartSortTile && !isBookmarkHubTile && !isOnlineStoragesTile && !isFavoriteTile &&
         !isRecentFilesTile && !isSettingsTile && !isAddStorageLocationTile &&
         !isOtherStorageTile && !isRootTile &&
         (!isUnmounted && (mountPath.isNotEmpty() || isSafCustomLocation || networkShare != null || onlineStorage != null || isDocumentProviderTile))

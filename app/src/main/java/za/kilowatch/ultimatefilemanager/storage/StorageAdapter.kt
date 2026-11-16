@@ -157,7 +157,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
             // Category 4: Organize
             item.isCustomTile || item.isFavoriteTile || item.isSearchTile ||
-            item.isSmartSortTile || item.isAnalyzerTile || item.isRecycleBinTile -> MainMenuViewModeManager.CATEGORY_ORGANIZE
+            item.isSmartSortTile || item.isBookmarkHubTile || item.isAnalyzerTile || item.isRecycleBinTile -> MainMenuViewModeManager.CATEGORY_ORGANIZE
 
             // Category 5: Utilities
             item.isScannerTile || item.isNotepadTile || item.isAppsTile ||

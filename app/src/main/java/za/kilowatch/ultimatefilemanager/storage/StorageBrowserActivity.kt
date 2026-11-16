@@ -590,6 +590,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             items.add(StorageItem(id = "search_tile", label = context.getString(R.string.search_title), iconRes = R.drawable.ic_search, totalBytes = 0, usedBytes = 0, mountPath = "", isSearchTile = true))
             items.add(StorageItem(id = "analyzer_tile", label = context.getString(R.string.analyzer_title), iconRes = R.drawable.ic_analyzer, totalBytes = 0, usedBytes = 0, mountPath = "", isAnalyzerTile = true))
             items.add(StorageItem(id = "smart_sort_tile", label = context.getString(R.string.smart_sort_title), iconRes = R.drawable.ic_sort, totalBytes = 0, usedBytes = 0, mountPath = "", isSmartSortTile = true))
+            if (!za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
+                items.add(StorageItem(id = "bookmark_hub_tile", label = context.getString(R.string.bookmark_hub_title), iconRes = R.drawable.ic_bookmark_hub, totalBytes = 0, usedBytes = 0, mountPath = "", isBookmarkHubTile = true, subtitle = context.getString(R.string.bookmark_hub_subtitle)))
+            }
             items.add(StorageItem(id = "vault_tile", label = context.getString(R.string.vault_title), iconRes = R.drawable.ic_lock, totalBytes = 0, usedBytes = 0, mountPath = "", isVaultTile = true))
 
             // APK Extracts (only if folder exists and non-empty)
@@ -2570,6 +2573,7 @@ class StorageBrowserActivity : AppCompatActivity() {
              item.isScannerTile                 -> getString(R.string.scanner_tile_subtitle)
              item.isDownloadsTile               -> getString(R.string.download_manager_subtitle)
             item.isSmartSortTile               -> getString(R.string.smart_sort_tile_subtitle)
+            item.isBookmarkHubTile             -> getString(R.string.bookmark_hub_subtitle)
             item.isTerminalTile                 -> getString(R.string.adb_terminal_subtitle)
             item.isPairedDevicesTile            -> getString(R.string.manage_links_with_other_devices)
             item.isSettingsTile                 -> getString(R.string.font_size_tile_subtitle)
@@ -2942,6 +2946,10 @@ class StorageBrowserActivity : AppCompatActivity() {
             item.isSmartSortTile -> {
                 startActivity(Intent(this, SmartSortActivity::class.java))
                 showPremiumSnackbar(getString(R.string.opening_smart_sort))
+            }
+            item.isBookmarkHubTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.bookmarks.ui.BookmarkHubActivity::class.java))
+                showPremiumSnackbar(getString(R.string.bookmark_hub_title))
             }
             item.isTvRemoteTile -> {
                 if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.P) {
@@ -5709,6 +5717,19 @@ class StorageBrowserActivity : AppCompatActivity() {
                     mountPath = "",
                     isSmartSortTile = true
                 ))
+
+                // Add the Smart Bookmark Hub tile (Mobile only)
+                if (!isTv) {
+                    storageItems.add(StorageItem(
+                        id = "bookmark_hub_tile",
+                        label = getString(R.string.bookmark_hub_title),
+                        iconRes = R.drawable.ic_bookmark_hub,
+                        totalBytes = 0,
+                        usedBytes = 0,
+                        mountPath = "",
+                        isBookmarkHubTile = true
+                    ))
+                }
 
                 // Add the Network Shares tile â€” above SAF tile
                 storageItems.add(StorageItem(

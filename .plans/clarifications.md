@@ -1,77 +1,50 @@
-# Clarifications: Selective File/Folder Download & Content Inspector
+# Clarifications: Smart Bookmark Hub (Mobile Only)
 
-The following functional and design clarifications have been established for the Torrent & Magnet Selective File/Folder Download Inspector feature:
-
----
-
-### Clarification 1: Magnet Metadata Resolution Timeout & Fallback Flow
-- **Question**: When fetching metadata for a Magnet link takes longer than 20 seconds, how should the app handle it?
-- **Decision**: **Timeout Dialog with 3 Actions**:
-  - If swarm metadata resolution exceeds 20 seconds, display a UFMStandard dialog offering:
-    1. **Keep Waiting**: Extends timeout by an additional 30 seconds while continuing swarm peer search.
-    2. **Download All Directly**: Immediately bypasses metadata inspection and queues the magnet download in `DownloadTransferManager` with all files selected (default full download).
-    3. **Cancel**: Aborts swarm metadata fetch and cleans up temporary session resources.
+The following architectural, functional, and user-experience clarifications have been established for the Smart Bookmark Hub feature:
 
 ---
 
-### Clarification 2: Folder Tree Hierarchy & Collapsible Nodes
-- **Question**: How should multi-level nested folders be presented in the scrollable selection list?
-- **Decision**: **Collapsible Folder Cards with Hierarchical Indentation**:
-  - Folders render with collapsible toggle arrows, folder icon, folder name, child item count, total folder size, and a folder-level master checkbox.
-  - Tapping the expand/collapse indicator toggles visibility of nested children, keeping multi-layer or high-file-count torrents tidy and performant.
-  - Tapping the folder checkbox recursively checks/unchecks all descendant files and subfolders.
-  - Folder checkbox visually indicates state: checked (all children selected), unchecked (0 children selected), or partial/indeterminate (some children selected).
+### Clarification 1: Default Tap Behavior on Web Links
+- **Question**: When tapping a saved web bookmark in the Bookmark Hub, what should be the default action?
+- **Decision**: **Open in Reader Mode first if article text is available**:
+  - If clean article body text was extracted during scraping, tapping the card opens the **Distraction-Free Reader Mode** immediately.
+  - The reader screen features a prominent top button: *"Open in Browser"* allowing the user to view the original live webpage in Chrome/default browser at any time.
+  - If the link has no extracted article body (e.g. video page, home page, web tool), it opens directly in the external browser.
 
 ---
 
-### Clarification 3: Search Bar & File-Type Category Filter Chips
-- **Question**: Should the selection dialog include quick filter chips or a search bar for torrents with dozens or hundreds of files?
-- **Decision**: **Search Bar + Quick File-Type Filter Chips**:
-  - The dialog includes an interactive search input (`TextInputEditText` with clear button) allowing real-time filtering of items by name.
-  - Quick filter chips are provided: **All**, **Videos**, **Audio**, **Images**, **Archives**, **Docs/Subtitles**.
-  - Tapping a chip filters the list view and allows targeted actions (e.g., selecting only video files or deselecting sample/doc files).
+### Clarification 2: Duplicate Share Handling
+- **Question**: How should duplicate shares (sharing the same URL or file twice) be handled?
+- **Decision**: **Detect and Update Existing Bookmark**:
+  - If an incoming shared URL or identical file hash is already in the database:
+    - Update its `updatedAt` timestamp so it moves to the top of the chronological feed.
+    - If a new note was typed in the quick save sheet, append or update the existing note.
+    - Display confirmation: *"Bookmark updated (already saved)"*.
+  - Prevents cluttering the database with duplicate entries while preserving user notes.
 
 ---
 
-### Clarification 5: Android TV D-Pad Focus Retention on Active Transfers
-- **Problem**: In `DownloadManagerActivity` on TV, 1-second progress ticks previously called `adapter.submitList()` with full `notifyDataSetChanged()`, recycling active ViewHolders and resetting D-pad focus to the top toolbar/sidebar every second.
-- **Decision**: **Granular Payload Updates & Stable IDs**:
-  - Replace full list dataset resets with granular item payload updates (`notifyItemChanged(pos, PAYLOAD_PROGRESS)` or DiffUtil with stable IDs).
-  - Existing focused ViewHolder remains focused continuously without jumping.
-  - Set explicit directional navigation rules (`nextFocusLeft`, `nextFocusRight`) between the sidebar and the transfers list.
+### Clarification 3: Unrecognized & Third-Party Apps
+- **Question**: When an item is shared from an app without a predefined smart group (e.g., Medium, Threads, Slack, Pocket Casts), what should happen?
+- **Decision**: **Dynamically Create an Auto-Group Using the App's Display Name**:
+  - Resolve the sender's package name and fetch its human-readable application label via `PackageManager` (e.g., "Medium", "Threads", "Slack").
+  - Dynamically provision a smart auto-group for that app with `isAutoGroup = true`, linking its package name and assigning an accent color.
+  - Subsequent shares from that app automatically route to this newly created group.
 
 ---
 
-### Clarification 6: Transfer Action Dialog & Platform Parity (Mobile & TV)
-- **Question**: How should tapping a transfer card behave on mobile touchscreens vs Android TV?
-- **Decision**: **Unified Transfer Action Dialog across Mobile and TV**:
-  - Tapping any transfer card on Mobile or pressing D-pad OK on TV opens the **Transfer Action Dialog** (`dialog_transfer_action.xml` on mobile, `dialog_transfer_action_tv.xml` on TV).
-  - The small inline play/pause icon button on the card remains available for instant 1-tap pausing/resuming without opening the dialog.
-  - The dialog displays complete transfer overview, stats (ETA, peers, seeds, file path), Pause/Resume toggle, Open Folder, and Remove/Delete.
+### Clarification 4: Deletion & File Cleanup Strategy
+- **Question**: When deleting a bookmark with private cloned media/files, how should deletion behave?
+- **Decision**: **Immediate Deletion with a 5-Second Undo Snackbar**:
+  - Tapping Delete removes the item from the UI immediately.
+  - Displays a glassmorphic Snackbar: *"Bookmark deleted — [Undo]"* for 5 seconds.
+  - If "Undo" is tapped, restore the database item and keep files.
+  - If the Snackbar times out or is dismissed, permanently delete the private files from `context.filesDir/bookmarks/media/` and `context.filesDir/bookmarks/thumbnails/`.
 
 ---
 
-### Clarification 7: Transfer Deletion Options & Sub-Prompt Flow
-- **Question**: When deleting/canceling a transfer from the Action Dialog, how should file deletion options be presented?
-- **Decision**: **Dual Distinct Glass Action Buttons**:
-  - Tapping "Delete / Remove Transfer" presents two distinct glass options:
-    1. **Remove Transfer Only (Keep Downloaded Files)**
-    2. **Remove Transfer & Delete Downloaded Files**
-    - Stacked with **Cancel** below.
-
----
-
-### Clarification 8: Android TV Two-Column Selection Dialog Layout
-- **Question**: On Android TV, what layout structure should the Torrent Content Selection Dialog use?
-- **Decision**: **Two-Column Split Layout (`800dp` width)**:
-  - **Left Sidebar**: Displays torrent title, total/selected size metrics, destination folder, free space, Select All / Deselect All buttons, and Start Download / Cancel buttons.
-  - **Right Pane**: Displays the full-height scrollable file and folder tree with search and category filters.
-  - Provides a desktop-class, widescreen experience optimized for 16:9 television screens, minimizing vertical scrolling and keeping action controls immediately accessible.
-
----
-
-### Clarification 9: Scope Boundary for In-Progress File Priority Modification
-- **Question**: Should the Transfer Action Dialog also allow re-selecting files for torrents that are already actively downloading?
-- **Decision**: **Pre-Download Selection Only for this Phase**:
-  - File/folder selection and priority assignment happen strictly pre-download before transfers begin.
-  - The Transfer Action Dialog manages Pause, Resume, Open Folder, and Remove/Delete. Dynamic runtime modification of file priorities on already active transfers is deferred.
+### Clarification 5: Private Sandbox Isolation & File Browsing Exclusion
+- **Decision**: 
+  - All media, documents, and thumbnail files remain strictly isolated inside `context.filesDir/bookmarks/media/` and `context.filesDir/bookmarks/thumbnails/`.
+  - UFM's general file browsing activities (`FileBrowserActivity`, `FileBrowserFragment`, `StorageBrowserActivity` Recents) will strictly filter out and never expose this internal folder.
+  - Users can explicitly copy/export files out into public storage via the card overflow menu: *"Save to Storage"*.

@@ -1,46 +1,51 @@
-# Reddit Post: New Feature Added - Selective Torrent Downloads and TV Transfer Controls
+# Reddit Post: New Feature Added - Smart Bookmark Hub with Distraction-Free Reader, Auto-Grouping & Offline Media Preservation
 
 ## Title
-New Feature Added - Selective Torrent Downloads and TV Transfer Controls
+New Feature Added - Smart Bookmark Hub with Distraction-Free Reader, Auto-Grouping & Offline Media Preservation
 
 ## Platform
-TV and Mobile
+Mobile Only
 
 ## Post
 
 Good Day Community,
 
 ### What's new
-I added a selective download inspector for torrent and magnet transfers.
-I also resolved an issue on Android TV where active download progress updates interrupted remote focus.
-* When you open a torrent file or magnet link, you can now preview the complete folder tree before downloading.
-* You can pick exactly which files you want and exclude the rest.
-* The app calculates the selected download size in real time so you only spend bandwidth and storage on what you need.
-* This feature is available on both the mobile and TV versions of the app.
+I added a full-featured **Smart Bookmark Hub** to Ultimate File Manager Pro on mobile devices.
+It functions as a central repository for links, articles, media, files, and notes shared from any app on your device (WhatsApp, Reddit, YouTube, Chrome, Telegram, Twitter/X, and more).
+
+* **New Share Target ("Bookmark with UFM")**: Whenever you share content on Android, you will now see **"Bookmark with UFM"** alongside UFM's existing "Open In..." and "Save to..." options.
+* **Smart Auto-Grouping**: The app automatically identifies where the share came from and routes it to dedicated smart groups (e.g., *WhatsApp*, *Reddit*, *YouTube*, *Web & Articles*, *Telegram*, or *Files*). You can also create unlimited custom collections with your own colors and icons.
+* **Permanent Offline Media Sandbox**: When you share photos, videos, voice clips, or PDFs (from WhatsApp, Telegram, etc.), UFM automatically clones a physical copy into the app's internal sandbox. If the original message is deleted or the messaging app clears its temporary cache, your bookmark and its preview remain 100% playable and intact.
+* **Strict Privacy & Isolation**: Cloned bookmark files are kept strictly inside the app directory. They are hidden from external galleries, MTP, and Android MediaStore, and are intentionally omitted from UFM's regular file browsing lists. If you ever want a copy in your device's public storage, you can export it with one tap via "Save to Storage".
+* **Rich Link Previews**: Web links automatically scrape page titles, descriptions, favicons, and high-resolution cover images for a clean, visual card dashboard.
+* **Distraction-Free Reader Mode & Text-to-Speech (TTS)**: Bookmarked articles can be opened in a clean, clutter-free reader view that strips ads, cookies, and pop-ups. Includes Light, Sepia, and Dark themes, font sizing, and a built-in Android Text-to-Speech engine so you can listen to articles aloud with speed controls (0.75x–2.0x).
+* **Search, Sort & Filters**: Sort chronologically (newest to oldest, oldest to newest), sort alphabetically or by file size, filter by type (Links, Media, Documents, Notes, Starred), and search across titles, URLs, and notes in real time.
+* **Biometric Vault Protection & Export**: You can lock sensitive bookmark collections behind fingerprint or PIN authentication using UFM's Vault. You can also export your bookmarks at any time to standard browser HTML (importable into Chrome, Firefox, Safari) or clean Markdown.
 
 ### How to use it
-* Open the Download Manager screen in the app.
-* Add a transfer by choosing a torrent file or entering a magnet link.
-* For magnet links, the app will connect to the swarm to fetch the file structure first.
-* Once the inspector appears, you will see the entire hierarchy of folders and files.
-* All files are selected by default.
-* You can tap Deselect All to clear the selection, or Select All to check everything.
-* Use the search bar at the top to quickly find specific files by name.
-* You can also use the category filter chips to narrow the view to videos, audio, images, archives, or documents.
-* Tap any folder row to toggle that folder and all of its contents together.
-* On Android TV, use the D-pad remote to move through the tree.
-* Press D-pad Right to expand a folder, or press D-pad Left to collapse it.
-* You can change the destination folder right from the inspector by selecting the save location card.
-* When you are ready, select Start Download to begin fetching only your chosen items.
-* Once transfers are running, you can click or press OK on any active transfer to open its action dialog.
-* From that dialog, you can pause or resume the download, jump directly to its folder in the file browser, or remove it.
+1. **Sharing Content**:
+   * In any app (such as WhatsApp, Reddit, Chrome, or YouTube), tap **Share** and select **"Bookmark with UFM"**.
+   * A glass bottom sheet will slide up displaying the detected sender app, preview, and auto-selected group.
+   * Edit the title or add an optional note if you wish, then tap **Save Bookmark**.
+   * If you share an item you have already bookmarked, UFM will detect the duplicate, update the timestamp to bump it to the top of your feed, and append any new notes.
 
-### What changed
-* On Android TV, active downloads previously caused the remote focus to jump back to the top toolbar every second.
-* That happened because progress updates were refreshing the entire list on every tick.
-* I updated the list so it refreshes progress values in place without disturbing the focused item.
-* Your remote focus now stays right where you leave it while downloads are running.
-* I also fixed an issue where selecting Open Download Folder would take you to the root of storage instead of the actual download location.
-* It now takes you straight to the folder where your files are being saved.
+2. **Accessing the Bookmark Hub**:
+   * Open UFM on your phone or tablet.
+   * On the Main Menu, scroll to the **"Organize"** category and tap the new **"Smart Bookmarks"** tile.
+   * Switch between list view and 2-column grid view using the view toggle in the header.
+   * Use the group chips at the top to filter by sender (e.g., view only Reddit posts or WhatsApp media), or tap "+ Create New Group" to make custom folders.
+   * Use the filter chips beneath to jump between Links, Media, Documents, Notes, or Starred items.
+
+3. **Reading & Listening**:
+   * Tapping any saved article opens the **Distraction-Free Reader Mode**.
+   * Tap the **Listen Aloud (Play)** button in the bottom audio bar to have your phone read the article to you while you commute or multitask.
+   * Adjust reading speed with the speed button (1.0x, 1.25x, 1.5x, 2.0x).
+   * Tap "Open in Browser" at the top whenever you want to visit the original live page.
+
+4. **Managing & Exporting**:
+   * Tap the 3-dot menu on any card to move groups, copy links, read, or export files to your device's Downloads folder.
+   * Deleting an item removes it immediately with a 5-second **Undo Snackbar** before the local files are permanently cleared.
+   * Long-press any card to enter multi-select mode to batch move, batch delete, or export your bookmarks to Netscape HTML or Markdown.
 
 Thank you and kind regards
