@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rowCollection"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="10dp"
+    android:background="@drawable/bg_reindex_option_card"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_marginBottom="6dp">
+
+    <!-- Squircle Icon Container -->
+    <FrameLayout
+        android:id="@+id/iconContainer"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginEnd="10dp">
+
+        <ImageView
+            android:id="@+id/imgGroupIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_folder"
+            app:tint="?attr/colorPrimary" />
+    </FrameLayout>
+
+    <!-- Details -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtGroupName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-bold"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/txtGroupStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="11sp"
+            android:singleLine="true"
+            android:ellipsize="end" />
+    </LinearLayout>
+
+    <!-- Count Badge -->
+    <TextView
+        android:id="@+id/txtGroupCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="11.5sp"
+        android:fontFamily="sans-serif-bold"
+        android:background="@drawable/bg_badge_sparse"
+        android:paddingHorizontal="7dp"
+        android:paddingVertical="2dp"
+        android:layout_marginEnd="6dp" />
+
+    <!-- 3-Dot Options Button (Visible for manual groups) -->
+    <ImageView
+        android:id="@+id/btnRowOptions"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_more_vert"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        app:tint="@color/mobile_text_secondary"
+        android:contentDescription="@string/toggle_options" />
+
+</LinearLayout>

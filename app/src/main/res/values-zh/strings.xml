@@ -16732,6 +16732,63 @@ Bookmark saved to %1$s
     <string name="bookmark_new_group">
 + Create New Group
 </string>
+    <string name="bookmark_groups_header">
+Groups
+</string>
+    <string name="bookmark_view_all_groups">
+View all &#8250;
+</string>
+    <string name="bookmark_collections_hub_title">
+Collections &amp; Sources
+</string>
+    <string name="bookmark_collections_hub_subtitle">
+Manage collections, filter, and vault protect
+</string>
+    <string name="bookmark_search_collections_hint">
+Search collections…
+</string>
+    <string name="bookmark_all_bookmarks_hub">
+All Bookmarks
+</string>
+    <string name="bookmark_all_bookmarks_hub_desc">
+Show all unlocked bookmarks across all sources
+</string>
+    <string name="bookmark_section_manual_collections">
+My Collections
+</string>
+    <string name="bookmark_section_manual_desc">
+User-created collections • Vault lockable
+</string>
+    <string name="bookmark_section_auto_collections">
+App Sources
+</string>
+    <string name="bookmark_section_auto_desc">
+Auto-generated from shared applications
+</string>
+    <string name="bookmark_group_manual_badge">
+MANUAL
+</string>
+    <string name="bookmark_group_auto_badge">
+AUTO
+</string>
+    <string name="bookmark_vault_no_credentials">
+Device security (PIN, pattern, or fingerprint) not set up on this device.
+</string>
+    <string name="bookmark_locked_badge">
+Vault Locked
+</string>
+    <string name="bookmark_unlock_group_desc">
+Authenticate to remove Vault lock
+</string>
+    <string name="bookmark_locked_toast">
+Collection locked with Vault
+</string>
+    <string name="bookmark_unlocked_toast">
+Collection unlocked
+</string>
+    <string name="bookmark_more_groups_format">
++ %1$d
+</string>
     <string name="bookmark_dialog_new_group_title">
 New Bookmark Group
 </string>

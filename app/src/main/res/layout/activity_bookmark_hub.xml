@@ -133,80 +133,136 @@
                 android:singleLine="true" />
         </FrameLayout>
 
-        <!-- Group Collections Chips Bar -->
-        <HorizontalScrollView
+        <!-- Tabs Row: All | Starred (UFMStandard matching a1.jpeg) -->
+        <LinearLayout
+            android:id="@+id/layoutTabsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:paddingHorizontal="12dp"
-            android:layout_marginTop="8dp">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="6dp">
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupGroups"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:singleSelection="true" />
-        </HorizontalScrollView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-        <!-- Content Type Filters Bar -->
-        <HorizontalScrollView
+                <!-- Tab: All -->
+                <LinearLayout
+                    android:id="@+id/tabAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingHorizontal="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:id="@+id/txtTabAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/bookmark_filter_all"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="17sp"
+                        android:fontFamily="sans-serif-black" />
+
+                    <View
+                        android:id="@+id/indicatorTabAll"
+                        android:layout_width="32dp"
+                        android:layout_height="3dp"
+                        android:background="?attr/colorPrimary" />
+                </LinearLayout>
+
+                <!-- Tab: Starred -->
+                <LinearLayout
+                    android:id="@+id/tabStarred"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginStart="20dp"
+                    android:paddingHorizontal="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:id="@+id/txtTabStarred"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/bookmark_filter_starred"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="17sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <View
+                        android:id="@+id/indicatorTabStarred"
+                        android:layout_width="32dp"
+                        android:layout_height="3dp"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Subtle Horizontal Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:background="#1AFFFFFF" />
+        </LinearLayout>
+
+        <!-- Groups Section Header -->
+        <LinearLayout
+            android:id="@+id/layoutGroupsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:paddingHorizontal="12dp"
-            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:layout_marginTop="14dp"
             android:layout_marginBottom="8dp">
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupFilters"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/bookmark_groups_header"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:id="@+id/btnViewAllGroups"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:singleSelection="true">
+                android:text="@string/bookmark_view_all_groups"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13.5sp"
+                android:fontFamily="sans-serif-medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingVertical="4dp"
+                android:paddingStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipFilterAll"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bookmark_filter_all"
-                    android:checked="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipFilterLinks"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bookmark_filter_links" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipFilterMedia"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bookmark_filter_media" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipFilterDocs"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bookmark_filter_docs" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipFilterNotes"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bookmark_filter_notes" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipFilterStarred"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bookmark_filter_starred" />
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
+        <!-- Groups Pills Container (Wraps across lines matching a1.jpeg) -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupGroups"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="8dp"
+            app:singleLine="false"
+            app:chipSpacing="8dp"
+            app:singleSelection="true" />
 
         <!-- Bookmarks List & Empty State Container -->
         <FrameLayout

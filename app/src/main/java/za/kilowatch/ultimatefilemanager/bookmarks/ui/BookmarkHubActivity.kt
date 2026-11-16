@@ -1,10 +1,12 @@
 package za.kilowatch.ultimatefilemanager.bookmarks.ui
 
+import android.app.KeyguardManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -61,8 +63,14 @@ class BookmarkHubActivity : AppCompatActivity() {
 
     private lateinit var layoutSearchBar: FrameLayout
     private lateinit var editSearchQuery: EditText
+    private lateinit var tabAll: LinearLayout
+    private lateinit var txtTabAll: TextView
+    private lateinit var indicatorTabAll: View
+    private lateinit var tabStarred: LinearLayout
+    private lateinit var txtTabStarred: TextView
+    private lateinit var indicatorTabStarred: View
+    private lateinit var btnViewAllGroups: TextView
     private lateinit var chipGroupGroups: ChipGroup
-    private lateinit var chipGroupFilters: ChipGroup
     private lateinit var recyclerBookmarks: RecyclerView
     private lateinit var layoutEmpty: LinearLayout
     private lateinit var txtEmptyTitle: TextView
@@ -123,8 +131,18 @@ class BookmarkHubActivity : AppCompatActivity() {
 
         layoutSearchBar = findViewById(R.id.layoutSearchBar)
         editSearchQuery = findViewById(R.id.editSearchQuery)
+        tabAll = findViewById(R.id.tabAll)
+        txtTabAll = findViewById(R.id.txtTabAll)
+        indicatorTabAll = findViewById(R.id.indicatorTabAll)
+        tabStarred = findViewById(R.id.tabStarred)
+        txtTabStarred = findViewById(R.id.txtTabStarred)
+        indicatorTabStarred = findViewById(R.id.indicatorTabStarred)
+        btnViewAllGroups = findViewById(R.id.btnViewAllGroups)
         chipGroupGroups = findViewById(R.id.chipGroupGroups)
-        chipGroupFilters = findViewById(R.id.chipGroupFilters)
+
+        tabAll.setOnClickListener { selectTab(starred = false) }
+        tabStarred.setOnClickListener { selectTab(starred = true) }
+        btnViewAllGroups.setOnClickListener { showCollectionHubDialog() }
         recyclerBookmarks = findViewById(R.id.recyclerBookmarks)
         layoutEmpty = findViewById(R.id.layoutEmpty)
         txtEmptyTitle = findViewById(R.id.txtEmptyTitle)
@@ -165,8 +183,6 @@ class BookmarkHubActivity : AppCompatActivity() {
             val selectedItems = allBookmarks.filter { adapter.selectedIds.contains(it.id) }
             showExportDialog(selectedItems)
         }
-
-        setupFilterChips()
     }
 
     private fun toggleSearchBar() {
@@ -275,31 +291,35 @@ class BookmarkHubActivity : AppCompatActivity() {
         popupWindow.showAsDropDown(anchor, xOffset, (4 * resources.displayMetrics.density).toInt())
     }
 
-    private fun setupFilterChips() {
-        val filters = listOf(
-            Pair(getString(R.string.bookmark_filter_starred), "starred"),
-            Pair(getString(R.string.bookmark_filter_links), BookmarkContentType.LINK),
-            Pair(getString(R.string.bookmark_filter_media), BookmarkContentType.IMAGE),
-            Pair(getString(R.string.bookmark_filter_notes), BookmarkContentType.TEXT_NOTE),
-            Pair(getString(R.string.bookmark_filter_docs), BookmarkContentType.DOCUMENT)
-        )
+    private fun selectTab(starred: Boolean) {
+        if (isFilterStarred == starred) return
+        isFilterStarred = starred
+        val typedValue = android.util.TypedValue()
+        theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true)
+        val primaryColor = if (typedValue.data != 0) typedValue.data else Color.parseColor("#3B82F6")
+        val textPrimary = ContextCompat.getColor(this, R.color.mobile_text_primary)
+        val textSecondary = ContextCompat.getColor(this, R.color.mobile_text_secondary)
 
-        chipGroupFilters.removeAllViews()
-        for ((label, key) in filters) {
-            val chip = Chip(this).apply {
-                text = label
-                isCheckable = true
-                setOnCheckedChangeListener { _, isChecked ->
-                    if (key == "starred") {
-                        isFilterStarred = isChecked
-                    } else {
-                        selectedContentType = if (isChecked) key else null
-                    }
-                    applyFilterAndSort()
-                }
-            }
-            chipGroupFilters.addView(chip)
+        if (starred) {
+            txtTabStarred.setTextColor(textPrimary)
+            txtTabStarred.typeface = Typeface.DEFAULT_BOLD
+            indicatorTabStarred.setBackgroundColor(primaryColor)
+            indicatorTabStarred.visibility = View.VISIBLE
+
+            txtTabAll.setTextColor(textSecondary)
+            txtTabAll.typeface = Typeface.DEFAULT
+            indicatorTabAll.visibility = View.INVISIBLE
+        } else {
+            txtTabAll.setTextColor(textPrimary)
+            txtTabAll.typeface = Typeface.DEFAULT_BOLD
+            indicatorTabAll.setBackgroundColor(primaryColor)
+            indicatorTabAll.visibility = View.VISIBLE
+
+            txtTabStarred.setTextColor(textSecondary)
+            txtTabStarred.typeface = Typeface.DEFAULT
+            indicatorTabStarred.visibility = View.INVISIBLE
         }
+        applyFilterAndSort()
     }
 
     private fun observeData() {
@@ -325,98 +345,385 @@ class BookmarkHubActivity : AppCompatActivity() {
         }
     }
 
+    private fun isDeviceSecurityAvailable(): Boolean {
+        val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
+        val isDeviceSecure = keyguardManager?.isDeviceSecure == true
+        val biometricManager = androidx.biometric.BiometricManager.from(this)
+        val authenticators = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG or
+            androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        } else {
+            @Suppress("DEPRECATION")
+            androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
+        }
+        val canAuth = biometricManager.canAuthenticate(authenticators)
+        val isBiometricAvailable = (canAuth == androidx.biometric.BiometricManager.BIOMETRIC_SUCCESS)
+
+        return isDeviceSecure || isBiometricAvailable
+    }
+
     private fun populateGroupChips(groups: List<BookmarkGroupEntity>) {
         chipGroupGroups.removeAllViews()
 
-        // "All" Master Chip
-        val allChip = Chip(this).apply {
-            text = getString(R.string.bookmark_filter_all)
-            isCheckable = true
-            isChecked = selectedGroupId == null
-            setOnClickListener {
-                selectedGroupId = null
-                applyFilterAndSort()
+        // 1. "+ New Group" Pill (Distinct emerald styling)
+        val addPill = TextView(this).apply {
+            text = getString(R.string.bookmark_new_group)
+            background = ContextCompat.getDrawable(this@BookmarkHubActivity, R.drawable.bg_bookmark_pill_add)
+            setTextColor(Color.parseColor("#34D399"))
+            textSize = 13.5f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = android.view.Gravity.CENTER
+            val pxPad = (14 * resources.displayMetrics.density).toInt()
+            setPadding(pxPad, 0, pxPad, 0)
+            layoutParams = ViewGroup.MarginLayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                (38 * resources.displayMetrics.density).toInt()
+            ).apply {
+                marginEnd = (8 * resources.displayMetrics.density).toInt()
+                bottomMargin = (8 * resources.displayMetrics.density).toInt()
             }
-        }
-        chipGroupGroups.addView(allChip)
-
-        for (group in groups) {
-            val chip = Chip(this).apply {
-                text = if (group.isLocked) "🔒 ${group.name}" else group.name
-                isCheckable = true
-                isChecked = selectedGroupId == group.id
-                setOnClickListener {
-                    if (group.isLocked) {
-                        promptVaultUnlock {
-                            selectedGroupId = group.id
-                            applyFilterAndSort()
-                        }
-                    } else {
-                        selectedGroupId = group.id
-                        applyFilterAndSort()
-                    }
-                }
-                setOnLongClickListener {
-                    if (!group.isAutoGroup) {
-                        showGroupOptionsDialog(group)
-                    }
-                    true
-                }
-            }
-            chipGroupGroups.addView(chip)
-        }
-
-        // "+" Create New Collection Chip
-        val addChip = Chip(this).apply {
-            text = "+ " + getString(R.string.bookmark_new_group)
-            isCheckable = false
+            isClickable = true
+            isFocusable = true
             setOnClickListener {
                 showCreateNewGroupDialog()
             }
         }
-        chipGroupGroups.addView(addChip)
-    }
+        chipGroupGroups.addView(addPill)
 
-    private fun showGroupOptionsDialog(group: BookmarkGroupEntity) {
-        val options = arrayOf(
-            if (group.isLocked) getString(R.string.bookmark_unlock_collection) else getString(R.string.bookmark_lock_collection),
-            getString(R.string.bookmark_delete_collection)
-        )
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(group.name)
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> { // Toggle Lock
+        // 2. Select up to 4 prominent groups (ensuring selectedGroupId is visible if chosen)
+        val displayedGroups = mutableListOf<BookmarkGroupEntity>()
+        val activeGroup = groups.find { it.id == selectedGroupId }
+        if (activeGroup != null) {
+            displayedGroups.add(activeGroup)
+        }
+        for (g in groups) {
+            if (displayedGroups.size >= 4) break
+            if (!displayedGroups.any { it.id == g.id }) {
+                displayedGroups.add(g)
+            }
+        }
+
+        for (group in displayedGroups) {
+            val isManual = !group.isAutoGroup
+            val isSelected = (selectedGroupId == group.id)
+
+            val pill = TextView(this).apply {
+                text = when {
+                    group.isLocked -> "🔒 ${group.name}"
+                    isManual -> "📁 ${group.name}"
+                    else -> group.name
+                }
+
+                val bgRes = when {
+                    isManual && isSelected -> R.drawable.bg_bookmark_pill_manual_active
+                    isManual -> R.drawable.bg_bookmark_pill_manual_inactive
+                    isSelected -> R.drawable.bg_bookmark_pill_auto_active
+                    else -> R.drawable.bg_bookmark_pill_auto_inactive
+                }
+                background = ContextCompat.getDrawable(this@BookmarkHubActivity, bgRes)
+
+                val textColor = when {
+                    isSelected -> Color.WHITE
+                    isManual -> Color.parseColor("#C7D2FE")
+                    else -> Color.parseColor("#94A3B8")
+                }
+                setTextColor(textColor)
+                textSize = 13.5f
+                typeface = if (isSelected) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
+                gravity = android.view.Gravity.CENTER
+                val pxPad = (14 * resources.displayMetrics.density).toInt()
+                setPadding(pxPad, 0, pxPad, 0)
+                layoutParams = ViewGroup.MarginLayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    (38 * resources.displayMetrics.density).toInt()
+                ).apply {
+                    marginEnd = (8 * resources.displayMetrics.density).toInt()
+                    bottomMargin = (8 * resources.displayMetrics.density).toInt()
+                }
+
+                isClickable = true
+                isFocusable = true
+
+                setOnClickListener {
+                    if (isSelected) {
+                        selectedGroupId = null
+                        applyFilterAndSort()
+                        populateGroupChips(allGroups)
+                    } else if (group.isLocked) {
                         promptVaultUnlock {
-                            lifecycleScope.launch {
-                                val updated = group.copy(isLocked = !group.isLocked)
-                                BookmarkRepository.getInstance(this@BookmarkHubActivity).updateGroup(updated)
-                                Toast.makeText(
-                                    this@BookmarkHubActivity,
-                                    if (updated.isLocked) R.string.bookmark_lock_collection else R.string.bookmark_unlock_collection,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                            selectedGroupId = group.id
+                            applyFilterAndSort()
+                            populateGroupChips(allGroups)
                         }
+                    } else {
+                        selectedGroupId = group.id
+                        applyFilterAndSort()
+                        populateGroupChips(allGroups)
                     }
-                    1 -> { // Delete Collection
-                        confirmDeleteEmptyGroup(group)
+                }
+
+                setOnLongClickListener {
+                    if (isManual) {
+                        showGroupOptionsDialog(group)
+                        true
+                    } else {
+                        false
                     }
                 }
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            chipGroupGroups.addView(pill)
+        }
+
+        // 3. "+ X" Pill when more groups exist (matching a1.jpeg where + 56 is shown)
+        if (groups.size > displayedGroups.size) {
+            val remainingCount = groups.size - displayedGroups.size
+            val morePill = TextView(this).apply {
+                text = getString(R.string.bookmark_more_groups_format, remainingCount)
+                background = ContextCompat.getDrawable(this@BookmarkHubActivity, R.drawable.bg_bookmark_pill_auto_inactive)
+                setTextColor(Color.parseColor("#94A3B8"))
+                textSize = 13.5f
+                typeface = Typeface.DEFAULT_BOLD
+                gravity = android.view.Gravity.CENTER
+                val pxPad = (14 * resources.displayMetrics.density).toInt()
+                setPadding(pxPad, 0, pxPad, 0)
+                layoutParams = ViewGroup.MarginLayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    (38 * resources.displayMetrics.density).toInt()
+                ).apply {
+                    marginEnd = (8 * resources.displayMetrics.density).toInt()
+                    bottomMargin = (8 * resources.displayMetrics.density).toInt()
+                }
+                isClickable = true
+                isFocusable = true
+                setOnClickListener {
+                    showCollectionHubDialog()
+                }
+            }
+            chipGroupGroups.addView(morePill)
+        }
+    }
+
+    private fun showCollectionHubDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_bookmark_collection_hub, null)
+        val editSearchCollections = dialogView.findViewById<EditText>(R.id.editSearchCollections)
+        val txtHubSubtitle = dialogView.findViewById<TextView>(R.id.txtHubSubtitle)
+        val cardAllBookmarks = dialogView.findViewById<View>(R.id.cardAllBookmarks)
+        val txtAllBookmarksCount = dialogView.findViewById<TextView>(R.id.txtAllBookmarksCount)
+        val layoutManualCollections = dialogView.findViewById<LinearLayout>(R.id.layoutManualCollections)
+        val layoutAutoCollections = dialogView.findViewById<LinearLayout>(R.id.layoutAutoCollections)
+        val headerManualSection = dialogView.findViewById<View>(R.id.headerManualSection)
+        val headerAutoSection = dialogView.findViewById<View>(R.id.headerAutoSection)
+        val btnCreateNewGroupInHub = dialogView.findViewById<MaterialButton>(R.id.btnCreateNewGroupInHub)
+        val btnCloseHub = dialogView.findViewById<MaterialButton>(R.id.btnCloseHub)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val lockedGroupIds = allGroups.filter { it.isLocked }.map { it.id }.toSet()
+        val unlockedCount = allBookmarks.count { it.groupId !in lockedGroupIds }
+        txtHubSubtitle.text = getString(R.string.bookmark_hub_subtitle_count, unlockedCount, allGroups.size)
+        txtAllBookmarksCount.text = "$unlockedCount"
+
+        cardAllBookmarks.setOnClickListener {
+            selectedGroupId = null
+            dialog.dismiss()
+            applyFilterAndSort()
+            populateGroupChips(allGroups)
+        }
+
+        btnCreateNewGroupInHub.setOnClickListener {
+            dialog.dismiss()
+            showCreateNewGroupDialog()
+        }
+
+        btnCloseHub.setOnClickListener { dialog.dismiss() }
+
+        fun populateHubList(query: String) {
+            layoutManualCollections.removeAllViews()
+            layoutAutoCollections.removeAllViews()
+
+            val manualGroups = allGroups.filter { !it.isAutoGroup && (query.isEmpty() || it.name.contains(query, ignoreCase = true)) }
+            val autoGroups = allGroups.filter { it.isAutoGroup && (query.isEmpty() || it.name.contains(query, ignoreCase = true)) }
+
+            headerManualSection.visibility = if (manualGroups.isNotEmpty()) View.VISIBLE else View.GONE
+            headerAutoSection.visibility = if (autoGroups.isNotEmpty()) View.VISIBLE else View.GONE
+
+            for (group in manualGroups) {
+                val row = LayoutInflater.from(this).inflate(R.layout.item_bookmark_hub_collection_row, layoutManualCollections, false)
+                val txtName = row.findViewById<TextView>(R.id.txtGroupName)
+                val txtStatus = row.findViewById<TextView>(R.id.txtGroupStatus)
+                val txtCount = row.findViewById<TextView>(R.id.txtGroupCount)
+                val btnOptions = row.findViewById<ImageView>(R.id.btnRowOptions)
+                val imgIcon = row.findViewById<ImageView>(R.id.imgGroupIcon)
+
+                txtName.text = group.name
+                if (group.isLocked) {
+                    txtStatus.text = "🔒 " + getString(R.string.bookmark_locked_badge)
+                    txtStatus.setTextColor(Color.parseColor("#FFA726"))
+                    imgIcon.setImageResource(R.drawable.ic_lock)
+                    imgIcon.setColorFilter(Color.parseColor("#FFA726"))
+                } else {
+                    txtStatus.text = getString(R.string.bookmark_section_manual_collections)
+                    txtStatus.setTextColor(ContextCompat.getColor(this, R.color.mobile_text_secondary))
+                    imgIcon.setImageResource(R.drawable.ic_folder)
+                }
+
+                val count = allBookmarks.count { it.groupId == group.id }
+                txtCount.text = "$count"
+
+                btnOptions.visibility = View.VISIBLE
+                btnOptions.setOnClickListener {
+                    dialog.dismiss()
+                    showGroupOptionsDialog(group)
+                }
+
+                row.setOnClickListener {
+                    if (group.isLocked) {
+                        promptVaultUnlock {
+                            selectedGroupId = group.id
+                            dialog.dismiss()
+                            applyFilterAndSort()
+                            populateGroupChips(allGroups)
+                        }
+                    } else {
+                        selectedGroupId = group.id
+                        dialog.dismiss()
+                        applyFilterAndSort()
+                        populateGroupChips(allGroups)
+                    }
+                }
+
+                row.setOnLongClickListener {
+                    dialog.dismiss()
+                    showGroupOptionsDialog(group)
+                    true
+                }
+
+                layoutManualCollections.addView(row)
+            }
+
+            for (group in autoGroups) {
+                val row = LayoutInflater.from(this).inflate(R.layout.item_bookmark_hub_collection_row, layoutAutoCollections, false)
+                val txtName = row.findViewById<TextView>(R.id.txtGroupName)
+                val txtStatus = row.findViewById<TextView>(R.id.txtGroupStatus)
+                val txtCount = row.findViewById<TextView>(R.id.txtGroupCount)
+                val btnOptions = row.findViewById<ImageView>(R.id.btnRowOptions)
+
+                txtName.text = group.name
+                txtStatus.text = getString(R.string.bookmark_section_auto_collections)
+                val count = allBookmarks.count { it.groupId == group.id }
+                txtCount.text = "$count"
+                btnOptions.visibility = View.GONE
+
+                row.setOnClickListener {
+                    selectedGroupId = group.id
+                    dialog.dismiss()
+                    applyFilterAndSort()
+                    populateGroupChips(allGroups)
+                }
+
+                layoutAutoCollections.addView(row)
+            }
+        }
+
+        populateHubList("")
+
+        editSearchCollections.doAfterTextChanged { text ->
+            populateHubList(text?.toString()?.trim().orEmpty())
+        }
+
+        dialog.show()
+    }
+
+    private fun showGroupOptionsDialog(group: BookmarkGroupEntity) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_bookmark_collection_options, null)
+        val txtCollectionTitle = dialogView.findViewById<TextView>(R.id.txtCollectionTitle)
+        val txtCollectionBadge = dialogView.findViewById<TextView>(R.id.txtCollectionBadge)
+        val optToggleLock = dialogView.findViewById<LinearLayout>(R.id.optToggleLock)
+        val imgLockIcon = dialogView.findViewById<ImageView>(R.id.imgLockIcon)
+        val txtLockTitle = dialogView.findViewById<TextView>(R.id.txtLockTitle)
+        val txtLockDesc = dialogView.findViewById<TextView>(R.id.txtLockDesc)
+        val optDeleteCollection = dialogView.findViewById<LinearLayout>(R.id.optDeleteCollection)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancel)
+
+        txtCollectionTitle.text = group.name
+        txtCollectionBadge.text = if (!group.isAutoGroup) {
+            getString(R.string.bookmark_group_manual_badge)
+        } else {
+            getString(R.string.bookmark_group_auto_badge)
+        }
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val isSecure = isDeviceSecurityAvailable()
+        if (!isSecure) {
+            optToggleLock.isEnabled = false
+            optToggleLock.alpha = 0.45f
+            txtLockTitle.text = getString(R.string.bookmark_lock_collection)
+            txtLockDesc.text = getString(R.string.bookmark_vault_no_credentials)
+        } else {
+            optToggleLock.isEnabled = true
+            optToggleLock.alpha = 1.0f
+            if (group.isLocked) {
+                txtLockTitle.text = getString(R.string.bookmark_unlock_collection)
+                txtLockDesc.text = getString(R.string.bookmark_unlock_group_desc)
+                imgLockIcon.setImageResource(R.drawable.ic_lock)
+            } else {
+                txtLockTitle.text = getString(R.string.bookmark_lock_collection)
+                txtLockDesc.text = getString(R.string.bookmark_lock_group_desc)
+                imgLockIcon.setImageResource(R.drawable.ic_lock)
+            }
+
+            optToggleLock.setOnClickListener {
+                dialog.dismiss()
+                promptVaultUnlock {
+                    lifecycleScope.launch {
+                        val updated = group.copy(isLocked = !group.isLocked)
+                        BookmarkRepository.getInstance(this@BookmarkHubActivity).updateGroup(updated)
+                        Toast.makeText(
+                            this@BookmarkHubActivity,
+                            if (updated.isLocked) R.string.bookmark_locked_toast else R.string.bookmark_unlocked_toast,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+
+        optDeleteCollection.setOnClickListener {
+            dialog.dismiss()
+            confirmDeleteEmptyGroup(group)
+        }
+
+        btnCancel.setOnClickListener { dialog.dismiss() }
+        dialog.show()
     }
 
     private fun showCreateNewGroupDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_bookmark_create_group, null)
         val edtGroupName = dialogView.findViewById<TextInputEditText>(R.id.edtGroupName)
+        val layoutLockToggle = dialogView.findViewById<LinearLayout>(R.id.layoutLockToggle)
         val switchLockGroup = dialogView.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.switchLockGroup)
+        val txtLockGroupDesc = dialogView.findViewById<TextView>(R.id.txtLockGroupDesc)
         val btnCreate = dialogView.findViewById<MaterialButton>(R.id.btnCreate)
         val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancel)
 
-        dialogView.findViewById<View>(R.id.layoutLockToggle)?.setOnClickListener {
-            switchLockGroup.isChecked = !switchLockGroup.isChecked
+        val isSecure = isDeviceSecurityAvailable()
+        if (!isSecure) {
+            switchLockGroup.isChecked = false
+            switchLockGroup.isEnabled = false
+            layoutLockToggle?.isEnabled = false
+            layoutLockToggle?.alpha = 0.45f
+            txtLockGroupDesc?.text = getString(R.string.bookmark_vault_no_credentials)
+        } else {
+            layoutLockToggle?.setOnClickListener {
+                switchLockGroup.isChecked = !switchLockGroup.isChecked
+            }
         }
 
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
@@ -496,21 +803,16 @@ class BookmarkHubActivity : AppCompatActivity() {
     private fun applyFilterAndSort() {
         var filtered = allBookmarks
 
-        // Filter by Group
+        // Filter by Group & Lock Vault Isolation
+        val lockedGroupIds = allGroups.filter { it.isLocked }.map { it.id }.toSet()
         if (selectedGroupId != null) {
             filtered = filtered.filter { it.groupId == selectedGroupId }
+        } else if (lockedGroupIds.isNotEmpty()) {
+            // "All" view: Strictly hide bookmarks belonging to locked collections!
+            filtered = filtered.filter { it.groupId !in lockedGroupIds }
         }
 
-        // Filter by Content Type
-        if (selectedContentType != null) {
-            filtered = if (selectedContentType == BookmarkContentType.IMAGE) {
-                filtered.filter { it.contentType in setOf(BookmarkContentType.IMAGE, BookmarkContentType.VIDEO, BookmarkContentType.AUDIO) }
-            } else {
-                filtered.filter { it.contentType == selectedContentType }
-            }
-        }
-
-        // Filter by Starred
+        // Filter by Starred Tab
         if (isFilterStarred) {
             filtered = filtered.filter { it.isStarred }
         }
@@ -562,10 +864,6 @@ class BookmarkHubActivity : AppCompatActivity() {
                     txtEmptyDesc.text = getString(R.string.bookmark_empty_search_desc, searchQuery)
                 }
                 isFilterStarred -> {
-                    txtEmptyTitle.text = getString(R.string.bookmark_empty_filter_title)
-                    txtEmptyDesc.text = getString(R.string.bookmark_empty_filter_desc)
-                }
-                selectedContentType != null -> {
                     txtEmptyTitle.text = getString(R.string.bookmark_empty_filter_title)
                     txtEmptyDesc.text = getString(R.string.bookmark_empty_filter_desc)
                 }
@@ -626,8 +924,14 @@ class BookmarkHubActivity : AppCompatActivity() {
     }
 
     private fun updateToolbarSubtitle() {
-        val count = allBookmarks.size
-        val groupCount = allGroups.size
+        val lockedGroupIds = allGroups.filter { it.isLocked }.map { it.id }.toSet()
+        val visibleBookmarks = if (selectedGroupId != null) {
+            allBookmarks.filter { it.groupId == selectedGroupId }
+        } else {
+            allBookmarks.filter { it.groupId !in lockedGroupIds }
+        }
+        val count = visibleBookmarks.size
+        val groupCount = if (selectedGroupId != null) 1 else allGroups.count { !it.isLocked }
         txtToolbarSubtitle.text = if (count > 0) {
             getString(R.string.bookmark_hub_subtitle_count, count, groupCount)
         } else {
@@ -948,6 +1252,13 @@ class BookmarkHubActivity : AppCompatActivity() {
     }
 
     private fun showExportDialog(items: List<BookmarkEntity>) {
+        val lockedGroupIds = allGroups.filter { it.isLocked }.map { it.id }.toSet()
+        val exportableItems = if (selectedGroupId != null) {
+            items
+        } else {
+            items.filter { it.groupId !in lockedGroupIds }
+        }
+
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_bookmark_export, null)
         val optExportHtml = dialogView.findViewById<View>(R.id.optExportHtml)
         val optExportMarkdown = dialogView.findViewById<View>(R.id.optExportMarkdown)
@@ -959,13 +1270,13 @@ class BookmarkHubActivity : AppCompatActivity() {
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         optExportHtml.setOnClickListener {
-            exportToHtml(items)
+            exportToHtml(exportableItems)
             exitSelectionMode()
             dialog.dismiss()
         }
 
         optExportMarkdown.setOnClickListener {
-            exportToMarkdown(items)
+            exportToMarkdown(exportableItems)
             exitSelectionMode()
             dialog.dismiss()
         }
