@@ -89,62 +89,20 @@
                     app:tint="@color/mobile_icon_tint" />
             </FrameLayout>
 
-            <!-- Sort Action -->
-            <FrameLayout
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/bg_btn_icon_frosted">
-
-                <ImageView
-                    android:id="@+id/btnSort"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerInside"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_sort"
-                    android:contentDescription="@string/bookmark_sort_title"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/mobile_icon_tint" />
-            </FrameLayout>
-
-            <!-- View Mode (Grid / List) Action -->
-            <FrameLayout
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/bg_btn_icon_frosted">
-
-                <ImageView
-                    android:id="@+id/btnViewMode"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerInside"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_view_grid_medium"
-                    android:contentDescription="@string/layout_grid"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/mobile_icon_tint" />
-            </FrameLayout>
-
-            <!-- Export Action -->
+            <!-- Consolidated 3-Dot Options Action (UFMStandard) -->
             <FrameLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@drawable/bg_btn_icon_frosted">
 
                 <ImageView
-                    android:id="@+id/btnExport"
+                    android:id="@+id/btnOptionsToggle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerInside"
                     android:padding="8dp"
-                    android:src="@drawable/ic_export"
-                    android:contentDescription="@string/bookmark_batch_export"
+                    android:src="@drawable/ic_more_vert"
+                    android:contentDescription="@string/toggle_options"
                     android:clickable="true"
                     android:focusable="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
@@ -282,6 +240,7 @@
                     android:contentDescription="@string/bookmark_empty_title" />
 
                 <TextView
+                    android:id="@+id/txtEmptyTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -291,6 +250,7 @@
                     android:fontFamily="sans-serif-black" />
 
                 <TextView
+                    android:id="@+id/txtEmptyDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -299,6 +259,22 @@
                     android:textSize="13sp"
                     android:gravity="center"
                     android:lineSpacingMultiplier="1.2" />
+
+                <!-- Delete Empty Collection Action -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDeleteEmptyGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/bookmark_delete_collection"
+                    android:textColor="#EF4444"
+                    app:icon="@drawable/ic_delete"
+                    app:iconTint="#EF4444"
+                    app:strokeColor="#4DEE4444"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="12dp"
+                    android:backgroundTint="@color/mobile_glass_card"
+                    android:visibility="gone" />
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>

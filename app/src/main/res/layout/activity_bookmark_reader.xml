@@ -297,13 +297,22 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnTtsSpeed"
-            style="@style/Widget.Material3Expressive.Button.TextButton"
+            style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
+            android:minWidth="48dp"
+            android:minHeight="36dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="0dp"
             android:text="1.0x"
             android:textColor="?attr/colorPrimary"
             android:textSize="13sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:cornerRadius="10dp"
+            app:backgroundTint="@color/mobile_glass_card"
+            android:layout_marginStart="8dp" />
     </LinearLayout>
 
 </LinearLayout>

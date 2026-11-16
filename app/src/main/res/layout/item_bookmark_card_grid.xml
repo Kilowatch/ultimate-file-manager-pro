@@ -33,12 +33,12 @@
                 android:src="@drawable/ic_bookmark_hub"
                 android:contentDescription="@string/cd_file_icon" />
 
-            <!-- Source App Badge Overlay -->
+            <!-- Source App Badge Overlay (Bottom-Right) -->
             <ImageView
                 android:id="@+id/imgSourceAppBadge"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:layout_gravity="bottom|start"
+                android:layout_gravity="bottom|end"
                 android:layout_margin="6dp"
                 android:background="@drawable/bg_dialog_glass"
                 android:padding="2dp"
@@ -93,6 +93,17 @@
                 android:textSize="11sp"
                 android:singleLine="true"
                 android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/txtNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="11sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:visibility="gone" />
 
             <!-- Bottom Row: Group Badge & Overflow -->
             <LinearLayout

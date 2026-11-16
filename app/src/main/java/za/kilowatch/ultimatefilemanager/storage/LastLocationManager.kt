@@ -262,6 +262,8 @@ object LastLocationManager {
         if (className == "za.kilowatch.ultimatefilemanager.ui.SafPickerActivity" ||
             className == "za.kilowatch.ultimatefilemanager.ui.OpenWithActivity" ||
             className == "za.kilowatch.ultimatefilemanager.ui.ShareReceiverActivity" ||
+            className == "za.kilowatch.ultimatefilemanager.bookmarks.ui.BookmarkReceiverActivity" ||
+            className.startsWith("za.kilowatch.ultimatefilemanager.bookmarks.ui.BookmarkReceiver") ||
             className == "za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity" ||
             className == "za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity" ||
             className == "za.kilowatch.ultimatefilemanager.ui.PackageInstallerActivity" ||
@@ -428,6 +430,10 @@ object LastLocationManager {
                 if (className.isNullOrEmpty() ||
                     className.startsWith("za.kilowatch.ultimatefilemanager.ui.policy.") ||
                     className.startsWith("za.kilowatch.ultimatefilemanager.onboarding.") ||
+                    className.startsWith("za.kilowatch.ultimatefilemanager.bookmarks.ui.BookmarkReceiver") ||
+                    className == "za.kilowatch.ultimatefilemanager.bookmarks.ui.BookmarkReceiverActivity" ||
+                    className == "za.kilowatch.ultimatefilemanager.ui.ShareReceiverActivity" ||
+                    className == "za.kilowatch.ultimatefilemanager.ui.OpenWithActivity" ||
                     className == "za.kilowatch.ultimatefilemanager.MainActivity"
                 ) {
                     recordStorageBrowser(context)

@@ -56,8 +56,14 @@ interface BookmarkDao {
     @Query("SELECT * FROM bookmark_groups WHERE id = :id LIMIT 1")
     suspend fun getGroupById(id: String): BookmarkGroupEntity?
 
+    @Query("SELECT * FROM bookmark_groups WHERE name = :name LIMIT 1")
+    suspend fun getGroupByName(name: String): BookmarkGroupEntity?
+
     @Query("SELECT * FROM bookmark_groups WHERE associatedPackage = :pkg LIMIT 1")
     suspend fun getGroupByPackage(pkg: String): BookmarkGroupEntity?
+
+    @Query("DELETE FROM bookmark_groups WHERE isAutoGroup = 1 AND id NOT IN (SELECT DISTINCT groupId FROM bookmarks)")
+    suspend fun deleteEmptyAutoGroups(): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGroup(group: BookmarkGroupEntity): Long

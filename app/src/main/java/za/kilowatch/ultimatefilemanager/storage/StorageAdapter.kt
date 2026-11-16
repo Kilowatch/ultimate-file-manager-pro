@@ -1583,7 +1583,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                     item.isSearchTile || item.isAnalyzerTile ||
                     item.isVaultTile  || item.isLegalTile   || item.isRateUsTile || item.isSafTile ||
                     item.isNetworkTile || item.isNetworkRoot || item.isPairedDevicesTile ||
-                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isRecentFilesTile || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isSupportTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile || item.isAddStorageLocationTile || item.isOtherStorageTile || item.isSafCustomLocation || item.isDocumentProviderTile
+                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isRecentFilesTile || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isSupportTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isBookmarkHubTile || item.isCustomTile || item.isAddStorageLocationTile || item.isOtherStorageTile || item.isSafCustomLocation || item.isDocumentProviderTile
 
             if (isSpecialTile) {
                 circularProgress?.visibility = View.GONE
@@ -1808,7 +1808,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile || item.isRecentFilesTile ||
                 item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage ||
                 item.isFileServerTile || item.isAboutTile || item.isSupportTile || item.isRecycleBinTile ||
-                item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile ||
+                item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isBookmarkHubTile || item.isCustomTile ||
                 item.isAddStorageLocationTile || item.isOtherStorageTile || item.isSafCustomLocation || item.isDocumentProviderTile
 
         return if (isSpecialTile) {
@@ -1863,6 +1863,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 item.isShizukuTile -> item.subtitle ?: ""
                 item.isFileServerTile -> context.getString(R.string.file_server_tile_subtitle)
                 item.isSmartSortTile -> context.getString(R.string.smart_sort_tile_subtitle)
+                item.isBookmarkHubTile -> context.getString(R.string.bookmark_hub_subtitle)
                 else -> ""
             }
         } else {

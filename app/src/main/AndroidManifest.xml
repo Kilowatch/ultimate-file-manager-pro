@@ -795,6 +795,8 @@
             android:exported="true"
             android:label="@string/share_target_save_to"
             android:theme="@style/Theme.UltimateFileManager"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -815,6 +817,12 @@
             android:label="@string/share_target_bookmark"
             android:icon="@drawable/ic_bookmark_hub"
             android:theme="@style/Theme.UFM.Translucent"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:finishOnTaskLaunch="true"
+            android:clearTaskOnLaunch="true"
+            android:taskAffinity=""
+            android:launchMode="singleInstance"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

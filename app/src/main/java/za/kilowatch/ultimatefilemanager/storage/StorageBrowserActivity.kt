@@ -5727,7 +5727,8 @@ class StorageBrowserActivity : AppCompatActivity() {
                         totalBytes = 0,
                         usedBytes = 0,
                         mountPath = "",
-                        isBookmarkHubTile = true
+                        isBookmarkHubTile = true,
+                        subtitle = getString(R.string.bookmark_hub_subtitle)
                     ))
                 }
 

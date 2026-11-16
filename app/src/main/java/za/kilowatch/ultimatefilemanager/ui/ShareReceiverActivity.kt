@@ -97,6 +97,10 @@ class ShareReceiverActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         za.kilowatch.ultimatefilemanager.settings.ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
+        if (savedInstanceState != null || (intent != null && (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY != 0))) {
+            finish()
+            return
+        }
         enableEdgeToEdge()
 
         isTv = DeviceUtils.isTvDevice(this)

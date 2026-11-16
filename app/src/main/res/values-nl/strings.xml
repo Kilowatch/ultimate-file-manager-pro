@@ -16327,8 +16327,26 @@ Oldest to Newest
     <string name="bookmark_sort_title_az">
 Title (A–Z)
 </string>
+    <string name="bookmark_sort_title_za">
+Title (Z–A)
+</string>
     <string name="bookmark_sort_size">
 File Size
+</string>
+    <string name="bookmark_sort_by_group">
+Group by Collection
+</string>
+    <string name="bookmark_sort_group_az">
+Collection: A to Z
+</string>
+    <string name="bookmark_sort_group_za">
+Collection: Z to A
+</string>
+    <string name="bookmark_delete_collection">
+Delete Collection
+</string>
+    <string name="bookmark_delete_collection_msg">
+Are you sure you want to delete the collection \"%1$s\"?
 </string>
     <string name="bookmark_action_open_reader">
 Read Article
@@ -16353,6 +16371,24 @@ Move to Group
 </string>
     <string name="bookmark_action_delete">
 Delete
+</string>
+    <string name="bookmark_view_note">
+View Note
+</string>
+    <string name="bookmark_lock_group_title">
+Lock Collection (Vault)
+</string>
+    <string name="bookmark_lock_group_desc">
+Require fingerprint or PIN to view
+</string>
+    <string name="bookmark_collection_options">
+Collection Options
+</string>
+    <string name="bookmark_lock_collection">
+Lock Collection
+</string>
+    <string name="bookmark_unlock_collection">
+Unlock Collection
 </string>
     <string name="bookmark_deleted_undo">
 Bookmark deleted
@@ -16455,6 +16491,18 @@ No Bookmarks Yet
 </string>
     <string name="bookmark_empty_desc">
 Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+</string>
+    <string name="bookmark_empty_search_title">
+No Results Found
+</string>
+    <string name="bookmark_empty_search_desc">
+No bookmarks match \"%1$s\". Try searching for different keywords.
+</string>
+    <string name="bookmark_empty_filter_title">
+No Bookmarks Found
+</string>
+    <string name="bookmark_empty_filter_desc">
+No bookmarks found matching the selected filter or collection.
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub

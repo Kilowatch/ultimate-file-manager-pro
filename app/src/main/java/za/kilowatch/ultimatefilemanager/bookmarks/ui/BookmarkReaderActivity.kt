@@ -25,6 +25,7 @@ import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.bookmarks.db.BookmarkEntity
 import za.kilowatch.ultimatefilemanager.bookmarks.db.BookmarkRepository
+import za.kilowatch.ultimatefilemanager.bookmarks.util.BookmarkMetadataScraper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import java.net.URI
@@ -175,6 +176,32 @@ class BookmarkReaderActivity : AppCompatActivity(), TextToSpeech.OnInitListener 
                     articleTitle = item.title
                     articleText = item.cachedArticleText ?: item.notes ?: item.title
                     bindBookmark(item)
+
+                    // If article text is missing or just the title, fetch it live
+                    val url = item.url
+                    if ((item.cachedArticleText.isNullOrBlank() || item.cachedArticleText == item.title) && !url.isNullOrBlank()) {
+                        txtArticleBody.text = "Loading article content…"
+                        launch(Dispatchers.IO) {
+                            val meta = BookmarkMetadataScraper.scrape(this@BookmarkReaderActivity, url)
+                            val text = meta.articleText ?: meta.description ?: item.notes ?: item.title
+                            withContext(Dispatchers.Main) {
+                                if (!meta.title.isNullOrBlank() && (item.title == url || item.title.startsWith("http"))) {
+                                    txtArticleTitle.text = meta.title
+                                    articleTitle = meta.title
+                                }
+                                txtArticleBody.text = text
+                                articleText = text
+                            }
+                            if (!meta.articleText.isNullOrBlank() || !meta.title.isNullOrBlank()) {
+                                val updated = item.copy(
+                                    title = if (!meta.title.isNullOrBlank() && (item.title == url || item.title.startsWith("http"))) meta.title else item.title,
+                                    cachedArticleText = meta.articleText ?: item.cachedArticleText
+                                )
+                                currentBookmark = updated
+                                BookmarkRepository.getInstance(this@BookmarkReaderActivity).updateBookmark(updated)
+                            }
+                        }
+                    }
                 } else {
                     bindDirectExtras()
                 }
@@ -194,7 +221,8 @@ class BookmarkReaderActivity : AppCompatActivity(), TextToSpeech.OnInitListener 
 
         updateStarUi(item.isStarred)
         btnStar.setOnClickListener {
-            val updated = item.copy(isStarred = !item.isStarred)
+            val current = currentBookmark ?: item
+            val updated = current.copy(isStarred = !current.isStarred)
             currentBookmark = updated
             updateStarUi(updated.isStarred)
             lifecycleScope.launch(Dispatchers.IO) {

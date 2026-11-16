@@ -26,9 +26,16 @@ class BookmarkReceiverActivity : AppCompatActivity() {
         ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
 
+        // If recreated from saved state or launched from history, dismiss immediately
+        if (savedInstanceState != null || (intent != null && (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY != 0))) {
+            finishAndRemoveTask()
+            return
+        }
+
         val incomingIntent = intent
-        if (incomingIntent == null) {
-            finish()
+        val action = incomingIntent?.action
+        if (incomingIntent == null || (action != Intent.ACTION_SEND && action != Intent.ACTION_SEND_MULTIPLE)) {
+            finishAndRemoveTask()
             return
         }
 
@@ -36,13 +43,20 @@ class BookmarkReceiverActivity : AppCompatActivity() {
         val appName = resolveApplicationName(callingPkg)
 
         val rawText = incomingIntent.getStringExtra(Intent.EXTRA_TEXT)
+        val rawSubject = incomingIntent.getStringExtra(Intent.EXTRA_SUBJECT)?.trim()?.takeIf { it.isNotBlank() }
+        val rawTitle = incomingIntent.getStringExtra(Intent.EXTRA_TITLE)?.trim()?.takeIf { it.isNotBlank() }
+        val clipLabel = incomingIntent.clipData?.description?.label?.toString()?.trim()?.takeIf { it.isNotBlank() && !it.startsWith("http") }
         val extractedUrl = extractUrlFromText(rawText)
         val plainText = if (extractedUrl != null) null else rawText
         val sharedUris = ShareReceiverHelper.extractUris(incomingIntent)
 
+        val textWithoutUrl = if (extractedUrl != null && rawText != null) {
+            rawText.replace(extractedUrl, "").trim().takeIf { it.isNotBlank() }
+        } else null
+        val initialTitle = rawSubject ?: rawTitle ?: clipLabel ?: textWithoutUrl
+
         if (extractedUrl == null && plainText == null && sharedUris.isEmpty()) {
-            Toast.makeText(this, R.string.bookmark_empty_desc, Toast.LENGTH_SHORT).show()
-            finish()
+            finishAndRemoveTask()
             return
         }
 
@@ -52,9 +66,17 @@ class BookmarkReceiverActivity : AppCompatActivity() {
             sharedUrl = extractedUrl,
             sharedText = plainText,
             sharedUris = sharedUris,
-            onFinished = { finish() }
+            initialTitle = initialTitle,
+            onFinished = { finishAndRemoveTask() }
         )
         sheet.show(supportFragmentManager, "BookmarkQuickSaveBottomSheet")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (!isFinishing) {
+            finishAndRemoveTask()
+        }
     }
 
     private fun resolveCallingPackage(): String? {
@@ -68,7 +90,7 @@ class BookmarkReceiverActivity : AppCompatActivity() {
         }
 
         // 3. Extra referrer string
-        val extraReferrer = intent.getParcelableExtra<Uri>(Intent.EXTRA_REFERRER)
+        val extraReferrer = androidx.core.content.IntentCompat.getParcelableExtra(intent, Intent.EXTRA_REFERRER, Uri::class.java)
             ?: intent.getStringExtra(Intent.EXTRA_REFERRER)?.let { Uri.parse(it) }
         if (extraReferrer != null && extraReferrer.scheme == "android-app") {
             return extraReferrer.authority

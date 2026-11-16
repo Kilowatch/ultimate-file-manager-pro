@@ -40,6 +40,7 @@ class BookmarkQuickSaveBottomSheet : BottomSheetDialogFragment() {
     private var sharedUrl: String? = null
     private var sharedText: String? = null
     private var sharedUris: List<Uri> = emptyList()
+    private var initialTitle: String? = null
 
     private var onFinishedListener: (() -> Unit)? = null
 
@@ -90,9 +91,31 @@ class BookmarkQuickSaveBottomSheet : BottomSheetDialogFragment() {
         txtSourceApp.text = getString(R.string.bookmark_shared_from, sourceAppName)
         loadSourceAppIcon()
 
-        // Set default title
-        val defaultTitle = sharedUrl ?: sharedText ?: sharedUris.firstOrNull()?.lastPathSegment ?: ""
+        // Set default title (never show a raw URL as title)
+        var defaultTitle = initialTitle ?: sharedText ?: sharedUris.firstOrNull()?.lastPathSegment ?: ""
+        if (defaultTitle.isBlank() || defaultTitle.startsWith("http://") || defaultTitle.startsWith("https://")) {
+            val domain = extractDomain(sharedUrl ?: defaultTitle)
+            val siteName = domain.substringBeforeLast('.').substringAfterLast('.').replaceFirstChar { it.uppercase() }
+            defaultTitle = if (siteName.isNotBlank()) siteName else sourceAppName
+        }
         editTitle.setText(defaultTitle)
+
+        // Asynchronously fetch the real title (video name, band, article) to populate the field
+        val url = sharedUrl
+        if (!url.isNullOrBlank()) {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                val realTitle = if (BookmarkMetadataScraper.isYouTube(url)) {
+                    BookmarkMetadataScraper.fetchYouTubeOEmbed(url)?.first
+                } else {
+                    BookmarkMetadataScraper.scrape(requireContext(), url).title
+                }
+                if (!realTitle.isNullOrBlank()) {
+                    withContext(Dispatchers.Main) {
+                        editTitle.setText(realTitle)
+                    }
+                }
+            }
+        }
 
         btnCancel.setOnClickListener {
             dismiss()
@@ -104,6 +127,15 @@ class BookmarkQuickSaveBottomSheet : BottomSheetDialogFragment() {
         }
 
         loadGroupsAndAutoSelect()
+    }
+
+    private fun extractDomain(urlStr: String?): String {
+        if (urlStr.isNullOrBlank()) return ""
+        return try {
+            java.net.URI(urlStr).host?.removePrefix("www.") ?: urlStr
+        } catch (_: Exception) {
+            urlStr
+        }
     }
 
     private fun loadSourceAppIcon() {
@@ -120,7 +152,7 @@ class BookmarkQuickSaveBottomSheet : BottomSheetDialogFragment() {
     private fun loadGroupsAndAutoSelect() {
         val repo = BookmarkRepository.getInstance(requireContext())
         viewLifecycleOwner.lifecycleScope.launch {
-            val autoGroup = repo.getOrCreateGroupForPackage(sourcePackage, sourceAppName)
+            val autoGroup = repo.resolveOrCreateGroup(sharedUrl, sourcePackage, sourceAppName)
             val allGroups = repo.getAllGroupsSync()
             availableGroups = allGroups
 
@@ -150,41 +182,46 @@ class BookmarkQuickSaveBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun showCreateNewGroupDialog() {
-        val ctx = requireContext()
-        val input = TextInputEditText(ctx).apply {
-            hint = getString(R.string.bookmark_dialog_group_name_hint)
-            setTextColor(Color.WHITE)
-            textSize = 15f
-        }
-        val layout = TextInputLayout(ctx, null, com.google.android.material.R.attr.textInputStyle).apply {
-            setPadding(40, 20, 40, 0)
-            addView(input)
-        }
+        val ctx = context ?: return
+        val dialogView = LayoutInflater.from(ctx).inflate(R.layout.dialog_bookmark_create_group, null)
+        val edtGroupName = dialogView.findViewById<TextInputEditText>(R.id.edtGroupName)
+        val btnCreate = dialogView.findViewById<MaterialButton>(R.id.btnCreate)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancel)
 
-        MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
-            .setTitle(R.string.bookmark_dialog_new_group_title)
-            .setView(layout)
-            .setPositiveButton(R.string.bookmark_dialog_btn_create) { _, _ ->
-                val name = input.text?.toString()?.trim().orEmpty()
-                if (name.isNotEmpty()) {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        val newGroup = BookmarkGroupEntity(
-                            id = "group_${UUID.randomUUID()}",
-                            name = name,
-                            iconResName = "ic_folder",
-                            colorHex = "#3B82F6",
-                            isAutoGroup = false,
-                            sortOrder = 50
-                        )
-                        BookmarkRepository.getInstance(ctx).insertGroup(newGroup)
-                        loadGroupsAndAutoSelect()
-                    }
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnCreate.setOnClickListener {
+            val name = edtGroupName.text?.toString()?.trim().orEmpty()
+            if (name.isNotEmpty()) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val newGroup = BookmarkGroupEntity(
+                        id = "group_${UUID.randomUUID()}",
+                        name = name,
+                        iconResName = "ic_folder",
+                        colorHex = "#3B82F6",
+                        isAutoGroup = false,
+                        sortOrder = 50
+                    )
+                    BookmarkRepository.getInstance(ctx).insertGroup(newGroup)
+                    loadGroupsAndAutoSelect()
+                    dialog.dismiss()
                 }
             }
-            .setNegativeButton(R.string.cancel) { _, _ ->
-                spinnerGroup.setSelection(0)
-            }
-            .show()
+        }
+
+        btnCancel.setOnClickListener {
+            spinnerGroup.setSelection(0)
+            dialog.dismiss()
+        }
+
+        dialog.setOnCancelListener {
+            spinnerGroup.setSelection(0)
+        }
+
+        dialog.show()
     }
 
     private fun performSave() {
@@ -246,20 +283,8 @@ class BookmarkQuickSaveBottomSheet : BottomSheetDialogFragment() {
                 val (saved, isDuplicate) = repo.saveBookmark(item)
                 Toast.makeText(context, getString(R.string.bookmark_saved_success, group.name), Toast.LENGTH_SHORT).show()
 
-                // Trigger background metadata scraping for rich preview & reader text
-                launch(Dispatchers.IO) {
-                    try {
-                        val meta = BookmarkMetadataScraper.scrape(context.applicationContext, url)
-                        val enriched = saved.copy(
-                            title = if (saved.title == url && !meta.title.isNullOrBlank()) meta.title else saved.title,
-                            thumbnailPath = meta.thumbnailPath ?: saved.thumbnailPath,
-                            faviconPath = meta.faviconPath ?: saved.faviconPath,
-                            cachedArticleText = meta.articleText
-                        )
-                        repo.updateBookmark(enriched)
-                    } catch (_: Exception) {}
-                }
-
+                repo.enrichBookmarkAsync(saved)
+                Toast.makeText(context, getString(R.string.bookmark_saved_success, group.name), Toast.LENGTH_SHORT).show()
                 dismiss()
                 onFinishedListener?.invoke()
                 return@launch
@@ -293,6 +318,7 @@ class BookmarkQuickSaveBottomSheet : BottomSheetDialogFragment() {
             sharedUrl: String?,
             sharedText: String?,
             sharedUris: List<Uri>,
+            initialTitle: String? = null,
             onFinished: () -> Unit
         ): BookmarkQuickSaveBottomSheet {
             return BookmarkQuickSaveBottomSheet().apply {
@@ -301,6 +327,7 @@ class BookmarkQuickSaveBottomSheet : BottomSheetDialogFragment() {
                 this.sharedUrl = sharedUrl
                 this.sharedText = sharedText
                 this.sharedUris = sharedUris
+                this.initialTitle = initialTitle
                 this.onFinishedListener = onFinished
             }
         }
