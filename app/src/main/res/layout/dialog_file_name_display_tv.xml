@@ -163,11 +163,12 @@
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/cgSpeed"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:singleSelection="true"
                     app:selectionRequired="true"
-                    app:singleLine="true"
+                    app:singleLine="false"
+                    app:chipSpacingVertical="6dp"
                     android:layout_marginBottom="10dp">
 
                     <com.google.android.material.chip.Chip
@@ -204,11 +205,12 @@
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/cgLoop"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:singleSelection="true"
                     app:selectionRequired="true"
-                    app:singleLine="true"
+                    app:singleLine="false"
+                    app:chipSpacingVertical="6dp"
                     android:layout_marginBottom="10dp">
 
                     <com.google.android.material.chip.Chip
@@ -238,11 +240,12 @@
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/cgScope"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:singleSelection="true"
                     app:selectionRequired="true"
-                    app:singleLine="true">
+                    app:singleLine="false"
+                    app:chipSpacingVertical="6dp">
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipScopeAll"

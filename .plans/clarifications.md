@@ -1,38 +1,28 @@
-# Clarifications: Enhanced Long Filename Display & Interactive Scrolling Options
+# Clarifications: Picture-in-Picture Compatibility for Custom Launchers and Modern Android
 
 ## Status
 Answers received — ready for /tasks
 
----
-
 ## Questions and Answers
 
-### 1. UI and Settings Presentation
-**Q1.** How should the Settings UI present 'Truncate Middle' and the new Marquee sub-options?  
-**A:** Add 'Truncate Middle' as a 6th primary option in the display mode dialog, and show Marquee sub-options (Scroll Speed, Loop Mode, Scroll Scope) inline within the same configuration view when Marquee is selected.
+### Playback State & Auto-Enter Behavior
+**Q1.** How should Picture-in-Picture behave when the video is paused and the user navigates to the home screen?  
+**A:** Do not enter PiP when paused (`autoEnterEnabled = false`). Navigating home minimizes/backgrounds the player without popping up a floating window.
 
-### 2. Middle Truncation Mechanics
-**Q2.** How should the middle truncation split and preserve characters at the end of the filename?  
-**A:** Preserve at least 4 trailing characters of the base filename before the extension (e.g., `prefix...xyz2.docx`) and always preserve the full file extension.
+### Aspect Ratio & Visual Transition
+**Q2.** How should the PiP window aspect ratio and transition animation be handled?  
+**A:** Dynamically match the video's actual aspect ratio (constrained to Android's 1:2.39 to 2.39:1 limits) and supply the active video surface bounds (`sourceRectHint`) for a seamless zoom-to-home animation.
 
-### 3. Interactive Touch Scrubbing Gesture
-**Q3.** How should manual touch scrubbing behave on mobile screens?  
-**A:** Touch specifically on the filename text to scrub. When manually scrubbed, the text remains fixed at the scrubbed position and marquee scrolling halts. It does not auto-reset while the row remains on screen. When the row is scrolled off-screen and becomes visible again (re-bound by RecyclerView), it resets to standard behavior.
+### Playlist Transitions Inside PiP
+**Q3.** When playing a playlist in PiP mode and the next track is audio-only, what should happen?  
+**A:** Automatically close the PiP window (`finish()`) and continue audio playback seamlessly in the background notification service.
 
-### 4. Scroll Scope (Mobile vs Android TV)
-**Q4.** How should the 'Selected / Focused Item Only' scroll scope behave on mobile vs Android TV?  
-**A:** On mobile touchscreens, scroll only checked/selected items when multi-select mode is active. On Android TV, scroll the currently D-pad focused row.
-
-### 5. Marquee Loop Defaults
-**Q5.** What should be the default marquee looping behavior out-of-the-box?  
-**A:** One-Shot (scroll forward, pause, scroll back, and stop) by default to conserve battery, reduce CPU cycles, and avoid visual distraction. Continuous loop is available as a configurable option.
-
----
+### Preference & Background Video Mode
+**Q4.** How should the user's "Background Video Mode" setting (PiP vs Audio Only) affect auto-enter PiP?  
+**A:** When configured as "Audio Only", disable PiP auto-enter (`autoEnterEnabled = false`) so navigating home continues audio in the background service without opening a floating window.
 
 ## Spec / Plan Impact
-- **spec.md FR-06 (Manual Touch Scrubbing)**: Updated to specify that manual scrubbing locks the offset in place and stops the marquee until the item scrolls off-screen and is re-bound by the RecyclerView.
-
----
+All confirmed answers align directly with the specifications defined in [.plans/spec.md](file:///F:/Share/UFM/.plans/spec.md) (specifically FR-01, FR-02, FR-03, FR-04, FR-07, FR-08, EC-01, and EC-05). No changes to the specification are needed.
 
 ## Confirmed — Ready for /tasks
-All requirements, edge cases, and user interactions are clarified and confirmed. Ready to proceed to `/plan` or `/tasks`.
+All questions have been resolved. The clarification phase is complete.
