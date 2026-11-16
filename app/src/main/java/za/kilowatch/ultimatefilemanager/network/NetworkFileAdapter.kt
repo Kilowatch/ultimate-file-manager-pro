@@ -1329,6 +1329,11 @@ class NetworkFileAdapter(
                             txtName.setTextColor(black)
                             txtDetails.setTextColor(black)
                             itemView.findViewById<TextView>(R.id.txtFileSize)?.setTextColor(black)
+                            if (ScrollingTextPreferenceManager.getScrollScope(ctx) == ScrollingTextPreferenceManager.SCOPE_FOCUSED &&
+                                ScrollingTextPreferenceManager.isEnabled(ctx)
+                            ) {
+                                ScrollingTextHelper.applyScrollingText(txtName, enabled = true)
+                            }
                         }
                         if (shouldTint) imgIcon.imageTintList = blackCsl
                     } else {
@@ -1338,6 +1343,9 @@ class NetworkFileAdapter(
                             txtName.setTextColor(white)
                             txtDetails.setTextColor(secondary)
                             itemView.findViewById<TextView>(R.id.txtFileSize)?.setTextColor(hint)
+                            if (ScrollingTextPreferenceManager.getScrollScope(ctx) == ScrollingTextPreferenceManager.SCOPE_FOCUSED) {
+                                ScrollingTextHelper.cancelScrolling(txtName)
+                            }
                         }
                         if (shouldTint) imgIcon.imageTintList = accentCsl
                     }
@@ -1345,7 +1353,14 @@ class NetworkFileAdapter(
             }
 
             // ── File name presentation (marquee, multi-line, or grid) ───────
-            FileNameDisplayHelper.applyFileNameDisplay(txtName, file.name, isTv, isGrid)
+            FileNameDisplayHelper.applyFileNameDisplay(
+                textView = txtName,
+                fileName = file.name,
+                isTv = isTv,
+                isGrid = isGrid,
+                isSelected = isSelected,
+                isFocused = itemView.hasFocus()
+            )
 
             if (isGrid) {
                 if (!GridTextPositionPreferenceManager.isBelow(context)) {

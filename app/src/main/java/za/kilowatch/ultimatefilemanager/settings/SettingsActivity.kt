@@ -727,15 +727,10 @@ class SettingsActivity : AppCompatActivity() {
         switchScrollingText = findViewById(R.id.switchScrollingText)
         txtScrollingTextSubtitle = findViewById(R.id.txtScrollingTextSubtitle)
 
+        updateFileNameDisplaySubtitle()
+        cardScrollingText.setOnClickListener { showFileNameDisplayDialog() }
         if (isTv) {
-            val scrollingTextEnabled = ScrollingTextPreferenceManager.isEnabled(this)
-            switchScrollingText?.isChecked = scrollingTextEnabled
-            updateScrollingTextSubtitle(scrollingTextEnabled)
-            cardScrollingText.setOnClickListener { toggleScrollingText() }
-            switchScrollingText?.setOnCheckedChangeListener(null)
-        } else {
-            updateFileNameDisplaySubtitle()
-            cardScrollingText.setOnClickListener { showFileNameDisplayDialog() }
+            switchScrollingText?.visibility = View.GONE
         }
 
         // Left-handed FAB toggle (Mobile Only)
@@ -2631,7 +2626,15 @@ class SettingsActivity : AppCompatActivity() {
         if (!::txtScrollingTextSubtitle.isInitialized) return
         val mode = ScrollingTextPreferenceManager.getMode(this)
         txtScrollingTextSubtitle.text = when (mode) {
-            ScrollingTextPreferenceManager.MODE_MARQUEE -> getString(R.string.settings_file_name_display_marquee)
+            ScrollingTextPreferenceManager.MODE_MARQUEE -> {
+                val speed = when (ScrollingTextPreferenceManager.getScrollSpeed(this)) {
+                    ScrollingTextPreferenceManager.SPEED_SLOW -> getString(R.string.settings_marquee_speed_slow)
+                    ScrollingTextPreferenceManager.SPEED_FAST -> getString(R.string.settings_marquee_speed_fast)
+                    else -> getString(R.string.settings_marquee_speed_normal)
+                }
+                "${getString(R.string.settings_file_name_display_marquee)} • $speed"
+            }
+            ScrollingTextPreferenceManager.MODE_TRUNCATE_MIDDLE -> getString(R.string.settings_file_name_display_truncate_middle)
             ScrollingTextPreferenceManager.MODE_MULTILINE_2 -> getString(R.string.settings_file_name_display_2_lines)
             ScrollingTextPreferenceManager.MODE_MULTILINE_3 -> getString(R.string.settings_file_name_display_3_lines)
             ScrollingTextPreferenceManager.MODE_MULTILINE_UNLIMITED -> getString(R.string.settings_file_name_display_unlimited)
@@ -2641,8 +2644,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showFileNameDisplayDialog() {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_file_name_display, null)
-        val currentMode = ScrollingTextPreferenceManager.getMode(this)
+        val layoutRes = if (isTv) R.layout.dialog_file_name_display_tv else R.layout.dialog_file_name_display
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        var currentMode = ScrollingTextPreferenceManager.getMode(this)
 
         val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
@@ -2650,29 +2654,147 @@ class SettingsActivity : AppCompatActivity() {
 
         dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
+        val layoutMarqueeSubOptions = dialogView.findViewById<View>(R.id.layoutMarqueeSubOptions)
+        val txtPreview = dialogView.findViewById<TextView>(R.id.txtPreviewFileName)
+        val sampleText = getString(R.string.settings_file_name_preview_sample)
+
         val options = listOf(
             Triple(R.id.btnModeMarquee, R.id.checkModeMarquee, ScrollingTextPreferenceManager.MODE_MARQUEE),
             Triple(R.id.btnMode2Lines, R.id.checkMode2Lines, ScrollingTextPreferenceManager.MODE_MULTILINE_2),
             Triple(R.id.btnMode3Lines, R.id.checkMode3Lines, ScrollingTextPreferenceManager.MODE_MULTILINE_3),
             Triple(R.id.btnModeUnlimited, R.id.checkModeUnlimited, ScrollingTextPreferenceManager.MODE_MULTILINE_UNLIMITED),
-            Triple(R.id.btnModeTruncate, R.id.checkModeTruncate, ScrollingTextPreferenceManager.MODE_TRUNCATE)
+            Triple(R.id.btnModeTruncate, R.id.checkModeTruncate, ScrollingTextPreferenceManager.MODE_TRUNCATE),
+            Triple(R.id.btnModeTruncateMiddle, R.id.checkModeTruncateMiddle, ScrollingTextPreferenceManager.MODE_TRUNCATE_MIDDLE)
         )
 
-        options.forEach { (btnId, checkId, mode) ->
-            val btn = dialogView.findViewById<View>(btnId)
-            val check = dialogView.findViewById<ImageView>(checkId)
-            val isSelected = currentMode == mode
-            check?.visibility = if (isSelected) View.VISIBLE else View.GONE
+        fun updatePreview(mode: String) {
+            if (txtPreview == null) return
+            ScrollingTextHelper.cancelScrolling(txtPreview)
+            txtPreview.setHorizontallyScrolling(false)
+            txtPreview.scrollX = 0
 
-            btn?.setOnClickListener {
-                ScrollingTextPreferenceManager.setMode(this, mode)
-                updateFileNameDisplaySubtitle()
-                dialog.dismiss()
+            when (mode) {
+                ScrollingTextPreferenceManager.MODE_MARQUEE -> {
+                    txtPreview.maxLines = 1
+                    txtPreview.ellipsize = null
+                    txtPreview.text = sampleText
+                    ScrollingTextHelper.applyScrollingText(txtPreview, enabled = true)
+                }
+                ScrollingTextPreferenceManager.MODE_TRUNCATE_MIDDLE -> {
+                    txtPreview.maxLines = 1
+                    txtPreview.ellipsize = android.text.TextUtils.TruncateAt.MIDDLE
+                    val avail = (txtPreview.width - txtPreview.paddingLeft - txtPreview.paddingRight).toFloat()
+                    if (avail > 0) {
+                        txtPreview.text = FileNameDisplayHelper.truncateMiddle(sampleText, txtPreview.paint, avail)
+                    } else {
+                        txtPreview.text = sampleText
+                        txtPreview.post {
+                            if (txtPreview.isAttachedToWindow && txtPreview.width > 0) {
+                                val w = (txtPreview.width - txtPreview.paddingLeft - txtPreview.paddingRight).toFloat()
+                                if (w > 0) txtPreview.text = FileNameDisplayHelper.truncateMiddle(sampleText, txtPreview.paint, w)
+                            }
+                        }
+                    }
+                }
+                ScrollingTextPreferenceManager.MODE_TRUNCATE -> {
+                    txtPreview.maxLines = 1
+                    txtPreview.ellipsize = android.text.TextUtils.TruncateAt.END
+                    txtPreview.text = sampleText
+                }
+                else -> {
+                    txtPreview.maxLines = when (mode) {
+                        ScrollingTextPreferenceManager.MODE_MULTILINE_2 -> 2
+                        ScrollingTextPreferenceManager.MODE_MULTILINE_3 -> 3
+                        else -> 3
+                    }
+                    txtPreview.ellipsize = android.text.TextUtils.TruncateAt.END
+                    txtPreview.text = FileNameDisplayHelper.formatForWrapping(sampleText)
+                }
             }
         }
 
+        fun updateModeSelection(selectedMode: String) {
+            currentMode = selectedMode
+            options.forEach { (btnId, checkId, mode) ->
+                val check = dialogView.findViewById<ImageView>(checkId)
+                val isSelected = selectedMode == mode
+                check?.visibility = if (isSelected) View.VISIBLE else View.GONE
+            }
+            layoutMarqueeSubOptions?.visibility = if (selectedMode == ScrollingTextPreferenceManager.MODE_MARQUEE) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+            updatePreview(selectedMode)
+        }
+
+        options.forEach { (btnId, _, mode) ->
+            val btn = dialogView.findViewById<View>(btnId)
+            btn?.setOnClickListener {
+                ScrollingTextPreferenceManager.setMode(this, mode)
+                updateFileNameDisplaySubtitle()
+                updateModeSelection(mode)
+            }
+        }
+
+        // Marquee Sub-options: Speed
+        val cgSpeed = dialogView.findViewById<com.google.android.material.chip.ChipGroup>(R.id.cgSpeed)
+        val currentSpeed = ScrollingTextPreferenceManager.getScrollSpeed(this)
+        when (currentSpeed) {
+            ScrollingTextPreferenceManager.SPEED_SLOW -> dialogView.findViewById<com.google.android.material.chip.Chip>(R.id.chipSpeedSlow)?.isChecked = true
+            ScrollingTextPreferenceManager.SPEED_FAST -> dialogView.findViewById<com.google.android.material.chip.Chip>(R.id.chipSpeedFast)?.isChecked = true
+            else -> dialogView.findViewById<com.google.android.material.chip.Chip>(R.id.chipSpeedNormal)?.isChecked = true
+        }
+        cgSpeed?.setOnCheckedStateChangeListener { _, checkedIds ->
+            val speed = when {
+                checkedIds.contains(R.id.chipSpeedSlow) -> ScrollingTextPreferenceManager.SPEED_SLOW
+                checkedIds.contains(R.id.chipSpeedFast) -> ScrollingTextPreferenceManager.SPEED_FAST
+                else -> ScrollingTextPreferenceManager.SPEED_NORMAL
+            }
+            ScrollingTextPreferenceManager.setScrollSpeed(this, speed)
+            updateFileNameDisplaySubtitle()
+            updatePreview(currentMode)
+        }
+
+        // Marquee Sub-options: Loop Mode
+        val cgLoop = dialogView.findViewById<com.google.android.material.chip.ChipGroup>(R.id.cgLoop)
+        val currentLoop = ScrollingTextPreferenceManager.getLoopMode(this)
+        when (currentLoop) {
+            ScrollingTextPreferenceManager.LOOP_CONTINUOUS -> dialogView.findViewById<com.google.android.material.chip.Chip>(R.id.chipLoopContinuous)?.isChecked = true
+            else -> dialogView.findViewById<com.google.android.material.chip.Chip>(R.id.chipLoopOneShot)?.isChecked = true
+        }
+        cgLoop?.setOnCheckedStateChangeListener { _, checkedIds ->
+            val loop = when {
+                checkedIds.contains(R.id.chipLoopContinuous) -> ScrollingTextPreferenceManager.LOOP_CONTINUOUS
+                else -> ScrollingTextPreferenceManager.LOOP_ONE_SHOT
+            }
+            ScrollingTextPreferenceManager.setLoopMode(this, loop)
+            updatePreview(currentMode)
+        }
+
+        // Marquee Sub-options: Scope
+        val cgScope = dialogView.findViewById<com.google.android.material.chip.ChipGroup>(R.id.cgScope)
+        val currentScope = ScrollingTextPreferenceManager.getScrollScope(this)
+        when (currentScope) {
+            ScrollingTextPreferenceManager.SCOPE_FOCUSED -> dialogView.findViewById<com.google.android.material.chip.Chip>(R.id.chipScopeFocused)?.isChecked = true
+            else -> dialogView.findViewById<com.google.android.material.chip.Chip>(R.id.chipScopeAll)?.isChecked = true
+        }
+        cgScope?.setOnCheckedStateChangeListener { _, checkedIds ->
+            val scope = when {
+                checkedIds.contains(R.id.chipScopeFocused) -> ScrollingTextPreferenceManager.SCOPE_FOCUSED
+                else -> ScrollingTextPreferenceManager.SCOPE_ALL
+            }
+            ScrollingTextPreferenceManager.setScrollScope(this, scope)
+        }
+
+        updateModeSelection(currentMode)
+
         dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
             dialog.dismiss()
+        }
+
+        dialog.setOnDismissListener {
+            txtPreview?.let { ScrollingTextHelper.cancelScrolling(it) }
         }
 
         dialog.show()

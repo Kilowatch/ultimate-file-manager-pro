@@ -1,22 +1,22 @@
-# Task List: Actual vs. Nominal File Size Detection & Sparse/Incomplete File Handling
+# Task List: Enhanced Long Filename Display & Interactive Scrolling Options
 
-## Setup & Resources
-- [x] [T001] [P] Add string resources in `app/src/main/res/values/strings.xml` for dual size labels, sparse warning badges, retention policies, compare results, and analyzer cards — blocks UI integration.
-- [x] [T002] Create amber badge drawable `app/src/main/res/drawable/bg_badge_sparse.xml` for partial/incomplete download indicators.
+## Setup
+- [x] [T001] [P] Add string resources to `app/src/main/res/values/strings.xml` for Truncate Middle, Marquee Speed (Slow, Normal, Fast), Marquee Loop (One-Shot, Continuous), Marquee Scope (All Files, Focused / Selected Only), and Preview.
 
-## Foundation & Core Utilities
-- [x] [T003] [P] Create `za.kilowatch.ultimatefilemanager.util.SparseFileUtils.kt` with POSIX `st_blocks` inspection, `FileAllocation` data model, and `comparePartialFiles()` — foundation for all sparse file detection.
-- [x] [T004] Create unit tests in `app/src/test/java/za/kilowatch/ultimatefilemanager/util/SparseFileUtilsTest.kt` verifying allocation calculation, percentage math, and threshold edge cases.
+## Foundation
+- [x] [T002] [P] Update `ScrollingTextPreferenceManager.kt` with `MODE_TRUNCATE_MIDDLE`, preference keys (`KEY_SCROLL_SPEED`, `KEY_LOOP_MODE`, `KEY_SCROLL_SCOPE`), constants, and getters/setters.
+- [x] [T003] [P] Implement `truncateMiddle(...)` algorithm in `FileNameDisplayHelper.kt` to calculate prefix + "…" + suffix (at least 4 chars) + full extension based on available text width and compound extensions.
+- [x] [T004] [P] Enhance `ScrollingTextHelper.kt` with variable speed calculation (30, 50, 80 dp/s), continuous looping support, and manual touch scrub state management (`attachTouchScrubbing`, `cancelScrolling` reset).
 
 ## Feature Implementation
-- [x] [T005] Update `app/src/main/res/layout/dialog_file_properties.xml` to add `rowSizeOnDisk` (label, formatted value, and `badgeSparseWarning`) adhering to UFMStandard glass theme.
-- [x] [T006] Update `FilePropertiesBottomSheet.kt` to query `SparseFileUtils.getFileAllocation()`, populate actual size on disk, and show the sparse warning badge.
-- [x] [T007] [P] Update `DuplicateRetentionManager.kt` to add `MODE_MOST_COMPLETE = "most_complete"` and `KEEP_MOST_COMPLETE` retention preset.
-- [x] [T008] Update `item_analyzer_duplicate_file.xml` and `item_analyzer_duplicate_file_tv.xml` to add `txtDupSparseBadge`.
-- [x] [T009] [P] Update `AnalyzerDuplicateAdapter.kt` to bind sparse badges and enforce complete file protection + `KEEP_MOST_COMPLETE` in `selectAllDuplicates()`.
-- [x] [T010] Update `FileCompareDialogFragment.kt`, `dialog_compare_files.xml`, and `dialog_compare_files_tv.xml` (strictly adhering to UFMStandard mobile/TV glass styling) to perform partial file header/offset checks and display partial match status.
-- [x] [T011] Update `StorageAnalyzerEngine.kt` to add `getIncompleteDownloads()` and generate the `Incomplete / Sparse Downloads` cleanup recommendation.
+- [x] [T005] Update `FileNameDisplayHelper.applyFileNameDisplay` to support `MODE_TRUNCATE_MIDDLE`, Marquee scope checks (`SCOPE_ALL` vs `SCOPE_FOCUSED`), and wire `attachTouchScrubbing` for single-line modes on touch devices.
+- [x] [T006] Update `FileAdapter.kt` to pass `isSelected` state into `applyFileNameDisplay`, hook TV focus changes to marquee scroll for `SCOPE_FOCUSED`, and ensure `recycle()` resets scroll and scrub state.
+- [x] [T007] Update `NetworkFileAdapter.kt` to pass `isSelected` state into `applyFileNameDisplay`, hook TV focus changes for `SCOPE_FOCUSED`, and ensure `recycle()` resets scroll and scrub state.
+- [x] [T008] Update `SafPickerActivity.kt` to support middle truncation and scrolling preferences consistently.
+- [x] [T009] [P] Update `app/src/main/res/layout/dialog_file_name_display.xml` with `btnModeTruncateMiddle` option card, expandable Marquee sub-options (Speed chips, Loop chips, Scope chips), and an interactive preview card.
+- [x] [T010] [P] Create `app/src/main/res/layout/dialog_file_name_display_tv.xml` adhering to `UFMStandard` (glass dialog background, 650dp width, D-pad focusable items with TV yellow focus selectors).
+- [x] [T011] Update `SettingsActivity.kt` to wire `dialog_file_name_display.xml` and `dialog_file_name_display_tv.xml`, handle `MODE_TRUNCATE_MIDDLE`, manage speed/loop/scope toggles, run the live preview animation, and update settings subtitles.
 
-## Polish, Verification & Testing
-- [x] [T012] Update `app/src/test/java/za/kilowatch/ultimatefilemanager/storage/DuplicateRetentionTest.kt` with tests for `KEEP_MOST_COMPLETE` and complete file protection.
-- [x] [T013] Run unit test suite and execute debug build (`./gradlew assembleMobileGoogleDebug`) to verify zero compilation errors.
+## Polish & Testing
+- [x] [T012] Verify debug compilation with `./gradlew assembleMobileGoogleDebug`.
+- [x] [T013] Run `python -u translate_strings.py verify` to sync translations for all newly added string keys.

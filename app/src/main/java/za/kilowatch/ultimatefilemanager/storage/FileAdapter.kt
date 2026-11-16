@@ -1825,6 +1825,11 @@ class FileAdapter(
                             txtName.setTextColor(black)
                             txtInfo.setTextColor(black)
                             txtSize.setTextColor(black)
+                            if (ScrollingTextPreferenceManager.getScrollScope(ctx) == ScrollingTextPreferenceManager.SCOPE_FOCUSED &&
+                                ScrollingTextPreferenceManager.isEnabled(ctx)
+                            ) {
+                                ScrollingTextHelper.applyScrollingText(txtName, enabled = true)
+                            }
                         }
                         if (shouldTint) imgIcon.imageTintList = blackCsl
                     } else {
@@ -1834,6 +1839,9 @@ class FileAdapter(
                             txtName.setTextColor(white)
                             txtInfo.setTextColor(secondary)
                             txtSize.setTextColor(hint)
+                            if (ScrollingTextPreferenceManager.getScrollScope(ctx) == ScrollingTextPreferenceManager.SCOPE_FOCUSED) {
+                                ScrollingTextHelper.cancelScrolling(txtName)
+                            }
                         }
                         if (shouldTint) imgIcon.imageTintList = accentCsl
                     }
@@ -1841,7 +1849,14 @@ class FileAdapter(
             }
 
             // ── File name presentation (marquee, multi-line, or grid) ───────
-            FileNameDisplayHelper.applyFileNameDisplay(txtName, file.name, isTv, isGrid)
+            FileNameDisplayHelper.applyFileNameDisplay(
+                textView = txtName,
+                fileName = file.name,
+                isTv = isTv,
+                isGrid = isGrid,
+                isSelected = isSelected,
+                isFocused = itemView.hasFocus()
+            )
 
             if (isGrid) {
                 if (!GridTextPositionPreferenceManager.isBelow(context)) {

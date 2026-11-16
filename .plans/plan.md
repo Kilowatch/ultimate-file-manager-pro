@@ -1,13 +1,14 @@
-# Implementation Plan: Actual vs. Nominal File Size Detection & Sparse/Incomplete File Handling
+# Implementation Plan: Enhanced Long Filename Display & Interactive Scrolling Options
 
 ## Goals
-Enable Ultimate File Manager to identify, display, and intelligently handle sparse and pre-allocated incomplete files (such as incomplete torrent downloads and sparse disk images) across the application. Specifically:
-- Expose both **Nominal (Logical) Size** and **Actual Allocated Disk Usage** in File Properties.
-- Differentiate between complete and partial downloads in the **Duplicate Finder**, displaying allocation badges and protecting complete files from accidental deletion.
-- Add an explicit **"Keep Most Complete"** duplicate retention policy preset.
-- Enhance **File Comparison** (`FileCompareDialogFragment`) to perform fast header (64 KB) and sampled block verification, reporting partial matches when nominal sizes match but hashes differ.
-- Add an **"Incomplete / Sparse Downloads"** cleanup recommendation card to **Storage Analyzer**.
-- Provide graceful degradation for cloud, network, and storage volumes where physical block allocation is unsupported.
+Implement advanced long filename display and customizable scrolling capabilities to solve the problem of indistinguishable long filenames in single-line listings, satisfying all success criteria in `.plans/spec.md` and user clarifications in `.plans/clarifications.md`:
+- Introduce **Truncate Middle** mode (`prefix...suffix.ext`) preserving base prefix, ellipsis, at least 4 trailing characters of the base name, and the full extension.
+- Provide **customizable marquee scrolling**:
+  - Scroll Speed: *Slow* (30 dp/s), *Normal* (50 dp/s, default), *Fast* (80 dp/s).
+  - Loop Behavior: *One-Shot* (default) vs *Continuous Loop*.
+  - Scroll Scope: *All Visible Files* (default) vs *Focused / Selected Only*.
+- Enable **manual horizontal touch scrubbing** on single-line filenames so users can drag across the text to inspect any part of the name, remaining fixed at the scrubbed position until recycled off-screen.
+- Provide a **unified settings UI** adhering to `UFMStandard` on both Mobile and Android TV with an interactive live preview.
 
 ---
 
@@ -15,156 +16,181 @@ Enable Ultimate File Manager to identify, display, and intelligently handle spar
 
 ```mermaid
 flowchart TD
-    A["File System Target / Candidate File"] --> B["SparseFileUtils.getFileAllocation()"]
-    
-    B --> C{"Is Local Ext4/F2FS Storage?"}
-    C -->|"Yes"| D["android.system.Os.lstat() -> stat.st_blocks * 512"]
-    C -->|"No (Network, Cloud, FAT32/exFAT)"| E["Fallback: allocatedBytes = nominalSize (isSparse = false)"]
-    
-    D --> F{"allocatedBytes < nominalSize * 0.98?"}
-    F -->|"Yes (Missing blocks)"| G["FileAllocationInfo(isSparse = true, pct, allocatedBytes)"]
-    F -->|"No (Fully allocated)"| H["FileAllocationInfo(isSparse = false, 100%, allocatedBytes)"]
-    
-    G --> I["File Properties: Dual Size + 'Partial Download' Badge"]
-    G --> J["Duplicate Finder: Group together + Tag 'Partial (X%)' + Protect Complete Files"]
-    G --> K["Retention Policy: 'Keep Most Complete' prioritizes 100% files"]
-    G --> L["File Compare: 64KB Header Match + Sampled Block Verification"]
-    G --> M["Storage Analyzer: 'Incomplete / Sparse Downloads' Cleanup Card"]
+    subgraph Settings ["Settings & Configuration"]
+        A["ScrollingTextPreferenceManager"] --> B["Mode: Marquee / Truncate Middle / Truncate End / Multi-line"]
+        A --> C["Speed: Slow (30) / Normal (50) / Fast (80)"]
+        A --> D["Loop: One-Shot / Continuous"]
+        A --> E["Scope: All Files / Focused Only"]
+    end
+
+    subgraph Presentation ["Presentation Layer (FileNameDisplayHelper)"]
+        B --> F{"Display Mode"}
+        F -->|"Truncate Middle"| G["truncateMiddle(): Prefix + '…' + Suffix(4) + Extension"]
+        F -->|"Marquee"| H["ScrollingTextHelper.applyScrollingText()"]
+        F -->|"Truncate End"| I["ellipsize = END"]
+        F -->|"Multi-line"| J["formatForWrapping()"]
+    end
+
+    subgraph Interaction ["Interactive Touch & Focus"]
+        K["Horizontal Touch Scrubbing (OnTouchListener)"] -->|"Drag on txtName"| L["scrollX = delta; Lock position; Halt marquee"]
+        E -->|"Scope == Focused"| M{"Platform Check"}
+        M -->|"Android TV"| N["TV Focus Listener: Start on focus, Reset on blur"]
+        M -->|"Mobile"| O["Selection Mode: Start only when item isChecked"]
+    end
+
+    G --> P["RecyclerView item (item_file / item_file_compact / item_file_tv)"]
+    H --> P
+    L --> P
 ```
 
 ### Architectural Decisions
 
-1. **Strict Adherence to UFMStandard Dialogs & Styling**:
-   - All dialogs and bottom sheets (`FilePropertiesBottomSheet`, `FileCompareDialogFragment`, and any cleanup prompts) strictly adhere to **UFMStandard**:
-     - Dark frosted glassmorphic theme styling (`@drawable/bg_dialog_glass`, `@drawable/bg_card_frosted`, `@drawable/bg_btn_icon_frosted`).
-     - Dual-layout architecture for Mobile (`dialog_<name>.xml` / bottom sheet) and Android TV (`dialog_<name>_tv.xml` / 10-foot centered dialog).
-     - Android TV remote D-pad navigation with yellow focus highlights (`@drawable/selector_btn_glass_yellow` / `selector_card_glass_tv`).
-     - Standard action button hierarchy (primary action stacked above secondary/dismiss).
-     - Any user alert or confirmation prompts route through `UfmDialogHelper` for consistent UFMStandard glass rendering.
+1. **Middle Truncation Algorithm**:
+   - `FileNameDisplayHelper.truncateMiddle(fileName, paint, availableWidthPx, keepSuffixChars = 4)`:
+     - Identifies compound extensions (e.g. `.tar.gz`, `.tar.bz2`) using known archive patterns and standard dot extension extraction.
+     - Splits into `baseName` and `extension`.
+     - Preserves the full extension and at least 4 trailing characters of the base name (`suffix = baseName.takeLast(4) + ext`).
+     - Calculates available width for prefix: `availableWidth - paint.measureText("…" + suffix)`.
+     - Measures and trims `baseName` prefix to fit.
+     - If width is too narrow even for suffix + ellipsis, gracefully falls back to native truncation (`TextUtils.TruncateAt.MIDDLE`).
 
-2. **Lightweight POSIX Block Inspection (`SparseFileUtils`)**:
-   - Uses `android.system.Os.lstat(file.absolutePath)` via Android's Bionic C library binding.
-   - Calculates allocated bytes as `stat.st_blocks * 512L`.
-   - Compares against `stat.st_size` (nominal logical length).
-   - If `nominalSize > 64 KB` and `allocatedBytes < nominalSize * 0.98L` (or difference > 4096 bytes), the file is classified as sparse/partially allocated.
-   - For files on network protocols (SMB, SFTP, WebDAV, Cloud) or filesystems without block allocation support, `SparseFileUtils` falls back gracefully without errors or false positives.
+2. **Touch Scrubbing & Gesture Disambiguation**:
+   - Implemented via a lightweight touch listener attached to single-line `TextView` (`ScrollingTextHelper.attachTouchScrubbing(textView, fullFileName)`).
+   - Distinguishes between:
+     - **Tap**: `abs(dx) < touchSlop && abs(dy) < touchSlop` -> calls `textView.performClick()` to open or select file.
+     - **Vertical list scroll**: `abs(dy) > abs(dx) && abs(dy) > touchSlop` -> yields touch events to RecyclerView.
+     - **Horizontal text scrub**: `abs(dx) > abs(dy) && abs(dx) > touchSlop` -> calls `requestDisallowInterceptTouchEvent(true)`, computes `scrollX.coerceIn(0, maxOverflow)`, and halts active marquee animations for that view instance.
+   - Text remains fixed at the scrubbed position until the ViewHolder is recycled (`recycle()`) or re-bound (`applyFileNameDisplay()`).
 
-2. **File Properties Dual Display (`FilePropertiesBottomSheet`)**:
-   - If a file is sparse, `FilePropertiesBottomSheet` displays both the nominal size and physical size on disk:
-     - `Size: 4.50 GB (4,831,838,208 bytes)`
-     - `Size on disk: 350.00 MB (367,001,600 bytes) — 7.2% allocated`
-     - Displays an amber warning chip/badge: `Partial Download (Sparse)`.
+3. **Marquee Engine Enhancements**:
+   - `ScrollingTextHelper` updated to query configured scroll speed (dp/s) and loop mode.
+   - `Continuous` mode chains an additional delayed callback from `scrollOneWay(forward = false)` back to `scrollOneWay(forward = true)` with a 1500ms initial pause.
+   - `Scope` check ensures animations only trigger if allowed by selection state on mobile or focus state on TV.
 
-3. **Duplicate Finder Protection & Retention (`DuplicateRetentionManager` & `AnalyzerDuplicateAdapter`)**:
-   - In `AnalyzerDuplicateAdapter`, sparse files in a duplicate group display an amber badge: `Partial (X%)`.
-   - In automated retention selection (`KEEP_OLDEST`, `KEEP_NEWEST`), complete files are **always protected** from deletion over partial files. An incomplete file will never be chosen as the "keeper" when a 100% complete file exists in the same group.
-   - Add a new retention preset `KEEP_MOST_COMPLETE` (`mode = "most_complete"`), sorting by allocation percentage descending before applying timestamp tie-breakers.
-
-4. **File Comparison Header & Offset Matching (`FileCompareDialogFragment`)**:
-   - When comparing two files that have matching nominal sizes:
-     - If both files have identical nominal sizes but differ in allocated blocks or standard full-hash:
-     - Read the initial 64 KB header of both files.
-     - If headers match, sample non-zero data offsets from the partial file against the reference file.
-     - If matched, display a dedicated status: `Matching Header / Partial Copy (X% allocated vs Y% allocated)`.
-
-5. **Storage Analyzer Cleanup Recommendation**:
-   - In `StorageAnalyzerEngine`, scan indexed files for sparse downloads (`isSparse == true`).
-   - Emit a dedicated `CleanupRecommendation`:
-     - Title: `Incomplete / Sparse Downloads`
-     - Description: `Found X partially downloaded files wasting Y MB on disk`
-     - Risk level: `RiskLevel.MODERATE`
-
----
-
-## Files to Create
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/util/SparseFileUtils.kt` — Core Utility
-- **What:** Provides POSIX-level block inspection, sparse allocation detection, and partial file comparison.
-- **Key Details:**
-  - `data class FileAllocation(val nominalSize: Long, val allocatedBytes: Long, val isSparse: Boolean, val allocationPercentage: Float)`
-  - `fun getFileAllocation(file: File): FileAllocation`
-  - `fun isSparseFile(file: File): Boolean`
-  - `sealed class PartialCompareResult { object MatchFull, data class MatchPartial(val pctA: Float, val pctB: Float), object HeaderMismatch, object SizeMismatch }`
-  - `fun comparePartialFiles(fileA: File, fileB: File): PartialCompareResult`
-
-### `app/src/test/java/za/kilowatch/ultimatefilemanager/util/SparseFileUtilsTest.kt` — Unit Tests
-- **What:** Unit tests for allocation math, percentage calculation, threshold logic, and partial header comparisons.
+4. **UFMStandard Compliance & TV Layout**:
+   - `dialog_file_name_display.xml` updated with `Truncate Middle` card, expandable Marquee sub-options, and an animated live preview card.
+   - `dialog_file_name_display_tv.xml` created for Android TV with D-pad focus traversal, glass dialog styling (`@drawable/bg_dialog_glass`), 650dp width, and yellow focus selectors.
 
 ---
 
 ## Files to Modify
 
-### `app/src/main/res/layout/dialog_file_properties.xml` — File Properties Layout
-- **What:** Add `rowSizeOnDisk` (TableRow) with `txtSizeOnDiskLabel`, `txtSizeOnDiskValue`, and `badgeSparseWarning` immediately beneath `rowSize`.
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/ScrollingTextPreferenceManager.kt`
+- Add `MODE_TRUNCATE_MIDDLE = "truncate_middle"`.
+- Add preferences keys:
+  - `KEY_SCROLL_SPEED = "scrolling_text_speed"` (values: `SPEED_SLOW`, `SPEED_NORMAL`, `SPEED_FAST`).
+  - `KEY_LOOP_MODE = "scrolling_text_loop"` (values: `LOOP_ONE_SHOT`, `LOOP_CONTINUOUS`).
+  - `KEY_SCROLL_SCOPE = "scrolling_text_scope"` (values: `SCOPE_ALL`, `SCOPE_FOCUSED`).
+- Add getter and setter functions with defaults (`SPEED_NORMAL`, `LOOP_ONE_SHOT`, `SCOPE_ALL`).
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/FilePropertiesBottomSheet.kt` — File Properties Logic
-- **What:** Bind `rowSizeOnDisk` and evaluate `SparseFileUtils.getFileAllocation()`. Display actual size, allocated percentage, and sparse warning badge when `isSparse == true`.
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/ScrollingTextHelper.kt`
+- Read dynamic scroll speed in `scrollOneWay`:
+  - Slow: 30 dp/s, Normal: 50 dp/s, Fast: 80 dp/s.
+- Support continuous looping when `LOOP_CONTINUOUS` is enabled.
+- Add `attachTouchScrubbing(textView: TextView, fullFileName: String)` and tracking for manually scrubbed views.
+- Add `cancelScrolling(textView: TextView)` enhancements to reset manual scrub state when recycled.
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/DuplicateRetentionManager.kt` — Retention Policies
-- **What:**
-  - Add `MODE_MOST_COMPLETE = "most_complete"`
-  - Add `KEEP_MOST_COMPLETE` to `DuplicateRetentionPolicy` enum
-  - Update `fromKey()` to parse `MODE_MOST_COMPLETE`
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/FileNameDisplayHelper.kt`
+- Add `truncateMiddle(fileName: String, paint: Paint, availableWidth: Float, keepSuffixChars: Int = 4): String`.
+- Support `MODE_TRUNCATE_MIDDLE` in `applyFileNameDisplay`:
+  - Configures single-line layout and calculates prefix/suffix middle truncation.
+- Update `applyFileNameDisplay` to accept `isSelected: Boolean = false` and `isFocused: Boolean = false` parameters.
+- Attach manual touch scrubbing for all single-line modes on mobile touch devices.
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/AnalyzerDuplicateAdapter.kt` — Duplicate List UI & Selection
-- **What:**
-  - Update `selectAllDuplicates()`:
-    - Enforce protection of complete files (a complete file is never selected for deletion if a duplicate candidate is a partial download).
-    - Handle `DuplicateRetentionPolicy.KEEP_MOST_COMPLETE`.
-  - In `FileVH`: check if file is sparse. If sparse, display `txtDupSparseBadge` (`Partial (X%)`) and format `txtDupFileSize` with dual size.
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/FileAdapter.kt`
+- Pass `isSelected = (file.absolutePath in selectedPaths)` to `FileNameDisplayHelper.applyFileNameDisplay`.
+- In TV `itemView.setOnFocusChangeListener`, notify `ScrollingTextHelper` to start/stop scrolling for `SCOPE_FOCUSED`.
+- In `recycle()`, ensure `ScrollingTextHelper.cancelScrolling(txtName)` resets scroll offset and scrub state.
 
-### `app/src/main/res/layout/item_analyzer_duplicate_file.xml` & `item_analyzer_duplicate_file_tv.xml` — Duplicate Item Layouts
-- **What:** Add `txtDupSparseBadge` TextView with amber warning background (`bg_badge_sparse`) next to `txtDupPreservedBadge`.
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/network/NetworkFileAdapter.kt`
+- Pass `isSelected = (file in selectedFiles)` to `FileNameDisplayHelper.applyFileNameDisplay`.
+- Handle TV focus change for `SCOPE_FOCUSED`.
+- In `recycle()`, ensure `ScrollingTextHelper.cancelScrolling(txtName)` is called.
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/checksum/FileCompareDialogFragment.kt` — File Comparison
-- **What:**
-  - Detect sparse files for local comparison targets.
-  - When nominal sizes match, invoke `SparseFileUtils.comparePartialFiles()`.
-  - Display partial match banner and allocation status when a complete and incomplete copy are compared.
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/SettingsActivity.kt`
+- Update `updateFileNameDisplaySubtitle()` to reflect `MODE_TRUNCATE_MIDDLE`.
+- Enhance `showFileNameDisplayDialog()`:
+  - Support dual layouts (`dialog_file_name_display.xml` on mobile, `dialog_file_name_display_tv.xml` on TV).
+  - Handle selection for `btnModeTruncateMiddle`.
+  - Wire up Speed chips/radios (Slow, Normal, Fast).
+  - Wire up Loop mode chips/radios (One-Shot, Continuous).
+  - Wire up Scope chips/radios (All Files, Focused / Selected Only).
+  - Bind interactive live preview TextView showing sample long filename animating with active preferences.
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAnalyzerEngine.kt` — Storage Analyzer
-- **What:**
-  - Add `getIncompleteDownloads(storageId: String): List<FileIndex>`
-  - Emit an `Incomplete / Sparse Downloads` recommendation in `buildRecommendations()`.
+### `app/src/main/res/layout/dialog_file_name_display.xml`
+- Add option card for `btnModeTruncateMiddle`.
+- Add inline Marquee sub-options container with chip groups / option rows for Speed, Loop, and Scope.
+- Add live preview card displaying sample text.
 
-### `app/src/main/res/values/strings.xml` — English String Resources
-- **What:** Add strings for:
-  - `properties_label_size_on_disk`: `"Size on disk"`
-  - `properties_sparse_badge`: `"Partial Download (Sparse)"`
-  - `properties_sparse_allocated_pct`: `"%1$s (%2$.1f%% allocated)"`
-  - `duplicate_badge_partial`: `"Partial (%1$.0f%%)"`
-  - `retention_keep_most_complete`: `"Keep Most Complete"`
-  - `compare_result_partial_match`: `"Matching Header & Data — Incomplete Download (%1$.1f%% allocated)"`
-  - `analyzer_incomplete_downloads_title`: `"Incomplete / Sparse Downloads"`
-  - `analyzer_incomplete_downloads_desc`: `"Found %1$d incomplete or sparse files consuming disk space"`
+### `app/src/main/res/values/strings.xml`
+- Add string resources:
+  - `settings_file_name_display_truncate_middle`
+  - `settings_file_name_display_truncate_middle_desc`
+  - `settings_marquee_speed_title`, `settings_marquee_speed_slow`, `settings_marquee_speed_normal`, `settings_marquee_speed_fast`
+  - `settings_marquee_loop_title`, `settings_marquee_loop_one_shot`, `settings_marquee_loop_continuous`
+  - `settings_marquee_scope_title`, `settings_marquee_scope_all`, `settings_marquee_scope_focused`
+  - `settings_file_name_preview_title`
 
 ---
 
-## Data Model Changes
-- No SQLite database schema changes required. `FileIndex` already tracks file path and nominal size. POSIX block queries are performed on candidate files on-demand during detailed inspections and duplicate resolution.
+## Files to Create
+
+### `app/src/main/res/layout/dialog_file_name_display_tv.xml`
+- **What:** TV-optimized version of the file name display & marquee options dialog.
+- **Key details:**
+  - Follows `UFMStandard` dialog pattern (`@drawable/bg_dialog_glass`, 650dp width).
+  - Focusable option cards with `@drawable/selector_tv_button` / `@drawable/selector_btn_glass_yellow`.
+  - D-pad friendly layout for switching display mode, speed, loop, and scope.
 
 ---
 
-## Verification Plan
+## Data Model & Preferences Keys
+Stored in `scrolling_text_prefs` (already registered in `SettingsBackupManager`):
 
-### Automated Tests
-1. **`SparseFileUtilsTest`**:
-   - Run via `./gradlew testMobileGoogleDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.util.SparseFileUtilsTest"`
-   - Verifies allocation calculation, percentage clamping, and threshold logic.
-2. **`DuplicateRetentionTest`**:
-   - Run via `./gradlew testMobileGoogleDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.storage.DuplicateRetentionTest"`
-   - Verifies `KEEP_MOST_COMPLETE` policy and complete file protection under `KEEP_OLDEST` and `KEEP_NEWEST`.
+| Key | Type | Possible Values | Default |
+|---|---|---|---|
+| `file_name_display_mode` | String | `marquee`, `truncate_middle`, `truncate`, `multiline_2`, `multiline_3`, `multiline_unlimited` | `marquee` |
+| `scrolling_text_speed` | String | `slow`, `normal`, `fast` | `normal` |
+| `scrolling_text_loop` | String | `one_shot`, `continuous` | `one_shot` |
+| `scrolling_text_scope` | String | `all`, `focused` | `all` |
 
-### Manual Verification
-1. **File Properties**:
-   - Inspect a complete local file: Verify standard single size line is shown.
-   - Inspect a partially downloaded torrent file: Verify `Size on disk` and `Partial Download` badge appear with correct percentage.
-2. **Duplicate Finder**:
-   - Run duplicate finder on a folder containing a complete file and a partial torrent download with the same nominal size.
-   - Verify the partial file is badged `Partial (X%)`.
-   - Verify `Select All Duplicates` marks the partial file for deletion while keeping the complete file preserved.
-3. **File Compare**:
-   - Select both the complete file and the partial download in Twin Window mode and choose **Compare**.
-   - Verify the dialog shows `Matching Header / Partial Copy (X% allocated)` instead of a generic hash failure.
-4. **Storage Analyzer**:
-   - Open Storage Analyzer: Verify the `Incomplete / Sparse Downloads` card appears in Suggestions if incomplete files exist on device.
+---
+
+## Dependencies
+- No external libraries required. Uses standard Android SDK (`ObjectAnimator`, `TextView.scrollX`, `ViewConfiguration.scaledTouchSlop`, `Paint.measureText`).
+- Zero impact on DEX size or R8 optimization scores.
+
+---
+
+## Test Plan
+- **Middle Truncation Verification**:
+  - Test files with standard long names: `my_document_backup_2026_version_1.docx` -> verify `my_docum...on_1.docx`.
+  - Test compound extensions: `archive_backup_daily_system.tar.gz` -> verify `.tar.gz` is intact.
+  - Test extensionless files: `README_CONTAINING_VERY_LONG_INSTRUCTIONS` -> verify middle truncation without crash.
+  - Test short files: `file.txt` -> verify no ellipsis is inserted.
+- **Marquee Settings Verification**:
+  - Verify Slow (~30 dp/s), Normal (~50 dp/s), and Fast (~80 dp/s) scroll speeds.
+  - Verify One-Shot stops after 1 cycle; verify Continuous repeats smoothly.
+  - Verify Scope `focused`:
+    - Mobile: files don't scroll unless selected via multi-select checkbox.
+    - TV: only the focused file row scrolls.
+- **Touch Scrubbing Verification**:
+  - Drag horizontally on long file name: verify text follows finger movement and stays at scrubbed offset.
+  - Tap normally on file name: verify file opens / selects without being blocked by touch listener.
+  - Scroll list vertically: verify vertical RecyclerView flinging is smooth without hindrance.
+- **Settings & Backup**:
+  - Export settings backup, restore, verify all preferences are preserved.
+- **Build Verification**:
+  - Compile with `./gradlew assembleMobileGoogleDebug` to guarantee clean build.
+- **Translation Verification**:
+  - Run `python -u translate_strings.py verify` to sync new strings.
+
+---
+
+## Risks & Mitigations
+- **Risk:** Touch scrubbing on `txtName` blocks vertical RecyclerView scrolling.  
+  **Mitigation:** Use `ViewConfiguration.scaledTouchSlop` and check `abs(dx) > abs(dy)`. Only request disallow intercept if the horizontal delta exceeds touch slop.
+- **Risk:** Middle truncation calculations cause layout stutter during RecyclerView scrolling.  
+  **Mitigation:** `truncateMiddle` performs simple string slicing and single paint measure passes without creating complex views or spawning threads. Results can be cached or computed when width is known.
+- **Risk:** Marquee animator memory leaks on recycled rows.  
+  **Mitigation:** `cancelScrolling` in `onViewRecycled` / `recycle()` explicitly removes all animator listeners and cancels the animator.

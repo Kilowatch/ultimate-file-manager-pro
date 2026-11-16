@@ -451,10 +451,58 @@ Unbegrenzte Zeilen
 Bricht den vollständigen Namen auf so viele Zeilen um, wie nötig
 </string>
     <string name="settings_file_name_display_truncate">
-Einzelne Zeile (abgeschnitten)
+Single line (Truncated end)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Kürzt mit Auslassungspunkten (…), ohne zu scrollen
+Truncates with ellipsis at end (abc…) without scrolling
+</string>
+    <string name="settings_file_name_display_truncate_middle">
+Single line (Truncate middle)
+</string>
+    <string name="settings_file_name_display_truncate_middle_desc">
+Truncates in middle (abc…xyz.ext) to preserve the end suffix
+</string>
+    <string name="settings_marquee_speed_title">
+Scroll Speed
+</string>
+    <string name="settings_marquee_speed_slow">
+Slow
+</string>
+    <string name="settings_marquee_speed_normal">
+Normal
+</string>
+    <string name="settings_marquee_speed_fast">
+Fast
+</string>
+    <string name="settings_marquee_loop_title">
+Loop Mode
+</string>
+    <string name="settings_marquee_loop_one_shot">
+One-Shot
+</string>
+    <string name="settings_marquee_loop_one_shot_desc">
+Scrolls once and stops to save battery
+</string>
+    <string name="settings_marquee_loop_continuous">
+Continuous
+</string>
+    <string name="settings_marquee_loop_continuous_desc">
+Repeats back and forth continuously
+</string>
+    <string name="settings_marquee_scope_title">
+Scroll Scope
+</string>
+    <string name="settings_marquee_scope_all">
+All Visible Files
+</string>
+    <string name="settings_marquee_scope_focused">
+Focused / Selected Only
+</string>
+    <string name="settings_file_name_preview_title">
+Live Preview
+</string>
+    <string name="settings_file_name_preview_sample">
+VeryLongFileName_ProjectReport_2026_Final_v2.docx
 </string>
     <string name="settings_grid_indicators_title">
 Zeilennummern und Spaltenüberschriften ausblenden

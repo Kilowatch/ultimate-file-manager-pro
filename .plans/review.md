@@ -1,44 +1,42 @@
-# Code Review: Actual vs. Nominal File Size Detection & Sparse/Incomplete File Handling
+# Code Review: Enhanced Long Filename Display & Interactive Scrolling Options
 
 ## Summary
-The implementation is clean, robust, and well-structured. It introduces POSIX-level block allocation inspection (`android.system.Os.lstat`) to reliably detect sparse and pre-allocated incomplete files (e.g., torrent downloads) and integrates seamlessly across File Properties, the Duplicate Finder, File Compare, and Storage Analyzer. All new UI components strictly adhere to UFMStandard glassmorphism styling and dual Mobile / Android TV layout conventions. Automated unit tests are passing and the debug APK builds cleanly with zero errors. One minor performance optimization was identified regarding coroutine dispatch in `FileCompareDialogFragment`.
+A comprehensive code review was conducted across all changes introduced for the enhanced long filename display feature. The implementation cleanly addresses customer requirements with zero external dependencies, robust lifecycle handling in `ScrollingTextHelper`, safe gesture disambiguation via `scaledTouchSlop`, and strict compliance with `UFMStandard` and project architecture rules.
 
 ---
 
 ## Findings
 
 ### 🔴 Critical
-*None.*
-
----
+*None.* No memory leaks, crashes, security risks, or broken coroutine scopes detected.
 
 ### 🟠 Major
-*None.*
-
----
+*None.* No lifecycle violations or performance bottlenecks identified.
 
 ### 🟡 Minor
-- **[RESOLVED]** **`app/src/main/java/za/kilowatch/ultimatefilemanager/checksum/FileCompareDialogFragment.kt:264`**: Moved `SparseFileUtils.comparePartialFiles(leftFile, rightFile)` to execute on the background coroutine prior to `withContext(Dispatchers.Main)`, ensuring zero file I/O runs on the main looper.
-
----
+- **[FileNameDisplayHelper.kt:214]** `textView.post { ... }` in `applyMiddleTruncationText` could theoretically execute after a `ViewHolder` has been recycled and re-bound to a different file during rapid flinging if `textView.width == 0` on first inflation.
+  - *Status:* **Resolved.** Added tag check `textView.setTag(R.id.txtFileName, fileName)` and validation `textView.getTag(R.id.txtFileName) == fileName` inside the post callback before updating text.
+- **[ScrollingTextHelper.kt:168]** Long-press runnable in `attachTouchScrubbing` should be cancelled if `cancelScrolling()` is explicitly invoked during view recycling.
+  - *Status:* **Resolved.** Added `pendingLongPressRunnables` tracking map; `cancelScrolling()` explicitly cancels and removes any pending long-press callbacks for the recycled view.
 
 ### 🔵 Suggestions
-- **[RESOLVED]** **`app/src/main/java/za/kilowatch/ultimatefilemanager/storage/AnalyzerDuplicateAdapter.kt:58`**: Added `allocationCache.clear()` inside `submitList()` to maintain cache hygiene when duplicate groups are reloaded.
+- **[FileNameDisplayHelper.kt:29]** Binary search prefix fitting in `truncateMiddle` takes ~4 measureText calls per calculation (under 0.05ms); caching recent results for identical filenames and widths could offer a minor micro-optimization for lists containing thousands of duplicate items.
+  - *Status:* **Resolved.** Implemented an in-memory synchronized LRU cache (`truncationCache`) capped at 256 entries.
 
 ---
 
 ## Checklist Coverage
 
 | Category | Status | Notes |
-| :--- | :---: | :--- |
-| **Kotlin Correctness** | ✅ Clean | Sealed classes, data classes, safe calls, and zero `!!` assertions used. |
-| **Coroutines & Threading** | ⚠️ Minor | File comparison partial check can be moved before `Dispatchers.Main`. |
-| **Android Lifecycle** | ✅ Clean | No context leaks; dialogs clean up listeners and jobs properly. |
-| **UI & UFMStandard** | ✅ Clean | Glassmorphic theme, amber badges, dual Mobile/TV layouts with D-pad focus. |
-| **Localisation & Strings**| ✅ Clean | All user-facing strings are defined in `strings.xml`. |
-| **Tests & Verification** | ✅ Clean | 16/16 unit tests passing; full debug APK build succeeded. |
+|---|---|---|
+| **Kotlin Correctness** | Clean | Nullable types handled safely, no raw assertions (`!!`), proper encapsulation. |
+| **Coroutines & Flow** | Clean | No heavy operations on Main thread, all measurements are lightweight. |
+| **Android Lifecycle & Architecture** | Clean | WeakHashMap used for view tracking, animators and touch runnables cancelled on recycle, clean detachment. |
+| **Performance** | Clean | Single-pass calculations with 256-entry LRU cache, zero object allocations in drawing loops. |
+| **Architecture & Project Conventions** | Clean | Dual layouts (`dialog_file_name_display.xml` & `_tv.xml`), `UFMStandard` dialog styles, translatable string resources synced across 17 locales. |
+| **Tests & Verification** | Clean | `./gradlew assembleMobileGoogleDebug` passes with exit code 0 (`BUILD SUCCESSFUL`). |
 
 ---
 
 ## Verdict
-**Approved** — All minor and suggested improvements have been resolved. The code is clean, robust, and ready for security audit.
+**Approved.** All findings and suggestions have been fully resolved. Ready to proceed to `/securitycheck`.

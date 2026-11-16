@@ -706,14 +706,19 @@ class SafPickerActivity : AppCompatActivity() {
                 videoJob = null
                 hasLoadedThumbnail = false
 
-                title.text = item.label
-                FileNameDisplayHelper.applyFileNameDisplay(title, item.label, isTv)
+                val isSelected = allowMultiple && !item.isRoot && !item.isDir && selectedFiles.contains(item.path)
+                FileNameDisplayHelper.applyFileNameDisplay(
+                    textView = title,
+                    fileName = item.label,
+                    isTv = isTv,
+                    isSelected = isSelected,
+                    isFocused = itemView.hasFocus()
+                )
                 subtitle.text = if (item.isRoot) getString(R.string.storage_volume) else if (item.isDir) "Folder" else "File"
 
                 itemView.findViewById<View>(R.id.txtFileSize)?.visibility = View.GONE
 
                 // Show selection state in multi-select mode
-                val isSelected = allowMultiple && !item.isRoot && !item.isDir && selectedFiles.contains(item.path)
                 val alpha = if (isSelected) 1.0f else 0.6f
                 title.alpha = alpha
 

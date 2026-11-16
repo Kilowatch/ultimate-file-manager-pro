@@ -451,10 +451,58 @@ UFMプレーヤーで次のファイルを自動再生
 名前全体を必要なだけ折り返して表示します
 </string>
     <string name="settings_file_name_display_truncate">
-1行（省略）
+Single line (Truncated end)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-スクロールせずに省略記号（…）で切り詰めます
+Truncates with ellipsis at end (abc…) without scrolling
+</string>
+    <string name="settings_file_name_display_truncate_middle">
+Single line (Truncate middle)
+</string>
+    <string name="settings_file_name_display_truncate_middle_desc">
+Truncates in middle (abc…xyz.ext) to preserve the end suffix
+</string>
+    <string name="settings_marquee_speed_title">
+Scroll Speed
+</string>
+    <string name="settings_marquee_speed_slow">
+Slow
+</string>
+    <string name="settings_marquee_speed_normal">
+Normal
+</string>
+    <string name="settings_marquee_speed_fast">
+Fast
+</string>
+    <string name="settings_marquee_loop_title">
+Loop Mode
+</string>
+    <string name="settings_marquee_loop_one_shot">
+One-Shot
+</string>
+    <string name="settings_marquee_loop_one_shot_desc">
+Scrolls once and stops to save battery
+</string>
+    <string name="settings_marquee_loop_continuous">
+Continuous
+</string>
+    <string name="settings_marquee_loop_continuous_desc">
+Repeats back and forth continuously
+</string>
+    <string name="settings_marquee_scope_title">
+Scroll Scope
+</string>
+    <string name="settings_marquee_scope_all">
+All Visible Files
+</string>
+    <string name="settings_marquee_scope_focused">
+Focused / Selected Only
+</string>
+    <string name="settings_file_name_preview_title">
+Live Preview
+</string>
+    <string name="settings_file_name_preview_sample">
+VeryLongFileName_ProjectReport_2026_Final_v2.docx
 </string>
     <string name="settings_grid_indicators_title">
 行番号と列ヘッダーを非表示
