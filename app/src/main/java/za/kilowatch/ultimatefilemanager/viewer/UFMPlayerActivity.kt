@@ -163,10 +163,40 @@ class UFMPlayerActivity : AppCompatActivity() {
     private lateinit var nextTrackOverlay: NextTrackOverlayView
     private var hasPendingNextTrack = false
 
-    // ── PiP Action Updates ─────────────────────────────────────────
+    // ── PiP Helpers & Parameter Updates ────────────────────────────
+
+    private fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+
+    private fun calculateValidAspectRatio(): android.util.Rational {
+        val vSize = player?.videoSize
+        var width = vSize?.width ?: 0
+        var height = vSize?.height ?: 0
+        val rotation = vSize?.unappliedRotationDegrees ?: 0
+
+        if (rotation == 90 || rotation == 270) {
+            val temp = width
+            width = height
+            height = temp
+        }
+
+        if (width > 0 && height > 0) {
+            val ratio = width.toFloat() / height.toFloat()
+            return when {
+                ratio < (1f / 2.39f) -> android.util.Rational(100, 239)
+                ratio > 2.39f -> android.util.Rational(239, 100)
+                else -> {
+                    val d = gcd(width, height)
+                    if (d > 0) android.util.Rational(width / d, height / d) else android.util.Rational(width, height)
+                }
+            }
+        }
+        return android.util.Rational(16, 9)
+    }
 
     @android.annotation.TargetApi(android.os.Build.VERSION_CODES.O)
-    private fun updatePiPActions(isPlaying: Boolean) {
+    private fun buildPiPParams(isPlaying: Boolean): android.app.PictureInPictureParams.Builder {
+        val pipBuilder = android.app.PictureInPictureParams.Builder()
+
         val prevIntent = Intent(this, UFMPlaybackService::class.java)
             .setAction(UFMPlaybackService.ACTION_SKIP_PREV)
         val prevPendingIntent = PendingIntent.getService(
@@ -205,14 +235,42 @@ class UFMPlayerActivity : AppCompatActivity() {
             nextPendingIntent
         )
 
+        pipBuilder.setActions(listOf(prevAction, toggleAction, nextAction))
+
+        val rational = calculateValidAspectRatio()
+        pipBuilder.setAspectRatio(rational)
+
+        if (::playerView.isInitialized && playerView.visibility == View.VISIBLE) {
+            val sourceRect = android.graphics.Rect()
+            if (playerView.getGlobalVisibleRect(sourceRect) && sourceRect.width() > 0 && sourceRect.height() > 0) {
+                pipBuilder.setSourceRectHint(sourceRect)
+            }
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            val isVideo = currentTrackInfo?.isVideo == true || playbackService?.currentQueueItem?.isVideo == true
+            val pipPrefEnabled = PlayerPreferencesManager.getBackgroundVideoMode(this) == BackgroundVideoMode.PIP
+            val canAutoEnter = isPlaying && isVideo && pipPrefEnabled && !isTv
+            pipBuilder.setAutoEnterEnabled(canAutoEnter)
+        }
+
+        return pipBuilder
+    }
+
+    @android.annotation.TargetApi(android.os.Build.VERSION_CODES.O)
+    private fun updatePiPParams() {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O || isTv) return
+        val svc = playbackService
+        val isPlaying = svc?.isPlaying == true
         try {
-            setPictureInPictureParams(
-                android.app.PictureInPictureParams.Builder()
-                    .setAspectRatio(android.util.Rational(16, 9))
-                    .setActions(listOf(prevAction, toggleAction, nextAction))
-                    .build()
-            )
+            val pipBuilder = buildPiPParams(isPlaying)
+            setPictureInPictureParams(pipBuilder.build())
         } catch (_: Exception) {}
+    }
+
+    @android.annotation.TargetApi(android.os.Build.VERSION_CODES.O)
+    private fun updatePiPActions(isPlaying: Boolean) {
+        updatePiPParams()
     }
 
     // ── Queue Drawer ───────────────────────────────────────────────
@@ -345,6 +403,12 @@ class UFMPlayerActivity : AppCompatActivity() {
                 detectAndUpdateTracks(tracks)
             }
         }
+
+        override fun onVideoSizeChanged(videoSize: androidx.media3.common.VideoSize) {
+            runOnUiThread {
+                updatePiPParams()
+            }
+        }
     }
 
     private val playbackCallback = object : UFMPlaybackService.PlaybackCallback {
@@ -401,6 +465,12 @@ class UFMPlayerActivity : AppCompatActivity() {
                     // Switch audio/video mode
                     val isAudio = trackInfo.isVideo.not()
                     if (isAudio) {
+                        if (isPiP) {
+                            // If advancing to an audio track while in PiP, dismiss PiP window;
+                            // playback service continues seamlessly in the background.
+                            finish()
+                            return@runOnUiThread
+                        }
                         playerView.visibility = View.GONE
                         btnSubtitles.visibility = View.GONE
 
@@ -474,6 +544,7 @@ class UFMPlayerActivity : AppCompatActivity() {
                             }
                         }
                     }
+                    updatePiPParams()
                 }
             }
         }
@@ -493,8 +564,8 @@ class UFMPlayerActivity : AppCompatActivity() {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                     playerView.keepScreenOn = false
                 }
-                // Update PiP actions if in PiP mode
-                if (isPiP) updatePiPActions(isPlaying)
+                // Update PiP actions and autoEnterEnabled state
+                updatePiPParams()
                 if (isPlaying) {
                     resetHideTimer()
                     handler.post(progressUpdater)
@@ -996,6 +1067,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         }
         captioningObserver?.register()
         applySubtitleStyle()
+        updatePiPParams()
     }
 
     override fun onPause() {
@@ -1058,65 +1130,23 @@ class UFMPlayerActivity : AppCompatActivity() {
     @android.annotation.TargetApi(android.os.Build.VERSION_CODES.O)
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        val svc = playbackService
-        if (svc?.isPlaying == true) {
-            val item = svc.currentQueueItem
-            if (item?.isVideo == true &&
-                PlayerPreferencesManager.getBackgroundVideoMode(this) == BackgroundVideoMode.PIP &&
-                !isTv
-            ) {
-                // Build PiP params with Previous, Play/Pause, Next
-                val pipBuilder = android.app.PictureInPictureParams.Builder()
-                    .setAspectRatio(android.util.Rational(16, 9))
-
-                // Previous action
-                val prevIntent = Intent(this, UFMPlaybackService::class.java)
-                    .setAction(UFMPlaybackService.ACTION_SKIP_PREV)
-                val prevPendingIntent = PendingIntent.getService(
-                    this, 12, prevIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-                val prevAction = android.app.RemoteAction(
-                    android.graphics.drawable.Icon.createWithResource(this, R.drawable.ic_skip_previous),
-                    "Previous", "Previous",
-                    prevPendingIntent
-                )
-
-                // Play/Pause action
-                val toggleIntent = Intent(this, UFMPlaybackService::class.java)
-                    .setAction(UFMPlaybackService.ACTION_TOGGLE)
-                val togglePendingIntent = PendingIntent.getService(
-                    this, 10, toggleIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-                val toggleAction = android.app.RemoteAction(
-                    android.graphics.drawable.Icon.createWithResource(this,
-                        if (svc.isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
-                    if (svc.isPlaying) getString(R.string.mini_player_pause_content_desc)
-                    else getString(R.string.mini_player_play_content_desc),
-                    if (svc.isPlaying) getString(R.string.mini_player_pause_content_desc)
-                    else getString(R.string.mini_player_play_content_desc),
-                    togglePendingIntent
-                )
-
-                // Next action
-                val nextIntent = Intent(this, UFMPlaybackService::class.java)
-                    .setAction(UFMPlaybackService.ACTION_SKIP_NEXT)
-                val nextPendingIntent = PendingIntent.getService(
-                    this, 13, nextIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-                val nextAction = android.app.RemoteAction(
-                    android.graphics.drawable.Icon.createWithResource(this, R.drawable.ic_skip_next),
-                    "Next", "Next",
-                    nextPendingIntent
-                )
-
-                pipBuilder.setActions(listOf(prevAction, toggleAction, nextAction))
-                enterPictureInPictureMode(pipBuilder.build())
-            } else {
-                // Audio-only or PiP disabled — just finish, service continues
-                finish()
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O && !isTv) {
+            val svc = playbackService
+            if (svc?.isPlaying == true) {
+                val item = svc.currentQueueItem
+                if (item?.isVideo == true &&
+                    PlayerPreferencesManager.getBackgroundVideoMode(this) == BackgroundVideoMode.PIP
+                ) {
+                    if (!isInPictureInPictureMode) {
+                        try {
+                            val pipBuilder = buildPiPParams(isPlaying = true)
+                            enterPictureInPictureMode(pipBuilder.build())
+                        } catch (_: Exception) {}
+                    }
+                } else {
+                    // Audio-only or PiP disabled — finish activity, playback service continues
+                    finish()
+                }
             }
         }
     }
@@ -1226,6 +1256,11 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     private fun initViews() {
         playerView = findViewById(R.id.playerView)
+        playerView.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+                updatePiPParams()
+            }
+        }
 
         btnPlayPause = findViewById(R.id.btnPlayPause)
         btnNext = findViewById(R.id.btnNext)

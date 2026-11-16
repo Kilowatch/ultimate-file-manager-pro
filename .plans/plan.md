@@ -1,196 +1,125 @@
-# Implementation Plan: Enhanced Long Filename Display & Interactive Scrolling Options
+# Implementation Plan: Picture-in-Picture Compatibility for Custom Launchers and Modern Android
 
 ## Goals
-Implement advanced long filename display and customizable scrolling capabilities to solve the problem of indistinguishable long filenames in single-line listings, satisfying all success criteria in `.plans/spec.md` and user clarifications in `.plans/clarifications.md`:
-- Introduce **Truncate Middle** mode (`prefix...suffix.ext`) preserving base prefix, ellipsis, at least 4 trailing characters of the base name, and the full extension.
-- Provide **customizable marquee scrolling**:
-  - Scroll Speed: *Slow* (30 dp/s), *Normal* (50 dp/s, default), *Fast* (80 dp/s).
-  - Loop Behavior: *One-Shot* (default) vs *Continuous Loop*.
-  - Scroll Scope: *All Visible Files* (default) vs *Focused / Selected Only*.
-- Enable **manual horizontal touch scrubbing** on single-line filenames so users can drag across the text to inspect any part of the name, remaining fixed at the scrubbed position until recycled off-screen.
-- Provide a **unified settings UI** adhering to `UFMStandard` on both Mobile and Android TV with an interactive live preview.
+- Enable seamless, launcher-agnostic automatic Picture-in-Picture entry when navigating home (gesture swipe or Home button) while playing video, resolving the issue where custom launchers (such as One4Home, Nova, Lawnchair) fail to trigger PiP.
+- Implement Android 12+ (API 31+) `setAutoEnterEnabled(true)` on `PictureInPictureParams` when video playback is active and PiP background mode is enabled.
+- Automatically disable `autoEnterEnabled` (`false`) when video is paused, when an audio file is playing, or when Background Video Mode is set to "Audio Only", satisfying Q1, Q3, and Q4 clarifications.
+- Dynamically detect and configure the video's actual aspect ratio from ExoPlayer (`videoWidth : videoHeight`, clamped to Android's allowed range `1:2.39` to `2.39:1`) with rotation awareness, and supply `sourceRectHint` for fluid zoom-to-home transitions (satisfying Q2 clarification).
+- If playing a playlist in PiP mode and playback advances to an audio-only track, automatically dismiss the PiP window (`finish()`) while maintaining audio playback via `UFMPlaybackService` in the background (satisfying Q3 clarification).
+- Maintain robust backwards-compatibility for Android 8.0–11 (API 26–30) via `onUserLeaveHint()`.
 
 ---
 
 ## Architecture Overview
 
+### Root Cause Analysis
+In current code (`UFMPlayerActivity.kt`), PiP mode entry is initiated solely inside `onUserLeaveHint()` by calling `enterPictureInPictureMode(...)`. 
+- On modern Android (Android 12+ / API 31+), custom launchers (like One4Home, Nova Launcher, Lawnchair) often do not invoke `onUserLeaveHint()` when the user performs a swipe-to-home gesture or presses the home button, because task switching and recents transitions are handled at the OS gesture navigation layer. Stock launchers like Samsung OneUI trigger `onUserLeaveHint()`, which is why PiP worked under OneUI but failed under One4Home.
+- Android 12 introduced `PictureInPictureParams.Builder.setAutoEnterEnabled(true)`. When this parameter is supplied to `setPictureInPictureParams(...)` while the activity is in the foreground, the Android WindowManager automatically transitions the activity into PiP during the home gesture or home press, completely bypassing the launcher and eliminating reliance on `onUserLeaveHint()`.
+
 ```mermaid
 flowchart TD
-    subgraph Settings ["Settings & Configuration"]
-        A["ScrollingTextPreferenceManager"] --> B["Mode: Marquee / Truncate Middle / Truncate End / Multi-line"]
-        A --> C["Speed: Slow (30) / Normal (50) / Fast (80)"]
-        A --> D["Loop: One-Shot / Continuous"]
-        A --> E["Scope: All Files / Focused Only"]
+    subgraph PlaybackLifecycle["UFM Player Lifecycle"]
+        A["Playback State / Track / VideoSize Change"] --> B{"Is Video Playing && PiP Enabled && !isTv?"}
+        B -->|Yes| C["Build PiP Params:\n- autoEnterEnabled = true (API 31+)\n- Dynamic AspectRatio (clamped)\n- sourceRectHint (PlayerView bounds)\n- Actions (Prev, Play/Pause, Next)"]
+        B -->|No / Paused / Audio| D["Build PiP Params:\n- autoEnterEnabled = false\n- Actions (matching state)"]
+        C --> E["setPictureInPictureParams(...)"]
+        D --> E
     end
 
-    subgraph Presentation ["Presentation Layer (FileNameDisplayHelper)"]
-        B --> F{"Display Mode"}
-        F -->|"Truncate Middle"| G["truncateMiddle(): Prefix + '…' + Suffix(4) + Extension"]
-        F -->|"Marquee"| H["ScrollingTextHelper.applyScrollingText()"]
-        F -->|"Truncate End"| I["ellipsize = END"]
-        F -->|"Multi-line"| J["formatForWrapping()"]
+    subgraph UserNavigation["User Navigates Home"]
+        F["User Swipes Home / Taps Home"] --> G{"Android Version"}
+        G -->|API 31+ with autoEnterEnabled| H["OS WindowManager automatically shifts Activity into PiP window (Smooth Zoom)"]
+        G -->|API 26..30 Fallback| I["onUserLeaveHint() invoked -> enterPictureInPictureMode(...)"]
     end
-
-    subgraph Interaction ["Interactive Touch & Focus"]
-        K["Horizontal Touch Scrubbing (OnTouchListener)"] -->|"Drag on txtName"| L["scrollX = delta; Lock position; Halt marquee"]
-        E -->|"Scope == Focused"| M{"Platform Check"}
-        M -->|"Android TV"| N["TV Focus Listener: Start on focus, Reset on blur"]
-        M -->|"Mobile"| O["Selection Mode: Start only when item isChecked"]
-    end
-
-    G --> P["RecyclerView item (item_file / item_file_compact / item_file_tv)"]
-    H --> P
-    L --> P
 ```
 
-### Architectural Decisions
+---
 
-1. **Middle Truncation Algorithm**:
-   - `FileNameDisplayHelper.truncateMiddle(fileName, paint, availableWidthPx, keepSuffixChars = 4)`:
-     - Identifies compound extensions (e.g. `.tar.gz`, `.tar.bz2`) using known archive patterns and standard dot extension extraction.
-     - Splits into `baseName` and `extension`.
-     - Preserves the full extension and at least 4 trailing characters of the base name (`suffix = baseName.takeLast(4) + ext`).
-     - Calculates available width for prefix: `availableWidth - paint.measureText("…" + suffix)`.
-     - Measures and trims `baseName` prefix to fit.
-     - If width is too narrow even for suffix + ellipsis, gracefully falls back to native truncation (`TextUtils.TruncateAt.MIDDLE`).
-
-2. **Touch Scrubbing & Gesture Disambiguation**:
-   - Implemented via a lightweight touch listener attached to single-line `TextView` (`ScrollingTextHelper.attachTouchScrubbing(textView, fullFileName)`).
-   - Distinguishes between:
-     - **Tap**: `abs(dx) < touchSlop && abs(dy) < touchSlop` -> calls `textView.performClick()` to open or select file.
-     - **Vertical list scroll**: `abs(dy) > abs(dx) && abs(dy) > touchSlop` -> yields touch events to RecyclerView.
-     - **Horizontal text scrub**: `abs(dx) > abs(dy) && abs(dx) > touchSlop` -> calls `requestDisallowInterceptTouchEvent(true)`, computes `scrollX.coerceIn(0, maxOverflow)`, and halts active marquee animations for that view instance.
-   - Text remains fixed at the scrubbed position until the ViewHolder is recycled (`recycle()`) or re-bound (`applyFileNameDisplay()`).
-
-3. **Marquee Engine Enhancements**:
-   - `ScrollingTextHelper` updated to query configured scroll speed (dp/s) and loop mode.
-   - `Continuous` mode chains an additional delayed callback from `scrollOneWay(forward = false)` back to `scrollOneWay(forward = true)` with a 1500ms initial pause.
-   - `Scope` check ensures animations only trigger if allowed by selection state on mobile or focus state on TV.
-
-4. **UFMStandard Compliance & TV Layout**:
-   - `dialog_file_name_display.xml` updated with `Truncate Middle` card, expandable Marquee sub-options, and an animated live preview card.
-   - `dialog_file_name_display_tv.xml` created for Android TV with D-pad focus traversal, glass dialog styling (`@drawable/bg_dialog_glass`), 650dp width, and yellow focus selectors.
+## Files to Create
+*None (All changes are contained within the existing media player activity architecture).*
 
 ---
 
 ## Files to Modify
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/ScrollingTextPreferenceManager.kt`
-- Add `MODE_TRUNCATE_MIDDLE = "truncate_middle"`.
-- Add preferences keys:
-  - `KEY_SCROLL_SPEED = "scrolling_text_speed"` (values: `SPEED_SLOW`, `SPEED_NORMAL`, `SPEED_FAST`).
-  - `KEY_LOOP_MODE = "scrolling_text_loop"` (values: `LOOP_ONE_SHOT`, `LOOP_CONTINUOUS`).
-  - `KEY_SCROLL_SCOPE = "scrolling_text_scope"` (values: `SCOPE_ALL`, `SCOPE_FOCUSED`).
-- Add getter and setter functions with defaults (`SPEED_NORMAL`, `LOOP_ONE_SHOT`, `SCOPE_ALL`).
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/ScrollingTextHelper.kt`
-- Read dynamic scroll speed in `scrollOneWay`:
-  - Slow: 30 dp/s, Normal: 50 dp/s, Fast: 80 dp/s.
-- Support continuous looping when `LOOP_CONTINUOUS` is enabled.
-- Add `attachTouchScrubbing(textView: TextView, fullFileName: String)` and tracking for manually scrubbed views.
-- Add `cancelScrolling(textView: TextView)` enhancements to reset manual scrub state when recycled.
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/FileNameDisplayHelper.kt`
-- Add `truncateMiddle(fileName: String, paint: Paint, availableWidth: Float, keepSuffixChars: Int = 4): String`.
-- Support `MODE_TRUNCATE_MIDDLE` in `applyFileNameDisplay`:
-  - Configures single-line layout and calculates prefix/suffix middle truncation.
-- Update `applyFileNameDisplay` to accept `isSelected: Boolean = false` and `isFocused: Boolean = false` parameters.
-- Attach manual touch scrubbing for all single-line modes on mobile touch devices.
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/FileAdapter.kt`
-- Pass `isSelected = (file.absolutePath in selectedPaths)` to `FileNameDisplayHelper.applyFileNameDisplay`.
-- In TV `itemView.setOnFocusChangeListener`, notify `ScrollingTextHelper` to start/stop scrolling for `SCOPE_FOCUSED`.
-- In `recycle()`, ensure `ScrollingTextHelper.cancelScrolling(txtName)` resets scroll offset and scrub state.
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/network/NetworkFileAdapter.kt`
-- Pass `isSelected = (file in selectedFiles)` to `FileNameDisplayHelper.applyFileNameDisplay`.
-- Handle TV focus change for `SCOPE_FOCUSED`.
-- In `recycle()`, ensure `ScrollingTextHelper.cancelScrolling(txtName)` is called.
-
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/SettingsActivity.kt`
-- Update `updateFileNameDisplaySubtitle()` to reflect `MODE_TRUNCATE_MIDDLE`.
-- Enhance `showFileNameDisplayDialog()`:
-  - Support dual layouts (`dialog_file_name_display.xml` on mobile, `dialog_file_name_display_tv.xml` on TV).
-  - Handle selection for `btnModeTruncateMiddle`.
-  - Wire up Speed chips/radios (Slow, Normal, Fast).
-  - Wire up Loop mode chips/radios (One-Shot, Continuous).
-  - Wire up Scope chips/radios (All Files, Focused / Selected Only).
-  - Bind interactive live preview TextView showing sample long filename animating with active preferences.
-
-### `app/src/main/res/layout/dialog_file_name_display.xml`
-- Add option card for `btnModeTruncateMiddle`.
-- Add inline Marquee sub-options container with chip groups / option rows for Speed, Loop, and Scope.
-- Add live preview card displaying sample text.
-
-### `app/src/main/res/values/strings.xml`
-- Add string resources:
-  - `settings_file_name_display_truncate_middle`
-  - `settings_file_name_display_truncate_middle_desc`
-  - `settings_marquee_speed_title`, `settings_marquee_speed_slow`, `settings_marquee_speed_normal`, `settings_marquee_speed_fast`
-  - `settings_marquee_loop_title`, `settings_marquee_loop_one_shot`, `settings_marquee_loop_continuous`
-  - `settings_marquee_scope_title`, `settings_marquee_scope_all`, `settings_marquee_scope_focused`
-  - `settings_file_name_preview_title`
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/UFMPlayerActivity.kt`
+- **What:** Modernize PiP parameter construction, dynamic video aspect ratio calculation, source rect hint tracking, auto-enter management, and playlist audio transition handling.
+- **Key Details:**
+  1. **Consolidated PiP Builder (`buildPiPParams(isPlaying: Boolean)`):**
+     - Construct `PictureInPictureParams.Builder()`.
+     - Configure remote actions: Previous, Play/Pause, Next.
+     - Calculate dynamic aspect ratio from `player?.videoSize` with unapplied rotation handling (swapping width and height if rotation is 90° or 270°), clamped safely between `Rational(100, 239)` and `Rational(239, 100)` using greatest common divisor (GCD) simplification.
+     - Set `sourceRectHint` from `playerView` global visible bounds when `playerView` is visible.
+     - On API 31+ (`Build.VERSION.SDK_INT >= Build.VERSION_CODES.S`), set `setAutoEnterEnabled(canAutoEnter)` where:
+       ```kotlin
+       val isVideo = currentTrackInfo?.isVideo == true || playbackService?.currentQueueItem?.isVideo == true
+       val pipEnabled = PlayerPreferencesManager.getBackgroundVideoMode(this) == BackgroundVideoMode.PIP
+       val canAutoEnter = isPlaying && isVideo && pipEnabled && !isTv
+       ```
+  2. **Lifecycle & State Updates (`updatePiPParams()`):**
+     - Call `updatePiPParams()` in:
+       - `onPlaybackStateChanged(isPlaying: Boolean, state: Int, isLocal: Boolean)`: immediately updates actions and toggles `autoEnterEnabled` between playing and paused states.
+       - `activityPlayerListener.onVideoSizeChanged(videoSize: VideoSize)`: updates aspect ratio as soon as the media dimensions are parsed or change.
+       - `playbackCallback.onTrackChanged(trackInfo: QueueItem?)`: updates track parameters. If in PiP mode (`isPiP == true`) and `trackInfo?.isVideo != true`, invoke `finish()` to seamlessly transition to background audio service.
+       - `onResume()`: refreshes PiP params when returning to foreground.
+       - `playerView` layout listener: refreshes `sourceRectHint` once view layout completes.
+  3. **Refactored `onUserLeaveHint()`:**
+     - On API < 31 (or if `!isInPictureInPictureMode` on API 31+), maintain safe fallback calling `enterPictureInPictureMode(buildPiPParams(true).build())`.
+     - When leaving foreground with audio-only or PiP disabled while playing, maintain `finish()` so playback service continues smoothly in background.
 
 ---
 
-## Files to Create
-
-### `app/src/main/res/layout/dialog_file_name_display_tv.xml`
-- **What:** TV-optimized version of the file name display & marquee options dialog.
-- **Key details:**
-  - Follows `UFMStandard` dialog pattern (`@drawable/bg_dialog_glass`, 650dp width).
-  - Focusable option cards with `@drawable/selector_tv_button` / `@drawable/selector_btn_glass_yellow`.
-  - D-pad friendly layout for switching display mode, speed, loop, and scope.
-
----
-
-## Data Model & Preferences Keys
-Stored in `scrolling_text_prefs` (already registered in `SettingsBackupManager`):
-
-| Key | Type | Possible Values | Default |
-|---|---|---|---|
-| `file_name_display_mode` | String | `marquee`, `truncate_middle`, `truncate`, `multiline_2`, `multiline_3`, `multiline_unlimited` | `marquee` |
-| `scrolling_text_speed` | String | `slow`, `normal`, `fast` | `normal` |
-| `scrolling_text_loop` | String | `one_shot`, `continuous` | `one_shot` |
-| `scrolling_text_scope` | String | `all`, `focused` | `all` |
+## Data Model
+No database schema or SharedPreferences schema changes required. Existing `BackgroundVideoMode` (`PIP` vs `AUDIO_ONLY`) in `PlayerPreferencesManager` is fully reused.
 
 ---
 
 ## Dependencies
-- No external libraries required. Uses standard Android SDK (`ObjectAnimator`, `TextView.scrollX`, `ViewConfiguration.scaledTouchSlop`, `Paint.measureText`).
-- Zero impact on DEX size or R8 optimization scores.
+- AndroidX Media3 Common `VideoSize` (already present in project dependencies).
+- Android OS Platform API `PictureInPictureParams.Builder.setAutoEnterEnabled` (introduced in API 31, guarded with `Build.VERSION.SDK_INT >= Build.VERSION_CODES.S`).
 
 ---
 
 ## Test Plan
-- **Middle Truncation Verification**:
-  - Test files with standard long names: `my_document_backup_2026_version_1.docx` -> verify `my_docum...on_1.docx`.
-  - Test compound extensions: `archive_backup_daily_system.tar.gz` -> verify `.tar.gz` is intact.
-  - Test extensionless files: `README_CONTAINING_VERY_LONG_INSTRUCTIONS` -> verify middle truncation without crash.
-  - Test short files: `file.txt` -> verify no ellipsis is inserted.
-- **Marquee Settings Verification**:
-  - Verify Slow (~30 dp/s), Normal (~50 dp/s), and Fast (~80 dp/s) scroll speeds.
-  - Verify One-Shot stops after 1 cycle; verify Continuous repeats smoothly.
-  - Verify Scope `focused`:
-    - Mobile: files don't scroll unless selected via multi-select checkbox.
-    - TV: only the focused file row scrolls.
-- **Touch Scrubbing Verification**:
-  - Drag horizontally on long file name: verify text follows finger movement and stays at scrubbed offset.
-  - Tap normally on file name: verify file opens / selects without being blocked by touch listener.
-  - Scroll list vertically: verify vertical RecyclerView flinging is smooth without hindrance.
-- **Settings & Backup**:
-  - Export settings backup, restore, verify all preferences are preserved.
-- **Build Verification**:
-  - Compile with `./gradlew assembleMobileGoogleDebug` to guarantee clean build.
-- **Translation Verification**:
-  - Run `python -u translate_strings.py verify` to sync new strings.
+
+### Automated Build Verification
+```bash
+./gradlew assembleMobileGoogleDebug
+```
+
+### Manual Verification
+1. **Third-Party Launcher Test (One4Home / Nova / Lawnchair)**:
+   - Set default home app to One4Home or another third-party launcher.
+   - Open UFM, play any video file.
+   - Perform swipe-up gesture or tap Home button.
+   - **Verify:** Video player automatically enters PiP mode without stopping or closing.
+2. **Stock Launcher Test (Samsung OneUI / Pixel Launcher)**:
+   - Play video and navigate home.
+   - **Verify:** PiP continues to work flawlessly.
+3. **Paused State Test**:
+   - Pause the video.
+   - Navigate home.
+   - **Verify:** Does not enter PiP; minimizes normally to background.
+4. **Audio-Only Mode Test**:
+   - In Settings, set Background Video Mode to "Audio Only" (or play an MP3/FLAC file).
+   - Navigate home.
+   - **Verify:** Player does not enter PiP; audio continues playing in background notification.
+5. **Aspect Ratio Test**:
+   - Play a 16:9 video, a 21:9 ultra-wide video, and a 9:16 vertical video.
+   - Enter PiP.
+   - **Verify:** PiP window matches the video's aspect ratio without black bars or distortion.
+6. **Mixed Playlist Test in PiP**:
+   - Queue a video followed by an audio track.
+   - Enter PiP and tap Next (or wait for video to end).
+   - **Verify:** PiP window dismisses cleanly, and audio continues playing via the playback notification.
 
 ---
 
 ## Risks & Mitigations
-- **Risk:** Touch scrubbing on `txtName` blocks vertical RecyclerView scrolling.  
-  **Mitigation:** Use `ViewConfiguration.scaledTouchSlop` and check `abs(dx) > abs(dy)`. Only request disallow intercept if the horizontal delta exceeds touch slop.
-- **Risk:** Middle truncation calculations cause layout stutter during RecyclerView scrolling.  
-  **Mitigation:** `truncateMiddle` performs simple string slicing and single paint measure passes without creating complex views or spawning threads. Results can be cached or computed when width is known.
-- **Risk:** Marquee animator memory leaks on recycled rows.  
-  **Mitigation:** `cancelScrolling` in `onViewRecycled` / `recycle()` explicitly removes all animator listeners and cancels the animator.
+- **Risk:** Aspect ratios outside Android system bounds throw `IllegalArgumentException` on `setAspectRatio`.  
+  **Mitigation:** Enforce strict mathematical clamping between `1/2.39` (`Rational(100, 239)`) and `2.39` (`Rational(239, 100)`).
+- **Risk:** Rotation degrees (e.g. portrait video recorded at 90° or 270°) cause inverted aspect ratio calculations.  
+  **Mitigation:** Inspect `videoSize.unappliedRotationDegrees` and swap width/height when rotation is 90° or 270°.
+- **Risk:** Rapid multitasking or calling `setPictureInPictureParams` before views are laid out.  
+  **Mitigation:** Guard all view bounds calculations with `::playerView.isInitialized` and wrap `setPictureInPictureParams` in a try-catch block.
