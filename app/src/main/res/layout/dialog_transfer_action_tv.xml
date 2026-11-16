@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Transfer Actions Dialog — UFMStandard Glass (Android TV)
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="650dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp"
+    android:gravity="center_horizontal">
+
+    <!-- Header Icon -->
+    <ImageView
+        android:id="@+id/imgActionIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_download"
+        app:tint="@color/tv_accent"
+        android:layout_marginBottom="10dp"
+        android:importantForAccessibility="no" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtActionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/transfer_action_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="4dp" />
+
+    <!-- File Name -->
+    <TextView
+        android:id="@+id/txtActionFileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAlignment="center"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Transfer Stats Glass Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/tv_glass_white_10"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/tv_glass_border"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp">
+
+            <TextView
+                android:id="@+id/txtActionStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: Downloading (45%)"
+                android:textColor="@color/tv_accent"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-bold" />
+
+            <TextView
+                android:id="@+id/txtActionSizeSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.2 GB / 4.5 GB • 3.2 MB/s"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="13sp"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/txtActionEtaPeers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ETA: 12m 30s • Peers: 8 • Seeds: 12"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp" />
+
+            <TextView
+                android:id="@+id/txtActionSavePath"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/storage/emulated/0/Download"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="12sp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- TV Action Buttons Stack -->
+
+    <!-- Pause / Resume Primary Button (TV Yellow Focus) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnActionPauseResume"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/transfer_action_pause"
+        android:textColor="@color/tv_button_focused_yellow_text"
+        android:textSize="14.5sp"
+        android:fontFamily="sans-serif-bold"
+        android:background="@drawable/selector_tv_button_yellow"
+        app:backgroundTint="@null"
+        android:focusable="true"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Open Download Folder Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnActionOpenFolder"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/transfer_action_open_folder"
+        android:textColor="@color/tv_button_text_selector"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:focusable="true"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Delete / Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnActionDelete"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/transfer_action_delete_title"
+        android:textColor="@color/tv_button_text_selector"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:focusable="true"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Dismiss Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnActionDismiss"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="@string/cancel"
+        android:textColor="@color/tv_button_text_selector"
+        android:textSize="14sp"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:focusable="true" />
+
+</LinearLayout>

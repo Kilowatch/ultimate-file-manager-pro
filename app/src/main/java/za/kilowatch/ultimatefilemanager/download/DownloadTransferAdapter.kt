@@ -11,25 +11,80 @@ import za.kilowatch.ultimatefilemanager.R
 
 /**
  * RecyclerView adapter for active and completed transfers in Download Manager.
+ * Supports stable IDs and granular payload updates to guarantee Android TV D-pad focus retention.
  */
 class DownloadTransferAdapter(
     private val isTv: Boolean,
     private val onPauseResumeClicked: (DownloadTransferManager.TransferItem) -> Unit,
-    private val onCancelClicked: (DownloadTransferManager.TransferItem) -> Unit
+    private val onCancelClicked: (DownloadTransferManager.TransferItem) -> Unit,
+    private val onItemClicked: ((DownloadTransferManager.TransferItem) -> Unit)? = null
 ) : RecyclerView.Adapter<DownloadTransferAdapter.TransferViewHolder>() {
+
+    companion object {
+        const val PAYLOAD_PROGRESS = "payload_progress"
+    }
 
     private val items = mutableListOf<DownloadTransferManager.TransferItem>()
 
+    init {
+        setHasStableIds(true)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return fnv1a64(items[position].id)
+    }
+
+    private fun fnv1a64(str: String): Long {
+        var hash = -0x340d631b7bdddcdbL // 0xcbf29ce484222325L (FNV-1a 64-bit offset basis)
+        for (c in str) {
+            hash = hash xor c.code.toLong()
+            hash *= 0x100000001b3L // FNV-1a 64-bit prime
+        }
+        return hash
+    }
+
     fun submitList(newItems: List<DownloadTransferManager.TransferItem>) {
-        items.clear()
-        items.addAll(newItems)
-        notifyDataSetChanged()
+        if (items.isEmpty() && newItems.isNotEmpty()) {
+            items.addAll(newItems)
+            notifyDataSetChanged()
+            return
+        }
+        if (newItems.isEmpty()) {
+            val count = items.size
+            items.clear()
+            notifyItemRangeRemoved(0, count)
+            return
+        }
+
+        val oldIds = items.map { it.id }
+        val newIds = newItems.map { it.id }
+
+        if (oldIds != newIds) {
+            items.clear()
+            items.addAll(newItems)
+            notifyDataSetChanged()
+            return
+        }
+
+        // Exact same item list: update in place with PAYLOAD_PROGRESS to prevent D-pad focus loss!
+        for (i in newItems.indices) {
+            items[i] = newItems[i]
+            notifyItemChanged(i, PAYLOAD_PROGRESS)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransferViewHolder {
         val layoutRes = if (isTv) R.layout.item_download_transfer_tv else R.layout.item_download_transfer
         val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
         return TransferViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: TransferViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads.contains(PAYLOAD_PROGRESS)) {
+            holder.bindProgressOnly(items[position])
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
+        }
     }
 
     override fun onBindViewHolder(holder: TransferViewHolder, position: Int) {
@@ -58,6 +113,25 @@ class DownloadTransferAdapter(
             }
             imgIcon?.setImageResource(iconRes)
 
+            if (isTv) {
+                btnPauseResume?.isFocusable = false
+                btnCancel?.isFocusable = false
+            }
+
+            bindProgressOnly(item)
+
+            itemView.setOnClickListener {
+                if (onItemClicked != null) {
+                    onItemClicked.invoke(item)
+                } else if (item.state != DownloadTransferManager.TransferState.COMPLETED) {
+                    onPauseResumeClicked(item)
+                }
+            }
+            btnPauseResume?.setOnClickListener { onPauseResumeClicked(item) }
+            btnCancel?.setOnClickListener { onCancelClicked(item) }
+        }
+
+        fun bindProgressOnly(item: DownloadTransferManager.TransferItem) {
             progressBar?.progress = item.progressPercent
             txtPercent?.text = "${item.progressPercent}%"
 
@@ -126,14 +200,6 @@ class DownloadTransferAdapter(
             }
 
             btnPauseResume?.visibility = if (item.state == DownloadTransferManager.TransferState.COMPLETED) View.GONE else View.VISIBLE
-
-            itemView.setOnClickListener {
-                if (item.state != DownloadTransferManager.TransferState.COMPLETED) {
-                    onPauseResumeClicked(item)
-                }
-            }
-            btnPauseResume?.setOnClickListener { onPauseResumeClicked(item) }
-            btnCancel?.setOnClickListener { onCancelClicked(item) }
         }
 
         private fun formatSize(bytes: Long): String {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaScannerConnection
 import android.util.Log
 import org.libtorrent4j.AlertListener
+import org.libtorrent4j.Priority
 import org.libtorrent4j.SessionHandle
 import org.libtorrent4j.SessionManager
 import org.libtorrent4j.SessionParams
@@ -56,6 +57,8 @@ class TorrentEngine(private val context: Context) {
     private val activeHashes = ConcurrentHashMap<String, Sha1Hash>()
     private val lastReannounceTimes = ConcurrentHashMap<String, Long>()
     private val torrentTrackers = ConcurrentHashMap<String, List<String>>()
+    private val torrentFilePriorities = ConcurrentHashMap<String, Array<Priority>>()
+    private val magnetFetchExecutor = Executors.newSingleThreadExecutor()
     private var progressScheduler: ScheduledExecutorService? = null
 
     interface TorrentListener {
@@ -292,6 +295,7 @@ class TorrentEngine(private val context: Context) {
         val id = handle.infoHash().toHex()
         lastReannounceTimes.remove(id)
         torrentTrackers.remove(id)
+        val priorities = torrentFilePriorities.remove(id)
         val torrentInfo = runCatching { handle.torrentFile() }.getOrNull()
         val saveDir = File(runCatching { handle.savePath() }.getOrDefault(""))
 
@@ -309,12 +313,24 @@ class TorrentEngine(private val context: Context) {
                 val pathsToScan = mutableListOf<String>()
                 for (i in 0 until numFiles) {
                     val relPath = torrentInfo.files().filePath(i)
-                    downloadedFiles.add(relPath)
+                    val isIgnored = priorities != null && i < priorities.size && priorities[i] == Priority.IGNORE
                     val fullFile = File(saveDir, relPath)
-                    if (fullFile.exists()) {
-                        pathsToScan.add(fullFile.absolutePath)
+
+                    if (isIgnored) {
+                        // Clean up zero-byte boundary stub files if created by libtorrent for unselected items
+                        if (fullFile.exists() && fullFile.isFile && fullFile.length() == 0L) {
+                            runCatching { fullFile.delete() }
+                        }
+                    } else {
+                        downloadedFiles.add(relPath)
+                        if (fullFile.exists()) {
+                            pathsToScan.add(fullFile.absolutePath)
+                        }
                     }
                 }
+
+                // Prune any empty subdirectories left behind by deselected files
+                runCatching { pruneEmptyDirectories(File(saveDir, torrentInfo.name())) }
 
                 // Index in Android MediaStore
                 if (pathsToScan.isNotEmpty()) {
@@ -331,6 +347,18 @@ class TorrentEngine(private val context: Context) {
             listener?.onTorrentFinished(id, saveDir, downloadedFiles)
         } catch (e: Exception) {
             Log.e(TAG, "Error finalizing torrent completion for $id", e)
+        }
+    }
+
+    private fun pruneEmptyDirectories(dir: File) {
+        if (!dir.exists() || !dir.isDirectory) return
+        dir.listFiles()?.forEach { child ->
+            if (child.isDirectory) {
+                pruneEmptyDirectories(child)
+            }
+        }
+        if (dir.listFiles()?.isEmpty() == true) {
+            dir.delete()
         }
     }
 
@@ -372,14 +400,18 @@ class TorrentEngine(private val context: Context) {
     }
 
     /**
-     * Starts downloading from a local .torrent file.
+     * Starts downloading from a local .torrent file with optional selective file priorities.
      */
-    fun downloadTorrentFile(torrentFile: File, saveDir: File): String? {
+    fun downloadTorrentFile(torrentFile: File, saveDir: File, filePriorities: Array<Priority>? = null): String? {
         return try {
             if (!saveDir.exists()) saveDir.mkdirs()
             val torrentInfo = TorrentInfo(torrentFile)
             val sha1 = torrentInfo.infoHash()
             val id = sha1.toHex()
+
+            if (filePriorities != null) {
+                torrentFilePriorities[id] = filePriorities
+            }
 
             // Extract tracker URLs from .torrent bencoded file
             val extracted = try {
@@ -392,14 +424,17 @@ class TorrentEngine(private val context: Context) {
                 Log.i(TAG, "Parsed ${extracted.size} trackers for $id: $extracted")
             }
 
-            Log.i(TAG, "Starting torrent file: ${torrentInfo.name()} (isPrivate=${torrentInfo.isPrivate()}, size=${torrentInfo.totalSize()})")
+            Log.i(TAG, "Starting torrent file: ${torrentInfo.name()} (isPrivate=${torrentInfo.isPrivate()}, size=${torrentInfo.totalSize()}, selective=${filePriorities != null})")
 
             val flags = TorrentFlags.AUTO_MANAGED.or_(TorrentFlags.UPDATE_SUBSCRIBE)
-            sessionManager.download(torrentInfo, saveDir, null, null, null, flags)
+            sessionManager.download(torrentInfo, saveDir, null, filePriorities, null, flags)
             activeHashes[id] = sha1
 
             val handle = runCatching { sessionManager.find(sha1) }.getOrNull()
             if (handle != null) {
+                if (filePriorities != null) {
+                    runCatching { handle.prioritizeFiles(filePriorities) }
+                }
                 injectTrackersIfPresent(handle)
                 runCatching {
                     handle.unsetFlags(TorrentFlags.PAUSED)
@@ -413,6 +448,46 @@ class TorrentEngine(private val context: Context) {
         } catch (e: Exception) {
             Log.e(TAG, "Failed to download torrent file: ${torrentFile.path}", e)
             null
+        }
+    }
+
+    /**
+     * Fetches metadata for a magnet link from the swarm.
+     * Caches the bencoded bytes into a temporary .torrent file and invokes [onResult].
+     */
+    fun fetchMagnetMetadata(
+        magnetUri: String,
+        timeoutSeconds: Int = 20,
+        onResult: (File?) -> Unit
+    ) {
+        val tempDir = File(context.cacheDir, "torrents").apply { mkdirs() }
+        magnetFetchExecutor.execute {
+            try {
+                // Ensure DHT is active
+                try {
+                    sessionManager.startDht()
+                } catch (e: Exception) {
+                    // Ignored if already started
+                }
+
+                val effectiveMagnet = if (!magnetUri.contains("tr=")) {
+                    "$magnetUri&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"
+                } else {
+                    magnetUri
+                }
+
+                val bytes = sessionManager.fetchMagnet(effectiveMagnet, timeoutSeconds, tempDir)
+                if (bytes != null && bytes.isNotEmpty()) {
+                    val tempFile = File(tempDir, "magnet_${System.currentTimeMillis()}.torrent")
+                    tempFile.writeBytes(bytes)
+                    onResult(tempFile)
+                } else {
+                    onResult(null)
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to fetch magnet metadata", e)
+                onResult(null)
+            }
         }
     }
 
@@ -441,6 +516,7 @@ class TorrentEngine(private val context: Context) {
     fun cancel(id: String, deleteFiles: Boolean = true) {
         lastReannounceTimes.remove(id)
         torrentTrackers.remove(id)
+        torrentFilePriorities.remove(id)
         val sha1 = activeHashes.remove(id) ?: runCatching {
             org.libtorrent4j.Sha1Hash.parseHex(id)
         }.getOrNull()

@@ -14,6 +14,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
+import org.libtorrent4j.Priority
 import org.libtorrent4j.TorrentInfo
 import org.libtorrent4j.swig.error_code
 import org.libtorrent4j.swig.libtorrent
@@ -357,20 +358,39 @@ object DownloadTransferManager {
         startServiceIfNeeded(context)
     }
 
-    fun startTorrentFileDownload(context: Context, torrentFile: File, targetFolder: File) {
+    fun startTorrentFileDownload(
+        context: Context,
+        torrentFile: File,
+        targetFolder: File,
+        selectedFileIndices: Set<Int>? = null
+    ) {
         initEnginesIfNeeded(context)
         try {
             val torrentInfo = TorrentInfo(torrentFile)
             val id = torrentInfo.infoHash().toHex()
             val name = torrentInfo.name()
-            val totalBytes = torrentInfo.totalSize()
+            val numFiles = torrentInfo.numFiles()
+
+            val effectiveTotalBytes = if (selectedFileIndices != null) {
+                (0 until numFiles).filter { it in selectedFileIndices }.sumOf { torrentInfo.files().fileSize(it) }
+            } else {
+                torrentInfo.totalSize()
+            }
+
+            val filePriorities: Array<Priority>? = if (selectedFileIndices != null) {
+                Array(numFiles) { idx ->
+                    if (idx in selectedFileIndices) Priority.DEFAULT else Priority.IGNORE
+                }
+            } else {
+                null
+            }
 
             val existing = transfers.find { it.id == id }
             if (existing != null) {
                 if (existing.state == TransferState.PAUSED || existing.state == TransferState.QUEUED_WIFI) {
                     resumeTransfer(context, id)
                 } else if (existing.state == TransferState.DOWNLOADING) {
-                    torrentEngine?.downloadTorrentFile(torrentFile, targetFolder)
+                    torrentEngine?.downloadTorrentFile(torrentFile, targetFolder, filePriorities)
                 }
                 return
             }
@@ -379,13 +399,13 @@ object DownloadTransferManager {
                 id = id,
                 title = name.ifBlank { torrentFile.nameWithoutExtension },
                 type = TransferType.TORRENT,
-                totalBytes = totalBytes,
+                totalBytes = effectiveTotalBytes,
                 targetFolder = targetFolder,
                 sourceUriOrUrl = torrentFile.absolutePath
             )
 
-            // Storage pre-flight check with known size
-            val preflight = StoragePreflightValidator.validate(context, targetFolder, totalBytes)
+            // Storage pre-flight check with selected size
+            val preflight = StoragePreflightValidator.validate(context, targetFolder, effectiveTotalBytes)
             if (!preflight.isSuccessful) {
                 notifyPreflightFailed(item, preflight)
                 return
@@ -400,11 +420,24 @@ object DownloadTransferManager {
 
             transfers.add(item)
             notifyTransfersChanged()
-            torrentEngine?.downloadTorrentFile(torrentFile, targetFolder)
+            torrentEngine?.downloadTorrentFile(torrentFile, targetFolder, filePriorities)
             startServiceIfNeeded(context)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to inspect and start torrent file download", e)
         }
+    }
+
+    /**
+     * Resolves magnet link metadata from the swarm via [TorrentEngine].
+     */
+    fun fetchMagnetMetadata(
+        context: Context,
+        magnetUri: String,
+        timeoutSeconds: Int = 20,
+        onResult: (File?) -> Unit
+    ) {
+        initEnginesIfNeeded(context)
+        torrentEngine?.fetchMagnetMetadata(magnetUri, timeoutSeconds, onResult) ?: onResult(null)
     }
 
     fun startTorrentFileDownload(context: Context, torrentUri: Uri, targetFolder: File) {

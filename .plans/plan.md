@@ -1,125 +1,192 @@
-# Implementation Plan: Picture-in-Picture Compatibility for Custom Launchers and Modern Android
+# Implementation Plan: Torrent & Magnet Selective File Download & TV Focus Stability
 
-## Goals
-- Enable seamless, launcher-agnostic automatic Picture-in-Picture entry when navigating home (gesture swipe or Home button) while playing video, resolving the issue where custom launchers (such as One4Home, Nova, Lawnchair) fail to trigger PiP.
-- Implement Android 12+ (API 31+) `setAutoEnterEnabled(true)` on `PictureInPictureParams` when video playback is active and PiP background mode is enabled.
-- Automatically disable `autoEnterEnabled` (`false`) when video is paused, when an audio file is playing, or when Background Video Mode is set to "Audio Only", satisfying Q1, Q3, and Q4 clarifications.
-- Dynamically detect and configure the video's actual aspect ratio from ExoPlayer (`videoWidth : videoHeight`, clamped to Android's allowed range `1:2.39` to `2.39:1`) with rotation awareness, and supply `sourceRectHint` for fluid zoom-to-home transitions (satisfying Q2 clarification).
-- If playing a playlist in PiP mode and playback advances to an audio-only track, automatically dismiss the PiP window (`finish()`) while maintaining audio playback via `UFMPlaybackService` in the background (satisfying Q3 clarification).
-- Maintain robust backwards-compatibility for Android 8.0–11 (API 26–30) via `onUserLeaveHint()`.
-
----
-
-## Architecture Overview
-
-### Root Cause Analysis
-In current code (`UFMPlayerActivity.kt`), PiP mode entry is initiated solely inside `onUserLeaveHint()` by calling `enterPictureInPictureMode(...)`. 
-- On modern Android (Android 12+ / API 31+), custom launchers (like One4Home, Nova Launcher, Lawnchair) often do not invoke `onUserLeaveHint()` when the user performs a swipe-to-home gesture or presses the home button, because task switching and recents transitions are handled at the OS gesture navigation layer. Stock launchers like Samsung OneUI trigger `onUserLeaveHint()`, which is why PiP worked under OneUI but failed under One4Home.
-- Android 12 introduced `PictureInPictureParams.Builder.setAutoEnterEnabled(true)`. When this parameter is supplied to `setPictureInPictureParams(...)` while the activity is in the foreground, the Android WindowManager automatically transitions the activity into PiP during the home gesture or home press, completely bypassing the launcher and eliminating reliance on `onUserLeaveHint()`.
+## Overview
+This plan defines the architectural design and implementation steps for:
+1. **Selective File & Folder Download Inspector**: Prior to initiating torrent or magnet downloads, inspect the torrent hierarchy in a scrollable, collapsible tree dialog. All items are selected by default, with one-tap "Select All" / "Deselect All", category filters (Videos, Audio, Docs, etc.), real-time size computation, and `libtorrent4j` priority masking (`Priority.DEFAULT` vs `Priority.IGNORE`).
+2. **Android TV Focus Stability & Transfer Action Dialog**: Fix the D-pad focus loss issue on Android TV where active downloads cause the RecyclerView to reset focus to the top toolbar every second. Implement granular payload updates, stable IDs, and a dedicated UFMStandard TV Transfer Action Dialog allowing users to pause, resume, open download folders, or delete transfers via D-pad remote.
 
 ```mermaid
 flowchart TD
-    subgraph PlaybackLifecycle["UFM Player Lifecycle"]
-        A["Playback State / Track / VideoSize Change"] --> B{"Is Video Playing && PiP Enabled && !isTv?"}
-        B -->|Yes| C["Build PiP Params:\n- autoEnterEnabled = true (API 31+)\n- Dynamic AspectRatio (clamped)\n- sourceRectHint (PlayerView bounds)\n- Actions (Prev, Play/Pause, Next)"]
-        B -->|No / Paused / Audio| D["Build PiP Params:\n- autoEnterEnabled = false\n- Actions (matching state)"]
-        C --> E["setPictureInPictureParams(...)"]
-        D --> E
-    end
-
-    subgraph UserNavigation["User Navigates Home"]
-        F["User Swipes Home / Taps Home"] --> G{"Android Version"}
-        G -->|API 31+ with autoEnterEnabled| H["OS WindowManager automatically shifts Activity into PiP window (Smooth Zoom)"]
-        G -->|API 26..30 Fallback| I["onUserLeaveHint() invoked -> enterPictureInPictureMode(...)"]
-    end
+    A["Add Torrent (.torrent file or magnet: link)"] --> B{"Input Type"}
+    B -->|".torrent File"| C["Parse TorrentInfo immediately"]
+    B -->|"magnet: Link"| D["Fetch Swarm Metadata (libtorrent4j fetchMagnet)"]
+    D -->|Received <20s| C
+    D -->|Timeout >20s| E["Timeout Dialog: Keep Waiting / Download All / Cancel"]
+    E -->|"Download All"| F["Queue Full Magnet Transfer"]
+    C --> G["Show Torrent Content Selection Dialog (UFMStandard)"]
+    G --> H["User selects/deselects files, folders, or filters"]
+    H --> I["Click Start Download"]
+    I --> J["Storage Preflight on Selected Bytes Only"]
+    J --> K["libtorrent4j SessionManager.download with Priority Array"]
+    K --> L["Download Active Transfers List"]
+    L --> M["Granular Payload Progress Updates (D-pad Focus Retained)"]
+    L --> N["D-pad OK / Click Transfer Card"]
+    N --> O["Show Transfer Action Dialog (Pause, Resume, Open Folder, Delete)"]
 ```
 
 ---
 
-## Files to Create
-*None (All changes are contained within the existing media player activity architecture).*
+## User Review Required
+
+> [!IMPORTANT]
+> **Android TV Layout Split**: Android TV will use an **800dp wide two-column layout** (`dialog_torrent_file_selection_tv.xml`). The left column houses summary stats and action buttons, while the right column houses the scrollable file tree, ensuring instant D-pad accessibility without needing to scroll past hundreds of files.
+
+> [!IMPORTANT]
+> **Pre-download Scope Boundary**: File selection and priority masking happen prior to starting the transfer. Changing file priorities on already active in-progress downloads is deferred to a future milestone.
 
 ---
 
-## Files to Modify
+## Proposed Changes
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/UFMPlayerActivity.kt`
-- **What:** Modernize PiP parameter construction, dynamic video aspect ratio calculation, source rect hint tracking, auto-enter management, and playlist audio transition handling.
-- **Key Details:**
-  1. **Consolidated PiP Builder (`buildPiPParams(isPlaying: Boolean)`):**
-     - Construct `PictureInPictureParams.Builder()`.
-     - Configure remote actions: Previous, Play/Pause, Next.
-     - Calculate dynamic aspect ratio from `player?.videoSize` with unapplied rotation handling (swapping width and height if rotation is 90° or 270°), clamped safely between `Rational(100, 239)` and `Rational(239, 100)` using greatest common divisor (GCD) simplification.
-     - Set `sourceRectHint` from `playerView` global visible bounds when `playerView` is visible.
-     - On API 31+ (`Build.VERSION.SDK_INT >= Build.VERSION_CODES.S`), set `setAutoEnterEnabled(canAutoEnter)` where:
-       ```kotlin
-       val isVideo = currentTrackInfo?.isVideo == true || playbackService?.currentQueueItem?.isVideo == true
-       val pipEnabled = PlayerPreferencesManager.getBackgroundVideoMode(this) == BackgroundVideoMode.PIP
-       val canAutoEnter = isPlaying && isVideo && pipEnabled && !isTv
-       ```
-  2. **Lifecycle & State Updates (`updatePiPParams()`):**
-     - Call `updatePiPParams()` in:
-       - `onPlaybackStateChanged(isPlaying: Boolean, state: Int, isLocal: Boolean)`: immediately updates actions and toggles `autoEnterEnabled` between playing and paused states.
-       - `activityPlayerListener.onVideoSizeChanged(videoSize: VideoSize)`: updates aspect ratio as soon as the media dimensions are parsed or change.
-       - `playbackCallback.onTrackChanged(trackInfo: QueueItem?)`: updates track parameters. If in PiP mode (`isPiP == true`) and `trackInfo?.isVideo != true`, invoke `finish()` to seamlessly transition to background audio service.
-       - `onResume()`: refreshes PiP params when returning to foreground.
-       - `playerView` layout listener: refreshes `sourceRectHint` once view layout completes.
-  3. **Refactored `onUserLeaveHint()`:**
-     - On API < 31 (or if `!isInPictureInPictureMode` on API 31+), maintain safe fallback calling `enterPictureInPictureMode(buildPiPParams(true).build())`.
-     - When leaving foreground with audio-only or PiP disabled while playing, maintain `finish()` so playback service continues smoothly in background.
+### Component 1: Torrent Content Data Model & Hierarchy Parser
 
----
-
-## Data Model
-No database schema or SharedPreferences schema changes required. Existing `BackgroundVideoMode` (`PIP` vs `AUDIO_ONLY`) in `PlayerPreferencesManager` is fully reused.
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/TorrentFileNode.kt`
+- Data structure representing a node in the torrent file tree (either a folder or a file).
+- Contains:
+  - `id: Int`
+  - `path: String` (full relative path inside the torrent)
+  - `name: String` (leaf file or folder name)
+  - `sizeBytes: Long` (file size or accumulated directory size)
+  - `var isSelected: Boolean = true`
+  - `val isDirectory: Boolean`
+  - `val fileIndex: Int` (-1 for directories, >= 0 for leaf files corresponding to `TorrentInfo.files()`)
+  - `val children: MutableList<TorrentFileNode>`
+  - `var isExpanded: Boolean = true`
+- Companion object builder `fromTorrentInfo(torrentInfo: TorrentInfo): TorrentFileNode`:
+  - Parses flat file lists from `TorrentInfo` (e.g., `Season 1/Episode 01.mkv`) into nested nodes.
+  - Recursively aggregates folder sizes and child counts.
+  - Helper functions for recursive toggling:
+    - `setSelectionRecursive(selected: Boolean)`
+    - `isAllSelected(): Boolean`
+    - `isNoneSelected(): Boolean`
+    - `getSelectedBytes(): Long`
+    - `getSelectedFileIndices(): Set<Int>`
+    - `buildPriorityArray(totalFiles: Int): Array<Priority>`
 
 ---
 
-## Dependencies
-- AndroidX Media3 Common `VideoSize` (already present in project dependencies).
-- Android OS Platform API `PictureInPictureParams.Builder.setAutoEnterEnabled` (introduced in API 31, guarded with `Build.VERSION.SDK_INT >= Build.VERSION_CODES.S`).
+### Component 2: Selective Torrent Engine Integration
+
+#### [MODIFY] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/TorrentEngine.kt`
+- Update `downloadTorrentFile(torrentFile: File, saveDir: File, filePriorities: Array<Priority>? = null)`:
+  - Pass `filePriorities` directly into `sessionManager.download(torrentInfo, saveDir, null, filePriorities, null, flags)`.
+- Implement `fetchMagnetMetadata(magnetUri: String, timeoutSeconds: Int = 20, onResult: (File?) -> Unit)`:
+  - Dispatches `sessionManager.fetchMagnet(magnetUri, timeoutSeconds, tempDir)` on an IO coroutine or worker thread.
+  - Caches the retrieved torrent bytes into a temporary `.torrent` file in `cacheDir/torrents/` and returns it for inspection.
+- Update `handleTorrentFinished(handle: TorrentHandle)`:
+  - Enforce zero-seeding compliance.
+  - Clean up any 0-byte boundary chunk files or empty directories left behind by deselected files (`Priority.IGNORE`).
+  - Scan only the downloaded files with `Priority > 0` into the Android MediaStore.
+
+#### [MODIFY] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/DownloadTransferManager.kt`
+- Overload `startTorrentFileDownload`:
+  - Accept `selectedFileIndices: Set<Int>? = null` and `customTotalBytes: Long? = null`.
+  - Pass the calculated `effectiveTotalBytes` into `StoragePreflightValidator.validate`.
+  - Pass the generated `Priority[]` array to `TorrentEngine`.
+  - Update `TransferItem.totalBytes` to reflect the selected payload size.
 
 ---
 
-## Test Plan
+### Component 3: File Selection UI & Adapters
 
-### Automated Build Verification
-```bash
-./gradlew assembleMobileGoogleDebug
-```
+#### [NEW] `app/src/main/res/layout/dialog_torrent_file_selection.xml` (Mobile)
+- Responsive UFMStandard glass layout (`@drawable/bg_dialog_glass`):
+  - Top Badge + Torrent Title + Summary Statistics (`Selected: X / Y files • A of B`).
+  - Destination Folder row with "Change" button.
+  - Search field (`TextInputLayout` OutlinedBox) + Category Filter Chips (All, Videos, Audio, Images, Archives, Docs).
+  - Quick action buttons: **Select All** and **Deselect All**.
+  - Scrollable `RecyclerView` with vertical scrollbars.
+  - Stacked action buttons: **Start Download** (Primary 50dp button) stacked on top of **Cancel** (44dp TextButton).
+
+#### [NEW] `app/src/main/res/layout/dialog_torrent_file_selection_tv.xml` (Android TV)
+- 800dp Widescreen Two-Column Split Layout:
+  - **Left Sidebar (290dp)**: Torrent Title, Selected Metrics Card, Storage/Location Card with Change button, Select All & Deselect All TV buttons, Primary Start Download TV button (`@drawable/selector_tv_button_yellow`), and Cancel button.
+  - **Right Pane (0dp, weight 1)**: Search input, Category filter row, full-height `RecyclerView` with D-pad navigation.
+
+#### [NEW] `app/src/main/res/layout/item_torrent_file.xml` & `item_torrent_folder.xml`
+- Custom checkable rows for files and collapsible folders.
+- Clean file type icons based on extension, formatted size, and D-pad TV focus selector.
+
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/TorrentFileSelectionAdapter.kt`
+- Tree-aware `RecyclerView.Adapter` rendering flat visible projections of `TorrentFileNode`.
+- Handles folder expansion/collapse animations.
+- Checkbox change listener triggering recursive parent/child updates and notifying dialog header metrics.
+- Text search and category filtering with instant diffing.
+
+---
+
+### Component 4: Android TV Focus Fix & Transfer Action Dialog
+
+#### [MODIFY] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/DownloadTransferAdapter.kt`
+- **Stable IDs**: Enable `setHasStableIds(true)` using hash of transfer item ID.
+- **Granular Payload Updates**:
+  - Replace whole-list `notifyDataSetChanged()` with item-level `notifyItemChanged(pos, PAYLOAD_PROGRESS)`.
+  - In `onBindViewHolder(holder, pos, payloads)`, if `PAYLOAD_PROGRESS` is present, update only progress bar, percent text, speed/ETA text without recreating the view or touching focus.
+- **Click & D-Pad OK Listener**:
+  - Add `onItemClicked: (DownloadTransferManager.TransferItem) -> Unit`.
+  - Pressing D-pad OK on TV or tapping the card on mobile triggers `onItemClicked`.
+
+#### [NEW] `app/src/main/res/layout/dialog_transfer_action.xml` & `dialog_transfer_action_tv.xml`
+- UFMStandard glass dialog displaying:
+  - Transfer Icon, Title, Status Badge, Download Progress, Speed, ETA, Peers, Seeds, Save Path.
+  - Action button stack:
+    - **Pause / Resume** button.
+    - **Open Download Folder** button.
+    - **Delete / Remove Transfer** button.
+    - **Close / Dismiss** button.
+
+#### [MODIFY] `app/src/main/java/za/kilowatch/ultimatefilemanager/download/DownloadManagerActivity.kt`
+- Hook `onItemClicked` in `DownloadTransferAdapter` to show `showTransferActionDialog(item)`.
+- When Delete is tapped, show dual options:
+  1. *"Remove Transfer Only (Keep Files)"* -> `DownloadTransferManager.cancelTransfer(item.id, deleteFiles = false)`
+  2. *"Remove Transfer & Delete Files"* -> `DownloadTransferManager.cancelTransfer(item.id, deleteFiles = true)`
+- Connect `.torrent` picker, file viewer router, and magnet input dialog to launch `showTorrentFileSelectionDialog(torrentInfo, torrentFile, targetDir)`.
+- Implement magnet metadata loading dialog with 20s timeout prompt.
+
+---
+
+### Component 5: Localization & Strings
+
+#### [MODIFY] `app/src/main/res/values/strings.xml`
+- Add translatable strings:
+  - `torrent_select_all`, `torrent_deselect_all`, `torrent_selected_summary`
+  - `torrent_fetching_metadata`, `torrent_metadata_timeout_title`, `torrent_metadata_timeout_msg`
+  - `torrent_keep_waiting`, `torrent_download_all_direct`
+  - `transfer_action_title`, `transfer_action_pause`, `transfer_action_resume`, `transfer_action_open_folder`
+  - `transfer_action_delete_title`, `transfer_delete_keep_files`, `transfer_delete_remove_files`
+  - Category filter labels: `filter_all`, `filter_videos`, `filter_audio`, `filter_images`, `filter_archives`, `filter_docs`
+
+---
+
+## Verification Plan
+
+### Automated Tests
+1. **Tree Parsing & Selection Unit Tests**:
+   - Create `TorrentFileNodeTest.kt` verifying:
+     - Multi-level path parsing into folder hierarchies.
+     - Recursive folder selection and deselection.
+     - Parent state calculation (All selected, None selected, Partial).
+     - Byte accumulation and file priority array generation.
+   - Run:
+     ```powershell
+     ./gradlew testDebugUnitTest --tests "za.kilowatch.ultimatefilemanager.download.*"
+     ```
+
+2. **Storage Preflight Unit Tests**:
+   - Verify `StoragePreflightValidator` correctly assesses space requirements when only a subset of files is chosen.
 
 ### Manual Verification
-1. **Third-Party Launcher Test (One4Home / Nova / Lawnchair)**:
-   - Set default home app to One4Home or another third-party launcher.
-   - Open UFM, play any video file.
-   - Perform swipe-up gesture or tap Home button.
-   - **Verify:** Video player automatically enters PiP mode without stopping or closing.
-2. **Stock Launcher Test (Samsung OneUI / Pixel Launcher)**:
-   - Play video and navigate home.
-   - **Verify:** PiP continues to work flawlessly.
-3. **Paused State Test**:
-   - Pause the video.
-   - Navigate home.
-   - **Verify:** Does not enter PiP; minimizes normally to background.
-4. **Audio-Only Mode Test**:
-   - In Settings, set Background Video Mode to "Audio Only" (or play an MP3/FLAC file).
-   - Navigate home.
-   - **Verify:** Player does not enter PiP; audio continues playing in background notification.
-5. **Aspect Ratio Test**:
-   - Play a 16:9 video, a 21:9 ultra-wide video, and a 9:16 vertical video.
-   - Enter PiP.
-   - **Verify:** PiP window matches the video's aspect ratio without black bars or distortion.
-6. **Mixed Playlist Test in PiP**:
-   - Queue a video followed by an audio track.
-   - Enter PiP and tap Next (or wait for video to end).
-   - **Verify:** PiP window dismisses cleanly, and audio continues playing via the playback notification.
-
----
-
-## Risks & Mitigations
-- **Risk:** Aspect ratios outside Android system bounds throw `IllegalArgumentException` on `setAspectRatio`.  
-  **Mitigation:** Enforce strict mathematical clamping between `1/2.39` (`Rational(100, 239)`) and `2.39` (`Rational(239, 100)`).
-- **Risk:** Rotation degrees (e.g. portrait video recorded at 90° or 270°) cause inverted aspect ratio calculations.  
-  **Mitigation:** Inspect `videoSize.unappliedRotationDegrees` and swap width/height when rotation is 90° or 270°.
-- **Risk:** Rapid multitasking or calling `setPictureInPictureParams` before views are laid out.  
-  **Mitigation:** Guard all view bounds calculations with `::playerView.isInitialized` and wrap `setPictureInPictureParams` in a try-catch block.
+1. **Selective Torrent Download on Mobile**:
+   - Open a multi-file `.torrent` (e.g. 5 files).
+   - Verify selection dialog appears with all 5 files checked.
+   - Uncheck 3 files, verify summary displays `Selected: 2 / 5 files` and updated size.
+   - Click "Start Download". Verify download completes, only the 2 chosen files exist on disk, and MediaStore scans only those 2 files.
+2. **Magnet Link Swarm Fetch**:
+   - Paste a magnet URL. Verify "Fetching metadata..." dialog displays.
+   - On resolution, verify selection dialog opens with complete file tree.
+3. **Android TV Remote Navigation & Focus**:
+   - On Android TV, start an active torrent transfer.
+   - Navigate D-pad focus down into the transfers list.
+   - Observe focus over 10 seconds: verify focus **stays firmly on the selected transfer** without jumping to the top toolbar every second.
+   - Press **D-pad OK** on the transfer card: verify Transfer Action Dialog opens with Pause, Open Folder, and Remove options.
+   - Test pausing, resuming, and deleting from the TV dialog.

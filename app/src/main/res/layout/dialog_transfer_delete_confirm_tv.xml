@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Transfer Delete Confirmation Dialog — UFMStandard Glass (Android TV)
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="600dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp"
+    android:gravity="center_horizontal">
+
+    <!-- Header Icon -->
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_delete"
+        app:tint="#FF5252"
+        android:layout_marginBottom="10dp"
+        android:importantForAccessibility="no" />
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/transfer_action_delete_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Warning / Description -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/transfer_action_delete_msg"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Option 1: Remove Transfer Only (Keep Files) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDeleteKeepFiles"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/transfer_delete_keep_files"
+        android:textColor="@color/tv_button_focused_yellow_text"
+        android:textSize="14.5sp"
+        android:fontFamily="sans-serif-bold"
+        android:background="@drawable/selector_tv_button_yellow"
+        app:backgroundTint="@null"
+        android:focusable="true"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Option 2: Remove Transfer & Delete Files -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDeleteRemoveFiles"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/transfer_delete_remove_files"
+        android:textColor="@color/tv_button_text_selector"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:focusable="true"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDeleteCancel"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="@string/cancel"
+        android:textColor="@color/tv_button_text_selector"
+        android:textSize="14sp"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:focusable="true" />
+
+</LinearLayout>

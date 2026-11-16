@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Torrent Content & File Selection Dialog — UFMStandard Glass (Android TV 800dp Widescreen Split Layout)
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="800dp"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp"
+    android:baselineAligned="false">
+
+    <!-- Left Column: Info, Stats, Actions & Controls (280dp) -->
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginEnd="18dp">
+
+        <!-- Header Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:id="@+id/imgTorrentHeaderIcon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_file_torrent"
+                app:tint="@color/tv_accent"
+                android:layout_marginEnd="10dp"
+                android:importantForAccessibility="no" />
+
+            <TextView
+                android:id="@+id/txtTorrentTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/torrent_file_selection_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="middle" />
+        </LinearLayout>
+
+        <!-- Selected Stats Glass Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/tv_glass_white_10"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/tv_glass_border"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SELECTION SUMMARY"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="10.5sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.06" />
+
+                <TextView
+                    android:id="@+id/txtSelectedSummary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selected: 0 of 0 files"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="13sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:layout_marginTop="3dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Save Location Glass Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/tv_glass_white_10"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/tv_glass_border"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="@drawable/selector_tv_card"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="10dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_folder"
+                    app:tint="@color/tv_accent" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="6dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/download_location_label"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/txtSaveLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="12sp"
+                        android:singleLine="true"
+                        android:ellipsize="middle" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnChangeLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/download_change_location"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="11.5sp"
+                    android:fontFamily="sans-serif-bold" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Quick Select All & Deselect All TV Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="14dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSelectAll"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:text="@string/torrent_select_all"
+                android:textColor="@color/tv_button_focused_yellow_text"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-bold"
+                android:background="@drawable/selector_tv_button_yellow"
+                app:backgroundTint="@null"
+                android:focusable="true"
+                android:layout_marginEnd="6dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeselectAll"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:text="@string/torrent_deselect_all"
+                android:textColor="@color/tv_button_text_selector"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-bold"
+                android:background="@drawable/selector_tv_button"
+                app:backgroundTint="@null"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- Spacer -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- TV Primary Action Button: Start Download -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStartDownload"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/download_action_start"
+            android:textColor="@color/tv_button_focused_yellow_text"
+            android:textSize="14.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:background="@drawable/selector_tv_button_yellow"
+            app:backgroundTint="@null"
+            android:focusable="true"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Cancel Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="@string/cancel"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="13.5sp"
+            android:background="@drawable/selector_tv_button"
+            app:backgroundTint="@null"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <!-- Right Column: Search, Category Filters & File Tree (0dp, weight 1) -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Search Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilSearch"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/torrent_search_hint"
+            app:endIconMode="clear_text"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:hintTextColor="@color/tv_text_hint"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editSearchFiles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="13sp"
+                android:paddingVertical="8dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Category Filters Row -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/chipFilterAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="@string/filter_all"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:textColor="@color/tv_text_primary"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    android:focusable="true"
+                    android:paddingHorizontal="12dp"
+                    android:gravity="center"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterVideos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="@string/filter_videos"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:textColor="@color/tv_text_secondary"
+                    android:background="@drawable/selector_tv_button"
+                    android:focusable="true"
+                    android:paddingHorizontal="12dp"
+                    android:gravity="center"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterAudio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="@string/filter_audio"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:textColor="@color/tv_text_secondary"
+                    android:background="@drawable/selector_tv_button"
+                    android:focusable="true"
+                    android:paddingHorizontal="12dp"
+                    android:gravity="center"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterImages"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="@string/filter_images"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:textColor="@color/tv_text_secondary"
+                    android:background="@drawable/selector_tv_button"
+                    android:focusable="true"
+                    android:paddingHorizontal="12dp"
+                    android:gravity="center"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterArchives"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="@string/filter_archives"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:textColor="@color/tv_text_secondary"
+                    android:background="@drawable/selector_tv_button"
+                    android:focusable="true"
+                    android:paddingHorizontal="12dp"
+                    android:gravity="center"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/chipFilterDocs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="@string/filter_documents"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:textColor="@color/tv_text_secondary"
+                    android:background="@drawable/selector_tv_button"
+                    android:focusable="true"
+                    android:paddingHorizontal="12dp"
+                    android:gravity="center" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Full-Height Tree Card Container -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="330dp"
+            app:cardBackgroundColor="@color/tv_glass_white_10"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/tv_glass_border">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerTorrentFiles"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:paddingVertical="4dp"
+                android:clipToPadding="false"
+                android:descendantFocusability="afterDescendants" />
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</LinearLayout>

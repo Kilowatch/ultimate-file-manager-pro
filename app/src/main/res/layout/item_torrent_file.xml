@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Torrent Content Inspector — File Row Item
+    Professional flat tree row with clean margins and no bulky card outlines.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="38dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_marginHorizontal="2dp"
+    android:layout_marginVertical="1dp"
+    android:paddingVertical="3dp"
+    android:paddingEnd="10dp"
+    android:background="@drawable/selector_torrent_tree_item"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Depth Indentation Spacer -->
+    <View
+        android:id="@+id/viewIndent"
+        android:layout_width="0dp"
+        android:layout_height="1dp" />
+
+    <!-- Align with folder arrow space -->
+    <View
+        android:layout_width="26dp"
+        android:layout_height="1dp" />
+
+    <!-- Checkbox -->
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/checkFile"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:padding="0dp"
+        android:layout_marginEnd="6dp"
+        android:clickable="false"
+        android:focusable="false"
+        app:buttonTint="?attr/colorPrimary" />
+
+    <!-- File Type Icon -->
+    <ImageView
+        android:id="@+id/imgFileIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_file_generic"
+        app:tint="@color/mobile_icon_tint"
+        android:layout_marginEnd="8dp"
+        android:importantForAccessibility="no" />
+
+    <!-- File Name & Path -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtFileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:ellipsize="middle" />
+
+        <TextView
+            android:id="@+id/txtFilePath"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="10.5sp"
+            android:singleLine="true"
+            android:ellipsize="start"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- File Size -->
+    <TextView
+        android:id="@+id/txtFileSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="11.5sp"
+        android:layout_marginStart="8dp" />
+
+</LinearLayout>

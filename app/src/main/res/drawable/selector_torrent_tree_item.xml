@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Selector for Torrent Tree View Folder and File Rows.
+    Provides a clean, professional appearance without heavy card borders or oversized radiuses.
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused (TV D-pad or Keyboard) -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/ufmFocusFill" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+    <!-- Pressed / Active -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#24FFFFFF" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+    <!-- Default: Clean Transparent Background (No borders) -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+</selector>

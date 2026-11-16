@@ -1,6 +1,7 @@
 package za.kilowatch.ultimatefilemanager.download
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
@@ -8,15 +9,21 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.OpenableColumns
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -29,6 +36,7 @@ import org.libtorrent4j.TorrentInfo
 import org.libtorrent4j.swig.error_code
 import org.libtorrent4j.swig.libtorrent
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
@@ -76,7 +84,12 @@ class DownloadManagerActivity : AppCompatActivity(), DownloadTransferManager.Tra
             if (!pickedPath.isNullOrBlank()) {
                 val file = File(pickedPath)
                 if (file.exists()) {
-                    showTorrentInputDialog(preselectedFile = file)
+                    val info = runCatching { TorrentInfo(file) }.getOrNull()
+                    if (info != null) {
+                        showTorrentFileSelectionDialog(info, file, DownloadPreferencesManager.getDownloadDir(this))
+                    } else {
+                        showTorrentInputDialog(preselectedFile = file)
+                    }
                 }
             }
         }
@@ -145,7 +158,10 @@ class DownloadManagerActivity : AppCompatActivity(), DownloadTransferManager.Tra
                 }
             },
             onCancelClicked = { item ->
-                DownloadTransferManager.cancelTransfer(item.id, deleteFiles = true)
+                showDeleteTransferConfirmationDialog(item)
+            },
+            onItemClicked = { item ->
+                showTransferActionDialog(item)
             }
         )
         recyclerDownloads?.layoutManager = LinearLayoutManager(this)
@@ -282,7 +298,12 @@ class DownloadManagerActivity : AppCompatActivity(), DownloadTransferManager.Tra
         if (!extraPath.isNullOrBlank()) {
             val f = File(extraPath)
             if (f.exists()) {
-                showTorrentInputDialog(preselectedFile = f)
+                val info = runCatching { TorrentInfo(f) }.getOrNull()
+                if (info != null) {
+                    showTorrentFileSelectionDialog(info, f, DownloadPreferencesManager.getDownloadDir(this))
+                } else {
+                    showTorrentInputDialog(preselectedFile = f)
+                }
                 return
             }
         }
@@ -299,13 +320,24 @@ class DownloadManagerActivity : AppCompatActivity(), DownloadTransferManager.Tra
             scheme == "file" -> {
                 val path = uri.path
                 if (path != null && path.endsWith(".torrent", ignoreCase = true)) {
-                    showTorrentInputDialog(preselectedFile = File(path))
+                    val f = File(path)
+                    val info = runCatching { TorrentInfo(f) }.getOrNull()
+                    if (info != null) {
+                        showTorrentFileSelectionDialog(info, f, DownloadPreferencesManager.getDownloadDir(this))
+                    } else {
+                        showTorrentInputDialog(preselectedFile = f)
+                    }
                 }
             }
             scheme == "content" -> {
                 val cached = cacheTorrentUri(uri)
                 if (cached != null) {
-                    showTorrentInputDialog(preselectedFile = cached)
+                    val info = runCatching { TorrentInfo(cached) }.getOrNull()
+                    if (info != null) {
+                        showTorrentFileSelectionDialog(info, cached, DownloadPreferencesManager.getDownloadDir(this))
+                    } else {
+                        showTorrentInputDialog(preselectedFile = cached)
+                    }
                 }
             }
         }
@@ -499,83 +531,19 @@ class DownloadManagerActivity : AppCompatActivity(), DownloadTransferManager.Tra
 
             if (file != null && file.exists()) {
                 val torrentInfo = runCatching { TorrentInfo(file) }.getOrNull()
-                val torrentName = torrentInfo?.name() ?: file.nameWithoutExtension
-                val isFolder = (torrentInfo?.numFiles() ?: 1) > 1
-                val destFile = File(targetDir, torrentName)
-
-                if (destFile.exists()) {
-                    lifecycleScope.launch {
-                        val action = TransferConflictHelper.showConflictDialog(
-                            activity = this@DownloadManagerActivity,
-                            fileName = torrentName,
-                            isFolder = destFile.isDirectory || isFolder,
-                            destSizeBytes = if (destFile.isFile) destFile.length() else 0L,
-                            applyToAllRef = booleanArrayOf(false)
-                        )
-                        when (action) {
-                            TransferConflictHelper.ConflictAction.OVERWRITE -> {
-                                DownloadTransferManager.startTorrentFileDownload(this@DownloadManagerActivity, file, targetDir)
-                                dialog.dismiss()
-                            }
-                            TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
-                                val unique = TransferConflictHelper.uniqueLocalFile(targetDir, torrentName, this@DownloadManagerActivity)
-                                val saveFolder = if (isFolder) unique else File(targetDir, "${unique.nameWithoutExtension}_dir")
-                                saveFolder.mkdirs()
-                                DownloadTransferManager.startTorrentFileDownload(this@DownloadManagerActivity, file, saveFolder)
-                                dialog.dismiss()
-                            }
-                            TransferConflictHelper.ConflictAction.SKIP,
-                            TransferConflictHelper.ConflictAction.CANCEL -> {
-                                // Keep dialog open
-                            }
-                        }
-                    }
-                } else {
-                    DownloadTransferManager.startTorrentFileDownload(this, file, targetDir)
+                if (torrentInfo != null) {
                     dialog.dismiss()
+                    showTorrentFileSelectionDialog(torrentInfo, file, targetDir)
+                    return@setOnClickListener
                 }
+                Toast.makeText(this, "Failed to inspect torrent file", Toast.LENGTH_SHORT).show()
             } else {
                 val magnetUri = editMagnetUrl?.text?.toString()?.trim() ?: ""
                 if (magnetUri.isBlank() || !magnetUri.startsWith("magnet:?", ignoreCase = true)) {
                     editMagnetUrl?.error = "Please enter a valid Magnet link"
                     return@setOnClickListener
                 }
-
-                val ec = error_code()
-                val p = libtorrent.parse_magnet_uri(magnetUri, ec)
-                val dn = p.name
-
-                if (!dn.isNullOrBlank() && File(targetDir, dn).exists()) {
-                    val destFile = File(targetDir, dn)
-                    lifecycleScope.launch {
-                        val action = TransferConflictHelper.showConflictDialog(
-                            activity = this@DownloadManagerActivity,
-                            fileName = dn,
-                            isFolder = destFile.isDirectory,
-                            destSizeBytes = if (destFile.isFile) destFile.length() else 0L,
-                            applyToAllRef = booleanArrayOf(false)
-                        )
-                        when (action) {
-                            TransferConflictHelper.ConflictAction.OVERWRITE -> {
-                                DownloadTransferManager.startTorrentDownload(this@DownloadManagerActivity, magnetUri, targetDir)
-                                dialog.dismiss()
-                            }
-                            TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
-                                val unique = TransferConflictHelper.uniqueLocalFile(targetDir, dn, this@DownloadManagerActivity)
-                                unique.mkdirs()
-                                DownloadTransferManager.startTorrentDownload(this@DownloadManagerActivity, magnetUri, unique)
-                                dialog.dismiss()
-                            }
-                            TransferConflictHelper.ConflictAction.SKIP,
-                            TransferConflictHelper.ConflictAction.CANCEL -> {
-                                // User cancelled
-                            }
-                        }
-                    }
-                } else {
-                    DownloadTransferManager.startTorrentDownload(this, magnetUri, targetDir)
-                    dialog.dismiss()
-                }
+                startMagnetResolutionFlow(magnetUri, dialog)
             }
         }
 
@@ -595,6 +563,320 @@ class DownloadManagerActivity : AppCompatActivity(), DownloadTransferManager.Tra
         }
     }
 
+    private fun startMagnetResolutionFlow(magnetUri: String, parentDialogToDismiss: Dialog?) {
+        val layoutRes = if (isTv) R.layout.dialog_torrent_fetch_metadata_tv else R.layout.dialog_torrent_fetch_metadata
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null, false)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancelFetch)
+
+        val progressDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        btnCancel?.setOnClickListener { progressDialog.dismiss() }
+        progressDialog.show()
+
+        if (isTv) {
+            progressDialog.window?.setLayout(
+                (520 * resources.displayMetrics.density).toInt(),
+                android.view.WindowManager.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        var isResolved = false
+        var isCancelled = false
+
+        progressDialog.setOnCancelListener { isCancelled = true }
+        progressDialog.setOnDismissListener { isCancelled = true }
+
+        val timeoutHandler = Handler(Looper.getMainLooper())
+        val timeoutRunnable = Runnable {
+            if (isFinishing || isDestroyed) return@Runnable
+            if (!isResolved && !isCancelled && progressDialog.isShowing) {
+                progressDialog.dismiss()
+                showMagnetTimeoutDialog(magnetUri, parentDialogToDismiss)
+            }
+        }
+        timeoutHandler.postDelayed(timeoutRunnable, 20_000L)
+
+        DownloadTransferManager.fetchMagnetMetadata(this, magnetUri, timeoutSeconds = 25) { cachedTorrentFile ->
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                timeoutHandler.removeCallbacks(timeoutRunnable)
+                if (isCancelled) return@runOnUiThread
+                isResolved = true
+                if (progressDialog.isShowing) {
+                    progressDialog.dismiss()
+                }
+                if (cachedTorrentFile != null && cachedTorrentFile.exists()) {
+                    parentDialogToDismiss?.dismiss()
+                    val info = runCatching { TorrentInfo(cachedTorrentFile) }.getOrNull()
+                    if (info != null) {
+                        showTorrentFileSelectionDialog(
+                            torrentInfo = info,
+                            torrentFile = cachedTorrentFile,
+                            initialTargetDir = DownloadPreferencesManager.getDownloadDir(this)
+                        )
+                    } else {
+                        Toast.makeText(this, "Failed to parse torrent metadata", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    showMagnetTimeoutDialog(magnetUri, parentDialogToDismiss)
+                }
+            }
+        }
+    }
+
+    private fun showMagnetTimeoutDialog(magnetUri: String, parentDialogToDismiss: Dialog?) {
+        val layoutRes = if (isTv) R.layout.dialog_torrent_metadata_timeout_tv else R.layout.dialog_torrent_metadata_timeout
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null, false)
+
+        val btnDownloadAll = dialogView.findViewById<MaterialButton>(R.id.btnDownloadAllDirect)
+        val btnKeepWaiting = dialogView.findViewById<MaterialButton>(R.id.btnKeepWaiting)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancelTimeout)
+
+        val timeoutDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        timeoutDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnDownloadAll?.setOnClickListener {
+            timeoutDialog.dismiss()
+            parentDialogToDismiss?.dismiss()
+            val targetDir = DownloadPreferencesManager.getDownloadDir(this)
+            DownloadTransferManager.startTorrentDownload(this, magnetUri, targetDir)
+        }
+
+        btnKeepWaiting?.setOnClickListener {
+            timeoutDialog.dismiss()
+            startMagnetResolutionFlow(magnetUri, parentDialogToDismiss)
+        }
+
+        btnCancel?.setOnClickListener {
+            timeoutDialog.dismiss()
+        }
+
+        timeoutDialog.show()
+
+        if (isTv) {
+            timeoutDialog.window?.setLayout(
+                (560 * resources.displayMetrics.density).toInt(),
+                android.view.WindowManager.LayoutParams.WRAP_CONTENT
+            )
+        }
+    }
+
+    private fun showTorrentFileSelectionDialog(
+        torrentInfo: TorrentInfo,
+        torrentFile: File,
+        initialTargetDir: File
+    ) {
+        val layoutRes = if (isTv) R.layout.dialog_torrent_file_selection_tv else R.layout.dialog_torrent_file_selection
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null, false)
+
+        val rootNode = TorrentFileNode.fromTorrentInfo(torrentInfo)
+
+        val txtTorrentTitle = dialogView.findViewById<TextView>(R.id.txtTorrentTitle)
+        val txtSelectedSummary = dialogView.findViewById<TextView>(R.id.txtSelectedSummary)
+        val txtSaveLocation = dialogView.findViewById<TextView>(R.id.txtSaveLocation)
+        val btnChangeLocation = dialogView.findViewById<View>(R.id.btnChangeLocation)
+        val cardLocation = dialogView.findViewById<View>(R.id.cardLocation)
+        val recycler = dialogView.findViewById<RecyclerView>(R.id.recyclerTorrentFiles)
+        val btnSelectAll = dialogView.findViewById<View>(R.id.btnSelectAll)
+        val btnDeselectAll = dialogView.findViewById<View>(R.id.btnDeselectAll)
+        val editSearch = dialogView.findViewById<EditText>(R.id.editSearchFiles)
+        val btnStart = dialogView.findViewById<MaterialButton>(R.id.btnStartDownload)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancel)
+
+        // Category filter chips
+        val chipAll = dialogView.findViewById<TextView>(R.id.chipFilterAll)
+        val chipVideos = dialogView.findViewById<TextView>(R.id.chipFilterVideos)
+        val chipAudio = dialogView.findViewById<TextView>(R.id.chipFilterAudio)
+        val chipImages = dialogView.findViewById<TextView>(R.id.chipFilterImages)
+        val chipArchives = dialogView.findViewById<TextView>(R.id.chipFilterArchives)
+        val chipDocs = dialogView.findViewById<TextView>(R.id.chipFilterDocs)
+
+        txtTorrentTitle?.text = torrentInfo.name().ifBlank { torrentFile.nameWithoutExtension }
+        txtSaveLocation?.text = initialTargetDir.absolutePath
+        activeDialogSaveLocationText = txtSaveLocation
+
+        val totalFiles = rootNode.getLeafFileCount()
+        val totalBytes = torrentInfo.totalSize()
+        var downloadStarted = false
+
+        fun updateMetricsDisplay() {
+            val selectedCount = rootNode.getSelectedLeafFileCount()
+            val selectedBytes = rootNode.getSelectedBytes()
+            txtSelectedSummary?.text = getString(
+                R.string.torrent_selected_summary,
+                selectedCount,
+                totalFiles,
+                formatBytes(selectedBytes),
+                formatBytes(totalBytes)
+            )
+
+            btnStart?.isEnabled = selectedCount > 0
+            btnStart?.alpha = if (selectedCount > 0) 1.0f else 0.5f
+        }
+        updateMetricsDisplay()
+
+        val selectionAdapter = TorrentFileSelectionAdapter(
+            rootNode = rootNode,
+            isTv = isTv,
+            onSelectionChanged = {
+                runOnUiThread { updateMetricsDisplay() }
+            }
+        )
+        recycler?.layoutManager = LinearLayoutManager(this)
+        recycler?.adapter = selectionAdapter
+
+        val chips = listOf(
+            chipAll to TorrentFileSelectionAdapter.CategoryFilter.ALL,
+            chipVideos to TorrentFileSelectionAdapter.CategoryFilter.VIDEOS,
+            chipAudio to TorrentFileSelectionAdapter.CategoryFilter.AUDIO,
+            chipImages to TorrentFileSelectionAdapter.CategoryFilter.IMAGES,
+            chipArchives to TorrentFileSelectionAdapter.CategoryFilter.ARCHIVES,
+            chipDocs to TorrentFileSelectionAdapter.CategoryFilter.DOCS
+        )
+
+        fun highlightChip(selectedChip: TextView?) {
+            chips.forEach { (chip, _) ->
+                if (chip == selectedChip) {
+                    chip?.setTextColor(if (isTv) ContextCompat.getColor(this, R.color.tv_button_focused_yellow_text) else Color.WHITE)
+                    chip?.setBackgroundResource(if (isTv) R.drawable.selector_tv_button_yellow else R.drawable.bg_btn_icon_frosted)
+                } else {
+                    chip?.setTextColor(ContextCompat.getColor(this, if (isTv) R.color.tv_text_secondary else R.color.mobile_text_secondary))
+                    chip?.setBackgroundResource(if (isTv) R.drawable.selector_tv_button else R.drawable.bg_btn_icon_frosted)
+                }
+            }
+        }
+
+        chips.forEach { (chip, filter) ->
+            chip?.setOnClickListener {
+                highlightChip(chip)
+                selectionAdapter.setCategoryFilter(filter)
+            }
+        }
+
+        editSearch?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                selectionAdapter.setSearchQuery(s?.toString() ?: "")
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        btnSelectAll?.setOnClickListener {
+            selectionAdapter.selectAll()
+        }
+
+        btnDeselectAll?.setOnClickListener {
+            selectionAdapter.deselectAll()
+        }
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnChangeLocation?.setOnClickListener {
+            launchFolderPicker()
+        }
+        cardLocation?.setOnClickListener {
+            launchFolderPicker()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnStart?.setOnClickListener {
+            val selectedIndices = rootNode.getSelectedFileIndices()
+            if (selectedIndices.isEmpty()) {
+                Toast.makeText(this, R.string.torrent_zero_selected_error, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val targetDir = DownloadPreferencesManager.getDownloadDir(this)
+            val torrentName = torrentInfo.name().ifBlank { torrentFile.nameWithoutExtension }
+            val isFolder = torrentInfo.numFiles() > 1
+            val destFile = File(targetDir, torrentName)
+
+            if (destFile.exists()) {
+                lifecycleScope.launch {
+                    val action = TransferConflictHelper.showConflictDialog(
+                        activity = this@DownloadManagerActivity,
+                        fileName = torrentName,
+                        isFolder = destFile.isDirectory || isFolder,
+                        destSizeBytes = if (destFile.isFile) destFile.length() else 0L,
+                        applyToAllRef = booleanArrayOf(false)
+                    )
+                    when (action) {
+                        TransferConflictHelper.ConflictAction.OVERWRITE -> {
+                            downloadStarted = true
+                            DownloadTransferManager.startTorrentFileDownload(
+                                this@DownloadManagerActivity,
+                                torrentFile,
+                                targetDir,
+                                selectedIndices
+                            )
+                            dialog.dismiss()
+                        }
+                        TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                            downloadStarted = true
+                            val unique = TransferConflictHelper.uniqueLocalFile(targetDir, torrentName, this@DownloadManagerActivity)
+                            val saveFolder = if (isFolder) unique else File(targetDir, "${unique.nameWithoutExtension}_dir")
+                            saveFolder.mkdirs()
+                            DownloadTransferManager.startTorrentFileDownload(
+                                this@DownloadManagerActivity,
+                                torrentFile,
+                                saveFolder,
+                                selectedIndices
+                            )
+                            dialog.dismiss()
+                        }
+                        TransferConflictHelper.ConflictAction.SKIP,
+                        TransferConflictHelper.ConflictAction.CANCEL -> {
+                            // Leave dialog open
+                        }
+                    }
+                }
+            } else {
+                downloadStarted = true
+                DownloadTransferManager.startTorrentFileDownload(
+                    this,
+                    torrentFile,
+                    targetDir,
+                    selectedIndices
+                )
+                dialog.dismiss()
+            }
+        }
+
+        dialog.setOnDismissListener {
+            if (activeDialogSaveLocationText == txtSaveLocation) {
+                activeDialogSaveLocationText = null
+            }
+            if (!downloadStarted && torrentFile.absolutePath.startsWith(cacheDir.absolutePath)) {
+                runCatching { torrentFile.delete() }
+            }
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            dialog.window?.setLayout(
+                (800 * resources.displayMetrics.density).toInt(),
+                android.view.WindowManager.LayoutParams.WRAP_CONTENT
+            )
+        }
+    }
+
     private fun formatBytes(bytes: Long): String {
         return when {
             bytes >= 1024L * 1024L * 1024L -> String.format("%.2f GB", bytes / (1024.0 * 1024.0 * 1024.0))
@@ -609,6 +891,172 @@ class DownloadManagerActivity : AppCompatActivity(), DownloadTransferManager.Tra
             bytesPerSec >= 1024 * 1024 -> String.format(java.util.Locale.US, "%.1f MB/s", bytesPerSec / (1024.0 * 1024.0))
             bytesPerSec >= 1024 -> String.format(java.util.Locale.US, "%.0f KB/s", bytesPerSec / 1024.0)
             else -> "$bytesPerSec B/s"
+        }
+    }
+
+    private fun formatEta(seconds: Long): String {
+        val mins = seconds / 60
+        val secs = seconds % 60
+        return if (mins > 0) "${mins}m ${secs}s" else "${secs}s"
+    }
+
+    private fun showTransferActionDialog(item: DownloadTransferManager.TransferItem) {
+        val layoutRes = if (isTv) R.layout.dialog_transfer_action_tv else R.layout.dialog_transfer_action
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null, false)
+
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgActionIcon)
+        val txtFileName = dialogView.findViewById<TextView>(R.id.txtActionFileName)
+        val txtStatus = dialogView.findViewById<TextView>(R.id.txtActionStatus)
+        val txtSizeSpeed = dialogView.findViewById<TextView>(R.id.txtActionSizeSpeed)
+        val txtEtaPeers = dialogView.findViewById<TextView>(R.id.txtActionEtaPeers)
+        val txtSavePath = dialogView.findViewById<TextView>(R.id.txtActionSavePath)
+        val btnPauseResume = dialogView.findViewById<MaterialButton>(R.id.btnActionPauseResume)
+        val btnOpenFolder = dialogView.findViewById<MaterialButton>(R.id.btnActionOpenFolder)
+        val btnDelete = dialogView.findViewById<MaterialButton>(R.id.btnActionDelete)
+        val btnDismiss = dialogView.findViewById<MaterialButton>(R.id.btnActionDismiss)
+
+        val iconRes = when (item.type) {
+            DownloadTransferManager.TransferType.DIRECT_HTTP -> R.drawable.ic_link
+            DownloadTransferManager.TransferType.TORRENT -> R.drawable.ic_file_torrent
+            DownloadTransferManager.TransferType.MAGNET -> R.drawable.ic_magnet
+        }
+        imgIcon?.setImageResource(iconRes)
+        txtFileName?.text = item.title
+
+        val stateStr = when (item.state) {
+            DownloadTransferManager.TransferState.DOWNLOADING -> "${getString(R.string.download_state_downloading)} (${item.progressPercent}%)"
+            DownloadTransferManager.TransferState.PAUSED -> getString(R.string.download_state_paused)
+            DownloadTransferManager.TransferState.QUEUED_WIFI -> getString(R.string.download_state_queued)
+            DownloadTransferManager.TransferState.COMPLETED -> getString(R.string.download_state_completed)
+            DownloadTransferManager.TransferState.ERROR -> "${getString(R.string.download_state_error)}: ${item.errorMessage ?: ""}"
+        }
+        txtStatus?.text = stateStr
+
+        val downloadedText = formatBytes(item.downloadedBytes)
+        val totalText = if (item.totalBytes > 0) formatBytes(item.totalBytes) else ""
+        val speedText = formatSpeed(item.speedBytesPerSec)
+        txtSizeSpeed?.text = if (totalText.isNotEmpty()) "$downloadedText / $totalText • $speedText" else "$downloadedText • $speedText"
+
+        val etaPart = if (item.etaSeconds > 0) "ETA: ${formatEta(item.etaSeconds)}" else "ETA: Calculating..."
+        val peersPart = if (item.type != DownloadTransferManager.TransferType.DIRECT_HTTP) {
+            " • Peers: ${item.connectedPeers} (${item.totalPeers}) • Seeds: ${item.connectedSeeds}"
+        } else ""
+        txtEtaPeers?.text = "$etaPart$peersPart"
+        txtSavePath?.text = item.targetFolder.absolutePath
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        if (item.state == DownloadTransferManager.TransferState.COMPLETED) {
+            btnPauseResume?.visibility = View.GONE
+        } else if (item.state == DownloadTransferManager.TransferState.PAUSED ||
+            item.state == DownloadTransferManager.TransferState.QUEUED_WIFI) {
+            btnPauseResume?.text = getString(R.string.transfer_action_resume)
+            btnPauseResume?.setIconResource(R.drawable.ic_play)
+        } else {
+            btnPauseResume?.text = getString(R.string.transfer_action_pause)
+            btnPauseResume?.setIconResource(R.drawable.ic_pause)
+        }
+
+        btnPauseResume?.setOnClickListener {
+            if (item.state == DownloadTransferManager.TransferState.DOWNLOADING) {
+                DownloadTransferManager.pauseTransfer(item.id)
+            } else {
+                DownloadTransferManager.resumeTransfer(this, item.id)
+            }
+            dialog.dismiss()
+        }
+
+        btnOpenFolder?.setOnClickListener {
+            dialog.dismiss()
+            val downloadDest = if (item.title.isNotBlank()) File(item.targetFolder, item.title) else item.targetFolder
+            val folderToOpen = if (downloadDest.exists() && downloadDest.isDirectory) {
+                downloadDest
+            } else {
+                item.targetFolder
+            }
+
+            if (!folderToOpen.exists()) {
+                folderToOpen.mkdirs()
+            }
+
+            if (folderToOpen.exists()) {
+                val (resolvedSid, resolvedStype, resolvedRoot) = IndexingRepository.resolveStorageForPath(folderToOpen.absolutePath)
+                val intent = Intent(this, FileBrowserActivity::class.java).apply {
+                    action = Intent.ACTION_VIEW
+                    putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, resolvedRoot)
+                    putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, folderToOpen.absolutePath)
+                    if (downloadDest.exists() && downloadDest.isFile) {
+                        putExtra(FileBrowserActivity.EXTRA_FOCUS_PATH, downloadDest.absolutePath)
+                    }
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, resolvedSid)
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, resolvedStype)
+                }
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Folder does not exist", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        btnDelete?.setOnClickListener {
+            dialog.dismiss()
+            showDeleteTransferConfirmationDialog(item)
+        }
+
+        btnDismiss?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            dialog.window?.setLayout(
+                (650 * resources.displayMetrics.density).toInt(),
+                android.view.WindowManager.LayoutParams.WRAP_CONTENT
+            )
+        }
+    }
+
+    private fun showDeleteTransferConfirmationDialog(item: DownloadTransferManager.TransferItem) {
+        val layoutRes = if (isTv) R.layout.dialog_transfer_delete_confirm_tv else R.layout.dialog_transfer_delete_confirm
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null, false)
+
+        val btnKeepFiles = dialogView.findViewById<MaterialButton>(R.id.btnDeleteKeepFiles)
+        val btnRemoveFiles = dialogView.findViewById<MaterialButton>(R.id.btnDeleteRemoveFiles)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnDeleteCancel)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnKeepFiles?.setOnClickListener {
+            DownloadTransferManager.cancelTransfer(item.id, deleteFiles = false)
+            dialog.dismiss()
+        }
+
+        btnRemoveFiles?.setOnClickListener {
+            DownloadTransferManager.cancelTransfer(item.id, deleteFiles = true)
+            dialog.dismiss()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            dialog.window?.setLayout(
+                (600 * resources.displayMetrics.density).toInt(),
+                android.view.WindowManager.LayoutParams.WRAP_CONTENT
+            )
         }
     }
 }

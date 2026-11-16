@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    BitTorrent Swarm Metadata Timeout Dialog — UFMStandard Glass (Android TV)
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="560dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp"
+    android:gravity="center_horizontal">
+
+    <!-- Hero Icon Badge (Warning Badge) -->
+    <FrameLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_time"
+            app:tint="#FFB300"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/torrent_metadata_timeout_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="6dp" />
+
+    <!-- Message -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/torrent_metadata_timeout_msg"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:lineSpacingExtra="3dp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Action 1: Download All Direct (Focused Yellow Button) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDownloadAllDirect"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/torrent_download_all_direct"
+        android:textColor="@color/tv_button_focused_yellow_text"
+        android:textSize="14.5sp"
+        android:fontFamily="sans-serif-bold"
+        android:background="@drawable/selector_tv_button_yellow"
+        app:backgroundTint="@null"
+        android:focusable="true"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Action 2: Keep Waiting -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnKeepWaiting"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="@string/torrent_keep_waiting"
+        android:textColor="@color/tv_button_text_selector"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:focusable="true"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Action 3: Cancel -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelTimeout"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:text="@string/cancel"
+        android:textColor="@color/tv_button_text_selector"
+        android:textSize="13.5sp"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:focusable="true" />
+
+</LinearLayout>

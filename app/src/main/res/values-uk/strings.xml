@@ -16613,6 +16613,82 @@ Ongoing download progress and status updates
     <string name="download_timeout_stopped">
 Downloads paused: Android 6-hour execution limit reached. Tap to resume.
 </string>
+
+    <!-- Torrent & Magnet Selective File Download & Content Inspector -->
+    <string name="torrent_select_all">
+Select All
+</string>
+    <string name="torrent_deselect_all">
+Deselect All
+</string>
+    <string name="torrent_selected_summary">
+Selected: %1$d of %2$d files (%3$s of %4$s)
+</string>
+    <string name="torrent_files_count">
+%1$d files
+</string>
+    <string name="torrent_file_selection_title">
+Torrent Content
+</string>
+    <string name="torrent_file_selection_subtitle">
+Select files and folders to download
+</string>
+    <string name="torrent_fetching_metadata">
+Fetching torrent metadata from swarm…
+</string>
+    <string name="torrent_fetching_metadata_desc">
+Contacting DHT nodes and peers to retrieve file list…
+</string>
+    <string name="torrent_metadata_timeout_title">
+Metadata Fetch Timeout
+</string>
+    <string name="torrent_metadata_timeout_msg">
+Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+</string>
+    <string name="torrent_keep_waiting">
+Keep Waiting
+</string>
+    <string name="torrent_download_all_direct">
+Download All Directly
+</string>
+    <string name="torrent_zero_selected_error">
+Please select at least one file to download
+</string>
+    <string name="torrent_search_hint">
+Search files…
+</string>
+
+    <!-- Transfer Action Dialog -->
+    <string name="transfer_action_title">
+Transfer Actions
+</string>
+    <string name="transfer_action_pause">
+Pause Transfer
+</string>
+    <string name="transfer_action_resume">
+Resume Transfer
+</string>
+    <string name="transfer_action_open_folder">
+Open Download Folder
+</string>
+    <string name="transfer_action_delete_title">
+Remove Transfer
+</string>
+    <string name="transfer_action_delete_msg">
+Choose how to remove this transfer from Download Manager:
+</string>
+    <string name="transfer_delete_keep_files">
+Remove Transfer Only
+</string>
+    <string name="transfer_delete_keep_files_desc">
+Keep downloaded files on your device
+</string>
+    <string name="transfer_delete_remove_files">
+Remove &amp; Delete Files
+</string>
+    <string name="transfer_delete_remove_files_desc">
+Permanently delete downloaded files from disk
+</string>
 </resources>
 
 
