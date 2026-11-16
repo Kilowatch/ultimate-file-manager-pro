@@ -11,7 +11,9 @@ import java.io.ByteArrayInputStream
 import java.net.InetAddress
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executors
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 /**
  * SSDP discovery system for the DLNA Media Client.
@@ -51,10 +53,13 @@ object DlnaDiscovery {
     private var cleanupHandler: Handler? = null
     private var cleanupRunnable: Runnable? = null
 
-    /** Dedicated thread for fetching device description XML without blocking SSDP. */
-    private val fetchExecutor = Executors.newSingleThreadExecutor { r ->
-        Thread(r, "DlnaFetchThread").also { it.isDaemon = true }
-    }
+    /** Dedicated thread for fetching device description XML without blocking SSDP. Bounded to prevent OOM. */
+    private val fetchExecutor = ThreadPoolExecutor(
+        1, 1, 0L, TimeUnit.MILLISECONDS,
+        LinkedBlockingQueue(64),
+        { r -> Thread(r, "DlnaFetchThread").also { it.isDaemon = true } },
+        ThreadPoolExecutor.DiscardOldestPolicy()
+    )
 
     // ── SSDP Listener ────────────────────────────────────────────────────────
 
@@ -68,18 +73,26 @@ object DlnaDiscovery {
             server: String
         ) {
             if (location.isBlank()) return
-            fetchExecutor.submit {
-                val info = fetchDeviceDescription(location)
-                if (info != null) {
-                    discoveredServers[info.udn] = info
-                    if (newlyDiscovered.add(info.udn)) {
-                        Log.i(
-                            TAG,
-                            "New DLNA server found: ${info.friendlyName} at ${info.ip}. " +
-                                "Only connect to servers you trust."
-                        )
+            try {
+                fetchExecutor.submit {
+                    try {
+                        val info = fetchDeviceDescription(location)
+                        if (info != null) {
+                            discoveredServers[info.udn] = info
+                            if (newlyDiscovered.add(info.udn)) {
+                                Log.i(
+                                    TAG,
+                                    "New DLNA server found: ${info.friendlyName} at ${info.ip}. " +
+                                        "Only connect to servers you trust."
+                                )
+                            }
+                        }
+                    } catch (t: Throwable) {
+                        Log.w(TAG, "Error fetching device description from $location", t)
                     }
                 }
+            } catch (t: Throwable) {
+                Log.w(TAG, "Failed to submit device description fetch for $location", t)
             }
         }
 
@@ -91,27 +104,35 @@ object DlnaDiscovery {
             server: String
         ) {
             if (location.isBlank()) return
-            fetchExecutor.submit {
-                val info = fetchDeviceDescription(location)
-                if (info != null) {
-                    val existing = discoveredServers[info.udn]
-                    if (existing == null) {
-                        // Brand new server
-                        discoveredServers[info.udn] = info
-                        if (passiveListening && newlyDiscovered.add(info.udn)) {
-                            Log.i(
-                                TAG,
-                                "New DLNA server found: ${info.friendlyName} at ${info.ip}. " +
-                                    "Only connect to servers you trust."
-                            )
+            try {
+                fetchExecutor.submit {
+                    try {
+                        val info = fetchDeviceDescription(location)
+                        if (info != null) {
+                            val existing = discoveredServers[info.udn]
+                            if (existing == null) {
+                                // Brand new server
+                                discoveredServers[info.udn] = info
+                                if (passiveListening && newlyDiscovered.add(info.udn)) {
+                                    Log.i(
+                                        TAG,
+                                        "New DLNA server found: ${info.friendlyName} at ${info.ip}. " +
+                                            "Only connect to servers you trust."
+                                    )
+                                }
+                            } else {
+                                // Refresh the lastSeen timestamp
+                                discoveredServers[info.udn] = existing.copy(
+                                    lastSeen = System.currentTimeMillis()
+                                )
+                            }
                         }
-                    } else {
-                        // Refresh the lastSeen timestamp
-                        discoveredServers[info.udn] = existing.copy(
-                            lastSeen = System.currentTimeMillis()
-                        )
+                    } catch (t: Throwable) {
+                        Log.w(TAG, "Error fetching device description from $location", t)
                     }
                 }
+            } catch (t: Throwable) {
+                Log.w(TAG, "Failed to submit device description fetch for $location", t)
             }
         }
 
@@ -120,12 +141,16 @@ object DlnaDiscovery {
             nt: String,
             usn: String
         ) {
-            // USN format: "uuid:UDN::urn:schemas-upnp-org:device:MediaServer:1"
-            // Extract the UDN portion by taking everything before "::".
-            val udn = usn.split("::").firstOrNull()?.takeIf { it.isNotEmpty() } ?: usn
-            val removed = discoveredServers.remove(udn)
-            if (removed != null) {
-                Log.d(TAG, "Server went offline: ${removed.friendlyName} ($udn)")
+            try {
+                // USN format: "uuid:UDN::urn:schemas-upnp-org:device:MediaServer:1"
+                // Extract the UDN portion by taking everything before "::".
+                val udn = usn.split("::").firstOrNull()?.takeIf { it.isNotEmpty() } ?: usn
+                val removed = discoveredServers.remove(udn)
+                if (removed != null) {
+                    Log.d(TAG, "Server went offline: ${removed.friendlyName} ($udn)")
+                }
+            } catch (t: Throwable) {
+                Log.w(TAG, "Error processing onNotifyByeBye", t)
             }
         }
     }
@@ -141,6 +166,14 @@ object DlnaDiscovery {
     fun initialize(context: Context) {
         if (appContext != null) return  // already initialized
         appContext = context.applicationContext
+
+        // Pre-start core worker thread so native thread creation happens early.
+        try {
+            fetchExecutor.prestartCoreThread()
+        } catch (t: Throwable) {
+            Log.w(TAG, "Failed to prestart fetchExecutor", t)
+        }
+
         // Initialize the SSDP engine if not already running (idempotent).
         // This sets up the multicast socket needed for M-SEARCH send/receive.
         val ssdpOk = DlnaSsdpEngine.initialize(context, "")
@@ -328,8 +361,8 @@ object DlnaDiscovery {
                 connectionManagerUrl = connectionManagerUrl,
                 lastSeen = System.currentTimeMillis()
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to fetch/parse device description from $locationUrl", e)
+        } catch (t: Throwable) {
+            Log.e(TAG, "Failed to fetch/parse device description from $locationUrl", t)
             null
         }
     }

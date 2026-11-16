@@ -14,7 +14,9 @@ import java.net.NetworkInterface
 import java.net.SocketException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.Executors
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 const val SSDP_MULTICAST_ADDRESS = "239.255.255.250"
 const val SSDP_PORT = 1900
@@ -64,16 +66,22 @@ object DlnaSsdpEngine {
     private val registeredServices = CopyOnWriteArrayList<RegisteredService>()
 
     // Background executor used to apply the random MX delay before unicast M-SEARCH responses.
-    // A single thread is sufficient because M-SEARCH responses are low-volume.
-    private val msearchResponseExecutor = Executors.newSingleThreadExecutor { r ->
-        Thread(r, "DlnaSsdpMSearchResponder").also { it.isDaemon = true }
-    }
+    // A bounded single-thread pool prevents memory exhaustion during SSDP discovery storms.
+    private val msearchResponseExecutor = ThreadPoolExecutor(
+        1, 1, 0L, TimeUnit.MILLISECONDS,
+        LinkedBlockingQueue(64),
+        { r -> Thread(r, "DlnaSsdpMSearchResponder").also { it.isDaemon = true } },
+        ThreadPoolExecutor.DiscardOldestPolicy()
+    )
 
     // Dedicated background executor for outbound UDP multicast and unicast packets,
-    // ensuring DatagramSocket.send never executes on the main looper.
-    private val ssdpSendExecutor = Executors.newSingleThreadExecutor { r ->
-        Thread(r, "DlnaSsdpSender").also { it.isDaemon = true }
-    }
+    // ensuring DatagramSocket.send never executes on the main looper. Bounded to prevent OOM.
+    private val ssdpSendExecutor = ThreadPoolExecutor(
+        1, 1, 0L, TimeUnit.MILLISECONDS,
+        LinkedBlockingQueue(128),
+        { r -> Thread(r, "DlnaSsdpSender").also { it.isDaemon = true } },
+        ThreadPoolExecutor.DiscardOldestPolicy()
+    )
 
     // ─── Public API ──────────────────────────────────────────────────────
 
@@ -126,8 +134,28 @@ object DlnaSsdpEngine {
                 Log.w(TAG, "WifiManager unavailable — MulticastLock not acquired (TV/Ethernet-only device)")
             }
 
+            // Pre-start core threads so native thread creation happens early
+            // rather than failing under peak memory pressure when packets arrive.
+            try {
+                msearchResponseExecutor.prestartCoreThread()
+            } catch (t: Throwable) {
+                Log.w(TAG, "Failed to prestart M-SEARCH response thread", t)
+            }
+            try {
+                ssdpSendExecutor.prestartCoreThread()
+            } catch (t: Throwable) {
+                Log.w(TAG, "Failed to prestart SSDP send thread", t)
+            }
+
             running = true
-            startListenerThread()
+            try {
+                startListenerThread()
+            } catch (t: Throwable) {
+                Log.e(TAG, "Failed to start SSDP listener thread", t)
+                cleanupSocketAndLock()
+                running = false
+                return false
+            }
 
             Log.d(TAG, "SSDP engine initialized on ${bindAddr.hostAddress}")
             return true
@@ -137,6 +165,10 @@ object DlnaSsdpEngine {
             return false
         } catch (e: IOException) {
             Log.e(TAG, "Failed to initialize SSDP engine", e)
+            cleanupSocketAndLock()
+            return false
+        } catch (t: Throwable) {
+            Log.e(TAG, "Unexpected error initializing SSDP engine", t)
             cleanupSocketAndLock()
             return false
         }
@@ -149,6 +181,14 @@ object DlnaSsdpEngine {
         registeredServices.clear()
         cleanupSocketAndLock()
         running = false
+        try {
+            listenerThread?.interrupt()
+        } catch (_: Throwable) {}
+        listenerThread = null
+        try {
+            msearchResponseExecutor.queue.clear()
+            ssdpSendExecutor.queue.clear()
+        } catch (_: Throwable) {}
         listeners.clear()
         lastNotifyTime.clear()
         lastMSearchTime = 0L
@@ -268,13 +308,19 @@ object DlnaSsdpEngine {
             Log.w(TAG, "Unicast response too large (${bytes.size} bytes), dropping")
             return
         }
-        ssdpSendExecutor.submit {
-            try {
-                val packet = DatagramPacket(bytes, bytes.size, address, port)
-                socket.send(packet)
-            } catch (e: IOException) {
-                Log.e(TAG, "Failed to send unicast response to $address", e)
+        try {
+            ssdpSendExecutor.submit {
+                try {
+                    val packet = DatagramPacket(bytes, bytes.size, address, port)
+                    socket.send(packet)
+                } catch (e: IOException) {
+                    Log.e(TAG, "Failed to send unicast response to $address", e)
+                } catch (t: Throwable) {
+                    Log.w(TAG, "Unexpected error in unicast send", t)
+                }
             }
+        } catch (t: Throwable) {
+            Log.w(TAG, "Failed to submit unicast response", t)
         }
     }
 
@@ -288,18 +334,25 @@ object DlnaSsdpEngine {
             )
             return false
         }
-        ssdpSendExecutor.submit {
-            try {
-                val packet = DatagramPacket(
-                    bytes, bytes.size,
-                    InetAddress.getByName(SSDP_MULTICAST_ADDRESS), SSDP_PORT
-                )
-                socket.send(packet)
-            } catch (e: IOException) {
-                Log.e(TAG, "Failed to send multicast packet", e)
+        return try {
+            ssdpSendExecutor.submit {
+                try {
+                    val packet = DatagramPacket(
+                        bytes, bytes.size,
+                        InetAddress.getByName(SSDP_MULTICAST_ADDRESS), SSDP_PORT
+                    )
+                    socket.send(packet)
+                } catch (e: IOException) {
+                    Log.e(TAG, "Failed to send multicast packet", e)
+                } catch (t: Throwable) {
+                    Log.w(TAG, "Unexpected error in multicast send", t)
+                }
             }
+            true
+        } catch (t: Throwable) {
+            Log.w(TAG, "Failed to submit multicast packet", t)
+            false
         }
-        return true
     }
 
     // ─── Listener Thread ─────────────────────────────────────────────────
@@ -322,6 +375,20 @@ object DlnaSsdpEngine {
                     if (running) {
                         Log.e(TAG, "IO error in listener thread", e)
                     }
+                } catch (oom: OutOfMemoryError) {
+                    if (running) {
+                        Log.e(TAG, "OutOfMemoryError in SSDP listener thread", oom)
+                        try {
+                            System.gc()
+                            Thread.sleep(1000L)
+                        } catch (_: InterruptedException) {
+                            break
+                        }
+                    }
+                } catch (t: Throwable) {
+                    if (running) {
+                        Log.e(TAG, "Unexpected error in SSDP listener thread", t)
+                    }
                 }
             }
             Log.d(TAG, "Listener thread stopped")
@@ -332,114 +399,138 @@ object DlnaSsdpEngine {
     }
 
     private fun processIncomingPacket(data: String, remoteAddress: InetAddress, remotePort: Int) {
-        val lines = data.split("\\r?\\n".toRegex())
-        if (lines.isEmpty()) return
+        try {
+            val lines = data.split("\\r?\\n".toRegex())
+            if (lines.isEmpty()) return
 
-        val firstLine = lines[0].trim()
-        val headers = parseHeaders(lines.drop(1))
+            val firstLine = lines[0].trim()
+            val headers = parseHeaders(lines.drop(1))
 
-        // Handle M-SEARCH requests from control points (VLC, TVs, etc.)
-        if (firstLine.startsWith("M-SEARCH", ignoreCase = true)) {
-            val st = headers["st"] ?: return
-            if (!isOnLocalSubnet(remoteAddress)) return
+            // Handle M-SEARCH requests from control points (VLC, TVs, etc.)
+            if (firstLine.startsWith("M-SEARCH", ignoreCase = true)) {
+                val st = headers["st"] ?: return
+                if (!isOnLocalSubnet(remoteAddress)) return
 
-            // Rate limit M-SEARCH responses per source to prevent amplification
-            val sourceKey = remoteAddress.hostAddress ?: return
-            if (!allowMsearchResponse(sourceKey)) return
+                // Rate limit M-SEARCH responses per source to prevent amplification
+                val sourceKey = remoteAddress.hostAddress ?: return
+                if (!allowMsearchResponse(sourceKey)) return
 
-            // Bug 3 fix: per UPnP §1.3.2, a device responding to a multicast M-SEARCH
-            // MUST wait a random interval between 0 and MX seconds before sending its
-            // unicast response. Without this delay some strict control points (including
-            // certain BubbleUPnP builds) reject responses that arrive before the MX
-            // window has elapsed. We cap MX at 5 s and floor it at 1 s for safety.
-            val mxSeconds = headers["mx"]?.trim()?.toIntOrNull()?.coerceIn(1, 5) ?: 3
-            val delayMs = (Math.random() * mxSeconds * 1000L).toLong()
+                // Bug 3 fix: per UPnP §1.3.2, a device responding to a multicast M-SEARCH
+                // MUST wait a random interval between 0 and MX seconds before sending its
+                // unicast response. Without this delay some strict control points (including
+                // certain BubbleUPnP builds) reject responses that arrive before the MX
+                // window has elapsed. We cap MX at 5 s and floor it at 1 s for safety.
+                val mxSeconds = headers["mx"]?.trim()?.toIntOrNull()?.coerceIn(1, 5) ?: 3
+                val delayMs = (Math.random() * mxSeconds * 1000L).toLong()
 
-            // Snapshot the services list so the closure captures stable data.
-            val matchedServices = registeredServices.filter { service ->
-                // Bug 2 fix: each registered service responds ONLY when the request ST
-                // equals "ssdp:all" OR the ST exactly matches that service's own NT.
-                // Previously, the code also matched any NT when ST == "upnp:rootdevice",
-                // causing the upnp:rootdevice service entry to wrongly respond to
-                // ST: MediaRenderer:1 requests (and vice versa), which violates the spec
-                // and causes BubbleUPnP to reject the response.
-                st.equals("ssdp:all", ignoreCase = true) ||
-                    st.equals(service.nt, ignoreCase = true)
-            }
+                // Snapshot the services list so the closure captures stable data.
+                val matchedServices = registeredServices.filter { service ->
+                    // Bug 2 fix: each registered service responds ONLY when the request ST
+                    // equals "ssdp:all" OR the ST exactly matches that service's own NT.
+                    // Previously, the code also matched any NT when ST == "upnp:rootdevice",
+                    // causing the upnp:rootdevice service entry to wrongly respond to
+                    // ST: MediaRenderer:1 requests (and vice versa), which violates the spec
+                    // and causes BubbleUPnP to reject the response.
+                    st.equals("ssdp:all", ignoreCase = true) ||
+                        st.equals(service.nt, ignoreCase = true)
+                }
 
-            if (matchedServices.isEmpty()) return
+                if (matchedServices.isEmpty()) return
 
-            // Capture state needed inside the executor closure.
-            val capturedRemoteAddress = remoteAddress
-            val capturedRemotePort = remotePort
+                // Capture state needed inside the executor closure.
+                val capturedRemoteAddress = remoteAddress
+                val capturedRemotePort = remotePort
 
-            msearchResponseExecutor.submit {
                 try {
-                    if (delayMs > 0) Thread.sleep(delayMs)
-                } catch (_: InterruptedException) {
-                    return@submit
-                }
+                    msearchResponseExecutor.submit {
+                        try {
+                            if (delayMs > 0) Thread.sleep(delayMs)
+                        } catch (_: InterruptedException) {
+                            return@submit
+                        }
 
-                for (service in matchedServices) {
-                    // Per UPnP §1.3.2: M-SEARCH response must include DATE header.
-                    val dateStr = java.text.SimpleDateFormat(
-                        "EEE, dd MMM yyyy HH:mm:ss z",
-                        java.util.Locale.US
-                    ).apply { timeZone = java.util.TimeZone.getTimeZone("GMT") }
-                     .format(java.util.Date())
+                        try {
+                            for (service in matchedServices) {
+                                // Per UPnP §1.3.2: M-SEARCH response must include DATE header.
+                                val dateStr = java.text.SimpleDateFormat(
+                                    "EEE, dd MMM yyyy HH:mm:ss z",
+                                    java.util.Locale.US
+                                ).apply { timeZone = java.util.TimeZone.getTimeZone("GMT") }
+                                 .format(java.util.Date())
 
-                    val response = buildString {
-                        append("HTTP/1.1 200 OK\r\n")
-                        append("CACHE-CONTROL: max-age=1800\r\n")
-                        append("DATE: $dateStr\r\n")
-                        append("EXT:\r\n")
-                        append("LOCATION: ${service.location}\r\n")
-                        append("SERVER: UFM DLNA Server/1.0\r\n")
-                        // Per UPnP §1.2.2: response ST MUST be identical to request ST
-                        append("ST: $st\r\n")
-                        append("USN: ${service.usn}\r\n")
-                        append("\r\n")
+                                val response = buildString {
+                                    append("HTTP/1.1 200 OK\r\n")
+                                    append("CACHE-CONTROL: max-age=1800\r\n")
+                                    append("DATE: $dateStr\r\n")
+                                    append("EXT:\r\n")
+                                    append("LOCATION: ${service.location}\r\n")
+                                    append("SERVER: UFM DLNA Server/1.0\r\n")
+                                    // Per UPnP §1.2.2: response ST MUST be identical to request ST
+                                    append("ST: $st\r\n")
+                                    append("USN: ${service.usn}\r\n")
+                                    append("\r\n")
+                                }
+
+                                sendUnicast(response, capturedRemoteAddress, capturedRemotePort)
+                                Log.d(TAG, "Responded to M-SEARCH from $sourceKey (delay=${delayMs}ms): ST=$st -> ${service.nt}")
+                            }
+                        } catch (t: Throwable) {
+                            Log.w(TAG, "Error generating M-SEARCH responses", t)
+                        }
                     }
+                } catch (t: Throwable) {
+                    Log.w(TAG, "Failed to submit M-SEARCH response task", t)
+                }
+                return
+            }
 
-                    sendUnicast(response, capturedRemoteAddress, capturedRemotePort)
-                    Log.d(TAG, "Responded to M-SEARCH from $sourceKey (delay=${delayMs}ms): ST=$st -> ${service.nt}")
+            if (firstLine.startsWith("NOTIFY")) {
+                val nts = headers["nts"] ?: return
+                val nt = headers["nt"] ?: return
+                val usn = headers["usn"] ?: return
+
+                if (!isOnLocalSubnet(remoteAddress)) return
+
+                when {
+                    nts.equals("ssdp:alive", ignoreCase = true) -> {
+                        val location = headers["location"] ?: ""
+                        val server = headers["server"] ?: ""
+                        for (listener in listeners) {
+                            try {
+                                listener.onNotifyAlive(remoteAddress, nt, usn, location, server)
+                            } catch (t: Throwable) {
+                                Log.w(TAG, "Error invoking listener onNotifyAlive", t)
+                            }
+                        }
+                    }
+                    nts.equals("ssdp:byebye", ignoreCase = true) -> {
+                        for (listener in listeners) {
+                            try {
+                                listener.onNotifyByeBye(remoteAddress, nt, usn)
+                            } catch (t: Throwable) {
+                                Log.w(TAG, "Error invoking listener onNotifyByeBye", t)
+                            }
+                        }
+                    }
+                }
+            } else if (firstLine.contains("200 OK", ignoreCase = true)) {
+                val st = headers["st"] ?: return
+                val usn = headers["usn"] ?: return
+                val location = headers["location"] ?: ""
+                val server = headers["server"] ?: ""
+
+                if (!isOnLocalSubnet(remoteAddress)) return
+
+                for (listener in listeners) {
+                    try {
+                        listener.onMSearchResponse(remoteAddress, st, usn, location, server)
+                    } catch (t: Throwable) {
+                        Log.w(TAG, "Error invoking listener onMSearchResponse", t)
+                    }
                 }
             }
-            return
-        }
-
-        if (firstLine.startsWith("NOTIFY")) {
-            val nts = headers["nts"] ?: return
-            val nt = headers["nt"] ?: return
-            val usn = headers["usn"] ?: return
-
-            if (!isOnLocalSubnet(remoteAddress)) return
-
-            when {
-                nts.equals("ssdp:alive", ignoreCase = true) -> {
-                    val location = headers["location"] ?: ""
-                    val server = headers["server"] ?: ""
-                    for (listener in listeners) {
-                        listener.onNotifyAlive(remoteAddress, nt, usn, location, server)
-                    }
-                }
-                nts.equals("ssdp:byebye", ignoreCase = true) -> {
-                    for (listener in listeners) {
-                        listener.onNotifyByeBye(remoteAddress, nt, usn)
-                    }
-                }
-            }
-        } else if (firstLine.contains("200 OK", ignoreCase = true)) {
-            val st = headers["st"] ?: return
-            val usn = headers["usn"] ?: return
-            val location = headers["location"] ?: ""
-            val server = headers["server"] ?: ""
-
-            if (!isOnLocalSubnet(remoteAddress)) return
-
-            for (listener in listeners) {
-                listener.onMSearchResponse(remoteAddress, st, usn, location, server)
-            }
+        } catch (t: Throwable) {
+            Log.w(TAG, "Error processing incoming SSDP packet", t)
         }
     }
 
@@ -505,8 +596,8 @@ object DlnaSsdpEngine {
                         }
                     }
                 }
-            } catch (e: Exception) {
-                Log.w(TAG, "Error refreshing network subnets", e)
+            } catch (t: Throwable) {
+                Log.w(TAG, "Error refreshing network subnets", t)
             }
             cachedSubnets = newSubnets
             lastSubnetCacheTime = System.currentTimeMillis()
@@ -526,8 +617,8 @@ object DlnaSsdpEngine {
                     return true
                 }
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "Error checking subnet for ${remoteAddress.hostAddress}", e)
+        } catch (t: Throwable) {
+            Log.w(TAG, "Error checking subnet for ${remoteAddress.hostAddress}", t)
         }
         return false
     }
@@ -581,8 +672,8 @@ object DlnaSsdpEngine {
                 Log.i(TAG, "Auto-detected bind address: ${selected.hostAddress}")
                 return selected
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to enumerate interfaces, falling back to localhost", e)
+        } catch (t: Throwable) {
+            Log.w(TAG, "Failed to enumerate interfaces, falling back to localhost", t)
         }
         return InetAddress.getLocalHost()
     }
@@ -599,8 +690,8 @@ object DlnaSsdpEngine {
                     }
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error finding network interface for ${addr.hostAddress}", e)
+        } catch (t: Throwable) {
+            Log.e(TAG, "Error finding network interface for ${addr.hostAddress}", t)
         }
         return null
     }
@@ -610,13 +701,13 @@ object DlnaSsdpEngine {
             multicastSocket?.let { socket ->
                 try {
                     socket.leaveGroup(InetAddress.getByName(SSDP_MULTICAST_ADDRESS))
-                } catch (e: Exception) {
-                    Log.w(TAG, "Error leaving multicast group", e)
+                } catch (t: Throwable) {
+                    Log.w(TAG, "Error leaving multicast group", t)
                 }
                 socket.close()
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error closing multicast socket", e)
+        } catch (t: Throwable) {
+            Log.e(TAG, "Error closing multicast socket", t)
         }
         multicastSocket = null
 
@@ -625,8 +716,8 @@ object DlnaSsdpEngine {
                 multicastLock?.release()
                 Log.d(TAG, "MulticastLock released")
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error releasing MulticastLock", e)
+        } catch (t: Throwable) {
+            Log.e(TAG, "Error releasing MulticastLock", t)
         }
         multicastLock = null
         cachedSubnets = emptyList()
