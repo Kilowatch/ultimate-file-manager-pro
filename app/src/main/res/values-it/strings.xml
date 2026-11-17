@@ -14224,9 +14224,7 @@ Select a folder to remove access from this storage. Your files will not be delet
     <string name="no_mounted_folders_hint">
 No mounted folders remaining for this storage.
 </string>
-    <string name="restricted_storage_empty_title">
-All Files Access Required
-</string>
+    <string name="restricted_storage_empty_title">Accesso a tutti i file richiesto</string>
     <string name="restricted_storage_empty_desc">
 To access and manage files in this storage, please enable All Files Access in Android Settings.
 </string>
