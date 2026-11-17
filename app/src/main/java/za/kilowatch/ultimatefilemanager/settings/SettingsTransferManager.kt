@@ -50,7 +50,9 @@ object SettingsTransferManager {
         SettingItem(prefsName = "ufm_controls_timeout_prefs", key = "controls_timeout_step", canonicalName = "controls_timeout_step", displayLabel = "Controls Auto-Hide Duration"),
         SettingItem(prefsName = "ufm_prefs",          key = "media_thumbnails_enabled",      canonicalName = "media_thumbnails_enabled", displayLabel = "Media Thumbnails"),
         SettingItem(prefsName = "ufm_favorites_prefs", key = "favorites_array",               canonicalName = "favorites_array",     displayLabel = "Manage Favorites"),
-        SettingItem(prefsName = "ufm_default_apps",   key = "*",                             canonicalName = "default_apps",        displayLabel = "Default Applications")
+        SettingItem(prefsName = "ufm_default_apps",   key = "*",                             canonicalName = "default_apps",        displayLabel = "Default Applications"),
+        SettingItem(prefsName = FlatViewPreferenceManager.PREFS_NAME, key = FlatViewPreferenceManager.KEY_INCLUDE_SYSTEM_FOLDERS, canonicalName = "flat_view_include_system_folders", displayLabel = "Flat View Include System Folders"),
+        SettingItem(prefsName = FlatViewPreferenceManager.PREFS_NAME, key = FlatViewPreferenceManager.KEY_DEFAULT_EXPANDED, canonicalName = "flat_view_default_expanded", displayLabel = "Flat View Default Expanded")
     )
 
     data class SettingItem(

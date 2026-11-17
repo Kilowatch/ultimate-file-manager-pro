@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Flat View Root Category Card (Mobile)
+    Styled exactly like the main menu category group cards (Storage, Bookmarks, etc.):
+    - 24dp corner radius, mobile_glass_card background, 1dp mobile_glass_stroke.
+    - Category header with squircle icon badge, title, subtitle, count pill, and chevron.
+    - Highlighted header (bg_category_header_highlight) when expanded.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardRootCategory"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp"
+    app:strokeColor="@android:color/transparent"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:rippleColor="@android:color/transparent">
+
+    <LinearLayout
+        android:id="@+id/layoutCategoryHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!-- Checkbox in edit mode -->
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/checkSelectCategory"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="8dp"
+            android:buttonTint="?attr/colorPrimary"
+            android:visibility="gone"
+            android:clickable="false"
+            android:focusable="false"
+            tools:visibility="visible" />
+
+        <!-- Category Squircle Icon Badge -->
+        <FrameLayout
+            android:id="@+id/iconContainerCategory"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_squircle_category_icon">
+
+            <ImageView
+                android:id="@+id/imgCategoryIcon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_folder"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <!-- Title & Subtitle column -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:id="@+id/txtCategoryTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_card_text_primary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-bold"
+                android:letterSpacing="0.01"
+                android:singleLine="true"
+                android:ellipsize="end"
+                tools:text="A Google Review" />
+
+            <TextView
+                android:id="@+id/txtCategorySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/mobile_card_text_secondary"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:visibility="gone"
+                tools:text="48 files across 6 folders" />
+        </LinearLayout>
+
+        <!-- Collapsed item count pill badge -->
+        <TextView
+            android:id="@+id/txtCategoryCountPill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:textColor="@color/mobile_card_text_secondary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-bold"
+            android:background="@drawable/bg_category_count_pill"
+            android:layout_marginEnd="8dp"
+            tools:text="48 files" />
+
+        <!-- Open Folder in Standard Browser Button -->
+        <ImageView
+            android:id="@+id/btnOpenCategory"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="6dp"
+            android:padding="7dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:src="@drawable/ic_arrow_forward"
+            app:tint="@color/mobile_icon_tint"
+            android:contentDescription="@string/flat_view_open_folder"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Expand / Collapse Chevron Indicator -->
+        <ImageView
+            android:id="@+id/imgCategoryChevron"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/mobile_card_text_secondary"
+            android:contentDescription="@null" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

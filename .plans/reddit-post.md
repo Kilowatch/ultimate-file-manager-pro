@@ -1,55 +1,64 @@
-# Reddit Post: New Feature Added - Smart Bookmark Hub with Distraction-Free Reader, Dynamic Auto-Grouping & Offline Media Preservation
+# Reddit Post: Flat View (Recursive Indexed Directory Browser)
 
 ## Title
-New Feature Added - Smart Bookmark Hub with Distraction-Free Reader, Dynamic Auto-Grouping & Offline Media Preservation
+New Feature Added - Flat View (Recursive Indexed Directory Browser)
 
 ## Platform
-Mobile Only
+TV and Mobile
 
 ## Post
 
 Good Day Community,
 
 ### What's new
-I added a full-featured **Smart Bookmark Hub** to Ultimate File Manager Pro on mobile devices.
-It functions as a central repository for links, articles, media, files, and personal notes shared from any app on your device (WhatsApp, Reddit, YouTube, Chrome, Telegram, Twitter/X, and more).
+A new **Flat View** browser mode is now available in Ultimate File Manager Pro for both Android phones/tablets and Android TV / Fire TV.
 
-* **New Share Target ("Bookmark with UFM")**: Whenever you share content on Android, you will now see **"Bookmark with UFM"** alongside UFM's existing "Open In..." and "Save to..." options.
-* **Dynamic Smart Collections & Auto-Cleanup**: The hub starts completely clean with only an "All" collection. Smart groups (e.g., *YouTube*, *Reddit*, *WhatsApp*, *X*, or website domain names) are dynamically created on the fly as you bookmark items. If all items in a dynamic group are deleted or moved to a custom collection, that group automatically cleans itself up so your hub never accumulates empty folders. You can also tap the **"+"** button at any time to create your own permanent custom collections.
-* **Biometric Vault Protection**: You can lock sensitive bookmark collections behind fingerprint, face, or lock-screen PIN/pattern/password authentication using UFM's Vault. Locked collections display a distinctive `🔒` badge and cannot be viewed without biometric verification. You can lock collections upon creation or long-press any existing custom collection to toggle Vault protection on the fly.
-* **Strict Private Sandbox & Media Isolation**: When you share photos, videos, voice clips, or PDFs (from WhatsApp, Telegram, etc.), UFM automatically clones a physical copy into the application's internal private sandbox (`context.filesDir/bookmarks/media/`). These files are 100% hidden from external galleries, third-party file managers, MTP USB transfers, and the Android MediaStore. They are also intentionally excluded from UFM's general file browsing lists so private bookmarks are never exposed during routine file browsing.
-* **Intent & History Lifecycle Security**: Share targets run in detached, ephemeral tasks (`excludeFromRecents`, `noHistory`, `finishOnTaskLaunch`). Both the bookmark and file share receivers are hardened against `FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY` replay and saved state recreation, ensuring sensitive shared URLs, text, or media never linger in memory or inadvertently pop back up when opening UFM from the home launcher.
-* **SSRF-Protected Scraper & Clean Reader Mode**: The built-in metadata scraper features Server-Side Request Forgery (SSRF) defense, blocking attempts to probe loopback (`127.0.0.1`), private LANs (`192.168.x.x`, `10.x.x.x`, `172.16-31.x.x`), and link-local addresses. In Reader Mode, all executable scripts, forms, frames, and tracking elements are stripped for a safe, tracker-free reading experience.
-* **Sort & Group by Collection (A–Z / Z–A)**: In addition to chronological and alphabetical sorting, you can choose **"Group by Collection"** with sorting from **A to Z** or **Z to A**. Your bookmarks are displayed neatly grouped beneath dedicated section headers in both list and 2-column grid views.
-* **Smart YouTube & Media Detection**: Sharing YouTube clips and music videos automatically resolves the actual song/video title, artist/band name, and high-resolution thumbnail preview instead of displaying a raw URL link.
-* **Personal Notes on Cards & Full Backup**: Any personal notes you add when saving are clearly visible on the cards in both list and grid views. When you export your bookmarks to Netscape HTML or Markdown, all your personal notes are preserved and fully importable into desktop browsers (Chrome, Firefox, Safari).
-* **Rich Link Previews & Distraction-Free Reader Mode**: Web links and Reddit posts scrape titles, descriptions, favicons, cover images, full post bodies, and top discussion comments. Articles can be opened in a clean, clutter-free reader view featuring Light, Sepia, and Dark themes, adjustable text sizing, one-tap star toggling, and a built-in Android Text-to-Speech (TTS) engine with speed controls (0.75x–2.0x).
-* **UFMStandard Glass Design**: The hub features UFM's signature glassmorphism interface, consolidated 3-dot toolbar menu (`⋮`), custom glass card overflow popups, squircle thumbnails with corner app badges, and empty collection management.
+When managing large storage drives or deep folder structures, navigating through subfolders one by one can be time-consuming. Flat View flattens your entire storage directory into a unified, virtualized list directly from the root folder—giving you full visibility and management over all your files in one place.
+
+> **Important Prerequisite**: **Flat View is available exclusively for indexed storage drives.** Because it relies on UFM's local Room database indexing engine to provide instantaneous loading across massive directory structures without slowing down or freezing your device, the target storage volume (Internal Storage, SD card, or USB OTG drive) must be fully indexed first. If a drive is not indexed, Flat View will prompt you to run indexing.
+
+* **Exclusively for Indexed Drives**: Flat View is purpose-built to take advantage of UFM's high-speed local database index. It operates only on indexed volumes from the root directory, ensuring lightning-fast access and zero filesystem lag even across 100,000+ files.
+* **Main Menu Category Styling & Hierarchy**:
+  * **Root Categories**: Immediate root-level folders (e.g. *A Google Review*, *Documents*, *Download*) are styled identically to the modern category cards on UFM's main menu (24dp rounded corners, 1dp glass stroke, squircle folder icon, and an elevated highlight header when expanded).
+  * **Nested Subfolders**: Subfolders inside a category (e.g. a subfolder called *Hello* inside *A Google Review*) are treated like items within categories—nested 20dp elevated cards with squircle folder badges. Subfolder names are stripped of the parent category prefix (displaying clean relative names like **`Hello`**, never redundant paths like `A Google Review/Hello`).
+  * **Clean File Rows**: Files sit cleanly indented underneath their respective subfolders with squircle file-type icons, sizes, and modification dates.
+* **Expand All & Collapse All Controls**: Dedicated toolbar action buttons allow you to fold everything down to top-level category cards at once with **Collapse All** (`^`), or unfold every subfolder level simultaneously with **Expand All** (`v`). Individual folder headers can also be tapped to toggle expansion.
+* **Direct Jump to Folder ("Open Folder")**: Spot a folder you want to inspect hierarchically? Each root category card and nested subfolder card includes a direct **"Open Folder"** action button that jumps straight to that location in standard file browser mode.
+* **System Folder Filtering**: By default, noisy Android system folders (`Android/data` and `Android/obb`) are excluded from Flat View to keep the list clean and focused on your personal data. You can toggle this on or off in settings.
+* **Full Multi-Selection & Edit Mode Parity**:
+  * **Cascading Checkboxes**: Checkboxes on root category headers select all files in that category across all subfolders; checkboxes on nested subfolder cards select all files within that specific subfolder.
+  * **Toggle Select All / Deselect All**: The selection header features a dedicated toggle button that dynamically switches between **Select All** and **Deselect All**.
+  * **Auto-Exit Edit Mode**: As soon as all items are deselected (or "Deselect All" is tapped), Flat View automatically exits edit mode without requiring you to manually close it.
+  * **Toolbar Synchronization (Quick Bar vs. Tools FAB)**: Fully respects your Toolbar settings. When the Floating Quick Action Bar is active, it appears alone at the bottom; when disabled, the Tools FAB appears alone at the bottom corner—never cluttering the screen together.
+  * **Standard File Tools**: Tapping Tools opens UFM's standard `FileToolsBottomSheet` with full support for Copy, Move (Cut), Delete, Rename, Share, Properties, and Checksum.
+* **Live Real-Time Filter**: A search bar at the top lets you instantly filter across filenames, subfolders, and categories in real time.
+* **100% UFMStandard Glass Dialogs**: All dialogs (Flat View Settings, Delete Confirmation, and Not Indexed notice) strictly adhere to `UFMStandard` with frosted glass card styling (`@drawable/bg_dialog_glass`), squircle hero icon badges, and embedded action buttons on both Mobile and Android TV.
+* **Android TV Remote Optimized**: Built with `UFMStandard` dual layouts. On Android TV and Fire TV, Flat View features a 72dp glass header, full D-pad remote navigation, and high-visibility yellow focus indicators.
 
 ### How to use it
-1. **Sharing Content**:
-   * In any app (such as YouTube, Reddit, WhatsApp, or your browser), tap **Share** and select **"Bookmark with UFM"**.
-   * A glass bottom sheet will slide up displaying the detected sender app, preview, and auto-selected group.
-   * For YouTube and articles, the video/song title or headline is automatically detected. Edit the title or add personal notes if you wish, then tap **Save Bookmark**.
-   * If you share an item you have already bookmarked, UFM will detect the duplicate, update the timestamp to bump it to the top of your feed, and append any new notes.
-
-2. **Accessing the Bookmark Hub**:
-   * Open UFM on your phone or tablet.
-   * On the Main Menu, scroll to the **"Organize"** category and tap the **"Smart Bookmarks"** tile.
-   * Tap the **3-dot menu** (`⋮`) in the top right to change view mode between List and 2-column Grid (your preference is automatically remembered), sort, or export.
-   * Use the group chips at the top to filter by platform (e.g., view only YouTube videos, Reddit posts, or WhatsApp media), or tap **"+"** to create custom collections with optional **Biometric Vault Lock**.
-   * Long-press any custom collection chip to lock/unlock it with fingerprint or PIN, or to delete it. If a custom collection is empty, a quick **"Delete Collection"** button also appears at the bottom.
-
-3. **Reading & Listening**:
-   * Tapping any saved article opens the **Distraction-Free Reader Mode** (including full Reddit post text and top comments).
-   * Tap the **Listen Aloud (Play)** button in the bottom audio bar to have your phone read the article to you while you commute or multitask.
-   * Adjust reading speed with the compact speed pill button (1.0x, 1.25x, 1.5x, 2.0x).
-   * Star or de-star the article directly from the top-right toolbar.
-   * Tap "Open in Browser" at the top whenever you want to visit the original live page.
-
-4. **Managing & Exporting**:
-   * Tap the 3-dot menu (`⋮`) on any card to open the UFMStandard glass menu: read, open in browser, copy links/text, move collections, view full notes, or save files to your device's Downloads folder.
-   * Deleting an item removes it immediately with a 5-second **Undo Snackbar** before local files are cleared.
-   * Long-press any card to enter multi-select mode to batch move, batch delete, or export your bookmarks (including all personal notes) to Netscape HTML or Markdown.
+1. **Prerequisite & Opening Flat View**:
+   * **Ensure drive is indexed**: Flat View is only available for indexed storage volumes (Internal Storage is typically indexed by default; for external SD cards or USB drives, ensure indexing is enabled and finished).
+   * Navigate to the **root** of your indexed storage volume in Local Standalone or Tabbed browser mode.
+   * Tap the **3-dot menu** (`⋮`) in the top right corner.
+   * Tap **Flat View** (located directly below *Twin Window*).
+2. **Browsing & Expanding**:
+   * Scroll smoothly through your root category cards and nested subfolders.
+   * Tap any category or subfolder card to expand or collapse that section.
+   * Tap **"Collapse All"** (`^`) in the top toolbar to collapse all folders down to top-level category cards.
+   * Tap **"Expand All"** (`v`) in the top toolbar to unfold every level at once.
+   * Tap the arrow button (**Open Folder**) on any category or subfolder header to jump to that folder in standard hierarchical browser mode.
+   * Tap any file to open it directly.
+3. **Filtering & Searching**:
+   * Tap the search icon in the toolbar and type to filter filenames instantly across all categories. Matching files and their parent folders are automatically expanded.
+4. **Multi-Selection & Batch Actions**:
+   * Tap the checkbox on any file to select it and enter Edit Mode.
+   * Tap the checkbox on a subfolder card to select or deselect all files in that subfolder.
+   * Tap the checkbox on a root category card to select or deselect all files in that entire category.
+   * Tap **Select All** in the selection header to select all files across the drive; tap **Deselect All** to clear everything and exit Edit Mode automatically.
+   * Use the **Floating Quick Bar** or **Tools FAB** to perform Copy, Move, Delete, Share, or view Properties.
+5. **Settings & Customization**:
+   * Open **Settings** -> **Browsing & File List** -> **Flat View**.
+   * Toggle **Include System Folders** if you want `Android/data` and `Android/obb` included.
+   * Toggle **Default to All Expanded** if you prefer folders to start collapsed by default.
 
 Thank you and kind regards

@@ -1,283 +1,194 @@
-# Implementation Plan: Smart Bookmark Hub (Mobile Only)
+# Implementation Plan: Flat View (Indexed Root Browser Mode)
 
-## Goal Description
-Implement the **Smart Bookmark Hub** for Ultimate File Manager Pro on mobile devices. The Bookmark Hub acts as a unified repository for shared links, media, files, and notes from external applications (WhatsApp, Reddit, YouTube, Twitter/X, Chrome, Telegram, Medium, etc.). 
+## Goals
+Implement **Flat View**, an expandable/collapsible virtual browsing layout for Ultimate File Manager Pro (UFM) that enables users to browse all files across deeply nested subdirectories from the root folder of any indexed storage volume.
 
-It introduces a third dedicated system share sheet target—**"Bookmark with UFM"**—alongside the existing "Open In..." and "Save to..." targets. Bookmarks are automatically organized into smart source groups, preserved permanently inside the app's private sandbox (`context.filesDir/bookmarks/media/`), presented in a visual dashboard with OpenGraph previews and thumbnails, and equipped with a distraction-free reader view, text-to-speech audio reader, biometric group locking, and export capabilities.
-
-The feature is accessible via a new tile in the Main Menu under the **"Organize"** category (`MainMenuViewModeManager.CATEGORY_ORGANIZE`) and is completely unrestricted with zero paywalls.
-
----
-
-## User Review Required
-> [!IMPORTANT]
-> **Strict Application Directory Sandbox Storage**:
-> All shared physical media, files, and downloaded thumbnails are stored strictly inside the application's internal private directory (`context.filesDir/bookmarks/media/` and `context.filesDir/bookmarks/thumbnails/`). 
-> - External file explorers, MTP, and Android MediaStore scanner cannot see or index these files.
-> - UFM's own general file browser and Recents list will explicitly ignore and not expose this directory.
-> - Files can only be exported to public user storage if the user explicitly triggers "Save to Storage" from the bookmark card.
-
-> [!NOTE]
-> **Mobile Only Scope**:
-> In accordance with the specification, all activities, layouts, and tile registrations are built exclusively for Android mobile/tablet devices (`!DeviceUtils.isTvDevice(context)`). Android TV menus and share receivers do not display or load this feature.
+### Success Criteria (from `spec.md` & `clarifications.md`):
+- Accessible exclusively from the root folder of indexed storages via the 3-dots overflow menu directly below Twin Window (`menuItemFlatView`).
+- Queries directly from the Room `file_index` database table for instant rendering across 100,000+ files.
+- Grouped by direct parent section headers displaying relative paths (e.g., `Documents/Work/2026/ (12 files)`), with all folders expanded by default.
+- Tapping any folder header or the root header toggles its collapsed/expanded state with smooth differential RecyclerView updates.
+- Folder headers feature an "Open Folder" action button to jump to standard hierarchical browsing at that specific folder.
+- `Android/data` and `Android/obb` are excluded by default, toggleable via Settings.
+- Full parity for normal Edit Mode, multi-select, Tools FAB (`fabTools`), and Floating Quick Action Bar (`floatingQuickBar`).
+- Checking a folder header in Edit Mode automatically cascades selection to all contained files; "Select All" selects files across both expanded and collapsed folders.
+- All file operations (copy, move, delete, rename, share, zip, properties) target real physical source paths.
+- Dedicated "Flat View" configuration card in `SettingsActivity` under "Browsing & File List".
+- Full Android TV remote/D-pad navigation and `UFMStandard` UI compliance (Mobile 56dp glass header, TV 72dp glass header, D-pad focus states).
 
 ---
 
-## Key Decisions from /clarify
-1. **Default Tap Action on Links**: Tapping opens the **Distraction-Free Reader Mode** if readable article text is available, with a prominent button at the top to open in the user's external browser. If no readable article body exists, it launches directly in the external browser.
-2. **Duplicate Detection**: Sharing an existing link or file updates the bookmark's timestamp (bumping it to the top) and appends any new notes, preventing clutter.
-3. **Dynamic Auto-Grouping**: Shares from apps without predefined groups automatically create a new smart group titled after the app's display name (e.g., "Medium", "Threads", "Slack").
-4. **Deletion**: Deletion is immediate with a 5-second **Undo Snackbar**; once the snackbar times out, private files in `files/bookmarks/media/` and `files/bookmarks/thumbnails/` are permanently purged.
-5. **Private Sandbox Isolation**: Files remain strictly sandboxed in application storage and are invisible in standard file browsing unless explicitly exported via *"Save to Storage"*.
-
----
-
-## Architecture & Data Flow
+## Architecture Overview
 
 ```mermaid
 flowchart TD
-    subgraph ShareSheet["Android System Share Sheet"]
-        SS["External App Share\n(WhatsApp, Reddit, Web, etc.)"]
+    subgraph UI_Entry["Entry Points (Overflow Menu)"]
+        FBA["FileBrowserActivity (3-Dots Menu)"]
+        TBA["TabbedBrowserActivity (3-Dots Menu)"]
+        FBA -->|"Root + isIndexed"| FVM["menuItemFlatView (below Twin Window)"]
+        TBA -->|"Root + isIndexed"| FVM
     end
 
-    subgraph Receiver["Share Receiver & Quick Save"]
-        BRA["BookmarkReceiverActivity\n(ACTION_SEND / ACTION_SEND_MULTIPLE)"]
-        BS["BookmarkQuickSaveBottomSheet\n• Source App Detection\n• Auto-Selected Smart Group\n• Title & Notes Input\n• Duplicate Detection & Update\n• 1-Tap Save"]
+    subgraph FlatViewScreen["FlatViewActivity (UFMStandard)"]
+        FVM -->|"Intent(rootPath, storageId, label)"| FVA["FlatViewActivity\n(Mobile & TV Layouts)"]
+        FVA --> VM["FlatViewViewModel"]
+        FVA --> FVA_Adapter["FlatViewAdapter\n(RecyclerView with Expand/Collapse)"]
+        FVA --> FAB["fabTools & floatingQuickBar\n(Synchronized Selection Tools)"]
     end
 
-    subgraph Processing["Background Processing"]
-        Scraper["BookmarkMetadataScraper\n(OpenGraph Title, Description, Image,\nFavicon, Reader Text Parser)"]
-        Cloner["BookmarkFileCloner\n(Copies external content:// to\napp-private files/bookmarks/media/)"]
+    subgraph DataLayer["Room Database Index"]
+        VM -->|"Query Dispatchers.IO"| FID["FileIndexDao.getFlatViewFiles(storageId, excludeSystem)"]
+        FID --> DB[("file_index (Room DB)")]
     end
 
-    subgraph StorageLayer["Data & Persistence Layer"]
-        DB[("Room Database: ufm_bookmarks.db\n• BookmarkEntity\n• BookmarkGroupEntity")]
-        Sandbox["Private Sandbox Storage\n• files/bookmarks/media/\n• files/bookmarks/thumbnails/"]
+    subgraph Operations["File Operations Engine"]
+        FAB -->|"Real File Paths"| OP["Existing FileOperations\n(Copy, Move, Delete, Rename, Share, Zip)"]
     end
 
-    subgraph UI["Mobile User Interface"]
-        Tile["Main Menu Organize Tile\n(StorageBrowserActivity)"]
-        Hub["BookmarkHubActivity\n• Filter Chips (All, Links, Media, Docs, Starred)\n• Group Tabs (WhatsApp, Reddit, Web, Custom)\n• Chronological Sort\n• Full-Text Search\n• Biometric Vault Lock\n• 5s Undo Snackbar on Delete"]
-        Reader["BookmarkReaderActivity\n• Clean Distraction-Free Typography\n• Text-to-Speech (TTS) Engine\n• 'Open in Browser' Action\n• Offline Reading Cache"]
+    subgraph SettingsSubsystem["Settings Subsystem"]
+        SA["SettingsActivity (Browsing & File List)"] --> FVPM["FlatViewPreferenceManager\n(System Folders, Default Expansion)"]
+        FVPM --> FVA
     end
-
-    SS --> BRA
-    BRA --> BS
-    BS --> Cloner
-    BS --> Scraper
-    Cloner --> Sandbox
-    Scraper --> Sandbox
-    Cloner --> DB
-    Scraper --> DB
-    Tile --> Hub
-    DB <--> Hub
-    Hub --> Reader
 ```
 
 ---
 
-## Proposed Changes
+## Files to Create
 
-### Component 1: Room Database & Data Models
-Create the persistence layer for bookmarks and groups inside package `za.kilowatch.ultimatefilemanager.bookmarks.db`.
+### 1. `app/src/main/java/za/kilowatch/ultimatefilemanager/flatview/FlatViewActivity.kt`
+- **What**: The primary Activity hosting Flat View, complying with `UFMStandard` and project activity rules.
+- **Key details**:
+  - Overrides `attachBaseContext` via `LocaleManagerWrapper.setLocale(this, super.attachBaseContext(newBase))`.
+  - Edge-to-edge setup via `EdgeToEdge.enable(this)` in `onCreate()` and window inset application.
+  - Dynamically loads `activity_flat_view.xml` (Mobile) or `activity_flat_view_tv.xml` (TV) using `DeviceUtils.isTvDevice(this)`.
+  - Coordinates ViewModel state, search/filter queries, folder collapse/expand events, and Edit Mode selection.
+  - Integrates `fabTools` and `floatingQuickBar` for file operations.
 
-#### [NEW] [BookmarkEntity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/db/BookmarkEntity.kt)
-- Room entity for bookmarked items.
-- Fields: `id`, `title`, `url`, `filePath`, `thumbnailPath`, `faviconPath`, `contentType`, `sourcePackage`, `sourceAppName`, `groupId`, `groupName`, `notes`, `cachedArticleText`, `fileSizeBytes`, `isStarred`, `isRead`, `isLocked`, `createdAt`, `updatedAt`.
-- Indices on `groupId`, `contentType`, `sourcePackage`, `createdAt`, `isStarred`, `url`.
+### 2. `app/src/main/java/za/kilowatch/ultimatefilemanager/flatview/FlatViewViewModel.kt`
+- **What**: ViewModel managing indexed data fetching, in-memory grouping, filtering, and selection state.
+- **Key details**:
+  - Loads data via `FileIndexDao` on `Dispatchers.IO`.
+  - Groups items by immediate parent `folderPath`, builds relative display paths, and initializes all folders as expanded (or as configured in preferences).
+  - Emits UI states: `Loading`, `Content(items, isFiltered, totalFiles, totalFolders)`, `Empty`, `Error`.
+  - Handles real-time in-memory text filtering without re-querying the database.
 
-#### [NEW] [BookmarkGroupEntity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/db/BookmarkGroupEntity.kt)
-- Room entity for smart and custom groups.
-- Fields: `id`, `name`, `iconResName`, `colorHex`, `isAutoGroup`, `associatedPackage`, `isLocked`, `sortOrder`, `createdAt`.
+### 3. `app/src/main/java/za/kilowatch/ultimatefilemanager/flatview/FlatViewAdapter.kt`
+- **What**: Virtualized `RecyclerView.Adapter` rendering folder headers and file entries.
+- **Key details**:
+  - Item types: `VIEW_TYPE_ROOT_HEADER`, `VIEW_TYPE_FOLDER_HEADER`, `VIEW_TYPE_FILE`.
+  - Folder headers: chevron toggle, folder name, relative path, file count chip, checkbox in edit mode, and "Open Folder" navigation icon.
+  - File rows: file icon / thumbnail loading via Glide/coil/UFM thumbnail loader, filename, relative parent path, file size, last modified date, and checkbox in edit mode.
+  - Differential list updates (`notifyItemRangeInserted` / `notifyItemRangeRemoved`) on folder collapse/expand for maximum efficiency.
+  - D-pad focus listeners and high-contrast yellow focus highlight on TV.
 
-#### [NEW] [BookmarkDao.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/db/BookmarkDao.kt)
-- Reactive DAO queries using Kotlin `Flow` and `suspend` functions:
-  - `getAllBookmarks(sortOrder)`: Flow<List<BookmarkEntity>>
-  - `getBookmarksByGroup(groupId, sortOrder)`: Flow<List<BookmarkEntity>>
-  - `getBookmarksFiltered(groupId?, contentType?, isStarred?, query?, sortOrder)`: Flow<List<BookmarkEntity>>
-  - `getBookmarkById(id)`: suspend fun
-  - `getBookmarkByUrl(url)`: suspend fun (for duplicate detection)
-  - `insertBookmark(item)`, `updateBookmark(item)`, `deleteBookmark(item)`
-  - `getAllGroups()`: Flow<List<BookmarkGroupEntity>>
-  - `getGroupByPackage(pkg)`: suspend fun
-  - `getGroupById(id)`, `insertGroup(group)`, `updateGroup(group)`, `deleteGroup(group)`
-  - `getBookmarkCount()`: Flow<Int>
-  - `getGroupCount()`: Flow<Int>
+### 4. `app/src/main/java/za/kilowatch/ultimatefilemanager/flatview/FlatViewItem.kt`
+- **What**: Data model representing items in the flattened adapter list.
+- **Key details**:
+  - `FlatFolderHeader`: `folderPath`, `relativePath`, `fileCount`, `isExpanded`, `isSelected`, `isRoot`.
+  - `FlatFileEntry`: `fileIndex: FileIndex`, `relativeParentPath`, `isSelected`.
 
-#### [NEW] [BookmarkDatabase.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/db/BookmarkDatabase.kt)
-- Room database instance (`ufm_bookmarks.db`, version 1, `exportSchema = false`).
-- Companion singleton pattern matching `RecycleBinDatabase`.
+### 5. `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/FlatViewPreferenceManager.kt`
+- **What**: Shared preference manager for Flat View settings.
+- **Key details**:
+  - `isSystemFoldersIncluded(context): Boolean` (Default: false)
+  - `setSystemFoldersIncluded(context, enabled: Boolean)`
+  - `isDefaultExpanded(context): Boolean` (Default: true)
+  - `setDefaultExpanded(context, expanded: Boolean)`
+  - `getContentMode(context): String` (Default: "files_only")
 
-#### [NEW] [BookmarkRepository.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/db/BookmarkRepository.kt)
-- Repository coordinating database access, file operations, duplicate detection, and smart group provisioning.
-- `ensureDefaultGroups()`: Automatically provisions default groups on first run:
-  - WhatsApp (`com.whatsapp`)
-  - Reddit (`com.reddit.frontpage`)
-  - YouTube (`com.google.android.youtube`)
-  - Twitter / X (`com.twitter.android`)
-  - Web & Articles (Chrome/Browser)
-  - Telegram (`org.telegram.messenger`)
-  - Saved Files & Documents
-- `getOrCreateGroupForPackage(pkg, appName)`: Dynamically creates new auto-groups for unrecognized apps.
-
----
-
-### Component 2: Background Scraper & Sandbox Cloner
-Create utilities for metadata extraction, offline article parsing, and file cloning inside `za.kilowatch.ultimatefilemanager.bookmarks.util`.
-
-#### [NEW] [BookmarkFileCloner.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/util/BookmarkFileCloner.kt)
-- Reads incoming `content://` or `file://` URIs and writes to `context.filesDir/bookmarks/media/` with secure UUID filenames and original extensions preserved.
-- Generates image/video thumbnails and writes to `context.filesDir/bookmarks/thumbnails/`.
-- Deletes associated physical files when a bookmark is deleted.
-
-#### [NEW] [BookmarkMetadataScraper.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/util/BookmarkMetadataScraper.kt)
-- Background coroutine utility to scrape OpenGraph metadata for URLs:
-  - Connects using `HttpURLConnection` with desktop/mobile User-Agent.
-  - Extracts `<meta property="og:title">`, `<meta property="og:description">`, `<meta property="og:image">`, `<link rel="icon">`.
-  - Downloads cover image and favicon to `context.filesDir/bookmarks/thumbnails/`.
-  - Extracts clean readable article body using readability container heuristic (strips ads, scripts, nav, footer) and caches text for offline reading.
+### 6. Layouts & Drawables:
+- `app/src/main/res/layout/activity_flat_view.xml` (Mobile layout with 56dp frosted glass header, filter bar, RecyclerView, `fabTools`, `floatingQuickBar`).
+- `app/src/main/res/layout/activity_flat_view_tv.xml` (Android TV layout with 72dp glass header, TV button selectors, and 10-foot UI styling).
+- `app/src/main/res/layout/item_flat_folder_header.xml` (Mobile folder section header).
+- `app/src/main/res/layout/item_flat_folder_header_tv.xml` (TV folder section header with D-pad focus).
+- `app/src/main/res/layout/item_flat_file.xml` (Mobile file row with relative path).
+- `app/src/main/res/layout/item_flat_file_tv.xml` (TV file row with relative path and TV focus styling).
+- `app/src/main/res/drawable/ic_flat_view.xml` (Vector icon for Flat View).
 
 ---
 
-### Component 3: Share Receiver & Quick Save Bottom Sheet
-Create the external share handler and confirmation sheet inside `za.kilowatch.ultimatefilemanager.bookmarks.ui`.
+## Files to Modify
 
-#### [NEW] [BookmarkReceiverActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/ui/BookmarkReceiverActivity.kt)
-- Registered in `AndroidManifest.xml` with label `@string/share_target_bookmark` ("Bookmark with UFM").
-- Accepts `ACTION_SEND` and `ACTION_SEND_MULTIPLE` for `text/*` and `*/*`.
-- Extracts shared URLs, text, and stream URIs.
-- Resolves sending package using `callingPackage` and package manager.
-- Shows `BookmarkQuickSaveBottomSheet`.
+### 1. `app/src/main/res/layout/popup_header_options_menu.xml`
+- **Change**: Add divider and `menuItemFlatView` directly below `menuItemTwinWindow`.
 
-#### [NEW] [BookmarkQuickSaveBottomSheet.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/ui/BookmarkQuickSaveBottomSheet.kt)
-- Glassmorphism bottom sheet (`R.layout.bottom_sheet_bookmark_quick_save`).
-- Displays:
-  - Source app icon and label (e.g. "Shared from WhatsApp").
-  - Content preview (thumbnail, title, link/file size).
-  - Target group selector dropdown with auto-selected smart group.
-  - Optional title edit and note input.
-  - Duplicate check: If URL/file already exists, shows notice: *"Already bookmarked — will update note & move to top"*.
-  - "Save Bookmark" primary button with auto-dismiss toast.
+### 2. `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/FileBrowserActivity.kt`
+- **Change**:
+  - In `showOverflowMenu()`: Check if at storage root (`currentDir.absolutePath == rootPath`) and storage is fully indexed (`UfmApplication.indexingRepository.isStorageFullyIndexed(storageId)`).
+  - Bind `menuItemFlatView` click to launch `FlatViewActivity`.
+  - If TV, wire TV header button/menu if applicable.
 
----
+### 3. `app/src/main/java/za/kilowatch/ultimatefilemanager/tabs/TabbedBrowserActivity.kt`
+- **Change**:
+  - In `showOverflowMenu()`: When current active tab is at indexed root, show `menuItemFlatView` and wire click to launch `FlatViewActivity`.
 
-### Component 4: Bookmark Hub Main Screen
-Create the main interface for browsing, searching, filtering, and managing bookmarks inside `za.kilowatch.ultimatefilemanager.bookmarks.ui`.
+### 4. `app/src/main/java/za/kilowatch/ultimatefilemanager/indexing/FileIndexDao.kt`
+- **Change**:
+  - Add `@Query` method `getFlatViewFiles(storageId: String, excludeSystem: Boolean): List<FileIndex>` for optimized fetching and filtering.
 
-#### [NEW] [BookmarkHubActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/ui/BookmarkHubActivity.kt)
-- Main screen adhering to `UFMStandard`:
-  - 56dp frosted glass toolbar with back button, title, search action, sort action, export action, and multi-select toggle.
-  - Horizontal group tabs / chips (All, WhatsApp, Reddit, Web, Custom Groups, + Add Group).
-  - Horizontal content type filter chips (All, Links, Media, Documents, Notes, Starred).
-  - Sort menu (Newest to Oldest, Oldest to Newest, Title A-Z, Size).
-  - Search bar with live reactive filtering.
-  - Empty state with modern illustration and instructions.
-- RecyclerView using `BookmarkAdapter`.
-- Deletion flow: Immediate removal with 5-second **Undo Snackbar** before purging files from private storage.
-- Long press multi-select mode:
-  - Batch move to group.
-  - Batch delete.
-  - Batch export (HTML Netscape bookmarks / Markdown).
-- Vault lock integration: Checks `isLocked` on group; invokes `BiometricPrompt` before displaying sensitive items.
+### 5. `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/SettingsActivity.kt`
+- **Change**:
+  - Add `cardFlatView` in the "Browsing & File List" section (`applySettingsCardIcons()`, click listener opening Flat View options dialog or bottom sheet).
 
-#### [NEW] [BookmarkAdapter.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/ui/BookmarkAdapter.kt)
-- Glassmorphism item cards (`R.layout.item_bookmark_card` and `R.layout.item_bookmark_card_grid`).
-- Visual components:
-  - OpenGraph cover image / file thumbnail loaded via Coil.
-  - Title and domain / file size subtitle.
-  - Source app badge icon.
-  - Star toggle button.
-  - Tap card: Opens Reader Mode if readable text cached; opens browser or UFM viewer otherwise.
-  - 3-dot overflow menu: Open Original, Read Mode, Copy Link, Save to Storage (Export), Move, Delete.
+### 6. `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/SettingsTransferManager.kt`
+- **Change**:
+  - Register Flat View preferences in backup/restore registry so preferences persist across exports.
+
+### 7. `app/src/main/AndroidManifest.xml`
+- **Change**:
+  - Register `FlatViewActivity` with orientation and configuration change handling.
+
+### 8. `app/src/main/res/values/strings.xml`
+- **Change**:
+  - Add translatable string resources: `flat_view`, `flat_view_subtitle`, `flat_view_open_folder`, `flat_view_expand_all`, `flat_view_collapse_all`, `flat_view_include_system_folders`, `flat_view_include_system_folders_desc`, `flat_view_default_expanded`, `flat_view_empty_notice`.
 
 ---
 
-### Component 5: Distraction-Free Reader Mode & Text-to-Speech
-Create the article reader inside `za.kilowatch.ultimatefilemanager.bookmarks.ui`.
+## Data Model & Query Details
 
-#### [NEW] [BookmarkReaderActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/bookmarks/ui/BookmarkReaderActivity.kt)
-- Pure typography reading screen (`R.layout.activity_bookmark_reader`):
-  - Reading container with adjustable margins and line height.
-  - Article title, domain, publication date, and clean body text.
-  - Top header action: *"Open in Browser"* to open live URL in Chrome/browser.
-  - Quick action toolbar:
-    - Text size adjustment (A- / A+).
-    - Font style toggle (Serif vs Sans).
-    - Theme switcher: Light (Paper), Warm Sepia, Dark (OLED).
-    - Star & Mark as Read toggles.
-  - **Text-to-Speech (TTS) Player Bar**:
-    - Android `TextToSpeech` integration.
-    - Play / Pause / Stop controls.
-    - Speed selector (0.75x, 1x, 1.25x, 1.5x, 2x).
-    - Paragraph progress indicator.
+```kotlin
+// In FileIndexDao.kt
+@Query("""
+    SELECT * FROM file_index
+    WHERE storageId = :storageId
+    AND isDirectory = 0
+    AND (:excludeSystem = 0 OR (path NOT LIKE '%/Android/data%' AND path NOT LIKE '%/Android/obb%'))
+    ORDER BY folderPath ASC, filename ASC
+""")
+suspend fun getFlatViewFiles(storageId: String, excludeSystem: Boolean): List<FileIndex>
+```
 
 ---
 
-### Component 6: Main Menu Tile & Registration Checklist
-
-#### [MODIFY] [StorageItem.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageItem.kt)
-- Add `val isBookmarkHubTile: Boolean = false`.
-- Include `isBookmarkHubTile` in `isHideable` property.
-
-#### [MODIFY] [StorageAdapter.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAdapter.kt)
-- In `categorizeItem()`, map `item.isBookmarkHubTile` to `MainMenuViewModeManager.CATEGORY_ORGANIZE`.
-
-#### [MODIFY] [StorageBrowserActivity.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageBrowserActivity.kt)
-- In `buildAllKnownTiles()`: Add `isBookmarkHubTile = true`.
-- In `loadStorageVolumes()`: When `!DeviceUtils.isTvDevice(this)`, instantiate and add `StorageItem(id = "bookmark_hub_tile", label = getString(R.string.bookmark_hub_title), iconRes = R.drawable.ic_bookmark_hub, isBookmarkHubTile = true)`.
-- In `getStorageSubtitle()`: Return formatted bookmark count.
-- In tile click router: Launch `BookmarkHubActivity`.
-
-#### [MODIFY] [TileOrderManager.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/storage/TileOrderManager.kt)
-- Include `isBookmarkHubTile` in `isFeatureTile()` check.
-
-#### [MODIFY] [IconCustomizationManager.kt](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/util/IconCustomizationManager.kt)
-- Add `R.drawable.ic_bookmark_hub` to `ALL_BUILTIN_ICONS`.
-
-#### [NEW] [ic_bookmark_hub.xml](file:///F:/Share/UFM/app/src/main/res/drawable/ic_bookmark_hub.xml)
-- Vector drawable icon for Bookmark Hub.
-
-#### [MODIFY] [strings.xml](file:///F:/Share/UFM/app/src/main/res/values/strings.xml)
-- Add all required localized strings:
-  - `bookmark_hub_title` ("Smart Bookmarks")
-  - `bookmark_hub_subtitle` ("Organize saved links, media & shares")
-  - `share_target_bookmark` ("Bookmark with UFM")
-  - Group names, filter chips, reader mode labels, TTS controls, and export options.
-
-#### [MODIFY] [AndroidManifest.xml](file:///F:/Share/UFM/app/src/main/AndroidManifest.xml)
-- Register `BookmarkReceiverActivity` with `ACTION_SEND` and `ACTION_SEND_MULTIPLE`.
-- Register `BookmarkHubActivity` and `BookmarkReaderActivity`.
+## Dependencies
+- No new external libraries required. Uses existing AndroidX, Room, Coroutines, Material3 Expressive, and UFM components.
 
 ---
 
 ## Verification Plan
 
-### Automated Build Verification
-1. **Compilation Check**:
-   ```powershell
-   ./gradlew assembleDebug
-   ```
-2. **Room KSP Verification**:
-   Verify Room compiler generates DAO and database classes cleanly.
+### Automated Tests
+- Unit test for `FlatViewViewModel` data grouping and collapse/expand logic.
+- Unit test for `FileIndexDao.getFlatViewFiles` query with and without system folder exclusion.
+- Gradle build verification: `./gradlew assembleMobileGoogleDebug` to guarantee zero build errors and clean compilation.
 
 ### Manual Verification
-1. **Share Sheet Target**:
-   - Share URL from browser -> verify "Bookmark with UFM" appears and opens Quick Save bottom sheet.
-   - Share Reddit post -> verify auto-detected "Reddit" group.
-   - Share WhatsApp media -> verify auto-detected "WhatsApp" group and physical media cloned into `files/bookmarks/media/`.
-2. **Sandbox Isolation**:
-   - Verify files inside `context.filesDir/bookmarks/media/` are not visible in UFM's general file browser or gallery.
-   - Delete original photo in WhatsApp -> verify bookmark in UFM Bookmark Hub remains fully playable and intact.
-3. **Organize Tile**:
-   - Open UFM Main Menu on mobile -> scroll to "Organize" category -> verify "Smart Bookmarks" tile appears.
-   - Tap tile -> opens `BookmarkHubActivity`.
-4. **Sorting & Filtering**:
-   - Tap "Links" / "Media" / "Docs" filter chips -> items filter accordingly.
-   - Test "Newest to Oldest" vs "Oldest to Newest" chronological sort.
-5. **Reader Mode & TTS**:
-   - Open a bookmarked article in Reader View -> verify clean typography.
-   - Tap TTS Play button -> verify Android reads aloud at various speeds (1x, 1.5x).
-6. **Vault Lock**:
-   - Lock a bookmark group -> verify biometric/PIN prompt appears.
-7. **Export**:
-   - Export bookmarks to HTML -> import into Chrome -> verify bookmarks import cleanly.
+1. Open UFM on an indexed storage (e.g. Internal Storage) at root folder.
+2. Tap the 3-dots menu on top right: verify `Flat View` appears directly below `Twin Window`.
+3. Tap `Flat View`: verify `FlatViewActivity` opens with all folders expanded by default.
+4. Verify subfolder headers show relative paths (e.g. `Documents/Invoices/`) and file counts.
+5. Tap a folder header: verify it collapses smoothly. Tap again: verify it expands.
+6. Tap the "Open Folder" action on a folder header: verify it jumps to standard browser at that directory.
+7. Long-press a file: verify Edit Mode activates, `fabTools` and `floatingQuickBar` appear.
+8. Check a folder header checkbox: verify all files inside that folder become selected.
+9. Tap "Select All": verify files across both expanded and collapsed folders are selected.
+10. Execute a file operation (e.g., Copy, Rename, or View Details): verify it targets the real file path.
+11. Navigate to Settings -> "Browsing & File List" -> "Flat View": toggle "Include System Folders" ON; re-open Flat View and verify `Android/data` appears.
+12. Verify Android TV D-pad navigation, focus highlights, and back button behavior.
+
+---
+
+## Risks & Mitigations
+- **Large Dataset (>100,000 files) Memory**: Differential adapter updates (`notifyItemRangeInserted` / `notifyItemRangeRemoved`) prevent re-binding the entire list during expand/collapse.
+- **Stale Index Data**: Before executing any file operation via `fabTools`, check `file.exists()`. If missing, display a prompt and refresh.
+- **Deep Nesting Visual Clutter**: Folder headers display direct parent paths rather than multi-level indentation, keeping the UI clean and readable on both phone and TV screens.

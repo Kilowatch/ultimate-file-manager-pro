@@ -239,6 +239,12 @@
             </intent-filter>
         </activity>
 
+        <!-- Flat View (Indexed Root Browser Mode) -->
+        <activity
+            android:name=".flatview.FlatViewActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
         <!-- Tabbed File Browser (Mobile Only) -->
         <activity
             android:name=".tabs.TabbedBrowserActivity"

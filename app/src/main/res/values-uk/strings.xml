@@ -17012,6 +17012,71 @@ No bookmarks found matching the selected filter or collection.
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
 </string>
+
+    <!-- Flat View (Indexed Root Browser Mode) -->
+    <string name="flat_view">
+Flat View
+</string>
+    <string name="flat_view_subtitle">
+Recursive Indexed Browser
+</string>
+    <string name="flat_view_open_folder">
+Open Folder
+</string>
+    <string name="flat_view_expand_all">
+Expand All
+</string>
+    <string name="flat_view_collapse_all">
+Collapse All
+</string>
+    <string name="flat_view_include_system_folders">
+Include System Folders
+</string>
+    <string name="flat_view_include_system_folders_desc">
+Show Android/data, Android/obb, and system directories in Flat View
+</string>
+    <string name="flat_view_default_expanded">
+Default to All Expanded
+</string>
+    <string name="flat_view_default_expanded_desc">
+Open Flat View with all folders expanded by default
+</string>
+    <string name="flat_view_empty_notice">
+No indexed files found in this volume
+</string>
+    <string name="flat_view_settings_title">
+Flat View
+</string>
+    <string name="flat_view_settings_desc">
+Configure recursive indexed browsing and system folders
+</string>
+    <string name="flat_view_not_indexed_title">
+Storage Not Indexed
+</string>
+    <string name="flat_view_not_indexed_msg">
+Flat View requires this storage volume to be fully indexed. Please run indexing first.
+</string>
+    <string name="flat_view_files_count">
+%1$d files across %2$d folders
+</string>
+    <string name="flat_view_selected_count">
+%1$d selected
+</string>
+    <string name="flat_view_folder_files_count">
+%1$d files
+</string>
+    <string name="flat_view_delete_title">
+Delete Files
+</string>
+    <string name="flat_view_delete_message">
+Are you sure you want to delete %1$d selected files?
+</string>
+    <string name="flat_view_deleted_count">
+Deleted %1$d files
+</string>
+    <string name="backup_pref_flat_view">
+Flat View settings
+</string>
 </resources>
 
 

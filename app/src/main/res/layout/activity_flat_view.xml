@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_mobile_gradient">
+
+    <!-- Modern Glass Header Bar -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="6dp"
+        android:background="@color/mobile_glass_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Normal Header Mode -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderNormal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Back Button in 40dp Frosted Squircle -->
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_btn_icon_frosted">
+
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="@string/cd_back"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:tint="@color/mobile_icon_tint" />
+            </FrameLayout>
+
+            <!-- Title & Subtitle -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtHeaderTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-black"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    tools:text="Internal Storage" />
+
+                <TextView
+                    android:id="@+id/txtHeaderSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif"
+                    android:singleLine="true"
+                    android:ellipsize="middle"
+                    tools:text="Flat View • 1,420 files across 48 folders" />
+            </LinearLayout>
+
+            <!-- Search Toggle -->
+            <ImageView
+                android:id="@+id/btnSearchToggle"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_search"
+                android:contentDescription="@string/search"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+            <!-- Expand All -->
+            <ImageView
+                android:id="@+id/btnExpandAll"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_flat_expand_all"
+                android:contentDescription="@string/flat_view_expand_all"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+            <!-- Collapse All -->
+            <ImageView
+                android:id="@+id/btnCollapseAll"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_flat_collapse_all"
+                android:contentDescription="@string/flat_view_collapse_all"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+        </LinearLayout>
+
+        <!-- Selection Header Mode -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderSelection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/btnCloseSelection"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+            <TextView
+                android:id="@+id/txtSelectionCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black"
+                tools:text="2 selected" />
+
+            <TextView
+                android:id="@+id/btnSelectAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="8dp"
+                android:background="@drawable/bg_header_action_ripple"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/action_select_all" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Search / Filter Bar -->
+    <LinearLayout
+        android:id="@+id/layoutSearchBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="8dp"
+        android:background="@color/mobile_glass_card"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_search"
+            app:tint="@color/mobile_text_secondary"
+            android:contentDescription="@null" />
+
+        <EditText
+            android:id="@+id/edtSearch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:background="@null"
+            android:hint="@string/type_here_to_search"
+            android:textColor="@color/mobile_text_primary"
+            android:textColorHint="@color/mobile_text_secondary"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:inputType="text" />
+
+        <ImageView
+            android:id="@+id/btnSearchClear"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_close"
+            android:contentDescription="@string/cd_clear_search"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_header_action_ripple"
+            app:tint="@color/mobile_icon_tint"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- RecyclerView for Flat View items -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerFlatView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingVertical="4dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutSearchBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_flat_file" />
+
+    <!-- Loading Indicator -->
+    <ProgressBar
+        android:id="@+id/progressLoading"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:indeterminate="true"
+        android:indeterminateTint="?attr/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_flat_view"
+            app:tint="@color/mobile_text_secondary"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/txtEmptyMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/flat_view_empty_notice" />
+    </LinearLayout>
+
+    <!-- Selection Tools FAB -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabTools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/action_tools"
+        android:textColor="?attr/colorOnPrimary"
+        app:icon="@drawable/ic_settings"
+        app:iconTint="?attr/colorOnPrimary"
+        app:backgroundTint="?attr/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Floating Quick Action Bar (Mobile Selection) -->
+    <za.kilowatch.ultimatefilemanager.ui.FloatingQuickActionBar
+        android:id="@+id/floatingQuickBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

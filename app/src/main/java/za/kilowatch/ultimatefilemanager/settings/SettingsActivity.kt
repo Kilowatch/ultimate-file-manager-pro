@@ -428,6 +428,9 @@ class SettingsActivity : AppCompatActivity() {
         cardHiddenFiles.setOnClickListener { toggleHiddenFiles() }
         switchHiddenFiles.setOnCheckedChangeListener(null)
 
+        val cardFlatView = findViewById<View>(R.id.cardFlatView)
+        cardFlatView?.setOnClickListener { showFlatViewSettingsDialog() }
+
         // Recycle Bin toggle
         val cardRecycleBin = findViewById<View>(R.id.cardRecycleBin)
         switchRecycleBin = findViewById(R.id.switchRecycleBin)
@@ -903,6 +906,7 @@ class SettingsActivity : AppCompatActivity() {
             cardStorageRename?.let { setupTvCardFocus(it) }
             findViewById<View>(R.id.cardDuplicateRetention)?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardHiddenFiles)
+            findViewById<View>(R.id.cardFlatView)?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardRecycleBin)
             setupTvCardFocus(cardMediaThumbnails)
             findViewById<View>(R.id.cardVideoThumbnailTime)?.let { setupTvCardFocus(it) }
@@ -1450,6 +1454,53 @@ class SettingsActivity : AppCompatActivity() {
         switchHiddenFiles.isChecked = newValue
         za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = newValue
         updateHiddenFilesSubtitle(newValue)
+    }
+
+    private fun showFlatViewSettingsDialog() {
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_flat_view_settings_tv else R.layout.dialog_flat_view_settings
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+
+        val switchSystem = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchSystemFolders)
+        val switchExpanded = dialogView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchDefaultExpanded)
+        val cardSystem = dialogView.findViewById<View>(R.id.cardSystemFolders)
+        val cardExpanded = dialogView.findViewById<View>(R.id.cardDefaultExpanded)
+        val btnDone = dialogView.findViewById<View>(R.id.btnDone)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        var systemFolders = FlatViewPreferenceManager.isSystemFoldersIncluded(this)
+        var defaultExpanded = FlatViewPreferenceManager.isDefaultExpanded(this)
+
+        switchSystem?.isChecked = systemFolders
+        switchExpanded?.isChecked = defaultExpanded
+
+        cardSystem?.setOnClickListener {
+            systemFolders = !systemFolders
+            switchSystem?.isChecked = systemFolders
+        }
+
+        cardExpanded?.setOnClickListener {
+            defaultExpanded = !defaultExpanded
+            switchExpanded?.isChecked = defaultExpanded
+        }
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnDone?.setOnClickListener {
+            FlatViewPreferenceManager.setSystemFoldersIncluded(this, systemFolders)
+            FlatViewPreferenceManager.setDefaultExpanded(this, defaultExpanded)
+            dialog.dismiss()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun updateAnalyticsSubtitle(enabled: Boolean) {
@@ -2980,6 +3031,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardDefaultApps, "settings_default_apps", R.drawable.ic_apps),
             CardIcon(R.id.cardFileServerTiles, "settings_file_server_tiles", R.drawable.ic_ufm_ftp),
             CardIcon(R.id.cardHiddenFiles, "settings_hidden_files", R.drawable.ic_eye),
+            CardIcon(R.id.cardFlatView, "settings_flat_view", R.drawable.ic_flat_view),
             CardIcon(R.id.cardRecycleBin, "settings_recycle_bin", R.drawable.ic_delete),
             CardIcon(R.id.cardMediaThumbnails, "settings_media_thumbnails", R.drawable.ic_photo_video),
             CardIcon(R.id.cardVideoThumbnailTime, "settings_video_thumbnail_time", R.drawable.ic_photo_video),

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutFolderHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="48dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="6dp"
+    android:background="@drawable/bg_header_action_ripple"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Checkbox in edit mode -->
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/checkSelectFolder"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="8dp"
+        android:buttonTint="?attr/colorPrimary"
+        android:visibility="gone"
+        android:clickable="false"
+        android:focusable="false"
+        tools:visibility="visible" />
+
+    <!-- Expand/Collapse Chevron -->
+    <ImageView
+        android:id="@+id/imgFolderChevron"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:src="@drawable/ic_chevron_right"
+        app:tint="@color/mobile_icon_tint"
+        android:contentDescription="@null" />
+
+    <!-- Folder Icon -->
+    <ImageView
+        android:id="@+id/imgFolderIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/ic_folder"
+        app:tint="?attr/colorPrimary"
+        android:contentDescription="@null" />
+
+    <!-- Folder Relative Path & File Count -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtFolderPath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-bold"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            tools:text="Documents/Invoices" />
+
+        <TextView
+            android:id="@+id/txtFolderCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="11sp"
+            android:fontFamily="sans-serif-medium"
+            tools:text="14 files" />
+    </LinearLayout>
+
+    <!-- Open Folder in Standard Browser Button -->
+    <ImageView
+        android:id="@+id/btnOpenFolder"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:padding="8dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:src="@drawable/ic_arrow_forward"
+        app:tint="@color/mobile_icon_tint"
+        android:contentDescription="@string/flat_view_open_folder"
+        android:clickable="true"
+        android:focusable="true" />
+</LinearLayout>

@@ -627,6 +627,19 @@ interface FileIndexDao {
           AND path LIKE :pathPrefix || '%'
     """)
     suspend fun getAppStorageByPrefix(storageId: String, pathPrefix: String): AppStorageAggregate?
+
+    /**
+     * Retrieves all files for Flat View on an indexed storage.
+     * Optionally excludes Android system folders (Android/data and Android/obb).
+     */
+    @Query("""
+        SELECT * FROM file_index
+        WHERE storageId = :storageId
+          AND isDirectory = 0
+          AND (:excludeSystem = 0 OR (path NOT LIKE '%/Android/data%' AND path NOT LIKE '%/Android/obb%'))
+        ORDER BY folderPath ASC, filename COLLATE NOCASE ASC
+    """)
+    suspend fun getFlatViewFiles(storageId: String, excludeSystem: Boolean): List<FileIndex>
 }
 
 data class StorageUsage(val storageId: String, val totalSize: Long)

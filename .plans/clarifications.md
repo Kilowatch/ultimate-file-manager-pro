@@ -1,50 +1,52 @@
-# Clarifications: Smart Bookmark Hub (Mobile Only)
+# Clarifications: Flat View (Indexed Root Browser Mode)
 
-The following architectural, functional, and user-experience clarifications have been established for the Smart Bookmark Hub feature:
+## Status
+Answers received — ready for /tasks (or /plan if creating plan.md first).
 
----
+## Questions and Answers
 
-### Clarification 1: Default Tap Behavior on Web Links
-- **Question**: When tapping a saved web bookmark in the Bookmark Hub, what should be the default action?
-- **Decision**: **Open in Reader Mode first if article text is available**:
-  - If clean article body text was extracted during scraping, tapping the card opens the **Distraction-Free Reader Mode** immediately.
-  - The reader screen features a prominent top button: *"Open in Browser"* allowing the user to view the original live webpage in Chrome/default browser at any time.
-  - If the link has no extracted article body (e.g. video page, home page, web tool), it opens directly in the external browser.
+### 1. Data Source & Index Synchronization
+**Q1.** How should Flat View query and load files for indexed storage volumes?  
+**A:** Query directly from Room `file_index` database table. This provides instant load times, minimal memory consumption, and scales to 100,000+ files at 60fps without heavy I/O disk thrashing.
 
----
+**Q2.** What qualifies as the root folder where Flat View is enabled?  
+**A:** Top-level volume root only (e.g. `/storage/emulated/0/` for Internal Storage or `/storage/XXXX-XXXX/` for an SD card). It is strictly gated to the volume root on indexed storages.
 
-### Clarification 2: Duplicate Share Handling
-- **Question**: How should duplicate shares (sharing the same URL or file twice) be handled?
-- **Decision**: **Detect and Update Existing Bookmark**:
-  - If an incoming shared URL or identical file hash is already in the database:
-    - Update its `updatedAt` timestamp so it moves to the top of the chronological feed.
-    - If a new note was typed in the quick save sheet, append or update the existing note.
-    - Display confirmation: *"Bookmark updated (already saved)"*.
-  - Prevents cluttering the database with duplicate entries while preserving user notes.
+### 2. Folder Grouping & Hierarchy Presentation
+**Q3.** How should nested subfolder headers and items be structured in the list?  
+**A:** Direct parent section headers with full relative path (e.g., `Documents/Work/2026/ (12 files)`). This groups files under their immediate parent folder, completely avoiding awkward deep horizontal nesting and horizontal scrolling on mobile and TV screens.
 
----
+**Q4.** Should folder headers offer a way to navigate into that folder in standard browsing?  
+**A:** Yes, provide an "Open Folder" icon button on each folder header to allow jumping directly into standard hierarchical browser mode at that specific folder.
 
-### Clarification 3: Unrecognized & Third-Party Apps
-- **Question**: When an item is shared from an app without a predefined smart group (e.g., Medium, Threads, Slack, Pocket Casts), what should happen?
-- **Decision**: **Dynamically Create an Auto-Group Using the App's Display Name**:
-  - Resolve the sender's package name and fetch its human-readable application label via `PackageManager` (e.g., "Medium", "Threads", "Slack").
-  - Dynamically provision a smart auto-group for that app with `isAutoGroup = true`, linking its package name and assigning an accent color.
-  - Subsequent shares from that app automatically route to this newly created group.
+### 3. Selection & Edit Mode (`fabTools` & Quick Bar)
+**Q5.** In Edit Mode, how should checking a folder header checkbox behave?  
+**A:** Checking a folder header checkbox automatically selects all files contained within that folder.
 
----
+**Q6.** When the user taps "Select All" in Edit Mode, which items should be selected?  
+**A:** Select all files across all folders (both currently expanded and collapsed folders).
 
-### Clarification 4: Deletion & File Cleanup Strategy
-- **Question**: When deleting a bookmark with private cloned media/files, how should deletion behave?
-- **Decision**: **Immediate Deletion with a 5-Second Undo Snackbar**:
-  - Tapping Delete removes the item from the UI immediately.
-  - Displays a glassmorphic Snackbar: *"Bookmark deleted — [Undo]"* for 5 seconds.
-  - If "Undo" is tapped, restore the database item and keep files.
-  - If the Snackbar times out or is dismissed, permanently delete the private files from `context.filesDir/bookmarks/media/` and `context.filesDir/bookmarks/thumbnails/`.
+### 4. System Folders Exclusion
+**Q7.** Which system folder patterns should be excluded by default?  
+**A:** Exclude `Android/data` and `Android/obb` by default. Keep dot directories visible unless hidden files are globally disabled in settings. Users can enable system folders via the Flat View settings toggle.
+
+### 5. UI Entry Point & Settings Placement
+**Q8.** Where should the user access the "Flat View" option in the browser UI?  
+**A:** In the 3-dots overflow popup menu on the top right (across Local Standalone, TAB Mode, etc.), located directly below "Twin Window" (`menuItemFlatView`), visible when browsing at the root of an indexed storage volume.
+
+**Q9.** Where in Settings should the dedicated Flat View configuration card be placed?  
+**A:** Under the "Browsing & File List" section in `SettingsActivity`.
 
 ---
 
-### Clarification 5: Private Sandbox Isolation & File Browsing Exclusion
-- **Decision**: 
-  - All media, documents, and thumbnail files remain strictly isolated inside `context.filesDir/bookmarks/media/` and `context.filesDir/bookmarks/thumbnails/`.
-  - UFM's general file browsing activities (`FileBrowserActivity`, `FileBrowserFragment`, `StorageBrowserActivity` Recents) will strictly filter out and never expose this internal folder.
-  - Users can explicitly copy/export files out into public storage via the card overflow menu: *"Save to Storage"*.
+## Spec / Plan Impact
+- **Entry Point**: Clarified that Flat View is launched from the top-right 3-dots overflow popup menu (`menuItemFlatView`) placed directly below "Twin Window" when at the indexed volume root.
+- **Data Engine**: Clarified that the Room `file_index` database is the primary query engine for Flat View.
+- **Folder Sections**: Clarified that grouping uses direct parent section headers with full relative paths and includes an "Open Folder" jump action.
+- **Selection**: Clarified folder header checkbox cascades to all files within that folder, and "Select All" selects across both expanded and collapsed folders.
+- **System Folders**: Clarified default exclusions specifically target `Android/data` and `Android/obb`.
+
+---
+
+## Confirmed — Ready for /tasks
+All questions are answered and architectural decisions are solidified. No outstanding ambiguities remain.

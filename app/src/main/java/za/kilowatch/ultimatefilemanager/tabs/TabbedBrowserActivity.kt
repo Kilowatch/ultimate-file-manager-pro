@@ -43,6 +43,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import za.kilowatch.ultimatefilemanager.UfmApplication
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -2311,6 +2312,31 @@ class TabbedBrowserActivity : AppCompatActivity(),
         popupView.findViewById<View>(R.id.menuItemTwinWindow)?.setOnClickListener {
             popupWindow.dismiss()
             btnTwinWindow.performClick()
+        }
+
+        val activeTab = getActiveTab()
+        val isAtRoot = activeTab != null && activeTab.currentPath == activeTab.rootPath
+        val storageId = if (activeTab?.storageType == StorageType.LOCAL) {
+            if (activeTab.rootPath == android.os.Environment.getExternalStorageDirectory().absolutePath) "internal" else activeTab.rootPath
+        } else ""
+        val isStorageIndexed = storageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(storageId)
+        val itemFlatView = popupView.findViewById<View>(R.id.menuItemFlatView)
+        val dividerFlatView = popupView.findViewById<View>(R.id.dividerFlatView)
+        if (isAtRoot && isStorageIndexed && activeTab != null) {
+            itemFlatView?.visibility = View.VISIBLE
+            dividerFlatView?.visibility = View.VISIBLE
+            itemFlatView?.setOnClickListener {
+                popupWindow.dismiss()
+                val intent = Intent(this, za.kilowatch.ultimatefilemanager.flatview.FlatViewActivity::class.java).apply {
+                    putExtra(za.kilowatch.ultimatefilemanager.flatview.FlatViewActivity.EXTRA_ROOT_PATH, activeTab.rootPath)
+                    putExtra(za.kilowatch.ultimatefilemanager.flatview.FlatViewActivity.EXTRA_STORAGE_ID, storageId)
+                    putExtra(za.kilowatch.ultimatefilemanager.flatview.FlatViewActivity.EXTRA_STORAGE_LABEL, activeTab.storageLabel)
+                }
+                startActivity(intent)
+            }
+        } else {
+            itemFlatView?.visibility = View.GONE
+            dividerFlatView?.visibility = View.GONE
         }
 
         popupView.findViewById<View>(R.id.menuItemCopyFolderPath)?.setOnClickListener {

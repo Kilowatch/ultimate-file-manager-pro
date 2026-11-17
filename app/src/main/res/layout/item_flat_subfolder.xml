@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Flat View Subfolder Card (Mobile)
+    Styled exactly like items within categories on the main menu (item_storage_nested_card):
+    - 20dp corner radius, quick_bar_bg elevated surface, 1dp mobile_glass_stroke.
+    - Squircle icon container, folder name stripped of category prefix (e.g. "Hello"),
+      file count subtitle, open folder jump button, and expand/collapse chevron.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardSubfolder"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="24dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/mobile_glass_stroke"
+    app:cardBackgroundColor="@color/quick_bar_bg"
+    app:rippleColor="@color/mobile_glass_ripple">
+
+    <LinearLayout
+        android:id="@+id/layoutSubfolderRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!-- Checkbox in edit mode -->
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/checkSelectSubfolder"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="8dp"
+            android:buttonTint="?attr/colorPrimary"
+            android:visibility="gone"
+            android:clickable="false"
+            android:focusable="false"
+            tools:visibility="visible" />
+
+        <!-- Squircle Icon Badge -->
+        <FrameLayout
+            android:id="@+id/iconContainerSubfolder"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_squircle_nested_icon">
+
+            <ImageView
+                android:id="@+id/imgSubfolderIcon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                app:tint="?attr/colorPrimary"
+                android:src="@drawable/ic_folder" />
+        </FrameLayout>
+
+        <!-- Subfolder Information (Name without category prefix, File Count) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp">
+
+            <TextView
+                android:id="@+id/txtSubfolderName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_card_text_primary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-bold"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                tools:text="Hello" />
+
+            <TextView
+                android:id="@+id/txtSubfolderCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/mobile_card_text_secondary"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="5 files" />
+        </LinearLayout>
+
+        <!-- Open Folder in Standard Browser Button -->
+        <ImageView
+            android:id="@+id/btnOpenSubfolder"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="6dp"
+            android:padding="7dp"
+            android:src="@drawable/ic_arrow_forward"
+            android:contentDescription="@string/flat_view_open_folder"
+            android:background="@drawable/bg_btn_icon_frosted"
+            app:tint="@color/mobile_icon_tint"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Expand / Collapse Chevron Indicator -->
+        <ImageView
+            android:id="@+id/imgSubfolderChevron"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/mobile_card_text_secondary"
+            android:contentDescription="@null" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

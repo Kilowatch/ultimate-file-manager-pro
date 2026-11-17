@@ -7793,6 +7793,27 @@ class FileBrowserActivity : AppCompatActivity(), VolumeEjectHost {
             startActivity(intent)
         }
 
+        val isAtRoot = currentDir.absolutePath == rootPath
+        val isStorageIndexed = UfmApplication.indexingRepository.isStorageFullyIndexed(storageId)
+        val itemFlatView = popupView.findViewById<View>(R.id.menuItemFlatView)
+        val dividerFlatView = popupView.findViewById<View>(R.id.dividerFlatView)
+        if (isAtRoot && isStorageIndexed) {
+            itemFlatView?.visibility = View.VISIBLE
+            dividerFlatView?.visibility = View.VISIBLE
+            itemFlatView?.setOnClickListener {
+                popupWindow.dismiss()
+                val intent = Intent(this, za.kilowatch.ultimatefilemanager.flatview.FlatViewActivity::class.java).apply {
+                    putExtra(za.kilowatch.ultimatefilemanager.flatview.FlatViewActivity.EXTRA_ROOT_PATH, rootPath)
+                    putExtra(za.kilowatch.ultimatefilemanager.flatview.FlatViewActivity.EXTRA_STORAGE_ID, storageId)
+                    putExtra(za.kilowatch.ultimatefilemanager.flatview.FlatViewActivity.EXTRA_STORAGE_LABEL, storageLabel)
+                }
+                startActivity(intent)
+            }
+        } else {
+            itemFlatView?.visibility = View.GONE
+            dividerFlatView?.visibility = View.GONE
+        }
+
         popupView.findViewById<View>(R.id.menuItemCopyFolderPath)?.setOnClickListener {
             popupWindow.dismiss()
             copyCurrentFolderPathToClipboard()

@@ -1,232 +1,85 @@
-# Specification: Smart Bookmark Hub (Mobile Only)
+# Specification: Flat View (Indexed Root Browser Mode)
 
-## 1. Overview & Vision
-Ultimate File Manager Pro currently integrates into Android's system share sheet with two primary entry points:
-1. **"Open In..." (`OpenWithActivity`)** — Immediate preview/inspection of incoming files.
-2. **"Save to..." (`ShareReceiverActivity`)** — Browsing and selecting a destination to save incoming files.
+## Overview
+Flat View is a specialized virtual browsing and presentation layout in Ultimate File Manager Pro (UFM), accessible exclusively on **indexed storage volumes** from the **root folder**. It presents the contents of the root and all descendant subdirectories in a unified, structured view where folders act as expandable and collapsible sections (all expanded by default). 
 
-This specification introduces a third flagship share target and home screen feature: the **Smart Bookmark Hub**. Positioned under the **"Organize"** category on the Main Menu (Mobile only), this feature merges the best capabilities of top-tier bookmark and research managers (such as **Raindrop.io** and **Instapaper**) with UFM's robust file management architecture. 
-
-It provides an all-inclusive, premium-grade experience with **zero paywalls or gated restrictions**. Every feature—visual dashboards, smart auto-grouping by source app, rich OpenGraph previews, distraction-free reader mode, text-to-speech audio reading, permanent offline media preservation, biometric vault locking, and comprehensive HTML/Markdown/JSON exporting—is fully available to all users.
+Flat View queries directly from UFM's Room `file_index` database table for instant loading across 100,000+ files at 60fps. It preserves standard UFM operations and controls: users can enter edit/multi-select mode, invoke the selection Tools FAB (`fabTools`) and Floating Quick Action Bar (`floatingQuickBar`), and execute all normal file operations (copy, move, delete, rename, share, compress, etc.) targeting real source files. System folders (`Android/data`, `Android/obb`) are excluded by default to avoid clutter and permission barriers, but can be enabled via a dedicated Flat View settings section under "Browsing & File List" in `SettingsActivity`.
 
 ---
 
-## 2. Platform & UI/UX Standards
-- **Target Platform**: **Mobile only** (Android phones and foldables/tablets). Android TV is explicitly excluded as share sheet receivers, link parsing, and reading queues are mobile workflows.
-- **Main Menu Location**: Placed under `MainMenuViewModeManager.CATEGORY_ORGANIZE` in `StorageBrowserActivity`, alongside Smart Sort, Storage Analyzer, and Recycle Bin.
-- **Design Language**: Strictly adheres to `UFMStandard`:
-  - Frosted glass headers (`@color/mobile_glass_header`, 56dp height).
-  - Squircle icon buttons (`@drawable/bg_btn_icon_frosted`, 40dp).
-  - Glass cards (`bg_reindex_option_card` / `bg_dialog_glass`).
-  - Interactive filter chips, smooth bottom sheets, and haptic feedback.
+## User Stories
+
+- **US-01 (Root-Scoped Activation on Indexed Storage):** As a user browsing the root directory of an indexed storage volume (such as Primary Internal Storage or an indexed SD card), I want to tap the 3-dots overflow menu and select "Flat View" (positioned directly below "Twin Window") so that I can browse all nested files in a single unified view.
+- **US-02 (Default-Expanded Tree Sections):** As a user in Flat View, I want all subfolders (and the root) to be expanded by default so that I immediately see all descendant files, with the ability to collapse or expand individual folders or the root header to organize my view.
+- **US-03 (Quick Folder Navigation):** As a user viewing a subfolder header, I want an "Open Folder" action on the header so that I can instantly jump to standard hierarchical browsing at that specific directory if I choose.
+- **US-04 (Standard Edit Mode & Tools FAB):** As a power user, I want normal edit mode, long-press multi-select, the selection Tools FAB (`fabTools`), and the Floating Quick Action Bar (`floatingQuickBar`) to function exactly as they do in standard browsing, with folder header checkboxes cascading to contained files and "Select All" selecting across all folders.
+- **US-05 (Exclusion of System Folders):** As a user, I want `Android/data` and `Android/obb` excluded by default so the flat list is not overwhelmed with inaccessible system files, while retaining an opt-in toggle in Settings.
+- **US-06 (Dedicated Flat View Settings):** As a user, I want a dedicated "Flat View" card in Settings under "Browsing & File List" to toggle system folder inclusion and configure expansion defaults.
+- **US-07 (Contextual Relative Paths):** As a user, I want each item row to display its relative folder path so that files with identical names from different subdirectories are instantly recognizable.
+- **US-08 (Android TV Remote & Mobile Usability):** As an Android TV or mobile user, I want Flat View to support full platform ergonomics—touch/multi-select on mobile and seamless D-pad focus navigation and 10-foot readability on Android TV.
 
 ---
 
-## 3. High-Level Architecture & Components
+## Functional Requirements
 
-```
-                          ┌─────────────────────────────┐
-                          │   External App Share Sheet  │
-                          │ (WhatsApp, Reddit, Web, etc)│
-                          └──────────────┬──────────────┘
-                                         │
-                                         ▼
-                      ┌──────────────────────────────────────┐
-                      │ BookmarkReceiverActivity (Share Target│
-                      │  "Bookmark with UFM"                 │
-                      └──────────────────┬───────────────────┘
-                                         │
-                                         ▼
-                      ┌──────────────────────────────────────┐
-                      │ Glass Quick Save Bottom Sheet        │
-                      │ • Source Icon & Name (e.g. Reddit)   │
-                      │ • Auto-Assigned Group                │
-                      │ • Title & Notes Input                │
-                      │ • 1-Tap Save / Confirm               │
-                      └──────────────────┬───────────────────┘
-                                         │
-                 ┌───────────────────────┴───────────────────────┐
-                 ▼                                               ▼
-      ┌─────────────────────┐                         ┌─────────────────────┐
-      │ Link / Text Scraper │                         │ Media Cloner & Cache│
-      │ • OpenGraph title   │                         │ • Clones shared     │
-      │ • Description & URL │                         │   images, videos,   │
-      │ • Favicon & Cover   │                         │   PDFs to internal  │
-      │ • Full text content │                         │   bookmarks storage │
-      └──────────┬──────────┘                         └──────────┬──────────┘
-                 │                                               │
-                 └───────────────────────┬───────────────────────┘
-                                         │
-                                         ▼
-                      ┌──────────────────────────────────────┐
-                      │ SQLite / Room Bookmarks Repository   │
-                      │ • Full metadata, groups, tags, notes │
-                      └──────────────────┬───────────────────┘
-                                         │
-                                         ▼
-                      ┌──────────────────────────────────────┐
-                      │ BookmarkHubActivity (Mobile UI)      │
-                      │ • Organize Tile on Main Menu         │
-                      │ • Grid / List View Toggle            │
-                      │ • Smart Auto-Groups & Custom Groups  │
-                      │ • Distraction-Free Reader Mode + TTS │
-                      │ • Full-Text Search, Sort & Filters   │
-                      │ • Biometric Vault Lock & Export/Sync │
-                      └──────────────────────────────────────┘
-```
+### 1. Scope, Availability & Entry Point
+- **FR-01 (Indexed Storage Gating):** Flat View is strictly available on storage volumes that are fully indexed by UFM's indexing repository. On unindexed or unsupported storages, the Flat View menu item is hidden.
+- **FR-02 (Volume Root Only):** Flat View can only be initiated from the **root folder** of an indexed storage volume (e.g. `/storage/emulated/0/` or SD card root). It is not offered when browsing deeper inside child subfolders.
+- **FR-03 (Overflow Menu Integration):** Flat View is exposed in the 3-dots overflow popup menu across Local Standalone, TAB Mode, and Twin Window, positioned directly below the "Twin Window" menu item (`menuItemFlatView`).
+- **FR-04 (Exit & Back Navigation):** Pressing Back or switching view modes returns the browser to the standard hierarchical view at the root directory, preserving scroll and selection state where feasible.
+
+### 2. Collapsible & Expandable Folder Structure
+- **FR-05 (Direct Parent Section Headers):** Files are grouped under their direct parent folder headers displaying their full relative path (e.g., `Documents/Work/2026/ (12 files)`), eliminating horizontal clipping and multi-level indentation.
+- **FR-06 (All Expanded by Default):** When entering Flat View, the root folder header and all discovered subfolder headers must be **expanded by default**, showing all descendant files immediately.
+- **FR-07 (Folder Toggle Interaction):** Tapping or clicking (or pressing D-pad Center on TV) on any folder header row toggles its collapsed/expanded state.
+- **FR-08 (Open Folder Action):** Each folder header provides an "Open Folder" action button allowing the user to navigate directly into that folder in standard hierarchical browsing.
+- **FR-09 (Root Header Collapse):** The root directory itself is presented with a top-level header that allows collapsing or expanding the entire flat hierarchy at once.
+
+### 3. System Folder Filtering & Configuration
+- **FR-10 (System Folders Excluded by Default):** `Android/data` and `Android/obb` are automatically excluded from Flat View by default.
+- **FR-11 (System Folder Inclusion Toggle):** Users can toggle "Include System Folders" in Settings to show these folders when needed.
+- **FR-12 (Dedicated Settings Section):** Add a dedicated "Flat View" card to UFM Settings under "Browsing & File List" containing:
+  - **Include System Folders:** Toggle switch (Default: Disabled / Off).
+  - **Default Folder Expansion:** Option for "All Expanded" vs "All Collapsed" (Default: All Expanded).
+  - **View Content Mode:** Files Only vs Files & Subfolders (Default: Files Only).
+
+### 4. Edit Mode, Multi-Select & Tools FAB Synchronization
+- **FR-13 (Full Edit Mode Parity):** Normal edit mode, long-press selection, select-all, and range selection must function identically to standard browser mode.
+- **FR-14 (Folder Header Checkbox Cascade):** In Edit Mode, checking a folder header checkbox automatically selects all files contained within that folder.
+- **FR-15 (Select All Scope):** Tapping "Select All" selects all files across the entire tree, including files inside currently collapsed folders.
+- **FR-16 (Tools FAB & Floating Quick Bar):** The selection Tools FAB (`fabTools`) and Floating Quick Action Bar (`floatingQuickBar`) must trigger, display, and synchronize across all container environments (Standalone, TAB Mode, and Twin Window Mode).
+- **FR-17 (Real Source Targeting):** All file operations triggered from the Tools FAB or quick actions (copy, move, delete, rename, share, zip, favorite, properties) must operate on the actual source file paths/URIs, never on synthetic or display paths.
+
+### 5. Data Engine & Sorting
+- **FR-18 (Room Database Index Engine):** Flat View queries files directly from the Room `file_index` database table (`FileIndexDao`), ensuring instant performance on datasets of 100,000+ files.
+- **FR-19 (Relative Path Display):** Each file row displays its parent path relative to the root (e.g. `Documents/Invoices/`).
+- **FR-20 (Deterministic Sorting):** Sorting options (Name, Size, Date, Type) apply deterministically across all items within their groups or across the unified list, with tie-breaking on relative path and stable ID.
+- **FR-21 (In-Memory Filter):** The local filter bar filters the loaded entries in real time without querying the global search database or re-scanning the disk.
 
 ---
 
-## 4. Detailed Functional Requirements
+## Non-Functional Requirements
 
-### FR-01: Share Target Registration ("Bookmark with UFM")
-- Registered in `AndroidManifest.xml` as `za.kilowatch.ultimatefilemanager.ui.BookmarkReceiverActivity`.
-- Intent filters:
-  - `ACTION_SEND` and `ACTION_SEND_MULTIPLE`.
-  - Categories: `DEFAULT`.
-  - MIME types: `text/*` (links, post shares, copied text, notes) and `*/*` (images, videos, audio, documents, archives, APKs).
-- Manifest label: `@string/share_target_bookmark` ("Bookmark with UFM").
-- Displays alongside existing targets "Open In..." and "Save to...".
-
-### FR-02: Quick Glass Save Bottom Sheet
-- When triggered from an external share, launches a lightweight glass bottom sheet:
-  - **Source App Header**: Automatically resolves calling package (e.g., `com.whatsapp`, `com.reddit.frontpage`, `com.google.android.youtube`, `com.android.chrome`, `org.telegram.messenger`) and displays app icon + name.
-  - **Target Group Selector**: Automatically selects the corresponding auto-group (e.g., "Reddit Posts" or "WhatsApp Shares") with a single-tap dropdown to switch to any custom group or create a new group on the fly.
-  - **Title & Note Field**: Editable title (defaults to shared title or URL) and optional note/tag input.
-  - **Actions**: "Save Bookmark" (Primary button) and "Cancel". Auto-dismiss with confirmation toast upon saving.
-
-### FR-03: Permanent Media & File Preservation in Private Application Sandbox
-- External apps (especially WhatsApp, Telegram, or temporary download caches) frequently clean up or purge shared media.
-- **Strict Private Application Directory Storage**:
-  - All shared binary files (photos, videos, audio, PDFs, archives) are copied directly from the incoming `content://` stream into the app's private internal directory (`context.filesDir` / `context.noBackupFilesDir`, e.g., `files/bookmarks/media/`).
-  - **No Direct User or External Access**:
-    - The files are stored strictly within the app's sandboxed private storage (`/data/user/0/za.kilowatch.ultimatefilemanager/files/bookmarks/media/`).
-    - Neither the user, external file explorers, MTP, nor Android MediaStore can scan, index, or browse this directory.
-    - UFM's own local File Browser and Recents screens will **not** expose or list this private application directory.
-    - Media and files are managed and viewed **exclusively** through the Smart Bookmark Hub UI.
-  - If a user deliberately wants a file in their device's public storage, they must explicitly invoke the "Save to Storage" / "Export" action from within the Bookmark Hub card menu.
-
-### FR-04: Smart Auto-Grouping & Custom Collections
-- **Automatic Smart Groups**:
-  - Automatically identifies sender app package and provisions smart groups:
-    - **WhatsApp**: Incoming photos, videos, voice notes, documents, and chat links.
-    - **Reddit**: Post links, image posts, comment threads.
-    - **YouTube**: Video URLs, shorts, channel links.
-    - **Twitter / X**: Shared posts, media links.
-    - **Browser / Web**: General web URLs from Chrome, Firefox, Brave, Samsung Internet.
-    - **Telegram / Messaging**: Chat media, links, forwarded documents.
-    - **Files / Other**: Shared files from file pickers, cloud drives, or system apps.
-- **Custom Collections / Groups**:
-  - Users can create unlimited custom groups (e.g., "Research", "Recipes", "Work", "Tech Deals").
-  - Customizable color accents and icons.
-  - Drag-and-drop or batch move items between groups.
-  - "All Bookmarks" master feed aggregating all groups.
-
-### FR-05: Rich OpenGraph Link Previews & Metadata Scraping
-- For web URLs:
-  - Background asynchronous scraper fetches OpenGraph / Twitter Card metadata:
-    - Webpage Title
-    - Meta description snippet
-    - Domain hostname and favicon
-    - Primary high-resolution preview cover image
-  - Caches thumbnail and metadata locally in UFM storage for instantaneous offline rendering.
-- For Media & Files:
-  - Images and videos display smooth local thumbnails.
-  - Audio files display audio card with waveform / ID3 album art.
-  - Documents (PDF, Word, Code) display rich format badges, page counts, and file sizes.
-
-### FR-06: Distraction-Free Reader Mode & Text-to-Speech (TTS)
-- Inspired by **Instapaper / Pocket**:
-  - Tapping a bookmarked article gives the user the option to open the **Clean Reader View**.
-  - Reader View strips ads, cookie banners, tracking scripts, navigation bars, and pop-ups, rendering clean, typography-optimized article text.
-  - Reader features:
-    - Adjustable font sizes and serif/sans-serif fonts.
-    - Dark mode, light mode, and warm sepia themes.
-    - **Text-to-Speech (TTS)**: Built-in Android TTS audio player allowing users to listen to bookmarked articles with play/pause, speed controls (1x, 1.25x, 1.5x, 2x), and skip buttons.
-    - Offline reading: Entire parsed article text is stored locally so articles can be read with zero internet connection.
-
-### FR-07: Search, Filtering & Chronological Sorting
-- **Sorting Options**:
-  - Date Added: Newest to Oldest (default), Oldest to Newest.
-  - Title: Alphabetical A-Z, Z-A.
-  - Source App: Grouped alphabetically by sender.
-  - Size: Largest to Smallest (for media and file bookmarks).
-- **Filtering Capabilities**:
-  - Content Type Filter Chips:
-    - **All**
-    - **Articles & Links**
-    - **Images**
-    - **Videos**
-    - **Audio & Voice**
-    - **Documents & PDFs**
-    - **Notes & Text**
-  - Starred / Favorites toggle.
-  - Read / Unread status filter for articles.
-- **Full-Text Search**:
-  - Real-time search across titles, URLs, notes, extracted descriptions, and cached article body text.
-
-### FR-08: Biometric / Vault Lock Integration
-- Users can toggle **"Lock with Vault"** on any specific bookmark group (e.g., private notes, confidential documents).
-- Locked groups require device biometric authentication (Fingerprint, Face Unlock) or UFM Vault Master PIN before contents and previews become visible.
-- Thumbnails for locked items are blurred or masked when locked.
-
-### FR-09: Export, Import & File System Integration
-- **Direct Save to Storage**: 1-tap action on any bookmarked file or media to copy/move it directly into any local storage folder or network share (SMB, FTP, SFTP, NFS, Cloud).
-- **Standard Netscape HTML Export**: Export link collections into standard bookmarks HTML format, fully importable into Google Chrome, Firefox, Safari, Brave, or Edge.
-- **Markdown & JSON Export**: Export bookmark lists as clean Markdown files (links + notes) or raw JSON backup.
-- **Settings Backup Integration**: Fully registered in `SettingsBackupManager.kt` so all bookmarks, groups, and tags are preserved across device backups and restores.
-
-### FR-10: Main Menu Tile Integration ("Organize" Section)
-- Added to `StorageBrowserActivity.loadStorageVolumes()` and `buildAllKnownTiles()`.
-- Categorized under `MainMenuViewModeManager.CATEGORY_ORGANIZE`.
-- Custom distinct bookmark icon (`R.drawable.ic_bookmark_hub`).
-- Live subtitle showing count of items and active groups (e.g., *"38 bookmarks in 5 groups"*).
-- Mobile only: Excluded from Android TV menu.
+- **NFR-01 (Threading & Fluidity):** Database queries and tree grouping must execute on `Dispatchers.IO`. No database operations or sorting on the UI thread.
+- **NFR-02 (Virtualization & Memory Scalability):** Large trees (100,000+ items) render via `RecyclerView` view holder recycling with differential updates (`notifyItemRangeRemoved` / `notifyItemRangeInserted`) on collapse/expand.
+- **NFR-03 (UFMStandard Compliance):**
+  - **Mobile:** 56dp glass header (`@color/mobile_glass_header`), squircle icon buttons (`@drawable/bg_btn_icon_frosted`), Material 3 Expressive buttons, glass cards for settings.
+  - **Android TV:** 72dp glass header (`@color/tv_glass_white_10`), high-contrast yellow focus selectors (`selector_tv_button_yellow`, `selector_tv_icon_btn`), distinct folder expand/collapse focus states, and 10-foot readability.
+- **NFR-04 (Permissions & Safeguards):** Honor Android scoped storage rules, all collision safeguards, overwrite prompts, and zero-byte file overwrite protections.
 
 ---
 
-## 5. Data Model & Database Schema
+## Success Criteria
 
-### Entity: `BookmarkItem`
-- `id`: `String` (UUID primary key)
-- `title`: `String`
-- `url`: `String?`
-- `filePath`: `String?` (Local cloned path for media/files)
-- `thumbnailPath`: `String?`
-- `faviconPath`: `String?`
-- `contentType`: `String` (`LINK`, `IMAGE`, `VIDEO`, `AUDIO`, `DOCUMENT`, `TEXT_NOTE`)
-- `sourcePackage`: `String` (e.g. `com.whatsapp`, `com.reddit.frontpage`)
-- `sourceAppName`: `String` (e.g. "WhatsApp", "Reddit")
-- `groupId`: `String`
-- `groupName`: `String`
-- `notes`: `String?`
-- `cachedArticleText`: `String?` (Parsed clean text for offline reader)
-- `fileSizeBytes`: `Long`
-- `isStarred`: `Boolean`
-- `isRead`: `Boolean`
-- `isLocked`: `Boolean`
-- `createdAt`: `Long` (Epoch millis)
-- `updatedAt`: `Long` (Epoch millis)
-
-### Entity: `BookmarkGroup`
-- `id`: `String` (UUID primary key)
-- `name`: `String`
-- `iconResId`: `Int`
-- `colorHex`: `String`
-- `isAutoGroup`: `Boolean`
-- `associatedPackage`: `String?`
-- `isLocked`: `Boolean`
-- `sortOrder`: `Int`
-- `createdAt`: `Long`
-
----
-
-## 6. Success & Verification Criteria
-1. **Share Sheet**: Sharing any web link, Reddit post, WhatsApp photo/video, or PDF to "Bookmark with UFM" opens the glass save sheet, detects the source app, and saves the item without crash.
-2. **Persistence & Sandbox Isolation**: Cloned media and documents are saved exclusively inside the app's internal private directory (`context.filesDir/bookmarks/media/`). They cannot be seen or indexed by external file explorers, MTP, or MediaStore, nor do they appear in UFM's general file browsing directories. Deleting the original shared photo or video in WhatsApp leaves the UFM bookmark and its preview fully playable and intact.
-3. **Organize Tile**: Bookmark Hub tile appears under the "Organize" category in the mobile main menu with a live subtitle count and opens `BookmarkHubActivity`.
-4. **Auto-Grouping**: Incoming items automatically route to their dedicated smart groups (WhatsApp, Reddit, Web, etc.) while allowing custom group creation.
-5. **Sorting & Filtering**: Sorting from latest to oldest, oldest to latest, and filtering by content type or source app responds immediately.
-6. **Reader Mode & TTS**: Articles open in distraction-free reader mode with clean text, theme controls, and working text-to-speech.
-7. **Vault Protection**: Locked groups cannot be accessed or viewed without passing biometric or PIN authentication.
-8. **Export**: Exporting bookmarks to HTML creates a valid Netscape Bookmarks file importable into web browsers.
+- [ ] Flat View is accessible exclusively from the root folder of indexed storages via the 3-dots overflow menu directly below Twin Window.
+- [ ] Data queries load directly from the Room `file_index` database with instant rendering.
+- [ ] Root and all descendant subfolders render as collapsible/expandable headers with relative paths, all expanded by default.
+- [ ] Tapping any folder header or the root header toggles its collapsed/expanded state smoothly.
+- [ ] Folder headers include an "Open Folder" action to jump to standard hierarchical browsing at that path.
+- [ ] `Android/data` and `Android/obb` are hidden by default and included only when enabled in Settings.
+- [ ] A dedicated "Flat View" card exists in Settings under "Browsing & File List".
+- [ ] Normal edit mode, multi-select, Tools FAB (`fabTools`), and Floating Quick Action Bar (`floatingQuickBar`) work identically to standard browser mode.
+- [ ] Checking a folder header in Edit Mode automatically selects all files in that folder.
+- [ ] "Select All" selects all files across both expanded and collapsed folders.
+- [ ] All file operations (copy, move, delete, rename, share, zip) correctly target actual physical file locations.
+- [ ] Full Android TV remote/D-pad navigation and UFMStandard visual parity.

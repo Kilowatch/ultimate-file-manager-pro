@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.6] — 2026-11-11
 
 ### Added
+- **Flat View (Indexed Root Browser Mode)**: Instant virtualized directory flattening for indexed storage volumes directly from root:
+  1. **Instant Room Querying**: High-performance flattened directory view leveraging Room database (`FileIndexDao.getFlatViewFiles`) capable of loading 100,000+ files instantly without blocking the UI thread.
+  2. **Parent Section Headers & Deep Tree Collapsing**: Displays relative directory parent paths (e.g., `Documents/Work/2026/ (12 files)`) with all folders expanded by default, supporting individual folder expand/collapse and global "Expand All" / "Collapse All" actions.
+  3. **Direct Folder Navigation**: Each folder section header includes an "Open Folder" action button jumping directly to standard hierarchical browser mode at that specific location.
+  4. **System Folder Exclusion & Settings Integration**: Automatically excludes system folders (`Android/data`, `Android/obb`) by default, configurable via a dedicated "Flat View" settings card under "Browsing & File List" with settings backup/restore support (`FlatViewPreferenceManager`).
+  5. **Full Multi-Selection & Edit Mode Parity**: Selection Tools FAB (`fabTools`) and Floating Quick Action Bar (`floatingQuickBar`) synchronized with standard file operations (Copy, Move, Delete, Share, Properties). Folder header checkboxes cascade selection to all contained files, and Select All operates seamlessly across expanded and collapsed sections.
+  6. **Android TV & D-pad Remote Support**: Adheres to `UFMStandard` with a 72dp glass header, D-pad navigation, and clear yellow focus highlights for Android TV and Fire TV devices.
+  7. **Overflow Menu Access**: Accessible via the 3-dots overflow menu directly below "Twin Window" in Local Standalone and Tabbed browser modes when browsing at the root of an indexed volume.
 - **Smart Bookmark Hub (Mobile Only)**: Unified repository for saved links, media, files, and notes captured across external applications:
   1. **Share Target ("Bookmark with UFM")**: Dedicated system share sheet target alongside "Open In..." and "Save to...", featuring a glass bottom sheet that auto-detects sender apps (WhatsApp, Reddit, YouTube, Chrome, Telegram, etc.) with smart auto-grouping and duplicate detection with note appending.
   2. **Isolated Application Sandbox Storage**: Cloned media and documents are preserved strictly inside the app's internal sandbox (`context.filesDir/bookmarks/media/`), isolated from external file managers, MTP, and Android MediaStore, and excluded from UFM's regular file browsing lists.

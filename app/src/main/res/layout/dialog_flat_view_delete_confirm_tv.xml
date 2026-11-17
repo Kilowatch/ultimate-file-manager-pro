@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Flat View Delete Confirmation Dialog — UFMStandard Glass (Android TV)
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="600dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp"
+    android:gravity="center_horizontal">
+
+    <!-- Header Icon -->
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_delete"
+        app:tint="#FF5252"
+        android:layout_marginBottom="10dp"
+        android:importantForAccessibility="no" />
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/flat_view_delete_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Message -->
+    <TextView
+        android:id="@+id/txtDeleteMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="24dp"
+        tools:text="Are you sure you want to delete 5 selected files?" />
+
+    <!-- Primary Action: Delete -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDeleteConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/action_delete"
+        android:textColor="@color/tv_button_focused_yellow_text"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-bold"
+        android:background="@drawable/selector_tv_button_yellow"
+        app:backgroundTint="@null"
+        android:focusable="true"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="@string/cancel"
+        android:textColor="@color/tv_button_text_selector"
+        android:textSize="14sp"
+        android:background="@drawable/selector_tv_button"
+        app:backgroundTint="@null"
+        android:focusable="true" />
+
+</LinearLayout>

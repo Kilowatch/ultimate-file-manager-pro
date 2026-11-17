@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutFileRow"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/tv_file_item_height"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_marginHorizontal="24dp"
+    android:paddingStart="24dp"
+    android:paddingEnd="20dp"
+    android:paddingVertical="6dp"
+    android:background="@drawable/selector_tv_list_item"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Selection Checkbox -->
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/checkSelectFile"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="10dp"
+        android:buttonTint="?attr/ufmFocusAccent"
+        android:visibility="gone"
+        android:clickable="false"
+        android:focusable="false"
+        tools:visibility="visible" />
+
+    <!-- File Icon / Thumbnail Bubble -->
+    <FrameLayout
+        android:id="@+id/iconContainer"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_glass_card"
+        android:padding="6dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <ImageView
+            android:id="@+id/imgFileIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/cd_file_icon"
+            app:tint="@color/tv_accent"
+            tools:src="@drawable/ic_file_document" />
+    </FrameLayout>
+
+    <!-- File Name & Info with Relative Path -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="14dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtFileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="17sp"
+            android:fontFamily="sans-serif-medium"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            tools:text="invoice_jan_2026.pdf" />
+
+        <TextView
+            android:id="@+id/txtFileInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="13sp"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text="Documents/Invoices/ • 2.4 MB • 14 Jan 2026" />
+    </LinearLayout>
+</LinearLayout>
