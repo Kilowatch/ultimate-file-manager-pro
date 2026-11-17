@@ -14211,9 +14211,7 @@ Aggiungi cartella
     <string name="action_add_folder_to_storage_desc">
 Concedi l\'accesso a una cartella in questo spazio di archiviazione
 </string>
-    <string name="action_remove_folder_from_storage">
-Remove Folder
-</string>
+    <string name="action_remove_folder_from_storage">Elimina Cartella</string>
     <string name="action_remove_folder_from_storage_desc">
 Remove mounted folder access from this storage
 </string>
