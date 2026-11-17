@@ -1457,6 +1457,119 @@ object CrashReportManager {
         return validStackFrames
     }
 
+    internal fun isActivityThreadCrashHookFrame(
+        frame: StackTraceElement,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (frame.methodName != "handleMessage") return false
+        val idx = mainStackTrace.indexOf(frame)
+        if (idx == -1) return false
+        val nextFrame = mainStackTrace.getOrNull(idx + 1)
+        if (nextFrame?.className != "android.os.Handler" || nextFrame.methodName != "dispatchMessage") {
+            return false
+        }
+        val prevFrame = mainStackTrace.getOrNull(idx - 1)
+        return prevFrame?.className?.startsWith("android.app.ActivityThread") == true
+    }
+
+    /**
+     * Identifies a main-thread stack sampled inside Android framework `QueuedWork.waitToFinish()`
+     * or `QueuedWork.processPendingWork()` during Activity or Service lifecycle teardown (e.g.
+     * `ActivityThread.handleStopActivity` / `performStopActivityInner` / `handlePauseActivity` /
+     * `performPauseActivity` / `handleSleeping` / `handleStopService` / `handleServiceArgs` /
+     * `handleReceiver` or `servertransaction.StopActivityItem` -> `QueuedWork.waitToFinish` ->
+     * `QueuedWork.processPendingWork`), thread state BLOCKED or RUNNABLE (reported from a Hisense
+     * SmartTV 4K, Android 11 / SDK 31, app 2.2.4-GOOGLE).
+     *
+     * During Activity teardown or lifecycle transitions, framework `ActivityThread.handleStopActivity`
+     * unconditionally invokes `QueuedWork.waitToFinish()` on the main thread to ensure any pending
+     * asynchronous `SharedPreferences` writes scheduled across the entire application process (by
+     * libraries, SDKs, or background workers) have finished writing and flushing to disk. On slow or
+     * flash-constrained Android TV storage under concurrent disk I/O, background writes executed by
+     * `queued-work-looper` hold `QueuedWork.sProcessingWork`, causing the main thread to block at
+     * `QueuedWork.processPendingWork(QueuedWork.java:252)` on `synchronized (sProcessingWork)` for >5 s.
+     *
+     * Because `CrashReportManager`'s `ActivityThread.mH` hook callback (`installActivityThreadCrashHook`)
+     * sits on `ActivityThread$H.handleMessage` and is obfuscated by R8 to short names (e.g. `ww1.handleMessage`),
+     * `isPureFrameworkStack` previously evaluated to false.
+     *
+     * With zero application business logic executing and no framework blocking primitives held outside
+     * `QueuedWork`, this is a pure Android framework asynchronous persistence barrier where the app
+     * is not frozen in application code. Genuine freezes keeping the main thread parked inside
+     * application business logic or custom blocking primitives continue to be reported.
+     */
+    fun isQueuedWorkWaitToFinishStall(
+        topFrame: StackTraceElement?,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (topFrame == null) return false
+
+        val hasActivityThreadMainOrLooper = mainStackTrace.any {
+            (it.className == "android.app.ActivityThread" && it.methodName == "main") ||
+            (it.className == "android.os.Looper" && (it.methodName == "loopOnce" || it.methodName == "loop"))
+        }
+        if (!hasActivityThreadMainOrLooper) {
+            return false
+        }
+
+        // Must involve QueuedWork waitToFinish or processPendingWork
+        val hasQueuedWorkWaitToFinish = mainStackTrace.any {
+            it.className == "android.app.QueuedWork" &&
+            (it.methodName == "waitToFinish" || it.methodName == "processPendingWork")
+        }
+        if (!hasQueuedWorkWaitToFinish) {
+            return false
+        }
+
+        // Must be in an ActivityThread or ServerTransaction lifecycle path where QueuedWork.waitToFinish is called
+        val hasLifecycleContext = mainStackTrace.any {
+            (it.className == "android.app.ActivityThread" &&
+             (it.methodName == "handleStopActivity" ||
+              it.methodName == "performStopActivityInner" ||
+              it.methodName == "handlePauseActivity" ||
+              it.methodName == "performPauseActivity" ||
+              it.methodName == "handleSleeping" ||
+              it.methodName == "handleStopService" ||
+              it.methodName == "handleServiceArgs" ||
+              it.methodName == "handleReceiver")) ||
+            it.className.startsWith("android.app.servertransaction.")
+        }
+        if (!hasLifecycleContext) {
+            return false
+        }
+
+        // Must NOT contain any application business logic (CrashReportManager hook frames allowed)
+        val noAppBusinessLogic = mainStackTrace.none { frame ->
+            frame.className.startsWith(APP_PACKAGE) &&
+            !frame.className.startsWith("za.kilowatch.ultimatefilemanager.support.CrashReportManager")
+        }
+        if (!noAppBusinessLogic) {
+            return false
+        }
+
+        // Must NOT contain any external blocking primitives (Binder IPC, custom network sockets, DB)
+        val noExternalBlockingPrimitives = mainStackTrace.none { frame ->
+            (frame.className == "android.os.BinderProxy" &&
+             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+            frame.className.startsWith("java.net.") ||
+            frame.className.startsWith("android.database.sqlite")
+        }
+        if (!noExternalBlockingPrimitives) {
+            return false
+        }
+
+        // All frames must be platform, AndroidX, Kotlin, CrashReportManager, or R8-obfuscated non-app classes
+        val validStackFrames = mainStackTrace.all { frame ->
+            PLATFORM_PREFIXES.any { frame.className.startsWith(it) } ||
+            frame.className.startsWith("androidx.") ||
+            frame.className.startsWith("kotlin.") ||
+            frame.className.startsWith("za.kilowatch.ultimatefilemanager.support.CrashReportManager") ||
+            (PLATFORM_PREFIXES.none { frame.className.startsWith(it) } &&
+             !frame.className.startsWith(APP_PACKAGE))
+        }
+        return validStackFrames
+    }
+
     @Volatile private var cachedGetActivityTokenMethod: java.lang.reflect.Method? = null
     @Volatile private var cachedGetCallbacksMethod: java.lang.reflect.Method? = null
     @Volatile private var cachedPreExecuteMethod: java.lang.reflect.Method? = null
@@ -1822,7 +1935,8 @@ object CrashReportManager {
                     val isPureFrameworkStack = mainStackTrace.isNotEmpty() &&
                         mainStackTrace.none { frame ->
                             PLATFORM_PREFIXES.none { frame.className.startsWith(it) } &&
-                            !frame.className.startsWith("za.kilowatch.ultimatefilemanager.support.CrashReportManager")
+                            !frame.className.startsWith("za.kilowatch.ultimatefilemanager.support.CrashReportManager") &&
+                            !isActivityThreadCrashHookFrame(frame, mainStackTrace)
                         }
 
                     // 3. It is blocked reading a compiled layout XML from the APK while
@@ -7211,7 +7325,29 @@ object CrashReportManager {
                     val isActivityDestroyViewDetachStall =
                         isActivityDestroyViewDetachStall(topFrame, mainStackTrace)
 
-                    if (isActivityDestroyViewDetachStall || isHonorHuaweiHiTraceLooperStall || isTextInputLayoutInflateStall || isFormatterFileSizeStall || isMaterialButtonLayoutInflateStall || isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 90. The main thread is sampled inside Android framework `QueuedWork.waitToFinish()`
+                    //     or `QueuedWork.processPendingWork()` during Activity or Service lifecycle teardown
+                    //     (`ActivityThread.handleStopActivity` / `performStopActivityInner` / `handlePauseActivity`
+                    //     -> `QueuedWork.waitToFinish` -> `QueuedWork.processPendingWork`), thread state
+                    //     BLOCKED or RUNNABLE (reported from a Hisense SmartTV 4K, Android 11 / SDK 31,
+                    //     app 2.2.4-GOOGLE). During Activity stop or lifecycle boundaries, framework
+                    //     `ActivityThread.handleStopActivity` unconditionally invokes `QueuedWork.waitToFinish()`
+                    //     on the main thread to flush pending asynchronous `SharedPreferences` writes to disk.
+                    //     On flash-constrained TV hardware under concurrent background disk I/O, background
+                    //     disk writes executed by `queued-work-looper` hold `sProcessingWork`, causing the main
+                    //     thread to wait on `synchronized (sProcessingWork)` at `QueuedWork.processPendingWork`
+                    //     for >5 s. Because CrashReportManager's ActivityThread.mH hook (`installActivityThreadCrashHook`)
+                    //     sits on `ActivityThread$H.handleMessage` and was obfuscated by R8 to a short name
+                    //     (`ww1`), `isPureFrameworkStack` evaluated to false. The `AnrWatchdogThread` filter 90
+                    //     (`isQueuedWorkWaitToFinishStall`) now treats a main-thread stack inside QueuedWork
+                    //     lifecycle teardown, with zero application business logic and no framework blocking
+                    //     primitives held, as a false positive, resetting its heartbeat instead of writing a
+                    //     spurious freeze report. Genuine freezes keeping the main thread parked inside
+                    //     application business logic or blocking primitives continue to be reported.
+                    val isQueuedWorkWaitToFinishStall =
+                        isQueuedWorkWaitToFinishStall(topFrame, mainStackTrace)
+
+                    if (isQueuedWorkWaitToFinishStall || isActivityDestroyViewDetachStall || isHonorHuaweiHiTraceLooperStall || isTextInputLayoutInflateStall || isFormatterFileSizeStall || isMaterialButtonLayoutInflateStall || isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
