@@ -1503,9 +1503,7 @@ Verifica e verifica Reimposta PIN
     <string name="vault_add_folder">
 Aggiungi cartella
 </string>
-    <string name="vault_remove">
-Rimuovi dal Vault
-</string>
+    <string name="vault_remove">Rimuovi dalla Cassaforte</string>
     <string name="vault_confirm_remove">
 Rimuovere %1$s dal caveau?
 </string>
