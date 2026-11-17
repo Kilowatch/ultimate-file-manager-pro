@@ -24,9 +24,9 @@ data class FlatRootCategory(
     val subfolders: List<FlatSubfolder>,
     val isRoot: Boolean
 ) {
-    val totalFiles: Int get() = subfolders.sumOf { it.files.size }
+    val allFiles: List<FileIndex> = subfolders.flatMap { it.files }
+    val totalFiles: Int get() = allFiles.size
     val subfolderCount: Int get() = subfolders.count { it.subfolderDisplayName.isNotEmpty() }
-    val allFiles: List<FileIndex> get() = subfolders.flatMap { it.files }
 }
 
 data class FlatViewState(
@@ -51,6 +51,7 @@ class FlatViewViewModel(
     val state: StateFlow<FlatViewState> = _state.asStateFlow()
 
     private var allCategories: List<FlatRootCategory> = emptyList()
+    private var fileMap: Map<String, FileIndex> = emptyMap()
     private val expandedCategories = mutableSetOf<String>()
     private val expandedSubfolders = mutableSetOf<String>()
     private val selectedFilePaths = mutableSetOf<String>()
@@ -131,6 +132,11 @@ class FlatViewViewModel(
                     )
                 }.sortedWith(compareBy({ !it.isRoot }, { it.categoryName.lowercase() }))
 
+                val fileIndexMap = LinkedHashMap<String, FileIndex>(files.size)
+                for (file in files) {
+                    fileIndexMap[file.path] = file
+                }
+                fileMap = fileIndexMap
                 allCategories = categories
                 expandedCategories.clear()
                 expandedSubfolders.clear()
@@ -346,18 +352,31 @@ class FlatViewViewModel(
     }
 
     fun selectAll() {
-        allCategories.forEach { cat ->
-            cat.allFiles.forEach { selectedFilePaths.add(it.path) }
+        if (fileMap.isNotEmpty()) {
+            selectedFilePaths.addAll(fileMap.keys)
+        } else {
+            allCategories.forEach { cat ->
+                cat.allFiles.forEach { selectedFilePaths.add(it.path) }
+            }
         }
         syncSelectionState()
     }
 
     fun invertSelection() {
-        val allFiles = allCategories.flatMap { it.allFiles }
+        val allPaths = fileMap.keys
         val newSelected = mutableSetOf<String>()
-        for (f in allFiles) {
-            if (!selectedFilePaths.contains(f.path)) {
-                newSelected.add(f.path)
+        if (allPaths.isNotEmpty()) {
+            for (p in allPaths) {
+                if (!selectedFilePaths.contains(p)) {
+                    newSelected.add(p)
+                }
+            }
+        } else {
+            val allFiles = allCategories.flatMap { it.allFiles }
+            for (f in allFiles) {
+                if (!selectedFilePaths.contains(f.path)) {
+                    newSelected.add(f.path)
+                }
             }
         }
         selectedFilePaths.clear()
@@ -408,7 +427,12 @@ class FlatViewViewModel(
     }
 
     fun getSelectedFiles(): List<FileIndex> {
-        val set = selectedFilePaths.toSet()
+        val set = selectedFilePaths
+        if (set.isEmpty()) return emptyList()
+        val map = fileMap
+        if (map.isNotEmpty()) {
+            return set.mapNotNull { map[it] }
+        }
         return allCategories.flatMap { it.allFiles }.filter { set.contains(it.path) }
     }
 

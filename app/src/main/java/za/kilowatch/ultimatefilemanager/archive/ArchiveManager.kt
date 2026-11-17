@@ -210,13 +210,18 @@ object ArchiveManager {
         return ext.lowercase() in SUPPORTED_ARCHIVE_EXTENSIONS
     }
 
-    fun isSupportedArchive(file: File): Boolean {
-        if (!file.isFile) return false
-        val name = file.name.lowercase()
-        if (name.endsWith(".tar.gz") || name.endsWith(".tar.bz2") || name.endsWith(".tar.xz") || name.endsWith(".tar.zst")) {
+    fun isSupportedArchiveName(fileName: String): Boolean {
+        val lower = fileName.lowercase()
+        if (lower.endsWith(".tar.gz") || lower.endsWith(".tar.bz2") || lower.endsWith(".tar.xz") || lower.endsWith(".tar.zst")) {
             return true
         }
-        return isSupportedArchiveExtension(file.extension)
+        val ext = fileName.substringAfterLast('.', "")
+        return isSupportedArchiveExtension(ext)
+    }
+
+    fun isSupportedArchive(file: File): Boolean {
+        if (!file.isFile) return false
+        return isSupportedArchiveName(file.name)
     }
 
     /**

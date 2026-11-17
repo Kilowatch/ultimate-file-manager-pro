@@ -370,18 +370,18 @@ class FlatViewActivity : AppCompatActivity() {
                         if (isQuickBar) {
                             fabTools?.visibility = View.GONE
                             if (hasSelectedFiles) {
-                                val selectedFiles = viewModel.getSelectedFiles().map { File(it.path) }
+                                val selectedIndices = viewModel.getSelectedFiles()
                                 val selState = FloatingQuickActionBar.SelectionState(
-                                    selectedCount = selectedFiles.size,
+                                    selectedCount = selectedIndices.size,
                                     hasDirectories = false,
                                     hasProtected = false,
                                     hasUnprotected = false,
                                     hasPinned = false,
                                     hasUnpinned = false,
-                                    hasArchiveSelected = selectedFiles.any { ArchiveManager.isSupportedArchive(it) },
-                                    allImagesSelected = selectedFiles.isNotEmpty() && selectedFiles.all { it.extension.lowercase() in FileViewerRouter.IMAGE_EXTENSIONS },
-                                    allAudioSelected = selectedFiles.isNotEmpty() && selectedFiles.all { it.isFile && FileViewerRouter.isAudio(it.extension) },
-                                    allVideosSelected = selectedFiles.isNotEmpty() && selectedFiles.all { it.isFile && FileViewerRouter.isVideo(it.extension) }
+                                    hasArchiveSelected = selectedIndices.any { ArchiveManager.isSupportedArchiveName(it.filename) },
+                                    allImagesSelected = selectedIndices.isNotEmpty() && selectedIndices.all { it.extension.lowercase() in FileViewerRouter.IMAGE_EXTENSIONS },
+                                    allAudioSelected = selectedIndices.isNotEmpty() && selectedIndices.all { FileViewerRouter.isAudio(it.extension) },
+                                    allVideosSelected = selectedIndices.isNotEmpty() && selectedIndices.all { FileViewerRouter.isVideo(it.extension) }
                                 )
                                 floatingQuickBar?.bindSelection(selState)
                                 floatingQuickBar?.visibility = View.VISIBLE
@@ -511,23 +511,20 @@ class FlatViewActivity : AppCompatActivity() {
 
         // 6. Share
         if (pm.isIconEnabled(this, pm.KEY_SHARE)) {
-            val shareable = selectedFiles.filter { it.isFile }
-            if (shareable.isNotEmpty()) {
-                list.add(FileToolsBottomSheet.ActionItem("share", getString(R.string.action_share), R.drawable.ic_share, "toolbar_share") {
-                    shareFiles(shareable)
-                })
-            }
+            list.add(FileToolsBottomSheet.ActionItem("share", getString(R.string.action_share), R.drawable.ic_share, "toolbar_share") {
+                shareFiles(selectedFiles)
+            })
         }
 
         // 7. Open With (Single file)
-        if (count == 1 && selectedFiles.first().isFile && pm.isIconEnabled(this, pm.KEY_OPEN_WITH)) {
+        if (count == 1 && pm.isIconEnabled(this, pm.KEY_OPEN_WITH)) {
             list.add(FileToolsBottomSheet.ActionItem("open_with", getString(R.string.toolbar_open_with), R.drawable.ic_apps, "toolbar_open_with") {
                 FileViewerRouter.showOpenWithDialog(this, selectedFiles.first(), isNetwork = false)
             })
         }
 
         // 8. Open As (Single file)
-        if (count == 1 && selectedFiles.first().isFile && pm.isIconEnabled(this, pm.KEY_OPEN_AS)) {
+        if (count == 1 && pm.isIconEnabled(this, pm.KEY_OPEN_AS)) {
             list.add(FileToolsBottomSheet.ActionItem("open_as", getString(R.string.toolbar_open_as), R.drawable.ic_apps, "toolbar_open_as") {
                 OpenAsBottomSheet.newInstance(selectedFiles.first().absolutePath, selectedFiles.first().name, false)
                     .show(supportFragmentManager, OpenAsBottomSheet.TAG)
@@ -554,7 +551,7 @@ class FlatViewActivity : AppCompatActivity() {
         })
 
         // 12. Extract Here
-        val hasArchiveSelected = selectedFiles.any { ArchiveManager.isSupportedArchive(it) }
+        val hasArchiveSelected = selectedFiles.any { ArchiveManager.isSupportedArchiveName(it.name) }
         if (hasArchiveSelected && pm.isIconEnabled(this, pm.KEY_EXTRACT)) {
             list.add(FileToolsBottomSheet.ActionItem("extract_here", getString(R.string.action_extract_here), R.drawable.ic_extract, "toolbar_extract") {
                 performExtractHere(selectedFiles)
@@ -590,7 +587,7 @@ class FlatViewActivity : AppCompatActivity() {
         }
 
         // 15. Extract Subtitles from Video
-        if (count == 1 && selectedFiles.first().isFile && FileViewerRouter.isVideo(selectedFiles.first().extension) &&
+        if (count == 1 && FileViewerRouter.isVideo(selectedFiles.first().extension) &&
             FFmpegMediaHelper.isAvailable() &&
             pm.isIconEnabled(this, pm.KEY_EXTRACT_SUBTITLES)) {
             list.add(FileToolsBottomSheet.ActionItem("extract_subtitles", getString(R.string.toolbar_extract_subtitles), R.drawable.ic_subtitles, "toolbar_extract_subtitles") {
@@ -599,7 +596,7 @@ class FlatViewActivity : AppCompatActivity() {
         }
 
         // 16. Extract Audio from Video
-        if (count == 1 && selectedFiles.first().isFile && FileViewerRouter.isVideo(selectedFiles.first().extension) &&
+        if (count == 1 && FileViewerRouter.isVideo(selectedFiles.first().extension) &&
             FFmpegMediaHelper.isAvailable() &&
             pm.isIconEnabled(this, pm.KEY_EXTRACT_AUDIO)) {
             list.add(FileToolsBottomSheet.ActionItem("extract_audio", getString(R.string.toolbar_extract_audio), R.drawable.ic_audio_track, "toolbar_extract_audio") {
@@ -608,7 +605,7 @@ class FlatViewActivity : AppCompatActivity() {
         }
 
         // 17. Convert Video to MP4
-        if (count == 1 && selectedFiles.first().isFile && FileViewerRouter.isVideo(selectedFiles.first().extension) &&
+        if (count == 1 && FileViewerRouter.isVideo(selectedFiles.first().extension) &&
             FFmpegMediaHelper.isAvailable() &&
             pm.isIconEnabled(this, pm.KEY_CONVERT_TO_MP4)) {
             list.add(FileToolsBottomSheet.ActionItem("convert_to_mp4", getString(R.string.toolbar_convert_to_mp4), R.drawable.ic_convert_video, "toolbar_convert_to_mp4") {
@@ -629,7 +626,7 @@ class FlatViewActivity : AppCompatActivity() {
         }
 
         // 19. Wallpaper (Mobile Only, single image)
-        val isSingleImage = count == 1 && selectedFiles.first().isFile && allImages
+        val isSingleImage = count == 1 && allImages
         if (isSingleImage && !isTv) {
             val imgFile = selectedFiles.first()
             if (pm.isIconEnabled(this, pm.KEY_SET_HOME_WALLPAPER)) {
@@ -645,7 +642,7 @@ class FlatViewActivity : AppCompatActivity() {
         }
 
         // 20. Audio -> System Sounds (Mobile Only, single audio)
-        val isSingleAudio = count == 1 && selectedFiles.first().isFile && FileViewerRouter.isAudio(selectedFiles.first().extension)
+        val isSingleAudio = count == 1 && FileViewerRouter.isAudio(selectedFiles.first().extension)
         if (isSingleAudio && !isTv) {
             val audioFile = selectedFiles.first()
             if (pm.isIconEnabled(this, pm.KEY_SET_RINGTONE)) {
@@ -666,7 +663,7 @@ class FlatViewActivity : AppCompatActivity() {
         }
 
         // 21. Music Tagger (All audio, mobile only)
-        val allAudio = selectedFiles.isNotEmpty() && selectedFiles.all { it.isFile && FileViewerRouter.isAudio(it.extension) }
+        val allAudio = selectedFiles.isNotEmpty() && selectedFiles.all { FileViewerRouter.isAudio(it.extension) }
         if (allAudio && !isTv && pm.isIconEnabled(this, pm.KEY_MUSIC_TAGGER)) {
             list.add(FileToolsBottomSheet.ActionItem("music_tagger", getString(R.string.action_music_tagger), R.drawable.ic_music_tag, "toolbar_music_tagger") {
                 startActivity(Intent(this, MusicTaggerActivity::class.java).apply {
@@ -869,7 +866,7 @@ class FlatViewActivity : AppCompatActivity() {
             pm.ACTION_COPY -> copyOrCut(selectedFiles, isMove = false)
             pm.ACTION_MOVE -> copyOrCut(selectedFiles, isMove = true)
             pm.ACTION_DELETE -> deleteFiles(selectedFiles)
-            pm.ACTION_SHARE -> shareFiles(selectedFiles.filter { it.isFile })
+            pm.ACTION_SHARE -> shareFiles(selectedFiles)
             pm.ACTION_RENAME -> {
                 if (selectedFiles.size == 1) {
                     showRenameDialog(selectedFiles.first())
@@ -1229,7 +1226,7 @@ class FlatViewActivity : AppCompatActivity() {
     }
 
     private fun performExtractHere(files: List<File>) {
-        val archives = files.filter { ArchiveManager.isSupportedArchive(it) }
+        val archives = files.filter { ArchiveManager.isSupportedArchiveName(it.name) }
         if (archives.isEmpty()) return
 
         val dialog = ExtractOptionsDialog.newInstance(archives.map { it.name })
