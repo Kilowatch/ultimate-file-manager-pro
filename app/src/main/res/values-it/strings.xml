@@ -1994,9 +1994,7 @@ Vuoi spostare %1$d elemento/i qui?
     <string name="quick_transfer_copy_here">
 Copia qui
 </string>
-    <string name="quick_transfer_move_here">
-Spostati qui
-</string>
+    <string name="quick_transfer_move_here">Sposta qui</string>
 
     <!-- Network Open Cache Toggle -->
     <string name="settings_network_open_cache_title">
