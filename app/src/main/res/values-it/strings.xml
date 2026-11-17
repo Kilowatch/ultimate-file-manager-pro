@@ -400,9 +400,7 @@ Abilitato: riproduce automaticamente il file successivo
     <string name="settings_autoplay_next_subtitle_off">
 Disabilitato: si ferma alla fine del file
 </string>
-    <string name="settings_breadcrumbs_title">
-Briciole di pane del percorso
-</string>
+    <string name="settings_breadcrumbs_title">Percorso di navigazione</string>
     <string name="settings_breadcrumbs_subtitle_on">
 Mostra la barra di navigazione del percorso sotto la barra degli strumenti
 </string>
