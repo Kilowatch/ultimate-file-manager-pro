@@ -2250,9 +2250,7 @@ Raggruppa per data
     <string name="action_copy">
 Copia
 </string>
-    <string name="action_move">
-Mossa
-</string>
+    <string name="action_move">Sposta</string>
     <string name="action_rename">
 Rinominare
 </string>
