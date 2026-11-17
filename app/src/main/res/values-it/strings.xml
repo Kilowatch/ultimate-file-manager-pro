@@ -1761,9 +1761,7 @@ Miniature e cache
     <string name="settings_section_network_performance">
 Rete e Prestazione
 </string>
-    <string name="settings_section_backup">
-Backup e; Ripristinare
-</string>
+    <string name="settings_section_backup">Backup e Ripristino</string>
     <string name="settings_section_privacy_diagnostics">
 Privacy e privacy Diagnostica
 </string>
