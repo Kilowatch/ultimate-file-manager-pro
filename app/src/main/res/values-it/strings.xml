@@ -2268,9 +2268,7 @@ Incolla qui
     <string name="action_copy_encrypt">
 Copia e Crittografare
 </string>
-    <string name="action_move_encrypt">
-Sposta e Crittografare
-</string>
+    <string name="action_move_encrypt">Sposta e Crittografa</string>
     <string name="clipboard_copied">
 %1$d elementi copiati negli appunti
 </string>
