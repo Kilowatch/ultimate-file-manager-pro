@@ -1,52 +1,37 @@
-# Clarifications: Flat View (Indexed Root Browser Mode)
+# Clarifications: Network Favorite Breadcrumb Navigation on SMB Server Shares
 
 ## Status
-Answers received — ready for /tasks (or /plan if creating plan.md first).
+Answers received — ready for /plan and /tasks
 
 ## Questions and Answers
 
-### 1. Data Source & Index Synchronization
-**Q1.** How should Flat View query and load files for indexed storage volumes?  
-**A:** Query directly from Room `file_index` database table. This provides instant load times, minimal memory consumption, and scales to 100,000+ files at 60fps without heavy I/O disk thrashing.
+### Navigation & Breadcrumb Trail Structure
+**Q1.** When opening an SMB server favorite (e.g., server profile named "NAS", favorite folder "Docker", deep path `Docker/_Projects/Immich`), how should the breadcrumbs be structured?
+**A:** **Full Server Hierarchy**: `Home > NAS > Docker > _Projects > Immich`
+- "NAS" navigates to the server root (`""` where shares are listed).
+- "Docker" navigates to `/Docker`.
+- "_Projects" navigates to `/Docker/_Projects`.
+- "Immich" is the active directory.
 
-**Q2.** What qualifies as the root folder where Flat View is enabled?  
-**A:** Top-level volume root only (e.g. `/storage/emulated/0/` for Internal Storage or `/storage/XXXX-XXXX/` for an SD card). It is strictly gated to the volume root on indexed storages.
+### Custom Favorite Labels
+**Q2.** If a favorite has a custom label (e.g., "Containers" for `/Docker`), how should it display in breadcrumbs?
+**A:** **Always show real directory name in breadcrumbs (ignoring custom label)**. Breadcrumb segments always reflect the actual filesystem directory names (`Docker`), ensuring strict parity with the folder structure and avoiding path resolution ambiguity.
 
-### 2. Folder Grouping & Hierarchy Presentation
-**Q3.** How should nested subfolder headers and items be structured in the list?  
-**A:** Direct parent section headers with full relative path (e.g., `Documents/Work/2026/ (12 files)`). This groups files under their immediate parent folder, completely avoiding awkward deep horizontal nesting and horizontal scrolling on mobile and TV screens.
+### Back Button Navigation Boundary
+**Q3.** What should happen when pressing the system Back button at the initial favorite folder?
+**A:** **Step up to server root**: Pressing Back at the favorite folder navigates up to the server root share list (`SMB://server/`), and pressing Back again exits the browser activity.
 
-**Q4.** Should folder headers offer a way to navigate into that folder in standard browsing?  
-**A:** Yes, provide an "Open Folder" icon button on each folder header to allow jumping directly into standard hierarchical browser mode at that specific folder.
-
-### 3. Selection & Edit Mode (`fabTools` & Quick Bar)
-**Q5.** In Edit Mode, how should checking a folder header checkbox behave?  
-**A:** Checking a folder header checkbox automatically selects all files contained within that folder.
-
-**Q6.** When the user taps "Select All" in Edit Mode, which items should be selected?  
-**A:** Select all files across all folders (both currently expanded and collapsed folders).
-
-### 4. System Folders Exclusion
-**Q7.** Which system folder patterns should be excluded by default?  
-**A:** Exclude `Android/data` and `Android/obb` by default. Keep dot directories visible unless hidden files are globally disabled in settings. Users can enable system folders via the Flat View settings toggle.
-
-### 5. UI Entry Point & Settings Placement
-**Q8.** Where should the user access the "Flat View" option in the browser UI?  
-**A:** In the 3-dots overflow popup menu on the top right (across Local Standalone, TAB Mode, etc.), located directly below "Twin Window" (`menuItemFlatView`), visible when browsing at the root of an indexed storage volume.
-
-**Q9.** Where in Settings should the dedicated Flat View configuration card be placed?  
-**A:** Under the "Browsing & File List" section in `SettingsActivity`.
+### Storage Scope
+**Q4.** Where should the breadcrumb fix apply?
+**A:** **Apply uniformly across all network storage types** (SMB, FTP, SFTP, WebDAV, Cloud Drive, TV Paired Storage) so that any network session opened with an initial subfolder path produces a correct, non-degrading breadcrumb hierarchy.
 
 ---
 
 ## Spec / Plan Impact
-- **Entry Point**: Clarified that Flat View is launched from the top-right 3-dots overflow popup menu (`menuItemFlatView`) placed directly below "Twin Window" when at the indexed volume root.
-- **Data Engine**: Clarified that the Room `file_index` database is the primary query engine for Flat View.
-- **Folder Sections**: Clarified that grouping uses direct parent section headers with full relative paths and includes an "Open Folder" jump action.
-- **Selection**: Clarified folder header checkbox cascades to all files within that folder, and "Select All" selects across both expanded and collapsed folders.
-- **System Folders**: Clarified default exclusions specifically target `Android/data` and `Android/obb`.
+- **spec.md**: Update FR-01 and FR-03 to explicitly specify the full storage hierarchy structure (`Home > <Storage/Server Name> > <Folder 1> > <Folder 2> ...`) where the storage root segment maps to the root (`""`), subsequent segments map to their actual folder paths using real directory names, and the fix uniformly applies across all network storage types.
+- **plan.md**: The architecture will ensure `NetworkBrowserActivity` breadcrumbs use `share.name` for the storage root (instead of overriding it with `EXTRA_STORAGE_LABEL`), append segments using actual directory names, and assign accurate accumulated subpaths to each segment.
 
 ---
 
-## Confirmed — Ready for /tasks
-All questions are answered and architectural decisions are solidified. No outstanding ambiguities remain.
+## Confirmed — Ready for /plan & /tasks
+All questions are answered and architectural requirements are aligned.

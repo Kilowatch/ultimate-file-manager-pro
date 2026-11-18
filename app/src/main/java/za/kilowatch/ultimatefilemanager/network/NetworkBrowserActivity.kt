@@ -692,7 +692,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         }
         originalRemotePath = share.remotePath
         
-        currentPath = intent.getStringExtra(EXTRA_INITIAL_PATH) ?: ""
+        val initPath = intent.getStringExtra(EXTRA_INITIAL_PATH) ?: ""
+        currentPath = if (share.type != ShareType.TV) initPath.trimStart('/') else initPath
         initialRootPath = currentPath.ifEmpty { null }
         
         // Restore sort preferences
@@ -8553,6 +8554,19 @@ class NetworkBrowserActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Resolves the display label for the root storage or server profile.
+     * Cloud accounts prefer the explicit storage label (account email/name passed via EXTRA_STORAGE_LABEL);
+     * self-hosted network shares (SMB, FTP, SFTP, etc.) prefer the configured profile name or host.
+     */
+    private fun getStorageProfileLabel(): String {
+        return if (share.type == ShareType.GOOGLE_DRIVE || share.type == ShareType.ONEDRIVE || share.type == ShareType.DROPBOX) {
+            intent.getStringExtra(EXTRA_STORAGE_LABEL) ?: share.name.ifEmpty { share.host }
+        } else {
+            share.name.ifEmpty { share.host }
+        }
+    }
+
     private fun updateBreadcrumbs() {
         val scroll = layoutBreadcrumbsScroll ?: return
         val container = layoutBreadcrumbs ?: return
@@ -8570,8 +8584,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         
         val list = mutableListOf<Pair<String, String>>()
         list.add(Pair("Home", ""))
-        val storageLabel = intent.getStringExtra(EXTRA_STORAGE_LABEL) ?: share.name
-        list.add(Pair(storageLabel, if (share.type == ShareType.TV) initialRootPath ?: "" else ""))
+        val serverLabel = getStorageProfileLabel()
+        list.add(Pair(serverLabel, if (share.type == ShareType.TV) initialRootPath ?: "" else ""))
         
         if (currentPath.isNotEmpty()) {
             if (share.type == ShareType.TV) {
@@ -8592,14 +8606,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             } else {
                 val parts = currentPath.split("/").filter { it.isNotEmpty() }
                 var accumulated = ""
-                var isFirstPart = true
                 for (part in parts) {
-                    if (isFirstPart && (part.equals(storageLabel, ignoreCase = true) || part.equals(share.name, ignoreCase = true))) {
-                        accumulated = part
-                        isFirstPart = false
-                        continue
-                    }
-                    isFirstPart = false
                     accumulated = if (accumulated.isEmpty()) part else "$accumulated/$part"
                     list.add(Pair(part, accumulated))
                 }

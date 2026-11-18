@@ -5,6 +5,11 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.7] — 2026-11-17
+
+### Fixed
+- **SMB Server Favorite Breadcrumb Navigation (`NetworkBrowserActivity`)**: Fixed an issue where tapping an ancestor or favorite folder segment in the breadcrumb navigation bar dropped back to the SMB server root (`SMB://server/`) instead of opening the tapped favorite folder when browsing an SMB share configured in server mode (`isServerMode`).
+
 ## [2.2.6] — 2026-11-11
 
 ### Added
