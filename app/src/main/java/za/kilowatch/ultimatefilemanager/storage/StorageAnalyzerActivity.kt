@@ -55,6 +55,13 @@ import android.os.StatFs
 import android.text.format.Formatter
 import android.widget.ProgressBar
 import android.widget.Spinner
+import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
+import za.kilowatch.ultimatefilemanager.storage.SafFile
+import za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper
+import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
+import za.kilowatch.ultimatefilemanager.util.TransferConflictHelper
+import za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction
+import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 
 /**
  * StorageAnalyzerActivity — reworked.
@@ -72,7 +79,12 @@ interface DuplicateTabHost {
     fun registerDuplicateAdapter(a: AnalyzerDuplicateAdapter)
 }
 
-class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost {
+interface LargeFilesTabHost {
+    fun showLargeFileActionDialog(file: FileIndex)
+    fun registerLargeFileAdapter(a: AnalyzerLargeFileAdapter)
+}
+
+class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost, LargeFilesTabHost {
     private val TAG = "StorageAnalyzerActivity"
 
     // ── View references ─────────────────────────────────────────────────────
@@ -104,6 +116,27 @@ class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost {
 
     // ── Duplicate adapter reference (for delete FAB) ─────────────────────────
     private var duplicateAdapter: AnalyzerDuplicateAdapter? = null
+
+    // ── Large file adapter reference & move picker launcher ──────────────────
+    private var largeFileAdapter: AnalyzerLargeFileAdapter? = null
+    private var pendingMoveFile: FileIndex? = null
+
+    private val moveFolderPickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val destPath = result.data?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH)
+                ?: result.data?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_PATH)
+                ?: result.data?.getStringExtra(FileBrowserActivity.RESULT_URI)?.removePrefix("file://")
+            val fileToMove = pendingMoveFile
+            pendingMoveFile = null
+            if (fileToMove != null && !destPath.isNullOrEmpty()) {
+                executeMoveLargeFile(fileToMove, destPath)
+            }
+        } else {
+            pendingMoveFile = null
+        }
+    }
 
     // Persisted through recreate() to prevent looping when restartPending is still true.
     private var handledFontChange = false
@@ -1004,6 +1037,324 @@ class StorageAnalyzerActivity : AppCompatActivity(), DuplicateTabHost {
         updateDuplicateFab()
     }
 
+    /** Called by the Large Files fragment when its adapter is created. */
+    override fun registerLargeFileAdapter(a: AnalyzerLargeFileAdapter) {
+        largeFileAdapter = a
+    }
+
+    override fun showLargeFileActionDialog(file: FileIndex) {
+        val layoutRes = if (isTv) R.layout.dialog_analyzer_large_file_actions_tv else R.layout.dialog_analyzer_large_file_actions
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgItemIcon)
+        val txtName = dialogView.findViewById<TextView>(R.id.txtItemName)
+        val txtDetails = dialogView.findViewById<TextView>(R.id.txtItemDetails)
+
+        val sizeFormatted = Formatter.formatFileSize(this, file.size)
+        txtName?.text = file.filename
+        txtDetails?.text = "$sizeFormatted · ${file.folderPath}"
+        imgIcon?.setImageResource(FileTypeIconProvider.iconForMime(this, file.mimeType))
+
+        // Open File
+        dialogView.findViewById<View>(R.id.btnActionOpen)?.setOnClickListener {
+            dialog.dismiss()
+            openLargeFile(file)
+        }
+
+        // Open Folder Location
+        dialogView.findViewById<View>(R.id.btnActionOpenFolder)?.setOnClickListener {
+            dialog.dismiss()
+            openFolderLocation(file)
+        }
+
+        // Move
+        dialogView.findViewById<View>(R.id.btnActionMove)?.setOnClickListener {
+            dialog.dismiss()
+            pendingMoveFile = file
+            val intent = Intent(this, StorageBrowserActivity::class.java).apply {
+                putExtra(FileBrowserActivity.EXTRA_LOCATION_PICKER, true)
+            }
+            moveFolderPickerLauncher.launch(intent)
+        }
+
+        // Delete
+        dialogView.findViewById<View>(R.id.btnActionDelete)?.setOnClickListener {
+            dialog.dismiss()
+            showSingleFileDeleteConfirmDialog(file)
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        if (isTv) {
+            dialog.window?.setLayout((650 * resources.displayMetrics.density).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
+            dialogView.findViewById<View>(R.id.btnActionOpen)?.requestFocus()
+        }
+    }
+
+    private fun openLargeFile(file: FileIndex) {
+        val f = File(file.path)
+        if (!f.exists()) {
+            android.widget.Toast.makeText(this, R.string.error, android.widget.Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (FileViewerRouter.openFile(this, f)) return
+        try {
+            val extension = f.extension.lowercase()
+            val mimeType = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: file.mimeType.ifEmpty { "*/*" }
+            val uri = androidx.core.content.FileProvider.getUriForFile(this, "${packageName}.fileprovider", f)
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, mimeType)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                za.kilowatch.ultimatefilemanager.viewer.MediaIntentHelper.attachMediaExtras(this, f.name, f.length(), mimeType)
+            }
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            } else {
+                android.widget.Toast.makeText(this, R.string.no_app_found_to_open_this_file_type, android.widget.Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            android.widget.Toast.makeText(this, R.string.unable_to_open_file_emessage, android.widget.Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun openFolderLocation(file: FileIndex) {
+        val (sid, stype, volumeRoot) = IndexingRepository.resolveStorageForPath(file.folderPath)
+        startActivity(Intent(this, FileBrowserActivity::class.java).apply {
+            putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, volumeRoot)
+            putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, file.folderPath)
+            putExtra(FileBrowserActivity.EXTRA_FOCUS_PATH, file.path)
+            putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, sid)
+            putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, getSelectedDriveLabel())
+            putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
+        })
+    }
+
+    private fun showSingleFileDeleteConfirmDialog(file: FileIndex) {
+        val layoutRes = if (isTv) R.layout.dialog_analyzer_delete_confirm_tv else R.layout.dialog_analyzer_delete_confirm
+        val dialogView = layoutInflater.inflate(layoutRes, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtTitle)
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtDeleteMessage)
+
+        val sizeFormatted = Formatter.formatFileSize(this, file.size)
+        txtTitle?.text = getString(R.string.analyzer_delete_single_confirm_title)
+        txtMessage?.text = getString(R.string.analyzer_delete_single_confirm_msg, file.filename, sizeFormatted)
+
+        dialogView.findViewById<View>(R.id.btnDeleteConfirm)?.setOnClickListener {
+            dialog.dismiss()
+            executeDeleteLargeFile(file)
+        }
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        if (isTv) {
+            dialog.window?.setLayout((650 * resources.displayMetrics.density).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
+            dialogView.findViewById<View>(R.id.btnCancel)?.requestFocus()
+        }
+    }
+
+    private fun executeDeleteLargeFile(file: FileIndex) {
+        lifecycleScope.launch {
+            val (success, hasProtectedFailed) = withContext(Dispatchers.IO) {
+                val path = file.path
+                val f = File(path)
+                val isSaf = SafTreeManager.isSafPath(path) ||
+                            SafTreeManager.hasTreePermissionForPath(this@StorageAnalyzerActivity, path)
+                val deleted = if (isSaf) {
+                    SafTreeManager.delete(this@StorageAnalyzerActivity, path)
+                } else if (ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                    ShizukuShellWrapper.delete(path)
+                } else {
+                    f.exists() && f.delete()
+                }
+
+                if (deleted) {
+                    indexingRepo.deleteFromIndex(setOf(path))
+                    // Notify media scanner
+                    try {
+                        android.media.MediaScannerConnection.scanFile(this@StorageAnalyzerActivity, arrayOf(path), null, null)
+                    } catch (e: Exception) { /* ignore */ }
+                    // Trigger background folder reindex
+                    val (sid, stype, _) = IndexingRepository.resolveStorageForPath(file.folderPath)
+                    indexingRepo.reindexFolder(file.folderPath, sid, stype, recursive = false)
+                }
+                val protectedFailed = !deleted && ShizukuShellWrapper.isProtectedPath(path)
+                Pair(deleted, protectedFailed)
+            }
+
+            if (success) {
+                // Instant UI removal
+                largeFileAdapter?.removeItem(file)
+                android.widget.Toast.makeText(this@StorageAnalyzerActivity, getString(R.string.analyzer_delete_success, file.filename), android.widget.Toast.LENGTH_SHORT).show()
+                // Re-trigger analysis in background to refresh metrics & tabs
+                selectedDrive?.let { drive ->
+                    viewModel.analyze(drive.storageId, drive.path, drive.isIndexed)
+                }
+            } else {
+                val shizukuAuthorized = ShizukuShellWrapper.isAuthorized()
+                val msg = if (hasProtectedFailed && !shizukuAuthorized) {
+                    getString(R.string.delete_error_shizuku_required)
+                } else {
+                    getString(R.string.delete_error)
+                }
+                android.widget.Toast.makeText(this@StorageAnalyzerActivity, msg, android.widget.Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun executeMoveLargeFile(file: FileIndex, destPath: String) {
+        val srcDir = try { File(file.folderPath).canonicalPath } catch (e: Exception) { file.folderPath }
+        val targetDir = try { File(destPath).canonicalPath } catch (e: Exception) { destPath }
+        if (srcDir == targetDir) {
+            android.widget.Toast.makeText(this, R.string.viewer_transfer_same_folder, android.widget.Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        lifecycleScope.launch {
+            val destFolder = File(destPath)
+            val fileName = file.filename
+            val isDestSaf = SafTreeManager.isSafPath(destPath) ||
+                    SafTreeManager.hasTreePermissionForPath(this@StorageAnalyzerActivity, destPath)
+            val targetFile = if (isDestSaf) SafFile(destPath, fileName) else File(destFolder, fileName)
+
+            val exists = withContext(Dispatchers.IO) {
+                if (isDestSaf) {
+                    SafTreeManager.exists(this@StorageAnalyzerActivity, targetFile.absolutePath)
+                } else {
+                    targetFile.exists()
+                }
+            }
+
+            var chosenAction = ConflictAction.OVERWRITE
+            var actualTargetName = fileName
+
+            if (exists) {
+                val targetSize = withContext(Dispatchers.IO) {
+                    if (isDestSaf) {
+                        SafTreeManager.getFileSize(this@StorageAnalyzerActivity, targetFile.absolutePath)
+                    } else {
+                        targetFile.length()
+                    }
+                }
+
+                chosenAction = TransferConflictHelper.showConflictDialog(
+                    activity = this@StorageAnalyzerActivity,
+                    fileName = fileName,
+                    isFolder = false,
+                    destSizeBytes = targetSize,
+                    applyToAllRef = BooleanArray(1)
+                )
+
+                when (chosenAction) {
+                    ConflictAction.CANCEL -> return@launch
+                    ConflictAction.SKIP -> {
+                        android.widget.Toast.makeText(this@StorageAnalyzerActivity, getString(R.string.conflict_skipped_n, 1), android.widget.Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+                    ConflictAction.KEEP_BOTH -> {
+                        actualTargetName = withContext(Dispatchers.IO) {
+                            TransferConflictHelper.uniqueLocalFile(destFolder, fileName).name
+                        }
+                    }
+                    ConflictAction.OVERWRITE -> { /* Handled atomically below */ }
+                }
+            }
+
+            // Show progress dialog
+            val progressLayoutRes = if (isTv) R.layout.dialog_deletion_progress_tv else R.layout.dialog_deletion_progress
+            val progressView = layoutInflater.inflate(progressLayoutRes, null)
+            val progressDialog = MaterialAlertDialogBuilder(this@StorageAnalyzerActivity, R.style.UFM_Dialog)
+                .setView(progressView)
+                .setCancelable(false)
+                .create()
+            progressView.findViewById<TextView>(R.id.txtTitle)?.setText(R.string.action_move)
+            progressView.findViewById<TextView>(R.id.txtDescription)?.text = getString(R.string.analyzer_move_progress, file.filename)
+            progressDialog.show()
+            progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            val moveSuccess = withContext(Dispatchers.IO) {
+                try {
+                    val srcFile = File(file.path)
+                    val destTarget = if (isDestSaf) SafFile(destPath, actualTargetName) else File(destFolder, actualTargetName)
+
+                    val resultFile = TransferConflictHelper.copyLocalToLocalAtomic(
+                        src = srcFile,
+                        dest = destTarget,
+                        action = chosenAction
+                    )
+                    val copied = resultFile.exists() && resultFile.length() > 0L
+                    if (copied) {
+                        // Delete source
+                        val isSrcSaf = SafTreeManager.isSafPath(srcFile.absolutePath) ||
+                                SafTreeManager.hasTreePermissionForPath(this@StorageAnalyzerActivity, srcFile.absolutePath)
+                        val deleted = if (isSrcSaf) {
+                            SafTreeManager.delete(this@StorageAnalyzerActivity, srcFile.absolutePath)
+                        } else if (ShizukuShellWrapper.canUseShizukuForPath(srcFile.absolutePath)) {
+                            ShizukuShellWrapper.delete(srcFile.absolutePath)
+                        } else {
+                            srcFile.exists() && srcFile.delete()
+                        }
+
+                        // Update index database
+                        indexingRepo.deleteFromIndex(setOf(file.path))
+                        val (destSid, destStype, _) = IndexingRepository.resolveStorageForPath(destPath)
+                        indexingRepo.indexFile(resultFile, destSid, destStype)
+
+                        // Background folder reindexing
+                        val (srcSid, srcStype, _) = IndexingRepository.resolveStorageForPath(file.folderPath)
+                        indexingRepo.reindexFolder(file.folderPath, srcSid, srcStype, recursive = false)
+                        indexingRepo.reindexFolder(destPath, destSid, destStype, recursive = false)
+
+                        // Media scanner notification
+                        try {
+                            android.media.MediaScannerConnection.scanFile(
+                                this@StorageAnalyzerActivity,
+                                arrayOf(file.path, resultFile.absolutePath),
+                                null,
+                                null
+                            )
+                        } catch (e: Exception) { /* ignore */ }
+                        true
+                    } else {
+                        false
+                    }
+                } catch (e: Exception) {
+                    GoRoLog.e(TAG, "Error moving large file: ${e.message}", e)
+                    false
+                }
+            }
+
+            try {
+                if (progressDialog.isShowing && !isFinishing && !isDestroyed) {
+                    progressDialog.dismiss()
+                }
+            } catch (e: Exception) { /* ignore */ }
+
+            if (moveSuccess) {
+                largeFileAdapter?.removeItem(file)
+                android.widget.Toast.makeText(this@StorageAnalyzerActivity, getString(R.string.analyzer_move_success, file.filename), android.widget.Toast.LENGTH_SHORT).show()
+                selectedDrive?.let { drive ->
+                    viewModel.analyze(drive.storageId, drive.path, drive.isIndexed)
+                }
+            } else {
+                android.widget.Toast.makeText(this@StorageAnalyzerActivity, R.string.error, android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     // ──────────────────────────────────────────────────────────────────────────
     // ViewPager tab adapter
     // ──────────────────────────────────────────────────────────────────────────
@@ -1287,6 +1638,8 @@ class OverviewTabFragment : AnalyzerTabFragment() {
 /* ── Large Files Tab ─────────────────────────────────────────────────────── */
 class LargeFilesTabFragment : AnalyzerTabFragment() {
 
+    private var largeFileAdapter: AnalyzerLargeFileAdapter? = null
+
     companion object { fun newInstance() = LargeFilesTabFragment() }
 
     override fun onCreateView(inf: LayoutInflater, container: ViewGroup?, state: Bundle?): View =
@@ -1296,8 +1649,10 @@ class LargeFilesTabFragment : AnalyzerTabFragment() {
         val v = view ?: return
         showNotIndexedIfNeeded(v, report)
         if (!report.isIndexed) return
-        makeRecycler(v, R.id.recyclerAnalyzerList).adapter =
-            AnalyzerLargeFileAdapter(report.largeFiles, isTv) { file ->
+        val adapter = AnalyzerLargeFileAdapter(
+            items = report.largeFiles,
+            isTv = isTv,
+            onClick = { file ->
                 // Open file via FileBrowserActivity at its folder
                 val (sid, stype, volumeRoot) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(file.folderPath)
                 startActivity(Intent(requireContext(), FileBrowserActivity::class.java).apply {
@@ -1308,7 +1663,23 @@ class LargeFilesTabFragment : AnalyzerTabFragment() {
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, (activity as? StorageAnalyzerActivity)?.getSelectedDriveLabel() ?: "")
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
                 })
+            },
+            onLongClick = { file, _ ->
+                (activity as? LargeFilesTabHost)?.showLargeFileActionDialog(file)
+                true
             }
+        )
+        largeFileAdapter = adapter
+        (activity as? LargeFilesTabHost)?.registerLargeFileAdapter(adapter)
+        makeRecycler(v, R.id.recyclerAnalyzerList).adapter = adapter
+    }
+
+    fun removeFile(file: FileIndex) {
+        largeFileAdapter?.removeItem(file)
+    }
+
+    fun removeFiles(paths: Set<String>) {
+        largeFileAdapter?.removeFiles(paths)
     }
 }
 

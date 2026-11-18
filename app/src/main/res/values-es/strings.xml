@@ -1280,6 +1280,21 @@ Eliminar seleccionados
     <string name="analyzer_delete_confirm_msg">
 Estos archivos se eliminarán permanentemente y se quitarán del índice.
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+¿Borrar archivo?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+«%1$s» (%2$s) se eliminará de forma permanente y se quitará del índice de almacenamiento.
+</string>
+    <string name="analyzer_move_success">
+«%1$s» se ha movido correctamente.
+</string>
+    <string name="analyzer_move_progress">
+Moviendo «%1$s»…
+</string>
+    <string name="analyzer_delete_success">
+Se ha eliminado «%1$s» correctamente.
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 Advertencia: eliminación crítica
 </string>

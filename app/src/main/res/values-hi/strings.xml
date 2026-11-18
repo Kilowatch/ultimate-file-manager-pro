@@ -1280,6 +1280,21 @@ Size on disk: %1$s (%2$.1f%%)
     <string name="analyzer_delete_confirm_msg">
 ये फ़ाइलें स्थायी रूप से हटा दी जाएँगी और इंडेक्स से हटा दी जाएँगी।
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+फ़ाइल मिटाएँ?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+\"%1$s\" (%2$s) को हमेशा के लिए डिलीट कर दिया जाएगा और स्टोरेज इंडेक्स से हटा दिया जाएगा।
+</string>
+    <string name="analyzer_move_success">
+\"%1$s\" को सफलतापूर्वक मूव किया गया।
+</string>
+    <string name="analyzer_move_progress">
+\"%1$s\" को मूव किया जा रहा है…
+</string>
+    <string name="analyzer_delete_success">
+\"%1$s\" को सफलतापूर्वक डिलीट किया गया।
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 चेतावनी: महत्वपूर्ण विलोपन
 </string>

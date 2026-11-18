@@ -1280,6 +1280,21 @@ Size on disk: %1$s (%2$.1f%%)
     <string name="analyzer_delete_confirm_msg">
 これらのファイルは完全に削除され、インデックスから削除されます。
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+ファイル削除?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+「%1$s」（%2$s）は完全に削除され、ストレージインデックスから削除されます。
+</string>
+    <string name="analyzer_move_success">
+「%1$s」を正常に移動しました。
+</string>
+    <string name="analyzer_move_progress">
+「%1$s」を移動中…
+</string>
+    <string name="analyzer_delete_success">
+「%1$s」を正常に削除しました。
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 警告: 重大な削除
 </string>

@@ -1,37 +1,38 @@
-# Clarifications: Network Favorite Breadcrumb Navigation on SMB Server Shares
+# Clarifications: Storage Analyzer – Large Files Action Menu (Move & Delete)
 
 ## Status
 Answers received — ready for /plan and /tasks
 
 ## Questions and Answers
 
-### Navigation & Breadcrumb Trail Structure
-**Q1.** When opening an SMB server favorite (e.g., server profile named "NAS", favorite folder "Docker", deep path `Docker/_Projects/Immich`), how should the breadcrumbs be structured?
-**A:** **Full Server Hierarchy**: `Home > NAS > Docker > _Projects > Immich`
-- "NAS" navigates to the server root (`""` where shares are listed).
-- "Docker" navigates to `/Docker`.
-- "_Projects" navigates to `/Docker/_Projects`.
-- "Immich" is the active directory.
+### UI and Layout
+**Q1.** Which actions should be displayed in the long-press contextual dialog?  
+**A:** **Move, Delete, Open File, and Open Folder Location**. In addition to Move and Delete, include options to open/view the file and open the containing directory in FileBrowserActivity with the file focused.
 
-### Custom Favorite Labels
-**Q2.** If a favorite has a custom label (e.g., "Containers" for `/Docker`), how should it display in breadcrumbs?
-**A:** **Always show real directory name in breadcrumbs (ignoring custom label)**. Breadcrumb segments always reflect the actual filesystem directory names (`Docker`), ensuring strict parity with the folder structure and avoiding path resolution ambiguity.
+**Q2.** How should the Delete confirmation dialog be styled?  
+**A:** **Reuse the standard UFM glass delete confirmation** (`dialog_analyzer_delete_confirm`) displaying the target filename, formatted size, danger badge, and permanent deletion warning with vertical primary/cancel buttons.
 
-### Back Button Navigation Boundary
-**Q3.** What should happen when pressing the system Back button at the initial favorite folder?
-**A:** **Step up to server root**: Pressing Back at the favorite folder navigates up to the server root share list (`SMB://server/`), and pressing Back again exits the browser activity.
+### Navigation and Entry Points
+**Q3.** Should the Move destination folder picker allow moving across different storage volumes?  
+**A:** **Yes, allow moving across any accessible storage volume** (Internal Storage, SD Card, USB OTG). If crossing volumes, the file will be safely transferred to the target storage and removed from the source upon verification.
 
-### Storage Scope
-**Q4.** Where should the breadcrumb fix apply?
-**A:** **Apply uniformly across all network storage types** (SMB, FTP, SFTP, WebDAV, Cloud Drive, TV Paired Storage) so that any network session opened with an initial subfolder path produces a correct, non-degrading breadcrumb hierarchy.
+### Business Logic and Edge Cases
+**Q4.** How should name collisions be handled if a file with the same name exists at the destination?  
+**A:** **Re-use the current conflict detector (`TransferConflictHelper`)**, providing standard conflict options: Overwrite (atomic temp-then-rename), Skip, Keep Both (auto-rename), or Cancel.
+
+### Data and State
+**Q5.** What reindexing scope should be executed after a Move or Delete operation?  
+**A:** **Targeted & Instant**: Directly update/remove entries in the `IndexingRepository` database, trigger background reindex for the affected source/destination folders, and instantly refresh the in-memory Large Files list and analyzer summary statistics for immediate UI feedback.
 
 ---
 
 ## Spec / Plan Impact
-- **spec.md**: Update FR-01 and FR-03 to explicitly specify the full storage hierarchy structure (`Home > <Storage/Server Name> > <Folder 1> > <Folder 2> ...`) where the storage root segment maps to the root (`""`), subsequent segments map to their actual folder paths using real directory names, and the fix uniformly applies across all network storage types.
-- **plan.md**: The architecture will ensure `NetworkBrowserActivity` breadcrumbs use `share.name` for the storage root (instead of overriding it with `EXTRA_STORAGE_LABEL`), append segments using actual directory names, and assign accurate accumulated subpaths to each segment.
+- **spec.md updated**:
+  - `FR-02` updated to include "Open File" and "Open Folder Location" in addition to "Move" and "Delete".
+  - `FR-05` updated to explicitly integrate `TransferConflictHelper` for collision resolution.
+  - Scope confirmed: Cross-storage volume moves permitted; targeted index updates with folder background reindex.
 
 ---
 
-## Confirmed — Ready for /plan & /tasks
-All questions are answered and architectural requirements are aligned.
+## Confirmed — Ready for /plan or /tasks
+All clarification questions are answered and incorporated into the specification.

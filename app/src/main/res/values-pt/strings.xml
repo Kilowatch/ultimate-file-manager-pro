@@ -1280,6 +1280,21 @@ Excluir %1$d arquivo(s)?
     <string name="analyzer_delete_confirm_msg">
 Estes arquivos serão excluídos permanentemente e removidos do índice.
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+Eliminar Ficheiro?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+\"%1$s\" (%2$s) será permanentemente eliminado e removido do índice de armazenamento.
+</string>
+    <string name="analyzer_move_success">
+\"%1$s\" movido com sucesso.
+</string>
+    <string name="analyzer_move_progress">
+A mover \"%1$s\"...
+</string>
+    <string name="analyzer_delete_success">
+\"%1$s\" eliminado com sucesso.
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 Aviso: Exclusão Crítica
 </string>

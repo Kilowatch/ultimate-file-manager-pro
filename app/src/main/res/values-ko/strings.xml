@@ -1280,6 +1280,21 @@ Size on disk: %1$s (%2$.1f%%)
     <string name="analyzer_delete_confirm_msg">
 이 파일들은 영구 삭제되고 인덱스에서 제거됩니다.
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+파일 삭제?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+\'%1$s\'(%2$s)이(가) 영구적으로 삭제되고 저장소 인덱스에서 제거됩니다.
+</string>
+    <string name="analyzer_move_success">
+\'%1$s\'을(를) 성공적으로 이동했습니다.
+</string>
+    <string name="analyzer_move_progress">
+\'%1$s\' 이동 중...
+</string>
+    <string name="analyzer_delete_success">
+\'%1$s\'을(를) 성공적으로 삭제했습니다.
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 경고: 중요 삭제
 </string>

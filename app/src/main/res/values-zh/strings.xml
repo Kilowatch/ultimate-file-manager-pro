@@ -1280,6 +1280,21 @@ Size on disk: %1$s (%2$.1f%%)
     <string name="analyzer_delete_confirm_msg">
 这些文件将被永久删除并从索引中移除。
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+删除文件?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+“%1$s”(%2$s)将被永久删除，并从存储索引中移除。
+</string>
+    <string name="analyzer_move_success">
+已成功移动“%1$s”。
+</string>
+    <string name="analyzer_move_progress">
+正在移动“%1$s”……
+</string>
+    <string name="analyzer_delete_success">
+已成功删除“%1$s”。
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 警告：严重删除
 </string>

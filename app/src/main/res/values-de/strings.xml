@@ -1280,6 +1280,21 @@ Ausgewählte löschen
     <string name="analyzer_delete_confirm_msg">
 Diese Dateien werden endgültig gelöscht und aus dem Index entfernt.
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+Datei löschen?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+„%1$s“ (%2$s) wird dauerhaft gelöscht und aus dem Speicherindex entfernt.
+</string>
+    <string name="analyzer_move_success">
+„%1$s“ wurde erfolgreich verschoben.
+</string>
+    <string name="analyzer_move_progress">
+„%1$s“ wird verschoben …
+</string>
+    <string name="analyzer_delete_success">
+„%1$s“ wurde erfolgreich gelöscht.
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 Warnung: Kritische Löschung
 </string>

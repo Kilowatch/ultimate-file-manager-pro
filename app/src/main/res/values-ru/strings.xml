@@ -1280,6 +1280,21 @@ Size on disk: %1$s (%2$.1f%%)
     <string name="analyzer_delete_confirm_msg">
 Эти файлы будут навсегда удалены и удалены из индекса.
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+Удалить Файл?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+Файл «%1$s» (%2$s) будет безвозвратно удален и исключен из индекса хранилища.
+</string>
+    <string name="analyzer_move_success">
+«%1$s» успешно перемещено.
+</string>
+    <string name="analyzer_move_progress">
+Перемещение «%1$s»…
+</string>
+    <string name="analyzer_delete_success">
+«%1$s» успешно удалено.
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 Предупреждение: критическое удаление
 </string>

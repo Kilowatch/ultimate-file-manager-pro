@@ -1280,6 +1280,21 @@ Hapus %1$d file?
     <string name="analyzer_delete_confirm_msg">
 File-file ini akan dihapus permanen dan dihapus dari indeks.
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+Hapus berkas?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+\"%1$s\" (%2$s) akan dihapus secara permanen dan dihapus dari indeks penyimpanan.
+</string>
+    <string name="analyzer_move_success">
+Berhasil memindahkan \"%1$s\".
+</string>
+    <string name="analyzer_move_progress">
+Memindahkan \"%1$s\"…
+</string>
+    <string name="analyzer_delete_success">
+Berhasil menghapus \"%1$s\".
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 Peringatan: Penghapusan Kritis
 </string>

@@ -445,6 +445,11 @@
     <string name="analyzer_delete_selected">Delete Selected</string>
     <string name="analyzer_delete_confirm_title">Delete %1$d file(s)?</string>
     <string name="analyzer_delete_confirm_msg">These files will be permanently deleted and removed from the index.</string>
+    <string name="analyzer_delete_single_confirm_title">Delete File?</string>
+    <string name="analyzer_delete_single_confirm_msg">\"%1$s\" (%2$s) will be permanently deleted and removed from the storage index.</string>
+    <string name="analyzer_move_success">Moved \"%1$s\" successfully.</string>
+    <string name="analyzer_move_progress">Moving \"%1$s\"…</string>
+    <string name="analyzer_delete_success">Deleted \"%1$s\" successfully.</string>
     <string name="analyzer_duplicate_all_selected_warning">Warning: Critical Deletion</string>
     <string name="analyzer_duplicate_all_selected_msg">You have selected ALL copies for these duplicate groups. If you proceed, you will have no copies of these files left:</string>
     <string name="analyzer_delete_anyway">Delete All Copies</string>

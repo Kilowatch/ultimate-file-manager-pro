@@ -1267,6 +1267,21 @@ Vill du ta bort %1$d fil(er)?
     <string name="analyzer_delete_confirm_msg">
 Dessa filer kommer att raderas permanent och tas bort från indexet.
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+Ta bort fil?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+\"%1$s\" (%2$s) kommer att raderas permanent och tas bort från lagringsindexet.
+</string>
+    <string name="analyzer_move_success">
+\"%1$s\" har flyttats.
+</string>
+    <string name="analyzer_move_progress">
+Flyttar \"%1$s\" …
+</string>
+    <string name="analyzer_delete_success">
+\"%1$s\" har tagits bort.
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 Varning: Kritisk radering
 </string>

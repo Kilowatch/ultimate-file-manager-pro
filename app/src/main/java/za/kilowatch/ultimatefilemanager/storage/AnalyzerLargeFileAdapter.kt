@@ -16,9 +16,10 @@ import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
  * Tapping opens the file via the host activity's file-open flow.
  */
 class AnalyzerLargeFileAdapter(
-    private val items  : List<FileIndex>,
-    private val isTv   : Boolean = false,
-    private val onClick: (FileIndex) -> Unit
+    private var items      : List<FileIndex>,
+    private val isTv       : Boolean = false,
+    private val onClick    : (FileIndex) -> Unit,
+    private val onLongClick: ((FileIndex, View) -> Boolean)? = null
 ) : RecyclerView.Adapter<AnalyzerLargeFileAdapter.VH>() {
 
     inner class VH(v: View) : RecyclerView.ViewHolder(v) {
@@ -43,9 +44,37 @@ class AnalyzerLargeFileAdapter(
         holder.imgIcon.setImageResource(FileTypeIconProvider.iconForMime(context, item.mimeType))
 
         holder.itemView.setOnClickListener { onClick(item) }
+        if (onLongClick != null) {
+            holder.itemView.setOnLongClickListener { v ->
+                onLongClick.invoke(item, v)
+            }
+        } else {
+            holder.itemView.setOnLongClickListener(null)
+        }
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun removeItem(file: FileIndex) {
+        val index = items.indexOfFirst { it.path == file.path }
+        if (index != -1) {
+            val mutable = items.toMutableList()
+            mutable.removeAt(index)
+            items = mutable
+            notifyItemRemoved(index)
+        }
+    }
+
+    fun removeFiles(paths: Set<String>) {
+        if (paths.isEmpty()) return
+        val mutable = items.toMutableList()
+        val before = mutable.size
+        mutable.removeAll { it.path in paths }
+        if (mutable.size != before) {
+            items = mutable
+            notifyDataSetChanged()
+        }
+    }
 
     private fun mimeToIcon(mime: String): Int = FileTypeIconProvider.iconForMime(mime)
 }

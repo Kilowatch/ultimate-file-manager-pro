@@ -1280,6 +1280,21 @@ Seçilenleri Sil
     <string name="analyzer_delete_confirm_msg">
 Bu dosyalar kalıcı olarak silinecek ve indeksten kaldırılacak.
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+Dosya silinsin mi?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+\"%1$s\" (%2$s) kalıcı olarak silinecek ve depolama dizininden kaldırılacaktır.
+</string>
+    <string name="analyzer_move_success">
+\"%1$s\" başarıyla taşındı.
+</string>
+    <string name="analyzer_move_progress">
+\"%1$s\" taşınıyor…
+</string>
+    <string name="analyzer_delete_success">
+\"%1$s\" başarıyla silindi.
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 Uyarı: Kritik Silme
 </string>

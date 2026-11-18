@@ -1216,6 +1216,21 @@ Geselecteerde verwijderen
     <string name="analyzer_delete_confirm_msg">
 Deze bestanden worden permanent verwijderd en uit de index verwijderd.
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+Bestand verwijderen?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+\"%1$s\" (%2$s) wordt permanent verwijderd en uit de opslagindex gehaald.
+</string>
+    <string name="analyzer_move_success">
+‘%1$s’ is succesvol verplaatst.
+</string>
+    <string name="analyzer_move_progress">
+\"%1$s\" verplaatsen…
+</string>
+    <string name="analyzer_delete_success">
+‘%1$s’ is succesvol verwijderd.
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 Waarschuwing: kritieke verwijdering
 </string>

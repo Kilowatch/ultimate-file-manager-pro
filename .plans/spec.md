@@ -1,167 +1,116 @@
-# Specification: High-Performance Optimization & English Change Tracking for `translate_strings.py`
+# Specification: Storage Analyzer – Large Files Action Menu (Move & Delete) with Auto-Reindex
 
 ## Overview
-The Android localization synchronization tool `translate_strings.py` verifies and synchronizes localized Android XML strings across 17+ languages (`app/src/main/res/values-*`) against the canonical English source files (`strings.xml` and `strings_policy.xml`).
-
-Currently, running `python -u translate_strings.py verify` suffers from three critical architectural deficiencies:
-1. **Severe Execution Delay (5–6+ minutes even when up to date):** Caused by an $O(N \times M)$ repeated regex substitution loop where each of the 2,000+ strings sequentially triggers a whole-file regex recompilation and 250 KB string re-allocation (`replace_string_block`), taking ~18.8 seconds per language file.
-2. **Sequential Language Processing:** Languages are evaluated and translated one-by-one in a blocking linear loop rather than running concurrently across languages when changes are detected.
-3. **Inability to Detect English Source Content Modifications:** If an existing English string's text is edited (without changing its key name), `verify` assumes the translation is already present in `values-<lang>` and fails to update it. Stale translations persist indefinitely unless manually spotted, violating the project's string update rule.
-
-This specification defines the architectural enhancements to:
-- Implement a **source checksum tracking engine** (`.translation_state.json`) that detects newly modified English strings, automatically removes outdated translations across all languages, and triggers re-translation.
-- Execute **parallel multi-language translation** using a concurrent worker pool when changes/missing strings are detected.
-- Implement a **single-pass XML substitution engine** and fast set-difference bypass, cutting up-to-date verification from 5+ minutes to **under 1.5 seconds**.
+The Large Files tab in Storage Analyzer displays the largest space-consuming files across indexed storage volumes, allowing users to quickly identify files taking up significant capacity. This feature introduces a long-press contextual action menu on large file entries—adhering strictly to UFMStandard glass component specifications on both Mobile and Android TV—enabling users to directly Move or Delete large files. Upon completing either operation, the system automatically initiates storage reindexing and refreshes the file list and analyzer metrics in real time.
 
 ---
 
 ## User Stories
 
-- **US-01 (English Modification Tracking & Auto-Invalidation):** As a developer editing an existing English string, I want the translation tool to automatically detect that the English content has changed, purge the obsolete translated string from all `values-*/` directories, and queue it for re-creation/re-translation across all languages.
-- **US-02 (Concurrent Multi-Language Execution):** As a developer syncing changes across 17 languages, I want all languages with detected changes to process and translate in parallel rather than sequentially, dramatically slashing total wall-clock runtime.
-- **US-03 (Instant Verification for Clean Repositories):** As a developer running `verify` when no changes exist, I want the script to check checksums and key sets in sub-second time (< 1.5 s) and exit immediately without rebuilding files.
-- **US-04 (High-Speed Single-Pass XML Generation):** As a developer re-creating localized XML files, I want the file rebuilder to assemble all strings in a single linear pass ($O(N)$) instead of thousands of regex substitutions over the file buffer.
-- **US-05 (Automatic Pruning of Deleted Keys):** As a project maintainer, I want keys deleted from English to be automatically pruned from all localized files, adhering strictly to the `AGENTS.md` Translation Cleanup Rule.
-- **US-06 (Strict Formatting & Tag Fidelity):** As an Android developer, I want all placeholders (`%s`, `%d`, `%1$s`), HTML tags (`<b>`, `<i>`), CDATA sections, and Android escapes (`\'`, `\"`, `\n`) to be preserved without syntax corruption.
-
----
-
-## Architecture & Workflows
-
-### 1. English Source Tracking & Change Detection Flow
-```mermaid
-flowchart TD
-    Start["Start verify mode"] --> ReadEN["Read English strings & compute SHA-256 hashes"]
-    ReadEN --> LoadState["Load .translation_state.json (tracked hashes)"]
-    LoadState --> DiffCheck{"Compare English Hashes"}
-    
-    DiffCheck -->|Content Changed| MarkChanged["Flag changed keys as MODIFIED"]
-    DiffCheck -->|Key Deleted in EN| MarkDeleted["Flag deleted keys as OBSOLETE"]
-    DiffCheck -->|New Key in EN| MarkNew["Flag new keys as MISSING"]
-    DiffCheck -->|Unchanged| UpToDate["Mark as UNCHANGED"]
-    
-    MarkChanged --> InvalidateTarget["Purge modified keys from all values-*/ files"]
-    MarkDeleted --> PurgeTarget["Purge deleted keys from all values-*/ files"]
-    InvalidateTarget --> QueueTrans["Queue modified & missing keys for translation"]
-    MarkNew --> QueueTrans
-```
-
-### 2. Multi-Language Parallel Execution Flow
-```mermaid
-flowchart LR
-    Queue["Batch of Missing / Modified Strings"] --> Pool["ThreadPoolExecutor (All Languages in Parallel)"]
-    Pool --> Worker1["Worker: de (German)"]
-    Pool --> Worker2["Worker: fr (French)"]
-    Pool --> Worker3["Worker: es (Spanish)"]
-    Pool --> Worker4["Worker: ... (All other langs)"]
-    Worker1 --> Assemble1["Single-pass XML write"]
-    Worker2 --> Assemble2["Single-pass XML write"]
-    Worker3 --> Assemble3["Single-pass XML write"]
-    Worker4 --> Assemble4["Single-pass XML write"]
-    Assemble1 & Assemble2 & Assemble3 & Assemble4 --> UpdateState["Save updated .translation_state.json"]
-```
+- **US-01 (Long-Press Context Menu):** As a user inspecting large files, I want to long-press any file item (or hold D-pad Center / press Menu on Android TV) so that a styled contextual menu appears with options to Move or Delete the file.
+- **US-02 (File Relocation / Move):** As a user managing disk space, I want to move an oversized file to another directory or external volume so that I can free up space on my primary drive while preserving the file.
+- **US-03 (Folder Picker Compliance):** As a user selecting a move destination, I want the standard UFM Folder Picker to launch with only storage drives shown (suppressing feature tiles) and confirm the target directory via the primary FAB.
+- **US-04 (Safe File Deletion):** As a user clearing unwanted large files, I want a dedicated UFMStandard confirmation dialog detailing the file name and size before deletion, so that I do not accidentally delete critical data.
+- **US-05 (Automatic Reindex & UI Refresh):** As a user who just moved or deleted a large file, I want the system to automatically reindex the affected storage and refresh the Large Files list and analyzer summary statistics without requiring me to manually exit and re-analyze.
+- **US-06 (Android TV Support):** As an Android TV user, I want the contextual menu, folder picker, and confirmation dialogs to be fully navigable via D-pad with clear focus indicators and TV-compliant dimensions (650dp width).
 
 ---
 
 ## Functional Requirements
 
-### 1. Source Tracking & Change Invalidation (`.translation_state.json`)
-- **FR-01 (Tracking Manifest Storage):**
-  - Store English string checksums in a persistent JSON state file located at `app/src/main/res/.translation_state.json`.
-  - Format:
-    ```json
-    {
-      "version": 1,
-      "files": {
-        "strings.xml": {
-          "string_key_name": "sha256_hash_of_english_content",
-          ...
-        },
-        "strings_policy.xml": { ... }
-      }
-    }
-    ```
-- **FR-02 (Modification Detection):**
-  - If a key exists in both English and `.translation_state.json`, but the SHA-256 hash of its inner content differs, flag the key as **MODIFIED**.
-- **FR-03 (Cross-Language Auto-Purge of Modified Strings):**
-  - For every key flagged as **MODIFIED**, immediately remove its entry from all existing localized files (`values-*/strings.xml`), ensuring stale translations are not retained.
-  - Automatically add the key to the re-translation queue for all languages.
-- **FR-04 (Cross-Language Pruning of Obsolete/Deleted Strings):**
-  - For any key that exists in `.translation_state.json` or localized files but is no longer present in the English source, permanently prune it from all target files per `AGENTS.md`.
-- **FR-05 (State Update on Completion):**
-  - Once translation and file generation succeed, update `.translation_state.json` with the current English hashes so subsequent runs recognize them as up to date.
+### 1. Contextual Action Trigger & Presentation
+- **FR-01 (Touch & Remote Triggers):** 
+  - On mobile devices, long-pressing any item in the Large Files list must trigger the contextual action dialog.
+  - On Android TV, holding the D-pad Center / OK button or pressing the remote Menu key on a focused item must trigger the contextual action dialog.
+  - Single-tap behavior must remain unchanged (navigates to the file in File Browser).
+- **FR-02 (UFMStandard Action Dialog):** 
+  - The action dialog must be rendered using UFMStandard glass styling (`bg_dialog_glass`, transparent dialog window background).
+  - The dialog header must display a file type icon badge, file name (truncated if long), formatted file size, and current parent directory path.
+  - The dialog must present vertical interactive action rows:
+    - **Open File**: Launches the default file viewing/opening workflow for the file type.
+    - **Open Folder Location**: Opens the file's parent folder inside `FileBrowserActivity` with focus set to the file.
+    - **Move**: Opens the UFM Folder Picker to relocate the file.
+    - **Delete**: Indicated by a warning/danger icon to permanently remove the file via confirmation.
+    - **Cancel / Dismiss**: Allows closing the dialog without action.
+- **FR-03 (Dual-Layout TV & Mobile Adaptation):**
+  - Mobile layout: Match-parent width with standard dialog margin insets.
+  - TV layout: Fixed 650dp dialog width, D-pad focus highlight with TV button/card selectors, safe padding.
 
-### 2. Concurrent Multi-Language Execution
-- **FR-06 (Parallel Language Processing):**
-  - When missing or modified strings are detected across languages, execute language synchronization concurrently using a worker pool (`ThreadPoolExecutor(max_workers=min(16, len(target_langs)))`).
-  - Each thread owns a distinct language directory (`values-<lang>`), guaranteeing thread-safe, independent file I/O with zero cross-language lock contention.
-- **FR-07 (Thread-Safe Logging):**
-  - Implement a synchronized output lock (`tprint`) to prevent interleaved console logs when multiple languages run simultaneously.
+### 2. Move Operation Flow
+- **FR-04 (Folder Picker Launch):**
+  - Selecting "Move" must launch the UFM Folder Picker compliant with the UFM Folder Picker Standard (`StorageBrowserActivity` -> `FileBrowserActivity`/`NetworkBrowserActivity`).
+  - Must strictly enforce the **All-Drives Initial View Rule**: feature tiles (Twin Window, Notepad, Document Scanner, etc.) must be suppressed so only storage drives/volumes are shown.
+- **FR-05 (Destination Confirmation & Validation):**
+  - Navigating to the desired folder allows confirming the destination via the picker Extended FAB.
+  - The system must prevent selecting the file's current containing folder as the target, displaying an informative message.
+  - If a file collision occurs at the destination, the existing `TransferConflictHelper` must be used to resolve the conflict (Overwrite, Skip, Keep Both / auto-rename, or Cancel).
+  - The system must verify write permissions for the destination folder (prompting for SAF tree permission if external storage requires it).
+- **FR-06 (Move Execution & Progress Feedback):**
+  - Large files may require substantial transfer time (especially across volumes); a non-blocking progress indicator must be displayed during the move operation.
+  - The move operation must support internal storage, secondary SD cards, USB OTG drives, and Shizuku/root if configured.
 
-### 3. High-Performance XML Reassembly (Single-Pass Engine)
-- **FR-08 (Fast Path No-Op Bypass):**
-  - If a language has zero missing strings, zero modified strings, and zero obsolete strings, bypass file rebuilding entirely. Verification for that language completes in < 5 ms.
-- **FR-09 (Single-Pass Regex Substitution):**
-  - When re-creating or updating a localized XML file, perform a single `re.sub(pattern, replacer, english_template)` pass in $O(N)$ time.
-  - Look up translations directly from a pre-computed dictionary in $O(1)$ memory time rather than rescanning the whole file for every string.
-  - File reconstruction time per language must drop from ~18.8 seconds to **< 35 milliseconds**.
-- **FR-10 (String-Array Preservation):**
-  - Reconstruct `<string-array>` items in a single pass per array without whole-file slicing loops.
+### 3. Delete Operation Flow
+- **FR-07 (UFMStandard Delete Confirmation):**
+  - Selecting "Delete" must prompt the user with a confirmation dialog styled with UFMStandard glass container (`bg_dialog_glass`).
+  - The confirmation dialog must clearly indicate the file name, formatted size, and a warning that the file will be permanently deleted.
+  - Actions must follow a vertical button hierarchy: "Delete" (prominent danger button) on top, and "Cancel" (secondary text button) below.
+- **FR-08 (Delete Execution):**
+  - Upon user confirmation, the file must be deleted from the filesystem using the appropriate storage mechanism (standard File API, SAF DocumentFile, or Shizuku).
+  - If deletion fails (e.g. write-protected or permission revoked), an informative error dialog or toast must notify the user.
 
-### 4. Translation & Network Efficiency
-- **FR-11 (Batch Translation):**
-  - Group translatable plain text strings into batches (`GoogleTranslator.translate_batch` or batched delimited payloads) to minimize network roundtrips.
-- **FR-12 (Translation Fallback Chain):**
-  - Maintain robust multi-provider fallback: `GoogleTranslator` -> `MyMemoryTranslator` -> `PonsTranslator` with exponential backoff on transient network failures.
-- **FR-13 (Per-Run Translation Caching):**
-  - Maintain an in-memory translation cache per run to prevent re-translating identical texts across files or array items.
-
-### 5. Syntax and XML Integrity
-- **FR-14 (Placeholder Tokenization):**
-  - Strictly protect formatting tokens (`%s`, `%d`, `%1$s`, `$[var]`) using token placeholders (`[[PH_X]]`) before translation and restore them accurately.
-- **FR-15 (Tag & CDATA Protection):**
-  - Preserve all inline HTML tags (`<b>`, `<i>`, `<font>`, `<xliff:g>`) and `<![CDATA[...]]>` wrappers without tag corruption or unauthorized entity escapes inside CDATA.
-- **FR-16 (Android Escapes):**
-  - Accurately maintain Android XML escaping for single quotes (`\'`), double quotes (`\"`), backslashes (`\\`), and literal newline characters (`\n`).
+### 4. Automatic Post-Operation Reindexing & List Refresh
+- **FR-09 (Automatic Storage Reindex):**
+  - Immediately following a successful Move or Delete operation, the system must trigger background reindexing for the affected storage location(s) so that the file index database remains completely synchronized.
+  - For Move operations, both the source directory and destination directory must be updated in the index.
+  - For Delete operations, the deleted file must be removed from the index database.
+- **FR-10 (Real-Time File List & Report Refresh):**
+  - The Large Files list must automatically refresh to immediately reflect the change:
+    - Deleted files must be removed from the list.
+    - Moved files must update their displayed path (or be removed if moved off the analyzed volume).
+  - The Storage Analyzer report (including overall storage usage, category breakdown, and large files total count/size) must automatically refresh with updated metrics without requiring a manual rescan or activity reload.
 
 ---
 
 ## Non-Functional Requirements
 
-- **NFR-01 (Speed):** Full `verify` mode with zero changes must complete in **< 1.5 seconds** across all 17 languages.
-- **NFR-02 (Concurrency Throughput):** Translating and re-creating modified strings across 17 languages must achieve at least an **8x to 12x wall-clock speedup** compared to sequential processing.
-- **NFR-03 (Reliability & Determinism):** Interrupted runs must not leave corrupted XML files; target files should be written atomically or safely overwritten only upon successful reassembly.
-- **NFR-04 (CLI Compatibility):** Retain all existing invocation flags:
-  - `python -u translate_strings.py verify`
-  - `python -u translate_strings.py <lang_code>`
-  - `python -u translate_strings.py <string_key>`
-  - Interactive selection menu via `questionary`.
+- **NFR-01 (UFMStandard Compliance):** All UI elements (action menu, confirmation dialog, folder picker FAB, progress indicators) must strictly adhere to the project's UFMStandard specifications:
+  - Frosted glass containers (`bg_dialog_glass`).
+  - Transparent dialog windows (`dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))`).
+  - Embedded XML buttons (no default Android alert button rows).
+  - Vertical hierarchy for option cards and action buttons.
+  - Proper TV selectors (`selector_tv_button_yellow`, `selector_tv_button`) and 650dp TV dialog width.
+- **NFR-02 (UI Responsiveness & Background Execution):** Move, Delete, and Reindexing operations must never block the main UI thread. File I/O and database operations must run on IO dispatchers.
+- **NFR-03 (Localization & Internationalization):** All user-facing strings (dialog titles, action labels, confirmation messages, progress descriptions) must be defined in `strings.xml`. In accordance with `AGENTS.md`, any modified existing English strings must be purged from non-English translation files.
+- **NFR-04 (Graceful Lifecycle Handling):** Configuration changes (screen rotation, orientation changes) during Move or Reindexing must not crash the application or duplicate operations.
 
 ---
 
-## Edge Cases & Error Handling
+## Edge Cases & Error States
 
-- **First-Time Initialization:** If `.translation_state.json` does not yet exist, generate it from the current English source without needlessly purging existing valid translations.
-- **Partial Network Failure:** If one language thread encounters an API error during translation, other languages must continue unimpeded; error details are logged specifically for the affected language.
-- **Region-Specific Locale Folders:** Proper handling of both 2-letter codes (`de`, `es`) and region codes (`zh-rCN`, `pt-rBR`, `values-in`).
-- **Mixed Content Strings:** Strings containing nested HTML tags, entity references (`&amp;`), and placeholders simultaneously.
+- **EC-01 (File Not Found / Deleted Externally):** If the file no longer exists on disk when the user attempts to Move or Delete it, the system must notify the user, remove the stale file from the index, and refresh the list.
+- **EC-02 (Same Destination Selected for Move):** If the user selects the file's current folder as the destination in the folder picker, the move operation must be rejected with a user-friendly notice ("File is already in this folder").
+- **EC-03 (Insufficient Destination Storage):** If the target drive does not have sufficient free space to accommodate the large file, the move operation must abort before copying and warn the user.
+- **EC-04 (Destination Permission Required):** If moving to an external SD card or USB volume requiring SAF access that has not been granted, the app must initiate the standard SAF permission authorization flow.
+- **EC-05 (Read-Only / Protected Files):** If a file cannot be deleted or moved due to OS-level system locks or lack of permissions, the operation must fail safely without crashing, presenting an actionable error message (e.g. requesting Shizuku or SAF access).
+- **EC-06 (User Dismissal / Cancellation):** If the user dismisses the action dialog, backs out of the folder picker, or clicks "Cancel" on the delete confirmation, no filesystem or database modifications take place, and the list remains intact.
+- **EC-07 (Rapid Multiple Actions):** Rapid successive taps or clicks on action buttons must be debounced to prevent concurrent duplicate file operations.
 
 ---
 
 ## Out of Scope
 
-- Altering the Android project resource directory hierarchy.
-- Modifying Kotlin or Java code in the app.
-- Requiring paid translation API credentials for basic `verify` operations.
+- Multi-select bulk actions in the Large Files tab (this specification focuses strictly on single-file long-press contextual Move & Delete).
+- Renaming or opening with custom applications directly from this menu (available via the standard file browser flow).
+- Cloud storage (SMB/SFTP/Google Drive) destination pickers for the Move operation (Move is restricted to local/mounted physical storage volumes analyzed by the engine).
 
 ---
 
 ## Success Criteria
 
-- [ ] `app/src/main/res/.translation_state.json` tracks English string hashes and detects modified, new, and deleted strings accurately.
-- [ ] Modifying an English string in `strings.xml` causes `translate_strings.py verify` to detect the change, purge the old translation from all `values-*/` files, re-translate the new text, and write the updated files.
-- [ ] Language synchronization runs in parallel across threads when changes are detected, utilizing all available language workers.
-- [ ] Clean verification (no changes) completes in under **1.5 seconds** across all 17 languages.
-- [ ] Single-pass XML reassembly replaces the $O(N^2)$ regex loop, reducing file generation time to < 35 ms per file.
-- [ ] All Android placeholders, HTML tags, CDATA blocks, and escape characters remain intact without corruption.
-- [ ] Existing CLI arguments (`verify`, single language, single key) continue to function identically.
+- [ ] Long-pressing any file in the Large Files tab on mobile displays the UFMStandard glass action dialog with Move and Delete options.
+- [ ] On Android TV, holding D-pad Center or pressing Menu on a focused file opens the TV-adapted 650dp action dialog.
+- [ ] Selecting "Move" opens the UFM Folder Picker showing only storage drives (feature tiles suppressed), and confirming a valid destination moves the file.
+- [ ] Selecting "Delete" presents a UFMStandard confirmation dialog with file details, requiring explicit confirmation before deletion.
+- [ ] Immediately after Move or Delete completes, the affected storage volume is reindexed in the background.
+- [ ] The Large Files list and Storage Analyzer overview statistics automatically refresh without manual reload.
+- [ ] Moving to the same folder or an invalid location is gracefully rejected.

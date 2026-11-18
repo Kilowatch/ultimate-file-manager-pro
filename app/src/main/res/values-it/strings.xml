@@ -1278,6 +1278,21 @@ Eliminare %1$d file?
     <string name="analyzer_delete_confirm_msg">
 Questi file verranno eliminati definitivamente e rimossi dall\'indice.
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+Eliminare il file?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+\"%1$s\" (%2$s) verrà eliminato definitivamente e rimosso dall\'indice di archiviazione.
+</string>
+    <string name="analyzer_move_success">
+Spostamento di \"%1$s\" riuscito.
+</string>
+    <string name="analyzer_move_progress">
+Spostamento di \"%1$s\" in corso…
+</string>
+    <string name="analyzer_delete_success">
+Elemento \"%1$s\" eliminato correttamente.
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 Avviso: eliminazione critica
 </string>

@@ -1280,6 +1280,21 @@ Supprimer %1$d fichier(s) ?
     <string name="analyzer_delete_confirm_msg">
 Ces fichiers seront définitivement supprimés et retirés de l\'index.
 </string>
+    <string name="analyzer_delete_single_confirm_title">
+Supprimer le fichier ?
+</string>
+    <string name="analyzer_delete_single_confirm_msg">
+« %1$s » (%2$s) sera définitivement supprimé et retiré de l\'index de stockage.
+</string>
+    <string name="analyzer_move_success">
+« %1$s » a bien été déplacé.
+</string>
+    <string name="analyzer_move_progress">
+Déplacement de « %1$s »…
+</string>
+    <string name="analyzer_delete_success">
+« %1$s » a bien été supprimé.
+</string>
     <string name="analyzer_duplicate_all_selected_warning">
 Avertissement : Suppression critique
 </string>
