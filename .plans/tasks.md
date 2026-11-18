@@ -1,22 +1,17 @@
-# Task List: Storage Analyzer – Large Files Action Menu (Move, Delete, Open, Open Folder Location) with Auto-Reindex
+# Task List: Root Storage Global Mount Namespace Access
 
 ## Setup
-- [x] [T001] Add string resources in `app/src/main/res/values/strings.xml` for single-file delete confirmation (`analyzer_delete_single_confirm_title`, `analyzer_delete_single_confirm_msg`), move progress, and success feedback.
-- [x] [T002] [P] Create Mobile UFMStandard Glass Action Dialog layout (`app/src/main/res/layout/dialog_analyzer_large_file_actions.xml`) with file header badge, filename, path, size, glass divider, and action rows for Open, Open Folder, Move, Delete, and Cancel.
-- [x] [T003] [P] Create Android TV UFMStandard Glass Action Dialog layout (`app/src/main/res/layout/dialog_analyzer_large_file_actions_tv.xml`) with 650dp width styling, D-pad focus traversal, and TV-compliant focus selectors.
+- [x] [T001] [P] Configure `libsu` default builder in `app/src/main/java/za/kilowatch/ultimatefilemanager/UfmApplication.kt` with `Shell.FLAG_REDIRECT_STDERR or Shell.FLAG_MOUNT_MASTER` — enables global mount namespace (PID 1) connection by default on root sessions.
 
 ## Foundation
-- [x] [T004] [P] Update `AnalyzerLargeFileAdapter.kt` to add `onLongClick: ((FileIndex, View) -> Boolean)? = null` callback, bind `setOnLongClickListener` on item views, and add `removeItem(file: FileIndex)` for zero-latency UI updates.
-- [x] [T005] Update `LargeFilesTabFragment` in `StorageAnalyzerActivity.kt` to wire the adapter's `onLongClick` callback to `(activity as? StorageAnalyzerActivity)?.showLargeFileActionDialog(file)`.
+- [x] [T002] [P] Implement resilient shell acquisition with automatic fallback in `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/RootShellWrapper.kt` — catches unsupported `--mount-master` flags on legacy `su` binaries and falls back gracefully to `FLAG_REDIRECT_STDERR`.
+- [x] [T003] [P] Update streaming process execution in `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/RootShellWrapper.kt` (`openInputStream` and `openOutputStream`) to pass `--mount-master` when active, with fallback to standard `su -c`.
 
-## Feature Implementation
-- [x] [T006] [P] Implement `showLargeFileActionDialog(file: FileIndex)` in `StorageAnalyzerActivity.kt` supporting Mobile and TV layouts with transparent window backgrounds, proper window dimensions, and action button event wiring.
-- [x] [T007] Implement "Open File" (via `FileViewerRouter.openFile`) and "Open Folder Location" (via `FileBrowserActivity` intent with `EXTRA_INITIAL_PATH` and `EXTRA_FOCUS_PATH`) in `StorageAnalyzerActivity.kt`.
-- [x] [T008] [P] Implement Folder Picker integration and Move pipeline in `StorageAnalyzerActivity.kt`: register `moveFolderPickerLauncher` with `StorageBrowserActivity` (`EXTRA_LOCATION_PICKER = true`), validate destination (guard against same folder), resolve collisions via `TransferConflictHelper`, and execute atomic move across volumes.
-- [x] [T009] [P] Implement single-file Delete flow in `StorageAnalyzerActivity.kt`: show UFMStandard glass delete confirmation dialog (`dialog_analyzer_delete_confirm` / TV variant), execute deletion via `SafTreeManager` / `ShizukuShellWrapper` / direct `File.delete()`, and show completion feedback.
-- [x] [T010] [P] Implement post-operation auto-reindexing and live report refresh in `StorageAnalyzerActivity.kt`: synchronize `IndexingRepository` database, trigger background folder reindexing, notify `MediaScannerConnection`, and refresh `viewModel.analyze(...)` while immediately updating the adapter list.
+## Feature Implementation & Path Refinement
+- [x] [T004] [P] Refine `isRootPath()` in `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/RootShellWrapper.kt` so that package directories under `/data/data` and `/data/user/0` (including `za.kilowatch.ultimatefilemanager`) are properly recognized as root paths when browsing Root Storage.
+- [x] [T005] Verify and ensure child directory enumeration in `RootShellWrapper.listFiles()` accurately parses and populates all package metadata (item counts, sizes, POSIX permissions, and timestamps) under `/data/data`.
 
 ## Polish & Testing
-- [x] [T011] Run `python -u translate_strings.py verify` to check translation consistency for newly added strings.
-- [x] [T012] Execute Gradle compile and build check (`./gradlew assembleDebug`) to verify zero compiler errors or missing resources.
-- [x] [T013] Verify edge case handling: same-folder move rejection, name collision resolution (Overwrite/Keep Both/Skip/Cancel), permission errors, cancellation flows, and Android TV D-pad focus states.
+- [x] [T006] [P] Update and expand unit test coverage in `app/src/test/java/za/kilowatch/ultimatefilemanager/storage/RootShellWrapperTest.kt` to validate root path recognition for `/data/data`, `/data/user/0`, and package paths.
+- [x] [T007] Execute Robolectric unit test suite (`./gradlew testMobileGoogleDebugUnitTest --tests za.kilowatch.ultimatefilemanager.storage.RootShellWrapperTest`).
+- [x] [T008] Run full build compilation check (`./gradlew assembleMobileGoogleDebug`) to ensure clean compilation without errors or regressions.

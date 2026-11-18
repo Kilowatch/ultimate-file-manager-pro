@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.2.7] — 2026-11-17
 
+### Added
+- **Storage Analyzer Large Files Action Menu & Auto-Reindex**: Added a contextual glass action menu accessible via long-press (or remote D-pad Center hold / Menu on Android TV) on any item in the Large Files tab:
+  1. **Open File & Open Folder Location**: Quick actions to directly view the file via built-in viewers or open its containing directory in `FileBrowserActivity` with the file focused.
+  2. **Relocate / Move**: Launches the UFM Folder Picker (All-Drives initial view) to move files across any storage volume, featuring same-folder validation and `TransferConflictHelper` collision detection (Overwrite, Skip, Keep Both / auto-rename, Cancel).
+  3. **Delete with Glass Confirmation**: Prompts with a UFMStandard glass delete confirmation dialog detailing file name, formatted size, and permanent deletion warning.
+  4. **Zero-Latency Auto-Reindexing & Live UI Refresh**: Instantly removes/updates items in the list, synchronizes the index database, runs background folder reindexing, and refreshes analyzer metrics in real time.
+
 ### Fixed
+- **Root Directory Enumeration in `/data/data` & `/data/user/0` on Android 14+ / 16**: Fixed an issue where accessing `/data/data` with root privileges only displayed `com.google.android.gms` and `za.kilowatch.ultimatefilemanager` on devices with per-app mount namespace isolation (such as Nothing Phone 2a running Android 16). Elevated root sessions now attach to the global master mount namespace (`Shell.FLAG_MOUNT_MASTER`), ensuring all installed application packages and system directories are fully visible.
 - **SMB Server Favorite Breadcrumb Navigation (`NetworkBrowserActivity`)**: Fixed an issue where tapping an ancestor or favorite folder segment in the breadcrumb navigation bar dropped back to the SMB server root (`SMB://server/`) instead of opening the tapped favorite folder when browsing an SMB share configured in server mode (`isServerMode`).
 
 ## [2.2.6] — 2026-11-11

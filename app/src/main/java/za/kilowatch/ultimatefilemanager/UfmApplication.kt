@@ -259,12 +259,12 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
         // Fix SSHD home folder on Android
         PathUtils.setUserHomeFolderResolver { filesDir.toPath() }
 
-        // Configure libsu defaults safely
+        // Configure libsu defaults safely with global mount namespace support
         try {
             com.topjohnwu.superuser.Shell.enableVerboseLogging = BuildConfig.DEBUG
             com.topjohnwu.superuser.Shell.setDefaultBuilder(
                 com.topjohnwu.superuser.Shell.Builder.create()
-                    .setFlags(com.topjohnwu.superuser.Shell.FLAG_REDIRECT_STDERR)
+                    .setFlags(com.topjohnwu.superuser.Shell.FLAG_MOUNT_MASTER)
                     .setTimeout(15)
             )
         } catch (e: Exception) {

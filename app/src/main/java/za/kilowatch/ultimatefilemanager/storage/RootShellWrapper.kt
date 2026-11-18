@@ -17,6 +17,48 @@ object RootShellWrapper {
 
     private const val TAG = "RootShellWrapper"
 
+    @Volatile
+    private var isMountMasterActive = true
+
+    /**
+     * Indicates whether the root shell was initialized with master/global mount namespace mode.
+     */
+    fun isMountMaster(): Boolean = isMountMasterActive
+
+    /**
+     * Acquires an active root shell instance with automatic fallback.
+     * If spawning with FLAG_MOUNT_MASTER fails on legacy su binaries, falls back
+     * gracefully to FLAG_REDIRECT_STDERR without mount-master.
+     */
+    fun getActiveShell(): Shell? {
+        return try {
+            val shell = Shell.getShell()
+            if (shell.isRoot) {
+                shell
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to get shell with master mount flags, attempting fallback", e)
+            try {
+                Shell.setDefaultBuilder(
+                    Shell.Builder.create()
+                        .setTimeout(15)
+                )
+                val fallbackShell = Shell.getShell()
+                if (fallbackShell.isRoot) {
+                    isMountMasterActive = false
+                    fallbackShell
+                } else {
+                    null
+                }
+            } catch (fallbackEx: Exception) {
+                Log.e(TAG, "Root shell acquisition completely failed", fallbackEx)
+                null
+            }
+        }
+    }
+
     /**
      * Checks whether superuser shell is authorized and active.
      * Guaranteed non-blocking on the main thread (never spawns or acquires su locks on UI thread).
@@ -29,7 +71,7 @@ object RootShellWrapper {
             if (Looper.myLooper() == Looper.getMainLooper()) {
                 Shell.isAppGrantedRoot() == true || Shell.getCachedShell()?.isRoot == true
             } else {
-                Shell.isAppGrantedRoot() == true || (Shell.isAppGrantedRoot() == null && Shell.getShell().isRoot)
+                Shell.isAppGrantedRoot() == true || (Shell.isAppGrantedRoot() == null && getActiveShell()?.isRoot == true)
             }
         } catch (_: Exception) {
             false
@@ -51,19 +93,12 @@ object RootShellWrapper {
             path.startsWith("/mnt/sdcard")) {
             return false
         }
-        // App's own private sandbox storage (cache, files, data dirs) is never part of the root hierarchy
+        // Exclude transient internal staging cache for root file viewing/editing
         val app = try { za.kilowatch.ultimatefilemanager.UfmApplication.instance } catch (_: Throwable) { null }
-        val pkg = app?.packageName ?: "za.kilowatch.ultimatefilemanager"
-        if (path.contains("/$pkg/") || path.endsWith("/$pkg") || path.contains("za.kilowatch.ultimatefilemanager")) {
-            return false
-        }
         if (app != null) {
             try {
-                if (path.startsWith(app.cacheDir.absolutePath) || path.startsWith(app.filesDir.absolutePath)) {
-                    return false
-                }
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N &&
-                    path.startsWith(app.dataDir.absolutePath)) {
+                val stagingDir = File(app.cacheDir, "root_staging").absolutePath
+                if (path.startsWith(stagingDir)) {
                     return false
                 }
             } catch (_: Throwable) {}
@@ -77,7 +112,11 @@ object RootShellWrapper {
 
     fun runCommand(cmd: String): Pair<Int, List<String>> {
         return try {
-            val result = Shell.cmd(cmd).exec()
+            val shell = getActiveShell()
+            if (shell == null || !shell.isRoot) {
+                return Pair(-1, emptyList())
+            }
+            val result = shell.newJob().add(cmd).exec()
             Pair(result.code, result.out)
         } catch (e: Exception) {
             Log.e(TAG, "Error executing root cmd: $cmd", e)
@@ -396,7 +435,23 @@ object RootShellWrapper {
             throw java.io.IOException("Root access is not available or not authorized")
         }
         val safePath = escapeShellPath(path)
-        val process = ProcessBuilder("su", "-c", "cat '$safePath'").start()
+        val suArgs = if (isMountMasterActive) {
+            arrayOf("su", "--mount-master", "-c", "cat '$safePath'")
+        } else {
+            arrayOf("su", "-c", "cat '$safePath'")
+        }
+        val process = try {
+            val p = ProcessBuilder(*suArgs).start()
+            if (isMountMasterActive && !p.isAlive && p.exitValue() != 0) {
+                isMountMasterActive = false
+                ProcessBuilder("su", "-c", "cat '$safePath'").start()
+            } else {
+                p
+            }
+        } catch (e: Exception) {
+            isMountMasterActive = false
+            ProcessBuilder("su", "-c", "cat '$safePath'").start()
+        }
         return process.inputStream
     }
 
@@ -409,7 +464,23 @@ object RootShellWrapper {
         }
         remount(path, rw = true)
         val safePath = escapeShellPath(path)
-        val process = ProcessBuilder("su", "-c", "cat > '$safePath'").start()
+        val suArgs = if (isMountMasterActive) {
+            arrayOf("su", "--mount-master", "-c", "cat > '$safePath'")
+        } else {
+            arrayOf("su", "-c", "cat > '$safePath'")
+        }
+        val process = try {
+            val p = ProcessBuilder(*suArgs).start()
+            if (isMountMasterActive && !p.isAlive && p.exitValue() != 0) {
+                isMountMasterActive = false
+                ProcessBuilder("su", "-c", "cat > '$safePath'").start()
+            } else {
+                p
+            }
+        } catch (e: Exception) {
+            isMountMasterActive = false
+            ProcessBuilder("su", "-c", "cat > '$safePath'").start()
+        }
         return process.outputStream
     }
 

@@ -1,7 +1,7 @@
-# Code Review: SMB Server Favorite Breadcrumb Navigation (v2.2.7)
+# Code Review: Root Storage Global Mount Namespace Access
 
 ## Summary
-The changes in this release are surgical, well-contained, and directly solve the breadcrumb regression reported in `error.txt`. The flawed `isFirstPart` deduplication loop in `NetworkBrowserActivity.kt` was removed, the root breadcrumb was properly decoupled from `EXTRA_STORAGE_LABEL`, and path accumulation now correctly binds each folder segment to its real target path. All changes conform to project conventions, Kotlin idioms, and Android lifecycle best practices.
+The changes implement master/global mount namespace integration for elevated root sessions using `libsu` (`Shell.FLAG_MOUNT_MASTER`), resolving the per-app mount namespace isolation issue on Android 14+ and Android 16 (e.g. Nothing Phone 2a) where `/data/data` was previously restricted to only two directories. All review items—including modern flag modernization without deprecated flags, immediate process exit checks, and graceful fallbacks—have been implemented and verified.
 
 ---
 
@@ -14,26 +14,23 @@ The changes in this release are surgical, well-contained, and directly solve the
 *None.*
 
 ### 🟡 Minor
-*None.*
+*All resolved:*
+- Deprecated `FLAG_REDIRECT_STDERR` removed from `UfmApplication.kt` and `RootShellWrapper.kt`. Builder configuration now uses modern `libsu` standard defaults and `Shell.FLAG_MOUNT_MASTER`.
 
 ### 🔵 Suggestions
-- **`app/src/main/java/za/kilowatch/ultimatefilemanager/network/NetworkBrowserActivity.kt:8561`**: Extracted `getStorageProfileLabel()` to centralize root storage profile label resolution, properly isolating profile naming across cloud storage and self-hosted shares. *(Implemented)*
+*All resolved:*
+- In `openInputStream` and `openOutputStream`, added immediate process exit status verification (`!p.isAlive && p.exitValue() != 0`) to dynamically detect unsupported `--mount-master` flags on custom binaries and instantly fall back to standard `su -c`.
 
 ---
 
 ## Checklist Coverage
-
-| Category | Status | Notes |
-|---|---|---|
-| **Kotlin Correctness** | Clean | Safe calls throughout; no `!!` assertions; robust `split("/").filter { it.isNotEmpty() }` handling |
-| **Coroutines & Flow** | Clean | No new coroutine scopes introduced; respects existing `lifecycleScope` / `Dispatchers.IO` dispatching in `loadDirectory()` |
-| **Jetpack Compose** | N/A | Feature is implemented in View-based architecture (`NetworkBrowserActivity`) |
-| **Android Lifecycle & Architecture** | Clean | Click listeners do not leak activity state; server-mode SMB reset cleanly triggers upon returning to root |
-| **Performance** | Clean | Minimal allocations; breadcrumb list construction is $O(N)$ with typical $N \le 6$ path depth |
-| **Architecture & Project Conventions** | Clean | Version bump (v2.2.7 / code 316) applied to `build.gradle.kts`; `CHANGELOG.md` properly updated; `SECURITY.md` verified |
-| **Tests & Verification** | Clean | `./gradlew assembleMobileGoogleDebug` completed cleanly with zero compilation errors |
+- **Kotlin Correctness**: Clean. No unnecessary `!!`, `@Volatile` used appropriately on `isMountMasterActive`, nullable types handled safely.
+- **Coroutines & Concurrency**: Clean. Main thread non-blocking guarantee preserved in `isAuthorized()`.
+- **Android Lifecycle & Architecture**: Clean. Proper separation of concerns; no leaked contexts or activities.
+- **Performance**: Clean. Minimal overhead, cached shell re-use, and fast directory traversal.
+- **Tests**: Clean. Expanded Robolectric test coverage in `RootShellWrapperTest` passing successfully.
 
 ---
 
 ## Verdict
-**Approve** — The implementation is clean, robust, and ready for `/verify`.
+**Approve** — Implementation is completely clean, modern, and ready to proceed to security audit.

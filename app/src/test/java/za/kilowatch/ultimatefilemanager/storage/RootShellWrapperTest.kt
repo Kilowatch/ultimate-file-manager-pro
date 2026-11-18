@@ -20,6 +20,12 @@ class RootShellWrapperTest {
         assertTrue(RootShellWrapper.isRootPath("/system/bin/sh"))
         assertTrue(RootShellWrapper.isRootPath("/data"))
         assertTrue(RootShellWrapper.isRootPath("/data/app"))
+        assertTrue(RootShellWrapper.isRootPath("/data/data"))
+        assertTrue(RootShellWrapper.isRootPath("/data/data/com.google.android.gms"))
+        assertTrue(RootShellWrapper.isRootPath("/data/data/za.kilowatch.ultimatefilemanager"))
+        assertTrue(RootShellWrapper.isRootPath("/data/data/za.kilowatch.ultimatefilemanager/shared_prefs"))
+        assertTrue(RootShellWrapper.isRootPath("/data/user/0"))
+        assertTrue(RootShellWrapper.isRootPath("/data/user/0/za.kilowatch.ultimatefilemanager"))
         assertTrue(RootShellWrapper.isRootPath("/vendor"))
         assertTrue(RootShellWrapper.isRootPath("/vendor/etc"))
         assertTrue(RootShellWrapper.isRootPath("/apex"))
@@ -111,5 +117,10 @@ class RootShellWrapperTest {
 
         val uniqueFolder = TransferConflictHelper.uniqueLocalFolder(destFolder, "NewApp")
         assertEquals("/system/app/NewApp", uniqueFolder.absolutePath)
+    }
+
+    @Test
+    fun testMountMasterDefault() {
+        assertTrue(RootShellWrapper.isMountMaster())
     }
 }
