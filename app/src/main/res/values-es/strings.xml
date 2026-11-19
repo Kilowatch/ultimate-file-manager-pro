@@ -16215,6 +16215,15 @@ OK
     <string name="fav_tv_custom_launcher_unsupported_toast">
 Tu lanzador no es compatible con los accesos directos de la pantalla de inicio. Prueba a mantener pulsada la pantalla de inicio o comprueba la configuración de tu lanzador.
 </string>
+    <string name="create_shortcut_title">
+Añadir un atajo a una pantalla de inicio
+</string>
+    <string name="create_shortcut_subtitle">
+Selecciona una unidad o un favorito para colocarlo en la pantalla de inicio
+</string>
+    <string name="create_shortcut_empty">
+No hay unidades ni favoritos disponibles
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

@@ -15879,6 +15879,15 @@ OK
     <string name="fav_tv_custom_launcher_unsupported_toast">
 Je launcher ondersteunt geen snelkoppelingen op het startscherm. Probeer lang op het startscherm te drukken of controleer de instellingen van je launcher.
 </string>
+    <string name="create_shortcut_title">
+Snelkoppeling toevoegen aan startscherm
+</string>
+    <string name="create_shortcut_subtitle">
+Selecteer een schijf of favoriet om op je startscherm te plaatsen
+</string>
+    <string name="create_shortcut_empty">
+Geen schijven of favorieten beschikbaar
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

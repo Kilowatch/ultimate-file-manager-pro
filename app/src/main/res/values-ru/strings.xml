@@ -16203,6 +16203,15 @@ OK
     <string name="fav_tv_custom_launcher_unsupported_toast">
 Ваш лаунчер не поддерживает ярлыки на главном экране. Попробуйте нажать и удерживать главный экран или проверьте настройки лаунчера.
 </string>
+    <string name="create_shortcut_title">
+Добавить ярлык на главный экран
+</string>
+    <string name="create_shortcut_subtitle">
+Выберите диск или избранное, чтобы разместить на главном экране
+</string>
+    <string name="create_shortcut_empty">
+Нет доступных дисков или избранного
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

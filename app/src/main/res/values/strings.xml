@@ -5749,6 +5749,9 @@
     <string name="fav_shortcut_error_body">The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.</string>
     <string name="fav_shortcut_error_ok">OK</string>
     <string name="fav_tv_custom_launcher_unsupported_toast">Your launcher doesn\'t support home screen shortcuts. Try long-pressing the home screen or check your launcher\'s settings.</string>
+    <string name="create_shortcut_title">Add Shortcut to Home Screen</string>
+    <string name="create_shortcut_subtitle">Select a drive or favorite to place on your home screen</string>
+    <string name="create_shortcut_empty">No drives or favorites available</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">Open with</string>

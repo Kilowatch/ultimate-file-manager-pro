@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardShortcutItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:foreground="@drawable/selector_tv_card"
+    app:cardBackgroundColor="@color/tv_glass_white_10"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/tv_glass_border">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="18dp"
+        android:paddingVertical="14dp">
+
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="16dp">
+
+            <ImageView
+                android:id="@+id/imgItemIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_folder"
+                app:tint="@color/tv_accent"
+                android:contentDescription="@string/favorite_icon" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtItemLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="17sp"
+                android:fontFamily="sans-serif-bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Samsung T7 SSD" />
+
+            <TextView
+                android:id="@+id/txtItemPath"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                android:layout_marginTop="2dp"
+                tools:text="/storage/0123-4567" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgAdd"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_star"
+            app:tint="@color/tv_accent"
+            android:layout_marginStart="12dp"
+            android:importantForAccessibility="no" />
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

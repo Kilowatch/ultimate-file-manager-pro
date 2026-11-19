@@ -16203,6 +16203,15 @@ OK
     <string name="fav_tv_custom_launcher_unsupported_toast">
 Votre lanceur d\'applications ne prend pas en charge les raccourcis de l\'écran d\'accueil. Essayez d\'appuyer longuement sur l\'écran d\'accueil ou vérifiez les paramètres de votre lanceur d\'applications.
 </string>
+    <string name="create_shortcut_title">
+Appuyez sur  → Add shortcut to home screen.
+</string>
+    <string name="create_shortcut_subtitle">
+Sélectionnez un lecteur ou un favori à placer sur votre écran d’accueil
+</string>
+    <string name="create_shortcut_empty">
+Aucun lecteur ni favori disponible
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

@@ -16326,6 +16326,15 @@ OK
     <string name="fav_tv_custom_launcher_unsupported_toast">
 您的启动器不支持主屏幕快捷方式。请尝试长按主屏幕，或检查您的启动器设置。
 </string>
+    <string name="create_shortcut_title">
+添加快捷方式到主屏幕
+</string>
+    <string name="create_shortcut_subtitle">
+选择要放置在主屏幕上的驱动器或收藏夹
+</string>
+    <string name="create_shortcut_empty">
+没有可用的驱动器或收藏夹
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

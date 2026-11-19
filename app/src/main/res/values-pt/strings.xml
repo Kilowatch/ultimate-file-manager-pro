@@ -16203,6 +16203,15 @@ OK
     <string name="fav_tv_custom_launcher_unsupported_toast">
 O seu iniciador não suporta atalhos no ecrã inicial. Tente premir longamente o ecrã inicial ou verifique as definições do seu iniciador.
 </string>
+    <string name="create_shortcut_title">
+Adicionar atalho ao ecrã inicial
+</string>
+    <string name="create_shortcut_subtitle">
+Selecione uma unidade ou um favorito para colocar no seu ecrã inicial
+</string>
+    <string name="create_shortcut_empty">
+Não há unidades ou favoritos disponíveis
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

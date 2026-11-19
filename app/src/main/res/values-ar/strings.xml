@@ -16203,6 +16203,15 @@ OK
     <string name="fav_tv_custom_launcher_unsupported_toast">
 لا تدعم واجهة التشغيل الخاصة بك الاختصارات على الشاشة الرئيسية. حاول الضغط لفترة طويلة على الشاشة الرئيسية أو تحقق من إعدادات المشغّل الخاص بك.
 </string>
+    <string name="create_shortcut_title">
+إضافة اختصار إلى الشاشة الرئيسية
+</string>
+    <string name="create_shortcut_subtitle">
+حدد محرك أقراص أو عنصرًا مفضلًا لوضعه على شاشتك الرئيسية
+</string>
+    <string name="create_shortcut_empty">
+لا توجد محركات أقراص أو مفضلات متاحة
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

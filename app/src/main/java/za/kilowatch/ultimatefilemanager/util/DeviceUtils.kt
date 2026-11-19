@@ -59,21 +59,16 @@ object DeviceUtils {
     )
 
     /**
-     * Returns the package name of the currently active home/leanback launcher,
+     * Returns the package name of the currently active home launcher,
      * or null if it cannot be resolved.
      */
     fun getActiveLauncherPackage(context: Context): String? {
         val pm = context.packageManager ?: return null
-        // Try LEANBACK_LAUNCHER first (TV-specific), then fall back to standard HOME
-        val leanbackIntent = Intent(Intent.ACTION_MAIN)
-            .addCategory("android.intent.category.LEANBACK_LAUNCHER")
         val homeIntent = Intent(Intent.ACTION_MAIN)
             .addCategory(Intent.CATEGORY_HOME)
         return try {
-            pm.resolveActivity(leanbackIntent, PackageManager.MATCH_DEFAULT_ONLY)
+            pm.resolveActivity(homeIntent, PackageManager.MATCH_DEFAULT_ONLY)
                 ?.activityInfo?.packageName
-                ?: pm.resolveActivity(homeIntent, PackageManager.MATCH_DEFAULT_ONLY)
-                    ?.activityInfo?.packageName
         } catch (e: Exception) {
             null
         }

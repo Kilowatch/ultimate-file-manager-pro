@@ -16180,6 +16180,15 @@ OK
     <string name="fav_tv_custom_launcher_unsupported_toast">
 Din startapp stöder inte genvägar på hemskärmen. Prova att trycka länge på startskärmen eller kontrollera inställningarna för din startskärm.
 </string>
+    <string name="create_shortcut_title">
+Lägg till genväg på startskärmen
+</string>
+    <string name="create_shortcut_subtitle">
+Välj en enhet eller favorit att placera på din startskärm
+</string>
+    <string name="create_shortcut_empty">
+Inga enheter eller favoriter tillgängliga
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

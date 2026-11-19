@@ -16191,6 +16191,15 @@ OK
     <string name="fav_tv_custom_launcher_unsupported_toast">
 Ihr Launcher unterstützt keine Startbildschirm-Verknüpfungen. Versuchen Sie, lange auf den Startbildschirm zu drücken, oder überprüfen Sie die Einstellungen Ihres Launchers.
 </string>
+    <string name="create_shortcut_title">
+Füge Shortcut hinzu
+</string>
+    <string name="create_shortcut_subtitle">
+Wählen Sie ein Laufwerk oder einen Favoriten aus, den Sie auf Ihrem Startbildschirm platzieren möchten
+</string>
+    <string name="create_shortcut_empty">
+Keine Laufwerke oder Favoriten verfügbar
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

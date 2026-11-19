@@ -16203,6 +16203,16 @@ OK
     <string name="fav_tv_custom_launcher_unsupported_toast">
 お使いのランチャーはホーム画面のショートカットに対応していません。ホーム画面を長押しするか、ランチャーの設定を確認してください。
 </string>
+    <string name="create_shortcut_title">
+ホーム画面にショートカットを追加
+</string>
+    <string name="create_shortcut_subtitle">
+ホーム画面に配置するドライブまたはお気に入りを
+選択してください
+</string>
+    <string name="create_shortcut_empty">
+利用可能なドライブまたはお気に入りがありません
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

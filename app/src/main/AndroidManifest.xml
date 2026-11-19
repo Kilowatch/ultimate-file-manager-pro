@@ -125,6 +125,11 @@
         <intent>
             <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
         </intent>
+        <!-- Home / TV Launcher queries for shortcut and preview channel management -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.HOME" />
+        </intent>
         <intent>
             <action android:name="android.intent.action.VIEW" />
             <data android:mimeType="video/*" />
@@ -497,6 +502,19 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="ufm" android:host="open" />
+            </intent-filter>
+        </activity>
+
+        <!-- Shortcut Creator Activity for Launcher 'Add Shortcut' (ATV Launcher Pro, Nova, etc.) -->
+        <activity
+            android:name=".shortcuts.CreateShortcutActivity"
+            android:label="@string/app_name"
+            android:icon="@mipmap/ic_launcher"
+            android:theme="@style/Theme.UFM.Translucent"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 

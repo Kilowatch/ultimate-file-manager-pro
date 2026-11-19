@@ -16203,6 +16203,15 @@ OK
     <string name="fav_tv_custom_launcher_unsupported_toast">
 Başlatıcınız ana ekran kısayollarını desteklemiyor. Ana ekrana uzun süre basmayı deneyin veya başlatıcınızın ayarlarını kontrol edin.
 </string>
+    <string name="create_shortcut_title">
+Ana Ekrana Kısayol Ekle
+</string>
+    <string name="create_shortcut_subtitle">
+Ana ekranınıza yerleştirmek için bir sürücü veya favori seçin
+</string>
+    <string name="create_shortcut_empty">
+Kullanılabilir sürücü veya favori yok
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
