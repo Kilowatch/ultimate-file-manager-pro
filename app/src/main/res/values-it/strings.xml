@@ -14116,9 +14116,7 @@ Trascina per riordinare la posizione da sinistra a destra
     <string name="quick_bar_max_limit_reached">
 Sono consentiti un massimo di 5 pulsanti di azione rapida
 </string>
-    <string name="quick_bar_action_protect_unprotect">
-Proteggi/Non proteggi
-</string>
+    <string name="quick_bar_action_protect_unprotect">“Proteggi/Consenti eliminazione”</string>
     <string name="quick_bar_action_hide_unhide">
 Nascondi/Mostra
 </string>
