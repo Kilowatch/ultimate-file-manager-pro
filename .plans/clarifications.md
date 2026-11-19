@@ -1,29 +1,37 @@
-# Clarifications: Root Storage Global Mount Namespace Access
+# Clarifications: Remote TV Download Manager (Mobile, Windows & Linux Companions)
 
 ## Status
-Answers received — ready for /plan and /tasks
-
-## Questions and Answers
-
-### Behavior & Settings
-**Q1. Should Master Mount Namespace mode be applied automatically or controlled via a Settings toggle?**
-**A:** (Recommended) Automatic: Apply `FLAG_MOUNT_MASTER` automatically whenever Root Storage is active. No extra settings toggle needed.
-
-### Error Handling & Fallback
-**Q2. How should UFM handle legacy or non-standard `su` binaries that reject the `--mount-master` flag?**
-**A:** (Recommended) Automatic Fallback: If spawning with `FLAG_MOUNT_MASTER` fails on legacy/unsupported `su` binaries, gracefully fall back to a standard root shell without crashing or disabling root.
-
-### Application Sandbox Path Filtering
-**Q3. When browsing `/data/data` in Root Storage mode, how should UFM's own package folder (`za.kilowatch.ultimatefilemanager`) be handled?**
-**A:** (Recommended) Allow Full Traversal: When browsing in Root Storage mode, allow root access and traversal into all packages in `/data/data`, including `za.kilowatch.ultimatefilemanager`.
+Answers received and approved — ready for /plan and /tasks
 
 ---
 
-## Spec / Plan Impact
-- The answers align with and solidify FR-01, FR-02, and FR-04 in [.plans/spec.md](file:///F:/Share/UFM/.plans/spec.md).
-- In the implementation plan, shell initialization will configure `FLAG_MOUNT_MASTER` by default, include graceful fallback catch logic, and ensure `RootShellWrapper.isRootPath()` permits root browsing into UFM's own package directory when the user is operating within Root Storage mode.
+## Questions and Answers
+
+### 1. Remote TV Storage Directory Picker
+**Q:** How should the TV download storage location picker behave when changing the target folder from Mobile?  
+**A:** **Interactive TV Storage Explorer dialog**: Browses TV Internal & USB storage drives dynamically, allows traversing folders, and supports creating new folders on the TV via `TvShareClient.listFiles` and `TvShareClient.mkdir`.
+
+### 2. Torrent Sub-File Selection
+**Q:** When adding a .torrent file to the TV, how should torrent sub-file selection be handled?  
+**A:** **Client-Side Inspection & Selection**: Inspect torrent files locally (mobile or PC) and present a sub-file selection checklist dialog before dispatching to the TV. Only the user-selected file indices will be set for active downloading on the TV BitTorrent engine.
+
+### 3. TV Background Service & Standby Resilience
+**Q:** How should downloads proceed on the TV when the TV screen turns off or enters standby?  
+**A:** **Persistent Foreground Service with Partial Wake Lock**: Keep TV `DownloadService` in the foreground with a partial wake lock so downloads finish even if the TV screen dims, sleeps, or turns off display output.
+
+### 4. Desktop Companion Presentation (`UFM-Windows` & `UFM-Linux`)
+**Q:** In the Windows and Linux companion apps, how should the Download Manager view be presented?  
+**A:** **Top Navigation Modal / Slide-Over Dashboard**: A modal/slide-over dashboard opened via a top navigation 'Download Manager' button (`DownloadManagerModal.tsx`), consistent with the Sideload APK modal.
+
+---
+
+## Spec & Plan Impact
+- **Mobile UI**: Implement an interactive TV folder picker bottom sheet / dialog in `RemoteDownloadManagerActivity` utilizing `TvShareClient`.
+- **Desktop Companion UI**: Create `DownloadManagerModal.tsx` in `UFM-Windows/src/components/` and `UFM-Linux/src/components/`, add a `DownloadCloud` button in `App.tsx`, and wire polling to `ufm_api_request`.
+- **Torrent Engine**: Integrate local parsing via `TorrentInfo` on Mobile and `bencode` / metadata inspection on Desktop to send `selectedIndices` array with `add-torrent` and `add-magnet` endpoints.
+- **TV Background Service**: Ensure `DownloadService.kt` on TV holds a `WakeLock` (`PARTIAL_WAKE_LOCK`) while active transfers are downloading, allowing uninterrupted background downloading when the TV enters screen-off sleep.
 
 ---
 
 ## Confirmed — Ready for Next Phase
-All questions have been confirmed. Proceed with `/plan` to define the architecture and implementation design.
+All questions confirmed. Proceed to `/plan` to detail the architecture and file modifications.

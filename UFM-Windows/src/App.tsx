@@ -6,6 +6,7 @@ import { Smartphone, Tv, Link, Download, Upload, AlertCircle, UploadCloud } from
 import { FilePane } from "./components/FilePane";
 import { DeviceSelector } from "./components/DeviceSelector";
 import { ProgressBar } from "./components/ProgressBar";
+import { DownloadManagerModal } from "./components/DownloadManagerModal";
 import { useUfmApi, UfmFile } from "./hooks/useUfmApi";
 import { languagesList } from "./hooks/translations";
 import logo from "./assets/logo.png";
@@ -41,6 +42,7 @@ function App() {
 
   // Dialog state
   const [showDeviceSelector, setShowDeviceSelector] = useState(false);
+  const [showDownloadManager, setShowDownloadManager] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
 
   // Local Filesystem state
@@ -196,6 +198,13 @@ function App() {
     if (isRemoteFs) {
       const success = await ufm.mkdir(currentPath, name);
       if (success) loadRemoteDir(currentPath);
+    } else {
+      try {
+        await invoke("create_local_folder", { path: currentPath, name });
+        loadLocalDir(currentPath);
+      } catch (err: any) {
+        console.error("Failed to create local directory:", err);
+      }
     }
   };
 
@@ -433,6 +442,18 @@ function App() {
             </div>
           )}
 
+          {ufm.activeDevice && (
+            <button 
+              className="btn-primary" 
+              onClick={() => setShowDownloadManager(true)}
+              title="TV Download Manager"
+              style={{ background: "rgba(0, 230, 118, 0.15)", borderColor: "#00E676", color: "#00E676" }}
+            >
+              <Download style={{ width: 16, height: 16 }} />
+              Download Manager
+            </button>
+          )}
+
           <button 
             className="btn-primary" 
             onClick={() => {
@@ -458,7 +479,7 @@ function App() {
           isLoading={isLocalLoading}
           onNavigate={loadLocalDir}
           onRefresh={() => loadLocalDir(localPath)}
-          onMkdir={() => {}} // Local mkdir can be implemented locally or omitted for read-only local safety
+          onMkdir={(path, name) => handleMkdir(false, path, name)}
           onDelete={() => {}} // Read-only local filesystem protection in MVP
           onFileSelect={setSelectedLocalFiles}
           selectedFiles={selectedLocalFiles}
@@ -626,6 +647,14 @@ function App() {
             ✕
           </button>
         </div>
+      )}
+
+      {showDownloadManager && (
+        <DownloadManagerModal
+          activeDevice={ufm.activeDevice}
+          onClose={() => setShowDownloadManager(false)}
+          t={t}
+        />
       )}
     </div>
     </>

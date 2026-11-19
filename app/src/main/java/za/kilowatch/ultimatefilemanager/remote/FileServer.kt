@@ -20,6 +20,8 @@ import android.os.StatFs
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.provider.Settings
+import za.kilowatch.ultimatefilemanager.download.DownloadTransferManager
+import za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager
 import za.kilowatch.ultimatefilemanager.storage.SafFile
 import za.kilowatch.ultimatefilemanager.storage.SafLocationRepository
 import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
@@ -599,6 +601,39 @@ class FileServer(
                                     uri == "/api/apps" -> handleApps()
                                     uri == "/api/apps/open-info" && isPost -> handleAppOpenInfo(session)
                                     uri == "/api/apps/extract" -> handleAppExtract(session)
+                                    (uri == "/tv/download-manager/status" || uri == "/api/download-manager/status") -> handleDownloadManagerStatus()
+                                    (uri == "/tv/download-manager/settings" || uri == "/api/download-manager/settings") && isPost -> handleDownloadManagerSettings(session)
+                                    (uri == "/tv/download-manager/action" || uri == "/api/download-manager/action") && isPost -> handleDownloadManagerAction(session)
+                                    (uri == "/tv/download-manager/add-url" || uri == "/api/download-manager/add-url") && isPost -> handleDownloadManagerAddUrl(session)
+                                    (uri == "/tv/download-manager/add-magnet" || uri == "/api/download-manager/add-magnet") && isPost -> handleDownloadManagerAddMagnet(session)
+                                    (uri == "/tv/download-manager/add-torrent" || uri == "/api/download-manager/add-torrent") && isPost -> handleDownloadManagerAddTorrent(session)
+                                    else -> KtorResult.Json(HttpStatusCode.NotFound, JSONObject().put("error", "Not found").toString())
+                                }
+                                result.send(call)
+                            }
+                        }
+                    }
+                    route("/tv/{...}") {
+                        handle {
+                            withContext(Dispatchers.IO) {
+                                val session = KtorSession(call)
+                                Log.d(TAG, "[TV] ${session.method} ${session.uri}")
+                                if (!isLanOrLocalhost(session.remoteIpAddress)) {
+                                    KtorResult.Json(HttpStatusCode.Forbidden, JSONObject().put("error", "Access restricted to local network").toString()).send(call)
+                                    return@withContext
+                                }
+                                val uri = session.uri; val isPost = session.method == "POST"
+                                if (!isAuthorized(session)) {
+                                    KtorResult.Json(HttpStatusCode.Unauthorized, JSONObject().put("error", "Unauthorized").toString()).send(call)
+                                    return@withContext
+                                }
+                                val result: KtorResult = when {
+                                    (uri == "/tv/download-manager/status" || uri == "/api/download-manager/status") -> handleDownloadManagerStatus()
+                                    (uri == "/tv/download-manager/settings" || uri == "/api/download-manager/settings") && isPost -> handleDownloadManagerSettings(session)
+                                    (uri == "/tv/download-manager/action" || uri == "/api/download-manager/action") && isPost -> handleDownloadManagerAction(session)
+                                    (uri == "/tv/download-manager/add-url" || uri == "/api/download-manager/add-url") && isPost -> handleDownloadManagerAddUrl(session)
+                                    (uri == "/tv/download-manager/add-magnet" || uri == "/api/download-manager/add-magnet") && isPost -> handleDownloadManagerAddMagnet(session)
+                                    (uri == "/tv/download-manager/add-torrent" || uri == "/api/download-manager/add-torrent") && isPost -> handleDownloadManagerAddTorrent(session)
                                     else -> KtorResult.Json(HttpStatusCode.NotFound, JSONObject().put("error", "Not found").toString())
                                 }
                                 result.send(call)
@@ -4491,6 +4526,185 @@ class FileServer(
     // (addSecurityHeaders and the old NanoHTTPD-era jsonResponse removed;
     //  security headers are now applied in KtorResult.send() for all response types,
     //  and jsonResponse() is defined above using HttpStatusCode directly.)
+
+    private fun handleDownloadManagerStatus(): KtorResult {
+        return try {
+            val transfers = DownloadTransferManager.getAllTransfers()
+            val transferArr = JSONArray()
+            for (t in transfers) {
+                val obj = JSONObject().apply {
+                    put("id", t.id)
+                    put("title", t.title)
+                    put("type", t.type.name)
+                    put("state", t.state.name)
+                    put("totalBytes", t.totalBytes)
+                    put("downloadedBytes", t.downloadedBytes)
+                    put("progressPercent", t.progressPercent)
+                    put("speedBytesPerSec", t.speedBytesPerSec)
+                    put("etaSeconds", t.etaSeconds)
+                    put("connectedPeers", t.connectedPeers)
+                    put("totalPeers", t.totalPeers)
+                    put("connectedSeeds", t.connectedSeeds)
+                    put("targetFolder", t.targetFolder.absolutePath)
+                    put("errorMessage", t.errorMessage ?: JSONObject.NULL)
+                }
+                transferArr.put(obj)
+            }
+
+            val currentDir = DownloadPreferencesManager.getDownloadDir(context)
+            val freeBytes = try { currentDir.freeSpace } catch (e: Exception) { 0L }
+            val totalBytes = try { currentDir.totalSpace } catch (e: Exception) { 0L }
+            val networkPolicy = DownloadPreferencesManager.getNetworkPolicy(context).name
+            val legalAccepted = DownloadPreferencesManager.isLegalAccepted(context)
+
+            val settingsObj = JSONObject().apply {
+                put("downloadDir", currentDir.absolutePath)
+                put("freeBytes", freeBytes)
+                put("totalBytes", totalBytes)
+                put("networkPolicy", networkPolicy)
+                put("legalAccepted", legalAccepted)
+            }
+
+            val rootObj = JSONObject().apply {
+                put("success", true)
+                put("settings", settingsObj)
+                put("transfers", transferArr)
+            }
+
+            KtorResult.Json(HttpStatusCode.OK, rootObj.toString())
+        } catch (e: Exception) {
+            jsonResponse(HttpStatusCode.InternalServerError, "error" to (e.message ?: "Unknown error"))
+        }
+    }
+
+    private fun handleDownloadManagerSettings(session: KtorSession): KtorResult {
+        return try {
+            val body = mutableMapOf<String, String>()
+            session.parseBody(body)
+            val json = JSONObject(body["postData"] ?: "{}")
+            if (json.has("downloadDir")) {
+                val dirPath = json.getString("downloadDir")
+                if (dirPath.isNotBlank()) {
+                    val f = File(dirPath)
+                    if (!f.exists()) f.mkdirs()
+                    if (f.exists() && f.isDirectory && f.canWrite()) {
+                        DownloadPreferencesManager.setDownloadDir(context, dirPath)
+                    } else {
+                        return jsonResponse(HttpStatusCode.BadRequest, "error" to "Directory cannot be written to or does not exist")
+                    }
+                }
+            }
+            if (json.has("networkPolicy")) {
+                val policyStr = json.getString("networkPolicy")
+                try {
+                    val policy = DownloadPreferencesManager.NetworkPolicy.valueOf(policyStr)
+                    DownloadPreferencesManager.setNetworkPolicy(context, policy)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Invalid network policy: $policyStr", e)
+                }
+            }
+            if (json.has("legalAccepted")) {
+                DownloadPreferencesManager.setLegalAccepted(context, json.getBoolean("legalAccepted"))
+            }
+            jsonResponse(HttpStatusCode.OK, "success" to true)
+        } catch (e: Exception) {
+            jsonResponse(HttpStatusCode.BadRequest, "error" to (e.message ?: "Invalid request"))
+        }
+    }
+
+    private fun handleDownloadManagerAction(session: KtorSession): KtorResult {
+        return try {
+            val body = mutableMapOf<String, String>()
+            session.parseBody(body)
+            val json = JSONObject(body["postData"] ?: "{}")
+            val id = json.optString("id")
+            val action = json.optString("action")
+            val deleteFiles = json.optBoolean("deleteFiles", false)
+
+            if (id.isBlank() || action.isBlank()) {
+                return jsonResponse(HttpStatusCode.BadRequest, "error" to "Missing id or action")
+            }
+
+            when (action.lowercase()) {
+                "pause" -> DownloadTransferManager.pauseTransfer(id)
+                "resume", "retry" -> DownloadTransferManager.resumeTransfer(context, id)
+                "delete", "cancel" -> DownloadTransferManager.cancelTransfer(id, deleteFiles = deleteFiles)
+                else -> return jsonResponse(HttpStatusCode.BadRequest, "error" to "Unknown action: $action")
+            }
+
+            jsonResponse(HttpStatusCode.OK, "success" to true)
+        } catch (e: Exception) {
+            jsonResponse(HttpStatusCode.BadRequest, "error" to (e.message ?: "Invalid action request"))
+        }
+    }
+
+    private fun handleDownloadManagerAddUrl(session: KtorSession): KtorResult {
+        return try {
+            val body = mutableMapOf<String, String>()
+            session.parseBody(body)
+            val json = JSONObject(body["postData"] ?: "{}")
+            val url = json.optString("url")
+            val filename = if (json.has("filename") && !json.isNull("filename")) json.getString("filename") else null
+            val saveDir = if (json.has("saveDir") && !json.isNull("saveDir")) File(json.getString("saveDir")) else DownloadPreferencesManager.getDownloadDir(context)
+
+            if (url.isBlank()) {
+                return jsonResponse(HttpStatusCode.BadRequest, "error" to "Missing URL")
+            }
+
+            DownloadTransferManager.startHttpDownload(context, url, saveDir, filename)
+            jsonResponse(HttpStatusCode.OK, "success" to true)
+        } catch (e: Exception) {
+            jsonResponse(HttpStatusCode.BadRequest, "error" to (e.message ?: "Failed to add URL download"))
+        }
+    }
+
+    private fun handleDownloadManagerAddMagnet(session: KtorSession): KtorResult {
+        return try {
+            val body = mutableMapOf<String, String>()
+            session.parseBody(body)
+            val json = JSONObject(body["postData"] ?: "{}")
+            val magnetUri = json.optString("magnetUri")
+            val saveDir = if (json.has("saveDir") && !json.isNull("saveDir")) File(json.getString("saveDir")) else DownloadPreferencesManager.getDownloadDir(context)
+
+            if (magnetUri.isBlank()) {
+                return jsonResponse(HttpStatusCode.BadRequest, "error" to "Missing magnetUri")
+            }
+
+            DownloadTransferManager.startTorrentDownload(context, magnetUri, saveDir)
+            jsonResponse(HttpStatusCode.OK, "success" to true)
+        } catch (e: Exception) {
+            jsonResponse(HttpStatusCode.BadRequest, "error" to (e.message ?: "Failed to add magnet download"))
+        }
+    }
+
+    private fun handleDownloadManagerAddTorrent(session: KtorSession): KtorResult {
+        return try {
+            val body = mutableMapOf<String, String>()
+            session.parseBody(body)
+            val json = JSONObject(body["postData"] ?: "{}")
+            val torrentBase64 = json.optString("torrentBase64")
+            val saveDir = if (json.has("saveDir") && !json.isNull("saveDir")) File(json.getString("saveDir")) else DownloadPreferencesManager.getDownloadDir(context)
+            val selectedIndices: Set<Int>? = if (json.has("selectedIndices") && !json.isNull("selectedIndices")) {
+                val arr = json.getJSONArray("selectedIndices")
+                (0 until arr.length()).map { arr.getInt(it) }.toSet()
+            } else {
+                null
+            }
+
+            if (torrentBase64.isBlank()) {
+                return jsonResponse(HttpStatusCode.BadRequest, "error" to "Missing torrentBase64")
+            }
+
+            val torrentBytes = android.util.Base64.decode(torrentBase64, android.util.Base64.DEFAULT)
+            val cacheFile = File(context.cacheDir, "remote_${UUID.randomUUID()}.torrent")
+            cacheFile.writeBytes(torrentBytes)
+
+            DownloadTransferManager.startTorrentFileDownload(context, cacheFile, saveDir, selectedIndices)
+            jsonResponse(HttpStatusCode.OK, "success" to true)
+        } catch (e: Exception) {
+            jsonResponse(HttpStatusCode.BadRequest, "error" to (e.message ?: "Failed to add torrent download"))
+        }
+    }
 
     /**
      * Custom FileInputStream that deletes the underlying file when closed.

@@ -11,7 +11,8 @@ use commands::{
     upload_file_to_android,
     download_file_from_android,
     upload_folder_to_android,
-    download_folder_from_android
+    download_folder_from_android,
+    create_local_folder
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -28,7 +29,8 @@ pub fn run() {
             upload_file_to_android,
             download_file_from_android,
             upload_folder_to_android,
-            download_folder_from_android
+            download_folder_from_android,
+            create_local_folder
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

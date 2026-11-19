@@ -16581,6 +16581,62 @@ Remove &amp; Delete Files
 Permanently delete downloaded files from disk
 </string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">
+Kelola unduhan TV, transfer aktif, dan lokasi penyimpanan
+</string>
+    <string name="tv_storage_location">
+Lokasi unduh:
+</string>
+    <string name="change_tv_storage_location">
+Ganti Lokasi
+</string>
+    <string name="clear_completed_transfers">
+Hapus yang Sudah Selesai
+</string>
+    <string name="reconnecting_to_tv">
+Menghubungkan ke TV…
+</string>
+    <string name="tv_folder_picker_title">
+Pilih Folder Unduhan TV
+</string>
+    <string name="tv_folder_picker_empty">
+Tidak ada subdirektori yang ditemukan
+</string>
+    <string name="tv_folder_select_btn">
+Pilih folder
+</string>
+    <string name="tv_folder_new_dir">
+Folder Baru
+</string>
+    <string name="add_direct_download">
+Direct download.. 
+</string>
+    <string name="add_magnet_link">
+Tautan Magnet
+</string>
+    <string name="add_torrent_file">
+File Torrent
+</string>
+    <string name="remote_download_dispatched">
+Unduhan ditambahkan ke TV
+</string>
+    <string name="remote_download_failed">
+Gagal menambahkan unduhan ke TV: %1$s
+</string>
+    <string name="remote_action_failed">
+Gagal menjalankan tindakan di TV: %1$s
+</string>
+    <string name="remote_location_updated">
+Lokasi unduhan TV diperbarui
+</string>
+    <string name="remote_location_update_failed">
+Gagal memperbarui lokasi unduhan TV: %1$s
+</string>
+    <string name="tv_download_free_space">
+%1$s gratis dari %2$s
+</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
 Smart Bookmarks

@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.7] — 2026-11-17
 
 ### Added
+- **Remote TV Download Manager (Mobile, Windows & Linux Companions)**: Full remote control and monitoring of Download Manager on paired Android TVs from Android Mobile, Windows Companion, and Linux Companion over secure LAN HTTPS:
+  1. **TV Root Action & Dedicated Activity**: Added "Download Manager" to the paired TV root screen in `NetworkBrowserActivity`, launching `RemoteDownloadManagerActivity` with live transfer %, download speeds, ETAs, and peer/seed metrics.
+  2. **Remote Storage Directory Picker**: Added interactive TV storage drive and folder explorer allowing users to inspect TV mounts and select any internal or external USB folder as the TV download location.
+  3. **Remote Download Dispatching**: Direct HTTP/HTTPS downloads, Magnet link pasting, and `.torrent` file dispatching with client-side sub-file selection checklist before starting on TV.
+  4. **Deletion Options**: Clear confirmation prompts to either "Remove from List Only" (preserving TV disk files) or "Remove & Delete Files from TV Storage".
+  5. **Desktop Companion Console**: Integrated `DownloadManagerModal` in Windows and Linux desktop companion applications for desktop-to-TV download management.
 - **Storage Analyzer Large Files Action Menu & Auto-Reindex**: Added a contextual glass action menu accessible via long-press (or remote D-pad Center hold / Menu on Android TV) on any item in the Large Files tab:
   1. **Open File & Open Folder Location**: Quick actions to directly view the file via built-in viewers or open its containing directory in `FileBrowserActivity` with the file focused.
   2. **Relocate / Move**: Launches the UFM Folder Picker (All-Drives initial view) to move files across any storage volume, featuring same-folder validation and `TransferConflictHelper` collision detection (Overwrite, Skip, Keep Both / auto-rename, Cancel).

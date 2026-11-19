@@ -5880,6 +5880,26 @@
     <string name="transfer_delete_remove_files">Remove &amp; Delete Files</string>
     <string name="transfer_delete_remove_files_desc">Permanently delete downloaded files from disk</string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">Manage TV downloads, active transfers, and storage location</string>
+    <string name="tv_storage_location">TV Download Location</string>
+    <string name="change_tv_storage_location">Change Location</string>
+    <string name="clear_completed_transfers">Clear Completed</string>
+    <string name="reconnecting_to_tv">Connecting to TV…</string>
+    <string name="tv_folder_picker_title">Select TV Download Folder</string>
+    <string name="tv_folder_picker_empty">No subdirectories found</string>
+    <string name="tv_folder_select_btn">Select Folder</string>
+    <string name="tv_folder_new_dir">New Folder</string>
+    <string name="add_direct_download">Direct Download</string>
+    <string name="add_magnet_link">Magnet Link</string>
+    <string name="add_torrent_file">Torrent File</string>
+    <string name="remote_download_dispatched">Download added to TV</string>
+    <string name="remote_download_failed">Failed to add download to TV: %1$s</string>
+    <string name="remote_action_failed">Failed to execute action on TV: %1$s</string>
+    <string name="remote_location_updated">TV download location updated</string>
+    <string name="remote_location_update_failed">Failed to update TV download location: %1$s</string>
+    <string name="tv_download_free_space">%1$s free of %2$s</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">Smart Bookmarks</string>
     <string name="bookmark_hub_subtitle">Organize saved links, media &amp; shares</string>

@@ -16257,6 +16257,62 @@ Remove &amp; Delete Files
 Permanently delete downloaded files from disk
 </string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">
+Beheer tv-downloads, actieve overdrachten en opslaglocatie
+</string>
+    <string name="tv_storage_location">
+Download Locatie
+</string>
+    <string name="change_tv_storage_location">
+Locatie wijzigen
+</string>
+    <string name="clear_completed_transfers">
+Verwijderen Voltooid
+</string>
+    <string name="reconnecting_to_tv">
+Bezig met verbinden met tv…
+</string>
+    <string name="tv_folder_picker_title">
+Kies downloadmap
+</string>
+    <string name="tv_folder_picker_empty">
+Geen submappen gevonden
+</string>
+    <string name="tv_folder_select_btn">
+Selecteer Map
+</string>
+    <string name="tv_folder_new_dir">
+Nieuwe map
+</string>
+    <string name="add_direct_download">
+Direct downloaden
+</string>
+    <string name="add_magnet_link">
+Magneetkoppeling
+</string>
+    <string name="add_torrent_file">
+Torrentbestand openen
+</string>
+    <string name="remote_download_dispatched">
+Download toegevoegd aan tv
+</string>
+    <string name="remote_download_failed">
+Downloaden naar tv toevoegen mislukt: %1$s
+</string>
+    <string name="remote_action_failed">
+Actie op tv kon niet worden uitgevoerd: %1$s
+</string>
+    <string name="remote_location_updated">
+Downloadlocatie voor tv bijgewerkt
+</string>
+    <string name="remote_location_update_failed">
+Kan de downloadlocatie van de tv niet bijwerken: %1$s
+</string>
+    <string name="tv_download_free_space">
+%1$s gratis van %2$s
+</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
 Smart Bookmarks

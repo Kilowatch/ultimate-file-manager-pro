@@ -39,6 +39,8 @@ import org.libtorrent4j.swig.error_code
 import org.libtorrent4j.swig.libtorrent
 import org.libtorrent4j.swig.settings_pack
 import java.io.File
+import java.nio.ByteBuffer
+import java.nio.charset.CodingErrorAction
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -53,8 +55,10 @@ import java.util.concurrent.TimeUnit
  */
 class TorrentEngine(private val context: Context) {
 
-    private val sessionManager = SessionManager(true)
+    private val sessionManager = SessionManager(false)
     private val activeHashes = ConcurrentHashMap<String, Sha1Hash>()
+    private val finishingHashes = ConcurrentHashMap.newKeySet<String>()
+    private val sessionLock = Any()
     private val lastReannounceTimes = ConcurrentHashMap<String, Long>()
     private val torrentTrackers = ConcurrentHashMap<String, List<String>>()
     private val torrentFilePriorities = ConcurrentHashMap<String, Array<Priority>>()
@@ -117,11 +121,11 @@ class TorrentEngine(private val context: Context) {
         sp.activeSeeds(0)
         sp.seedingOutgoingConnections(false)
 
-        // 4. Concurrency limits & unconstrained active downloads (removes 5-item limit)
-        sp.connectionsLimit(300)
-        sp.activeDownloads(9999)
-        sp.activeLimit(9999)
-        sp.setInteger(settings_pack.int_types.active_tracker_limit.swigValue(), 9999)
+        // 4. Concurrency limits & active downloads (hardened against native heap exhaustion on low-memory TV devices)
+        sp.connectionsLimit(200)
+        sp.activeDownloads(20)
+        sp.activeLimit(30)
+        sp.setInteger(settings_pack.int_types.active_tracker_limit.swigValue(), 100)
 
         // 5. TCP & uTP protocols enabled
         sp.setBoolean(settings_pack.bool_types.enable_incoming_tcp.swigValue(), true)
@@ -145,17 +149,51 @@ class TorrentEngine(private val context: Context) {
         // 8. Listen interfaces: bind to standard port range on IPv4 (avoid dead-end IPv6 routes on mobile/cellular)
         sp.setString(settings_pack.string_types.listen_interfaces.swigValue(), "0.0.0.0:6881-6889,0.0.0.0:0")
 
-        // 9. Alert mask: Ensure all tracker, peer, error, and status alerts are received
-        sp.setInteger(settings_pack.int_types.alert_mask.swigValue(), alert.all_categories.to_int())
+        // 9. Alert mask: Only subscribe to critical state, error, tracker, storage, and peer alerts.
+        // DO NOT enable all_categories, which generates thousands of internal dht/picker/session log alerts per second
+        // causing Scudo chunk header race aborts on 32-bit Android ARM devices.
+        val alertMask = alert.error_notification
+            .or_(alert.status_notification)
+            .or_(alert.tracker_notification)
+            .or_(alert.storage_notification)
+            .or_(alert.peer_notification)
+            .or_(alert.connect_notification)
+            .to_int()
+        sp.setInteger(settings_pack.int_types.alert_mask.swigValue(), alertMask)
 
         return sp
     }
 
     private fun setupAlertListener() {
+        val targetAlertTypes = intArrayOf(
+            AlertType.TORRENT_FINISHED.swig(),
+            AlertType.TORRENT_REMOVED.swig(),
+            AlertType.TORRENT_DELETED.swig(),
+            AlertType.TORRENT_PAUSED.swig(),
+            AlertType.TORRENT_RESUMED.swig(),
+            AlertType.TORRENT_CHECKED.swig(),
+            AlertType.TORRENT_ERROR.swig(),
+            AlertType.ADD_TORRENT.swig(),
+            AlertType.METADATA_RECEIVED.swig(),
+            AlertType.METADATA_FAILED.swig(),
+            AlertType.STATE_CHANGED.swig(),
+            AlertType.TRACKER_ANNOUNCE.swig(),
+            AlertType.TRACKER_REPLY.swig(),
+            AlertType.TRACKER_WARNING.swig(),
+            AlertType.TRACKER_ERROR.swig(),
+            AlertType.LISTEN_SUCCEEDED.swig(),
+            AlertType.LISTEN_FAILED.swig(),
+            AlertType.PEER_CONNECT.swig(),
+            AlertType.PEER_DISCONNECTED.swig(),
+            AlertType.PEER_ERROR.swig(),
+            AlertType.PEER_BLOCKED.swig(),
+            AlertType.PEER_BAN.swig()
+        )
+
         sessionManager.addListener(object : AlertListener {
             override fun types(): IntArray? {
-                // Register for all alert types so no tracker, peer, or session events are missed
-                return IntArray(org.libtorrent4j.alerts.Alerts.NUM_ALERT_TYPES) { it }
+                // Register only for explicitly handled alerts, avoiding thousands of noisy internal log alerts
+                return targetAlertTypes
             }
 
             override fun alert(alert: Alert<*>) {
@@ -169,16 +207,16 @@ class TorrentEngine(private val context: Context) {
                     is TrackerErrorAlert -> {
                         val errObj = alert.error()
                         val errMsg = alert.errorMessage().ifBlank { errObj?.toString() ?: "unknown" }
-                        Log.w(TAG, "Tracker error [${alert.trackerUrl()}]: error='$errMsg' code=${alert.error()}")
+                        Log.w(TAG, "Tracker error [${alert.trackerUrl().safeJniUrl()}]: error='$errMsg' code=${alert.error()}")
                     }
                     is TrackerWarningAlert -> {
-                        Log.w(TAG, "Tracker warning [${alert.trackerUrl()}]: ${alert.warningMessage()}")
+                        Log.w(TAG, "Tracker warning [${alert.trackerUrl().safeJniUrl()}]: ${alert.warningMessage()}")
                     }
                     is TrackerReplyAlert -> {
-                        Log.i(TAG, "Tracker reply [${alert.trackerUrl()}]: received ${alert.numPeers()} peers")
+                        Log.i(TAG, "Tracker reply [${alert.trackerUrl().safeJniUrl()}]: received ${alert.numPeers()} peers")
                     }
                     is TrackerAnnounceAlert -> {
-                        Log.i(TAG, "Announcing to tracker: ${alert.trackerUrl()} (event=${alert.getEvent()})")
+                        Log.i(TAG, "Announcing to tracker: ${alert.trackerUrl().safeJniUrl()} (event=${alert.getEvent()})")
                     }
                     is PeerConnectAlert -> {
                         Log.i(TAG, "Peer connected: ${alert.endpoint()} (dir=${alert.direction()}, type=${alert.socketType()})")
@@ -209,12 +247,13 @@ class TorrentEngine(private val context: Context) {
                                 handle.unsetFlags(TorrentFlags.PAUSED)
                                 handle.resume()
                             }
-                            Log.i(TAG, "TorrentCheckedAlert: hash checked, unpaused ${handle.infoHash().toHex()} (trackers=${handle.trackers().size})")
+                            val trackerCount = runCatching { handle.trackers().size }.getOrDefault(0)
+                            Log.i(TAG, "TorrentCheckedAlert: hash checked, unpaused ${handle.infoHash().toHex()} (trackers=$trackerCount)")
                         }
                     }
                     is StateChangedAlert -> {
                         val handle = alert.handle()
-                        val name = handle?.torrentFile()?.name() ?: runCatching { handle?.getName() }.getOrDefault("")
+                        val name = handle?.torrentFile()?.name() ?: handle?.infoHash()?.toHex().orEmpty()
                         Log.d(TAG, "State changed [$name]: ${alert.prevState} -> ${alert.state}")
                         if (alert.state == org.libtorrent4j.TorrentStatus.State.DOWNLOADING && handle != null) {
                             injectTrackersIfPresent(handle)
@@ -235,7 +274,8 @@ class TorrentEngine(private val context: Context) {
                                 handle.unsetFlags(TorrentFlags.PAUSED)
                                 handle.resume()
                             }
-                            Log.i(TAG, "AddTorrentAlert: unpaused, resumed, trackers injected (${handle.trackers().size}) for $id")
+                            val trackerCount = runCatching { handle.trackers().size }.getOrDefault(0)
+                            Log.i(TAG, "AddTorrentAlert: unpaused, resumed, trackers injected ($trackerCount) for $id")
                         }
                     }
                     is MetadataReceivedAlert -> {
@@ -249,14 +289,14 @@ class TorrentEngine(private val context: Context) {
                                 handle.resume()
                             }
                             val info = runCatching { handle.torrentFile() }.getOrNull()
-                            val name = info?.name() ?: runCatching { handle.getName() }.getOrDefault("")
+                            val name = info?.name() ?: id
                             val total = info?.totalSize() ?: runCatching { handle.status().totalWanted() }.getOrDefault(0L)
                             listener?.onTorrentAdded(id, name, total)
                         }
                     }
                     is TorrentErrorAlert -> {
                         val handle = alert.handle()
-                        val name = handle?.torrentFile()?.name() ?: runCatching { handle?.getName() }.getOrDefault("")
+                        val name = handle?.torrentFile()?.name() ?: handle?.infoHash()?.toHex().orEmpty()
                         Log.e(TAG, "Torrent error [$name]: error=${alert.error()} msg=${alert.message()}")
                     }
                     is TorrentAlert<*> -> {
@@ -292,7 +332,12 @@ class TorrentEngine(private val context: Context) {
      * - Triggers MediaScanner scan so files are instantly visible in UFM & system
      */
     private fun handleTorrentFinished(handle: TorrentHandle) {
-        val id = handle.infoHash().toHex()
+        val id = runCatching { handle.infoHash().toHex() }.getOrNull() ?: return
+        if (!finishingHashes.add(id)) {
+            // Already being handled / finalized by another thread
+            return
+        }
+        activeHashes.remove(id)
         lastReannounceTimes.remove(id)
         torrentTrackers.remove(id)
         val priorities = torrentFilePriorities.remove(id)
@@ -301,10 +346,11 @@ class TorrentEngine(private val context: Context) {
 
         try {
             // Immediate pause and peer ejection
-            handle.pause()
-            handle.unsetFlags(TorrentFlags.AUTO_MANAGED)
-            sessionManager.remove(handle) // Completely drop handle from active session so IP is never announced
-            activeHashes.remove(id)
+            runCatching { handle.pause() }
+            runCatching { handle.unsetFlags(TorrentFlags.AUTO_MANAGED) }
+            synchronized(sessionLock) {
+                runCatching { sessionManager.remove(handle) } // Completely drop handle from active session so IP is never announced
+            }
             Log.i(TAG, "Torrent $id finished. Immediately severed peer sockets and ejected from swarm.")
 
             val downloadedFiles = mutableListOf<String>()
@@ -514,6 +560,7 @@ class TorrentEngine(private val context: Context) {
     }
 
     fun cancel(id: String, deleteFiles: Boolean = true) {
+        finishingHashes.add(id)
         lastReannounceTimes.remove(id)
         torrentTrackers.remove(id)
         torrentFilePriorities.remove(id)
@@ -527,10 +574,18 @@ class TorrentEngine(private val context: Context) {
                 val torrentInfo = runCatching { handle.torrentFile() }.getOrNull()
                 val savePath = runCatching { handle.savePath() }.getOrNull()
 
-                if (deleteFiles) {
-                    runCatching {
-                        sessionManager.remove(handle, org.libtorrent4j.swig.session_handle.delete_files)
+                runCatching { handle.pause() }
+                synchronized(sessionLock) {
+                    if (deleteFiles) {
+                        runCatching {
+                            sessionManager.remove(handle, org.libtorrent4j.swig.session_handle.delete_files)
+                        }
+                    } else {
+                        runCatching { sessionManager.remove(handle) }
                     }
+                }
+
+                if (deleteFiles) {
                     if (torrentInfo != null && !savePath.isNullOrBlank()) {
                         try {
                             val saveDir = File(savePath).canonicalFile
@@ -550,8 +605,6 @@ class TorrentEngine(private val context: Context) {
                             Log.w(TAG, "Failed explicit disk cleanup during torrent cancellation", e)
                         }
                     }
-                } else {
-                    runCatching { sessionManager.remove(handle) }
                 }
             }
         }
@@ -560,92 +613,81 @@ class TorrentEngine(private val context: Context) {
     fun updateProgress() {
         val now = System.currentTimeMillis()
         for ((id, sha1) in activeHashes) {
-            val handle = runCatching { sessionManager.find(sha1) }.getOrNull() ?: continue
-            val isValid = runCatching { handle.isValid }.getOrDefault(false)
-            if (!isValid) continue
+            if (finishingHashes.contains(id)) continue
+            // Wrap the entire per-handle block so a native exception from one handle never
+            // disrupts the progress loop for all other active torrents.
+            runCatching {
+                val handle = sessionManager.find(sha1) ?: return@runCatching
+                // Re-check validity immediately before every native call to close the TOCTOU window
+                // between the initial isValid check and subsequent handle.status() / handle.trackers()
+                // calls.  libtorrent's internal alert/RTC threads can invalidate a handle at any point.
+                if (!handle.isValid || finishingHashes.contains(id)) return@runCatching
 
-            val status = runCatching { handle.status() }.getOrNull() ?: continue
+                val status = handle.status()
 
-            if (status.isFinished || status.isSeeding || status.progress() >= 1.0f) {
-                handleTorrentFinished(handle)
-                continue
-            }
+                // Re-validate after status() — the handle may have been invalidated during the call
+                if (!handle.isValid || finishingHashes.contains(id)) return@runCatching
 
-            val progress = (status.progress() * 100).toInt()
-            val downloadRate = status.downloadRate().toLong()
-
-            // Calculate ETA
-            val totalBytes = status.totalWanted()
-            val doneBytes = status.totalWantedDone()
-            val remainingBytes = if (totalBytes > doneBytes) totalBytes - doneBytes else 0L
-            val eta = if (downloadRate > 0) remainingBytes / downloadRate else 0L
-
-            val connectedPeers = runCatching { status.numPeers() }.getOrDefault(0)
-            val totalPeers = runCatching { status.listPeers() }.getOrDefault(0)
-            val connectedSeeds = runCatching { status.numSeeds() }.getOrDefault(0)
-            val numConnections = runCatching { status.numConnections() }.getOrDefault(0)
-            val connectCandidates = runCatching { status.connectCandidates() }.getOrDefault(0)
-
-            // Diagnostic logging for tracker endpoints (every 5 seconds)
-            val trackers = runCatching { handle.trackers() }.getOrDefault(emptyList())
-            if (now % 5000 < 1000) {
-                for (t in trackers) {
-                    val epInfo = t.endpoints().joinToString { ep ->
-                        val v1 = ep.infohashV1()
-                        "ep(fails=${v1?.fails()}, work=${v1?.isWorking()}, up=${v1?.updating()}, msg='${v1?.message()}')"
-                    }
-                    Log.i(TAG, "Torrent ${handle.getName()} tracker [${t.url()}]: tier=${t.tier()}, $epInfo")
+                if (status.isFinished || status.isSeeding || status.progress() >= 1.0f) {
+                    handleTorrentFinished(handle)
+                    return@runCatching
                 }
-            }
 
-            // Periodic peer swarm diagnostic logging (every 3 seconds)
-            if (now % 3000 < 1000) {
-                val peerList = runCatching { handle.peerInfo() }.getOrDefault(emptyList())
-                val peerSummary = if (peerList.isNotEmpty()) {
-                    peerList.take(5).joinToString { p -> "${p.ip()}(${p.client()}, ${p.flags()})" }
-                } else "none"
-                Log.d(TAG, "Torrent ${handle.getName()}: state=${status.state()}, conns=$numConnections, candidates=$connectCandidates, peers=$connectedPeers/$totalPeers, seeds=$connectedSeeds, rate=$downloadRate, samplePeers=[$peerSummary]")
-            }
+                val progress = (status.progress() * 100).toInt()
+                val downloadRate = status.downloadRate().toLong()
 
-            // Safe periodic reannounce ONLY when 0 peers are in swarm after 3 minutes (prevents tracker hammering bans)
-            if (status.state() == org.libtorrent4j.TorrentStatus.State.DOWNLOADING && connectedPeers == 0 && totalPeers == 0) {
-                val lastTime = lastReannounceTimes[id] ?: 0L
-                if (now - lastTime > 180_000L) {
-                    lastReannounceTimes[id] = now
-                    runCatching {
-                        handle.unsetFlags(TorrentFlags.PAUSED)
-                        handle.resume()
-                        handle.forceReannounce()
-                        Log.i(TAG, "Periodic reannounce triggered for ${handle.getName()} ($id)")
+                // Calculate ETA
+                val totalBytes = status.totalWanted()
+                val doneBytes = status.totalWantedDone()
+                val remainingBytes = if (totalBytes > doneBytes) totalBytes - doneBytes else 0L
+                val eta = if (downloadRate > 0) remainingBytes / downloadRate else 0L
+
+                val connectedPeers = runCatching { status.numPeers() }.getOrDefault(0)
+                val totalPeers = runCatching { status.listPeers() }.getOrDefault(0)
+                val connectedSeeds = runCatching { status.numSeeds() }.getOrDefault(0)
+
+                // Safe periodic reannounce ONLY when 0 peers are in swarm after 3 minutes (prevents tracker hammering bans)
+                if (status.state() == org.libtorrent4j.TorrentStatus.State.DOWNLOADING && connectedPeers == 0 && totalPeers == 0 && !finishingHashes.contains(id)) {
+                    val lastTime = lastReannounceTimes[id] ?: 0L
+                    if (now - lastTime > 180_000L) {
+                        lastReannounceTimes[id] = now
+                        runCatching {
+                            handle.unsetFlags(TorrentFlags.PAUSED)
+                            handle.resume()
+                            handle.forceReannounce()
+                            Log.i(TAG, "Periodic reannounce triggered for $id")
+                        }
                     }
                 }
-            }
 
-            if (status.hasMetadata()) {
-                val info = runCatching { handle.torrentFile() }.getOrNull()
-                val name = info?.name() ?: runCatching { handle.getName() }.getOrDefault("")
-                if (name.isNotBlank() && totalBytes > 0) {
-                    listener?.onTorrentAdded(id, name, totalBytes)
+                // NOTE: onTorrentAdded is intentionally NOT called here. It is fired once,
+                // reliably, inside MetadataReceivedAlert on libtorrent's own thread — avoiding
+                // any JNI race from reading handle.torrentFile() on a pool thread.
+
+                if (!finishingHashes.contains(id)) {
+                    listener?.onTorrentProgress(
+                        id,
+                        progress,
+                        downloadRate,
+                        eta,
+                        doneBytes,
+                        connectedPeers,
+                        totalPeers,
+                        connectedSeeds
+                    )
                 }
+            }.onFailure { e ->
+                Log.w(TAG, "updateProgress: skipping $id — native error reading handle state", e)
             }
-
-            listener?.onTorrentProgress(
-                id,
-                progress,
-                downloadRate,
-                eta,
-                doneBytes,
-                connectedPeers,
-                totalPeers,
-                connectedSeeds
-            )
         }
     }
 
     fun stop() {
         try {
             progressScheduler?.shutdownNow()
-            sessionManager.stop()
+            synchronized(sessionLock) {
+                sessionManager.stop()
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error stopping SessionManager", e)
         }
@@ -654,7 +696,13 @@ class TorrentEngine(private val context: Context) {
     private fun injectTrackersIfPresent(handle: TorrentHandle) {
         val id = handle.infoHash().toHex()
         val trackers = torrentTrackers[id] ?: emptyList()
-        val existing = runCatching { handle.trackers().map { it.url() } }.getOrDefault(emptyList())
+        // Read existing tracker URLs via JNI — sanitise each one through safeJniUrl() to prevent
+        // NewStringUTF from aborting the process when libtorrent returns non-UTF-8 announce URLs.
+        val existing = runCatching {
+            handle.trackers().mapNotNull { entry ->
+                runCatching { entry.url().safeJniUrl() }.getOrNull()
+            }
+        }.getOrDefault(emptyList())
         for (tUrl in trackers) {
             if (!existing.contains(tUrl)) {
                 runCatching {
@@ -742,5 +790,30 @@ class TorrentEngine(private val context: Context) {
 
     companion object {
         private const val TAG = "TorrentEngine"
+
+        /**
+         * Sanitises a raw C-string returned by libtorrent's JNI layer (e.g. announce_entry_url_get)
+         * before it is handed to NewStringUTF.  libtorrent stores tracker URLs as std::string with
+         * no guaranteed encoding; non-UTF-8 bytes cause CheckJNI to SIGABRT the process.
+         *
+         * Strategy:
+         *  1. Attempt strict UTF-8 decode — fast path for the 99 % case.
+         *  2. Fall back to ISO-8859-1 → UTF-8 re-encode, which is lossless for byte values and
+         *     always produces a valid UTF-8 string (at the cost of some mojibake in the URL, which
+         *     is still far better than a native crash).
+         */
+        fun String?.safeJniUrl(): String {
+            if (this == null) return ""
+            return try {
+                val bytes = this.toByteArray(Charsets.ISO_8859_1)
+                val decoder = Charsets.UTF_8.newDecoder()
+                    .onMalformedInput(CodingErrorAction.REPLACE)
+                    .onUnmappableCharacter(CodingErrorAction.REPLACE)
+                decoder.decode(ByteBuffer.wrap(bytes)).toString()
+            } catch (e: Exception) {
+                // Last resort: strip every byte outside printable ASCII so the URL is at least safe
+                this.filter { it.code in 32..126 }
+            }
+        }
     }
 }

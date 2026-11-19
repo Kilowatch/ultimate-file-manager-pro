@@ -16581,6 +16581,62 @@ Remove &amp; Delete Files
 Permanently delete downloaded files from disk
 </string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">
+TV indirmelerini, etkin aktarımları ve depolama konumunu yönetin
+</string>
+    <string name="tv_storage_location">
+TV İndirme Konumu
+</string>
+    <string name="change_tv_storage_location">
+Konum değiştir
+</string>
+    <string name="clear_completed_transfers">
+Tamamlananları Temizle
+</string>
+    <string name="reconnecting_to_tv">
+TV\'ye bağlanılıyor…
+</string>
+    <string name="tv_folder_picker_title">
+TV İndirme Klasörü Seçin
+</string>
+    <string name="tv_folder_picker_empty">
+Alt dizin bulunamadı
+</string>
+    <string name="tv_folder_select_btn">
+Klasörü Seçiniz
+</string>
+    <string name="tv_folder_new_dir">
+Yeni Klasör
+</string>
+    <string name="add_direct_download">
+Direkt indirme
+</string>
+    <string name="add_magnet_link">
+Mıknatıs Bağlantısı
+</string>
+    <string name="add_torrent_file">
+Torrent Dosyası Aç
+</string>
+    <string name="remote_download_dispatched">
+İndirme TV\'ye eklendi
+</string>
+    <string name="remote_download_failed">
+İndirme işlemi TV\'ye eklenemedi: %1$s
+</string>
+    <string name="remote_action_failed">
+TV\'de işlem gerçekleştirilemedi: %1$s
+</string>
+    <string name="remote_location_updated">
+TV indirme konumu güncellendi
+</string>
+    <string name="remote_location_update_failed">
+TV indirme konumu güncellenemedi: %1$s
+</string>
+    <string name="tv_download_free_space">
+%2$s için %1$s ücretsiz
+</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
 Smart Bookmarks

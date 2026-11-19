@@ -16593,6 +16593,62 @@ Remove &amp; Delete Files
 Permanently delete downloaded files from disk
 </string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">
+Gestionar las descargas de TV, las transferencias activas y la ubicación de almacenamiento
+</string>
+    <string name="tv_storage_location">
+Ubicación de descarga
+</string>
+    <string name="change_tv_storage_location">
+Cambiar ubicación
+</string>
+    <string name="clear_completed_transfers">
+Limpiar finalizados
+</string>
+    <string name="reconnecting_to_tv">
+<g id="2245"/><g id="2246"/><g id="2247">Conectar a TV</g>
+</string>
+    <string name="tv_folder_picker_title">
+Seleccionar carpeta de descarga de TV
+</string>
+    <string name="tv_folder_picker_empty">
+No se han encontrado subdirectorios
+</string>
+    <string name="tv_folder_select_btn">
+Seleccione la carpeta
+</string>
+    <string name="tv_folder_new_dir">
+Nueva carpeta
+</string>
+    <string name="add_direct_download">
+Descarga directa
+</string>
+    <string name="add_magnet_link">
+Enlace magnético
+</string>
+    <string name="add_torrent_file">
+Agregar archivo torrent
+</string>
+    <string name="remote_download_dispatched">
+Descarga añadida a la TV
+</string>
+    <string name="remote_download_failed">
+No se ha podido añadir la descarga al televisor: %1$s
+</string>
+    <string name="remote_action_failed">
+No se ha podido ejecutar la acción en el televisor: %1$s
+</string>
+    <string name="remote_location_updated">
+Se ha actualizado la ubicación de descarga de la TV
+</string>
+    <string name="remote_location_update_failed">
+No se ha podido actualizar la ubicación de descarga de la TV: %1$s
+</string>
+    <string name="tv_download_free_space">
+%1$s gratis de %2$s
+</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
 Smart Bookmarks

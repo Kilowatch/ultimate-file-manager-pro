@@ -16704,6 +16704,62 @@ Remove &amp; Delete Files
 Permanently delete downloaded files from disk
 </string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">
+管理电视下载、正在进行的传输和存储位置
+</string>
+    <string name="tv_storage_location">
+下载位置:
+</string>
+    <string name="change_tv_storage_location">
+更改位置
+</string>
+    <string name="clear_completed_transfers">
+清除日志文件
+</string>
+    <string name="reconnecting_to_tv">
+正在连接到电视……
+</string>
+    <string name="tv_folder_picker_title">
+选择电视下载文件夹
+</string>
+    <string name="tv_folder_picker_empty">
+未找到子目录
+</string>
+    <string name="tv_folder_select_btn">
+选择文件夹
+</string>
+    <string name="tv_folder_new_dir">
+新文件夹
+</string>
+    <string name="add_direct_download">
+直接下载
+</string>
+    <string name="add_magnet_link">
+磁力链接
+</string>
+    <string name="add_torrent_file">
+种子文件
+</string>
+    <string name="remote_download_dispatched">
+下载已添加到电视
+</string>
+    <string name="remote_download_failed">
+无法将下载内容添加到电视：%1$s
+</string>
+    <string name="remote_action_failed">
+无法在电视上执行操作：%1$s
+</string>
+    <string name="remote_location_updated">
+电视下载位置已更新
+</string>
+    <string name="remote_location_update_failed">
+更新电视下载位置失败：%1$s
+</string>
+    <string name="tv_download_free_space">
+%2$s免费%1$s
+</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
 Smart Bookmarks

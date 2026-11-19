@@ -16581,6 +16581,62 @@ Remove &amp; Delete Files
 Permanently delete downloaded files from disk
 </string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">
+テレビのダウンロード、進行中の転送、保存場所を管理する
+</string>
+    <string name="tv_storage_location">
+テレビのダウンロード先
+</string>
+    <string name="change_tv_storage_location">
+場所を変更
+</string>
+    <string name="clear_completed_transfers">
+ログファイルをクリア
+</string>
+    <string name="reconnecting_to_tv">
+テレビに接続中…
+</string>
+    <string name="tv_folder_picker_title">
+ダウンロードフォルダーを選択してください
+</string>
+    <string name="tv_folder_picker_empty">
+サブディレクトリが見つかりません
+</string>
+    <string name="tv_folder_select_btn">
+フォルダ選択
+</string>
+    <string name="tv_folder_new_dir">
+新しいフォルダ
+</string>
+    <string name="add_direct_download">
+直接ダウンロード
+</string>
+    <string name="add_magnet_link">
+マグネットリンク
+</string>
+    <string name="add_torrent_file">
+トレントファイル
+</string>
+    <string name="remote_download_dispatched">
+ダウンロードがテレビに追加されました
+</string>
+    <string name="remote_download_failed">
+テレビにダウンロードを追加できませんでした：%1$s
+</string>
+    <string name="remote_action_failed">
+テレビでアクションを実行できませんでした：%1$s
+</string>
+    <string name="remote_location_updated">
+テレビのダウンロード場所が更新されました
+</string>
+    <string name="remote_location_update_failed">
+テレビのダウンロード場所を更新できませんでした：%1$s
+</string>
+    <string name="tv_download_free_space">
+%2$sのうち%1$sが無料
+</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
 Smart Bookmarks

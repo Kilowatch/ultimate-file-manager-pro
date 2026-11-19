@@ -31,6 +31,9 @@ import java.security.KeyStore
 import java.util.UUID
 import java.util.zip.ZipFile
 import android.os.storage.StorageManager
+import android.os.StatFs
+import za.kilowatch.ultimatefilemanager.download.DownloadPreferencesManager
+import za.kilowatch.ultimatefilemanager.download.DownloadTransferManager
 import za.kilowatch.ultimatefilemanager.storage.SafFile
 import za.kilowatch.ultimatefilemanager.storage.SafLocationRepository
 import za.kilowatch.ultimatefilemanager.storage.SafTreeManager
@@ -255,6 +258,12 @@ class PairingServer(
                             method == Method.GET && uri == "/tv/install-xapk-status" -> handleTvInstallXapkStatus(session)
                             method == Method.GET && uri == "/tv/adb-status" -> handleTvAdbStatus()
                             method == Method.POST && uri == "/tv/transfer-settings" -> handleTvTransferSettings(session)
+                            method == Method.GET && uri == "/tv/download-manager/status" -> handleTvDownloadStatus()
+                            method == Method.POST && uri == "/tv/download-manager/settings" -> handleTvDownloadSettings(session)
+                            method == Method.POST && uri == "/tv/download-manager/action" -> handleTvDownloadAction(session)
+                            method == Method.POST && uri == "/tv/download-manager/add-url" -> handleTvDownloadAddUrl(session)
+                            method == Method.POST && uri == "/tv/download-manager/add-magnet" -> handleTvDownloadAddMagnet(session)
+                            method == Method.POST && uri == "/tv/download-manager/add-torrent" -> handleTvDownloadAddTorrent(session)
                             else -> {
                                 Log.w("GoRoScreen", "No route matched for: method=$method uri=$uri")
                                 newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Not Found")
@@ -1329,5 +1338,210 @@ class PairingServer(
 
         // C-3: Return 202 Accepted — no data written here
         return newFixedLengthResponse(Response.Status.ACCEPTED, "application/json", "{\"status\":\"awaiting_approval\"}")
+    }
+
+    private fun readBodyString(session: IHTTPSession, maxBytes: Long = 1024 * 1024): String {
+        val contentLength = session.headers["content-length"]?.toLongOrNull() ?: 0L
+        val limit = if (contentLength > 0) contentLength.coerceAtMost(maxBytes).toInt() else maxBytes.toInt()
+        val buffer = java.io.ByteArrayOutputStream(minOf(limit, 64 * 1024))
+        val chunk = ByteArray(8192)
+        var remaining = limit
+        val inputStream = session.inputStream
+        while (remaining > 0) {
+            val read = inputStream.read(chunk, 0, minOf(chunk.size, remaining))
+            if (read == -1) break
+            buffer.write(chunk, 0, read)
+            remaining -= read
+        }
+        return buffer.toString("UTF-8")
+    }
+
+    private fun handleTvDownloadStatus(): Response {
+        try {
+            val downloadDir = DownloadPreferencesManager.getDownloadDir(context)
+            var freeBytes = 0L
+            var totalBytes = 0L
+            try {
+                val stat = StatFs(downloadDir.path)
+                freeBytes = stat.availableBytes
+                totalBytes = stat.totalBytes
+            } catch (e: Exception) {
+                Log.w("PairingServer", "Could not query StatFs for ${downloadDir.path}", e)
+            }
+
+            val networkPolicy = DownloadPreferencesManager.getNetworkPolicy(context).name
+            val legalAccepted = DownloadPreferencesManager.isLegalAccepted(context)
+
+            val settingsObj = JSONObject().apply {
+                put("downloadDir", downloadDir.absolutePath)
+                put("freeBytes", freeBytes)
+                put("totalBytes", totalBytes)
+                put("networkPolicy", networkPolicy)
+                put("legalAccepted", legalAccepted)
+            }
+
+            val transfersArray = JSONArray()
+            val allTransfers = DownloadTransferManager.getAllTransfers()
+            for (item in allTransfers) {
+                val itemObj = JSONObject().apply {
+                    put("id", item.id)
+                    put("title", item.title)
+                    put("type", item.type.name)
+                    put("state", item.state.name)
+                    put("totalBytes", item.totalBytes)
+                    put("downloadedBytes", item.downloadedBytes)
+                    put("progressPercent", item.progressPercent)
+                    put("speedBytesPerSec", item.speedBytesPerSec)
+                    put("etaSeconds", item.etaSeconds)
+                    put("connectedPeers", item.connectedPeers)
+                    put("totalPeers", item.totalPeers)
+                    put("connectedSeeds", item.connectedSeeds)
+                    put("targetFolder", item.targetFolder.absolutePath)
+                    put("errorMessage", item.errorMessage ?: JSONObject.NULL)
+                }
+                transfersArray.put(itemObj)
+            }
+
+            val rootObj = JSONObject().apply {
+                put("success", true)
+                put("settings", settingsObj)
+                put("transfers", transfersArray)
+            }
+
+            return newFixedLengthResponse(Response.Status.OK, "application/json", rootObj.toString())
+        } catch (e: Exception) {
+            Log.e("PairingServer", "Error in handleTvDownloadStatus", e)
+            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "application/json", "{\"error\":\"${e.message}\"}")
+        }
+    }
+
+    private fun handleTvDownloadSettings(session: IHTTPSession): Response {
+        try {
+            val bodyStr = readBodyString(session, maxBytes = 64 * 1024)
+            val json = JSONObject(bodyStr)
+            if (json.has("downloadDir")) {
+                val dirPath = json.getString("downloadDir")
+                if (dirPath.isNotBlank()) {
+                    val f = File(dirPath)
+                    if (!f.exists()) f.mkdirs()
+                    if (f.exists() && f.isDirectory && f.canWrite()) {
+                        DownloadPreferencesManager.setDownloadDir(context, dirPath)
+                    } else {
+                        return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", "{\"error\":\"Directory cannot be written to or does not exist\"}")
+                    }
+                }
+            }
+            if (json.has("networkPolicy")) {
+                val policyStr = json.getString("networkPolicy")
+                try {
+                    val policy = DownloadPreferencesManager.NetworkPolicy.valueOf(policyStr)
+                    DownloadPreferencesManager.setNetworkPolicy(context, policy)
+                } catch (e: Exception) {
+                    Log.w("PairingServer", "Invalid network policy: $policyStr", e)
+                }
+            }
+            if (json.has("legalAccepted")) {
+                DownloadPreferencesManager.setLegalAccepted(context, json.getBoolean("legalAccepted"))
+            }
+            return newFixedLengthResponse(Response.Status.OK, "application/json", "{\"success\":true}")
+        } catch (e: Exception) {
+            Log.e("PairingServer", "Error in handleTvDownloadSettings", e)
+            return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", "{\"error\":\"${e.message}\"}")
+        }
+    }
+
+    private fun handleTvDownloadAction(session: IHTTPSession): Response {
+        try {
+            val bodyStr = readBodyString(session, maxBytes = 64 * 1024)
+            val json = JSONObject(bodyStr)
+            val id = json.optString("id")
+            val action = json.optString("action")
+            val deleteFiles = json.optBoolean("deleteFiles", false)
+
+            if (id.isBlank() || action.isBlank()) {
+                return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", "{\"error\":\"Missing id or action\"}")
+            }
+
+            when (action.lowercase()) {
+                "pause" -> DownloadTransferManager.pauseTransfer(id)
+                "resume", "retry" -> DownloadTransferManager.resumeTransfer(context, id)
+                "delete", "cancel" -> DownloadTransferManager.cancelTransfer(id, deleteFiles = deleteFiles)
+                else -> return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", "{\"error\":\"Unknown action: $action\"}")
+            }
+
+            return newFixedLengthResponse(Response.Status.OK, "application/json", "{\"success\":true}")
+        } catch (e: Exception) {
+            Log.e("PairingServer", "Error in handleTvDownloadAction", e)
+            return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", "{\"error\":\"${e.message}\"}")
+        }
+    }
+
+    private fun handleTvDownloadAddUrl(session: IHTTPSession): Response {
+        try {
+            val bodyStr = readBodyString(session, maxBytes = 64 * 1024)
+            val json = JSONObject(bodyStr)
+            val url = json.optString("url")
+            val filename = if (json.has("filename") && !json.isNull("filename")) json.getString("filename") else null
+            val saveDir = if (json.has("saveDir") && !json.isNull("saveDir")) File(json.getString("saveDir")) else DownloadPreferencesManager.getDownloadDir(context)
+
+            if (url.isBlank()) {
+                return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", "{\"error\":\"Missing URL\"}")
+            }
+
+            DownloadTransferManager.startHttpDownload(context, url, saveDir, filename)
+            return newFixedLengthResponse(Response.Status.OK, "application/json", "{\"success\":true}")
+        } catch (e: Exception) {
+            Log.e("PairingServer", "Error in handleTvDownloadAddUrl", e)
+            return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", "{\"error\":\"${e.message}\"}")
+        }
+    }
+
+    private fun handleTvDownloadAddMagnet(session: IHTTPSession): Response {
+        try {
+            val bodyStr = readBodyString(session, maxBytes = 64 * 1024)
+            val json = JSONObject(bodyStr)
+            val magnetUri = json.optString("magnetUri")
+            val saveDir = if (json.has("saveDir") && !json.isNull("saveDir")) File(json.getString("saveDir")) else DownloadPreferencesManager.getDownloadDir(context)
+
+            if (magnetUri.isBlank()) {
+                return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", "{\"error\":\"Missing magnetUri\"}")
+            }
+
+            DownloadTransferManager.startTorrentDownload(context, magnetUri, saveDir)
+            return newFixedLengthResponse(Response.Status.OK, "application/json", "{\"success\":true}")
+        } catch (e: Exception) {
+            Log.e("PairingServer", "Error in handleTvDownloadAddMagnet", e)
+            return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", "{\"error\":\"${e.message}\"}")
+        }
+    }
+
+    private fun handleTvDownloadAddTorrent(session: IHTTPSession): Response {
+        try {
+            val bodyStr = readBodyString(session, maxBytes = 10 * 1024 * 1024) // up to 10 MB for base64 torrent
+            val json = JSONObject(bodyStr)
+            val torrentBase64 = json.optString("torrentBase64")
+            val saveDir = if (json.has("saveDir") && !json.isNull("saveDir")) File(json.getString("saveDir")) else DownloadPreferencesManager.getDownloadDir(context)
+            
+            val selectedIndices: Set<Int>? = if (json.has("selectedIndices") && !json.isNull("selectedIndices")) {
+                val arr = json.getJSONArray("selectedIndices")
+                (0 until arr.length()).map { arr.getInt(it) }.toSet()
+            } else {
+                null
+            }
+
+            if (torrentBase64.isBlank()) {
+                return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", "{\"error\":\"Missing torrentBase64\"}")
+            }
+
+            val torrentBytes = android.util.Base64.decode(torrentBase64, android.util.Base64.DEFAULT)
+            val cacheFile = File(context.cacheDir, "remote_${UUID.randomUUID()}.torrent")
+            cacheFile.writeBytes(torrentBytes)
+
+            DownloadTransferManager.startTorrentFileDownload(context, cacheFile, saveDir, selectedIndices)
+            return newFixedLengthResponse(Response.Status.OK, "application/json", "{\"success\":true}")
+        } catch (e: Exception) {
+            Log.e("PairingServer", "Error in handleTvDownloadAddTorrent", e)
+            return newFixedLengthResponse(Response.Status.BAD_REQUEST, "application/json", "{\"error\":\"${e.message}\"}")
+        }
     }
 }

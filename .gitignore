@@ -92,6 +92,7 @@ Mobile_Screenshot_New.py
 approval-ui/
 __pycache__/
 *.pyc
+build_companions.py
 
 # ── Log & Debug Files ────────────────────────────────────────
 *.log

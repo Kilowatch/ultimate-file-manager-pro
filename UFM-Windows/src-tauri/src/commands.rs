@@ -108,7 +108,7 @@ fn pinned_async_client(fingerprint: &str) -> Result<reqwest::Client, String> {
             .danger_accept_invalid_certs(true)
             .tcp_keepalive(Duration::from_secs(30))
             .connection_verbose(false)
-            .timeout(Duration::from_secs(5))
+            .timeout(Duration::from_secs(8))
             .build()
             .map_err(|e| e.to_string())
     } else {
@@ -123,7 +123,7 @@ fn pinned_async_client(fingerprint: &str) -> Result<reqwest::Client, String> {
             .use_preconfigured_tls(tls_config)
             .tcp_keepalive(Duration::from_secs(30))
             .connection_verbose(false)
-            .timeout(Duration::from_secs(10))
+            .timeout(Duration::from_secs(12))
             .build()
             .map_err(|e| e.to_string())
     }
@@ -335,17 +335,35 @@ pub async fn download_file_from_android(
 
     let mut file = fs::File::create(&path).map_err(|e| e.to_string())?;
 
-    while let Some(chunk) = res.chunk().await.map_err(|e| e.to_string())? {
-        file.write_all(&chunk).map_err(|e| e.to_string())?;
-        downloaded += chunk.len() as u64;
-        if total_size > 0 {
-            let percent = (downloaded * 100 / total_size) as u32;
-            let _ = app_handle.emit("transfer-progress", percent);
+    loop {
+        match res.chunk().await {
+            Ok(Some(chunk)) => {
+                file.write_all(&chunk).map_err(|e| e.to_string())?;
+                downloaded += chunk.len() as u64;
+                if total_size > 0 {
+                    let percent = (downloaded * 100 / total_size) as u32;
+                    let _ = app_handle.emit("transfer-progress", percent);
+                }
+            }
+            Ok(None) => break,
+            Err(e) => {
+                if total_size > 0 && downloaded >= total_size {
+                    break;
+                }
+                return Err(e.to_string());
+            }
         }
     }
 
     let _ = app_handle.emit("transfer-progress", 100);
     Ok(())
+}
+
+#[tauri::command]
+pub fn create_local_folder(path: String, name: String) -> Result<(), String> {
+    let p = safe_path(&path)?;
+    let target = p.join(name);
+    fs::create_dir_all(&target).map_err(|e| e.to_string())
 }
 
 struct ProgressReader<R: Read> {

@@ -1390,6 +1390,13 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".download.RemoteDownloadManagerActivity"
+            android:exported="false"
+            android:label="@string/download_manager_title"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:windowSoftInputMode="adjustResize" />
+
         <service
             android:name=".download.DownloadService"
             android:exported="false"

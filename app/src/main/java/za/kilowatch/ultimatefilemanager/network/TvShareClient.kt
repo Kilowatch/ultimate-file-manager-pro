@@ -345,4 +345,166 @@ object TvShareClient {
             connection?.disconnect()
         }
     }
+
+    data class RemoteDownloadSettings(
+        val downloadDir: String,
+        val freeBytes: Long,
+        val totalBytes: Long,
+        val networkPolicy: String,
+        val legalAccepted: Boolean
+    )
+
+    data class RemoteTransferItem(
+        val id: String,
+        val title: String,
+        val type: String,
+        val state: String,
+        val totalBytes: Long,
+        val downloadedBytes: Long,
+        val progressPercent: Int,
+        val speedBytesPerSec: Long,
+        val etaSeconds: Long,
+        val connectedPeers: Int,
+        val totalPeers: Int,
+        val connectedSeeds: Int,
+        val targetFolder: String,
+        val errorMessage: String?
+    )
+
+    data class RemoteDownloadStatus(
+        val settings: RemoteDownloadSettings,
+        val transfers: List<RemoteTransferItem>
+    )
+
+    fun getDownloadManagerStatus(share: NetworkShare): RemoteDownloadStatus? {
+        val urlStr = "${getBaseUrl(share)}/tv/download-manager/status"
+        var connection: javax.net.ssl.HttpsURLConnection? = null
+        return try {
+            connection = LanHttpsClient.openConnection(context(), urlStr, getCertFingerprintForShare(share))
+            connection.requestMethod = "GET"
+            connection.setRequestProperty("Connection", "close")
+            addAuthHeaders(connection, share)
+            connection.connectTimeout = 8000
+            connection.readTimeout = 8000
+
+            val code = connection.responseCode
+            checkUpgradedToken(share, connection)
+            if (code == 200) {
+                val text = connection.inputStream.bufferedReader().use { it.readText() }
+                val root = JSONObject(text)
+                val sObj = root.getJSONObject("settings")
+                val settings = RemoteDownloadSettings(
+                    downloadDir = sObj.optString("downloadDir", ""),
+                    freeBytes = sObj.optLong("freeBytes", 0L),
+                    totalBytes = sObj.optLong("totalBytes", 0L),
+                    networkPolicy = sObj.optString("networkPolicy", "WIFI_ONLY"),
+                    legalAccepted = sObj.optBoolean("legalAccepted", true)
+                )
+
+                val tArray = root.getJSONArray("transfers")
+                val list = mutableListOf<RemoteTransferItem>()
+                for (i in 0 until tArray.length()) {
+                    val obj = tArray.getJSONObject(i)
+                    list.add(
+                        RemoteTransferItem(
+                            id = obj.optString("id", ""),
+                            title = obj.optString("title", ""),
+                            type = obj.optString("type", "DIRECT_HTTP"),
+                            state = obj.optString("state", "DOWNLOADING"),
+                            totalBytes = obj.optLong("totalBytes", 0L),
+                            downloadedBytes = obj.optLong("downloadedBytes", 0L),
+                            progressPercent = obj.optInt("progressPercent", 0),
+                            speedBytesPerSec = obj.optLong("speedBytesPerSec", 0L),
+                            etaSeconds = obj.optLong("etaSeconds", 0L),
+                            connectedPeers = obj.optInt("connectedPeers", 0),
+                            totalPeers = obj.optInt("totalPeers", 0),
+                            connectedSeeds = obj.optInt("connectedSeeds", 0),
+                            targetFolder = obj.optString("targetFolder", ""),
+                            errorMessage = if (obj.isNull("errorMessage")) null else obj.optString("errorMessage")
+                        )
+                    )
+                }
+                RemoteDownloadStatus(settings, list)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        } finally {
+            connection?.disconnect()
+        }
+    }
+
+    fun updateDownloadSettings(share: NetworkShare, downloadDir: String? = null, networkPolicy: String? = null, legalAccepted: Boolean? = null): Boolean {
+        return try {
+            val body = JSONObject().apply {
+                if (downloadDir != null) put("downloadDir", downloadDir)
+                if (networkPolicy != null) put("networkPolicy", networkPolicy)
+                if (legalAccepted != null) put("legalAccepted", legalAccepted)
+            }
+            postCommand(share, "/tv/download-manager/settings", body)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun executeTransferAction(share: NetworkShare, id: String, action: String, deleteFiles: Boolean = false): Boolean {
+        return try {
+            val body = JSONObject().apply {
+                put("id", id)
+                put("action", action)
+                put("deleteFiles", deleteFiles)
+            }
+            postCommand(share, "/tv/download-manager/action", body)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun addDirectDownload(share: NetworkShare, url: String, filename: String? = null, saveDir: String? = null): Boolean {
+        return try {
+            val body = JSONObject().apply {
+                put("url", url)
+                if (!filename.isNullOrBlank()) put("filename", filename)
+                if (!saveDir.isNullOrBlank()) put("saveDir", saveDir)
+            }
+            postCommand(share, "/tv/download-manager/add-url", body)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun addMagnetDownload(share: NetworkShare, magnetUri: String, saveDir: String? = null): Boolean {
+        return try {
+            val body = JSONObject().apply {
+                put("magnetUri", magnetUri)
+                if (!saveDir.isNullOrBlank()) put("saveDir", saveDir)
+            }
+            postCommand(share, "/tv/download-manager/add-magnet", body)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun addTorrentDownload(share: NetworkShare, torrentBytes: ByteArray, saveDir: String? = null, selectedIndices: Set<Int>? = null): Boolean {
+        return try {
+            val body = JSONObject().apply {
+                put("torrentBase64", android.util.Base64.encodeToString(torrentBytes, android.util.Base64.NO_WRAP))
+                if (!saveDir.isNullOrBlank()) put("saveDir", saveDir)
+                if (selectedIndices != null) {
+                    val arr = JSONArray()
+                    selectedIndices.forEach { arr.put(it) }
+                    put("selectedIndices", arr)
+                }
+            }
+            postCommand(share, "/tv/download-manager/add-torrent", body)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

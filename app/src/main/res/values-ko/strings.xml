@@ -16581,6 +16581,62 @@ Remove &amp; Delete Files
 Permanently delete downloaded files from disk
 </string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">
+TV 다운로드, 활성 전송 및 저장 위치 관리
+</string>
+    <string name="tv_storage_location">
+TV 다운로드 위치
+</string>
+    <string name="change_tv_storage_location">
+위치 변경
+</string>
+    <string name="clear_completed_transfers">
+로그파일 비우기
+</string>
+    <string name="reconnecting_to_tv">
+TV에 연결 중...
+</string>
+    <string name="tv_folder_picker_title">
+TV 다운로드 폴더 선택
+</string>
+    <string name="tv_folder_picker_empty">
+하위 디렉터리를 찾을 수 없습니다.
+</string>
+    <string name="tv_folder_select_btn">
+폴더 선택
+</string>
+    <string name="tv_folder_new_dir">
+새 폴더
+</string>
+    <string name="add_direct_download">
+직접 다운로드
+</string>
+    <string name="add_magnet_link">
+마그넷 링크
+</string>
+    <string name="add_torrent_file">
+토렌트 파일 열기
+</string>
+    <string name="remote_download_dispatched">
+TV에 다운로드 추가됨
+</string>
+    <string name="remote_download_failed">
+TV에 다운로드 항목을 추가하지 못했습니다. %1$s
+</string>
+    <string name="remote_action_failed">
+TV에서 작업을 실행하지 못했습니다. %1$s
+</string>
+    <string name="remote_location_updated">
+TV 다운로드 위치가 업데이트되었습니다.
+</string>
+    <string name="remote_location_update_failed">
+TV 다운로드 위치를 업데이트하지 못했습니다. %1$s
+</string>
+    <string name="tv_download_free_space">
+%2$s 중 %1$s 무료
+</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
 Smart Bookmarks

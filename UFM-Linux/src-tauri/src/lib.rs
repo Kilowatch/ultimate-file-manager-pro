@@ -5,6 +5,7 @@ use commands::{
     discover_devices, download_file_from_android, download_folder_from_android,
     get_system_roots, list_local_directory, load_paired_devices, save_paired_devices,
     ufm_api_request, upload_file_to_android, upload_folder_to_android,
+    create_local_folder,
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -22,7 +23,8 @@ pub fn run() {
             upload_file_to_android,
             download_file_from_android,
             upload_folder_to_android,
-            download_folder_from_android
+            download_folder_from_android,
+            create_local_folder
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

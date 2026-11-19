@@ -16558,6 +16558,62 @@ Remove &amp; Delete Files
 Permanently delete downloaded files from disk
 </string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">
+Hantera TV-nedladdningar, aktiva överföringar och lagringsplats
+</string>
+    <string name="tv_storage_location">
+Plats för TV-nedladdning
+</string>
+    <string name="change_tv_storage_location">
+Ändra plats
+</string>
+    <string name="clear_completed_transfers">
+Rensa klara
+</string>
+    <string name="reconnecting_to_tv">
+Ansluter till TV:n …
+</string>
+    <string name="tv_folder_picker_title">
+Välj mapp för nedladdning av TV-program
+</string>
+    <string name="tv_folder_picker_empty">
+Inga underkataloger hittades
+</string>
+    <string name="tv_folder_select_btn">
+Välj mapp
+</string>
+    <string name="tv_folder_new_dir">
+Ny mapp
+</string>
+    <string name="add_direct_download">
+Direkt nedladdning
+</string>
+    <string name="add_magnet_link">
+Magnetisk länk
+</string>
+    <string name="add_torrent_file">
+Öppna dataflödesfil
+</string>
+    <string name="remote_download_dispatched">
+Nedladdning tillagd till TV:n
+</string>
+    <string name="remote_download_failed">
+Det gick inte att lägga till nedladdningen på TV:n: %1$s
+</string>
+    <string name="remote_action_failed">
+Det gick inte att utföra åtgärden på TV:n: %1$s
+</string>
+    <string name="remote_location_updated">
+Nedladdningsplats för TV har uppdaterats
+</string>
+    <string name="remote_location_update_failed">
+Det gick inte att uppdatera platsen för TV-nedladdning: %1$s
+</string>
+    <string name="tv_download_free_space">
+%1$s gratis av %2$s
+</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
 Smart Bookmarks

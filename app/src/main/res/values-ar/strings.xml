@@ -16581,6 +16581,62 @@ Remove &amp; Delete Files
 Permanently delete downloaded files from disk
 </string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">
+إدارة التنزيلات على التلفزيون وعمليات النقل النشطة وموقع التخزين
+</string>
+    <string name="tv_storage_location">
+حدد مكان التحميل
+</string>
+    <string name="change_tv_storage_location">
+تغيير الموقع
+</string>
+    <string name="clear_completed_transfers">
+ازل المهام المكتملة
+</string>
+    <string name="reconnecting_to_tv">
+جارٍ الاتصال بالتلفزيون...
+</string>
+    <string name="tv_folder_picker_title">
+تحديد مجلد تنزيل التلفزيون
+</string>
+    <string name="tv_folder_picker_empty">
+لم يتم العثور على أي دلائل فرعية
+</string>
+    <string name="tv_folder_select_btn">
+حدد مجلدا
+</string>
+    <string name="tv_folder_new_dir">
+ملف جدید
+</string>
+    <string name="add_direct_download">
+تحميل مباشر
+</string>
+    <string name="add_magnet_link">
+رابط مغناطيسي
+</string>
+    <string name="add_torrent_file">
+ملف تورنت
+</string>
+    <string name="remote_download_dispatched">
+تمت إضافة التنزيل إلى التلفزيون
+</string>
+    <string name="remote_download_failed">
+فشل إضافة التنزيل إلى التلفزيون: %1$s
+</string>
+    <string name="remote_action_failed">
+فشل تنفيذ الإجراء على التلفزيون: %1$s
+</string>
+    <string name="remote_location_updated">
+تم تحديث موقع تنزيل التلفزيون
+</string>
+    <string name="remote_location_update_failed">
+فشل تحديث موقع تنزيل التلفزيون: %1$s
+</string>
+    <string name="tv_download_free_space">
+%1$s مجانًا من %2$s
+</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
 Smart Bookmarks

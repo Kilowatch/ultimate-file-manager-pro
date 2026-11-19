@@ -16581,6 +16581,62 @@ Remove &amp; Delete Files
 Permanently delete downloaded files from disk
 </string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">
+Управление загрузками на телевизор, активными передачами и местом хранения
+</string>
+    <string name="tv_storage_location">
+Местоположение загрузки
+</string>
+    <string name="change_tv_storage_location">
+Меняйте местоположение
+</string>
+    <string name="clear_completed_transfers">
+Очистить журнал
+</string>
+    <string name="reconnecting_to_tv">
+Подключение к телевизору
+</string>
+    <string name="tv_folder_picker_title">
+Выберите папку для загрузок
+</string>
+    <string name="tv_folder_picker_empty">
+Подкаталоги не найдены
+</string>
+    <string name="tv_folder_select_btn">
+Выбрать папку
+</string>
+    <string name="tv_folder_new_dir">
+Новая папка
+</string>
+    <string name="add_direct_download">
+Прямое скачивание
+</string>
+    <string name="add_magnet_link">
+Magnet-ссылка
+</string>
+    <string name="add_torrent_file">
+Открыть файл коллекции
+</string>
+    <string name="remote_download_dispatched">
+Загрузка добавлена на телевизор
+</string>
+    <string name="remote_download_failed">
+Не удалось добавить загрузку на телевизор: %1$s
+</string>
+    <string name="remote_action_failed">
+Не удалось выполнить действие на телевизоре: %1$s
+</string>
+    <string name="remote_location_updated">
+Место загрузки на телевизор обновлено
+</string>
+    <string name="remote_location_update_failed">
+Не удалось обновить место загрузки для телевизора: %1$s
+</string>
+    <string name="tv_download_free_space">
+%1$s бесплатно из %2$s
+</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
 Smart Bookmarks

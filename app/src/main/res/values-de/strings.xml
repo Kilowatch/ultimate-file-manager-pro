@@ -16569,6 +16569,62 @@ Remove &amp; Delete Files
 Permanently delete downloaded files from disk
 </string>
 
+    <!-- Remote TV Download Manager -->
+    <string name="tv_download_manager_subtitle">
+Verwalten von TV-Downloads, aktiven Übertragungen und Speicherorten
+</string>
+    <string name="tv_storage_location">
+Speicherort für TV-Downloads
+</string>
+    <string name="change_tv_storage_location">
+Standort ändern
+</string>
+    <string name="clear_completed_transfers">
+Räumung abgeschlossen
+</string>
+    <string name="reconnecting_to_tv">
+Anschluss an TV-Gerät
+</string>
+    <string name="tv_folder_picker_title">
+TV-Download-Ordner auswählen
+</string>
+    <string name="tv_folder_picker_empty">
+Keine Unterverzeichnisse gefunden
+</string>
+    <string name="tv_folder_select_btn">
+Ordner auswählen
+</string>
+    <string name="tv_folder_new_dir">
+Neuer Ordner
+</string>
+    <string name="add_direct_download">
+Direkt Download
+</string>
+    <string name="add_magnet_link">
+Magnet-Link
+</string>
+    <string name="add_torrent_file">
+Torrent-Datei
+</string>
+    <string name="remote_download_dispatched">
+Download auf TV hinzugefügt
+</string>
+    <string name="remote_download_failed">
+Das Herunterladen auf den Fernseher konnte nicht hinzugefügt werden: %1$s
+</string>
+    <string name="remote_action_failed">
+Die Aktion konnte nicht auf dem Fernseher ausgeführt werden: %1$s
+</string>
+    <string name="remote_location_updated">
+Speicherort für TV-Downloads aktualisiert
+</string>
+    <string name="remote_location_update_failed">
+Der TV-Download-Speicherort konnte nicht aktualisiert werden: %1$s
+</string>
+    <string name="tv_download_free_space">
+%1$s kostenlos von %2$s
+</string>
+
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
 Smart Bookmarks

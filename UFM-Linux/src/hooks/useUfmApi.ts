@@ -95,7 +95,7 @@ export function useUfmApi() {
     setIsConnecting(true);
     setError(null);
     try {
-      const candidatePorts = Array.from(new Set([device.port, 8444, 8445, 8446, 8447, 8448]));
+      const candidatePorts = Array.from(new Set([device.port, 8444, 8443, 8085, 8445, 8446]));
       
       const probePromises = candidatePorts.map(async (port) => {
         const authUrl = `https://${device.ip}:${port}/api/auth`;
@@ -210,23 +210,8 @@ export function useUfmApi() {
       setError(null);
       return true;
     }
-    // If the error is a connection, DNS, timeout, cert mismatch, host or network unreachable error,
-    // automatically reset the active device to null (disconnect).
-    if (
-      errMsg.includes("error sending request") ||
-      errMsg.includes("dns") ||
-      errMsg.includes("connect") ||
-      errMsg.includes("timeout") ||
-      errMsg.includes("mismatch") ||
-      errMsg.includes("connection") ||
-      errMsg.includes("os error") ||
-      errMsg.includes("host") ||
-      errMsg.includes("network")
-    ) {
-      setActiveDevice(null);
-      setError(null);
-      return true;
-    }
+    // Do NOT disconnect the active device on transient network, connection, or timeout errors.
+    // Preserving activeDevice allows retry on Wi-Fi wake-up without dropping back to the connection screen.
     return false;
   };
 
@@ -246,42 +231,46 @@ export function useUfmApi() {
       });
     };
 
-    try {
-      return await tryRequest(activeDevice.port);
-    } catch (e: any) {
-      const errMsg = e.toString();
-      if (errMsg.includes("HTTP error")) {
-        checkConnectionError(e);
-        throw e;
-      }
-
-      const candidatePorts = [8444, 8445, 8446, 8447, 8448].filter(p => p !== activeDevice.port);
-      for (const port of candidatePorts) {
-        try {
-          const res = await tryRequest(port);
-          const updatedDevice = { ...activeDevice, port };
-          setActiveDevice(updatedDevice);
-          const updatedList = pairedDevices.map(d => d.id === activeDevice.id ? updatedDevice : d);
-          setPairedDevices(updatedList);
-          await invoke("save_paired_devices", { devices: updatedList });
-          return res;
-        } catch (err: any) {
-          const subErrMsg = err.toString();
-          if (subErrMsg.includes("HTTP error")) {
-            const updatedDevice = { ...activeDevice, port };
-            setActiveDevice(updatedDevice);
-            const updatedList = pairedDevices.map(d => d.id === activeDevice.id ? updatedDevice : d);
-            setPairedDevices(updatedList);
-            await invoke("save_paired_devices", { devices: updatedList });
-            checkConnectionError(err);
-            throw err;
-          }
+    // 1. Try primary active port with automatic retries for device wake-up and transient network hiccups
+    let lastError: any = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        if (attempt > 0) {
+          await new Promise((resolve) => setTimeout(resolve, 350));
+        }
+        return await tryRequest(activeDevice.port);
+      } catch (err: any) {
+        lastError = err;
+        const msg = err?.toString() || "";
+        if (msg.includes("HTTP error 401") || msg.includes("HTTP error 403")) {
+          checkConnectionError(err);
+          throw err;
         }
       }
-
-      checkConnectionError(e);
-      throw e;
     }
+
+    // 2. If primary port failed after retries, probe other candidate ports
+    const candidatePorts = [8444, 8443, 8085, 8445].filter((p) => p !== activeDevice.port);
+    for (const port of candidatePorts) {
+      try {
+        const res = await tryRequest(port);
+        const updatedDevice = { ...activeDevice, port };
+        setActiveDevice(updatedDevice);
+        const updatedList = pairedDevices.map((d) => (d.id === activeDevice.id ? updatedDevice : d));
+        setPairedDevices(updatedList);
+        await invoke("save_paired_devices", { devices: updatedList });
+        return res;
+      } catch (err: any) {
+        const subErrMsg = err?.toString() || "";
+        if (subErrMsg.includes("HTTP error 401") || subErrMsg.includes("HTTP error 403")) {
+          checkConnectionError(err);
+          throw err;
+        }
+      }
+    }
+
+    checkConnectionError(lastError);
+    throw lastError;
   };
 
   const getVolumes = async (): Promise<UfmVolume[]> => {

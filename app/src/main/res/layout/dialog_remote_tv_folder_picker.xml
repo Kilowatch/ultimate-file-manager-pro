@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="20dp">
+
+    <!-- Header: Title + Up Navigation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:id="@+id/btnFolderUp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint"
+            android:contentDescription="@string/cd_back"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtPickerTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="@string/tv_folder_picker_title"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-bold" />
+
+        <ImageView
+            android:id="@+id/btnCreateNewFolder"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_folder"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@string/tv_folder_new_dir" />
+    </LinearLayout>
+
+    <!-- Current Path Breadcrumb -->
+    <TextView
+        android:id="@+id/txtCurrentPickerPath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:singleLine="true"
+        android:ellipsize="start"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Loading Spinner -->
+    <ProgressBar
+        android:id="@+id/pickerProgress"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:layout_marginVertical="24dp"
+        android:visibility="gone" />
+
+    <!-- Empty State -->
+    <TextView
+        android:id="@+id/txtPickerEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_folder_picker_empty"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginVertical="32dp"
+        android:visibility="gone" />
+
+    <!-- Folder List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerFolders"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:scrollbars="vertical" />
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPickerCancel"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/mobile_text_secondary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPickerSelect"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/tv_folder_select_btn" />
+    </LinearLayout>
+
+</LinearLayout>

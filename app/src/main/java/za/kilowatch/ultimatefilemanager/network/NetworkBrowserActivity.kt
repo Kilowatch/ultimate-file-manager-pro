@@ -167,6 +167,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         const val RESULT_SELECTED_COMPRESS_SHARE_ID = "result_compress_share_id"
         const val RESULT_SELECTED_COMPRESS_NET_PATH  = "result_compress_net_path"
         const val EXTRA_REMOTE_PATH = "extra_remote_path"
+        private const val DOWNLOAD_MANAGER_PATH = "__download_manager__"
         private const val SIDELOAD_APK_PATH = "__sideload_apk__"
         private const val SIDELOAD_XAPK_PATH = "__sideload_xapk__"
         const val SCREENSHOT_PATH = "__screenshot__"
@@ -1167,6 +1168,17 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             putExtra(EXTRA_PAIRED_DEVICE_ID, pairedDeviceId)
                             putExtra(TransferSettingsActivity.EXTRA_SHARE_HOST, share.host)
                             putExtra(TransferSettingsActivity.EXTRA_SHARE_PORT, share.port)
+                        }
+                        startActivity(intent)
+                        return@NetworkFileAdapter
+                    }
+                    DOWNLOAD_MANAGER_PATH -> {
+                        val pairedDeviceId = intent.getStringExtra(EXTRA_PAIRED_DEVICE_ID) ?: ""
+                        val intent = Intent(this@NetworkBrowserActivity, za.kilowatch.ultimatefilemanager.download.RemoteDownloadManagerActivity::class.java).apply {
+                            putExtra(EXTRA_PAIRED_DEVICE_ID, pairedDeviceId)
+                            putExtra(za.kilowatch.ultimatefilemanager.download.RemoteDownloadManagerActivity.EXTRA_SHARE_HOST, share.host)
+                            putExtra(za.kilowatch.ultimatefilemanager.download.RemoteDownloadManagerActivity.EXTRA_SHARE_PORT, share.port)
+                            putExtra(za.kilowatch.ultimatefilemanager.download.RemoteDownloadManagerActivity.EXTRA_DEVICE_NAME, share.name)
                         }
                         startActivity(intent)
                         return@NetworkFileAdapter
@@ -3739,6 +3751,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
         // Append action items at TV root (mobile only)
         return if (isTvRoot) {
             sortedFiles + listOf(
+                NetworkFile(
+                    name = getString(R.string.download_manager_title),
+                    path = DOWNLOAD_MANAGER_PATH,
+                    isDirectory = false,
+                    iconRes = R.drawable.ic_download,
+                    subtitle = getString(R.string.tv_download_manager_subtitle)
+                ),
                 NetworkFile(
                     name = getString(R.string.take_screenshot),
                     path = SCREENSHOT_PATH,
