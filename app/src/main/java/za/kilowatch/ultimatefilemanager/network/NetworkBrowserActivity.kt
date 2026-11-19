@@ -1159,7 +1159,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         return@NetworkFileAdapter
                     }
                     SIDELOAD_XAPK_PATH -> {
-                        launchFilePicker("xapk,apks")
+                        launchFilePicker("xapk,apks,apkm")
                         return@NetworkFileAdapter
                     }
                     TRANSFER_SETTINGS_PATH -> {
