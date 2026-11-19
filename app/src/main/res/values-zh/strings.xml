@@ -51,7 +51,7 @@ Ultimate File Manager Pro
 荷兰语 (Nederlands)
 </string>
     <string name="language_chinese">
-Chinese (中文)
+中文 (中文)
 </string>
     <string name="language_swedish">
 瑞典语（Svenska）
@@ -347,10 +347,10 @@ USB 驱动器
 双窗
 </string>
     <string name="copy_folder_path">
-Copy Folder Path
+复制文件夹路径
 </string>
     <string name="folder_path_copied">
-Folder path copied to clipboard
+文件夹路径已复制到剪贴板
 </string>
     <string name="close_twin_window">
 关闭双窗
@@ -451,55 +451,55 @@ Folder path copied to clipboard
 根据完整名称长度自动换行显示
 </string>
     <string name="settings_file_name_display_truncate">
-Single line (Truncated end)
+单行（截断端）
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Truncates with ellipsis at end (abc…) without scrolling
+在结尾处用省略号截断 (abc...) 而不滚动
 </string>
     <string name="settings_file_name_display_truncate_middle">
-Single line (Truncate middle)
+单行（中间截断）
 </string>
     <string name="settings_file_name_display_truncate_middle_desc">
-Truncates in middle (abc…xyz.ext) to preserve the end suffix
+中间截断 (abc…xyz.ext) 以保留结尾后缀
 </string>
     <string name="settings_marquee_speed_title">
-Scroll Speed
+滚动速度
 </string>
     <string name="settings_marquee_speed_slow">
-Slow
+慢的
 </string>
     <string name="settings_marquee_speed_normal">
 Normal
 </string>
     <string name="settings_marquee_speed_fast">
-Fast
+快速地
 </string>
     <string name="settings_marquee_loop_title">
-Loop Mode
+循环模式
 </string>
     <string name="settings_marquee_loop_one_shot">
-One-Shot
+一击
 </string>
     <string name="settings_marquee_loop_one_shot_desc">
-Scrolls once and stops to save battery
+滚动一次然后停止以节省电池
 </string>
     <string name="settings_marquee_loop_continuous">
-Continuous
+连续的
 </string>
     <string name="settings_marquee_loop_continuous_desc">
-Repeats back and forth continuously
+不断地来回重复
 </string>
     <string name="settings_marquee_scope_title">
-Scroll Scope
+滚动范围
 </string>
     <string name="settings_marquee_scope_all">
-All Visible Files
+所有可见文件
 </string>
     <string name="settings_marquee_scope_focused">
-Focused / Selected Only
+仅聚焦/选定
 </string>
     <string name="settings_file_name_preview_title">
-Live Preview
+实时预览
 </string>
     <string name="settings_file_name_preview_sample">
 VeryLongFileName_ProjectReport_2026_Final_v2.docx
@@ -1206,7 +1206,7 @@ APK
 重复项
 </string>
     <string name="analyzer_tab_incomplete">
-Incomplete
+不完整
 </string>
     <string name="analyzer_tab_junk">
 垃圾与旧货
@@ -1233,10 +1233,10 @@ Incomplete
 可节省 %1$s
 </string>
     <string name="analyzer_no_incomplete_files">
-No incomplete or sparse downloads found
+未发现不完整或稀疏的下载
 </string>
     <string name="analyzer_incomplete_file_allocated">
-Size on disk: %1$s (%2$.1f%%)
+磁盘大小：%1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1321,97 +1321,97 @@ Size on disk: %1$s (%2$.1f%%)
 
     <!-- Bulk duplicate deletion & retention strategy -->
     <string name="analyzer_select_all_duplicates">
-Select All Duplicates
+选择所有重复项
 </string>
     <string name="analyzer_clear_selection">
-Clear
+清除
 </string>
     <string name="analyzer_delete_all_duplicates">
-Delete All Duplicates
+删除所有重复项
 </string>
     <string name="analyzer_delete_selected_count">
-Delete Selected (%1$d)
+删除所选内容 (%1$d)
 </string>
     <string name="analyzer_badge_original">
-Original
+原来的
 </string>
     <string name="analyzer_strategy_title">
-Duplicate Retention Strategy
+重复保留策略
 </string>
     <string name="analyzer_strategy_oldest">
-Keep Oldest (Original)
+保留最旧的（原始）
 </string>
     <string name="analyzer_strategy_oldest_desc">
-Preserves the oldest file by modification date and deletes newer copies.
+按修改日期保留最旧的文件并删除较新的副本。
 </string>
     <string name="analyzer_strategy_newest">
-Keep Newest
+保持最新
 </string>
     <string name="analyzer_strategy_newest_desc">
-Preserves the most recently modified file and deletes older copies.
+保留最近修改的文件并删除旧副本。
 </string>
     <string name="analyzer_strategy_remember">
-Remember my choice
+记住我的选择
 </string>
     <string name="analyzer_strategy_most_complete">
-Keep Most Complete
+保持最完整
 </string>
     <string name="analyzer_strategy_most_complete_desc">
-Preserves fully downloaded or most allocated files and deletes incomplete copies.
+保留完全下载或大多数分配的文件并删除不完整的副本。
 </string>
     <string name="analyzer_badge_partial">
-Partial (%1$.0f%%)
+部分（%1$.0f%%）
 </string>
     <string name="analyzer_badge_sparse">
-Sparse
+疏
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+删除 %1$d 重复文件？
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+每个文件将保留一份原始副本。 %1$d 重复副本将被永久删除以释放 %2$s。
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+清理完成
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+已成功删除 %1$d 个重复文件并回收 %2$s 存储空间。
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+由于权限原因，无法删除 %1$d 文件。
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+正在删除 %1$d 个文件（共 %2$d 个）...
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d 重复组 · 保存 %2$s
 </string>
     <string name="settings_duplicate_retention_title">
-Duplicate Retention Strategy
+重复保留策略
 </string>
     <string name="settings_duplicate_retention_dialog_subtitle">
-Choose which copy to preserve when selecting duplicate files for cleanup.
+选择要清理的重复文件时选择要保留的副本。
 </string>
     <string name="settings_duplicate_retention_summary_oldest">
-Keep oldest file (Original)
+保留最旧的文件（原始）
 </string>
     <string name="settings_duplicate_retention_summary_newest">
-Keep newest file
+保留最新文件
 </string>
     <string name="settings_duplicate_retention_summary_most_complete">
-Keep most complete file
+保留最完整的文件
 </string>
     <string name="settings_duplicate_retention_summary_ask">
-Always ask
+总是问
 </string>
     <string name="settings_duplicate_retention_desc_ask">
-Prompt to choose retention strategy each time duplicate files are selected.
+每次选择重复文件时提示选择保留策略。
 </string>
     <string name="settings_duplicate_retention_toast">
-Duplicate retention strategy set to: %s
+重复保留策略设置为：%s
 </string>
     <string name="backup_pref_duplicate_retention">
-Duplicate Retention Strategy
+重复保留策略
 </string>
 
     <!-- Theme -->
@@ -1917,13 +1917,13 @@ Ultimate File Manager Pro
 选择启动时打开的屏幕
 </string>
     <string name="start_screen_last_opened">
-Last Opened Location
+最后打开的位置
 </string>
     <string name="start_screen_last_opened_desc">
-Reopen where you left off upon app launch
+应用程序启动时从上次离开的位置重新打开
 </string>
     <string name="storage_unavailable_redirect">
-Previous storage location is unavailable. Returned to Storage screen.
+以前的存储位置不可用。返回到存储屏幕。
 </string>
     <string name="start_screen_storage_browser">
 主菜单（默认）
@@ -2026,13 +2026,13 @@ HTTP、FTP 和 WebDAV 文件服务器控件
 
     <!-- Network Transfer Multi-Threading Settings -->
     <string name="settings_network_transfer_threads_title">
-FTP, SFTP &amp; SMB Multi-threading
+FTP、SFTP 和 SMB 多线程
 </string>
     <string name="settings_network_transfer_threads_dialog_title">
 传输线程
 </string>
     <string name="settings_network_transfer_threads_dialog_subtitle">
-Select the number of simultaneous connections for faster network file transfers
+选择同时连接的数量以实现更快的网络文件传输
 </string>
     <string name="settings_network_transfer_threads_subtitle">
 %1$d 个线程 — 同时连接以加快传输
@@ -2047,40 +2047,40 @@ Select the number of simultaneous connections for faster network file transfers
 %1$d 个线程（推荐）
 </string>
     <string name="settings_network_transfer_threads_maximum">
-%1$d threads (Maximum)
+%1$d 线程（最大）
 </string>
     <string name="settings_network_transfer_threads_2">
 2 threads
 </string>
     <string name="settings_network_transfer_threads_4">
-4 threads (Recommended)
+4 线程（推荐）
 </string>
     <string name="settings_network_transfer_threads_6">
 6 threads
 </string>
     <string name="settings_network_transfer_threads_8">
-8 threads (Maximum)
+8 个线程（最多）
 </string>
     <string name="settings_network_transfer_threads_desc_1">
-Single connection, transfers files sequentially
+单连接，顺序传输文件
 </string>
     <string name="settings_network_transfer_threads_desc_2">
-Light parallelism, ideal for slower connections
+轻度并行，非常适合较慢的连接
 </string>
     <string name="settings_network_transfer_threads_desc_4">
-Optimal balance of speed and stability for Wi-Fi and LAN
+Wi-Fi 和 LAN 速度与稳定性的最佳平衡
 </string>
     <string name="settings_network_transfer_threads_desc_6">
-High throughput for Gigabit networks and fast Wi-Fi
+千兆位网络和快速 Wi-Fi 的高吞吐量
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+多千兆位 LAN 和 Wi-Fi 的最大吞吐量 7
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+传输线程设置为 %1$d
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+FTP、SFTP 和 SMB 多线程设置
 </string>
     <string name="network_field_threads">
 传输线程
@@ -2091,28 +2091,28 @@ FTP, SFTP &amp; SMB Multi-threading Settings
 
     <!-- Transfer Multi-Threading Telemetry -->
     <string name="transfer_threads_header">
-Threads (%1$d active)
+线程（%1$d 活动）
 </string>
     <string name="transfer_threads_header_single">
-Thread (1 active)
+线程（1 个活动线程）
 </string>
     <string name="transfer_per_thread_placeholder">
--- MB/s
+-- 兆/秒
 </string>
     <string name="transfer_per_thread_format">
-Per thread: %1$.1f MB/s
+每个线程：%1$.1f MB/s
 </string>
     <string name="transfer_per_thread_single_format">
-Single thread: %1$.1f MB/s
+单线程：%1$.1f MB/s
 </string>
     <string name="transfer_thread_initial">
 Thread %1$d: --
 </string>
     <string name="transfer_thread_speed_item">
-Thread %1$d: %2$.1f MB/s
+线程 %1$d：%2$.1f MB/秒
 </string>
     <string name="transfer_thread_speed_single">
-Thread %1$d: %2$.1f MB/s (Single-threaded)
+线程 %1$d：%2$.1f MB/s（单线程）
 </string>
 
     <!-- Open Source Licenses -->
@@ -5554,13 +5554,27 @@ XAPK 内未找到 APK 文件
 播放/暂停
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+互动模式
+</string>
+    <string name="svg_transport_mode">
+播放器控制
+</string>
+    <string name="svg_restart">
+重启动画
+</string>
+    <string name="svg_playback_speed">
+播放速度
+</string>
+    <string name="svg_next_panel">
+下一个面板
+</string>
+    <string name="svg_prev_panel">
+上一个小组
+</string>
+    <string name="svg_tv_interactive_hint">
+交互模式 - 按“返回”或“菜单”进行播放器控制
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 音轨
@@ -5869,10 +5883,10 @@ UFM 不支持通过系统选择器选择这些文件夹。
 保存到 UFM
 </string>
     <string name="share_target_save_to">
-Save to…
+保存到...
 </string>
     <string name="share_target_open_in">
-Open in…
+打开于…
 </string>
     <string name="share_receive_from">
 正在从 %s 接收文件
@@ -7030,7 +7044,7 @@ SCP 共享：%1$s (%2$s)
 %1$s / %2$s
 </string>
     <string name="transfer_speed_mbs">
-%1$.1f MB/s
+%1$.1f MB/秒
 </string>
     <string name="cannot_read_source_file">
 无法读取源文件
@@ -7377,10 +7391,10 @@ SAF 输出流失败
 找到大于 512 MB 的 %1$d 文件。
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+下载不完整/稀疏
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+发现 %1$d 个不完整或稀疏的文件占用磁盘空间。
 </string>
     <string name="old_unused_files">
 旧的未使用的文件
@@ -7975,10 +7989,18 @@ APK / XAPK 提取物
     <string name="sync_disabled">
 同步已禁用
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+启用配置文件
+</string>
+    <string name="sync_action_disable">
+禁用配置文件
+</string>
+    <string name="sync_status_enabled">
+积极的
+</string>
+    <string name="sync_status_disabled">
+已暂停
+</string>
     <string name="sync_delete_profile_confirm_msg">
 您确定要删除“%1$s”吗？此操作无法撤消。
 </string>
@@ -8362,7 +8384,7 @@ YouTube
 维伯
 </string>
     <string name="line">
-Line
+线
 </string>
     <string name="opening_itemlabel">
 📂 正在打开 %1$s
@@ -8615,16 +8637,16 @@ Dropbox
 身份验证失败：%1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+认证失败
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+连接或验证错误
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+无法通过 Dropbox 验证授权码。请检查代码输入是否正确、是否已过期，以及您的设备日期/时间是否正确。
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+检测到设备日期和时间错误。您的电视系统日期/时间似乎是过去的日期，这会阻止与 Dropbox 的安全连接。请在 Android TV 设置中设置正确的日期和时间。
 </string>
     <string name="dropbox_auth_verifying">
 正在验证代码...
@@ -8776,7 +8798,7 @@ UFM 无法通过您的 Google 云端硬盘帐户进行身份验证。连接令�
 高架访问
 </string>
     <string name="shizuku_subtitle">
-Porter / Shizuku / Shevery
+波特/雫/谢弗里
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
@@ -8921,7 +8943,7 @@ Porter、Shizuku 和 Shevery 服务
 轻量级快速替代方案
 </string>
     <string name="shizuku_manager_porter_title">
-Porter
+搬运工
 </string>
     <string name="shizuku_manager_porter_desc">
 仍在积极维护的 Shizuku 延续版本
@@ -8951,16 +8973,16 @@ Porter
 正在检查提权访问…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+得到波特
 </string>
     <string name="elevated_prerelease_badge">
 预发布版
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+获取雫
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+得到谢弗里
 </string>
     <string name="shizuku_open_manager">
 打开 %1$s 管理器
@@ -8969,7 +8991,7 @@ Get Shevery
 3 步设置指南
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1.安装管理器
 </string>
     <string name="shizuku_step_2">
 2. 启动服务
@@ -9008,22 +9030,22 @@ ADB/无线调试
 下载并安装（%1$s）
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+断开高架访问？
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+这将断开 UFM 中的 %1$s 提升访问权限。您可以随时重新启用它。
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+断开
 </string>
     <string name="shizuku_allow_app_access">
-Allow app access
+允许应用程序访问
 </string>
     <string name="shizuku_app_access_granted_toast">
-Elevated access enabled for %1$s
+已启用 %1$s 的提升访问权限
 </string>
     <string name="shizuku_app_access_revoked">
-Elevated access disabled for %1$s
+已禁用 %1$s 的提升访问权限
 </string>
     <string name="elevated_fetching_toast">
 正在检查 %1$s 的最新版本…
@@ -9321,7 +9343,7 @@ FTP 和 SFTP 服务器正在运行
 点击进行管理
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+文件服务器已停止：Android 已达到 6 小时执行限制
 </string>
     <string name="opening_file_server">
 正在打开文件服务器...
@@ -9629,34 +9651,34 @@ URL 必须以 http:// 或 https:// 开头
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+允许不受信任/自签名证书
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+接受自签名或私有 CA SSL 证书（常见于本地 NAS 设备）
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+密码（留空以保持最新）
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+不受信任的 SSL 证书
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+%1$s 处的服务器提供了不受信任或自签名的 SSL 证书。在信任此连接之前，请验证以下证书详细信息。
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+主题
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+发行人
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+有效性
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+SHA-256 指纹
 </string>
     <string name="webdav_cert_dialog_trust">
-Trust &amp; Connect
+信任与联系
 </string>
 
     <!-- About Section -->
@@ -10498,7 +10520,7 @@ PDF（仅限多页）
 相机
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+此设备上找不到相机应用程序
 </string>
     <string name="scanner_capture_gallery">
 从图库中选择
@@ -11755,7 +11777,7 @@ PIN 码无效，请重试。
 
     <!-- RClone Cloud Storage Support -->
     <string name="add_online_storage_rclone">
-RClone
+克隆人
 </string>
     <string name="add_online_storage_auth_rclone">
 设置存储
@@ -11913,19 +11935,19 @@ Proton 2FA 设置中的 Base32 密钥可自动生成代码
 选择在媒体播放中查找时向前或向后跳多远。
 </string>
     <string name="skip_length_option_3s">
-3s
+3秒
 </string>
     <string name="skip_length_option_5s">
-5s
+5秒
 </string>
     <string name="skip_length_option_10s">
-10s
+10秒
 </string>
     <string name="skip_length_option_20s">
-20s
+20多岁
 </string>
     <string name="skip_length_option_30s">
-30s
+30秒
 </string>
     <string name="skip_length_option_disable">
 禁用
@@ -11954,100 +11976,100 @@ Proton 2FA 设置中的 Base32 密钥可自动生成代码
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+字幕样式
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+配置应用内字幕外观、字体大小和系统字幕同步。
 </string>
     <string name="subtitle_style_summary_system">
-System caption style
+系统字幕样式
 </string>
     <string name="subtitle_style_summary_custom">
-UFM custom style (%1$s)
+UFM 自定义样式 (%1$s)
 </string>
     <string name="subtitle_style_dialog_title">
-Subtitle Style
+字幕样式
 </string>
     <string name="subtitle_style_mode_system">
-System Caption Style
+系统标题样式
 </string>
     <string name="subtitle_style_mode_system_desc">
-Follows device Accessibility caption settings even when system captions are disabled.
+即使系统字幕已禁用，也会遵循设备辅助功能字幕设置。
 </string>
     <string name="subtitle_style_mode_custom">
-UFM Custom Style
+UFM定制风格
 </string>
     <string name="subtitle_style_mode_custom_desc">
-Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+自定义应用内样式，可调整大小、颜色、边缘效果和位置。
 </string>
     <string name="subtitle_style_open_system">
-Open Device Caption Settings
+打开设备标题设置
 </string>
     <string name="subtitle_style_system_unavailable">
-System caption settings not available on this device; using UFM style.
+系统字幕设置在此设备上不可用；使用UFM风格。
 </string>
     <string name="subtitle_style_preview_title">
-Preview
+预览
 </string>
     <string name="subtitle_style_preview_line1">
 Ultimate File Manager Pro
 </string>
     <string name="subtitle_style_preview_line2">
-Live subtitle preview • Crisp text styling
+实时字幕预览 • 清晰的文本样式
 </string>
     <string name="subtitle_style_text_size">
-Text size
+文字大小
 </string>
     <string name="subtitle_style_text_color">
-Text color
+文字颜色
 </string>
     <string name="subtitle_style_bg_color">
-Background opacity
+背景不透明度
 </string>
     <string name="subtitle_style_edge_type">
-Edge effect
+边缘效应
 </string>
     <string name="subtitle_style_edge_none">
 None
 </string>
     <string name="subtitle_style_edge_outline">
-Outline
+大纲
 </string>
     <string name="subtitle_style_edge_drop_shadow">
-Drop shadow
+投影
 </string>
     <string name="subtitle_style_edge_raised">
-Raised
+凸起
 </string>
     <string name="subtitle_style_edge_depressed">
-Depressed
+郁闷
 </string>
     <string name="subtitle_style_bottom_margin">
-Bottom margin
+下边距
 </string>
     <string name="subtitle_style_apply_embedded">
-Apply embedded styles (ASS/SSA/TTML)
+应用嵌入样式（ASS/SSA/TTML）
 </string>
     <string name="subtitle_style_apply_embedded_desc">
-When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+禁用后，UFM 字幕样式将覆盖嵌入的字体和颜色标签，以实现最佳可读性。
 </string>
     <string name="subtitle_style_color_yellow">
-Yellow
+黄色的
 </string>
     <string name="subtitle_style_color_white">
-White
+白色的
 </string>
     <string name="subtitle_style_color_cyan">
-Cyan
+青色
 </string>
     <string name="subtitle_style_color_green">
-Green
+绿色的
 </string>
     <string name="subtitle_style_color_magenta">
-Magenta
+品红
 </string>
     <string name="subtitle_style_color_orange">
-Orange
+橙子
 </string>
     <string name="subtitle_style_bg_transparent">
 None
@@ -12062,13 +12084,13 @@ None
 75%
 </string>
     <string name="subtitle_style_bg_100">
-Solid
+坚硬的
 </string>
     <string name="player_track_sheet_subtitle_style">
-Subtitle Style…
+字幕样式...
 </string>
     <string name="player_track_sheet_subtitle_style_desc">
-Customize colors, size &amp; appearance
+定制颜色、尺寸和外观
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -12109,10 +12131,10 @@ Customize colors, size &amp; appearance
 重复关闭
 </string>
     <string name="player_toast_repeat_all">
-Repeat all
+重复全部
 </string>
     <string name="player_toast_repeat_one">
-Repeat current track
+重复当前曲目
 </string>
     <string name="player_toast_audio_track">
 音轨
@@ -12271,13 +12293,13 @@ UFM 播放器设置
 尺寸：
 </string>
     <string name="properties_label_size_on_disk">
-Size on disk:
+磁盘上的大小：
 </string>
     <string name="properties_sparse_badge">
-Partial Download (Sparse)
+部分下载（稀疏）
 </string>
     <string name="properties_sparse_allocated_pct">
-%1$.1f%% allocated
+%1$.1f%% 已分配
 </string>
     <string name="properties_label_contains">
 包含：
@@ -12992,61 +13014,61 @@ UFM 在您上次会话期间停止响应。您想发送冻结报告来帮助我�
 </string>
     <!-- Music Tag Online Sync & High-Res Cover Picker -->
     <string name="music_tag_btn_search_online_cover">
-Search Online Art
+搜索在线艺术
 </string>
     <string name="music_tag_btn_musicbrainz_sync">
-Identify Online (MusicBrainz)
+在线识别（MusicBrainz）
 </string>
     <string name="music_tag_cover_picker_title">
-Search Online Artwork
+搜索在线艺术品
 </string>
     <string name="music_tag_search_covers_hint">
-Artist and Album name…
+艺术家和专辑名称...
 </string>
     <string name="music_tag_searching_artwork">
-Searching Apple Music, Deezer &amp; Cover Art Archive…
+搜索 Apple Music、Deezer 和封面艺术档案...
 </string>
     <string name="music_tag_no_artwork_found">
-No artwork found for this query
+没有找到该查询的艺术品
 </string>
     <string name="music_tag_cover_applied">
-Applied online album artwork
+应用在线专辑封面
 </string>
     <string name="music_tag_cover_download_error">
-Failed to download artwork
+艺术作品下载失败
 </string>
     <string name="music_tag_musicbrainz_search_title">
-MusicBrainz Tag Search
+MusicBrainz 标签搜索
 </string>
     <string name="music_tag_search_query_hint">
-Track title or Album name…
+曲目标题或专辑名称...
 </string>
     <string name="music_tag_searching_musicbrainz">
-Searching MusicBrainz…
+正在搜索 MusicBrainz...
 </string>
     <string name="music_tag_no_musicbrainz_results">
-No matching recordings or releases found
+未找到匹配的录音或版本
 </string>
     <string name="music_tag_diff_title">
-Review Online Tags
+在线评论标签
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+选择要应用于跟踪的字段
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+应用选定的标签
 </string>
     <string name="music_tag_select_all">
-Select All
+选择全部
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+录音
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+专辑/发行
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d 曲目
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -14113,7 +14135,7 @@ Vim 导航键
 存储位置已删除
 </string>
     <string name="storage_location_termux_default_name">
-Termux Home
+特马克斯主页
 </string>
     <string name="storage_location_saf_default_name">
 文件位置
@@ -14260,10 +14282,10 @@ SAF 存储
 此存储没有剩余的已安装文件夹。
 </string>
     <string name="restricted_storage_empty_title">
-All Files Access Required
+需要访问所有文件
 </string>
     <string name="restricted_storage_empty_desc">
-To access and manage files in this storage, please enable All Files Access in Android Settings.
+要访问和管理此存储中的文件，请在 Android 设置中启用所有文件访问。
 </string>
     <string name="restricted_storage_grant_all_files">
 在设置中启用所有文件访问
@@ -14701,10 +14723,10 @@ SHA-256
 ✗ 文件不同（不同大小：%1$s 与 %2$s）
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ 匹配标头和数据 — 下载不完整（%1$.1f%% 与 %2$.1f%% 已分配）
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
-Size on disk: %1$s (%2$.1f%%)
+磁盘大小：%1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 大小相同 (%1$s)。散列以验证内容...
@@ -14807,13 +14829,13 @@ Size on disk: %1$s (%2$.1f%%)
 带有字母和符号的字母数字短语
 </string>
     <string name="settings_security_method_biometric">
-Biometrics / Device Lock
+生物识别/设备锁定
 </string>
     <string name="settings_security_method_biometric_desc">
 指纹、面部解锁或图案
 </string>
     <string name="settings_security_biometric_unavailable">
-Biometrics not available on this device
+此设备不支持生物识别功能
 </string>
     <string name="settings_security_biometric_none_enrolled">
 Android 设置中未设置生物识别或设备锁定
@@ -14822,31 +14844,31 @@ Android 设置中未设置生物识别或设备锁定
 更改密码
 </string>
     <string name="settings_security_change_pin_subtitle">
-Update your current 4-digit security PIN
+更新您当前的 4 位安全 PIN 码
 </string>
     <string name="settings_security_change_password">
-Change Password
+更改密码
 </string>
     <string name="settings_security_change_password_subtitle">
-Update your custom alphanumeric password
+更新您的自定义字母数字密码
 </string>
     <string name="settings_security_verify_old_pin">
 输入您当前的 4 位数 PIN 码以继续
 </string>
     <string name="settings_security_verify_old_password_title">
-Verify Current Password
+验证当前密码
 </string>
     <string name="settings_security_verify_old_password_subtitle">
-Enter your old password before changing
+更改前请输入旧密码
 </string>
     <string name="settings_security_disable_pin_title">
-Disable App Lock
+禁用应用程序锁定
 </string>
     <string name="settings_security_disable_pin_subtitle">
-Enter your 4-digit PIN to turn off App Lock
+输入您的 4 位 PIN 码以关闭应用程序锁定
 </string>
     <string name="settings_security_disable_password_title">
-Disable App Lock
+禁用应用程序锁定
 </string>
     <string name="settings_security_disable_password_subtitle">
 输入密码以关闭应用锁
@@ -15022,7 +15044,7 @@ PIN 码不正确。剩余 %1$d 次尝试
     
     <!-- SAF & External File Pickers Exposure -->
     <string name="expose_to_saf_title">
-Expose to SAF &amp; Pickers
+接触 SAF 和 Pickers
 </string>
     <string name="expose_to_saf_subtitle">
 对系统文件选择器、Projectivy Launcher 壁纸和外部应用程序可见
@@ -15031,7 +15053,7 @@ Expose to SAF &amp; Pickers
 允许启动器和外部应用程序（如 Projectivy）浏览此网络共享中的文件夹和流媒体。
 </string>
     <string name="expose_to_saf_cloud_hint">
-Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
+允许启动器和外部应用程序（例如 Projectivy）浏览此在线存储中的文件夹和流媒体。
 </string>
     <!-- Archive Modification (Copy / Move into Archive) -->
     <string name="action_add_to_existing_archive">
@@ -15591,357 +15613,357 @@ OTG 闪存盘（模拟/测试）
 
     <!-- Grid Text Placement Settings -->
     <string name="settings_grid_text_position_title">
-Grid Text Placement
+网格文本放置
 </string>
     <string name="settings_grid_text_position_subtitle">
-Position file names below or overlaid on grid items
+将文件名放置在网格项目下方或覆盖在网格项目上
 </string>
     <string name="settings_grid_text_position_below">
-Below Block (Default)
+块下方（默认）
 </string>
     <string name="settings_grid_text_position_overlay">
-Overlaid on Block
+覆盖在块上
 </string>
     <string name="backup_pref_grid_text_position">
-Grid text placement settings
+网格文本放置设置
 </string>
     <string name="backup_pref_view_styles">
-View density &amp; preset styles
+查看密度和预设样式
 </string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
     <string name="open_as">
-Open As…
+打开为...
 </string>
     <string name="open_as_desc">
-Choose a viewer or player to open this file
+选择查看器或播放器来打开此文件
 </string>
     <string name="presentation_viewer">
-Presentation Viewer
+演示文稿查看器
 </string>
     <string name="slide_counter">
-Slide %1$d of %2$d
+%2$d 的幻灯片 %1$d
 </string>
     <string name="open_in_powerpoint">
-Open in Presentation App
+在演示应用程序中打开
 </string>
     <string name="open_as_text">
-Text / Code Viewer
+文本/代码查看器
 </string>
     <string name="open_as_text_desc">
-Built-in code &amp; text editor with syntax highlighting
+具有语法突出显示功能的内置代码和文本编辑器
 </string>
     <string name="open_as_hex">
-Hex / Binary Viewer
+十六进制/二进制查看器
 </string>
     <string name="open_as_hex_desc">
-Raw byte hex dump and binary inspector
+原始字节十六进制转储和二进制检查器
 </string>
     <string name="open_as_presentation">
-Presentation / Slide Deck
+演示文稿/幻灯片
 </string>
     <string name="open_as_presentation_desc">
-Built-in slide deck viewer with speaker notes
+内置幻灯片查看器和演讲者注释
 </string>
     <string name="open_as_spreadsheet">
-Spreadsheet / Table
+电子表格/表格
 </string>
     <string name="open_as_spreadsheet_desc">
-Built-in spreadsheet table viewer
+内置电子表格查看器
 </string>
     <string name="open_as_image">
-Image Viewer
+图片浏览器
 </string>
     <string name="open_as_image_desc">
-High-resolution photo viewer with zoom &amp; pan
+具有缩放和平移功能的高分辨率照片查看器
 </string>
     <string name="open_as_audio">
-Audio Player
+音频播放器
 </string>
     <string name="open_as_audio_desc">
-Media3 audio player with background playback
+带后台播放的 Media3 音频播放器
 </string>
     <string name="open_as_video">
-Video Player
+视频播放器
 </string>
     <string name="open_as_video_desc">
-Media3 hardware-accelerated video player
+Media3 硬件加速视频播放器
 </string>
     <string name="open_as_archive">
-Archive Browser
+档案浏览器
 </string>
     <string name="open_as_archive_desc">
-Explore ZIP, 7Z, TAR, RAR, and compressed files
+探索 ZIP、7Z、TAR、RAR 和压缩文件
 </string>
     <string name="open_as_other">
-Choose External App…
+选择外部应用程序...
 </string>
     <string name="open_as_other_desc">
-Open with an installed third-party app
+使用已安装的第三方应用程序打开
 </string>
     <string name="speaker_notes">
-Speaker Notes
+演讲者笔记
 </string>
     <string name="no_slides_found">
-No slides found in this presentation
+此演示文稿中未找到幻灯片
 </string>
     <string name="next_slide">
-Next Slide
+下一张幻灯片
 </string>
     <string name="prev_slide">
-Previous Slide
+上一张幻灯片
 </string>
     <string name="view_raw_text">
-View as Raw Text
+查看原始文本
 </string>
     <string name="ufm_slide_deck_viewer">
-UFM Slide Deck
+UFM 幻灯片
 </string>
     <string name="open_with_presentation_app">
-Presentation App (PowerPoint / Slides)
+演示应用程序（PowerPoint /幻灯片）
 </string>
     <string name="open_with_presentation_app_desc">
-Open in Microsoft PowerPoint, Google Slides, or office suite
+在 Microsoft PowerPoint、Google 幻灯片或办公套件中打开
 </string>
     <string name="ufm_slide_viewer_desc">
-View slides, cover thumbnail, and notes in UFM
+在 UFM 中查看幻灯片、封面缩略图和注释
 </string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
     <string name="action_open_with">
-Open With…
+打开方式...
 </string>
     <string name="action_open_as">
-Open As…
+打开为...
 </string>
     <string name="toolbar_open_with">
-Open With
+打开方式
 </string>
     <string name="toolbar_open_as">
-Open As
+打开为
 </string>
     <string name="action_extract_subtitles">
-Extract Subtitles
+提取字幕
 </string>
     <string name="action_extract_audio">
-Extract Audio
+提取音频
 </string>
     <string name="action_convert_to_mp4">
-Convert to MP4
+转换为 MP4
 </string>
     <string name="toolbar_extract_subtitles">
-Extract Subtitles
+提取字幕
 </string>
     <string name="toolbar_extract_audio">
-Extract Audio
+提取音频
 </string>
     <string name="toolbar_convert_to_mp4">
-Convert to MP4
+转换为 MP4
 </string>
     <string name="extracting_subtitles">
-Extracting subtitle track…
+正在提取字幕轨道...
 </string>
     <string name="extracting_audio">
-Extracting audio track…
+正在提取音轨...
 </string>
     <string name="convert_to_mp4_progress">
-Converting video to MP4…
+正在将视频转换为 MP4...
 </string>
     <string name="convert_to_mp4_success">
-Video converted to %1$s
+视频已转换为 %1$s
 </string>
     <string name="convert_to_mp4_failed">
-Failed to convert video
+视频转换失败
 </string>
     <string name="convert_to_mp4_title">
-Convert to MP4
+转换为 MP4
 </string>
     <string name="convert_to_mp4_confirm">
-Convert \"%1$s\" to universal MP4 format?
+将“%1$s”转换为通用 MP4 格式？
 </string>
     <string name="subtitles_extracted_success">
-Subtitles extracted successfully.
+字幕提取成功。
 </string>
     <string name="audio_extracted_success">
-Audio extracted successfully.
+音频提取成功。
 </string>
     <string name="audio_format_universal">
-Universal M4A
+通用M4A
 </string>
     <string name="audio_format_original">
-Original Stream
+原创流
 </string>
     <string name="audio_format_universal_desc">
-High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+高品质 AAC (.m4a) — 可在手机、汽车和音乐应用程序上随处播放
 </string>
     <string name="audio_format_original_desc">
-Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+无损直接流复制（.eac3、.dts、.ac3、.flac）
 </string>
     <string name="codec_unsupported_title">
-Audio Codec Not Supported
+不支持音频编解码器
 </string>
     <string name="codec_unsupported_message">
-This device lacks a native hardware decoder for %1$s audio.\n
+此设备缺少 %1$s 音频的本机硬件解码器。\n
 \n
-Would you like to convert it to Universal M4A (AAC) for seamless playback?
+是否要将其转换为通用 M4A (AAC) 以实现无缝播放？
 </string>
     <string name="convert_and_play">
-Convert &amp; Play
+转换和播放
 </string>
     <string name="converting_audio">
-Converting audio to M4A…
+将音频转换为 M4A...
 </string>
     <string name="convert_to_m4a">
-Convert to M4A
+转换为M4A
 </string>
     <string name="no_subtitles_found_in_video">
-No embedded subtitle tracks found in this video
+该视频中未找到嵌入的字幕轨道
 </string>
     <string name="media_technical_details">
-Media Stream Details
+媒体流详细信息
 </string>
     <string name="media_format">
-Container
+容器
 </string>
     <string name="media_bitrate">
-Overall Bitrate
+总体比特率
 </string>
     <string name="error_generic">
-An error occurred
+发生错误
 </string>
     <string name="failed_to_open_file">
-Failed to open file
+无法打开文件
 </string>
     <string name="slide_badge_format">
-Slide %1$d
+幻灯片 %1$d
 </string>
     <string name="slide_counter_format">
-Slide %1$d of %2$d
+%2$d 的幻灯片 %1$d
 </string>
     <string name="no_app_to_open_file">
-No app found to open this file
+找不到可以打开此文件的应用程序
 </string>
     <string name="select_subtitle_track">
-Select Subtitle Track
+选择字幕轨道
 </string>
     <string name="extract_all_subtitles">
-Extract All Tracks
+提取所有曲目
 </string>
     <string name="extract_all_subtitles_desc">
-Extract all %1$d subtitle tracks into separate files
+将所有 %1$d 字幕轨道提取到单独的文件中
 </string>
     <string name="subtitles_extracted_multiple_success">
-Successfully extracted %1$d subtitle files.
+已成功提取 %1$d 字幕文件。
 </string>
     <string name="select_audio_track">
-Select Audio Track
+选择音轨
 </string>
     <string name="extract_all_audio">
-Extract All Tracks
+提取所有曲目
 </string>
     <string name="extract_all_audio_desc">
-Extract all %1$d audio tracks into separate files
+将所有 %1$d 音轨提取到单独的文件中
 </string>
     <string name="audio_extracted_multiple_success">
-Successfully extracted %1$d audio files.
+已成功提取 %1$d 音频文件。
 </string>
     <string name="no_audio_found_in_video">
-No audio tracks found in this video
+该视频中未找到音轨
 </string>
 
     <!-- Floating Bottom Bar Dock -->
     <string name="floating_bar_settings_title">
-Floating Bottom Bar
+浮动底栏
 </string>
     <string name="floating_bar_settings_subtitle">
-Show a modern floating dock at the bottom of the main menu for quick access
+在主菜单底部显示现代浮动码头以便快速访问
 </string>
     <string name="floating_bar_manage_title">
-Manage Floating Bar
+管理浮动栏
 </string>
     <string name="floating_bar_manage_subtitle">
-Add, remove, and reorder quick-access shortcuts
+添加、删除和重新排序快速访问快捷方式
 </string>
     <string name="floating_bar_enable_switch">
-Enable Floating Bar
+启用浮动栏
 </string>
     <string name="floating_bar_enable_desc">
-Docked tiles appear in the bottom floating bar and are hidden from the main menu
+停靠的图块出现在底部浮动栏中，并从主菜单中隐藏
 </string>
     <string name="floating_bar_docked_section">
-Docked Items
+停靠的项目
 </string>
     <string name="floating_bar_docked_hint">
-Drag handle to reorder. Tap Remove to return item to main menu.
+拖动手柄进行重新排序。点击删除将项目返回到主菜单。
 </string>
     <string name="floating_bar_available_section">
-Available Tiles
+可用瓷砖
 </string>
     <string name="floating_bar_available_hint">
-Tap + to add a tile to the floating bottom bar
+点击 + 将图块添加到浮动底部栏
 </string>
     <string name="floating_bar_empty_docked">
-No items docked yet. Add tiles from the list below.
+尚未停靠任何项目。从下面的列表中添加图块。
 </string>
     <string name="floating_bar_empty_available">
-All available tiles have been added to the floating bar.
+所有可用的图块均已添加到浮动栏中。
 </string>
     <string name="floating_bar_add">
-Add
+添加
 </string>
     <string name="floating_bar_remove">
-Remove
+消除
 </string>
     <string name="backup_pref_floating_bar">
-Floating Bottom Bar
+浮动底栏
 </string>
 
     <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
     <string name="quick_access_title">
-Quick Access
+快速访问
 </string>
     <string name="quick_access_mode_title">
-Quick Access Style
+快速访问风格
 </string>
     <string name="quick_access_mode_subtitle">
-Choose how quick-access shortcuts are presented
+选择快速访问快捷方式的呈现方式
 </string>
     <string name="quick_access_mode_disabled">
-Disabled
+残疾人
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+底部浮动条
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+边缘滑动菜单
 </string>
     <string name="quick_access_edge_title">
-Swipe Edge
+滑动边缘
 </string>
     <string name="quick_access_edge_left">
-Left Edge
+左边缘
 </string>
     <string name="quick_access_edge_right">
-Right Edge
+右边缘
 </string>
     <string name="quick_access_edge_handle_title">
-Edge Handle Indicator
+边缘手柄指示器
 </string>
     <string name="quick_access_edge_handle_desc">
-Show a subtle indicator on the screen edge for easy opening
+在屏幕边缘显示微妙的指示器，以便于打开
 </string>
     <string name="quick_access_hide_tiles_title">
-Hide Docked Tiles on Main Menu
+隐藏主菜单上停靠的图块
 </string>
     <string name="quick_access_hide_tiles_desc">
-Keep the main dashboard clean by hiding tiles docked in Quick Access
+通过隐藏快速访问中停靠的图块来保持主仪表板干净
 </string>
     <string name="quick_access_manage_tiles">
-Manage Tiles
+管理图块
 </string>
     <string name="quick_access_empty_hint">
-No tiles docked yet.\n
-Tap Manage Tiles to add shortcuts.
+尚未停靠图块。\n
+点击“管理图块”以添加快捷方式。
 </string>
     <string name="quick_access_mode_disabled_desc">停用快速访问快捷方式</string>
     <string name="quick_access_mode_bottom_bar_desc">主菜单底部的现代浮动栏</string>
@@ -15952,373 +15974,373 @@ Tap Manage Tiles to add shortcuts.
 
     <!-- Direct Remote Media & Media Operation Worker -->
     <string name="settings_network_media_process_title">
-Network Media Processing
+网络媒体处理
 </string>
     <string name="settings_network_media_process_subtitle_off">
-Direct stream processing (zero local copy of video)
+直接流处理（视频零本地副本）
 </string>
     <string name="settings_network_media_process_subtitle_on">
-Copy full video to local storage before processing
+在处理之前将完整视频复制到本地存储
 </string>
     <string name="backup_pref_network_media_process">
-Network Media Processing
+网络媒体处理
 </string>
     <string name="dialog_copy_before_process_title">
-Copy to Local Storage?
+复制到本地存储？
 </string>
     <string name="dialog_copy_before_process_msg">
-This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+此操作将首先将“%1$s”(%2$s)从网络存储复制到您设备的本地存储。\n
 \n
-Depending on file size and connection speed, this may take some time.\n
+根据文件大小和连接速度，这可能需要一些时间。\n
 \n
-Do you want to proceed?
+是否继续?
 </string>
     <string name="action_copy_and_proceed">
-Copy &amp; Proceed
+复制并继续
 </string>
     <string name="media_operation_channel_name">
-Media Operations
+媒体运营
 </string>
     <string name="media_operation_channel_desc">
-Background video conversion and track extraction
+背景视频转换和轨道提取
 </string>
     <string name="media_op_converting_video">
-Converting Video to MP4…
+将视频转换为 MP4...
 </string>
     <string name="media_op_extracting_audio">
-Extracting Audio Track…
+提取音轨...
 </string>
     <string name="media_op_extracting_subtitles">
-Extracting Subtitles…
+正在提取字幕...
 </string>
     <string name="media_op_completed_title">
-Media Operation Completed
+媒体运营完成
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+媒体操作失败
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+正在将远程视频下载到本地缓存...
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+正在将结果上传到远程文件夹...
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+在后台继续。检查通知以了解进度。
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+远程共享是只读的
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+无法将提取的文件保存到“%1$s”，因为该共享是只读的。\n
 \n
-Would you like to save it to your local device instead?
+是否要将其保存到本地设备？
 </string>
     <string name="action_save_locally">
-Save to Device
+保存到设备
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+只读共享
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+共享“%1$s”是只读的。\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+提取或转换的文件无法保存回远程共享，因此它将保存到本地下载文件夹中。\n
 \n
-Do you want to proceed?
+是否要继续？
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+其他存储
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+已安装的云和文档提供商
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+访问您设备上安装的第三方文档提供程序
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+%1$d 可用的文档提供者
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+1 个可用的文档提供者
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+未找到第三方文档提供商
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+浏览文件 (SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+挂载存储文件夹
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+通过 UFM Native Engine 连接
 </string>
     <string name="action_open_app">
-Open App
+打开应用程序
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+添加存储位置
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+挂载目录/文件夹
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+从 Termux、SD 卡或 USB 驱动器中选择文件夹
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+已安装的文档提供程序
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+访问 Proton Drive、Synology DS file、Google Drive 等
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+高速云和网络
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+通过 RClone (Proton/Google Drive) 或 SMB/WebDAV 进行完全 2 路同步
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+打开或复制文件
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+您想对“%1$s”做什么？
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+在 UFM 查看器中打开
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+复制到本地存储
 </string>
     <string name="saf_file_action_remember">
-Remember my choice
+记住我的选择
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+总是问
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+已将 %1$d 文件复制到“下载”
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+SAF 选取的文件操作
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+总是询问是否打开或复制
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+始终在 UFM 查看器中打开
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+始终复制到本地存储
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+文件提供者
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+管理 %1$s
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+浏览和下载文件
 </string>
     <string name="doc_provider_action_browse_subtitle">打开 %1$s 选择要在本地查看或复制的文件</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+将文件上传到 %1$s
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+在 UFM 中选择本地文件保存到 %1$s
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+删除 %1$s？
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+从存储中删除%1$s？您可以随时从其他存储重新添加它。
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+从存储中删除
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+%1$s已从存储中删除
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+%1$s 已添加到存储空间
 </string>
     <string name="other_storage_all_added">
-All available providers added
+添加了所有可用的提供商
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+所有已安装的文档提供程序均已添加到您的主存储菜单中。
 </string>
     <string name="saf_copy_destination_title">
-Destination: %1$s
+目的地：%1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+更改文件夹...
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+选择目标文件夹
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+设置复制目的地
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+SAF 选取的文件目标
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+从文档提供者复制的文件将保存到“%1$s”。
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+其他存储和 SAF 传输
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+复制目标文件夹
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+重置为默认值（下载）
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+选择新文件夹...
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+将目标复制重置为“下载”
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+导出到文档提供者
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+直接保存到已安装的云或文档提供程序
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+选择目的地提供商
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+导出多个文件
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+您希望如何将这些 %1$d 文件导出到 %2$s？
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+导出为 ZIP 存档
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+使用系统上传表
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+“%1$s”已保存到 %2$s
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+可安装文件夹
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+文件与云
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+本机同步可用
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+上传至其他存储
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+将选定的文件或文件夹上传到外部文档提供商
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+上传至其他存储
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+未添加存储提供商。选择要添加的提供商。
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+已将 %1$d 文件复制到 %2$s
 </string>
     <string name="share_export_folder_title">
-Export Folder
+导出文件夹
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+文件夹无法直接通过文档提供程序上传。您想将“%1$s”压缩为 ZIP 存档以上传到 %2$s 吗？
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+压缩为单个 ZIP 存档并上传
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+使用Android系统上传表发送项目
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+选择已安装的提供商或打开其他存储
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+正在压缩 %1$s...
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+压缩用于其他存储...
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+通过 %1$s 上传
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+将文件直接发送到 %1$s
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+压缩成 ZIP 存档并选择 %1$s 中的目标文件夹
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+保留 %1$s 中 ZIP 存档内的文件夹结构和原始目录
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+将单个文件直接上传到 %1$s（外部上传屏幕无法创建目录）
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+文件夹上传通知
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+外部上传屏幕（例如 %2$s）无法创建目录。\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+只会上传“%1$s”内的文件，而不是原始文件夹本身。\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+要保留完整的目录结构，请选择“导出为 ZIP 存档”。
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+外部上传屏幕（例如 %1$s）无法创建目录。\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+只会上传所选文件夹内的文件，而不是原始文件夹本身。\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+要保留完整的目录结构，请选择“导出为 ZIP 存档”。
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+仅上传文件
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+主屏幕选项
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+添加到主屏幕
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+从主屏幕删除
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+删除收藏夹
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+请求快捷方式 — 检查您的主屏幕
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+快捷方式已禁用。手动将其从主屏幕中删除。
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+UFM 收藏夹
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+渠道未获批准。您可以稍后在电视设置 → 频道中启用它。
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+商品不可用
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+找不到该文件或文件夹。它可能已被移动、删除或位于不可用的存储中。
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -16338,382 +16360,382 @@ OK
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+打开方式
 </string>
     <string name="open_with_search_hint">
-Search apps…
+搜索应用程序...
 </string>
     <string name="open_with_just_once">
-Just once
+就一次
 </string>
     <string name="open_with_always">
-Always
+总是
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+始终对 .%1$s 文件使用选定的应用程序
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+始终使用选定的应用程序
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+记住 .%1$s 文件的默认值
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+找不到可打开此文件的已安装应用程序
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+搜索 Google Play 商店
 </string>
     <string name="open_with_app_info">
-App info
+应用程序信息
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+查看应用程序详细信息和系统设置
 </string>
     <string name="open_with_set_default">
-Always use this app
+一直使用这个应用程序
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+无法启动 %1$s。回到系统选择器...
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+按“确定”打开 • 长按“确定”打开默认应用程序选项
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+选择作为目的地
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+观众目的地
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+确认目标文件夹
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+选定的文件夹将用于 UFM 查看器和幻灯片放映中的快速复制和移动操作。
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+文件操作
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+目标文件夹
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+未选择目的地 — 点击进行选择
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+改变
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+复制到 %1$s
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+移至 %1$s
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+复制到目的地
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+移动至目的地
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+已复制到 %1$s
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+已移至 %1$s
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+源和目标是同一个文件夹
 </string>
     <string name="backup_pref_viewer_transfer">
-Viewer Transfer Destination
+观看者转移目的地
 </string>
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+添加到主屏幕
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+快捷方式名称
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+存储快捷方式
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+“%1$s”已固定到您的主屏幕。
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+添加到主屏幕
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+快捷方式名称不能为空
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
     <string name="download_manager_title">
-Download Manager
+下载管理器
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+Torrent、Magnet 和 HTTP 下载
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+高速本机直接和点对点下载管理器，具有零种子隐私保护。
 </string>
     <string name="download_no_transfers">
-No active downloads
+没有活跃的下载
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+选择作为下载文件夹
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+下载文件夹
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+确认下载位置
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+下载的内容将直接保存到此目录中。
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+直接下载
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+洪流下载
 </string>
     <string name="download_location_label">
-Download location
+下载位置
 </string>
     <string name="download_change_location">
-Change
+改变
 </string>
     <string name="download_action_start">
-Start
+开始
 </string>
     <string name="download_action_pause">
 Pause
 </string>
     <string name="download_action_resume">
-Resume
+恢复
 </string>
     <string name="download_action_cancel">
-Cancel
+取消
 </string>
     <string name="download_action_delete">
-Delete
+删除
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+直接下载地址
 </string>
     <string name="download_enter_url_hint">
 https://example.com/file.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+下载
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+洪流或磁力链接
 </string>
     <string name="download_enter_magnet_hint">
-magnet:?xt=urn:btih:...
+磁铁:?xt=瓮:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+打开 .torrent 文件
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+下载管理器和P2P通知
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+可接受的使用和隐私信息
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+我了解点对点下载会在群内共享我的 IP 地址，并且我同意严格将此工具用于合法、非侵权内容。
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+超出存储限制
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+目标文件大小 (%1$s) 超出了该驱动器上 FAT32 文件系统支持的 4 GB 限制。\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+请选择 exFAT、NTFS 或内部存储格式的其他下载位置。
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+存储空间不足
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+所选存储驱动器上没有足够的可用空间。\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+必需: %1$s\n
+可用: %2$s\n
 \n
-Please select another drive or free up space.
+请选择其他驱动器或释放空间。
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+选择地点
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+移动数据连接
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+您当前已连接到蜂窝网络，并且启用了仅 Wi-Fi 模式。\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+您是否希望将此传输排队直至 Wi-Fi 连接或允许下载移动数据？
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+排队等待 Wi-Fi
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+允许移动数据
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+网络政策
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+选择下载的网络连接规则
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+仅 Wi-Fi（推荐）
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+仅在连接到不限流量的 Wi-Fi 时传输下载
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+所有网络（Wi-Fi 和蜂窝网络）
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+允许通过蜂窝移动数据和 Wi-Fi 网络进行传输
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+查看非盗版条款
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+查看 P2P 群体披露、隐私和零种子条款
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+P2P Swarm 和 IP 可见性
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+BitTorrent 直接与集群中的其他对等设备传输交换块。传输时，活动的对等方可以看到您的公共 IP 地址。
 </string>
     <string name="download_legal_zero_seeding_title">
-Zero-Seeding Privacy
+零播种隐私
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+UFM 强制执行严格的零播种。下载完成（100%）后，所有群连接都会被切断，跟踪器公告也会立即停止。
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+仅限合法内容
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+您同意严格将此工具用于合法、开源、公共领域或授权文件。未经许可，禁止下载或分发受版权保护的材料。
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+同意并继续
 </string>
     <string name="download_legal_understood">
-Understood
+明白了
 </string>
     <string name="download_state_downloading">
-Downloading
+正在下载
 </string>
     <string name="download_state_paused">
-Paused
+已暂停
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+排队等待 Wi-Fi
 </string>
     <string name="download_state_completed">
-Completed
+完全的
 </string>
     <string name="download_state_error">
-Error
+错误
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+下载管理器传输
 </string>
     <string name="download_notif_channel_desc">
-Ongoing download progress and status updates
+持续下载进度和状态更新
 </string>
     <string name="download_timeout_stopped">
-Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+下载已暂停：Android 已达到 6 小时执行限制。点击即可恢复。
 </string>
 
     <!-- Torrent & Magnet Selective File Download & Content Inspector -->
     <string name="torrent_select_all">
-Select All
+选择全部
 </string>
     <string name="torrent_deselect_all">
-Deselect All
+取消全选
 </string>
     <string name="torrent_selected_summary">
-Selected: %1$d of %2$d files (%3$s of %4$s)
+已选择：%2$d 个文件中的 %1$d 个（%4$s 个文件中的 %3$s 个）
 </string>
     <string name="torrent_files_count">
-%1$d files
+%1$d 文件
 </string>
     <string name="torrent_file_selection_title">
-Torrent Content
+洪流内容
 </string>
     <string name="torrent_file_selection_subtitle">
-Select files and folders to download
+选择要下载的文件和文件夹
 </string>
     <string name="torrent_fetching_metadata">
-Fetching torrent metadata from swarm…
+正在从 swarm 中获取 torrent 元数据...
 </string>
     <string name="torrent_fetching_metadata_desc">
-Contacting DHT nodes and peers to retrieve file list…
+联系 DHT 节点和对等点以检索文件列表...
 </string>
     <string name="torrent_metadata_timeout_title">
-Metadata Fetch Timeout
+元数据获取超时
 </string>
     <string name="torrent_metadata_timeout_msg">
-Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+从对等方检索文件列表所需的时间比平时要长。您想继续搜索，还是直接下载所有文件？
 </string>
     <string name="torrent_keep_waiting">
-Keep Waiting
+继续等待
 </string>
     <string name="torrent_download_all_direct">
-Download All Directly
+直接下载全部
 </string>
     <string name="torrent_zero_selected_error">
-Please select at least one file to download
+请至少选择一个文件进行下载
 </string>
     <string name="torrent_search_hint">
-Search files…
+搜索文件...
 </string>
 
     <!-- Transfer Action Dialog -->
     <string name="transfer_action_title">
-Transfer Actions
+转移行动
 </string>
     <string name="transfer_action_pause">
-Pause Transfer
+暂停转移
 </string>
     <string name="transfer_action_resume">
-Resume Transfer
+简历转移
 </string>
     <string name="transfer_action_open_folder">
-Open Download Folder
+打开下载文件夹
 </string>
     <string name="transfer_action_delete_title">
-Remove Transfer
+删除传输
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+选择如何从下载管理器中删除此传输：
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+仅删除传输
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+将下载的文件保留在您的设备上
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+删除和删除文件
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+从磁盘永久删除下载的文件
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16774,79 +16796,79 @@ Permanently delete downloaded files from disk
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+智能书签
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+整理保存的链接、媒体和共享
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%2$d 个组中的 %1$d 个项目
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+尚未保存书签
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+带 UFM 的书签
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+保存书签
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+分享自 %1$s
 </string>
     <string name="bookmark_field_title_hint">
-Title
+标题
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+收藏/组
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+添加个人备注（可选）
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+保存书签
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+已添加书签 - 注释和时间已更新
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+书签已保存到 %1$s
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+团体
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+查看全部 ›
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+收藏与来源
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+管理集合、过滤器和保管库保护
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+搜索集合...
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+所有书签
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+显示所有来源的所有未锁定书签
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+我的收藏
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+用户创建的收藏 • 保险库可上锁
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+应用程序来源
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+从共享应用程序自动生成
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16855,241 +16877,241 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+此设备上未设置设备安全性（PIN、图案或指纹）。
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+金库已锁定
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+进行身份验证以删除保管库锁定
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+使用 Vault 锁定收藏
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+收藏已解锁
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+新书签组
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+群组名称
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+创建群组
 </string>
     <string name="bookmark_filter_all">
-All
+全部
 </string>
     <string name="bookmark_filter_links">
-Links
+链接
 </string>
     <string name="bookmark_filter_media">
-Media
+媒体
 </string>
     <string name="bookmark_filter_docs">
-Documents
+文件
 </string>
     <string name="bookmark_filter_notes">
-Notes
+笔记
 </string>
     <string name="bookmark_filter_starred">
-Starred
+已加星标
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+搜索书签、笔记或域...
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+对书签进行排序
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+从最新到最旧
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+从最旧到最新
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+标题（A-Z）
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+标题 (Z–A)
 </string>
     <string name="bookmark_sort_size">
-File Size
+文件大小
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+按集合分组
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+收藏：A 到 Z
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+收藏：从Z到A
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+删除集合
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+您确定要删除集合“%1$s”吗？
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+阅读文章
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+在浏览器中打开
 </string>
     <string name="bookmark_action_open_file">
-Open File
+打开文件
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+复制链接
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+复制文本
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+保存到存储
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+移至组
 </string>
     <string name="bookmark_action_delete">
-Delete
+删除
 </string>
     <string name="bookmark_view_note">
-View Note
+查看备注
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+锁具收藏（金库）
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+需要指纹或 PIN 码才能查看
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+收集选项
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+锁系列
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+解锁收藏
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+书签已删除
 </string>
     <string name="bookmark_undo">
-Undo
+撤消
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+已选择的 %1$d 项
 </string>
     <string name="bookmark_batch_move">
-Move
+移动
 </string>
     <string name="bookmark_batch_delete">
-Delete
+删除
 </string>
     <string name="bookmark_batch_export">
-Export
+出口
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+导出书签
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+浏览器 HTML 书签 (.html)
 </string>
     <string name="bookmark_export_markdown">
-Markdown Document (.md)
+Markdown 文档 (.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+已将 %1$d 书签导出到 %2$s
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+阅读器模式
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+文字大小
 </string>
     <string name="bookmark_reader_theme">
-Theme
+主题
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+光
 </string>
     <string name="bookmark_reader_theme_sepia">
-Sepia
+棕褐色
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+黑暗的
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+大声听
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+暂停阅读
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+停止阅读
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+速度 %1$sx
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+正在初始化语音引擎...
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+此设备不支持或未安装文本转语音功能
 </string>
     <string name="bookmark_group_whatsapp">
 WhatsApp
 </string>
     <string name="bookmark_group_reddit">
-Reddit
+红迪网
 </string>
     <string name="bookmark_group_youtube">
 YouTube
 </string>
     <string name="bookmark_group_twitter">
-Twitter / X
+推特/X
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+网络和文章
 </string>
     <string name="bookmark_group_telegram">
-Telegram
+电报
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+文件和文件
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+使用 Vault 锁定组
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+解锁组
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+进行身份验证以访问锁定的书签
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+还没有书签
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+分享 WhatsApp、Reddit 或浏览器中的链接、文章、媒体或文件，然后选择“使用 UFM 添加书签”。
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+没有找到结果
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+没有与“%1$s”匹配的书签。尝试搜索不同的关键字。
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+未找到书签
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+找不到与所选过滤器或集合匹配的书签。
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -17097,67 +17119,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+平面视图
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+递归索引浏览器
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+打开文件夹
 </string>
     <string name="flat_view_expand_all">
-Expand All
+全部展开
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+全部折叠
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+包括系统文件夹
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+在平面视图中显示 Android/data、Android/obb 和系统目录
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+默认为全部展开
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+打开平面视图，默认情况下展开所有文件夹
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+在此卷中找不到索引文件
 </string>
     <string name="flat_view_settings_title">
-Flat View
+平面视图
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+配置递归索引浏览和系统文件夹
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+存储未建立索引
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+Flat View 要求此存储卷完全建立索引。请先运行索引。
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%2$d 文件夹中的 %1$d 个文件
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+已选择 %1$d
 </string>
     <string name="flat_view_folder_files_count">
-%1$d files
+%1$d 文件
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+删除文件
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+您确定要删除 %1$d 个选定的文件吗？
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+已删除 %1$d 个文件
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+平面视图设置
 </string>
 </resources>
 

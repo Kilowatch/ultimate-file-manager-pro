@@ -451,55 +451,55 @@ USB-накопичувач
 Переносить повне ім\\\'я на стільки рядків, скільки потрібно
 </string>
     <string name="settings_file_name_display_truncate">
-Single line (Truncated end)
+Один рядок (усічений кінець)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Truncates with ellipsis at end (abc…) without scrolling
+Скорочується з крапкою в кінці (abc…) без прокручування
 </string>
     <string name="settings_file_name_display_truncate_middle">
-Single line (Truncate middle)
+Один рядок (усічений посередині)
 </string>
     <string name="settings_file_name_display_truncate_middle_desc">
-Truncates in middle (abc…xyz.ext) to preserve the end suffix
+Скорочується посередині (abc…xyz.ext), щоб зберегти кінцевий суфікс
 </string>
     <string name="settings_marquee_speed_title">
-Scroll Speed
+Швидкість прокручування
 </string>
     <string name="settings_marquee_speed_slow">
-Slow
+Повільно
 </string>
     <string name="settings_marquee_speed_normal">
 Normal
 </string>
     <string name="settings_marquee_speed_fast">
-Fast
+швидко
 </string>
     <string name="settings_marquee_loop_title">
-Loop Mode
+Режим циклу
 </string>
     <string name="settings_marquee_loop_one_shot">
-One-Shot
+Одноразовий
 </string>
     <string name="settings_marquee_loop_one_shot_desc">
-Scrolls once and stops to save battery
+Прокручує один раз і зупиняється для економії заряду акумулятора
 </string>
     <string name="settings_marquee_loop_continuous">
-Continuous
+Безперервний
 </string>
     <string name="settings_marquee_loop_continuous_desc">
-Repeats back and forth continuously
+Безперервно повторюється вперед і назад
 </string>
     <string name="settings_marquee_scope_title">
-Scroll Scope
+Сфера прокручування
 </string>
     <string name="settings_marquee_scope_all">
-All Visible Files
+Усі видимі файли
 </string>
     <string name="settings_marquee_scope_focused">
-Focused / Selected Only
+Сфокусовані / Лише вибрані
 </string>
     <string name="settings_file_name_preview_title">
-Live Preview
+Попередній перегляд
 </string>
     <string name="settings_file_name_preview_sample">
 VeryLongFileName_ProjectReport_2026_Final_v2.docx
@@ -1206,7 +1206,7 @@ APK
 Дублікати
 </string>
     <string name="analyzer_tab_incomplete">
-Incomplete
+Неповний
 </string>
     <string name="analyzer_tab_junk">
 Сміття та застарілі
@@ -1233,10 +1233,10 @@ Incomplete
 економить %1$s
 </string>
     <string name="analyzer_no_incomplete_files">
-No incomplete or sparse downloads found
+Неповних або розріджених завантажень не знайдено
 </string>
     <string name="analyzer_incomplete_file_allocated">
-Size on disk: %1$s (%2$.1f%%)
+Розмір на диску: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1321,97 +1321,97 @@ Size on disk: %1$s (%2$.1f%%)
 
     <!-- Bulk duplicate deletion & retention strategy -->
     <string name="analyzer_select_all_duplicates">
-Select All Duplicates
+Виберіть Усі дублікати
 </string>
     <string name="analyzer_clear_selection">
-Clear
+ясно
 </string>
     <string name="analyzer_delete_all_duplicates">
-Delete All Duplicates
+Видалити всі дублікати
 </string>
     <string name="analyzer_delete_selected_count">
-Delete Selected (%1$d)
+Видалити вибране (%1$d)
 </string>
     <string name="analyzer_badge_original">
-Original
+Оригінал
 </string>
     <string name="analyzer_strategy_title">
-Duplicate Retention Strategy
+Стратегія збереження дублікатів
 </string>
     <string name="analyzer_strategy_oldest">
-Keep Oldest (Original)
+Зберегти найстаріший (оригінал)
 </string>
     <string name="analyzer_strategy_oldest_desc">
-Preserves the oldest file by modification date and deletes newer copies.
+Зберігає найстаріший файл за датою модифікації та видаляє новіші копії.
 </string>
     <string name="analyzer_strategy_newest">
-Keep Newest
+Зберігати найновіші
 </string>
     <string name="analyzer_strategy_newest_desc">
-Preserves the most recently modified file and deletes older copies.
+Зберігає останній змінений файл і видаляє старіші копії.
 </string>
     <string name="analyzer_strategy_remember">
-Remember my choice
+Запам\'ятай мій вибір
 </string>
     <string name="analyzer_strategy_most_complete">
-Keep Most Complete
+Зберегти найбільш повне
 </string>
     <string name="analyzer_strategy_most_complete_desc">
-Preserves fully downloaded or most allocated files and deletes incomplete copies.
+Зберігає повністю завантажені або більшість виділених файлів і видаляє неповні копії.
 </string>
     <string name="analyzer_badge_partial">
-Partial (%1$.0f%%)
+Частково (%1$.0f%%)
 </string>
     <string name="analyzer_badge_sparse">
-Sparse
+розріджений
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+Видалити %1$d повторювані файли?
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+Один оригінальний примірник кожного файлу буде збережено. %1$d дублікатів буде остаточно видалено, щоб звільнити %2$s.
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+Очищення завершено
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+Успішно видалено %1$d дублікатів файлів і звільнено %2$s місця для зберігання.
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+%1$d файлів не вдалося видалити через дозволи.
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+Видалення %1$d з %2$d файлів…
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d повторюваних груп · зберігає %2$s
 </string>
     <string name="settings_duplicate_retention_title">
-Duplicate Retention Strategy
+Стратегія збереження дублікатів
 </string>
     <string name="settings_duplicate_retention_dialog_subtitle">
-Choose which copy to preserve when selecting duplicate files for cleanup.
+Виберіть, яку копію зберегти під час вибору дублікатів файлів для очищення.
 </string>
     <string name="settings_duplicate_retention_summary_oldest">
-Keep oldest file (Original)
+Зберігати найстаріший файл (оригінал)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
-Keep newest file
+Зберігати найновіший файл
 </string>
     <string name="settings_duplicate_retention_summary_most_complete">
-Keep most complete file
+Зберігайте максимально повний файл
 </string>
     <string name="settings_duplicate_retention_summary_ask">
-Always ask
+Завжди запитуйте
 </string>
     <string name="settings_duplicate_retention_desc_ask">
-Prompt to choose retention strategy each time duplicate files are selected.
+Пропонувати вибрати стратегію збереження щоразу, коли вибираються дублікати файлів.
 </string>
     <string name="settings_duplicate_retention_toast">
-Duplicate retention strategy set to: %s
+Вибрано стратегію збереження дублікатів: %s
 </string>
     <string name="backup_pref_duplicate_retention">
-Duplicate Retention Strategy
+Стратегія збереження дублікатів
 </string>
 
     <!-- Theme -->
@@ -1613,7 +1613,7 @@ AMOLED чорний
 Тему застосовано
 </string>
     <string name="material_you_title">
-Material You
+Матеріал Ви
 </string>
     <string name="material_you_summary">
 Використовуйте кольори ваших шпалер для персоналізованого вигляду
@@ -1917,13 +1917,13 @@ Ultimate File Manager Pro
 Виберіть, який екран відкривається під час запуску
 </string>
     <string name="start_screen_last_opened">
-Last Opened Location
+Останнє відкрите місце
 </string>
     <string name="start_screen_last_opened_desc">
-Reopen where you left off upon app launch
+Знову відкрити там, де зупинилися після запуску програми
 </string>
     <string name="storage_unavailable_redirect">
-Previous storage location is unavailable. Returned to Storage screen.
+Попереднє місце зберігання недоступне. Повернуто до екрана зберігання.
 </string>
     <string name="start_screen_storage_browser">
 Головне меню (за замовчуванням)
@@ -2026,13 +2026,13 @@ Previous storage location is unavailable. Returned to Storage screen.
 
     <!-- Network Transfer Multi-Threading Settings -->
     <string name="settings_network_transfer_threads_title">
-FTP, SFTP &amp; SMB Multi-threading
+Багатопотоковість FTP, SFTP і SMB
 </string>
     <string name="settings_network_transfer_threads_dialog_title">
 Потоки передачі
 </string>
     <string name="settings_network_transfer_threads_dialog_subtitle">
-Select the number of simultaneous connections for faster network file transfers
+Виберіть кількість одночасних підключень для швидшої передачі файлів по мережі
 </string>
     <string name="settings_network_transfer_threads_subtitle">
 %1$d потоків — одночасні з\'єднання для швидшої передачі
@@ -2047,40 +2047,40 @@ Select the number of simultaneous connections for faster network file transfers
 %1$d потоків (рекомендовано)
 </string>
     <string name="settings_network_transfer_threads_maximum">
-%1$d threads (Maximum)
+%1$d потоків (максимум)
 </string>
     <string name="settings_network_transfer_threads_2">
 2 threads
 </string>
     <string name="settings_network_transfer_threads_4">
-4 threads (Recommended)
+4 потоки (рекомендовано)
 </string>
     <string name="settings_network_transfer_threads_6">
 6 threads
 </string>
     <string name="settings_network_transfer_threads_8">
-8 threads (Maximum)
+8 потоків (максимум)
 </string>
     <string name="settings_network_transfer_threads_desc_1">
-Single connection, transfers files sequentially
+Єдине підключення, передача файлів по черзі
 </string>
     <string name="settings_network_transfer_threads_desc_2">
-Light parallelism, ideal for slower connections
+Легкий паралелізм, ідеальний для повільних з\'єднань
 </string>
     <string name="settings_network_transfer_threads_desc_4">
-Optimal balance of speed and stability for Wi-Fi and LAN
+Оптимальний баланс швидкості та стабільності для Wi-Fi та LAN
 </string>
     <string name="settings_network_transfer_threads_desc_6">
-High throughput for Gigabit networks and fast Wi-Fi
+Висока пропускна здатність для гігабітних мереж і швидкий Wi-Fi
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+Максимальна пропускна здатність для мультигігабітної локальної мережі та Wi-Fi 7
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+Перенести ланцюжки для %1$d
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+Налаштування багатопоточності FTP, SFTP і SMB
 </string>
     <string name="network_field_threads">
 Потоки передачі
@@ -2091,28 +2091,28 @@ FTP, SFTP &amp; SMB Multi-threading Settings
 
     <!-- Transfer Multi-Threading Telemetry -->
     <string name="transfer_threads_header">
-Threads (%1$d active)
+Теми (активні %1$d)
 </string>
     <string name="transfer_threads_header_single">
-Thread (1 active)
+Тема (1 активна)
 </string>
     <string name="transfer_per_thread_placeholder">
--- MB/s
+-- МБ/с
 </string>
     <string name="transfer_per_thread_format">
-Per thread: %1$.1f MB/s
+На потік: %1$.1f МБ/с
 </string>
     <string name="transfer_per_thread_single_format">
-Single thread: %1$.1f MB/s
+Один потік: %1$.1f МБ/с
 </string>
     <string name="transfer_thread_initial">
 Thread %1$d: --
 </string>
     <string name="transfer_thread_speed_item">
-Thread %1$d: %2$.1f MB/s
+Потік %1$d: %2$.1f МБ/с
 </string>
     <string name="transfer_thread_speed_single">
-Thread %1$d: %2$.1f MB/s (Single-threaded)
+Потік %1$d: %2$.1f Мб/с (однопотоковий)
 </string>
 
     <!-- Open Source Licenses -->
@@ -2376,10 +2376,10 @@ APK
 Зовнішній застосунок
 </string>
     <string name="default_apps_action_player">
-UFM Player
+Програвач UFM
 </string>
     <string name="default_apps_action_slideshow">
-UFM Slide Show
+Слайд-шоу UFM
 </string>
     <string name="default_apps_context_local">
 Локально
@@ -2887,7 +2887,7 @@ UFM Slide Show
 Відкрити за допомогою UFM
 </string>
     <string name="saf_info_subtitle">
-Storage Access Framework
+Платформа доступу до сховища
 </string>
     <string name="saf_info_heading">
 Використовувати UFM як джерело файлів
@@ -4797,7 +4797,7 @@ IP-адреса цільового пристрою
 Пов\'язано з %s
 </string>
     <string name="tv_server_channel_name">
-UFM TV Server
+Сервер UFM TV
 </string>
     <string name="tv_server_channel_desc">
 Забезпечує активний обмін файлами на ТБ для пов\\\'язаних мобільних пристроїв
@@ -5554,13 +5554,27 @@ APK готовий до встановлення
 Відтворення / Пауза
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+Інтерактивний режим
+</string>
+    <string name="svg_transport_mode">
+Елементи керування гравцем
+</string>
+    <string name="svg_restart">
+Перезапустіть анімацію
+</string>
+    <string name="svg_playback_speed">
+Швидкість відтворення
+</string>
+    <string name="svg_next_panel">
+Наступна панель
+</string>
+    <string name="svg_prev_panel">
+Попередня панель
+</string>
+    <string name="svg_tv_interactive_hint">
+Інтерактивний режим — натисніть «Назад» або «Меню» для керування програвачем
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 Аудіодоріжка
@@ -5869,10 +5883,10 @@ UFM не підтримує вибір цих папок через систем
 Зберегти в UFM
 </string>
     <string name="share_target_save_to">
-Save to…
+Зберегти в…
 </string>
     <string name="share_target_open_in">
-Open in…
+Відкрити в…
 </string>
     <string name="share_receive_from">
 Отримання файлу з %s
@@ -7030,7 +7044,7 @@ PIN-код сховища
 %1$s / %2$s
 </string>
     <string name="transfer_speed_mbs">
-%1$.1f MB/s
+%1$.1f МБ/с
 </string>
     <string name="cannot_read_source_file">
 Не вдається прочитати вихідний файл
@@ -7213,7 +7227,7 @@ PIN-код сховища
 Системні програми
 </string>
     <string name="debloater">
-Debloater
+Деблоатер
 </string>
     <string name="package_apppackagename">
 Пакет: %1$s
@@ -7377,10 +7391,10 @@ Debloater
 Знайдено %1$d файлів розміром більше 512 МБ.
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+Неповні/розріджені завантаження
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+Знайдено %1$d неповних або розріджених файлів, які займають місце на диску.
 </string>
     <string name="old_unused_files">
 Старі невикористані файли
@@ -7424,7 +7438,7 @@ USB-накопичувач (%1$s)
 
     <!-- Smart Sort -->
     <string name="smart_sort_title">
-Smart Sort
+Розумне сортування
 </string>
     <string name="smart_sort_tile_subtitle">
 Упорядкувати файли за категоріями
@@ -7975,10 +7989,18 @@ Smart Sort для цієї папки
     <string name="sync_disabled">
 Синхронізацію вимкнено
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+Увімкнути профіль
+</string>
+    <string name="sync_action_disable">
+Вимкнути профіль
+</string>
+    <string name="sync_status_enabled">
+Активний
+</string>
+    <string name="sync_status_disabled">
+Призупинено
+</string>
     <string name="sync_delete_profile_confirm_msg">
 Ви впевнені, що хочете видалити «%1$s»? Цю дію не можна скасувати.
 </string>
@@ -8326,7 +8348,7 @@ WhatsApp
 WhatsApp Business
 </string>
     <string name="telegram">
-Telegram
+Телеграма
 </string>
     <string name="instagram">
 Instagram
@@ -8341,10 +8363,10 @@ TikTok
 Facebook
 </string>
     <string name="twitter_x">
-Twitter / X
+Твіттер / X
 </string>
     <string name="discord">
-Discord
+Розбрат
 </string>
     <string name="spotify">
 Spotify
@@ -8356,13 +8378,13 @@ Netflix
 YouTube
 </string>
     <string name="signal">
-Signal
+Сигнал
 </string>
     <string name="viber">
 Viber
 </string>
     <string name="line">
-Line
+лінія
 </string>
     <string name="opening_itemlabel">
 📂 Відкриття %1$s
@@ -8449,10 +8471,10 @@ Apache Commons Compress
 zip4j (net.lingala.zip4j)
 </string>
     <string name="xz_for_java_orgtukaanixz">
-XZ for Java (org.tukaani.xz)
+XZ для Java (org.tukaani.xz)
 </string>
     <string name="public_domain">
-Public Domain
+Громадське надбання
 </string>
     <string name="apache_poi">
 Apache POI
@@ -8464,13 +8486,13 @@ NanoHTTPD
 Google Firebase Analytics
 </string>
     <string name="google_billing_library">
-Google Billing Library
+Бібліотека платежів Google
 </string>
     <string name="google_play_review_library">
-Google Play Review Library
+Бібліотека оглядів Google Play
 </string>
     <string name="androidx_libraries">
-AndroidX Libraries
+Бібліотеки AndroidX
 </string>
     <string name="viewpager2">
 ViewPager2
@@ -8485,7 +8507,7 @@ BouncyCastle (org.bouncycastle) · v1.83
 Apache MINA SSHD
 </string>
     <string name="eddsa_java">
-EdDSA for Java
+EdDSA для Java
 </string>
     <string name="slf4j_android">
 SLF4J Android
@@ -8494,10 +8516,10 @@ SLF4J Android
 AndroidSVG (com.caverock)
 </string>
     <string name="coil_iocoilkt">
-Coil (io.coil-kt.coil3)
+Котушка (io.coil-kt.coil3)
 </string>
     <string name="bouncy_castle_license_mitstyle">
-Bouncy Castle License (MIT-style)
+Ліцензія Bouncy Castle (стиль MIT)
 </string>
     <string name="storage_volume">
 Сховище
@@ -8615,16 +8637,16 @@ Dropbox
 Не вдалося автентифікувати: %1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+Помилка автентифікації
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+Помилка підключення або перевірки
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+Не вдалося перевірити код авторизації за допомогою Dropbox. Будь ласка, переконайтеся, що код введено правильно, термін його дії не закінчився, а дата/час вашого пристрою правильні.
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+Виявлено помилку дати й часу пристрою. Схоже, дата й час вашої телевізійної системи минули, що перешкоджає безпечному з’єднанню з Dropbox. Установіть правильну дату й час у налаштуваннях Android TV.
 </string>
     <string name="dropbox_auth_verifying">
 Перевірка коду…
@@ -8776,7 +8798,7 @@ Box — сеанс завершено
 Розширений доступ
 </string>
     <string name="shizuku_subtitle">
-Porter / Shizuku / Shevery
+Портер / Шизуку / Шевері
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
@@ -8909,19 +8931,19 @@ ADB не підключено. Підключіться через ADB Terminal,
 Доступні менеджери
 </string>
     <string name="shizuku_manager_shizuku_title">
-Shizuku
+Шизуку
 </string>
     <string name="shizuku_manager_shizuku_desc">
 Стандартна служба з підвищеними правами з GitHub
 </string>
     <string name="shizuku_manager_shevery_title">
-Shevery
+Шевері
 </string>
     <string name="shizuku_manager_shevery_desc">
 Легка швидка альтернатива
 </string>
     <string name="shizuku_manager_porter_title">
-Porter
+Портер
 </string>
     <string name="shizuku_manager_porter_desc">
 Активно підтримуваний наступник Shizuku
@@ -8951,16 +8973,16 @@ Porter установлено, але його служба не запущен�
 Перевірка доступу з підвищеними правами…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+Візьміть Портера
 </string>
     <string name="elevated_prerelease_badge">
 Пре-реліз
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+Отримати Шизуку
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+Отримати Шевері
 </string>
     <string name="shizuku_open_manager">
 Відкрити менеджер %1$s
@@ -8969,7 +8991,7 @@ Get Shevery
 Інструкція з налаштування за 3 кроки
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1. Менеджер встановлення
 </string>
     <string name="shizuku_step_2">
 2. Запустіть службу
@@ -9008,22 +9030,22 @@ ADB / Бездротове налагодження
 Завантажити та встановити (%1$s)
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+Відключити підвищений доступ?
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+Це від’єднає %1$s підвищений доступ в UFM. Ви можете будь-коли повторно ввімкнути його.
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+Відключити
 </string>
     <string name="shizuku_allow_app_access">
-Allow app access
+Дозволити доступ програмі
 </string>
     <string name="shizuku_app_access_granted_toast">
-Elevated access enabled for %1$s
+Розширений доступ увімкнено для %1$s
 </string>
     <string name="shizuku_app_access_revoked">
-Elevated access disabled for %1$s
+Розширений доступ вимкнено для %1$s
 </string>
     <string name="elevated_fetching_toast">
 Перевірка наявності останньої версії %1$s…
@@ -9074,13 +9096,13 @@ DLNA медіа-рендерер
 Назва сервера
 </string>
     <string name="dlna_server_name_default">
-UFM Media Server
+Медіасервер UFM
 </string>
     <string name="dlna_renderer_name_label">
 Назва рендерера
 </string>
     <string name="dlna_renderer_name_default">
-UFM Player
+Програвач UFM
 </string>
     <string name="dlna_shared_folders_label">
 Спільні папки
@@ -9321,7 +9343,7 @@ FTP та SFTP-сервери запущено
 Натисніть для керування
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+Файловий сервер зупинено: досягнуто 6-годинного ліміту виконання Android
 </string>
     <string name="opening_file_server">
 Відкриття файлового сервера…
@@ -9629,34 +9651,34 @@ URL має починатися з http:// або https://
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+Дозволити ненадійний/самопідписаний сертифікат
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+Приймати самопідписані або приватні сертифікати CA SSL (поширені на локальних пристроях NAS)
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+Пароль (залиште порожнім, щоб зберегти актуальний)
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+Ненадійний сертифікат SSL
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+Сервер за адресою %1$s надав ненадійний або самопідписаний сертифікат SSL. Перш ніж довіряти цьому підключенню, перевірте наведені нижче дані сертифіката.
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+Тема
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+Емітент
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+Термін дії
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+Відбиток пальця SHA-256
 </string>
     <string name="webdav_cert_dialog_trust">
-Trust &amp; Connect
+Довіряйте та підключайтеся
 </string>
 
     <!-- About Section -->
@@ -9943,7 +9965,7 @@ Bluetooth має бути увімкнено для використання п�
 </string>
     <string name="bt_remote_keyboard_backspace">⌫</string>
     <string name="bt_remote_keyboard_tab">
-Tab
+вкладка
 </string>
     <string name="bt_remote_keyboard_enter">↩</string>
 
@@ -10498,7 +10520,7 @@ PDF (лише багатосторінковий)
 Камера
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+На цьому пристрої не знайдено програми камери
 </string>
     <string name="scanner_capture_gallery">
 Вибрати з галереї
@@ -11627,7 +11649,7 @@ Android TV / Fire TV
 Знайдені телевізори та пристрої
 </string>
     <string name="web_portal_card">
-Web Share Portal
+Портал Web Share
 </string>
     <string name="web_portal_desc">
 Для ПК, планшетів або мобільних пристроїв із браузерами:
@@ -11830,7 +11852,7 @@ Mega
 Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
-Premiumize
+Преміум
 </string>
     <string name="rclone_provider_box">
 Box
@@ -11854,7 +11876,7 @@ URL-адреса сервера
 Використовуйте пароль додатка, створений у налаштуваннях облікового запису Koofr, а не ваш пароль для входу
 </string>
     <string name="rclone_provider_protondrive">
-Proton Drive
+Протонний драйв
 </string>
     <string name="rclone_field_username">
 Ім\\\'я користувача або електронна пошта
@@ -11954,100 +11976,100 @@ Proton Drive
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+Стиль субтитрів
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+Налаштуйте вигляд субтитрів у програмі, розмір шрифту та синхронізацію системних субтитрів.
 </string>
     <string name="subtitle_style_summary_system">
-System caption style
+Системний стиль підпису
 </string>
     <string name="subtitle_style_summary_custom">
-UFM custom style (%1$s)
+Спеціальний стиль UFM (%1$s)
 </string>
     <string name="subtitle_style_dialog_title">
-Subtitle Style
+Стиль субтитрів
 </string>
     <string name="subtitle_style_mode_system">
-System Caption Style
+Системний стиль підпису
 </string>
     <string name="subtitle_style_mode_system_desc">
-Follows device Accessibility caption settings even when system captions are disabled.
+Слідує налаштуванням субтитрів доступності пристрою, навіть якщо системні субтитри вимкнено.
 </string>
     <string name="subtitle_style_mode_custom">
-UFM Custom Style
+Спеціальний стиль UFM
 </string>
     <string name="subtitle_style_mode_custom_desc">
-Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+Спеціальний стиль у додатку з регульованим розміром, кольорами, ефектами країв і позиціонуванням.
 </string>
     <string name="subtitle_style_open_system">
-Open Device Caption Settings
+Відкрийте налаштування субтитрів пристрою
 </string>
     <string name="subtitle_style_system_unavailable">
-System caption settings not available on this device; using UFM style.
+Системні налаштування субтитрів недоступні на цьому пристрої; використовуючи стиль UFM.
 </string>
     <string name="subtitle_style_preview_title">
-Preview
+Попередній перегляд
 </string>
     <string name="subtitle_style_preview_line1">
 Ultimate File Manager Pro
 </string>
     <string name="subtitle_style_preview_line2">
-Live subtitle preview • Crisp text styling
+Попередній перегляд субтитрів • Чіткий стиль тексту
 </string>
     <string name="subtitle_style_text_size">
-Text size
+Розмір тексту
 </string>
     <string name="subtitle_style_text_color">
-Text color
+Колір тексту
 </string>
     <string name="subtitle_style_bg_color">
-Background opacity
+Непрозорість фону
 </string>
     <string name="subtitle_style_edge_type">
-Edge effect
+Ефект краю
 </string>
     <string name="subtitle_style_edge_none">
 None
 </string>
     <string name="subtitle_style_edge_outline">
-Outline
+Контур
 </string>
     <string name="subtitle_style_edge_drop_shadow">
-Drop shadow
+Тінь
 </string>
     <string name="subtitle_style_edge_raised">
-Raised
+Піднятий
 </string>
     <string name="subtitle_style_edge_depressed">
-Depressed
+депресія
 </string>
     <string name="subtitle_style_bottom_margin">
-Bottom margin
+Нижнє поле
 </string>
     <string name="subtitle_style_apply_embedded">
-Apply embedded styles (ASS/SSA/TTML)
+Застосувати вбудовані стилі (ASS/SSA/TTML)
 </string>
     <string name="subtitle_style_apply_embedded_desc">
-When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+Коли вимкнено, стиль субтитрів UFM замінює вбудовані теги шрифту та кольору для оптимальної читабельності.
 </string>
     <string name="subtitle_style_color_yellow">
-Yellow
+Жовтий
 </string>
     <string name="subtitle_style_color_white">
-White
+Білий
 </string>
     <string name="subtitle_style_color_cyan">
-Cyan
+Блакитний
 </string>
     <string name="subtitle_style_color_green">
-Green
+Зелений
 </string>
     <string name="subtitle_style_color_magenta">
-Magenta
+Маджента
 </string>
     <string name="subtitle_style_color_orange">
-Orange
+Помаранчевий
 </string>
     <string name="subtitle_style_bg_transparent">
 None
@@ -12062,13 +12084,13 @@ None
 75%
 </string>
     <string name="subtitle_style_bg_100">
-Solid
+Твердий
 </string>
     <string name="player_track_sheet_subtitle_style">
-Subtitle Style…
+Стиль субтитрів…
 </string>
     <string name="player_track_sheet_subtitle_style_desc">
-Customize colors, size &amp; appearance
+Налаштуйте кольори, розмір і зовнішній вигляд
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -12109,10 +12131,10 @@ Customize colors, size &amp; appearance
 Повтор вимкнено
 </string>
     <string name="player_toast_repeat_all">
-Repeat all
+Повторити все
 </string>
     <string name="player_toast_repeat_one">
-Repeat current track
+Повторити поточний трек
 </string>
     <string name="player_toast_audio_track">
 Аудіодоріжка
@@ -12271,13 +12293,13 @@ Repeat current track
 Розмір:
 </string>
     <string name="properties_label_size_on_disk">
-Size on disk:
+Розмір на диску:
 </string>
     <string name="properties_sparse_badge">
-Partial Download (Sparse)
+Часткове завантаження (розріджене)
 </string>
     <string name="properties_sparse_allocated_pct">
-%1$.1f%% allocated
+%1$.1f%% виділено
 </string>
     <string name="properties_label_contains">
 Містить:
@@ -12313,22 +12335,22 @@ Partial Download (Sparse)
 Кілька типів
 </string>
     <string name="properties_viewer_photo">
-UFM Photo Viewer
+Перегляд фотографій UFM
 </string>
     <string name="properties_viewer_player">
-UFM Player
+Програвач UFM
 </string>
     <string name="properties_viewer_text">
-UFM Text Viewer
+Перегляд тексту UFM
 </string>
     <string name="properties_viewer_archive">
-UFM Archive Viewer
+Переглядач архіву UFM
 </string>
     <string name="properties_viewer_pdf">
 UFM PDF Viewer
 </string>
     <string name="properties_viewer_spreadsheet">
-UFM Spreadsheet Viewer
+Переглядач електронних таблиць UFM
 </string>
     <string name="properties_viewer_default">
 Програма за замовчуванням
@@ -12992,61 +13014,61 @@ UFM перестав відповідати під час вашого оста�
 </string>
     <!-- Music Tag Online Sync & High-Res Cover Picker -->
     <string name="music_tag_btn_search_online_cover">
-Search Online Art
+Пошук мистецтва в Інтернеті
 </string>
     <string name="music_tag_btn_musicbrainz_sync">
 Identify Online (MusicBrainz)
 </string>
     <string name="music_tag_cover_picker_title">
-Search Online Artwork
+Пошук творів мистецтва в Інтернеті
 </string>
     <string name="music_tag_search_covers_hint">
-Artist and Album name…
+Виконавець і назва альбому…
 </string>
     <string name="music_tag_searching_artwork">
-Searching Apple Music, Deezer &amp; Cover Art Archive…
+Пошук в архіві Apple Music, Deezer і обкладинок…
 </string>
     <string name="music_tag_no_artwork_found">
-No artwork found for this query
+За цим запитом не знайдено жодної ілюстрації
 </string>
     <string name="music_tag_cover_applied">
-Applied online album artwork
+Прикладна обкладинка онлайн-альбому
 </string>
     <string name="music_tag_cover_download_error">
-Failed to download artwork
+Не вдалося завантажити ілюстрацію
 </string>
     <string name="music_tag_musicbrainz_search_title">
-MusicBrainz Tag Search
+Пошук тегів MusicBrainz
 </string>
     <string name="music_tag_search_query_hint">
-Track title or Album name…
+Назва композиції або назва альбому…
 </string>
     <string name="music_tag_searching_musicbrainz">
-Searching MusicBrainz…
+Пошук MusicBrainz…
 </string>
     <string name="music_tag_no_musicbrainz_results">
-No matching recordings or releases found
+Відповідних записів чи випусків не знайдено
 </string>
     <string name="music_tag_diff_title">
-Review Online Tags
+Перегляньте онлайн-теги
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+Виберіть поля, які потрібно застосувати до відстеження
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+Застосувати вибрані теги
 </string>
     <string name="music_tag_select_all">
-Select All
+Виберіть усі
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+Записи
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+Альбоми / Релізи
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d треків
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -13432,7 +13454,7 @@ ISO-чутливість
 Камера + Дата
 </string>
     <string name="exif_rename_token_year">
-+ {YYYY}
++ {РРРР}
 </string>
     <string name="exif_rename_token_month">
 + {MM}
@@ -13441,13 +13463,13 @@ ISO-чутливість
 + {DD}
 </string>
     <string name="exif_rename_token_time">
-+ {hh}{mm}{ss}
++ {гч}{мм}{сс}
 </string>
     <string name="exif_rename_token_model">
-+ {MODEL}
++ {МОДЕЛЬ}
 </string>
     <string name="exif_rename_token_original">
-+ {ORIGINAL}
++ {ОРИГІНАЛ}
 </string>
     <string name="exif_rename_token_seq">+ {#}</string>
     <string name="exif_rename_preview_header">
@@ -14245,19 +14267,19 @@ ADB підключено
 Надайте доступ до папки в цьому сховищі
 </string>
     <string name="action_remove_folder_from_storage">
-Remove Folder
+Видалити папку
 </string>
     <string name="action_remove_folder_from_storage_desc">
-Remove mounted folder access from this storage
+Скасувати доступ до змонтованої папки з цього сховища
 </string>
     <string name="dialog_remove_folders_title">
-Remove Mounted Folders
+Видаліть підключені папки
 </string>
     <string name="dialog_remove_folders_desc">
-Select a folder to remove access from this storage. Your files will not be deleted.
+Виберіть папку, щоб скасувати доступ до цього сховища. Ваші файли не будуть видалені.
 </string>
     <string name="no_mounted_folders_hint">
-No mounted folders remaining for this storage.
+Для цього сховища не залишилося підключених папок.
 </string>
     <string name="restricted_storage_empty_title">
 Потрібен доступ до всіх файлів
@@ -14701,10 +14723,10 @@ SHA-256
 ✗ Файли відрізняються (різні розміри: %1$s проти %2$s)
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ Відповідний заголовок і дані — неповне завантаження (%1$.1f%% проти %2$.1f%% виділено)
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
-Size on disk: %1$s (%2$.1f%%)
+Розмір на диску: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 Ідентичний розмір (%1$s). Хешування для перевірки вмісту…
@@ -15592,357 +15614,357 @@ USB-накопичувач (імітований OTG)
 
     <!-- Grid Text Placement Settings -->
     <string name="settings_grid_text_position_title">
-Grid Text Placement
+Розміщення тексту сітки
 </string>
     <string name="settings_grid_text_position_subtitle">
-Position file names below or overlaid on grid items
+Розташуйте імена файлів нижче або накладіть на елементи сітки
 </string>
     <string name="settings_grid_text_position_below">
-Below Block (Default)
+Під блоком (за замовчуванням)
 </string>
     <string name="settings_grid_text_position_overlay">
-Overlaid on Block
+Накладено на блок
 </string>
     <string name="backup_pref_grid_text_position">
-Grid text placement settings
+Параметри розміщення тексту сітки
 </string>
     <string name="backup_pref_view_styles">
-View density &amp; preset styles
+Перегляньте щільність і попередньо встановлені стилі
 </string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
     <string name="open_as">
-Open As…
+Відкрити як…
 </string>
     <string name="open_as_desc">
-Choose a viewer or player to open this file
+Виберіть засіб перегляду або програвач, щоб відкрити цей файл
 </string>
     <string name="presentation_viewer">
-Presentation Viewer
+Переглядач презентацій
 </string>
     <string name="slide_counter">
-Slide %1$d of %2$d
+Слайд %1$d з %2$d
 </string>
     <string name="open_in_powerpoint">
-Open in Presentation App
+Відкрити в додатку для презентацій
 </string>
     <string name="open_as_text">
-Text / Code Viewer
+Перегляд тексту / коду
 </string>
     <string name="open_as_text_desc">
-Built-in code &amp; text editor with syntax highlighting
+Вбудований редактор коду та тексту з підсвічуванням синтаксису
 </string>
     <string name="open_as_hex">
 Hex / Binary Viewer
 </string>
     <string name="open_as_hex_desc">
-Raw byte hex dump and binary inspector
+Необроблений байтовий шістнадцятковий дамп і бінарний інспектор
 </string>
     <string name="open_as_presentation">
-Presentation / Slide Deck
+Презентація / Слайд
 </string>
     <string name="open_as_presentation_desc">
-Built-in slide deck viewer with speaker notes
+Вбудований засіб перегляду слайдів із нотатками доповідача
 </string>
     <string name="open_as_spreadsheet">
-Spreadsheet / Table
+Таблиця / Таблиця
 </string>
     <string name="open_as_spreadsheet_desc">
-Built-in spreadsheet table viewer
+Вбудований засіб перегляду таблиць електронних таблиць
 </string>
     <string name="open_as_image">
-Image Viewer
+Переглядач зображень
 </string>
     <string name="open_as_image_desc">
-High-resolution photo viewer with zoom &amp; pan
+Переглядач фотографій високої роздільної здатності з масштабуванням і панорамуванням
 </string>
     <string name="open_as_audio">
-Audio Player
+Аудіоплеєр
 </string>
     <string name="open_as_audio_desc">
-Media3 audio player with background playback
+Аудіоплеєр Media3 із фоновим відтворенням
 </string>
     <string name="open_as_video">
-Video Player
+Відеоплеєр
 </string>
     <string name="open_as_video_desc">
-Media3 hardware-accelerated video player
+Відеопрогравач Media3 з апаратним прискоренням
 </string>
     <string name="open_as_archive">
-Archive Browser
+Браузер архівів
 </string>
     <string name="open_as_archive_desc">
-Explore ZIP, 7Z, TAR, RAR, and compressed files
+Досліджуйте ZIP, 7Z, TAR, RAR і стислі файли
 </string>
     <string name="open_as_other">
-Choose External App…
+Виберіть зовнішню програму…
 </string>
     <string name="open_as_other_desc">
-Open with an installed third-party app
+Відкрийте за допомогою встановленої програми стороннього розробника
 </string>
     <string name="speaker_notes">
-Speaker Notes
+Нотатки доповідача
 </string>
     <string name="no_slides_found">
-No slides found in this presentation
+У цій презентації не знайдено слайдів
 </string>
     <string name="next_slide">
-Next Slide
+Наступний слайд
 </string>
     <string name="prev_slide">
-Previous Slide
+Попередній слайд
 </string>
     <string name="view_raw_text">
-View as Raw Text
+Переглянути як необроблений текст
 </string>
     <string name="ufm_slide_deck_viewer">
-UFM Slide Deck
+Дека слайдів UFM
 </string>
     <string name="open_with_presentation_app">
-Presentation App (PowerPoint / Slides)
+Додаток для презентацій (PowerPoint/Слайди)
 </string>
     <string name="open_with_presentation_app_desc">
-Open in Microsoft PowerPoint, Google Slides, or office suite
+Відкрийте в Microsoft PowerPoint, Google Slides або офісному пакеті
 </string>
     <string name="ufm_slide_viewer_desc">
-View slides, cover thumbnail, and notes in UFM
+Переглядайте слайди, ескіз обкладинки та примітки в UFM
 </string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
     <string name="action_open_with">
-Open With…
+Відкрити за допомогою…
 </string>
     <string name="action_open_as">
-Open As…
+Відкрити як…
 </string>
     <string name="toolbar_open_with">
-Open With
+Відкрити за допомогою
 </string>
     <string name="toolbar_open_as">
-Open As
+Відкрити як
 </string>
     <string name="action_extract_subtitles">
-Extract Subtitles
+Видобути субтитри
 </string>
     <string name="action_extract_audio">
-Extract Audio
+Витяг аудіо
 </string>
     <string name="action_convert_to_mp4">
-Convert to MP4
+Перетворити в MP4
 </string>
     <string name="toolbar_extract_subtitles">
-Extract Subtitles
+Видобути субтитри
 </string>
     <string name="toolbar_extract_audio">
-Extract Audio
+Витяг аудіо
 </string>
     <string name="toolbar_convert_to_mp4">
-Convert to MP4
+Перетворити в MP4
 </string>
     <string name="extracting_subtitles">
-Extracting subtitle track…
+Вилучення доріжки субтитрів…
 </string>
     <string name="extracting_audio">
-Extracting audio track…
+Вилучення звукової доріжки…
 </string>
     <string name="convert_to_mp4_progress">
-Converting video to MP4…
+Перетворення відео в MP4…
 </string>
     <string name="convert_to_mp4_success">
-Video converted to %1$s
+Відео перетворено на %1$s
 </string>
     <string name="convert_to_mp4_failed">
-Failed to convert video
+Не вдалося конвертувати відео
 </string>
     <string name="convert_to_mp4_title">
-Convert to MP4
+Перетворити в MP4
 </string>
     <string name="convert_to_mp4_confirm">
-Convert \"%1$s\" to universal MP4 format?
+Перетворити \"%1$s\" в універсальний формат MP4?
 </string>
     <string name="subtitles_extracted_success">
-Subtitles extracted successfully.
+Субтитри успішно вилучено.
 </string>
     <string name="audio_extracted_success">
-Audio extracted successfully.
+Аудіо успішно вилучено.
 </string>
     <string name="audio_format_universal">
-Universal M4A
+Універсальний М4А
 </string>
     <string name="audio_format_original">
-Original Stream
+Оригінальний потік
 </string>
     <string name="audio_format_universal_desc">
-High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+Високоякісний AAC (.m4a) — відтворюється всюди на телефонах, автомобілях і музичних програмах
 </string>
     <string name="audio_format_original_desc">
-Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+Пряме потокове копіювання без втрат (.eac3, .dts, .ac3, .flac)
 </string>
     <string name="codec_unsupported_title">
-Audio Codec Not Supported
+Аудіокодек не підтримується
 </string>
     <string name="codec_unsupported_message">
-This device lacks a native hardware decoder for %1$s audio.\n
+Цей пристрій не має вбудованого апаратного декодера для %1$s аудіо.\n
 \n
-Would you like to convert it to Universal M4A (AAC) for seamless playback?
+Чи бажаєте ви перетворити його на Universal M4A (AAC) для безперебійного відтворення?
 </string>
     <string name="convert_and_play">
-Convert &amp; Play
+Конвертуйте та грайте
 </string>
     <string name="converting_audio">
-Converting audio to M4A…
+Перетворення аудіо на M4A…
 </string>
     <string name="convert_to_m4a">
-Convert to M4A
+Конвертувати в M4A
 </string>
     <string name="no_subtitles_found_in_video">
-No embedded subtitle tracks found in this video
+У цьому відео не знайдено вбудованих доріжок субтитрів
 </string>
     <string name="media_technical_details">
-Media Stream Details
+Деталі медіа-потоку
 </string>
     <string name="media_format">
-Container
+Контейнер
 </string>
     <string name="media_bitrate">
-Overall Bitrate
+Загальний бітрейт
 </string>
     <string name="error_generic">
-An error occurred
+Сталася помилка
 </string>
     <string name="failed_to_open_file">
-Failed to open file
+Не вдалося відкрити файл
 </string>
     <string name="slide_badge_format">
-Slide %1$d
+Слайд %1$d
 </string>
     <string name="slide_counter_format">
-Slide %1$d of %2$d
+Слайд %1$d з %2$d
 </string>
     <string name="no_app_to_open_file">
-No app found to open this file
+Не знайдено програми для відкриття цього файлу
 </string>
     <string name="select_subtitle_track">
-Select Subtitle Track
+Виберіть доріжку субтитрів
 </string>
     <string name="extract_all_subtitles">
-Extract All Tracks
+Видобути всі треки
 </string>
     <string name="extract_all_subtitles_desc">
-Extract all %1$d subtitle tracks into separate files
+Розпакуйте всі доріжки субтитрів %1$d в окремі файли
 </string>
     <string name="subtitles_extracted_multiple_success">
-Successfully extracted %1$d subtitle files.
+Файли субтитрів %1$d успішно видобуто.
 </string>
     <string name="select_audio_track">
-Select Audio Track
+Виберіть звукову доріжку
 </string>
     <string name="extract_all_audio">
-Extract All Tracks
+Видобути всі треки
 </string>
     <string name="extract_all_audio_desc">
-Extract all %1$d audio tracks into separate files
+Розпакуйте всі %1$d звукові доріжки в окремі файли
 </string>
     <string name="audio_extracted_multiple_success">
-Successfully extracted %1$d audio files.
+Успішно роздобуто %1$d аудіофайлів.
 </string>
     <string name="no_audio_found_in_video">
-No audio tracks found in this video
+У цьому відео не знайдено звукових доріжок
 </string>
 
     <!-- Floating Bottom Bar Dock -->
     <string name="floating_bar_settings_title">
-Floating Bottom Bar
+Плаваюча нижня панель
 </string>
     <string name="floating_bar_settings_subtitle">
-Show a modern floating dock at the bottom of the main menu for quick access
+Показати сучасну плаваючу док-станцію внизу головного меню для швидкого доступу
 </string>
     <string name="floating_bar_manage_title">
-Manage Floating Bar
+Керування плаваючою панеллю
 </string>
     <string name="floating_bar_manage_subtitle">
-Add, remove, and reorder quick-access shortcuts
+Додавайте, видаляйте та змінюйте порядок ярликів швидкого доступу
 </string>
     <string name="floating_bar_enable_switch">
-Enable Floating Bar
+Увімкнути плаваючу панель
 </string>
     <string name="floating_bar_enable_desc">
-Docked tiles appear in the bottom floating bar and are hidden from the main menu
+Закріплені плитки з’являються на нижній плаваючій панелі та приховані в головному меню
 </string>
     <string name="floating_bar_docked_section">
-Docked Items
+Закріплені елементи
 </string>
     <string name="floating_bar_docked_hint">
-Drag handle to reorder. Tap Remove to return item to main menu.
+Перетягніть маркер, щоб змінити порядок. Натисніть «Видалити», щоб повернутися до головного меню.
 </string>
     <string name="floating_bar_available_section">
-Available Tiles
+В наявності плитка
 </string>
     <string name="floating_bar_available_hint">
-Tap + to add a tile to the floating bottom bar
+Торкніться +, щоб додати плитку до плаваючої нижньої панелі
 </string>
     <string name="floating_bar_empty_docked">
-No items docked yet. Add tiles from the list below.
+Ще немає прикріплених елементів. Додайте плитки зі списку нижче.
 </string>
     <string name="floating_bar_empty_available">
-All available tiles have been added to the floating bar.
+Усі доступні плитки додано до плаваючої панелі.
 </string>
     <string name="floating_bar_add">
-Add
+додати
 </string>
     <string name="floating_bar_remove">
-Remove
+видалити
 </string>
     <string name="backup_pref_floating_bar">
-Floating Bottom Bar
+Плаваюча нижня панель
 </string>
 
     <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
     <string name="quick_access_title">
-Quick Access
+Швидкий доступ
 </string>
     <string name="quick_access_mode_title">
-Quick Access Style
+Стиль швидкого доступу
 </string>
     <string name="quick_access_mode_subtitle">
-Choose how quick-access shortcuts are presented
+Виберіть спосіб представлення ярликів швидкого доступу
 </string>
     <string name="quick_access_mode_disabled">
-Disabled
+Вимкнено
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+Нижня плаваюча панель
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+Меню пальцем по краю
 </string>
     <string name="quick_access_edge_title">
-Swipe Edge
+Проведіть пальцем по краю
 </string>
     <string name="quick_access_edge_left">
-Left Edge
+Лівий край
 </string>
     <string name="quick_access_edge_right">
-Right Edge
+Правий край
 </string>
     <string name="quick_access_edge_handle_title">
-Edge Handle Indicator
+Індикатор крайової ручки
 </string>
     <string name="quick_access_edge_handle_desc">
-Show a subtle indicator on the screen edge for easy opening
+Покажіть тонкий індикатор на краю екрана для легкого відкриття
 </string>
     <string name="quick_access_hide_tiles_title">
-Hide Docked Tiles on Main Menu
+Приховати закріплені плитки в головному меню
 </string>
     <string name="quick_access_hide_tiles_desc">
-Keep the main dashboard clean by hiding tiles docked in Quick Access
+Тримайте головну інформаційну панель чистою, приховуючи плитки, закріплені в швидкому доступі
 </string>
     <string name="quick_access_manage_tiles">
-Manage Tiles
+Керування плитками
 </string>
     <string name="quick_access_empty_hint">
-No tiles docked yet.\n
-Tap Manage Tiles to add shortcuts.
+Ще немає закріплених плиток.\n
+Торкніться «Керувати плитками», щоб додати ярлики.
 </string>
     <string name="quick_access_mode_disabled_desc">Вимкнути ярлики швидкого доступу</string>
     <string name="quick_access_mode_bottom_bar_desc">Сучасна плаваюча панель внизу головного меню</string>
@@ -15953,373 +15975,373 @@ Tap Manage Tiles to add shortcuts.
 
     <!-- Direct Remote Media & Media Operation Worker -->
     <string name="settings_network_media_process_title">
-Network Media Processing
+Обробка мережевих носіїв
 </string>
     <string name="settings_network_media_process_subtitle_off">
-Direct stream processing (zero local copy of video)
+Обробка прямого потоку (нульова локальна копія відео)
 </string>
     <string name="settings_network_media_process_subtitle_on">
-Copy full video to local storage before processing
+Перед обробкою скопіюйте повне відео в локальне сховище
 </string>
     <string name="backup_pref_network_media_process">
-Network Media Processing
+Обробка мережевих носіїв
 </string>
     <string name="dialog_copy_before_process_title">
-Copy to Local Storage?
+Копіювати в локальне сховище?
 </string>
     <string name="dialog_copy_before_process_msg">
-This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+Ця операція спочатку скопіює \"%1$s\" (%2$s) із мережевого сховища в локальне сховище вашого пристрою.\n
 \n
-Depending on file size and connection speed, this may take some time.\n
+Залежно від розміру файлу та швидкості з’єднання це може зайняти деякий час.\n
 \n
-Do you want to proceed?
+Продовжити?
 </string>
     <string name="action_copy_and_proceed">
-Copy &amp; Proceed
+Копіювати та продовжити
 </string>
     <string name="media_operation_channel_name">
-Media Operations
+Операції зі ЗМІ
 </string>
     <string name="media_operation_channel_desc">
-Background video conversion and track extraction
+Перетворення фонового відео та вилучення доріжок
 </string>
     <string name="media_op_converting_video">
-Converting Video to MP4…
+Перетворення відео в MP4…
 </string>
     <string name="media_op_extracting_audio">
-Extracting Audio Track…
+Вилучення звукової доріжки…
 </string>
     <string name="media_op_extracting_subtitles">
-Extracting Subtitles…
+Вилучення субтитрів…
 </string>
     <string name="media_op_completed_title">
-Media Operation Completed
+Медіаоперація завершена
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+Помилка операції з медіа
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+Завантаження віддаленого відео в локальний кеш…
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+Завантаження результатів у віддалену папку…
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+Продовження у фоновому режимі. Перевірте сповіщення щодо прогресу.
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+Remote Share доступний лише для читання
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+Розпакований файл не вдалося зберегти в папку \"%1$s\", оскільки спільний доступ доступний лише для читання.\n
 \n
-Would you like to save it to your local device instead?
+Зберегти його на локальному пристрої?
 </string>
     <string name="action_save_locally">
-Save to Device
+Зберегти на пристрій
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+Доступ лише для читання
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+Спільний ресурс «%1$s» доступний лише для читання.\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+Видобутий або перетворений файл не можна зберегти назад у віддалену спільну папку, тому він буде збережений у локальній папці завантажень.\n
 \n
-Do you want to proceed?
+Продовжити?
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+Інше зберігання
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+Установлені постачальники хмар і документів
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+Доступ до сторонніх постачальників документів, встановлених на вашому пристрої
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+Доступні %1$d постачальники документів
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+Доступний 1 постачальник документів
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+Не знайдено сторонніх постачальників документів
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+Огляд файлів (SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+Змонтувати папку зберігання
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+Підключіться через UFM Native Engine
 </string>
     <string name="action_open_app">
-Open App
+Відкрийте додаток
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+Додайте місце зберігання
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+Змонтувати каталог / папку
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+Виберіть папку з Termux, SD-карти або USB-накопичувача
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+Встановлені постачальники документів
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+Доступ до Proton Drive, файлу Synology DS, Google Drive тощо
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+Високошвидкісна хмара та мережа
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+Повна двостороння синхронізація через RClone (Proton/Google Drive) або SMB/WebDAV
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+Відкрити або скопіювати файл
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+Що б ви хотіли зробити з \"%1$s\"?
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+Відкрити в UFM Viewer
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+Копіювати в локальне сховище
 </string>
     <string name="saf_file_action_remember">
-Remember my choice
+Запам\'ятай мій вибір
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+Завжди запитуйте
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+Скопійовано %1$d файл(и) у Завантаження
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+Дія вибраного файлу SAF
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+Завжди запитуйте, відкрити чи скопіювати
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+Завжди відкривати в UFM Viewer
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+Завжди копіюйте в локальне сховище
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+Постачальник документів
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+Керувати %1$s
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+Перегляд і завантаження файлів
 </string>
     <string name="doc_provider_action_browse_subtitle">Відкрити %1$s для вибору файлів для перегляду або локального копіювання</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+Завантажити файл до %1$s
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+Виберіть локальний файл в UFM для збереження в %1$s
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+Видалити %1$s?
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+Вилучити %1$s зі сховища? Ви можете будь-коли повторно додати його з іншого сховища.
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+Видалити зі сховища
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+%1$s вилучено зі сховища
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+%1$s додано в пам’ять
 </string>
     <string name="other_storage_all_added">
-All available providers added
+Додано всіх доступних провайдерів
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+Усі встановлені постачальники документів уже додано до головного меню зберігання.
 </string>
     <string name="saf_copy_destination_title">
-Destination: %1$s
+Пункт призначення: %1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+Змінити папку…
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+Виберіть папку призначення
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+Встановіть місце призначення копії
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+Місце призначення вибраних файлів SAF
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+Файли, скопійовані з постачальників документів, буде збережено в \"%1$s\".
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+Інше зберігання та передавання SAF
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+Копіювати цільову папку
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+Скинути до замовчування (завантаження)
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+Виберіть нову папку…
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+Скидання місця призначення копії до завантажень
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+Експорт до постачальника документів
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+Збережіть безпосередньо у змонтовану хмару або постачальник документів
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+Виберіть постачальника призначення
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+Експорт кількох файлів
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+Як би ви хотіли експортувати ці %1$d файли в %2$s?
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+Експортувати як архів ZIP
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+Використовуйте аркуш завантаження системи
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+\"%1$s\" збережено в %2$s
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+Можливість встановлення папки
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+Файли та хмара
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+Нативна синхронізація доступна
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+Завантажити в інше сховище
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+Завантажте вибрані файли або папки до зовнішніх постачальників документів
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+Завантажити в інше сховище
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+Постачальник пам’яті не додано. Виберіть постачальника для додавання.
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+Скопійовано %1$d файл(ів) до %2$s
 </string>
     <string name="share_export_folder_title">
-Export Folder
+Експорт папки
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+Папки не можна завантажити безпосередньо через постачальників документів. Бажаєте стиснути \"%1$s\" в архів ZIP для завантаження в %2$s?
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+Стисніть в єдиний архів ZIP і завантажте
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+Надсилайте елементи за допомогою аркуша завантаження системи Android
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+Виберіть підключеного постачальника або відкрийте Інше сховище
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+Архівування %1$s…
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+Архівування для іншого сховища…
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+Завантажити через %1$s
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+Надсилайте файли безпосередньо в %1$s
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+Стисніть у ZIP-архів і виберіть папку призначення в %1$s
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+Зберігає структуру папок і оригінальний каталог у ZIP-архіві в %1$s
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+Завантажує окремі файли безпосередньо в %1$s (зовнішні екрани завантаження не можуть створювати каталоги)
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+Повідомлення про завантаження папки
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+Зовнішні екрани завантаження (такі як %2$s) не можуть створювати каталоги.\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+Буде завантажено лише файли всередині \"%1$s\", а не саму оригінальну папку.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Щоб зберегти повну структуру каталогу, виберіть \"Експортувати як ZIP-архів\".
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+Зовнішні екрани завантаження (такі як %1$s) не можуть створювати каталоги.\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+Буде завантажено лише файли всередині вибраних папок, а не самі оригінальні папки.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Щоб зберегти повну структуру каталогу, виберіть натомість «Експортувати як архів ZIP».
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+Завантажувати лише файли
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+Параметри головного екрана
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+Додати на головний екран
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+Видалити з головного екрана
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+Видалити улюблене
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+Запит на ярлик — перевірте головний екран
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+Ярлик вимкнено. Видаліть його вручну з головного екрана.
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+УФМ Вибране
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+Канал не схвалено. Ви можете ввімкнути його пізніше в ТВ-параметрах → Канали.
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+Товар недоступний
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+Не вдалося знайти файл або папку. Можливо, його було переміщено, видалено або знаходиться в недоступному сховищі.
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -16339,382 +16361,382 @@ OK
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+Відкрити за допомогою
 </string>
     <string name="open_with_search_hint">
-Search apps…
+Пошук програм…
 </string>
     <string name="open_with_just_once">
-Just once
+Тільки один раз
 </string>
     <string name="open_with_always">
-Always
+Завжди
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+Завжди використовувати вибрану програму для %1$s файлів
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+Завжди використовуйте вибрану програму
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+Запам’ятати за умовчанням для файлів %1$s.
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+Не знайдено встановлених програм для відкриття цього файлу
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+Пошук у магазині Google Play
 </string>
     <string name="open_with_app_info">
-App info
+Інформація про додаток
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+Перегляньте відомості про програму та налаштування системи
 </string>
     <string name="open_with_set_default">
-Always use this app
+Завжди використовуйте цю програму
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+Не вдається запустити %1$s. Повернення до вибору системи…
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+Натисніть OK, щоб відкрити • Утримуйте OK, щоб переглянути параметри програми за замовчуванням
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+Виберіть як пункт призначення
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+Пункт призначення глядача
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+Підтвердьте папку призначення
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+Вибрана папка використовуватиметься для швидкого копіювання та переміщення у засобі перегляду UFM та слайд-шоу.
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+Дії з файлами
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+Папка призначення
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+Пункт призначення не вибрано — торкніться, щоб вибрати
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+Зміна
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+Копіювати в %1$s
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+Перемістити до %1$s
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+Копіювати до місця призначення
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+Переміщення до пункту призначення
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+Скопійовано в %1$s
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+Переміщено до %1$s
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+Джерело та цільова папка – одна папка
 </string>
     <string name="backup_pref_viewer_transfer">
-Viewer Transfer Destination
+Пункт призначення передачі глядача
 </string>
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+Додати на головний екран
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+Назва ярлика
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+Ярлик для зберігання
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+\"%1$s\" уже закріплено на головному екрані.
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+Додати на головний екран
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+Назва ярлика не може бути пустою
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
     <string name="download_manager_title">
-Download Manager
+Менеджер завантажень
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+Завантаження через торрент, Magnet і HTTP
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+Високошвидкісний нативний прямий і одноранговий менеджер завантажень із захистом конфіденційності без заповнення.
 </string>
     <string name="download_no_transfers">
-No active downloads
+Немає активних завантажень
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+Виберіть як папку для завантаження
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+Завантажити папку
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+Підтвердьте місце завантаження
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+Завантаження буде збережено безпосередньо в цьому каталозі.
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+Прямі завантаження
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+Завантаження через торрент
 </string>
     <string name="download_location_label">
-Download location
+Місце завантаження
 </string>
     <string name="download_change_location">
-Change
+Зміна
 </string>
     <string name="download_action_start">
-Start
+старт
 </string>
     <string name="download_action_pause">
 Pause
 </string>
     <string name="download_action_resume">
-Resume
+Резюме
 </string>
     <string name="download_action_cancel">
-Cancel
+Скасувати
 </string>
     <string name="download_action_delete">
-Delete
+Видалити
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+URL-адреса прямого завантаження
 </string>
     <string name="download_enter_url_hint">
 https://example.com/file.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+Завантажити
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+Торрент або Magnet Link
 </string>
     <string name="download_enter_magnet_hint">
 magnet:?xt=urn:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+Відкрийте файл .torrent
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+Менеджер завантажень і повідомлення про P2P
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+Інформація про прийнятне використання та конфіденційність
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+Я розумію, що однорангові завантаження використовують мою IP-адресу в групі, і я погоджуюся використовувати цей інструмент виключно для законного вмісту, який не порушує права.
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+Обмеження пам\'яті перевищено
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+Розмір цільового файлу (%1$s) перевищує ліміт у 4 ГБ, який підтримує файлова система FAT32 на цьому диску.\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+Будь ласка, виберіть інше місце завантаження у форматі exFAT, NTFS або внутрішньої пам’яті.
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+Недостатньо місця для зберігання
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+На вибраному накопичувачі недостатньо вільного місця.\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+Потрібно: %1$s\n
+Доступно: %2$s\n
 \n
-Please select another drive or free up space.
+Будь ласка, виберіть інший диск або звільніть місце.
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+Виберіть Розташування
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+Підключення для мобільних даних
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+Наразі ви під’єднані до стільникової мережі та ввімкнено режим лише Wi-Fi.\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+Поставити цю передачу в чергу, доки Wi-Fi не під’єднається, чи дозволити мобільні дані для завантажень?
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+Черга на Wi-Fi
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+Дозволити мобільні дані
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+Мережева політика
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+Виберіть правила підключення до мережі для завантажень
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+Лише Wi-Fi (рекомендовано)
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+Передавати завантаження лише за підключення до безлімітної мережі Wi-Fi
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+Усі мережі (Wi-Fi і стільниковий зв’язок)
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+Дозволити передавання через стільниковий мобільний Інтернет і Wi-Fi
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+Ознайомтеся з умовами заборони піратства
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+Ознайомтеся з розкриттям P2P роїв, конфіденційністю та умовами нульового розсівання
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+Видимість P2P Swarm &amp; IP
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+BitTorrent передає обмін фрагментами безпосередньо з іншими одноранговими пристроями в групі. Ваша загальнодоступна IP-адреса доступна для активних користувачів під час передачі.
 </string>
     <string name="download_legal_zero_seeding_title">
-Zero-Seeding Privacy
+Конфіденційність із нульовим розсіюванням
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+UFM забезпечує суворе нульове заповнення. У момент завершення завантаження (100%) усі ройові з’єднання розриваються, а оголошення трекера негайно припиняються.
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+Лише законний вміст
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+Ви погоджуєтеся використовувати цей інструмент виключно для законних файлів із відкритим кодом, загального надбання чи авторизованих файлів. Завантажувати або розповсюджувати матеріали, захищені авторським правом, без дозволу заборонено.
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+Погодитися та продовжити
 </string>
     <string name="download_legal_understood">
-Understood
+Зрозумів
 </string>
     <string name="download_state_downloading">
-Downloading
+Завантаження
 </string>
     <string name="download_state_paused">
-Paused
+Призупинено
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+У черзі Wi-Fi
 </string>
     <string name="download_state_completed">
-Completed
+Виконано
 </string>
     <string name="download_state_error">
-Error
+Помилка
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+Передачі менеджера завантажень
 </string>
     <string name="download_notif_channel_desc">
-Ongoing download progress and status updates
+Постійний прогрес завантаження та оновлення статусу
 </string>
     <string name="download_timeout_stopped">
-Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+Завантаження призупинено: досягнуто 6-годинного ліміту роботи Android. Торкніться, щоб відновити.
 </string>
 
     <!-- Torrent & Magnet Selective File Download & Content Inspector -->
     <string name="torrent_select_all">
-Select All
+Виберіть усі
 </string>
     <string name="torrent_deselect_all">
-Deselect All
+Зняти вибір із усіх
 </string>
     <string name="torrent_selected_summary">
-Selected: %1$d of %2$d files (%3$s of %4$s)
+Вибрано: %1$d з %2$d файлів (%3$s з %4$s)
 </string>
     <string name="torrent_files_count">
-%1$d files
+%1$d файлів
 </string>
     <string name="torrent_file_selection_title">
-Torrent Content
+Торрент контент
 </string>
     <string name="torrent_file_selection_subtitle">
-Select files and folders to download
+Виберіть файли та папки для завантаження
 </string>
     <string name="torrent_fetching_metadata">
-Fetching torrent metadata from swarm…
+Отримання метаданих торрент-файлів із роя…
 </string>
     <string name="torrent_fetching_metadata_desc">
-Contacting DHT nodes and peers to retrieve file list…
+Зв’язування з вузлами та одноранговими вузлами DHT для отримання списку файлів…
 </string>
     <string name="torrent_metadata_timeout_title">
-Metadata Fetch Timeout
+Час очікування отримання метаданих
 </string>
     <string name="torrent_metadata_timeout_msg">
-Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+Отримання списку файлів від однорангових пристроїв триває довше, ніж зазвичай. Бажаєте продовжити пошук чи завантажити всі файли безпосередньо?
 </string>
     <string name="torrent_keep_waiting">
-Keep Waiting
+Продовжуйте чекати
 </string>
     <string name="torrent_download_all_direct">
-Download All Directly
+Завантажити все безпосередньо
 </string>
     <string name="torrent_zero_selected_error">
-Please select at least one file to download
+Виберіть принаймні один файл для завантаження
 </string>
     <string name="torrent_search_hint">
-Search files…
+Пошук файлів…
 </string>
 
     <!-- Transfer Action Dialog -->
     <string name="transfer_action_title">
-Transfer Actions
+Дії передачі
 </string>
     <string name="transfer_action_pause">
-Pause Transfer
+Призупинити передачу
 </string>
     <string name="transfer_action_resume">
-Resume Transfer
+Відновити передачу
 </string>
     <string name="transfer_action_open_folder">
-Open Download Folder
+Відкрийте папку завантажень
 </string>
     <string name="transfer_action_delete_title">
-Remove Transfer
+Видалити передачу
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+Виберіть, як видалити цю передачу з менеджера завантажень:
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+Видалити тільки передачу
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+Зберігайте завантажені файли на своєму пристрої
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+Видалення та видалення файлів
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+Назавжди видалити завантажені файли з диска
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16775,79 +16797,79 @@ Permanently delete downloaded files from disk
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+Розумні закладки
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+Упорядковуйте збережені посилання, медіафайли та спільні файли
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%1$d елементів у %2$d групах
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+Ще немає закладок
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+Закладка з УФМ
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+Зберегти закладку
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+Поділився з %1$s
 </string>
     <string name="bookmark_field_title_hint">
-Title
+Назва
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+Збірник / Груп
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+Додати особисту примітку (необов\'язково)
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+Зберегти закладку
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+Уже додано в закладки — нотатки та час оновлено
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+Закладку збережено в %1$s
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+Групи
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+Переглянути все ›
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+Колекції та джерела
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+Керуйте колекціями, фільтруйте та захищайте сховище
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+Пошук колекцій…
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+Усі закладки
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+Показати всі розблоковані закладки з усіх джерел
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+Мої колекції
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+Створені користувачами колекції • Сховище замикається
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+Джерела програми
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+Автоматично створено зі спільних програм
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16856,193 +16878,193 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+На цьому пристрої не налаштовано захист пристрою (PIN-код, ключ або відбиток пальця).
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+Сховище заблоковано
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+Пройдіть автентифікацію, щоб зняти блокування Сховища
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+Колекція заблокована за допомогою Vault
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+Колекція розблокована
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+Нова група закладок
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+Назва групи
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+Створити групу
 </string>
     <string name="bookmark_filter_all">
-All
+все
 </string>
     <string name="bookmark_filter_links">
-Links
+Посилання
 </string>
     <string name="bookmark_filter_media">
-Media
+ЗМІ
 </string>
     <string name="bookmark_filter_docs">
-Documents
+Документи
 </string>
     <string name="bookmark_filter_notes">
-Notes
+Примітки
 </string>
     <string name="bookmark_filter_starred">
-Starred
+Позначено зірочкою
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+Пошук закладок, нотаток або доменів…
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+Сортувати закладки
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+Від найновішого до найстаршого
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+Від найстарішого до найновішого
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+Назва (А–Я)
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+Назва (Я–А)
 </string>
     <string name="bookmark_sort_size">
-File Size
+Розмір файлу
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+Групування за колекцією
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+Колекція: від А до Я
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+Колекція: від Я до А
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+Видалити колекцію
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+Ви впевнені, що хочете видалити колекцію \"%1$s\"?
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+Прочитати статтю
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+Відкрити в браузері
 </string>
     <string name="bookmark_action_open_file">
-Open File
+Відкрити файл
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+Копіювати посилання
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+Копіювати текст
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+Зберегти в сховище
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+Перейти до групи
 </string>
     <string name="bookmark_action_delete">
-Delete
+Видалити
 </string>
     <string name="bookmark_view_note">
-View Note
+Переглянути примітку
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+Блокування колекції (сховище)
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+Для перегляду потрібен відбиток пальця або PIN-код
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+Параметри колекції
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+Колекція замків
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+Розблокувати колекцію
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+Закладку видалено
 </string>
     <string name="bookmark_undo">
-Undo
+Скасувати
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+Вибрано %1$d елементів
 </string>
     <string name="bookmark_batch_move">
-Move
+рухатися
 </string>
     <string name="bookmark_batch_delete">
-Delete
+Видалити
 </string>
     <string name="bookmark_batch_export">
-Export
+Експорт
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+Експортувати закладки
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+HTML-закладки браузера (.html)
 </string>
     <string name="bookmark_export_markdown">
-Markdown Document (.md)
+Документ розцінки (.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+%1$d закладок експортовано в %2$s
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+Режим читання
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+Розмір тексту
 </string>
     <string name="bookmark_reader_theme">
-Theme
+Тема
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+світло
 </string>
     <string name="bookmark_reader_theme_sepia">
-Sepia
+сепія
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+Темний
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+Слухайте вголос
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+Пауза в читанні
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+Перестаньте читати
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+Швидкість %1$sx
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+Ініціалізація голосової системи…
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+Синтез мовлення не підтримується або не встановлено на цьому пристрої
 </string>
     <string name="bookmark_group_whatsapp">
 WhatsApp
@@ -17054,43 +17076,43 @@ Reddit
 YouTube
 </string>
     <string name="bookmark_group_twitter">
-Twitter / X
+Твіттер / X
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+Веб і статті
 </string>
     <string name="bookmark_group_telegram">
-Telegram
+Телеграма
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+Файли та документи
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+Блокування групи за допомогою Vault
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+Розблокувати групу
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+Пройдіть автентифікацію, щоб отримати доступ до заблокованих закладок
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+Закладок ще немає
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+Поділіться посиланнями, статтями, медіа-файлами або файлами з WhatsApp, Reddit або вашого браузера та виберіть «Додати в закладки за допомогою UFM».
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+Результатів не знайдено
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+Жодна закладка не відповідає \"%1$s\". Спробуйте знайти інші ключові слова.
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+Закладок не знайдено
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+Не знайдено жодної закладки, що відповідає вибраному фільтру чи колекції.
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -17098,67 +17120,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+Плоский вид
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+Рекурсивний індексований браузер
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+Відкрити папку
 </string>
     <string name="flat_view_expand_all">
-Expand All
+Розгорнути все
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+Згорнути все
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+Включити системні папки
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+Показати Android/data, Android/obb і системні каталоги в Flat View
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+За замовчуванням усі розгорнуті
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+Відкрийте Flat View із усіма папками, розгорнутими за замовчуванням
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+У цьому томі не знайдено проіндексованих файлів
 </string>
     <string name="flat_view_settings_title">
-Flat View
+Плоский вид
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+Налаштуйте рекурсивний індексований перегляд і системні папки
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+Сховище не проіндексовано
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+Flat View вимагає, щоб цей обсяг пам’яті був повністю проіндексований. Спочатку запустіть індексацію.
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%1$d файлів у %2$d папках
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+Вибрано %1$d.
 </string>
     <string name="flat_view_folder_files_count">
-%1$d files
+%1$d файлів
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+Видалити файли
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+Справді видалити %1$d вибраних файлів?
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+Видалено %1$d файлів
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+Налаштування Flat View
 </string>
 </resources>
 

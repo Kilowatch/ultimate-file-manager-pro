@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-Last Updated: November 2026
+Dernière mise à jour : novembre 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -180,82 +180,82 @@ En utilisant Ultimate File Manager Pro, vous confirmez avoir lu et compris ces C
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-File Browser — browse, copy, move, rename, and delete files anywhere on your device.
+Navigateur de fichiers : parcourez, copiez, déplacez, renommez et supprimez des fichiers n\'importe où sur votre appareil.
 </item>
         <item>
-Encrypted Vault — lock sensitive files behind AES-256-GCM encryption with your own PIN.
+Coffre-fort crypté : verrouillez les fichiers sensibles derrière le cryptage AES-256-GCM avec votre propre code PIN.
 </item>
         <item>
-File Server — host an FTP or secure SFTP server directly on your device to share files across your local network.
+Serveur de fichiers : hébergez un serveur FTP ou SFTP sécurisé directement sur votre appareil pour partager des fichiers sur votre réseau local.
 </item>
         <item>
-Remote Management — manage files over your local Wi-Fi via a built-in HTTP server that supports uploading, downloading, and installing APKs remotely.
+Gestion à distance : gérez les fichiers sur votre réseau Wi-Fi local via un serveur HTTP intégré qui prend en charge le téléchargement et l\'installation d\'APK à distance.
 </item>
         <item>
-Network Shares — connect to SMB, FTP, and NFS servers on your local network to browse, download, and manage remote files.
+Partages réseau : connectez-vous aux serveurs SMB, FTP et NFS sur votre réseau local pour parcourir, télécharger et gérer des fichiers distants.
 </item>
         <item>
-Folder Sync — automatically back up local phone folders to an SMB or FTP network share on a schedule you choose (interval or specific time daily, weekly, or monthly).
+Synchronisation des dossiers : sauvegardez automatiquement les dossiers téléphoniques locaux sur un partage réseau SMB ou FTP selon un calendrier que vous choisissez (intervalle ou heure spécifique quotidiennement, hebdomadairement ou mensuellement).
 </item>
         <item>
-Device Pairing — pair your mobile phone and Android TV over local Wi-Fi to transfer and install files.
+Couplage d\'appareils : associez votre téléphone mobile et Android TV via le Wi-Fi local pour transférer et installer des fichiers.
 </item>
         <item>
-ADB Terminal — connect to Android devices in Developer Mode over your local Wi-Fi using ADB (Android Debug Bridge) for direct shell access and advanced troubleshooting.
+Terminal ADB : connectez-vous aux appareils Android en mode développeur via votre réseau Wi-Fi local à l\'aide d\'ADB (Android Debug Bridge) pour un accès direct au shell et un dépannage avancé.
 </item>
         <item>
-Built-in Viewers — view text files, PDFs, animated images (APNG, GIF, animated WebP, AVIF, SVG and more), archives, and other formats directly within the app.
+Visionneuses intégrées : affichez des fichiers texte, des PDF, des images animées (APNG, GIF, WebP animés, AVIF, SVG et plus), des archives et d\'autres formats directement dans l\'application.
 </item>
         <item>
-Advanced ZIP Support — create and extract password-protected and AES-encrypted ZIP archives.
+Prise en charge ZIP avancée : créez et extrayez des archives ZIP protégées par mot de passe et cryptées par AES.
 </item>
         <item>
-Remote Screenshots — capture the screen of your paired Android TV over local Wi-Fi via ADB and save it directly to your phone\'s storage.
+Captures d\'écran à distance : capturez l\'écran de votre Android TV couplé via le Wi-Fi local via ADB et enregistrez-le directement sur la mémoire de stockage de votre téléphone.
 </item>
         <item>
-7Z Archive Support — extract 7Z archives with LZMA/LZMA2 compression.
+Prise en charge des archives 7Z : extrayez les archives 7Z avec la compression LZMA/LZMA2.
 </item>
         <item>
-File Search — quickly find files and folders across your device storage.
+Recherche de fichiers : recherchez rapidement des fichiers et des dossiers sur le stockage de votre appareil.
 </item>
         <item>
-Storage Analyser — see a visual breakdown of what\'s using your storage space.
+Analyseur de stockage : consultez une analyse visuelle de ce qui utilise votre espace de stockage.
 </item>
         <item>
-App Manager — view and manage all apps installed on your device, with debloat recommendations for pre-installed apps.
+App Manager : affichez et gérez toutes les applications installées sur votre appareil, avec des recommandations de suppression pour les applications préinstallées.
 </item>
         <item>
-APK Installer — install Android apps and split APKs (XAPK) directly from files saved locally.
+APK Installer – installez des applications Android et divisez les APK (XAPK) directement à partir des fichiers enregistrés localement.
 </item>
         <item>
-Elevated Access (Porter, Shizuku, Shevery &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.
+Accès élevé (Porter, Shizuku, Shevery et ADB) : obtenez un accès de type root pour gérer les fichiers système et les répertoires restreints sans réellement rooter votre appareil.
 </item>
         <item>
-Root Access (Mobile) — elevated Superuser access for rooted devices to browse, manage, and inspect system-level partitions and protected directories.
+Accès racine (mobile) : accès superutilisateur élevé pour les appareils rootés afin de parcourir, gérer et inspecter les partitions au niveau du système et les répertoires protégés.
 </item>
         <item>
-Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.
+Storage Indexer : créez un index local de métadonnées de fichiers pour une recherche instantanée et une navigation ultra-rapide.
 </item>
         <item>
-Storage Access Framework — other apps can access your files through UFM\'s document provider.
+Storage Access Framework : d\'autres applications peuvent accéder à vos fichiers via le fournisseur de documents d\'UFM.
 </item>
         <item>
-Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.
+Tip Jar – achats uniques facultatifs pour aider le développeur ; l\'application est toujours gratuite sans pourboire.
 </item>
         <item>
-UFM Media Player — play audio, video, and SMIL animated SVG/SVGZ vector files with background playback, notification controls, Picture-in-Picture mode, and playlist management.
+UFM Media Player : lit des fichiers vectoriels SVG/SVGZ animés audio, vidéo et SMIL avec lecture en arrière-plan, commandes de notification, mode Picture-in-Picture et gestion de listes de lecture.
 </item>
         <item>
-GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.
+GIF Creator : créez des fichiers GIF animés à partir d\'images sélectionnées avec une fréquence d\'images personnalisée, des options de redimensionnement et une réorganisation des images par glisser-déposer.
 </item>
         <item>
-Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.
+Outils Photo EXIF : inspectez les métadonnées EXIF ​​et GPS des photos, nettoyez les géolocalisations privées et les informations sur l\'appareil, et renommez les photos par lots à l\'aide des horodatages de capture et des métadonnées de l\'appareil photo.
 </item>
         <item>
-Music Tag Editor (Mobile) — inspect, edit, clean, and batch-update audio metadata descriptions (title, artist, album, year, genre, lyrics) and embedded album art directly inside audio files.
+Music Tag Editor (Mobile) : inspectez, modifiez, nettoyez et mettez à jour par lots les descriptions des métadonnées audio (titre, artiste, album, année, genre, paroles) et les pochettes d\'album intégrées directement dans les fichiers audio.
 </item>
         <item>
-Download Manager — download files via direct HTTP/HTTPS URLs and peer-to-peer Magnet links or .torrent files for open-source distributions, public domain media, and authorized content.
+Gestionnaire de téléchargement : téléchargez des fichiers via des URL HTTP/HTTPS directes et des liens Magnet peer-to-peer ou des fichiers .torrent pour les distributions open source, les médias du domaine public et le contenu autorisé.
 </item>
     </string-array>
 
@@ -352,52 +352,52 @@ Notre responsabilité totale est plafonnée au montant total que vous avez payé
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
         <item>
-Keep regular backups of important files before performing bulk operations.
+Conservez des sauvegardes régulières des fichiers importants avant d\'effectuer des opérations groupées.
 </item>
         <item>
-Store your Vault PIN and Recovery Code somewhere safe — we cannot retrieve them for you.
+Conservez votre code PIN et votre code de récupération Vault dans un endroit sûr : nous ne pouvons pas les récupérer à votre place.
 </item>
         <item>
-Keep your PIN private. Anyone who knows it can access your Vault.
+Gardez votre code PIN privé. Toute personne qui le connaît peut accéder à votre coffre-fort.
 </item>
         <item>
-Keep your network share credentials safe — they are stored locally on your device.
+Protégez vos identifiants de partage réseau : ils sont stockés localement sur votre appareil.
 </item>
         <item>
-Review your Folder Sync remote paths carefully — syncing to an incorrect network folder may overwrite existing files.
+Examinez attentivement les chemins distants de votre synchronisation de dossiers : la synchronisation vers un dossier réseau incorrect peut écraser les fichiers existants.
 </item>
         <item>
-Exercise caution when removing system apps based on debloat recommendations.
+Faites preuve de prudence lorsque vous supprimez des applications système en fonction des recommandations de débloquement.
 </item>
         <item>
-Only connect via ADB Terminal to devices you own or have explicit permission to access. Do not use ADB Terminal to gain unauthorized access to any device.
+Connectez-vous uniquement via le terminal ADB aux appareils que vous possédez ou dont vous disposez d\'une autorisation explicite d\'accès. N\'utilisez pas le terminal ADB pour obtenir un accès non autorisé à un appareil.
 </item>
         <item>
-Keep any ADB, Porter, Shizuku, or Shevery pairing PINs private — share these only with people you trust to have access to your device.
+Gardez privés les codes PIN de couplage ADB, Porter, Shizuku ou Shevery – partagez-les uniquement avec des personnes de confiance pour avoir accès à votre appareil.
 </item>
         <item>
-Secure your Porter, Shizuku or Shevery Manager — granting UFM elevated access via any of these managers gives it power over restricted files. Only grant this access if you trust the app.
+Sécurisez votre Porter, Shizuku ou Shevery Manager : accorder un accès élevé à UFM via l\'un de ces gestionnaires lui donne le pouvoir sur les fichiers restreints. N\'accordez cet accès que si vous faites confiance à l\'application.
 </item>
         <item>
-Exercise extreme caution when Root Access is active — never delete or modify system files unless you understand the consequences to your device OS.
+Faites preuve d\'une extrême prudence lorsque l\'accès racine est actif : ne supprimez ou ne modifiez jamais les fichiers système à moins de comprendre les conséquences sur le système d\'exploitation de votre appareil.
 </item>
         <item>
-Only use the app for lawful purposes. Don\'t store, share, or distribute illegal content.
+Utilisez l\'application uniquement à des fins licites. Ne stockez pas, ne partagez pas et ne distribuez pas de contenu illégal.
 </item>
         <item>
-Don\'t use Remote Management to access another person\'s device without their permission.
+N\'utilisez pas la gestion à distance pour accéder à l\'appareil d\'une autre personne sans sa permission.
 </item>
         <item>
-Don\'t attempt to reverse-engineer, decompile, or tamper with the app.
+N\'essayez pas de faire de l\'ingénierie inverse, de décompiler ou de falsifier l\'application.
 </item>
         <item>
-Manage your indexed records responsibly — you can delete records or ignore specific drives at any time via Settings -> Storage Indexer.
+Gérez vos enregistrements indexés de manière responsable : vous pouvez supprimer des enregistrements ou ignorer des lecteurs spécifiques à tout moment via Paramètres -&gt; Indexeur de stockage.
 </item>
         <item>
-Verify the authenticity and safety of any APK files before installing them.
+Vérifiez l\'authenticité et la sécurité de tous les fichiers APK avant de les installer.
 </item>
         <item>
-Don\'t use the Download Manager, BitTorrent engine, or HTTP streamer to download, share, transmit, or facilitate infringement of copyrighted material without authorization from the copyright holder. You assume sole liability for downloaded content.
+N\'utilisez pas le gestionnaire de téléchargement, le moteur BitTorrent ou le streamer HTTP pour télécharger, partager, transmettre ou faciliter la violation de matériel protégé par le droit d\'auteur sans l\'autorisation du détenteur du droit d\'auteur. Vous assumez l\'entière responsabilité du contenu téléchargé.
 </item>
     </string-array>
 
@@ -416,7 +416,7 @@ Notifications
 Réseau / Wi-Fi
 </item>
         <item>
-Multicast
+Multidiffusion
 </item>
         <item>
 État du réseau
@@ -524,142 +524,142 @@ Fournit un retour haptique lorsque vous appuyez sur les boutons de la télécomm
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD — lightweight HTTP server that powers Remote Management. (BSD-3-Clause)
+NanoHTTPD — serveur HTTP léger qui alimente la gestion à distance. (Clause BSD-3)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3 client library for network share browsing and Folder Sync. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — Bibliothèque client SMB2/SMB3 pour la navigation sur les partages réseau et la synchronisation des dossiers. (LGPL-2.1)
 </item>
         <item>
-smbj (hierynomus/smbj) — SMB2/SMB3 Java implementation used for network share access. (Apache-2.0)
+smbj (hierynomus/smbj) — Implémentation Java SMB2/SMB3 utilisée pour l\'accès au partage réseau. (Apache-2.0)
 </item>
         <item>
-EMC ECS NFS Client (com.emc.ecs:nfs-client) — NFS v3 client library for network share access. (Apache-2.0)
+Client NFS EMC ECS (com.emc.ecs:nfs-client) : bibliothèque client NFS v3 pour l\'accès au partage réseau. (Apache-2.0)
 </item>
         <item>
-libnfs (sahlberg/libnfs) — native NFS client library supporting NFSv2, NFSv3, and NFSv4. (LGPL-2.1 / BSD-2-Clause)
+libnfs (sahlberg/libnfs) — bibliothèque client NFS native prenant en charge NFSv2, NFSv3 et NFSv4. (Clause LGPL-2.1 / BSD-2)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access and hosting. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — bibliothèque client complète SSHD, SFTP et SCP pour un accès et un hébergement sécurisés aux partages réseau. (Apache-2.0)
 </item>
         <item>
-Apache FtpServer (org.apache.ftpserver) — 100% pure Java FTP server. (Apache-2.0)
+Apache FtpServer (org.apache.ftpserver) — Serveur FTP Java 100 % pur. (Apache-2.0)
 </item>
         <item>
-Apache POI — document processing library for viewing office files. (Apache-2.0)
+Apache POI — bibliothèque de traitement de documents pour visualiser les fichiers bureautiques. (Apache-2.0)
 </item>
         <item>
-Firebase Analytics — Google\'s analytics platform that helps us understand app usage. (Apache-2.0)
+Firebase Analytics — La plateforme d\'analyse de Google qui nous aide à comprendre l\'utilisation des applications. (Apache-2.0)
 </item>
         <item>
-AndroidX Libraries (incl. Leanback for Android TV) — Google\'s Jetpack components for modern Android development. (Apache-2.0)
+Bibliothèques AndroidX (y compris Leanback pour Android TV) — Composants Jetpack de Google pour le développement Android moderne. (Apache-2.0)
 </item>
         <item>
-Material Design Components — Google\'s UI library for a clean, consistent interface. (Apache-2.0)
+Composants de conception matérielle : la bibliothèque d\'interface utilisateur de Google pour une interface claire et cohérente. (Apache-2.0)
 </item>
         <item>
-Room Persistence Library — SQLite abstraction layer for local metadata indexing. (Apache-2.0)
+Room Persistence Library — Couche d\'abstraction SQLite pour l\'indexation des métadonnées locales. (Apache-2.0)
 </item>
         <item>
-zip4j (net.lingala.zip4j) — advanced ZIP library for password-protected and AES-encrypted archives. (Apache-2.0)
+zip4j (net.lingala.zip4j) — bibliothèque ZIP avancée pour les archives protégées par mot de passe et cryptées par AES. (Apache-2.0)
 </item>
         <item>
-Apache Commons Compress — library for reading and writing various archive formats (7z, zip, tar, etc). (Apache-2.0)
+Apache Commons Compress — bibliothèque pour lire et écrire divers formats d\'archives (7z, zip, tar, etc.). (Apache-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) — implementation of XZ and LZMA compression. (Public Domain)
+XZ pour Java (org.tukaani.xz) — implémentation de la compression XZ et LZMA. (Domaine public)
 </item>
         <item>
-zstd-jni (com.github.luben:zstd-jni) — JNI bindings for Zstandard compression and extraction library. (BSD-2-Clause)
+zstd-jni (com.github.luben:zstd-jni) — Liaisons JNI pour la bibliothèque de compression et d\'extraction Zstandard. (Clause BSD-2)
 </item>
         <item>
-Junrar (com.github.junrar:junrar) — Java RAR extraction library. (BSD-3-Clause)
+Junrar (com.github.junrar:junrar) — Bibliothèque d\'extraction Java RAR. (Clause BSD-3)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) — Android Debug Bridge library enabling secure connections to ADB-enabled devices for remote shell access and certificate-based pairing. (Apache-2.0)
+libadb-android (com.github.MuntashirAkon) — Bibliothèque Android Debug Bridge permettant des connexions sécurisées aux appareils compatibles ADB pour un accès au shell à distance et un couplage basé sur des certificats. (Apache-2.0)
 </item>
         <item>
-libsu (com.github.topjohnwu.libsu) — complete Android su shell and root service solution. (Apache-2.0)
+libsu (com.github.topjohnwu.libsu) — solution complète de shell Android su et de service racine. (Apache-2.0)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — bibliothèque client complète SSHD, SFTP et SCP pour un accès sécurisé aux partages réseau. (Apache-2.0)
 </item>
         <item>
-EdDSA for Java (net.i2p.crypto:eddsa) — implementation of EdDSA (Edwards-curve Digital Signature Algorithm) for Ed25519 SSH keys. (CC0-1.0)
+EdDSA pour Java (net.i2p.crypto:eddsa) — implémentation d\'EdDSA (Edwards-curve Digital Signature Algorithm) pour les clés SSH Ed25519. (CC0-1.0)
 </item>
         <item>
-SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding for Android used by the SSHD library. (MIT)
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — liaison de journalisation pour Android utilisée par la bibliothèque SSHD. (MIT)
 </item>
         <item>
-BouncyCastle (org.bouncycastle) — cryptography library for RSA/EdDSA keypair generation and X.509 certificate creation; version 1.83. (MIT-style License)
+BouncyCastle (org.bouncycastle) — bibliothèque de cryptographie pour la génération de paires de clés RSA/EdDSA et la création de certificats X.509 ; version 1.83. (Licence de type MIT)
 </item>
         <item>
-Google Play Billing Library — processes optional in-app tip purchases; governed by Google Play\'s Privacy Policy. (Apache-2.0)
+Bibliothèque de facturation Google Play : traite les achats facultatifs de pourboires dans l\'application ; régi par la politique de confidentialité de Google Play. (Apache-2.0)
 </item>
         <item>
-Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)
+Bibliothèque d\'avis Google Play : alimente la fonctionnalité d\'évaluation et d\'évaluation intégrée à l\'application. (Apache-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, JXL, SVG) in the built-in image viewer. (Apache-2.0)
+Coil (io.coil-kt.coil3) — bibliothèque de chargement d\'images qui alimente le rendu d\'images animées (APNG, GIF, WebP animé, AVIF, JXL, SVG) dans la visionneuse d\'images intégrée. (Apache-2.0)
 </item>
         <item>
-avif-coder (io.github.awxkee) — AVIF image decoding library providing native AVIF support on Android API 24–30; API 31+ uses the built-in ImageDecoder. (Apache-2.0)
+avif-coder (io.github.awxkee) — Bibliothèque de décodage d\'images AVIF offrant une prise en charge native d\'AVIF sur l\'API Android 24-30 ; L\'API 31+ utilise l\'ImageDecoder intégré. (Apache-2.0)
 </item>
         <item>
-jxl-coder (io.github.awxkee) — JPEG XL image decoding and encoding library providing native JXL support on Android API 21+. (Apache-2.0 / BSD-3-Clause)
+jxl-coder (io.github.awxkee) — Bibliothèque de décodage et d\'encodage d\'images JPEG XL offrant une prise en charge native de JXL sur l\'API Android 21+. (Apache-2.0 / BSD-3-Clause)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)
+APNG4Android (com.github.penfeizhou.android.animation) — bibliothèque principale pour le décodage et le rendu des fichiers PNG animés sur Android. (Apache-2.0)
 </item>
         <item>
-Porter SDK (com.github.d4rken-org.porter-api) — Android SDK enabling elevated file system access via the Porter, Shizuku or Shevery Manager apps. It embeds the Shizuku API (rikka.shizuku), licensed under MIT. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) — SDK Android permettant un accès élevé au système de fichiers via les applications Porter, Shizuku ou Shevery Manager. Il embarque l\'API Shizuku (rikka.shizuku), sous licence MIT. (Apache-2.0)
 </item>
         <item>
-ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)
+ViewPager2 — Bibliothèque Android pour glisser entre les fragments et les mises en page. (Apache-2.0)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — animation library for rendering Adobe After Effects animations natively on Android, used for smooth UI animations throughout the app. (Apache-2.0)
+Lottie (com.airbnb.android:lottie) v6.3.0 — bibliothèque d\'animations pour le rendu natif des animations Adobe After Effects sur Android, utilisée pour des animations fluides de l\'interface utilisateur dans toute l\'application. (Apache-2.0)
 </item>
         <item>
-Ktor (io.ktor) — lightweight web framework used to power the local File Server. (Apache-2.0)
+Ktor (io.ktor) — framework Web léger utilisé pour alimenter le serveur de fichiers local. (Apache-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) — library for rendering and viewing PDF documents natively. (Apache-2.0)
+PDFBox-Android (com.tom-roush:pdfbox-android) — bibliothèque pour le rendu et la visualisation de documents PDF de manière native. (Apache-2.0)
 </item>
         <item>
-ExoPlayer / Media3 (androidx.media3) — advanced media player for robust video and audio playback. (Apache-2.0)
+ExoPlayer / Media3 (androidx.media3) — lecteur multimédia avancé pour une lecture vidéo et audio robuste. (Apache-2.0)
 </item>
         <item>
-Microsoft Authentication Library (MSAL) — handles OneDrive API authentication natively. (MIT)
+Bibliothèque d\'authentification Microsoft (MSAL) : gère l\'authentification de l\'API OneDrive de manière native. (MIT)
 </item>
         <item>
-OkHttp (com.squareup.okhttp3) — robust HTTP &amp; HTTP/2 client for cloud storage network requests. (Apache-2.0)
+OkHttp (com.squareup.okhttp3) — client HTTP et HTTP/2 robuste pour les requêtes de réseau de stockage cloud. (Apache-2.0)
 </item>
         <item>
-Gson (com.google.code.gson) — JSON processing library used for cloud storage integration. (Apache-2.0)
+Gson (com.google.code.gson) — Bibliothèque de traitement JSON utilisée pour l\'intégration du stockage cloud. (Apache-2.0)
 </item>
         <item>
-AndroidX Browser (androidx.browser) — Chrome Custom Tabs support for Google Drive API authentication. (Apache-2.0)
+Navigateur AndroidX (androidx.browser) — Prise en charge des onglets personnalisés Chrome pour l\'authentification de l\'API Google Drive. (Apache-2.0)
 </item>
         <item>
-ZXing (com.google.zxing:core) — barcode image processing library. (Apache-2.0)
+ZXing (com.google.zxing:core) — bibliothèque de traitement d\'images de codes-barres. (Apache-2.0)
 </item>
         <item>
-gifencoder (com.squareup:gifencoder) — pure Java GIF encoding library for creating animated GIF files from selected images. (Apache-2.0)
+gifencoder (com.squareup:gifencoder) — bibliothèque d\'encodage GIF Java pure pour créer des fichiers GIF animés à partir d\'images sélectionnées. (Apache-2.0)
 </item>
         <item>
-AndroidX ExifInterface (androidx.exifinterface:exifinterface) — library for reading, writing, and stripping EXIF and GPS metadata across JPEG, PNG, WebP, HEIF, and DNG image formats. (Apache-2.0)
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) — bibliothèque pour lire, écrire et supprimer les métadonnées EXIF ​​et GPS aux formats d\'image JPEG, PNG, WebP, HEIF et DNG. (Apache-2.0)
 </item>
         <item>
-Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+Amazon Appstore SDK : traite les achats facultatifs de pourboires dans l\'application sur les appareils Amazon. (Propriétaire)
 </item>
         <item>
-jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — bibliothèque de balisage audio pour lire et éditer des métadonnées et des pochettes aux formats MP3, FLAC, M4A, OGG, OPUS, WAV et WMA. (LGPL-3.0/LGPL-2.1)
 </item>
         <item>
-AndroidX WebKit (androidx.webkit) — library providing WebViewAssetLoader for secure, local-only rendering of SMIL animated SVG/SVGZ files in UFM Media Player without external network access or file-scheme vulnerabilities. (Apache-2.0)
+AndroidX WebKit (androidx.webkit) — bibliothèque fournissant WebViewAssetLoader pour un rendu sécurisé et local uniquement des fichiers SVG/SVGZ animés SMIL dans UFM Media Player sans accès au réseau externe ni vulnérabilités de schéma de fichiers. (Apache-2.0)
 </item>
         <item>
-libtorrent4j (org.libtorrent4j) — Java and Kotlin JNI wrapper around Rasterbar libtorrent for zero-seeding peer-to-peer BitTorrent downloading. (BSD-3-Clause / MIT)
+libtorrent4j (org.libtorrent4j) — Java and Kotlin JNI wrapper around Rasterbar libtorrent for zero-seeding peer-to-peer BitTorrent downloading. (Clause BSD-3 / MIT)
 </item>
     </string-array>
 
@@ -688,7 +688,7 @@ Vos fichiers restent sur votre appareil — nous ne les voyons jamais. Avec votr
 
     <!-- Section titles -->
     <string name="pp_s1_title">
-1. Introduction
+1. Présentation
 </string>
     <string name="pp_s2_title">
 2. Informations que nous collectons
@@ -799,7 +799,11 @@ UFM peut capturer des informations de diagnostic lorsqu\\\'il plante ou se fige 
 \n
 Rien n\\\'est envoyé automatiquement : après un plantage ou un gel, une invite demande si vous souhaitez envoyer le rapport à KiloWatch (kilowatch.co.za). Choisir « Non merci » le supprime localement. Vous pouvez désactiver la détection des crashs et des gels à tout moment via Paramètres → Signalement des crashs et ANR ; la désactiver supprime également les rapports en attente.
 </string>
-    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+    <string name="pp_s2_crash_body">
+UFM peut capturer des informations de diagnostic en cas de panne ou de blocage afin que nous puissions résoudre le problème. Cela inclut la version de l\'application, la version Android, le modèle et le fabricant de l\'appareil, le type et le message d\'exception, ainsi que la trace de la pile. Il n\'inclut jamais vos fichiers, noms, adresses e-mail ou informations de compte.\n
+\n
+Rien n\'est envoyé automatiquement : après un crash ou un gel, une invite vous demande si vous souhaitez envoyer le rapport à KiloWatch (kilowatch.co.za). Choisir « Non merci » le supprime localement. Vous pouvez désactiver la détection de crash et de gel à tout moment via Paramètres → Rapports de crash et ANR ; sa désactivation supprime également tous les rapports en attente.
+</string>
 
     <string name="pp_s2_nocollect_heading">
 Ce que nous ne collectons jamais
@@ -1355,7 +1359,7 @@ Authentification
     </string-array>
     <string-array name="pp_encryption_details">
         <item>
-AES-256-GCM (Advanced Encryption Standard with Galois/Counter Mode)
+AES-256-GCM (norme de cryptage avancée avec mode Galois/compteur)
 </item>
         <item>
 Android Keystore — stockage sécurisé basé sur le matériel
@@ -1494,22 +1498,22 @@ Transfert de données utilisateur Google à des tiers pour quelque raison que ce
     <!-- Third parties (Section 7) -->
     <string-array name="pp_third_party_names">
         <item>
-Firebase Analytics
+Analyse Firebase
 </item>
         <item>
-Google Play Services
+Services Google Play
 </item>
         <item>
-Google Play Billing
+Facturation Google Play
 </item>
         <item>
-Microsoft OneDrive API
+API Microsoft OneDrive
 </item>
         <item>
-Google Drive API
+API Google Drive
 </item>
         <item>
-Dropbox API
+API Dropbox
 </item>
         <item>
 AWS S3 / API compatibles S3 (par ex. AWS S3, MinIO, IDrive E2)
@@ -1517,19 +1521,19 @@ AWS S3 / API compatibles S3 (par ex. AWS S3, MinIO, IDrive E2)
     </string-array>
     <string-array name="pp_third_party_providers">
         <item>
-Google LLC
+Google SARL
 </item>
         <item>
-Google LLC
+Google SARL
 </item>
         <item>
-Google LLC
+Google SARL
 </item>
         <item>
-Microsoft Corporation
+Société Microsoft
 </item>
         <item>
-Google LLC
+Google SARL
 </item>
         <item>
 Dropbox, Inc.

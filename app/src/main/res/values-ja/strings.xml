@@ -1366,25 +1366,25 @@ Partial (%1$.0f%%)
 Sparse
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+%1$d 重複ファイルを削除しますか?
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+各ファイルのオリジナルのコピーが 1 つ保持されます。 %1$d の重複コピーは %2$s を解放するために完全に削除されます。
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+クリーンアップが完了しました
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+%1$d 個の重複ファイルが正常に削除され、%2$s 個のストレージ スペースが再利用されました。
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+%1$d ファイルは権限のため削除できませんでした。
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+%2$d 個のファイル %1$d を削除しています…
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d の重複グループ · %2$s を保存します
 </string>
     <string name="settings_duplicate_retention_title">
 Duplicate Retention Strategy
@@ -2074,13 +2074,13 @@ Optimal balance of speed and stability for Wi-Fi and LAN
 High throughput for Gigabit networks and fast Wi-Fi
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+マルチギガビット LAN および Wi-Fi 7 の最大スループット
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+%1$d に設定された転送スレッド
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+FTP、SFTP、SMBマルチスレッド設定
 </string>
     <string name="network_field_threads">
 転送スレッド
@@ -2091,28 +2091,28 @@ FTP, SFTP &amp; SMB Multi-threading Settings
 
     <!-- Transfer Multi-Threading Telemetry -->
     <string name="transfer_threads_header">
-Threads (%1$d active)
+スレッド (%1$d がアクティブ)
 </string>
     <string name="transfer_threads_header_single">
-Thread (1 active)
+スレッド (1 アクティブ)
 </string>
     <string name="transfer_per_thread_placeholder">
--- MB/s
+-- MB/秒
 </string>
     <string name="transfer_per_thread_format">
-Per thread: %1$.1f MB/s
+スレッドあたり: %1$.1f MB/秒
 </string>
     <string name="transfer_per_thread_single_format">
-Single thread: %1$.1f MB/s
+シングルスレッド: %1$.1f MB/秒
 </string>
     <string name="transfer_thread_initial">
 Thread %1$d: --
 </string>
     <string name="transfer_thread_speed_item">
-Thread %1$d: %2$.1f MB/s
+スレッド %1$d: %2$.1f MB/秒
 </string>
     <string name="transfer_thread_speed_single">
-Thread %1$d: %2$.1f MB/s (Single-threaded)
+スレッド %1$d: %2$.1f MB/秒 (シングルスレッド)
 </string>
 
     <!-- Open Source Licenses -->
@@ -2159,10 +2159,10 @@ Thread %1$d: %2$.1f MB/s (Single-threaded)
 降順
 </string>
     <string name="sort_order_a_to_z">
-A → Z
+A→Z
 </string>
     <string name="sort_order_z_to_a">
-Z → A
+Z→A
 </string>
     <string name="sort_order_small_to_large">
 小 → 大
@@ -2680,7 +2680,7 @@ UFMスライドショー
 ファイル名
 </string>
     <string name="new_file_default">
-New File.txt
+新しいファイル.txt
 </string>
     <string name="new_file_create">
 作成
@@ -3351,7 +3351,7 @@ Amazon購入エラー: %1$s
 これらをスキップ
 </string>
     <string name="filter_extensions_hint">
-jpg, png, mp4
+jpg、png、mp4
 </string>
     <string name="filter_extensions_label">
 ファイル拡張子
@@ -4830,7 +4830,7 @@ TVでUFMが開いていなくても、ペア設定済みのモバイルデバイ
 A
 </string>
     <string name="hello_world">
-Hello World!
+「こんにちは世界」
 </string>
     <string name="view_mode">
 表示モード
@@ -5554,13 +5554,27 @@ PINを生成中…
 再生/一時停止
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+インタラクティブモード
+</string>
+    <string name="svg_transport_mode">
+プレーヤーのコントロール
+</string>
+    <string name="svg_restart">
+アニメーションを再開する
+</string>
+    <string name="svg_playback_speed">
+再生速度
+</string>
+    <string name="svg_next_panel">
+次のパネル
+</string>
+    <string name="svg_prev_panel">
+前のパネル
+</string>
+    <string name="svg_tv_interactive_hint">
+インタラクティブ モード — [戻る] または [メニュー] を押してプレーヤー コントロールを表示します
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 音声トラック
@@ -5869,10 +5883,10 @@ PINを入力
 UFMに保存
 </string>
     <string name="share_target_save_to">
-Save to…
+保存先…
 </string>
     <string name="share_target_open_in">
-Open in…
+で開く…
 </string>
     <string name="share_receive_from">
 %sからファイルを受信中
@@ -6469,7 +6483,7 @@ SDカード
 インストール済みアプリを表示
 </string>
     <string name="remote_vol_vault">
-Vault
+保管庫
 </string>
     <string name="remote_vol_vault_secure">
 セキュア
@@ -7030,7 +7044,7 @@ SCP 共有: %1$s (%2$s)
 %1$s / %2$s
 </string>
     <string name="transfer_speed_mbs">
-%1$.1f MB/s
+%1$.1f MB/秒
 </string>
     <string name="cannot_read_source_file">
 ソースファイルを読み取れません
@@ -7377,10 +7391,10 @@ SAF 出力ストリーム失敗
 512 MB を超えるファイルが %1$d 個見つかりました。
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+不完全/まばらなダウンロード
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+ディスク容量を消費している不完全またはスパース ファイル %1$d が見つかりました。
 </string>
     <string name="old_unused_files">
 古い未使用ファイル
@@ -7975,10 +7989,18 @@ SMB / FTP設定
     <string name="sync_disabled">
 同期無効
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+プロファイルを有効にする
+</string>
+    <string name="sync_action_disable">
+プロファイルを無効にする
+</string>
+    <string name="sync_status_enabled">
+アクティブ
+</string>
+    <string name="sync_status_disabled">
+一時停止中
+</string>
     <string name="sync_delete_profile_confirm_msg">
 「%1$s」を削除してもよろしいですか？この操作は元に戻せません。
 </string>
@@ -8320,34 +8342,34 @@ Androidデバイス
 重複
 </string>
     <string name="whatsapp">
-WhatsApp
+ワッツアップ
 </string>
     <string name="whatsapp_business">
-WhatsApp Business
+WhatsApp ビジネス
 </string>
     <string name="telegram">
-Telegram
+電報
 </string>
     <string name="instagram">
-Instagram
+インスタグラム
 </string>
     <string name="snapchat">
-Snapchat
+スナップチャット
 </string>
     <string name="tiktok">
 TikTok
 </string>
     <string name="facebook">
-Facebook
+フェイスブック
 </string>
     <string name="twitter_x">
-Twitter / X
+ツイッター / ×
 </string>
     <string name="discord">
-Discord
+不和
 </string>
     <string name="spotify">
-Spotify
+スポティファイ
 </string>
     <string name="netflix">
 Netflix
@@ -8356,13 +8378,13 @@ Netflix
 YouTube
 </string>
     <string name="signal">
-Signal
+信号
 </string>
     <string name="viber">
-Viber
+バイバー
 </string>
     <string name="line">
-Line
+ライン
 </string>
     <string name="opening_itemlabel">
 📂 %1$sを開く
@@ -8428,7 +8450,7 @@ DCIMバックアップ
 使用済み
 </string>
     <string name="android_tv">
-Android TV
+アンドロイドTV
 </string>
     <string name="jcifsng_euagno3">
 jcifs-ng (eu.agno3)
@@ -8437,13 +8459,13 @@ jcifs-ng (eu.agno3)
 FFmpeg（LGPLビルド）
 </string>
     <string name="smbj_hierynomus">
-smbj (hierynomus)
+smbj (ヒエリノムス)
 </string>
     <string name="apache_commons_net">
 Apache Commons Net
 </string>
     <string name="apache_commons_compress">
-Apache Commons Compress
+Apache Commons 圧縮
 </string>
     <string name="zip4j_netlingalazip4j">
 zip4j (net.lingala.zip4j)
@@ -8455,28 +8477,28 @@ XZ for Java (org.tukaani.xz)
 パブリックドメイン
 </string>
     <string name="apache_poi">
-Apache POI
+アパッチPOI
 </string>
     <string name="nanohttpd">
 NanoHTTPD
 </string>
     <string name="google_firebase_analytics">
-Google Firebase Analytics
+Google Firebase アナリティクス
 </string>
     <string name="google_billing_library">
-Google Billing Library
+Google 請求ライブラリ
 </string>
     <string name="google_play_review_library">
-Google Play Review Library
+Google Play レビュー ライブラリ
 </string>
     <string name="androidx_libraries">
-AndroidX Libraries
+AndroidX ライブラリ
 </string>
     <string name="viewpager2">
 ViewPager2
 </string>
     <string name="libadbandroid_comgithubmuntashirakon">
-libadb-android (com.github.MuntashirAkon)
+libadb-android (com.github.MuntasirAkon)
 </string>
     <string name="bouncycastle_orgbouncycastle">
 BouncyCastle (org.bouncycastle) · v1.83
@@ -8485,19 +8507,19 @@ BouncyCastle (org.bouncycastle) · v1.83
 Apache MINA SSHD
 </string>
     <string name="eddsa_java">
-EdDSA for Java
+Java 用 EdDSA
 </string>
     <string name="slf4j_android">
-SLF4J Android
+SLF4J アンドロイド
 </string>
     <string name="androidsvg_comcaverock">
 AndroidSVG (com.caverock)
 </string>
     <string name="coil_iocoilkt">
-Coil (io.coil-kt.coil3)
+コイル (io.coil-kt.coil3)
 </string>
     <string name="bouncy_castle_license_mitstyle">
-Bouncy Castle License (MIT-style)
+Bouncy Castle ライセンス (MIT スタイル)
 </string>
     <string name="storage_volume">
 ストレージボリューム
@@ -8615,16 +8637,16 @@ Dropboxに正常に接続しました
 認証に失敗しました: %1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+認証に失敗しました
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+接続または検証エラー
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+Dropbox で認証コードを確認できません。コードが正しく入力されていること、有効期限が切れていないこと、デバイスの日付/時刻が正しいことを確認してください。
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+デバイスの日付と時刻のエラーが検出されました。テレビ システムの日付/時刻が過去になっているため、Dropbox に安全に接続できません。 Android TV の設定で正しい日付と時刻を設定してください。
 </string>
     <string name="dropbox_auth_verifying">
 コードを確認中…
@@ -8776,7 +8798,7 @@ Boxを認証
 昇格したアクセス
 </string>
     <string name="shizuku_subtitle">
-Porter / Shizuku / Shevery
+ポーター/シズク/シェベリー
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
@@ -8909,19 +8931,19 @@ root不要で安全
 利用可能なマネージャー
 </string>
     <string name="shizuku_manager_shizuku_title">
-Shizuku
+しずく
 </string>
     <string name="shizuku_manager_shizuku_desc">
 GitHubの標準的な昇格サービス
 </string>
     <string name="shizuku_manager_shevery_title">
-Shevery
+シェベリー
 </string>
     <string name="shizuku_manager_shevery_desc">
 軽量で高速な代替手段
 </string>
     <string name="shizuku_manager_porter_title">
-Porter
+ポーター
 </string>
     <string name="shizuku_manager_porter_desc">
 活発にメンテナンスされているShizukuの後継
@@ -8951,16 +8973,16 @@ Porterはインストールされていますが、サービスが実行され�
 管理者権限を確認しています…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+ポーターを入手
 </string>
     <string name="elevated_prerelease_badge">
 プレリリース
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+雫を入手
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+シェベリーを入手
 </string>
     <string name="shizuku_open_manager">
 %1$sマネージャーを開く
@@ -8969,7 +8991,7 @@ Get Shevery
 3ステップのセットアップガイド
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1. インストールマネージャー
 </string>
     <string name="shizuku_step_2">
 2. サービスを開始
@@ -9008,17 +9030,23 @@ ADB / ワイヤレスデバッグ
 ダウンロードしてインストール (%1$s)
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+昇格されたアクセスを切断しますか?
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+これにより、UFM での %1$s 昇格アクセスが切断されます。いつでも再度有効にすることができます。
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+切断する
 </string>
-    <string name="shizuku_allow_app_access">Allow app access</string>
-    <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
-    <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
+    <string name="shizuku_allow_app_access">
+アプリへのアクセスを許可する
+</string>
+    <string name="shizuku_app_access_granted_toast">
+%1$s に対して昇格されたアクセスが有効になりました
+</string>
+    <string name="shizuku_app_access_revoked">
+%1$s に対する昇格アクセスが無効になっています
+</string>
     <string name="elevated_fetching_toast">
 %1$s の最新リリースを確認中…
 </string>
@@ -9095,7 +9123,7 @@ DLNA設定
 DLNA: %1$s:%2$d
 </string>
     <string name="dlna_renderer_running">
-DLNA Renderer: %1$s
+DLNA レンダラー: %1$s
 </string>
     <string name="dlna_new_server_found">
 新しいDLNAサーバーが見つかりました: %1$s (%2$s)。信頼できるサーバーにのみ接続してください。
@@ -9315,7 +9343,7 @@ FTPまたはSFTPサーバーがアクティブなときに表示
 タップして管理
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+ファイル サーバーが停止しました: Android の 6 時間の実行制限に達しました
 </string>
     <string name="opening_file_server">
 ファイルサーバーを開いています…
@@ -9623,34 +9651,34 @@ URLはhttp://またはhttps://で始まる必要があります
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+信頼できない/自己署名証明書を許可する
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+自己署名またはプライベート CA SSL 証明書を受け入れる (ローカル NAS デバイスで一般的)
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+パスワード (最新の状態に保つには空白のままにしてください)
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+信頼できないSSL証明書
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+%1$s のサーバーは、信頼できない、または自己署名の SSL 証明書を提示しました。この接続を信頼する前に、以下の証明書の詳細を確認してください。
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+主題
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+発行者
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+有効
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+SHA-256 指紋
 </string>
     <string name="webdav_cert_dialog_trust">
-Trust &amp; Connect
+信頼してつながる
 </string>
 
     <!-- About Section -->
@@ -9682,7 +9710,7 @@ support@kilowatch.co.za
 モバイル
 </string>
     <string name="flavor_tv">
-Android TV
+アンドロイドTV
 </string>
     <string name="about_tile_subtitle">
 アプリの情報と詳細
@@ -9977,10 +10005,10 @@ Bluetoothで%1$sに接続
 WiFiで%1$sに接続
 </string>
     <string name="remote_device_bt_suffix">
- — Bluetooth
+ - ブルートゥース
 </string>
     <string name="remote_device_wifi_suffix">
- — WiFi
+- Wi-Fi
 </string>
     <string name="remote_transport_no_wifi_tvs_title">
 リモコン対応のテレビがありません
@@ -10191,7 +10219,7 @@ WiFiリモコンが切断されました
 メモ帳を開いています
 </string>
     <string name="notepad_default_name">
-Notepad.txt
+メモ帳.txt
 </string>
     <string name="save_note">
 保存
@@ -10492,7 +10520,7 @@ PDF（マルチページのみ）
 カメラ
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+このデバイスにはカメラ アプリが見つかりません
 </string>
     <string name="scanner_capture_gallery">
 ギャラリーから選択
@@ -11630,7 +11658,7 @@ PC、タブレット、モバイル（ブラウザ対応）の場合:
 セッションPIN
 </string>
     <string name="adb_device_badge">
-Android TV (ADB)
+アンドロイドTV（ADB）
 </string>
     <string name="connecting_to_device">
 %1$s に接続中…
@@ -11744,12 +11772,12 @@ Webサーバー実行中。接続を待機中…
 ファイルを送信中…
 </string>
     <string name="pro_badge">
-PRO
+プロ
 </string>
 
     <!-- RClone Cloud Storage Support -->
     <string name="add_online_storage_rclone">
-RClone
+RCローン
 </string>
     <string name="add_online_storage_auth_rclone">
 ストレージを設定
@@ -11824,7 +11852,7 @@ Mega
 Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
-Premiumize
+プレミアム化
 </string>
     <string name="rclone_provider_box">
 Box
@@ -11848,7 +11876,7 @@ Box
 ログインパスワードではなく、Koofrアカウント設定で生成されたアプリパスワードを使用してください
 </string>
     <string name="rclone_provider_protondrive">
-Proton Drive
+プロトンドライブ
 </string>
     <string name="rclone_field_username">
 ユーザー名またはメールアドレス
@@ -11948,100 +11976,100 @@ Proton 2FA設定のBase32シークレットキー（コード自動生成用）
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+字幕スタイル
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+アプリ内字幕の外観、フォント サイズ、システム キャプションの同期を構成します。
 </string>
     <string name="subtitle_style_summary_system">
-System caption style
+システムキャプションのスタイル
 </string>
     <string name="subtitle_style_summary_custom">
-UFM custom style (%1$s)
+UFM カスタム スタイル (%1$s)
 </string>
     <string name="subtitle_style_dialog_title">
-Subtitle Style
+字幕スタイル
 </string>
     <string name="subtitle_style_mode_system">
-System Caption Style
+システム キャプション スタイル
 </string>
     <string name="subtitle_style_mode_system_desc">
-Follows device Accessibility caption settings even when system captions are disabled.
+システム キャプションが無効になっている場合でも、デバイスのアクセシビリティ キャプション設定に従います。
 </string>
     <string name="subtitle_style_mode_custom">
-UFM Custom Style
+UFM カスタム スタイル
 </string>
     <string name="subtitle_style_mode_custom_desc">
-Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+サイズ、色、エッジ効果、位置を調整できるカスタムのアプリ内スタイル。
 </string>
     <string name="subtitle_style_open_system">
-Open Device Caption Settings
+デバイスキャプション設定を開く
 </string>
     <string name="subtitle_style_system_unavailable">
-System caption settings not available on this device; using UFM style.
+このデバイスではシステム キャプション設定を利用できません。 UFM スタイルを使用します。
 </string>
     <string name="subtitle_style_preview_title">
-Preview
+プレビュー
 </string>
     <string name="subtitle_style_preview_line1">
 Ultimate File Manager Pro
 </string>
     <string name="subtitle_style_preview_line2">
-Live subtitle preview • Crisp text styling
+ライブ字幕プレビュー • 鮮明なテキスト スタイル
 </string>
     <string name="subtitle_style_text_size">
-Text size
+文字サイズ
 </string>
     <string name="subtitle_style_text_color">
-Text color
+文字の色
 </string>
     <string name="subtitle_style_bg_color">
-Background opacity
+背景の不透明度
 </string>
     <string name="subtitle_style_edge_type">
-Edge effect
+エッジ効果
 </string>
     <string name="subtitle_style_edge_none">
 None
 </string>
     <string name="subtitle_style_edge_outline">
-Outline
+概要
 </string>
     <string name="subtitle_style_edge_drop_shadow">
-Drop shadow
+ドロップシャドウ
 </string>
     <string name="subtitle_style_edge_raised">
-Raised
+上げた
 </string>
     <string name="subtitle_style_edge_depressed">
-Depressed
+押し下げられた
 </string>
     <string name="subtitle_style_bottom_margin">
-Bottom margin
+下マージン
 </string>
     <string name="subtitle_style_apply_embedded">
-Apply embedded styles (ASS/SSA/TTML)
+埋め込みスタイル (ASS/SSA/TTML) を適用する
 </string>
     <string name="subtitle_style_apply_embedded_desc">
-When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+無効にすると、UFM 字幕スタイルは埋め込まれたフォントとカラー タグをオーバーライドして、読みやすさを最適化します。
 </string>
     <string name="subtitle_style_color_yellow">
-Yellow
+黄色
 </string>
     <string name="subtitle_style_color_white">
-White
+白
 </string>
     <string name="subtitle_style_color_cyan">
-Cyan
+シアン
 </string>
     <string name="subtitle_style_color_green">
-Green
+緑
 </string>
     <string name="subtitle_style_color_magenta">
-Magenta
+マゼンタ
 </string>
     <string name="subtitle_style_color_orange">
-Orange
+オレンジ
 </string>
     <string name="subtitle_style_bg_transparent">
 None
@@ -12056,13 +12084,13 @@ None
 75%
 </string>
     <string name="subtitle_style_bg_100">
-Solid
+固体
 </string>
     <string name="player_track_sheet_subtitle_style">
-Subtitle Style…
+字幕スタイル…
 </string>
     <string name="player_track_sheet_subtitle_style_desc">
-Customize colors, size &amp; appearance
+色、サイズ、外観をカスタマイズする
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -12103,10 +12131,10 @@ Customize colors, size &amp; appearance
 リピートオフ
 </string>
     <string name="player_toast_repeat_all">
-Repeat all
+すべて繰り返す
 </string>
     <string name="player_toast_repeat_one">
-Repeat current track
+現在のトラックをリピートする
 </string>
     <string name="player_toast_audio_track">
 音声トラック
@@ -12265,13 +12293,13 @@ UFMプレーヤー設定
 サイズ:
 </string>
     <string name="properties_label_size_on_disk">
-Size on disk:
+ディスク上のサイズ:
 </string>
     <string name="properties_sparse_badge">
-Partial Download (Sparse)
+部分ダウンロード (スパース)
 </string>
     <string name="properties_sparse_allocated_pct">
-%1$.1f%% allocated
+%1$.1f%% が割り当てられました
 </string>
     <string name="properties_label_contains">
 内容:
@@ -12307,22 +12335,22 @@ Partial Download (Sparse)
 複数の種類
 </string>
     <string name="properties_viewer_photo">
-UFM Photo Viewer
+UFMフォトビューア
 </string>
     <string name="properties_viewer_player">
-UFM Player
+UFMプレーヤー
 </string>
     <string name="properties_viewer_text">
-UFM Text Viewer
+UFM テキスト ビューア
 </string>
     <string name="properties_viewer_archive">
-UFM Archive Viewer
+UFM アーカイブ ビューア
 </string>
     <string name="properties_viewer_pdf">
-UFM PDF Viewer
+UFM PDF ビューア
 </string>
     <string name="properties_viewer_spreadsheet">
-UFM Spreadsheet Viewer
+UFM スプレッドシート ビューア
 </string>
     <string name="properties_viewer_default">
 デフォルトアプリ
@@ -12986,61 +13014,61 @@ UFMが前回のセッション中に応答しなくなりました。修正に�
 </string>
     <!-- Music Tag Online Sync & High-Res Cover Picker -->
     <string name="music_tag_btn_search_online_cover">
-Search Online Art
+オンラインアートを検索
 </string>
     <string name="music_tag_btn_musicbrainz_sync">
-Identify Online (MusicBrainz)
+オンラインで識別 (MusicBrainz)
 </string>
     <string name="music_tag_cover_picker_title">
-Search Online Artwork
+オンラインアートワークを検索
 </string>
     <string name="music_tag_search_covers_hint">
-Artist and Album name…
+アーティスト名とアルバム名…
 </string>
     <string name="music_tag_searching_artwork">
-Searching Apple Music, Deezer &amp; Cover Art Archive…
+Apple Music、Deezer、カバーアートのアーカイブを検索しています…
 </string>
     <string name="music_tag_no_artwork_found">
-No artwork found for this query
+このクエリにはアートワークが見つかりませんでした
 </string>
     <string name="music_tag_cover_applied">
-Applied online album artwork
+オンラインアルバムアートワークを適用しました
 </string>
     <string name="music_tag_cover_download_error">
-Failed to download artwork
+アートワークのダウンロードに失敗しました
 </string>
     <string name="music_tag_musicbrainz_search_title">
-MusicBrainz Tag Search
+MusicBrainz タグ検索
 </string>
     <string name="music_tag_search_query_hint">
-Track title or Album name…
+曲名またはアルバム名…
 </string>
     <string name="music_tag_searching_musicbrainz">
-Searching MusicBrainz…
+MusicBrainz を検索中…
 </string>
     <string name="music_tag_no_musicbrainz_results">
-No matching recordings or releases found
+一致する録音またはリリースが見つかりませんでした
 </string>
     <string name="music_tag_diff_title">
-Review Online Tags
+オンラインタグを確認する
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+トラックに適用するフィールドを選択してください
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+選択したタグを適用する
 </string>
     <string name="music_tag_select_all">
-Select All
+すべて選択
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+録音
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+アルバム/リリース
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d トラック
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -13438,10 +13466,10 @@ GPSジオタグを削除（緯度、経度、高度）
 + {hh}{mm}{ss}
 </string>
     <string name="exif_rename_token_model">
-+ {MODEL}
++ {モデル}
 </string>
     <string name="exif_rename_token_original">
-+ {ORIGINAL}
++ {オリジナル}
 </string>
     <string name="exif_rename_token_seq">+ {#}</string>
     <string name="exif_rename_preview_header">
@@ -14239,19 +14267,19 @@ UFM がアクセスおよび管理を許可されているデバイス上のフ�
 このストレージ内のフォルダーへのアクセスを許可します
 </string>
     <string name="action_remove_folder_from_storage">
-Remove Folder
+フォルダーの削除
 </string>
     <string name="action_remove_folder_from_storage_desc">
-Remove mounted folder access from this storage
+このストレージからマウントされたフォルダーへのアクセスを削除します
 </string>
     <string name="dialog_remove_folders_title">
-Remove Mounted Folders
+マウントされたフォルダーを削除する
 </string>
     <string name="dialog_remove_folders_desc">
-Select a folder to remove access from this storage. Your files will not be deleted.
+このストレージからアクセスを削除するフォルダーを選択してください。ファイルは削除されません。
 </string>
     <string name="no_mounted_folders_hint">
-No mounted folders remaining for this storage.
+このストレージにはマウントされたフォルダーが残っていません。
 </string>
     <string name="restricted_storage_empty_title">
 すべてのファイルへのアクセスが必要
@@ -14695,7 +14723,7 @@ AndroidManifest.xml をデコードできません
 ✗ ファイルが異なります (サイズが異なります: %1$s と %2$s)
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ 一致するヘッダーとデータ — 不完全なダウンロード (%1$.1f%% 対 %2$.1f%% が割り当てられました)
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
 Size on disk: %1$s (%2$.1f%%)
@@ -14768,19 +14796,19 @@ Size on disk: %1$s (%2$.1f%%)
     
     <!-- Mobile Security & App Lock -->
     <string name="settings_section_security">
-Security
+安全
 </string>
     <string name="settings_security_app_lock_title">
-App Lock
+アプリロック
 </string>
     <string name="settings_security_app_lock_subtitle">
-Require authentication to open Ultimate File Manager Pro
+Ultimate File Manager Proを開くには認証が必要です
 </string>
     <string name="settings_security_method_title">
-Authentication Method
+認証方法
 </string>
     <string name="settings_security_method_picker_title">
-Choose Security Method
+セキュリティ方式の選択
 </string>
     <string name="settings_security_method_picker_subtitle">
 ファイルを保護する方法を選択してください
@@ -14825,7 +14853,7 @@ PINの変更
 カスタムの英数字パスワードを更新する
 </string>
     <string name="settings_security_verify_old_pin">
-Enter your current 4-digit PIN to continue
+現在の 4 桁の PIN を入力して続行してください
 </string>
     <string name="settings_security_verify_old_password_title">
 現在のパスワードを確認する
@@ -14834,43 +14862,43 @@ Enter your current 4-digit PIN to continue
 変更する前に古いパスワードを入力してください
 </string>
     <string name="settings_security_disable_pin_title">
-Disable App Lock
+アプリロックを無効にする
 </string>
     <string name="settings_security_disable_pin_subtitle">
-Enter your 4-digit PIN to turn off App Lock
+4桁のPINを入力してアプリロックをオフにしてください
 </string>
     <string name="settings_security_disable_password_title">
-Disable App Lock
+アプリロックを無効にする
 </string>
     <string name="settings_security_disable_password_subtitle">
-Enter your password to turn off App Lock
+パスワードを入力してアプリロックをオフにします
 </string>
     <string name="settings_security_disable_biometric_title">
-Disable App Lock
+アプリロックを無効にする
 </string>
     <string name="settings_security_disable_biometric_subtitle">
-Authenticate to turn off App Lock
+認証してアプリロックをオフにする
 </string>
     <string name="settings_security_pin_setup_subtitle">
-Enter a 4-digit PIN to secure UFM
+4 桁の PIN を入力して UFM を保護します
 </string>
     <string name="settings_security_password_title">
-Set Password
+パスワードを設定する
 </string>
     <string name="settings_security_password_subtitle">
-Enter a secure password for UFM
+UFM の安全なパスワードを入力してください
 </string>
     <string name="settings_security_password_create_title">
-Create Password
+パスワードの作成
 </string>
     <string name="settings_security_password_create_subtitle">
-Enter a secure alphanumeric password (at least 4 characters)
+安全な英数字のパスワードを入力してください (少なくとも 4 文字)
 </string>
     <string name="settings_security_password_confirm_title">
-Confirm Password
+パスワードを認証する
 </string>
     <string name="settings_security_password_confirm_subtitle">
-Re-enter your password to confirm
+確認のためパスワードを再入力してください
 </string>
     <string name="settings_security_lock_frequency">
 ロック周波数
@@ -15228,7 +15256,7 @@ SAF とピッカーを公開する
 技術情報をクリップボードにコピーしました
 </string>
     <string name="video_info_not_available">
-N/A
+該当なし
 </string>
     <string name="video_info_no_video">
 映像ストリームが検出されませんでした
@@ -15436,7 +15464,7 @@ N/A
 ライブプレビュー
 </string>
     <string name="live_preview_sample_filename">
-Quarterly_Financial_Report_2026_Final.pdf
+四半期_財務_レポート_2026_最終.pdf
 </string>
     <string name="live_preview_sample_info">
 3.8 MB · 今日 13:45 に変更
@@ -15585,240 +15613,358 @@ USB OTG ドライブをシミュレート
 </string>
 
     <!-- Grid Text Placement Settings -->
-    <string name="settings_grid_text_position_title">Grid Text Placement</string>
-    <string name="settings_grid_text_position_subtitle">Position file names below or overlaid on grid items</string>
-    <string name="settings_grid_text_position_below">Below Block (Default)</string>
-    <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
-    <string name="backup_pref_grid_text_position">Grid text placement settings</string>
-    <string name="backup_pref_view_styles">View density &amp; preset styles</string>
+    <string name="settings_grid_text_position_title">
+グリッドテキストの配置
+</string>
+    <string name="settings_grid_text_position_subtitle">
+ファイル名をグリッド項目の下または上に配置します
+</string>
+    <string name="settings_grid_text_position_below">
+ブロックの下 (デフォルト)
+</string>
+    <string name="settings_grid_text_position_overlay">
+ブロックに重ねて表示
+</string>
+    <string name="backup_pref_grid_text_position">
+グリッドテキストの配置設定
+</string>
+    <string name="backup_pref_view_styles">
+密度とプリセット スタイルを表示する
+</string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
-    <string name="open_as">Open As…</string>
-    <string name="open_as_desc">Choose a viewer or player to open this file</string>
-    <string name="presentation_viewer">Presentation Viewer</string>
-    <string name="slide_counter">Slide %1$d of %2$d</string>
-    <string name="open_in_powerpoint">Open in Presentation App</string>
-    <string name="open_as_text">Text / Code Viewer</string>
-    <string name="open_as_text_desc">Built-in code &amp; text editor with syntax highlighting</string>
-    <string name="open_as_hex">Hex / Binary Viewer</string>
-    <string name="open_as_hex_desc">Raw byte hex dump and binary inspector</string>
-    <string name="open_as_presentation">Presentation / Slide Deck</string>
-    <string name="open_as_presentation_desc">Built-in slide deck viewer with speaker notes</string>
-    <string name="open_as_spreadsheet">Spreadsheet / Table</string>
-    <string name="open_as_spreadsheet_desc">Built-in spreadsheet table viewer</string>
-    <string name="open_as_image">Image Viewer</string>
-    <string name="open_as_image_desc">High-resolution photo viewer with zoom &amp; pan</string>
-    <string name="open_as_audio">Audio Player</string>
-    <string name="open_as_audio_desc">Media3 audio player with background playback</string>
-    <string name="open_as_video">Video Player</string>
-    <string name="open_as_video_desc">Media3 hardware-accelerated video player</string>
-    <string name="open_as_archive">Archive Browser</string>
-    <string name="open_as_archive_desc">Explore ZIP, 7Z, TAR, RAR, and compressed files</string>
-    <string name="open_as_other">Choose External App…</string>
-    <string name="open_as_other_desc">Open with an installed third-party app</string>
-    <string name="speaker_notes">Speaker Notes</string>
-    <string name="no_slides_found">No slides found in this presentation</string>
-    <string name="next_slide">Next Slide</string>
-    <string name="prev_slide">Previous Slide</string>
-    <string name="view_raw_text">View as Raw Text</string>
-    <string name="ufm_slide_deck_viewer">UFM Slide Deck</string>
-    <string name="open_with_presentation_app">Presentation App (PowerPoint / Slides)</string>
-    <string name="open_with_presentation_app_desc">Open in Microsoft PowerPoint, Google Slides, or office suite</string>
-    <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
+    <string name="open_as">
+別名で開く…
+</string>
+    <string name="open_as_desc">
+このファイルを開くビューアまたはプレーヤーを選択してください
+</string>
+    <string name="presentation_viewer">
+プレゼンテーションビューア
+</string>
+    <string name="slide_counter">
+%2$d の %1$d をスライド
+</string>
+    <string name="open_in_powerpoint">
+プレゼンテーション アプリで開く
+</string>
+    <string name="open_as_text">
+テキスト/コードビューア
+</string>
+    <string name="open_as_text_desc">
+構文強調表示を備えた組み込みのコードおよびテキスト エディター
+</string>
+    <string name="open_as_hex">
+16進数/バイナリビューア
+</string>
+    <string name="open_as_hex_desc">
+生のバイト 16 進ダンプとバイナリ インスペクタ
+</string>
+    <string name="open_as_presentation">
+プレゼンテーション/スライドデッキ
+</string>
+    <string name="open_as_presentation_desc">
+スピーカーノートを備えた内蔵スライドデッキビューア
+</string>
+    <string name="open_as_spreadsheet">
+スプレッドシート/テーブル
+</string>
+    <string name="open_as_spreadsheet_desc">
+組み込みのスプレッドシート表ビューア
+</string>
+    <string name="open_as_image">
+画像ビューア
+</string>
+    <string name="open_as_image_desc">
+ズームとパンを備えた高解像度フォトビューアー
+</string>
+    <string name="open_as_audio">
+オーディオプレーヤー
+</string>
+    <string name="open_as_audio_desc">
+バックグラウンド再生を備えた Media3 オーディオ プレーヤー
+</string>
+    <string name="open_as_video">
+ビデオプレーヤー
+</string>
+    <string name="open_as_video_desc">
+Media3 ハードウェア アクセラレーション ビデオ プレーヤー
+</string>
+    <string name="open_as_archive">
+アーカイブブラウザ
+</string>
+    <string name="open_as_archive_desc">
+ZIP、7Z、TAR、RAR、および圧縮ファイルを探索する
+</string>
+    <string name="open_as_other">
+外部アプリを選択…
+</string>
+    <string name="open_as_other_desc">
+インストールされているサードパーティ製アプリで開く
+</string>
+    <string name="speaker_notes">
+スピーカーノート
+</string>
+    <string name="no_slides_found">
+このプレゼンテーションにはスライドがありません
+</string>
+    <string name="next_slide">
+次のスライド
+</string>
+    <string name="prev_slide">
+前のスライド
+</string>
+    <string name="view_raw_text">
+生のテキストとして表示
+</string>
+    <string name="ufm_slide_deck_viewer">
+UFM スライドデッキ
+</string>
+    <string name="open_with_presentation_app">
+プレゼンテーションアプリ（PowerPoint / スライド）
+</string>
+    <string name="open_with_presentation_app_desc">
+Microsoft PowerPoint、Google スライド、またはオフィス スイートで開きます
+</string>
+    <string name="ufm_slide_viewer_desc">
+UFM でスライド、表紙のサムネイル、メモを表示する
+</string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
-    <string name="action_open_with">Open With…</string>
-    <string name="action_open_as">Open As…</string>
-    <string name="toolbar_open_with">Open With</string>
-    <string name="toolbar_open_as">Open As</string>
-    <string name="action_extract_subtitles">Extract Subtitles</string>
-    <string name="action_extract_audio">Extract Audio</string>
+    <string name="action_open_with">
+開く…
+</string>
+    <string name="action_open_as">
+別名で開く…
+</string>
+    <string name="toolbar_open_with">
+開く
+</string>
+    <string name="toolbar_open_as">
+別名で開く
+</string>
+    <string name="action_extract_subtitles">
+字幕の抽出
+</string>
+    <string name="action_extract_audio">
+音声を抽出する
+</string>
     <string name="action_convert_to_mp4">
-Convert to MP4
+MP4に変換
 </string>
-    <string name="toolbar_extract_subtitles">Extract Subtitles</string>
-    <string name="toolbar_extract_audio">Extract Audio</string>
+    <string name="toolbar_extract_subtitles">
+字幕の抽出
+</string>
+    <string name="toolbar_extract_audio">
+音声を抽出する
+</string>
     <string name="toolbar_convert_to_mp4">
-Convert to MP4
+MP4に変換
 </string>
-    <string name="extracting_subtitles">Extracting subtitle track…</string>
-    <string name="extracting_audio">Extracting audio track…</string>
+    <string name="extracting_subtitles">
+字幕トラックを抽出中…
+</string>
+    <string name="extracting_audio">
+オーディオトラックを抽出中…
+</string>
     <string name="convert_to_mp4_progress">
-Converting video to MP4…
+ビデオを MP4 に変換しています…
 </string>
     <string name="convert_to_mp4_success">
-Video converted to %1$s
+動画を %1$s に変換しました
 </string>
     <string name="convert_to_mp4_failed">
-Failed to convert video
+ビデオの変換に失敗しました
 </string>
     <string name="convert_to_mp4_title">
-Convert to MP4
+MP4に変換
 </string>
     <string name="convert_to_mp4_confirm">
-Convert \"%1$s\" to universal MP4 format?
+「%1$s」をユニバーサル MP4 形式に変換しますか?
 </string>
-    <string name="subtitles_extracted_success">Subtitles extracted successfully.</string>
-    <string name="audio_extracted_success">Audio extracted successfully.</string>
+    <string name="subtitles_extracted_success">
+字幕が正常に抽出されました。
+</string>
+    <string name="audio_extracted_success">
+音声が正常に抽出されました。
+</string>
     <string name="audio_format_universal">
-Universal M4A
+ユニバーサルM4A
 </string>
     <string name="audio_format_original">
-Original Stream
+オリジナルストリーム
 </string>
     <string name="audio_format_universal_desc">
-High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+高品質 AAC (.m4a) — 携帯電話、車、音楽アプリでどこでも再生可能
 </string>
     <string name="audio_format_original_desc">
-Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+ロスレス ダイレクト ストリーム コピー (.eac3、.dts、.ac3、.flac)
 </string>
     <string name="codec_unsupported_title">
-Audio Codec Not Supported
+オーディオコーデックはサポートされていません
 </string>
     <string name="codec_unsupported_message">
-This device lacks a native hardware decoder for %1$s audio.\n
+このデバイスには %1$s オーディオ用のネイティブ ハードウェア デコーダがありません。\n
 \n
-Would you like to convert it to Universal M4A (AAC) for seamless playback?
+シームレスに再生するためにユニバーサル M4A (AAC) に変換しますか?
 </string>
     <string name="convert_and_play">
-Convert &amp; Play
+変換して再生
 </string>
     <string name="converting_audio">
-Converting audio to M4A…
+オーディオを M4A に変換しています…
 </string>
     <string name="convert_to_m4a">
-Convert to M4A
+M4Aに変換する
 </string>
-    <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
-    <string name="media_technical_details">Media Stream Details</string>
-    <string name="media_format">Container</string>
-    <string name="media_bitrate">Overall Bitrate</string>
-    <string name="error_generic">An error occurred</string>
-    <string name="failed_to_open_file">Failed to open file</string>
-    <string name="slide_badge_format">Slide %1$d</string>
-    <string name="slide_counter_format">Slide %1$d of %2$d</string>
-    <string name="no_app_to_open_file">No app found to open this file</string>
+    <string name="no_subtitles_found_in_video">
+このビデオには埋め込み字幕トラックが見つかりません
+</string>
+    <string name="media_technical_details">
+メディアストリームの詳細
+</string>
+    <string name="media_format">
+容器
+</string>
+    <string name="media_bitrate">
+全体的なビットレート
+</string>
+    <string name="error_generic">
+エラーが発生しました
+</string>
+    <string name="failed_to_open_file">
+ファイルを開けませんでした
+</string>
+    <string name="slide_badge_format">
+スライド %1$d
+</string>
+    <string name="slide_counter_format">
+%2$d の %1$d をスライド
+</string>
+    <string name="no_app_to_open_file">
+このファイルを開くアプリが見つかりませんでした
+</string>
     <string name="select_subtitle_track">
-Select Subtitle Track
+字幕トラックを選択
 </string>
     <string name="extract_all_subtitles">
-Extract All Tracks
+すべてのトラックを抽出
 </string>
     <string name="extract_all_subtitles_desc">
-Extract all %1$d subtitle tracks into separate files
+すべての %1$d 字幕トラックを個別のファイルに抽出します
 </string>
     <string name="subtitles_extracted_multiple_success">
-Successfully extracted %1$d subtitle files.
+%1$d 個の字幕ファイルが正常に抽出されました。
 </string>
     <string name="select_audio_track">
-Select Audio Track
+オーディオトラックを選択
 </string>
     <string name="extract_all_audio">
-Extract All Tracks
+すべてのトラックを抽出
 </string>
     <string name="extract_all_audio_desc">
-Extract all %1$d audio tracks into separate files
+すべての %1$d オーディオ トラックを個別のファイルに抽出します
 </string>
     <string name="audio_extracted_multiple_success">
-Successfully extracted %1$d audio files.
+%1$d オーディオ ファイルが正常に抽出されました。
 </string>
     <string name="no_audio_found_in_video">
-No audio tracks found in this video
+このビデオにはオーディオ トラックが見つかりません
 </string>
 
     <!-- Floating Bottom Bar Dock -->
     <string name="floating_bar_settings_title">
-Floating Bottom Bar
+フローティングボトムバー
 </string>
     <string name="floating_bar_settings_subtitle">
-Show a modern floating dock at the bottom of the main menu for quick access
+メイン メニューの下部にモダンなフローティング ドックを表示して、簡単にアクセスできるようにします
 </string>
     <string name="floating_bar_manage_title">
-Manage Floating Bar
+フローティングバーの管理
 </string>
     <string name="floating_bar_manage_subtitle">
-Add, remove, and reorder quick-access shortcuts
+クイックアクセスショートカットの追加、削除、並べ替え
 </string>
     <string name="floating_bar_enable_switch">
-Enable Floating Bar
+フローティングバーを有効にする
 </string>
     <string name="floating_bar_enable_desc">
-Docked tiles appear in the bottom floating bar and are hidden from the main menu
+ドッキングされたタイルは下部のフローティング バーに表示され、メイン メニューからは非表示になります。
 </string>
     <string name="floating_bar_docked_section">
-Docked Items
+ドッキングされたアイテム
 </string>
     <string name="floating_bar_docked_hint">
-Drag handle to reorder. Tap Remove to return item to main menu.
+ハンドルをドラッグして並べ替えます。項目をメインメニューに戻すには、「削除」をタップします。
 </string>
     <string name="floating_bar_available_section">
-Available Tiles
+利用可能なタイル
 </string>
     <string name="floating_bar_available_hint">
-Tap + to add a tile to the floating bottom bar
++ をタップして、フローティングボトムバーにタイルを追加します
 </string>
     <string name="floating_bar_empty_docked">
-No items docked yet. Add tiles from the list below.
+まだアイテムがドッキングされていません。以下のリストからタイルを追加します。
 </string>
     <string name="floating_bar_empty_available">
-All available tiles have been added to the floating bar.
+利用可能なすべてのタイルがフローティング バーに追加されました。
 </string>
     <string name="floating_bar_add">
-Add
+追加
 </string>
     <string name="floating_bar_remove">
-Remove
+取り除く
 </string>
     <string name="backup_pref_floating_bar">
-Floating Bottom Bar
+フローティングボトムバー
 </string>
 
     <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
     <string name="quick_access_title">
-Quick Access
+クイックアクセス
 </string>
     <string name="quick_access_mode_title">
-Quick Access Style
+クイックアクセススタイル
 </string>
     <string name="quick_access_mode_subtitle">
-Choose how quick-access shortcuts are presented
+クイックアクセスショートカットの表示方法を選択する
 </string>
     <string name="quick_access_mode_disabled">
-Disabled
+無効
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+ボトムフローティングバー
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+エッジスワイプメニュー
 </string>
     <string name="quick_access_edge_title">
-Swipe Edge
+スワイプエッジ
 </string>
     <string name="quick_access_edge_left">
-Left Edge
+左端
 </string>
     <string name="quick_access_edge_right">
-Right Edge
+右端
 </string>
     <string name="quick_access_edge_handle_title">
-Edge Handle Indicator
+エッジハンドルインジケーター
 </string>
     <string name="quick_access_edge_handle_desc">
-Show a subtle indicator on the screen edge for easy opening
+簡単に開くことができるように、画面の端に微妙なインジケーターを表示します
 </string>
     <string name="quick_access_hide_tiles_title">
-Hide Docked Tiles on Main Menu
+メインメニューでドッキングされたタイルを非表示にする
 </string>
     <string name="quick_access_hide_tiles_desc">
-Keep the main dashboard clean by hiding tiles docked in Quick Access
+クイック アクセスにドッキングされているタイルを非表示にして、メイン ダッシュボードをクリーンな状態に保ちます
 </string>
     <string name="quick_access_manage_tiles">
-Manage Tiles
+タイルの管理
 </string>
     <string name="quick_access_empty_hint">
-No tiles docked yet.\n
-Tap Manage Tiles to add shortcuts.
+まだタイルがドッキングされていません。\n
+ショートカットを追加するには、「タイルの管理」をタップします。
 </string>
     <string name="quick_access_mode_disabled_desc">クイックアクセスショートカットを無効化</string>
     <string name="quick_access_mode_bottom_bar_desc">メインメニュー下部のモダンなフローティングバー</string>
@@ -15829,373 +15975,373 @@ Tap Manage Tiles to add shortcuts.
 
     <!-- Direct Remote Media & Media Operation Worker -->
     <string name="settings_network_media_process_title">
-Network Media Processing
+ネットワークメディア処理
 </string>
     <string name="settings_network_media_process_subtitle_off">
-Direct stream processing (zero local copy of video)
+ダイレクト ストリーム処理 (ビデオのゼロ ローカル コピー)
 </string>
     <string name="settings_network_media_process_subtitle_on">
-Copy full video to local storage before processing
+処理する前にビデオ全体をローカル ストレージにコピーします
 </string>
     <string name="backup_pref_network_media_process">
-Network Media Processing
+ネットワークメディア処理
 </string>
     <string name="dialog_copy_before_process_title">
-Copy to Local Storage?
+ローカルストレージにコピーしますか?
 </string>
     <string name="dialog_copy_before_process_msg">
-This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+この操作では、最初に「%1$s」(%2$s) がネットワーク ストレージからデバイスのローカル ストレージにコピーされます。\n
 \n
-Depending on file size and connection speed, this may take some time.\n
+ファイル サイズと接続速度によっては、時間がかかる場合があります。\n
 \n
-Do you want to proceed?
+続行しますか?
 </string>
     <string name="action_copy_and_proceed">
-Copy &amp; Proceed
+コピーして続行
 </string>
     <string name="media_operation_channel_name">
-Media Operations
+メディア運営
 </string>
     <string name="media_operation_channel_desc">
-Background video conversion and track extraction
+バックグラウンドビデオ変換とトラック抽出
 </string>
     <string name="media_op_converting_video">
-Converting Video to MP4…
+ビデオを MP4 に変換中…
 </string>
     <string name="media_op_extracting_audio">
-Extracting Audio Track…
+オーディオトラックを抽出中…
 </string>
     <string name="media_op_extracting_subtitles">
-Extracting Subtitles…
+字幕を抽出中…
 </string>
     <string name="media_op_completed_title">
-Media Operation Completed
+メディア操作が完了しました
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+メディア操作に失敗しました
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+リモートビデオをローカルキャッシュにダウンロードしています…
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+結果をリモート フォルダーにアップロードしています…
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+バックグラウンドで続行します。進捗状況については通知を確認してください。
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+リモート共有は読み取り専用です
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+共有が読み取り専用であるため、抽出されたファイルを「%1$s」に保存できませんでした。\n
 \n
-Would you like to save it to your local device instead?
+代わりにローカル デバイスに保存しますか?
 </string>
     <string name="action_save_locally">
-Save to Device
+デバイスに保存
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+読み取り専用共有
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+共有「%1$s」は読み取り専用です。\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+抽出または変換されたファイルはリモート共有に保存し直すことはできないため、代わりにローカルのダウンロード フォルダに保存されます。\n
 \n
-Do you want to proceed?
+続行しますか?
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+その他のストレージ
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+インストールされたクラウドおよびドキュメントプロバイダー
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+デバイスにインストールされているサードパーティのドキュメント プロバイダーにアクセスする
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+%1$d のドキュメントプロバイダーが利用可能です
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+1 つのドキュメントプロバイダーが利用可能
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+サードパーティのドキュメントプロバイダーが見つかりません
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+ファイルの参照 (SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+ストレージフォルダーのマウント
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+UFM ネイティブ エンジン経由で接続する
 </string>
     <string name="action_open_app">
-Open App
+アプリを開く
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+保管場所の追加
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+ディレクトリ/フォルダーのマウント
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+Termux、SD カード、または USB ドライブからフォルダーを選択します
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+インストールされているドキュメントプロバイダー
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+Proton Drive、Synology DS ファイル、Google Drive などにアクセス
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+高速クラウドとネットワーク
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+RClone (Proton/Google Drive) または SMB/WebDAV 経由の完全な双方向同期
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+ファイルを開くかコピーする
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+「%1$s」をどうしたいですか?
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+UFM ビューアで開く
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+ローカルストレージにコピー
 </string>
     <string name="saf_file_action_remember">
 Remember my choice
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+常に質問する
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+%1$d ファイルをダウンロードにコピーしました
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+SAF が選択したファイルのアクション
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+開くかコピーするかを常に尋ねる
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+常に UFM Viewer で開きます
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+常にローカル ストレージにコピーする
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+ドキュメントプロバイダー
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+%1$s を管理する
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+ファイルの参照とダウンロード
 </string>
     <string name="doc_provider_action_browse_subtitle">%1$s を開いてファイルを選択し、表示またはローカルにコピー</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+ファイルを %1$s にアップロード
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+UFM でローカル ファイルを選択して %1$s に保存します
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+%1$s を削除しますか?
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+%1$s をストレージから削除しますか?その他のストレージからいつでも再追加できます。
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+ストレージから削除する
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+%1$s がストレージから削除されました
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+%1$s がストレージに追加されました
 </string>
     <string name="other_storage_all_added">
-All available providers added
+利用可能なすべてのプロバイダーが追加されました
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+インストールされているすべてのドキュメント プロバイダーは、すでにメイン ストレージ メニューに追加されています。
 </string>
     <string name="saf_copy_destination_title">
-Destination: %1$s
+目的地: %1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+フォルダを変更…
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+保存先フォルダを選択
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+コピー先の設定
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+SAF が選択したファイルの宛先
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+ドキュメントプロバイダーからコピーされたファイルは「%1$s」に保存されます。
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+その他のストレージおよび SAF 転送
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+コピー先フォルダー
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+デフォルトにリセット (ダウンロード)
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+新しいフォルダーを選択…
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+コピー先がダウンロードにリセットされました
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+ドキュメントプロバイダーにエクスポート
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+マウントされたクラウドまたはドキュメント プロバイダーに直接保存します
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+宛先プロバイダーの選択
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+複数のファイルをエクスポートする
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+これらの %1$d ファイルを %2$s にどのようにエクスポートしますか?
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+ZIP アーカイブとしてエクスポート
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+システムアップロードシートを利用する
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+「%1$s」を %2$s に保存しました
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+フォルダーマウント可能
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+ファイルとクラウド
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+ネイティブ同期が利用可能
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+他のストレージにアップロードする
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+選択したファイルまたはフォルダーを外部ドキュメントプロバイダーにアップロードします
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+他のストレージにアップロードする
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+ストレージプロバイダーは追加されていません。追加するプロバイダーを選択します。
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+%1$d ファイルを %2$s にコピーしました
 </string>
     <string name="share_export_folder_title">
-Export Folder
+エクスポートフォルダー
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+ドキュメント プロバイダーを介してフォルダーを直接アップロードすることはできません。 「[PH_0]]」を ZIP アーカイブに圧縮して %2$s にアップロードしますか?
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+単一の ZIP アーカイブに圧縮してアップロードする
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+Android システムのアップロード シートを使用してアイテムを送信する
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+マウントされたプロバイダーを選択するか、その他のストレージを開きます
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+%1$s の圧縮中…
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+他のストレージ用に圧縮…
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+%1$s 経由でアップロードする
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+ファイルを %1$s に直接送信します
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+ZIP アーカイブに圧縮し、%1$s で宛先フォルダーを選択してください
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+%1$s の ZIP アーカイブ内のフォルダー構造と元のディレクトリを保持します。
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+個々のファイルを %1$s に直接アップロードします (外部アップロード画面ではディレクトリを作成できません)
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+フォルダーアップロードに関する注意事項
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+外部アップロード画面 (%2$s など) ではディレクトリを作成できません。\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+元のフォルダ自体ではなく、「[PH_1]]」内のファイルのみがアップロードされます。\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+完全なディレクトリ構造を保持するには、代わりに「ZIP アーカイブとしてエクスポート」を選択してください。
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+外部アップロード画面 (%1$s など) ではディレクトリを作成できません。\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+元のフォルダ自体ではなく、選択したフォルダ内のファイルのみがアップロードされます。\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+完全なディレクトリ構造を保持するには、代わりに [ZIP アーカイブとしてエクスポート] を選択してください。
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+ファイルのみをアップロードする
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+ホーム画面のオプション
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+ホーム画面に追加
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+ホーム画面から削除
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+お気に入りを削除
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+ショートカットが要求されました - ホーム画面を確認してください
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+ショートカットが無効になっています。ホーム画面から手動で削除してください。
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+UFM のお気に入り
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+チャンネルが承認されていません。後で [テレビ設定] → [チャンネル] で有効にできます。
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+アイテムが利用できません
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+ファイルまたはフォルダーが見つかりませんでした。移動または削除されたか、使用できないストレージ上にある可能性があります。
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -16216,382 +16362,382 @@ OK
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+で開く
 </string>
     <string name="open_with_search_hint">
-Search apps…
+アプリを検索…
 </string>
     <string name="open_with_just_once">
-Just once
+一度だけ
 </string>
     <string name="open_with_always">
-Always
+いつも
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+.%1$s ファイルには選択したアプリを常に使用します
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+選択したアプリを常に使用する
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+.%1$s ファイルのデフォルトを記憶する
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+このファイルを開くためのインストールされたアプリケーションが見つかりませんでした
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+Google Play ストアを検索
 </string>
     <string name="open_with_app_info">
-App info
+アプリ情報
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+アプリケーションの詳細とシステム設定を表示する
 </string>
     <string name="open_with_set_default">
-Always use this app
+常にこのアプリを使用する
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+%1$s を起動できません。システム選択に戻ります…
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+OK を押して開く • OK を長押しすると、デフォルトのアプリオプションが表示されます
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+目的地として選択
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+ビューアの宛先
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+保存先フォルダーの確認
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+選択したフォルダーは、UFM Viewer およびスライド ショーでの迅速なコピーおよび移動アクションに使用されます。
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+ファイルアクション
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+保存先フォルダー
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+目的地が選択されていません — タップして選択してください
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+変化
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+%1$s にコピー
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+%1$s に移動します
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+宛先にコピー
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+目的地へ移動
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+%1$s にコピーされました
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+%1$s に移動しました
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+ソースと宛先が同じフォルダーである
 </string>
     <string name="backup_pref_viewer_transfer">
-Viewer Transfer Destination
+ビューア転送先
 </string>
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+ホーム画面に追加
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+ショートカット名
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+ストレージのショートカット
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+「%1$s」はすでにホーム画面に固定されています。
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+ホーム画面に追加
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+ショートカット名を空にすることはできません
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
     <string name="download_manager_title">
-Download Manager
+ダウンロードマネージャー
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+トレント、マグネット、HTTP ダウンロード
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+ゼロシーディングのプライバシー保護を備えた高速ネイティブダイレクトおよびピアツーピアダウンロードマネージャー。
 </string>
     <string name="download_no_transfers">
-No active downloads
+アクティブなダウンロードはありません
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+ダウンロードフォルダーとして選択
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+ダウンロードフォルダー
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+ダウンロード場所の確認
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+ダウンロードはこのディレクトリに直接保存されます。
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+直接ダウンロード
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+トレントダウンロード
 </string>
     <string name="download_location_label">
-Download location
+ダウンロード場所
 </string>
     <string name="download_change_location">
-Change
+変化
 </string>
     <string name="download_action_start">
-Start
+始める
 </string>
     <string name="download_action_pause">
 Pause
 </string>
     <string name="download_action_resume">
-Resume
+再開する
 </string>
     <string name="download_action_cancel">
-Cancel
+キャンセル
 </string>
     <string name="download_action_delete">
-Delete
+消去
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+直接ダウンロード URL
 </string>
     <string name="download_enter_url_hint">
 https://example.com/file.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+ダウンロード
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+トレントまたはマグネットリンク
 </string>
     <string name="download_enter_magnet_hint">
-magnet:?xt=urn:btih:...
+磁石:?xt=urn:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+.torrent ファイルを開く
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+ダウンロードマネージャーとP2Pに関する通知
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+許容される使用とプライバシー情報
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+私は、ピアツーピア ダウンロードでは私の IP アドレスが群れ内で共有されることを理解しており、このツールを合法的で侵害のないコンテンツに対してのみ使用することに同意します。
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+ストレージ制限を超えました
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+ターゲット ファイル サイズ (%1$s) は、このドライブ上の FAT32 ファイル システムでサポートされている 4 GB 制限を超えています。\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+exFAT、NTFS、または内部ストレージでフォーマットされた別のダウンロード場所を選択してください。
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+ストレージスペースが不十分です
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+選択したストレージ ドライブに十分な空き容量がありません。\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+必須: %1$s\n
+使用可能: %2$s\n
 \n
-Please select another drive or free up space.
+別のドライブを選択するか、空き容量を増やしてください。
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+場所を選択してください
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+モバイルデータ接続
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+現在、携帯電話ネットワークに接続しており、Wi-Fi のみモードが有効になっています。\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+Wi-Fi が接続されるまでこの転送をキューに入れますか、それともダウンロードにモバイル データを許可しますか?
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+Wi-Fiの待ち行列
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+モバイルデータを許可する
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+ネットワークポリシー
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+ダウンロード用のネットワーク接続ルールを選択する
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+Wi-Fiのみ（推奨）
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+従量制課金の Wi-Fi に接続している場合にのみダウンロードを転送します
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+すべてのネットワーク (Wi-Fi および携帯電話)
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+携帯電話のモバイル データおよび Wi-Fi ネットワーク経由の転送を許可する
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+非著作権規約を確認する
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+P2P swarm の開示、プライバシー、ゼロシーディング条件を表示する
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+P2P スウォームと IP の可視性
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+BitTorrent は、交換ピースのチャンクを群内の他のピア デバイスに直接転送します。パブリック IP アドレスは、転送中にアクティブなピアに表示されます。
 </string>
     <string name="download_legal_zero_seeding_title">
-Zero-Seeding Privacy
+ゼロシーディングプライバシー
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+UFM は厳密なゼロシードを強制します。ダウンロードが完了 (100%) した瞬間、すべての swarm 接続が切断され、トラッカーのアナウンスは直ちに停止します。
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+合法的なコンテンツのみ
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+あなたは、このツールを合法、オープンソース、パブリック ドメイン、または承認されたファイルに対してのみ使用することに同意します。著作権で保護された素材を許可なくダウンロードまたは配布することは禁止されています。
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+同意して続行
 </string>
     <string name="download_legal_understood">
-Understood
+理解した
 </string>
     <string name="download_state_downloading">
-Downloading
+ダウンロード中
 </string>
     <string name="download_state_paused">
-Paused
+一時停止中
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+Wi-Fi の待機中
 </string>
     <string name="download_state_completed">
-Completed
+完了
 </string>
     <string name="download_state_error">
-Error
+エラー
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+ダウンロードマネージャーの転送
 </string>
     <string name="download_notif_channel_desc">
-Ongoing download progress and status updates
+進行中のダウンロードの進行状況とステータスの更新
 </string>
     <string name="download_timeout_stopped">
-Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+ダウンロードが一時停止されました: Android の 6 時間の実行制限に達しました。タップして再開します。
 </string>
 
     <!-- Torrent & Magnet Selective File Download & Content Inspector -->
     <string name="torrent_select_all">
-Select All
+すべて選択
 </string>
     <string name="torrent_deselect_all">
-Deselect All
+すべての選択を解除
 </string>
     <string name="torrent_selected_summary">
-Selected: %1$d of %2$d files (%3$s of %4$s)
+選択済み: %1$d/%2$d ファイル (%3$s/%4$s)
 </string>
     <string name="torrent_files_count">
-%1$d files
+%1$d ファイル
 </string>
     <string name="torrent_file_selection_title">
-Torrent Content
+トレントコンテンツ
 </string>
     <string name="torrent_file_selection_subtitle">
-Select files and folders to download
+ダウンロードするファイルとフォルダーを選択してください
 </string>
     <string name="torrent_fetching_metadata">
-Fetching torrent metadata from swarm…
+swarm から torrent メタデータを取得しています…
 </string>
     <string name="torrent_fetching_metadata_desc">
-Contacting DHT nodes and peers to retrieve file list…
+ファイルリストを取得するために DHT ノードおよびピアに接続しています…
 </string>
     <string name="torrent_metadata_timeout_title">
-Metadata Fetch Timeout
+メタデータフェッチタイムアウト
 </string>
     <string name="torrent_metadata_timeout_msg">
-Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+ピアからのファイル リストの取得に通常より時間がかかっています。検索を続けますか、それともすべてのファイルを直接ダウンロードしますか?
 </string>
     <string name="torrent_keep_waiting">
-Keep Waiting
+待ち続けてください
 </string>
     <string name="torrent_download_all_direct">
-Download All Directly
+すべてを直接ダウンロード
 </string>
     <string name="torrent_zero_selected_error">
-Please select at least one file to download
+ダウンロードするファイルを少なくとも 1 つ選択してください
 </string>
     <string name="torrent_search_hint">
-Search files…
+ファイルを検索…
 </string>
 
     <!-- Transfer Action Dialog -->
     <string name="transfer_action_title">
-Transfer Actions
+転送アクション
 </string>
     <string name="transfer_action_pause">
-Pause Transfer
+転送の一時停止
 </string>
     <string name="transfer_action_resume">
-Resume Transfer
+転送を再開する
 </string>
     <string name="transfer_action_open_folder">
-Open Download Folder
+ダウンロードフォルダーを開く
 </string>
     <string name="transfer_action_delete_title">
-Remove Transfer
+転送の削除
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+この転送をダウンロード マネージャーから削除する方法を選択します:
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+転送のみを削除
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+ダウンロードしたファイルをデバイスに保存しておく
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+ファイルの削除と削除
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+ダウンロードしたファイルをディスクから完全に削除します
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16652,79 +16798,79 @@ Permanently delete downloaded files from disk
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+スマートブックマーク
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+保存されたリンク、メディア、共有を整理する
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%2$d グループの %1$d 個のアイテム
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+ブックマークはまだ保存されていません
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+UFM でブックマークする
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+ブックマークを保存
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+%1$s から共有されました
 </string>
     <string name="bookmark_field_title_hint">
-Title
+タイトル
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+コレクション / グループ
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+個人的なメモを追加します (オプション)
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+ブックマークを保存
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+すでにブックマークされています — メモと時刻が更新されました
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+ブックマークが %1$s に保存されました
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+グループ
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+すべて見る ›
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+コレクションとソース
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+コレクションの管理、フィルター、ボールト保護
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+コレクションを検索…
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+すべてのブックマーク
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+すべてのソースのロック解除されたブックマークをすべて表示します
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+私のコレクション
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+ユーザー作成のコレクション • Vault ロック可能
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+アプリのソース
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+共有アプリケーションから自動生成
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16733,241 +16879,241 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+このデバイスにはデバイス セキュリティ (PIN、パターン、または指紋) が設定されていません。
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+金庫がロックされました
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+認証して Vault ロックを解除します
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+コレクションは Vault でロックされています
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+コレクションのロックが解除されました
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+新しいブックマークグループ
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+グループ名
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+グループの作成
 </string>
     <string name="bookmark_filter_all">
-All
+全て
 </string>
     <string name="bookmark_filter_links">
-Links
+リンク
 </string>
     <string name="bookmark_filter_media">
-Media
+メディア
 </string>
     <string name="bookmark_filter_docs">
-Documents
+書類
 </string>
     <string name="bookmark_filter_notes">
-Notes
+注意事項
 </string>
     <string name="bookmark_filter_starred">
-Starred
+スター付き
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+ブックマーク、メモ、ドメインを検索します…
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+ブックマークを並べ替える
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+新しいものから古いものへ
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+古いものから新しいものへ
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+タイトル (A ～ Z)
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+タイトル (Z-A)
 </string>
     <string name="bookmark_sort_size">
-File Size
+ファイルサイズ
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+コレクションごとにグループ化
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+コレクション: A to Z
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+コレクション: Z to A
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+コレクションの削除
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+コレクション「%1$s」を削除してもよろしいですか?
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+記事を読む
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+ブラウザで開く
 </string>
     <string name="bookmark_action_open_file">
-Open File
+ファイルを開く
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+リンクをコピー
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+テキストをコピーする
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+ストレージに保存
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+グループに移動
 </string>
     <string name="bookmark_action_delete">
-Delete
+消去
 </string>
     <string name="bookmark_view_note">
-View Note
+ノートを見る
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+ロックコレクション (保管庫)
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+閲覧するには指紋またはPINが必要です
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+収集オプション
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+ロックコレクション
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+コレクションのロックを解除する
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+ブックマークが削除されました
 </string>
     <string name="bookmark_undo">
-Undo
+元に戻す
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+選択された %1$d アイテム
 </string>
     <string name="bookmark_batch_move">
-Move
+動く
 </string>
     <string name="bookmark_batch_delete">
-Delete
+消去
 </string>
     <string name="bookmark_batch_export">
-Export
+輸出
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+ブックマークのエクスポート
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+ブラウザの HTML ブックマーク (.html)
 </string>
     <string name="bookmark_export_markdown">
-Markdown Document (.md)
+マークダウンドキュメント (.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+%1$d のブックマークを %2$s にエクスポートしました
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+リーダーモード
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+文字サイズ
 </string>
     <string name="bookmark_reader_theme">
-Theme
+テーマ
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+ライト
 </string>
     <string name="bookmark_reader_theme_sepia">
-Sepia
+セピア
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+暗い
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+声を出して聞く
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+読書を一時停止する
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+読書をやめる
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+速度%1$sx
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+音声エンジンを初期化しています…
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+テキスト読み上げはサポートされていないか、このデバイスにインストールされていません
 </string>
     <string name="bookmark_group_whatsapp">
-WhatsApp
+ワッツアップ
 </string>
     <string name="bookmark_group_reddit">
-Reddit
+レディット
 </string>
     <string name="bookmark_group_youtube">
 YouTube
 </string>
     <string name="bookmark_group_twitter">
-Twitter / X
+ツイッター / ×
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+ウェブと記事
 </string>
     <string name="bookmark_group_telegram">
-Telegram
+電報
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+ファイルとドキュメント
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+ボールトでグループをロックする
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+グループのロックを解除する
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+ロックされたブックマークにアクセスするための認証
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+まだブックマークはありません
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+WhatsApp、Reddit、またはブラウザからリンク、記事、メディア、またはファイルを共有し、「UFM でブックマーク」を選択します。
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+結果が見つかりませんでした
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+「%1$s」に一致するブックマークはありません。別のキーワードで検索してみてください。
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+ブックマークが見つかりませんでした
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+選択したフィルターまたはコレクションに一致するブックマークが見つかりませんでした。
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -16975,67 +17121,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+フラットビュー
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+再帰的なインデックス付きブラウザ
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+フォルダーを開く
 </string>
     <string name="flat_view_expand_all">
-Expand All
+すべて展開
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+すべて折りたたむ
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+システムフォルダーを含める
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+Android/data、Android/obb、およびシステム ディレクトリをフラット ビューで表示する
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+デフォルトはすべて展開済み
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+デフォルトですべてのフォルダーが展開された状態でフラ​​ット ビューを開きます
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+このボリュームにはインデックス付きファイルが見つかりません
 </string>
     <string name="flat_view_settings_title">
-Flat View
+フラットビュー
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+再帰的なインデックス付きブラウジングとシステム フォルダーを構成する
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+インデックスが作成されていないストレージ
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+Flat View では、このストレージ ボリュームに完全にインデックスが作成されている必要があります。最初にインデックス作成を実行してください。
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%2$d フォルダにある %1$d ファイル
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+%1$d が選択されました
 </string>
     <string name="flat_view_folder_files_count">
-%1$d files
+%1$d ファイル
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+ファイルの削除
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+%1$d 選択したファイルを削除してもよろしいですか?
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+%1$d ファイルを削除しました
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+フラットビュー設定
 </string>
 </resources>
 

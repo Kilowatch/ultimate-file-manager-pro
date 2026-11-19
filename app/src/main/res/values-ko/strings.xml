@@ -51,7 +51,7 @@ Ultimate File Manager Pro
 네덜란드어(네덜란드)
 </string>
     <string name="language_chinese">
-Chinese (中文)
+중국어(중문)
 </string>
     <string name="language_swedish">
 스웨덴어(스벤스카)
@@ -347,7 +347,7 @@ USB 드라이브
 듀얼 창
 </string>
     <string name="copy_folder_path">
-Copy Folder Path
+폴더 경로 복사
 </string>
     <string name="folder_path_copied">
 폴더 경로가 클립보드에 복사되었습니다.
@@ -451,55 +451,55 @@ UFM 플레이어에서 자동 다음 재생
 필요한 만큼 여러 줄로 전체 이름을 표시합니다
 </string>
     <string name="settings_file_name_display_truncate">
-Single line (Truncated end)
+단일 라인(잘린 끝)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Truncates with ellipsis at end (abc…) without scrolling
+스크롤하지 않고 끝(abc…)에서 줄임표로 자릅니다.
 </string>
     <string name="settings_file_name_display_truncate_middle">
-Single line (Truncate middle)
+단일 라인(가운데 잘림)
 </string>
     <string name="settings_file_name_display_truncate_middle_desc">
-Truncates in middle (abc…xyz.ext) to preserve the end suffix
+끝 접미사를 유지하기 위해 중간(abc…xyz.ext)을 자릅니다.
 </string>
     <string name="settings_marquee_speed_title">
-Scroll Speed
+스크롤 속도
 </string>
     <string name="settings_marquee_speed_slow">
-Slow
+느린
 </string>
     <string name="settings_marquee_speed_normal">
 Normal
 </string>
     <string name="settings_marquee_speed_fast">
-Fast
+빠른
 </string>
     <string name="settings_marquee_loop_title">
-Loop Mode
+루프 모드
 </string>
     <string name="settings_marquee_loop_one_shot">
-One-Shot
+원샷
 </string>
     <string name="settings_marquee_loop_one_shot_desc">
-Scrolls once and stops to save battery
+한 번 스크롤하고 중지하여 배터리를 절약합니다.
 </string>
     <string name="settings_marquee_loop_continuous">
-Continuous
+마디 없는
 </string>
     <string name="settings_marquee_loop_continuous_desc">
-Repeats back and forth continuously
+앞뒤로 계속 반복됩니다
 </string>
     <string name="settings_marquee_scope_title">
-Scroll Scope
+스크롤 범위
 </string>
     <string name="settings_marquee_scope_all">
-All Visible Files
+보이는 모든 파일
 </string>
     <string name="settings_marquee_scope_focused">
-Focused / Selected Only
+집중 / 선택만
 </string>
     <string name="settings_file_name_preview_title">
-Live Preview
+실시간 미리보기
 </string>
     <string name="settings_file_name_preview_sample">
 VeryLongFileName_ProjectReport_2026_Final_v2.docx
@@ -712,7 +712,7 @@ sFTP 타일
 DCIM
 </string>
     <string name="widget_preview_mock_network">
-Home NAS
+홈 NAS
 </string>
     <string name="network_connection_restored_first">
 연결 실패\n
@@ -1206,7 +1206,7 @@ APK
 중복 파일
 </string>
     <string name="analyzer_tab_incomplete">
-Incomplete
+불완전한
 </string>
     <string name="analyzer_tab_junk">
 정크 및 오래된 파일
@@ -1233,10 +1233,10 @@ Incomplete
 %1$s 절약
 </string>
     <string name="analyzer_no_incomplete_files">
-No incomplete or sparse downloads found
+불완전하거나 부족한 다운로드가 없습니다.
 </string>
     <string name="analyzer_incomplete_file_allocated">
-Size on disk: %1$s (%2$.1f%%)
+디스크 크기: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1321,97 +1321,97 @@ Size on disk: %1$s (%2$.1f%%)
 
     <!-- Bulk duplicate deletion & retention strategy -->
     <string name="analyzer_select_all_duplicates">
-Select All Duplicates
+모든 중복 항목 선택
 </string>
     <string name="analyzer_clear_selection">
-Clear
+분명한
 </string>
     <string name="analyzer_delete_all_duplicates">
-Delete All Duplicates
+모든 중복 삭제
 </string>
     <string name="analyzer_delete_selected_count">
-Delete Selected (%1$d)
+선택 항목 삭제(%1$d)
 </string>
     <string name="analyzer_badge_original">
-Original
+원래의
 </string>
     <string name="analyzer_strategy_title">
-Duplicate Retention Strategy
+중복 보존 전략
 </string>
     <string name="analyzer_strategy_oldest">
-Keep Oldest (Original)
+가장 오래된 항목 유지(원본)
 </string>
     <string name="analyzer_strategy_oldest_desc">
-Preserves the oldest file by modification date and deletes newer copies.
+수정 날짜별로 가장 오래된 파일을 보존하고 최신 복사본을 삭제합니다.
 </string>
     <string name="analyzer_strategy_newest">
-Keep Newest
+최신 상태 유지
 </string>
     <string name="analyzer_strategy_newest_desc">
-Preserves the most recently modified file and deletes older copies.
+가장 최근에 수정된 파일을 보존하고 이전 복사본을 삭제합니다.
 </string>
     <string name="analyzer_strategy_remember">
-Remember my choice
+내 선택을 기억해
 </string>
     <string name="analyzer_strategy_most_complete">
-Keep Most Complete
+가장 완벽한 상태 유지
 </string>
     <string name="analyzer_strategy_most_complete_desc">
-Preserves fully downloaded or most allocated files and deletes incomplete copies.
+완전히 다운로드되었거나 가장 많이 할당된 파일을 보존하고 불완전한 복사본을 삭제합니다.
 </string>
     <string name="analyzer_badge_partial">
-Partial (%1$.0f%%)
+부분(%1$.0f%%)
 </string>
     <string name="analyzer_badge_sparse">
-Sparse
+부족한
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+%1$d 중복 파일을 삭제하시겠습니까?
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+각 파일의 원본 사본 1개가 보관됩니다. %1$d개의 중복 사본이 영구적으로 삭제되어 %2$s을(를) 확보합니다.
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+정리 완료
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+%1$d개의 중복 파일을 성공적으로 삭제하고 %2$s의 저장 공간을 확보했습니다.
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+%1$d 파일은 권한 때문에 삭제할 수 없습니다.
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+%2$d개 파일 중 %1$d개 삭제 중…
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d 중복 그룹 · %2$s 저장
 </string>
     <string name="settings_duplicate_retention_title">
-Duplicate Retention Strategy
+중복 보존 전략
 </string>
     <string name="settings_duplicate_retention_dialog_subtitle">
-Choose which copy to preserve when selecting duplicate files for cleanup.
+정리할 중복 파일을 선택할 때 보존할 복사본을 선택합니다.
 </string>
     <string name="settings_duplicate_retention_summary_oldest">
-Keep oldest file (Original)
+가장 오래된 파일 보관(원본)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
-Keep newest file
+최신 파일 유지
 </string>
     <string name="settings_duplicate_retention_summary_most_complete">
-Keep most complete file
+가장 완전한 파일 유지
 </string>
     <string name="settings_duplicate_retention_summary_ask">
-Always ask
+항상 물어보세요
 </string>
     <string name="settings_duplicate_retention_desc_ask">
-Prompt to choose retention strategy each time duplicate files are selected.
+중복 파일을 선택할 때마다 보존 전략을 선택하라는 메시지가 표시됩니다.
 </string>
     <string name="settings_duplicate_retention_toast">
-Duplicate retention strategy set to: %s
+중복된 보관 전략이 다음으로 설정되었습니다: %s
 </string>
     <string name="backup_pref_duplicate_retention">
-Duplicate Retention Strategy
+중복 보존 전략
 </string>
 
     <!-- Theme -->
@@ -1507,7 +1507,7 @@ PIN과 복구 코드를 모두 분실하면 볼트 데이터에 영구히 접근
 PIN을 재설정하려면 16자리 복구 코드를 입력하세요
 </string>
     <string name="vault_recovery_entry_hint">
-XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXX
 </string>
     <string name="vault_recovery_invalid">
 복구 코드가 올바르지 않습니다
@@ -1613,7 +1613,7 @@ AMOLED 블랙
 테마가 적용되었습니다
 </string>
     <string name="material_you_title">
-Material You
+재료 당신
 </string>
     <string name="material_you_summary">
 배경화면의 색상을 사용하여 나만의 스타일을 만드세요.
@@ -1917,13 +1917,13 @@ USB 및 로컬 저장소 드라이브 이름 바꾸기
 앱 실행 시 열릴 화면 선택
 </string>
     <string name="start_screen_last_opened">
-Last Opened Location
+마지막으로 열린 위치
 </string>
     <string name="start_screen_last_opened_desc">
-Reopen where you left off upon app launch
+앱 실행 시 중단한 부분부터 다시 열기
 </string>
     <string name="storage_unavailable_redirect">
-Previous storage location is unavailable. Returned to Storage screen.
+이전 저장 위치를 ​​사용할 수 없습니다. 저장 화면으로 돌아왔습니다.
 </string>
     <string name="start_screen_storage_browser">
 주 메뉴 (기본값)
@@ -2026,13 +2026,13 @@ HTTP, FTP, WebDAV 파일 서버 제어
 
     <!-- Network Transfer Multi-Threading Settings -->
     <string name="settings_network_transfer_threads_title">
-FTP, SFTP &amp; SMB Multi-threading
+FTP, SFTP 및 SMB 멀티스레딩
 </string>
     <string name="settings_network_transfer_threads_dialog_title">
 전송 스레드
 </string>
     <string name="settings_network_transfer_threads_dialog_subtitle">
-Select the number of simultaneous connections for faster network file transfers
+더 빠른 네트워크 파일 전송을 위해 동시 연결 수를 선택하세요.
 </string>
     <string name="settings_network_transfer_threads_subtitle">
 %1$d개 스레드 — 더 빠른 전송을 위한 동시 연결
@@ -2047,40 +2047,40 @@ Select the number of simultaneous connections for faster network file transfers
 %1$d개 스레드 (권장)
 </string>
     <string name="settings_network_transfer_threads_maximum">
-%1$d threads (Maximum)
+%1$d 스레드(최대)
 </string>
     <string name="settings_network_transfer_threads_2">
 2 threads
 </string>
     <string name="settings_network_transfer_threads_4">
-4 threads (Recommended)
+스레드 4개(권장)
 </string>
     <string name="settings_network_transfer_threads_6">
 6 threads
 </string>
     <string name="settings_network_transfer_threads_8">
-8 threads (Maximum)
+스레드 8개(최대)
 </string>
     <string name="settings_network_transfer_threads_desc_1">
-Single connection, transfers files sequentially
+단일 연결, 순차적으로 파일 전송
 </string>
     <string name="settings_network_transfer_threads_desc_2">
-Light parallelism, ideal for slower connections
+느린 연결에 이상적인 가벼운 병렬성
 </string>
     <string name="settings_network_transfer_threads_desc_4">
-Optimal balance of speed and stability for Wi-Fi and LAN
+Wi-Fi와 LAN의 속도와 안정성의 최적 균형
 </string>
     <string name="settings_network_transfer_threads_desc_6">
-High throughput for Gigabit networks and fast Wi-Fi
+기가비트 네트워크 및 빠른 Wi-Fi를 위한 높은 처리량
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+멀티 기가비트 LAN 및 Wi-Fi 7의 최대 처리량
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+%1$d로 설정된 전송 스레드
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+FTP, SFTP 및 SMB 멀티스레딩 설정
 </string>
     <string name="network_field_threads">
 전송 스레드
@@ -2091,28 +2091,28 @@ FTP, SFTP &amp; SMB Multi-threading Settings
 
     <!-- Transfer Multi-Threading Telemetry -->
     <string name="transfer_threads_header">
-Threads (%1$d active)
+스레드(%1$d 활성)
 </string>
     <string name="transfer_threads_header_single">
-Thread (1 active)
+스레드(활성 1개)
 </string>
     <string name="transfer_per_thread_placeholder">
--- MB/s
+--MB/초
 </string>
     <string name="transfer_per_thread_format">
-Per thread: %1$.1f MB/s
+스레드당: %1$.1fMB/s
 </string>
     <string name="transfer_per_thread_single_format">
-Single thread: %1$.1f MB/s
+단일 스레드: %1$.1fMB/s
 </string>
     <string name="transfer_thread_initial">
 Thread %1$d: --
 </string>
     <string name="transfer_thread_speed_item">
-Thread %1$d: %2$.1f MB/s
+스레드 %1$d: %2$.1fMB/s
 </string>
     <string name="transfer_thread_speed_single">
-Thread %1$d: %2$.1f MB/s (Single-threaded)
+스레드 %1$d: %2$.1fMB/s(단일 스레드)
 </string>
 
     <!-- Open Source Licenses -->
@@ -4830,7 +4830,7 @@ TV에서 UFM이 열려 있는 동안에만 활성화됩니다
 A
 </string>
     <string name="hello_world">
-Hello World!
+안녕하세요 월드!
 </string>
     <string name="view_mode">
 보기 모드
@@ -5554,13 +5554,27 @@ TV를 찾을 수 없습니다. TV에서 앱이 열려 있는지 확인하세요.
 재생 / 일시정지
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+대화형 모드
+</string>
+    <string name="svg_transport_mode">
+플레이어 컨트롤
+</string>
+    <string name="svg_restart">
+애니메이션 다시 시작
+</string>
+    <string name="svg_playback_speed">
+재생 속도
+</string>
+    <string name="svg_next_panel">
+다음 패널
+</string>
+    <string name="svg_prev_panel">
+이전 패널
+</string>
+    <string name="svg_tv_interactive_hint">
+대화형 모드 - 플레이어 컨트롤을 보려면 뒤로 또는 메뉴를 누르세요.
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 오디오 트랙
@@ -5869,10 +5883,10 @@ PIN 입력
 UFM에 저장
 </string>
     <string name="share_target_save_to">
-Save to…
+다음에 저장…
 </string>
     <string name="share_target_open_in">
-Open in…
+다음에서 열다…
 </string>
     <string name="share_receive_from">
 %s에서 파일 받는 중
@@ -7030,7 +7044,7 @@ TV로 전송
 %1$s / %2$s
 </string>
     <string name="transfer_speed_mbs">
-%1$.1f MB/s
+%1$.1fMB/초
 </string>
     <string name="cannot_read_source_file">
 원본 파일을 읽을 수 없음
@@ -7377,10 +7391,10 @@ SAF 출력 스트림 실패
 512MB보다 큰 %1$d개의 파일을 찾았습니다.
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+불완전하거나 희박한 다운로드
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+디스크 공간을 소비하는 불완전하거나 희박한 파일 %1$d개를 발견했습니다.
 </string>
     <string name="old_unused_files">
 오래된 사용하지 않는 파일
@@ -7975,10 +7989,18 @@ SMB / FTP 설정
     <string name="sync_disabled">
 동기화 비활성화됨
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+프로필 활성화
+</string>
+    <string name="sync_action_disable">
+프로필 비활성화
+</string>
+    <string name="sync_status_enabled">
+활동적인
+</string>
+    <string name="sync_status_disabled">
+일시중지됨
+</string>
     <string name="sync_delete_profile_confirm_msg">
 %1$s을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
 </string>
@@ -8320,49 +8342,49 @@ Android 기기
 중복
 </string>
     <string name="whatsapp">
-WhatsApp
+왓츠앱
 </string>
     <string name="whatsapp_business">
-WhatsApp Business
+WhatsApp 비즈니스
 </string>
     <string name="telegram">
-Telegram
+전보
 </string>
     <string name="instagram">
-Instagram
+인스타그램
 </string>
     <string name="snapchat">
-Snapchat
+스냅챗
 </string>
     <string name="tiktok">
-TikTok
+틱톡
 </string>
     <string name="facebook">
-Facebook
+페이스북
 </string>
     <string name="twitter_x">
-Twitter / X
+트위터 / X
 </string>
     <string name="discord">
-Discord
+불화
 </string>
     <string name="spotify">
-Spotify
+스포티파이
 </string>
     <string name="netflix">
-Netflix
+넷플릭스
 </string>
     <string name="youtube">
-YouTube
+유튜브
 </string>
     <string name="signal">
-Signal
+신호
 </string>
     <string name="viber">
-Viber
+바이버
 </string>
     <string name="line">
-Line
+선
 </string>
     <string name="opening_itemlabel">
 📂 %1$s 열기
@@ -8428,76 +8450,76 @@ DCIM 백업
 사용 중
 </string>
     <string name="android_tv">
-Android TV
+안드로이드 TV
 </string>
     <string name="jcifsng_euagno3">
-jcifs-ng (eu.agno3)
+jcifs-ng(eu.agno3)
 </string>
     <string name="ffmpeg_lgpl_build">
 FFmpeg (LGPL 빌드)
 </string>
     <string name="smbj_hierynomus">
-smbj (hierynomus)
+smbj (히에리노무스)
 </string>
     <string name="apache_commons_net">
-Apache Commons Net
+아파치 커먼즈 넷
 </string>
     <string name="apache_commons_compress">
-Apache Commons Compress
+아파치 커먼즈 압축
 </string>
     <string name="zip4j_netlingalazip4j">
 zip4j (net.lingala.zip4j)
 </string>
     <string name="xz_for_java_orgtukaanixz">
-XZ for Java (org.tukaani.xz)
+Java용 XZ(org.tukaani.xz)
 </string>
     <string name="public_domain">
 퍼블릭 도메인
 </string>
     <string name="apache_poi">
-Apache POI
+아파치 POI
 </string>
     <string name="nanohttpd">
-NanoHTTPD
+나노HTTPD
 </string>
     <string name="google_firebase_analytics">
-Google Firebase Analytics
+구글 파이어베이스 분석
 </string>
     <string name="google_billing_library">
-Google Billing Library
+Google 결제 라이브러리
 </string>
     <string name="google_play_review_library">
-Google Play Review Library
+Google Play 리뷰 라이브러리
 </string>
     <string name="androidx_libraries">
-AndroidX Libraries
+AndroidX 라이브러리
 </string>
     <string name="viewpager2">
 ViewPager2
 </string>
     <string name="libadbandroid_comgithubmuntashirakon">
-libadb-android (com.github.MuntashirAkon)
+libadb-안드로이드 (com.github.MuntashirAkon)
 </string>
     <string name="bouncycastle_orgbouncycastle">
-BouncyCastle (org.bouncycastle) · v1.83
+BouncyCastle(org.bouncycastle) · v1.83
 </string>
     <string name="apache_sshd_core">
-Apache MINA SSHD
+아파치 MINA SSHD
 </string>
     <string name="eddsa_java">
-EdDSA for Java
+Java용 EdDSA
 </string>
     <string name="slf4j_android">
-SLF4J Android
+SLF4J 안드로이드
 </string>
     <string name="androidsvg_comcaverock">
-AndroidSVG (com.caverock)
+AndroidSVG(com.caverock)
 </string>
     <string name="coil_iocoilkt">
-Coil (io.coil-kt.coil3)
+코일(io.coil-kt.coil3)
 </string>
     <string name="bouncy_castle_license_mitstyle">
-Bouncy Castle License (MIT-style)
+Bouncy Castle 라이센스(MIT 스타일)
 </string>
     <string name="storage_volume">
 저장소 볼륨
@@ -8509,7 +8531,7 @@ Bouncy Castle License (MIT-style)
 $bytes B
 </string>
     <string name="q1f_mb">
-%.1f MB
+%.1fMB
 </string>
     <string name="sheet_sheetsheetname">
 ═══ 시트: %1$s ═══
@@ -8539,7 +8561,7 @@ $bytes B
 ☕ 감사합니다!
 </string>
     <string name="apng4android_comgithubpenfeizhou">
-APNG4Android (com.github.penfeizhou.android.animation)
+APNG4Android(com.github.penfeizhou.android.animation)
 </string>
     <string name="online_storages_title">
 온라인 저장소
@@ -8615,16 +8637,16 @@ Dropbox에 성공적으로 연결됨
 인증 실패: %1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+인증 실패
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+연결 또는 확인 오류
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+Dropbox에서 인증 코드를 확인할 수 없습니다. 코드가 올바르게 입력되었는지, 만료되지 않았는지, 장치 날짜/시간이 올바른지 확인하세요.
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+기기 날짜 및 시간 오류가 감지되었습니다. TV 시스템 날짜/시간이 과거로 설정되어 있어 Dropbox에 안전하게 연결할 수 없습니다. Android TV 설정에서 정확한 날짜와 시간을 설정해 주세요.
 </string>
     <string name="dropbox_auth_verifying">
 코드 확인 중…
@@ -8776,7 +8798,7 @@ Box 인증
 고급 접근 권한
 </string>
     <string name="shizuku_subtitle">
-Porter / Shizuku / Shevery
+포터 / 시즈쿠 / 셰버리
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
@@ -8909,19 +8931,19 @@ Android/data 및 obb에 대한 전체 읽기/쓰기 액세스
 사용 가능한 관리자
 </string>
     <string name="shizuku_manager_shizuku_title">
-Shizuku
+시즈쿠
 </string>
     <string name="shizuku_manager_shizuku_desc">
 GitHub의 표준 높은 권한 서비스
 </string>
     <string name="shizuku_manager_shevery_title">
-Shevery
+셰버리
 </string>
     <string name="shizuku_manager_shevery_desc">
 가볍고 빠른 대안
 </string>
     <string name="shizuku_manager_porter_title">
-Porter
+문지기
 </string>
     <string name="shizuku_manager_porter_desc">
 활발히 유지 관리되는 Shizuku 후속 프로젝트
@@ -8951,16 +8973,16 @@ Porter가 설치되어 있지만 서비스가 실행 중이 아닙니다. 연결
 고급 권한 확인 중…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+포터 받기
 </string>
     <string name="elevated_prerelease_badge">
 사전 출시
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+시즈쿠 받기
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+셰베리를 얻으세요
 </string>
     <string name="shizuku_open_manager">
 %1$s 관리자 열기
@@ -8969,7 +8991,7 @@ Get Shevery
 3단계 설정 가이드
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1. 설치 관리자
 </string>
     <string name="shizuku_step_2">
 2. 서비스 시작
@@ -9008,17 +9030,23 @@ ADB / 무선 디버깅
 다운로드 및 설치 (%1$s)
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+높은 액세스 권한을 연결 해제하시겠습니까?
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+이렇게 하면 UFM에서 %1$s 높은 액세스가 연결 해제됩니다. 언제든지 다시 활성화할 수 있습니다.
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+연결 끊기
 </string>
-    <string name="shizuku_allow_app_access">Allow app access</string>
-    <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
-    <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
+    <string name="shizuku_allow_app_access">
+앱 액세스 허용
+</string>
+    <string name="shizuku_app_access_granted_toast">
+%1$s에 대한 높은 액세스 권한이 활성화되었습니다.
+</string>
+    <string name="shizuku_app_access_revoked">
+%1$s에 대한 높은 액세스 권한이 비활성화되었습니다.
+</string>
     <string name="elevated_fetching_toast">
 최신 %1$s 릴리스 확인 중…
 </string>
@@ -9315,7 +9343,7 @@ FTP 또는 SFTP 서버가 활성 상태일 때 표시
 탭하여 관리
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+파일 서버 중지됨: Android 6시간 실행 제한에 도달했습니다.
 </string>
     <string name="opening_file_server">
 파일 서버 여는 중…
@@ -9623,34 +9651,34 @@ URL은 http:// 또는 https://로 시작해야 합니다.
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+신뢰할 수 없는/자체 서명된 인증서 허용
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+자체 서명 또는 개인 CA SSL 인증서 수락(로컬 NAS 장치에 공통)
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+비밀번호(현재 상태로 유지하려면 비워두세요)
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+신뢰할 수 없는 SSL 인증서
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+%1$s의 서버가 신뢰할 수 없거나 자체 서명된 SSL 인증서를 제공했습니다. 이 연결을 신뢰하기 전에 아래 인증서 세부정보를 확인하세요.
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+주제
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+발급자
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+효력
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+SHA-256 지문
 </string>
     <string name="webdav_cert_dialog_trust">
-Trust &amp; Connect
+신뢰 및 연결
 </string>
 
     <!-- About Section -->
@@ -9682,7 +9710,7 @@ support@kilowatch.co.za
 모바일
 </string>
     <string name="flavor_tv">
-Android TV
+안드로이드 TV
 </string>
     <string name="about_tile_subtitle">
 앱 정보 및 세부사항
@@ -10191,7 +10219,7 @@ WiFi 리모컨 연결 해제됨
 메모장 열기
 </string>
     <string name="notepad_default_name">
-Notepad.txt
+메모장.txt
 </string>
     <string name="save_note">
 저장
@@ -10492,7 +10520,7 @@ PDF(다중 페이지 전용)
 카메라
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+이 기기에서 카메라 앱을 찾을 수 없습니다.
 </string>
     <string name="scanner_capture_gallery">
 갤러리에서 선택
@@ -10789,7 +10817,7 @@ FTP 서버 프로필
 어두움
 </string>
     <string name="default_icon_color_section_amoled">
-AMOLED
+아몰레드
 </string>
     <string name="default_icon_color_preview_label">
 미리보기
@@ -11606,7 +11634,7 @@ UFM 로컬 복사 센터
 대상 기기 유형 선택:
 </string>
     <string name="target_tv">
-Android TV / Fire TV
+안드로이드 TV / 파이어 TV
 </string>
     <string name="target_tv_desc">
 무선 ADB 푸시를 사용하여 Android TV로 파일 직접 복사
@@ -11630,7 +11658,7 @@ PC, 태블릿 또는 브라우저가 있는 모바일의 경우:
 세션 PIN
 </string>
     <string name="adb_device_badge">
-Android TV (ADB)
+안드로이드 TV(ADB)
 </string>
     <string name="connecting_to_device">
 %1$s에 연결하는 중…
@@ -11744,12 +11772,12 @@ Ultimate File Manager Pro
 파일 전송 중…
 </string>
     <string name="pro_badge">
-PRO
+찬성
 </string>
 
     <!-- RClone Cloud Storage Support -->
     <string name="add_online_storage_rclone">
-RClone
+RC클론
 </string>
     <string name="add_online_storage_auth_rclone">
 스토리지 설정
@@ -11824,7 +11852,7 @@ Mega
 Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
-Premiumize
+프리미엄화하다
 </string>
     <string name="rclone_provider_box">
 Box
@@ -11848,7 +11876,7 @@ Box
 Koofr 계정 설정에서 생성된 앱 비밀번호를 사용하세요. 로그인 비밀번호가 아닙니다.
 </string>
     <string name="rclone_provider_protondrive">
-Proton Drive
+양성자 드라이브
 </string>
     <string name="rclone_field_username">
 사용자 이름 또는 이메일
@@ -11948,100 +11976,100 @@ PiP(화면 속 화면)
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+자막 스타일
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+인앱 자막 모양, 글꼴 크기 및 시스템 캡션 동기화를 구성합니다.
 </string>
     <string name="subtitle_style_summary_system">
-System caption style
+시스템 캡션 스타일
 </string>
     <string name="subtitle_style_summary_custom">
-UFM custom style (%1$s)
+UFM 맞춤 스타일(%1$s)
 </string>
     <string name="subtitle_style_dialog_title">
-Subtitle Style
+자막 스타일
 </string>
     <string name="subtitle_style_mode_system">
-System Caption Style
+시스템 캡션 스타일
 </string>
     <string name="subtitle_style_mode_system_desc">
-Follows device Accessibility caption settings even when system captions are disabled.
+시스템 캡션이 비활성화된 경우에도 장치 접근성 캡션 설정을 따릅니다.
 </string>
     <string name="subtitle_style_mode_custom">
-UFM Custom Style
+UFM 커스텀 스타일
 </string>
     <string name="subtitle_style_mode_custom_desc">
-Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+조정 가능한 크기, 색상, 가장자리 효과 및 위치 지정 기능을 갖춘 맞춤형 인앱 스타일.
 </string>
     <string name="subtitle_style_open_system">
-Open Device Caption Settings
+장치 캡션 설정 열기
 </string>
     <string name="subtitle_style_system_unavailable">
-System caption settings not available on this device; using UFM style.
+이 장치에서는 시스템 캡션 설정을 사용할 수 없습니다. UFM 스타일을 사용합니다.
 </string>
     <string name="subtitle_style_preview_title">
-Preview
+시사
 </string>
     <string name="subtitle_style_preview_line1">
 Ultimate File Manager Pro
 </string>
     <string name="subtitle_style_preview_line2">
-Live subtitle preview • Crisp text styling
+실시간 자막 미리보기 • 선명한 텍스트 스타일
 </string>
     <string name="subtitle_style_text_size">
-Text size
+텍스트 크기
 </string>
     <string name="subtitle_style_text_color">
-Text color
+텍스트 색상
 </string>
     <string name="subtitle_style_bg_color">
-Background opacity
+배경 불투명도
 </string>
     <string name="subtitle_style_edge_type">
-Edge effect
+가장자리 효과
 </string>
     <string name="subtitle_style_edge_none">
 None
 </string>
     <string name="subtitle_style_edge_outline">
-Outline
+개요
 </string>
     <string name="subtitle_style_edge_drop_shadow">
-Drop shadow
+그림자
 </string>
     <string name="subtitle_style_edge_raised">
-Raised
+높은
 </string>
     <string name="subtitle_style_edge_depressed">
-Depressed
+우울한
 </string>
     <string name="subtitle_style_bottom_margin">
-Bottom margin
+아래쪽 여백
 </string>
     <string name="subtitle_style_apply_embedded">
-Apply embedded styles (ASS/SSA/TTML)
+포함된 스타일 적용(ASS/SSA/TTML)
 </string>
     <string name="subtitle_style_apply_embedded_desc">
-When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+비활성화되면 UFM 자막 스타일이 내장된 글꼴 및 색상 태그를 재정의하여 가독성을 최적화합니다.
 </string>
     <string name="subtitle_style_color_yellow">
-Yellow
+노란색
 </string>
     <string name="subtitle_style_color_white">
-White
+하얀색
 </string>
     <string name="subtitle_style_color_cyan">
-Cyan
+청록색
 </string>
     <string name="subtitle_style_color_green">
-Green
+녹색
 </string>
     <string name="subtitle_style_color_magenta">
-Magenta
+마젠타
 </string>
     <string name="subtitle_style_color_orange">
-Orange
+주황색
 </string>
     <string name="subtitle_style_bg_transparent">
 None
@@ -12056,13 +12084,13 @@ None
 75%
 </string>
     <string name="subtitle_style_bg_100">
-Solid
+단단한
 </string>
     <string name="player_track_sheet_subtitle_style">
-Subtitle Style…
+자막 스타일…
 </string>
     <string name="player_track_sheet_subtitle_style_desc">
-Customize colors, size &amp; appearance
+색상, 크기, 모양 맞춤설정
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -12103,10 +12131,10 @@ Customize colors, size &amp; appearance
 반복 끄기
 </string>
     <string name="player_toast_repeat_all">
-Repeat all
+모두 반복
 </string>
     <string name="player_toast_repeat_one">
-Repeat current track
+현재 트랙 반복
 </string>
     <string name="player_toast_audio_track">
 오디오 트랙
@@ -12265,13 +12293,13 @@ UFM 플레이어 설정
 크기:
 </string>
     <string name="properties_label_size_on_disk">
-Size on disk:
+디스크 크기:
 </string>
     <string name="properties_sparse_badge">
-Partial Download (Sparse)
+부분 다운로드(스파스)
 </string>
     <string name="properties_sparse_allocated_pct">
-%1$.1f%% allocated
+%1$.1f%% 할당됨
 </string>
     <string name="properties_label_contains">
 포함:
@@ -12986,61 +13014,61 @@ UFM이 마지막 사용 중 응답하지 않았습니다. 문제 해결을 위�
 </string>
     <!-- Music Tag Online Sync & High-Res Cover Picker -->
     <string name="music_tag_btn_search_online_cover">
-Search Online Art
+온라인 예술 검색
 </string>
     <string name="music_tag_btn_musicbrainz_sync">
-Identify Online (MusicBrainz)
+온라인 식별(MusicBrainz)
 </string>
     <string name="music_tag_cover_picker_title">
-Search Online Artwork
+온라인 작품 검색
 </string>
     <string name="music_tag_search_covers_hint">
-Artist and Album name…
+아티스트와 앨범 이름…
 </string>
     <string name="music_tag_searching_artwork">
-Searching Apple Music, Deezer &amp; Cover Art Archive…
+Apple Music, Deezer 및 커버 아트 아카이브 검색 중…
 </string>
     <string name="music_tag_no_artwork_found">
-No artwork found for this query
+이 검색어에 대한 예술작품을 찾을 수 없습니다.
 </string>
     <string name="music_tag_cover_applied">
-Applied online album artwork
+온라인 앨범아트 적용
 </string>
     <string name="music_tag_cover_download_error">
-Failed to download artwork
+작품을 다운로드하지 못했습니다.
 </string>
     <string name="music_tag_musicbrainz_search_title">
-MusicBrainz Tag Search
+MusicBrainz 태그 검색
 </string>
     <string name="music_tag_search_query_hint">
-Track title or Album name…
+트랙 제목 또는 앨범 이름…
 </string>
     <string name="music_tag_searching_musicbrainz">
-Searching MusicBrainz…
+MusicBrainz 검색 중…
 </string>
     <string name="music_tag_no_musicbrainz_results">
-No matching recordings or releases found
+일치하는 녹음 또는 릴리스가 없습니다.
 </string>
     <string name="music_tag_diff_title">
-Review Online Tags
+온라인 태그 검토
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+추적에 적용할 필드 선택
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+선택한 태그 적용
 </string>
     <string name="music_tag_select_all">
-Select All
+모두 선택
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+녹음
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+앨범 / 발매
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d 트랙
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -13429,7 +13457,7 @@ EXIF 일괄 이름 변경
 + {YYYY}
 </string>
     <string name="exif_rename_token_month">
-+ {MM}
++ {월}
 </string>
     <string name="exif_rename_token_day">
 + {DD}
@@ -13438,10 +13466,10 @@ EXIF 일괄 이름 변경
 + {hh}{mm}{ss}
 </string>
     <string name="exif_rename_token_model">
-+ {MODEL}
++ {모델}
 </string>
     <string name="exif_rename_token_original">
-+ {ORIGINAL}
++ {원본}
 </string>
     <string name="exif_rename_token_seq">+ {#}</string>
     <string name="exif_rename_preview_header">
@@ -14239,19 +14267,19 @@ UFM이 액세스하고 관리할 수 있는 장치의 폴더를 선택하세요.
 이 저장소의 폴더에 대한 액세스 권한을 부여하세요.
 </string>
     <string name="action_remove_folder_from_storage">
-Remove Folder
+폴더 제거
 </string>
     <string name="action_remove_folder_from_storage_desc">
-Remove mounted folder access from this storage
+이 저장소에서 마운트된 폴더 액세스를 제거하세요.
 </string>
     <string name="dialog_remove_folders_title">
-Remove Mounted Folders
+마운트된 폴더 제거
 </string>
     <string name="dialog_remove_folders_desc">
-Select a folder to remove access from this storage. Your files will not be deleted.
+이 저장소에서 액세스 권한을 제거하려면 폴더를 선택하세요. 귀하의 파일은 삭제되지 않습니다.
 </string>
     <string name="no_mounted_folders_hint">
-No mounted folders remaining for this storage.
+이 저장소에 마운트된 폴더가 남아 있지 않습니다.
 </string>
     <string name="restricted_storage_empty_title">
 모든 파일 액세스 필요
@@ -14695,10 +14723,10 @@ AndroidManifest.xml을 디코딩할 수 없습니다.
 ✗ 파일이 다름(다른 크기: %1$s 및 %2$s)
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ 일치하는 헤더 및 데이터 — 불완전한 다운로드(%1$.1f%% 대 %2$.1f%% 할당됨)
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
-Size on disk: %1$s (%2$.1f%%)
+디스크 크기: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 동일한 크기(%1$s). 콘텐츠 확인을 위한 해싱…
@@ -15017,16 +15045,16 @@ PIN이나 비밀번호를 잊으셨나요? 복구 키 입력
     
     <!-- SAF & External File Pickers Exposure -->
     <string name="expose_to_saf_title">
-Expose to SAF &amp; Pickers
+SAF 및 선택기에 노출
 </string>
     <string name="expose_to_saf_subtitle">
 시스템 파일 선택기, Projectivy Launcher 배경화면 및 외부 앱에 표시됩니다.
 </string>
     <string name="expose_to_saf_network_hint">
-Allows launchers and external apps (like Projectivy) to browse folders and stream media from this network share.
+실행 프로그램 및 외부 앱(예: Projectivy)이 이 네트워크 공유에서 폴더를 찾아보고 미디어를 스트리밍할 수 있도록 허용합니다.
 </string>
     <string name="expose_to_saf_cloud_hint">
-Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
+런처 및 외부 앱(예: Projectivy)이 이 온라인 저장소에서 폴더를 찾아보고 미디어를 스트리밍할 수 있도록 허용합니다.
 </string>
     <!-- Archive Modification (Copy / Move into Archive) -->
     <string name="action_add_to_existing_archive">
@@ -15436,7 +15464,7 @@ Allows launchers and external apps (like Projectivy) to browse folders and strea
 실시간 미리보기
 </string>
     <string name="live_preview_sample_filename">
-Quarterly_Financial_Report_2026_Final.pdf
+분기별_금융_보고서_2026_최종.pdf
 </string>
     <string name="live_preview_sample_info">
 3.8 MB · 오늘 13:45에 수정됨
@@ -15585,240 +15613,358 @@ USB OTG 드라이브 시뮬레이션
 </string>
 
     <!-- Grid Text Placement Settings -->
-    <string name="settings_grid_text_position_title">Grid Text Placement</string>
-    <string name="settings_grid_text_position_subtitle">Position file names below or overlaid on grid items</string>
-    <string name="settings_grid_text_position_below">Below Block (Default)</string>
-    <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
-    <string name="backup_pref_grid_text_position">Grid text placement settings</string>
-    <string name="backup_pref_view_styles">View density &amp; preset styles</string>
+    <string name="settings_grid_text_position_title">
+그리드 텍스트 배치
+</string>
+    <string name="settings_grid_text_position_subtitle">
+그리드 항목 아래 또는 위에 파일 이름을 배치합니다.
+</string>
+    <string name="settings_grid_text_position_below">
+블록 아래(기본값)
+</string>
+    <string name="settings_grid_text_position_overlay">
+블록 위에 겹쳐짐
+</string>
+    <string name="backup_pref_grid_text_position">
+그리드 텍스트 배치 설정
+</string>
+    <string name="backup_pref_view_styles">
+밀도 및 사전 설정 스타일 보기
+</string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
-    <string name="open_as">Open As…</string>
-    <string name="open_as_desc">Choose a viewer or player to open this file</string>
-    <string name="presentation_viewer">Presentation Viewer</string>
-    <string name="slide_counter">Slide %1$d of %2$d</string>
-    <string name="open_in_powerpoint">Open in Presentation App</string>
-    <string name="open_as_text">Text / Code Viewer</string>
-    <string name="open_as_text_desc">Built-in code &amp; text editor with syntax highlighting</string>
-    <string name="open_as_hex">Hex / Binary Viewer</string>
-    <string name="open_as_hex_desc">Raw byte hex dump and binary inspector</string>
-    <string name="open_as_presentation">Presentation / Slide Deck</string>
-    <string name="open_as_presentation_desc">Built-in slide deck viewer with speaker notes</string>
-    <string name="open_as_spreadsheet">Spreadsheet / Table</string>
-    <string name="open_as_spreadsheet_desc">Built-in spreadsheet table viewer</string>
-    <string name="open_as_image">Image Viewer</string>
-    <string name="open_as_image_desc">High-resolution photo viewer with zoom &amp; pan</string>
-    <string name="open_as_audio">Audio Player</string>
-    <string name="open_as_audio_desc">Media3 audio player with background playback</string>
-    <string name="open_as_video">Video Player</string>
-    <string name="open_as_video_desc">Media3 hardware-accelerated video player</string>
-    <string name="open_as_archive">Archive Browser</string>
-    <string name="open_as_archive_desc">Explore ZIP, 7Z, TAR, RAR, and compressed files</string>
-    <string name="open_as_other">Choose External App…</string>
-    <string name="open_as_other_desc">Open with an installed third-party app</string>
-    <string name="speaker_notes">Speaker Notes</string>
-    <string name="no_slides_found">No slides found in this presentation</string>
-    <string name="next_slide">Next Slide</string>
-    <string name="prev_slide">Previous Slide</string>
-    <string name="view_raw_text">View as Raw Text</string>
-    <string name="ufm_slide_deck_viewer">UFM Slide Deck</string>
-    <string name="open_with_presentation_app">Presentation App (PowerPoint / Slides)</string>
-    <string name="open_with_presentation_app_desc">Open in Microsoft PowerPoint, Google Slides, or office suite</string>
-    <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
+    <string name="open_as">
+다른 이름으로 열기…
+</string>
+    <string name="open_as_desc">
+이 파일을 열려면 뷰어나 플레이어를 선택하세요.
+</string>
+    <string name="presentation_viewer">
+프레젠테이션 뷰어
+</string>
+    <string name="slide_counter">
+%2$d의 %1$d 슬라이드
+</string>
+    <string name="open_in_powerpoint">
+프레젠테이션 앱에서 열기
+</string>
+    <string name="open_as_text">
+텍스트/코드 뷰어
+</string>
+    <string name="open_as_text_desc">
+구문 강조 기능이 포함된 내장 코드 및 텍스트 편집기
+</string>
+    <string name="open_as_hex">
+16진수/바이너리 뷰어
+</string>
+    <string name="open_as_hex_desc">
+원시 바이트 16진수 덤프 및 바이너리 검사기
+</string>
+    <string name="open_as_presentation">
+프리젠테이션/슬라이드 덱
+</string>
+    <string name="open_as_presentation_desc">
+발표자 노트가 포함된 슬라이드 데크 뷰어 내장
+</string>
+    <string name="open_as_spreadsheet">
+스프레드시트/테이블
+</string>
+    <string name="open_as_spreadsheet_desc">
+내장 스프레드시트 테이블 뷰어
+</string>
+    <string name="open_as_image">
+이미지 뷰어
+</string>
+    <string name="open_as_image_desc">
+확대/축소 및 이동 기능을 갖춘 고해상도 사진 뷰어
+</string>
+    <string name="open_as_audio">
+오디오 플레이어
+</string>
+    <string name="open_as_audio_desc">
+백그라운드 재생 기능이 있는 Media3 오디오 플레이어
+</string>
+    <string name="open_as_video">
+비디오 플레이어
+</string>
+    <string name="open_as_video_desc">
+Media3 하드웨어 가속 비디오 플레이어
+</string>
+    <string name="open_as_archive">
+아카이브 브라우저
+</string>
+    <string name="open_as_archive_desc">
+ZIP, 7Z, TAR, RAR 및 압축 파일 탐색
+</string>
+    <string name="open_as_other">
+외부 앱 선택…
+</string>
+    <string name="open_as_other_desc">
+설치된 타사 앱으로 열기
+</string>
+    <string name="speaker_notes">
+발표자 노트
+</string>
+    <string name="no_slides_found">
+이 프레젠테이션에는 슬라이드가 없습니다.
+</string>
+    <string name="next_slide">
+다음 슬라이드
+</string>
+    <string name="prev_slide">
+이전 슬라이드
+</string>
+    <string name="view_raw_text">
+원시 텍스트로 보기
+</string>
+    <string name="ufm_slide_deck_viewer">
+UFM 슬라이드 데크
+</string>
+    <string name="open_with_presentation_app">
+프레젠테이션 앱(PowerPoint/슬라이드)
+</string>
+    <string name="open_with_presentation_app_desc">
+Microsoft PowerPoint, Google Slides 또는 Office 제품군에서 열기
+</string>
+    <string name="ufm_slide_viewer_desc">
+UFM에서 슬라이드, 표지 썸네일, 메모 보기
+</string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
-    <string name="action_open_with">Open With…</string>
-    <string name="action_open_as">Open As…</string>
-    <string name="toolbar_open_with">Open With</string>
-    <string name="toolbar_open_as">Open As</string>
-    <string name="action_extract_subtitles">Extract Subtitles</string>
-    <string name="action_extract_audio">Extract Audio</string>
+    <string name="action_open_with">
+다음으로 열기…
+</string>
+    <string name="action_open_as">
+다른 이름으로 열기…
+</string>
+    <string name="toolbar_open_with">
+다음으로 열기
+</string>
+    <string name="toolbar_open_as">
+다음으로 열기
+</string>
+    <string name="action_extract_subtitles">
+자막 추출
+</string>
+    <string name="action_extract_audio">
+오디오 추출
+</string>
     <string name="action_convert_to_mp4">
-Convert to MP4
+MP4로 변환
 </string>
-    <string name="toolbar_extract_subtitles">Extract Subtitles</string>
-    <string name="toolbar_extract_audio">Extract Audio</string>
+    <string name="toolbar_extract_subtitles">
+자막 추출
+</string>
+    <string name="toolbar_extract_audio">
+오디오 추출
+</string>
     <string name="toolbar_convert_to_mp4">
-Convert to MP4
+MP4로 변환
 </string>
-    <string name="extracting_subtitles">Extracting subtitle track…</string>
-    <string name="extracting_audio">Extracting audio track…</string>
+    <string name="extracting_subtitles">
+자막 트랙 추출 중…
+</string>
+    <string name="extracting_audio">
+오디오 트랙 추출 중…
+</string>
     <string name="convert_to_mp4_progress">
-Converting video to MP4…
+비디오를 MP4로 변환하는 중…
 </string>
     <string name="convert_to_mp4_success">
-Video converted to %1$s
+%1$s(으)로 변환된 동영상
 </string>
     <string name="convert_to_mp4_failed">
-Failed to convert video
+비디오 변환에 실패했습니다.
 </string>
     <string name="convert_to_mp4_title">
-Convert to MP4
+MP4로 변환
 </string>
     <string name="convert_to_mp4_confirm">
-Convert \"%1$s\" to universal MP4 format?
+\'%1$s\'을 범용 MP4 형식으로 변환하시겠습니까?
 </string>
-    <string name="subtitles_extracted_success">Subtitles extracted successfully.</string>
-    <string name="audio_extracted_success">Audio extracted successfully.</string>
+    <string name="subtitles_extracted_success">
+자막이 성공적으로 추출되었습니다.
+</string>
+    <string name="audio_extracted_success">
+오디오가 성공적으로 추출되었습니다.
+</string>
     <string name="audio_format_universal">
-Universal M4A
+범용 M4A
 </string>
     <string name="audio_format_original">
-Original Stream
+원본 스트림
 </string>
     <string name="audio_format_universal_desc">
-High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+고품질 AAC(.m4a) — 휴대폰, 자동차, 음악 앱 어디에서나 재생됩니다.
 </string>
     <string name="audio_format_original_desc">
-Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+무손실 직접 스트림 복사(.eac3, .dts, .ac3, .flac)
 </string>
     <string name="codec_unsupported_title">
-Audio Codec Not Supported
+오디오 코덱이 지원되지 않음
 </string>
     <string name="codec_unsupported_message">
-This device lacks a native hardware decoder for %1$s audio.\n
+이 장치에는 %1$s 오디오에 대한 기본 하드웨어 디코더가 없습니다.\n
 \n
-Would you like to convert it to Universal M4A (AAC) for seamless playback?
+원활한 재생을 위해 AAC(Universal M4A)로 변환하시겠습니까?
 </string>
     <string name="convert_and_play">
-Convert &amp; Play
+변환 및 플레이
 </string>
     <string name="converting_audio">
-Converting audio to M4A…
+오디오를 M4A로 변환하는 중…
 </string>
     <string name="convert_to_m4a">
-Convert to M4A
+M4A로 변환
 </string>
-    <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
-    <string name="media_technical_details">Media Stream Details</string>
-    <string name="media_format">Container</string>
-    <string name="media_bitrate">Overall Bitrate</string>
-    <string name="error_generic">An error occurred</string>
-    <string name="failed_to_open_file">Failed to open file</string>
-    <string name="slide_badge_format">Slide %1$d</string>
-    <string name="slide_counter_format">Slide %1$d of %2$d</string>
-    <string name="no_app_to_open_file">No app found to open this file</string>
+    <string name="no_subtitles_found_in_video">
+이 동영상에는 삽입된 자막 트랙이 없습니다.
+</string>
+    <string name="media_technical_details">
+미디어 스트림 세부정보
+</string>
+    <string name="media_format">
+컨테이너
+</string>
+    <string name="media_bitrate">
+전체 비트레이트
+</string>
+    <string name="error_generic">
+오류가 발생했습니다
+</string>
+    <string name="failed_to_open_file">
+파일을 열지 못했습니다.
+</string>
+    <string name="slide_badge_format">
+슬라이드 %1$d
+</string>
+    <string name="slide_counter_format">
+%2$d의 %1$d 슬라이드
+</string>
+    <string name="no_app_to_open_file">
+이 파일을 열 수 있는 앱을 찾을 수 없습니다.
+</string>
     <string name="select_subtitle_track">
-Select Subtitle Track
+자막 트랙 선택
 </string>
     <string name="extract_all_subtitles">
-Extract All Tracks
+모든 트랙 추출
 </string>
     <string name="extract_all_subtitles_desc">
-Extract all %1$d subtitle tracks into separate files
+모든 %1$d 자막 트랙을 별도의 파일로 추출
 </string>
     <string name="subtitles_extracted_multiple_success">
-Successfully extracted %1$d subtitle files.
+%1$d 자막 파일을 성공적으로 추출했습니다.
 </string>
     <string name="select_audio_track">
-Select Audio Track
+오디오 트랙 선택
 </string>
     <string name="extract_all_audio">
-Extract All Tracks
+모든 트랙 추출
 </string>
     <string name="extract_all_audio_desc">
-Extract all %1$d audio tracks into separate files
+모든 %1$d 오디오 트랙을 별도의 파일로 추출
 </string>
     <string name="audio_extracted_multiple_success">
-Successfully extracted %1$d audio files.
+%1$d 오디오 파일을 성공적으로 추출했습니다.
 </string>
     <string name="no_audio_found_in_video">
-No audio tracks found in this video
+이 동영상에는 오디오 트랙이 없습니다.
 </string>
 
     <!-- Floating Bottom Bar Dock -->
     <string name="floating_bar_settings_title">
-Floating Bottom Bar
+플로팅 하단 바
 </string>
     <string name="floating_bar_settings_subtitle">
-Show a modern floating dock at the bottom of the main menu for quick access
+빠른 액세스를 위해 메인 메뉴 하단에 현대적인 플로팅 도크를 표시합니다.
 </string>
     <string name="floating_bar_manage_title">
-Manage Floating Bar
+플로팅바 관리
 </string>
     <string name="floating_bar_manage_subtitle">
-Add, remove, and reorder quick-access shortcuts
+빠른 액세스 바로 가기 추가, 제거 및 재정렬
 </string>
     <string name="floating_bar_enable_switch">
-Enable Floating Bar
+플로팅 바 활성화
 </string>
     <string name="floating_bar_enable_desc">
-Docked tiles appear in the bottom floating bar and are hidden from the main menu
+도킹된 타일은 하단 부동 표시줄에 표시되며 기본 메뉴에서는 숨겨집니다.
 </string>
     <string name="floating_bar_docked_section">
-Docked Items
+도킹된 항목
 </string>
     <string name="floating_bar_docked_hint">
-Drag handle to reorder. Tap Remove to return item to main menu.
+재정렬하려면 핸들을 드래그하세요. 항목을 기본 메뉴로 되돌리려면 제거를 탭하세요.
 </string>
     <string name="floating_bar_available_section">
-Available Tiles
+사용 가능한 타일
 </string>
     <string name="floating_bar_available_hint">
-Tap + to add a tile to the floating bottom bar
+부동 하단 표시줄에 타일을 추가하려면 +를 탭하세요.
 </string>
     <string name="floating_bar_empty_docked">
-No items docked yet. Add tiles from the list below.
+아직 도킹된 항목이 없습니다. 아래 목록에서 타일을 추가하세요.
 </string>
     <string name="floating_bar_empty_available">
-All available tiles have been added to the floating bar.
+사용 가능한 모든 타일이 플로팅 바에 추가되었습니다.
 </string>
     <string name="floating_bar_add">
-Add
+추가하다
 </string>
     <string name="floating_bar_remove">
-Remove
+제거하다
 </string>
     <string name="backup_pref_floating_bar">
-Floating Bottom Bar
+플로팅 하단 바
 </string>
 
     <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
     <string name="quick_access_title">
-Quick Access
+빠른 액세스
 </string>
     <string name="quick_access_mode_title">
-Quick Access Style
+빠른 액세스 스타일
 </string>
     <string name="quick_access_mode_subtitle">
-Choose how quick-access shortcuts are presented
+빠른 액세스 바로가기가 표시되는 방식을 선택하세요.
 </string>
     <string name="quick_access_mode_disabled">
-Disabled
+장애가 있는
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+하단 플로팅 바
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+가장자리 스와이프 메뉴
 </string>
     <string name="quick_access_edge_title">
-Swipe Edge
+가장자리 스와이프
 </string>
     <string name="quick_access_edge_left">
-Left Edge
+왼쪽 가장자리
 </string>
     <string name="quick_access_edge_right">
-Right Edge
+오른쪽 가장자리
 </string>
     <string name="quick_access_edge_handle_title">
-Edge Handle Indicator
+엣지 핸들 표시기
 </string>
     <string name="quick_access_edge_handle_desc">
-Show a subtle indicator on the screen edge for easy opening
+쉽게 열 수 있도록 화면 가장자리에 미묘한 표시기를 표시합니다.
 </string>
     <string name="quick_access_hide_tiles_title">
-Hide Docked Tiles on Main Menu
+메인 메뉴에서 도킹된 타일 숨기기
 </string>
     <string name="quick_access_hide_tiles_desc">
-Keep the main dashboard clean by hiding tiles docked in Quick Access
+Quick Access에 도킹된 타일을 숨겨 메인 대시보드를 깔끔하게 유지하세요.
 </string>
     <string name="quick_access_manage_tiles">
-Manage Tiles
+타일 ​​관리
 </string>
     <string name="quick_access_empty_hint">
-No tiles docked yet.\n
-Tap Manage Tiles to add shortcuts.
+아직 도킹된 타일이 없습니다.\n
+바로가기를 추가하려면 타일 관리를 탭하세요.
 </string>
     <string name="quick_access_mode_disabled_desc">빠른 실행 단축키 비활성화</string>
     <string name="quick_access_mode_bottom_bar_desc">메인 메뉴 하단의 모던 플로팅 바</string>
@@ -15829,373 +15975,373 @@ Tap Manage Tiles to add shortcuts.
 
     <!-- Direct Remote Media & Media Operation Worker -->
     <string name="settings_network_media_process_title">
-Network Media Processing
+네트워크 미디어 처리
 </string>
     <string name="settings_network_media_process_subtitle_off">
-Direct stream processing (zero local copy of video)
+직접 스트림 처리(비디오의 로컬 복사본이 없음)
 </string>
     <string name="settings_network_media_process_subtitle_on">
-Copy full video to local storage before processing
+처리하기 전에 전체 비디오를 로컬 저장소에 복사하세요.
 </string>
     <string name="backup_pref_network_media_process">
-Network Media Processing
+네트워크 미디어 처리
 </string>
     <string name="dialog_copy_before_process_title">
-Copy to Local Storage?
+로컬 저장소에 복사하시겠습니까?
 </string>
     <string name="dialog_copy_before_process_msg">
-This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+이 작업은 먼저 네트워크 저장소에서 장치의 로컬 저장소로 \"%1$s\"(%2$s)을 복사합니다.\n
 \n
-Depending on file size and connection speed, this may take some time.\n
+파일 크기와 연결 속도에 따라 시간이 걸릴 수 있습니다.\n
 \n
-Do you want to proceed?
+계속하시겠습니까?
 </string>
     <string name="action_copy_and_proceed">
-Copy &amp; Proceed
+복사 및 진행
 </string>
     <string name="media_operation_channel_name">
-Media Operations
+미디어 운영
 </string>
     <string name="media_operation_channel_desc">
-Background video conversion and track extraction
+배경 영상 변환 및 트랙 추출
 </string>
     <string name="media_op_converting_video">
-Converting Video to MP4…
+비디오를 MP4로 변환하는 중…
 </string>
     <string name="media_op_extracting_audio">
-Extracting Audio Track…
+오디오 트랙 추출 중…
 </string>
     <string name="media_op_extracting_subtitles">
-Extracting Subtitles…
+자막 추출 중…
 </string>
     <string name="media_op_completed_title">
-Media Operation Completed
+미디어 작업 완료
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+미디어 작업 실패
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+원격 비디오를 로컬 캐시로 다운로드하는 중…
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+결과를 원격 폴더에 업로드하는 중…
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+백그라운드에서 계속됩니다. 진행 상황에 대한 알림을 확인하세요.
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+원격 공유는 읽기 전용입니다.
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+공유가 읽기 전용이므로 추출된 파일을 \"%1$s\"에 저장할 수 없습니다.\n
 \n
-Would you like to save it to your local device instead?
+대신 로컬 장치에 저장하시겠습니까?
 </string>
     <string name="action_save_locally">
-Save to Device
+장치에 저장
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+읽기 전용 공유
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+공유 \"%1$s\"은(는) 읽기 전용입니다.\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+추출되거나 변환된 파일은 원격 공유에 다시 저장할 수 없으므로 대신 로컬 다운로드 폴더에 저장됩니다.\n
 \n
-Do you want to proceed?
+계속하시겠습니까?
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+기타 저장소
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+설치된 클라우드 및 문서 제공업체
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+장치에 설치된 타사 문서 제공자에 액세스
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+%1$d 문서 제공업체 사용 가능
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+문서 제공업체 1개 사용 가능
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+타사 문서 제공업체를 찾을 수 없습니다.
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+파일 찾아보기(SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+스토리지 폴더 마운트
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+UFM 네이티브 엔진을 통해 연결
 </string>
     <string name="action_open_app">
-Open App
+앱 열기
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+저장 위치 추가
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+마운트 디렉터리/폴더
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+Termux, SD 카드 또는 USB 드라이브에서 폴더를 선택하세요.
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+설치된 문서 제공자
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+Proton Drive, Synology DS 파일, Google Drive 등에 액세스
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+고속 클라우드 및 네트워크
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+RClone(Proton/Google Drive) 또는 SMB/WebDAV를 통한 완전한 양방향 동기화
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+파일 열기 또는 복사
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+\"%1$s\"로 무엇을 하시겠습니까?
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+UFM 뷰어에서 열기
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+로컬 저장소에 복사
 </string>
     <string name="saf_file_action_remember">
-Remember my choice
+내 선택을 기억해
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+항상 물어보세요
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+%1$d 파일을 다운로드에 복사했습니다.
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+SAF 선택 파일 작업
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+열 것인지 복사할 것인지 항상 묻습니다.
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+UFM 뷰어에서 항상 열기
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+항상 로컬 저장소에 복사
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+문서 제공자
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+%1$s 관리
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+파일 찾아보기 및 다운로드
 </string>
     <string name="doc_provider_action_browse_subtitle">%1$s을(를) 열어 파일을 선택하고 보거나 로컬로 복사</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+%1$s에 파일 업로드
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+UFM에서 로컬 파일을 선택하여 %1$s에 저장하세요.
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+%1$s을(를) 제거하시겠습니까?
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+저장소에서 %1$s을(를) 제거하시겠습니까? 언제든지 기타 저장소에서 다시 추가할 수 있습니다.
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+저장소에서 제거
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+%1$s이 저장소에서 제거되었습니다.
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+%1$s이 저장소에 추가되었습니다.
 </string>
     <string name="other_storage_all_added">
-All available providers added
+사용 가능한 모든 제공업체가 추가되었습니다.
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+설치된 모든 문서 제공자는 이미 주 저장소 메뉴에 추가되어 있습니다.
 </string>
     <string name="saf_copy_destination_title">
-Destination: %1$s
+목적지: %1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+폴더 변경…
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+대상 폴더 선택
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+복사 대상 설정
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+SAF 선택 파일 대상
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+문서 제공자에서 복사한 파일은 \"%1$s\"에 저장됩니다.
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+기타 저장소 및 SAF 전송
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+대상 폴더 복사
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+기본값으로 재설정(다운로드)
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+새 폴더 선택…
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+대상 재설정을 다운로드에 복사
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+문서 제공업체로 내보내기
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+마운트된 클라우드 또는 문서 제공자에 직접 저장
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+목적지 제공업체 선택
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+여러 파일 내보내기
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+이 %1$d 파일을 %2$s(으)로 내보내시겠습니까?
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+ZIP 아카이브로 내보내기
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+시스템 업로드 시트 사용
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+\"%1$s\"이(가) %2$s에 저장되었습니다.
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+폴더 장착 가능
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+파일 및 클라우드
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+기본 동기화 가능
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+다른 저장소에 업로드
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+선택한 파일 또는 폴더를 외부 문서 제공업체에 업로드
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+다른 저장소에 업로드
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+추가된 스토리지 제공업체가 없습니다. 추가할 제공업체를 선택하세요.
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+%1$d 파일을 %2$s에 복사했습니다.
 </string>
     <string name="share_export_folder_title">
-Export Folder
+폴더 내보내기
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+폴더는 문서 제공자를 통해 직접 업로드할 수 없습니다. \"%1$s\"을 ZIP 아카이브로 압축하여 %2$s에 업로드하시겠습니까?
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+단일 ZIP 아카이브로 압축하여 업로드
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+Android 시스템 업로드 시트를 사용하여 항목 보내기
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+마운트된 공급자를 선택하거나 기타 저장소를 엽니다.
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+%1$s 압축 중…
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+다른 저장소용으로 압축하는 중…
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+%1$s을(를) 통해 업로드
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+%1$s로 직접 파일 보내기
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+ZIP 아카이브로 압축하고 %1$s에서 대상 폴더를 선택하세요.
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+%1$s의 ZIP 아카이브 내부에 폴더 구조와 원본 디렉터리를 보존합니다.
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+개별 파일을 %1$s에 직접 업로드합니다(외부 업로드 화면에서는 디렉터리를 생성할 수 없음).
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+폴더 업로드 알림
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+외부 업로드 화면(예: %2$s)은 디렉토리를 생성할 수 없습니다.\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+\"%1$s\" 내부의 파일만 업로드되며 원본 폴더 자체는 업로드되지 않습니다.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+전체 디렉토리 구조를 유지하려면 대신 \"ZIP 아카이브로 내보내기\"를 선택하세요.
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+외부 업로드 화면(예: %1$s)은 디렉토리를 생성할 수 없습니다.\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+선택한 폴더 내의 파일만 업로드되며 원본 폴더 자체는 업로드되지 않습니다.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+전체 디렉토리 구조를 유지하려면 대신 \"ZIP 아카이브로 내보내기\"를 선택하세요.
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+파일만 업로드
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+홈 화면 옵션
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+홈 화면에 추가
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+홈 화면에서 제거
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+즐겨찾기 삭제
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+바로가기가 요청되었습니다. 홈 화면을 확인하세요.
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+바로가기가 비활성화되었습니다. 홈 화면에서 수동으로 제거하세요.
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+UFC 즐겨찾기
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+채널이 승인되지 않았습니다. 나중에 TV 설정 → 채널에서 활성화할 수 있습니다.
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+사용할 수 없는 항목
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+파일이나 폴더를 찾을 수 없습니다. 이동되었거나 삭제되었거나 사용할 수 없는 저장 공간에 있을 수 있습니다.
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -16215,382 +16361,382 @@ OK
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+다음으로 열기
 </string>
     <string name="open_with_search_hint">
-Search apps…
+앱 검색…
 </string>
     <string name="open_with_just_once">
-Just once
+딱 한 번만
 </string>
     <string name="open_with_always">
-Always
+언제나
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+.%1$s 파일에는 항상 선택한 앱을 사용합니다.
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+항상 선택한 앱 사용
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+.%1$s 파일의 기본값을 기억하세요.
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+이 파일을 열 수 있는 설치된 애플리케이션이 없습니다.
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+구글 플레이 스토어 검색
 </string>
     <string name="open_with_app_info">
-App info
+앱 정보
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+애플리케이션 세부정보 및 시스템 설정 보기
 </string>
     <string name="open_with_set_default">
-Always use this app
+항상 이 앱을 사용하세요
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+%1$s을(를) 시작할 수 없습니다. 시스템 선택기로 돌아가는 중…
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+열려면 확인을 누르세요. • 기본 앱 옵션을 보려면 확인을 길게 누르세요.
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+목적지로 선택
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+시청자 대상
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+대상 폴더 확인
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+선택한 폴더는 UFM 뷰어 및 슬라이드 쇼에서 빠른 복사 및 이동 작업에 사용됩니다.
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+파일 작업
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+대상 폴더
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+선택한 목적지가 없습니다. 탭하여 선택하세요.
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+변화
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+%1$s에 복사
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+%1$s로 이동
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+대상에 복사
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+목적지로 이동
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+%1$s에 복사됨
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+%1$s로 이동됨
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+원본과 대상이 동일한 폴더입니다.
 </string>
     <string name="backup_pref_viewer_transfer">
-Viewer Transfer Destination
+시청자 전송 대상
 </string>
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+홈 화면에 추가
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+바로가기 이름
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+저장소 바로가기
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+\'%1$s\'은(는) 이미 홈 화면에 고정되어 있습니다.
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+홈 화면에 추가
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+바로가기 이름은 비워둘 수 없습니다.
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
     <string name="download_manager_title">
-Download Manager
+다운로드 관리자
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+토렌트, 마그넷 및 HTTP 다운로드
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+제로 시딩 개인 정보 보호 기능을 갖춘 고속 기본 직접 및 P2P 다운로드 관리자입니다.
 </string>
     <string name="download_no_transfers">
-No active downloads
+활성 다운로드 없음
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+다운로드 폴더로 선택
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+폴더 다운로드
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+다운로드 위치 확인
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+다운로드는 이 디렉토리에 직접 저장됩니다.
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+직접 다운로드
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+토런트 다운로드
 </string>
     <string name="download_location_label">
-Download location
+다운로드 위치
 </string>
     <string name="download_change_location">
-Change
+변화
 </string>
     <string name="download_action_start">
-Start
+시작
 </string>
     <string name="download_action_pause">
 Pause
 </string>
     <string name="download_action_resume">
-Resume
+재개하다
 </string>
     <string name="download_action_cancel">
-Cancel
+취소
 </string>
     <string name="download_action_delete">
-Delete
+삭제
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+직접 다운로드 URL
 </string>
     <string name="download_enter_url_hint">
 https://example.com/file.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+다운로드
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+토렌트 또는 마그넷 링크
 </string>
     <string name="download_enter_magnet_hint">
-magnet:?xt=urn:btih:...
+자석:?xt=urn:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+.torrent 파일 열기
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+다운로드 관리자 및 P2P 공지
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+허용되는 사용 및 개인 정보 보호 정보
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+나는 P2P 다운로드가 떼 내에서 내 IP 주소를 공유한다는 것을 이해하며 합법적이고 침해하지 않는 콘텐츠에만 이 도구를 사용하는 데 동의합니다.
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+저장용량 한도를 초과했습니다.
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+대상 파일 크기(%1$s)가 이 드라이브의 FAT32 파일 시스템에서 지원하는 4GB 제한을 초과합니다.\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+exFAT, NTFS 또는 내부 저장소로 포맷된 다른 다운로드 위치를 선택하십시오.
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+저장 공간 부족
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+선택한 스토리지 드라이브에 여유 공간이 부족합니다.\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+필수: %1$s\n
+사용 가능: %2$s\n
 \n
-Please select another drive or free up space.
+다른 드라이브를 선택하거나 공간을 확보하십시오.
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+위치 선택
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+모바일 데이터 연결
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+현재 셀룰러 네트워크에 연결되어 있으며 Wi-Fi 전용 모드가 활성화되어 있습니다.\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+Wi-Fi가 연결될 때까지 이 전송을 대기하시겠습니까, 아니면 모바일 데이터 다운로드를 허용하시겠습니까?
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+Wi-Fi 대기열
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+모바일 데이터 허용
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+네트워크 정책
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+다운로드를 위한 네트워크 연결 규칙 선택
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+Wi-Fi 전용(권장)
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+무제한 Wi-Fi에 연결된 경우에만 다운로드 전송
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+모든 네트워크(Wi-Fi 및 셀룰러)
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+셀룰러 모바일 데이터 및 Wi-Fi 네트워크를 통한 전송 허용
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+불법 복제 금지 약관 검토
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+P2P 떼 공개, 개인 정보 보호 및 제로 시딩 조건 보기
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+P2P 스웜 및 IP 가시성
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+BitTorrent는 교환 조각 청크를 떼의 다른 피어 장치와 직접 전송합니다. 귀하의 공개 IP 주소는 전송하는 동안 활성 피어에게 표시됩니다.
 </string>
     <string name="download_legal_zero_seeding_title">
-Zero-Seeding Privacy
+제로 시딩 개인 정보 보호
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+UFM은 엄격한 제로 시딩을 시행합니다. 다운로드가 완료되는 순간(100%) 모든 스웜 연결이 끊어지고 추적기 알림이 즉시 중단됩니다.
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+합법적인 콘텐츠만
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+귀하는 이 도구를 합법적인 오픈 소스, 공개 도메인 또는 승인된 파일에만 사용하는 데 동의합니다. 저작권이 있는 자료를 무단으로 다운로드하거나 배포하는 것을 금지합니다.
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+동의 및 계속
 </string>
     <string name="download_legal_understood">
-Understood
+이해했다
 </string>
     <string name="download_state_downloading">
-Downloading
+다운로드 중
 </string>
     <string name="download_state_paused">
-Paused
+일시중지됨
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+Wi-Fi 대기 중
 </string>
     <string name="download_state_completed">
-Completed
+완전한
 </string>
     <string name="download_state_error">
-Error
+오류
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+다운로드 관리자 전송
 </string>
     <string name="download_notif_channel_desc">
-Ongoing download progress and status updates
+지속적인 다운로드 진행 및 상태 업데이트
 </string>
     <string name="download_timeout_stopped">
-Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+다운로드 일시중지됨: Android 6시간 실행 제한에 도달했습니다. 재개하려면 탭하세요.
 </string>
 
     <!-- Torrent & Magnet Selective File Download & Content Inspector -->
     <string name="torrent_select_all">
-Select All
+모두 선택
 </string>
     <string name="torrent_deselect_all">
-Deselect All
+모두 선택 취소
 </string>
     <string name="torrent_selected_summary">
-Selected: %1$d of %2$d files (%3$s of %4$s)
+선택됨: %2$d개 파일 중 %1$d개(%4$s개 중 %3$s개)
 </string>
     <string name="torrent_files_count">
-%1$d files
+%1$d 파일
 </string>
     <string name="torrent_file_selection_title">
-Torrent Content
+토렌트 콘텐츠
 </string>
     <string name="torrent_file_selection_subtitle">
-Select files and folders to download
+다운로드할 파일 및 폴더 선택
 </string>
     <string name="torrent_fetching_metadata">
-Fetching torrent metadata from swarm…
+Swarm에서 토렌트 메타데이터를 가져오는 중…
 </string>
     <string name="torrent_fetching_metadata_desc">
-Contacting DHT nodes and peers to retrieve file list…
+파일 목록을 검색하기 위해 DHT 노드 및 피어에 연결하는 중…
 </string>
     <string name="torrent_metadata_timeout_title">
-Metadata Fetch Timeout
+메타데이터 가져오기 시간 초과
 </string>
     <string name="torrent_metadata_timeout_msg">
-Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+피어에서 파일 목록을 검색하는 데 평소보다 시간이 오래 걸립니다. 계속 검색하시겠습니까, 아니면 모든 파일을 직접 다운로드하시겠습니까?
 </string>
     <string name="torrent_keep_waiting">
-Keep Waiting
+계속 기다리세요
 </string>
     <string name="torrent_download_all_direct">
-Download All Directly
+모두 직접 다운로드
 </string>
     <string name="torrent_zero_selected_error">
-Please select at least one file to download
+다운로드할 파일을 하나 이상 선택하세요.
 </string>
     <string name="torrent_search_hint">
-Search files…
+파일 검색…
 </string>
 
     <!-- Transfer Action Dialog -->
     <string name="transfer_action_title">
-Transfer Actions
+전송 작업
 </string>
     <string name="transfer_action_pause">
-Pause Transfer
+전송 일시중지
 </string>
     <string name="transfer_action_resume">
-Resume Transfer
+전송 재개
 </string>
     <string name="transfer_action_open_folder">
-Open Download Folder
+다운로드 폴더 열기
 </string>
     <string name="transfer_action_delete_title">
-Remove Transfer
+전송 삭제
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+다운로드 관리자에서 이 전송을 삭제하는 방법을 선택하세요.
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+전송만 제거
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+다운로드한 파일을 기기에 보관하세요
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+파일 제거 및 삭제
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+다운로드한 파일을 디스크에서 영구적으로 삭제
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16651,79 +16797,79 @@ TV 다운로드 위치를 업데이트하지 못했습니다. %1$s
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+스마트 북마크
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+저장된 링크, 미디어, 공유 정리
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%2$d개 그룹의 %1$d개 항목
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+아직 저장된 북마크가 없습니다.
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+UFM으로 북마크하기
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+북마크 저장
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+%1$s에서 공유됨
 </string>
     <string name="bookmark_field_title_hint">
-Title
+제목
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+컬렉션/그룹
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+개인 메모 추가(선택 사항)
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+북마크 저장
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+이미 북마크에 추가됨 - 메모 및 시간이 업데이트됨
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+%1$s에 북마크가 저장되었습니다.
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+여러 떼
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+모두 보기 ›
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+컬렉션 및 소스
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+컬렉션 관리, 필터 및 저장소 보호
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+컬렉션 검색…
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+모든 북마크
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+모든 소스에서 잠금 해제된 북마크를 모두 표시합니다.
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+내 컬렉션
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+사용자가 만든 컬렉션 • 금고 잠금 가능
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+앱 소스
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+공유 애플리케이션에서 자동 생성됨
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16732,241 +16878,241 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+이 기기에 기기 보안(PIN, 패턴, 지문)이 설정되지 않았습니다.
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+금고가 잠겼습니다
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+Vault 잠금을 제거하려면 인증하세요.
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+Vault로 인해 컬렉션이 잠겼습니다.
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+컬렉션 잠금 해제됨
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+새 북마크 그룹
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+그룹 이름
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+그룹 만들기
 </string>
     <string name="bookmark_filter_all">
-All
+모두
 </string>
     <string name="bookmark_filter_links">
-Links
+모래밭
 </string>
     <string name="bookmark_filter_media">
-Media
+메디아
 </string>
     <string name="bookmark_filter_docs">
-Documents
+서류
 </string>
     <string name="bookmark_filter_notes">
-Notes
+메모
 </string>
     <string name="bookmark_filter_starred">
-Starred
+별표 표시됨
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+북마크, 메모, 도메인 검색…
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+북마크 정렬
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+최신순
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+오래된 것부터 최신 것까지
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+제목(A~Z)
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+제목(Z~A)
 </string>
     <string name="bookmark_sort_size">
-File Size
+파일 크기
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+컬렉션별로 그룹화
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+컬렉션: A부터 Z까지
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+컬렉션: Z부터 A까지
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+컬렉션 삭제
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+\"%1$s\" 컬렉션을 삭제하시겠습니까?
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+기사 읽기
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+브라우저에서 열기
 </string>
     <string name="bookmark_action_open_file">
-Open File
+파일 열기
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+링크 복사
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+텍스트 복사
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+저장소에 저장
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+그룹으로 이동
 </string>
     <string name="bookmark_action_delete">
-Delete
+삭제
 </string>
     <string name="bookmark_view_note">
-View Note
+노트 보기
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+잠금 컬렉션(Vault)
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+보려면 지문이나 PIN이 필요합니다.
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+수집 옵션
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+잠금 컬렉션
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+컬렉션 잠금 해제
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+북마크가 삭제되었습니다.
 </string>
     <string name="bookmark_undo">
-Undo
+끄르다
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+%1$d개 항목을 선택함
 </string>
     <string name="bookmark_batch_move">
-Move
+이동하다
 </string>
     <string name="bookmark_batch_delete">
-Delete
+삭제
 </string>
     <string name="bookmark_batch_export">
-Export
+내보내다
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+북마크 내보내기
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+브라우저 HTML 책갈피(.html)
 </string>
     <string name="bookmark_export_markdown">
-Markdown Document (.md)
+마크다운 문서(.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+%1$d 북마크를 %2$s(으)로 내보냈습니다.
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+리더 모드
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+텍스트 크기
 </string>
     <string name="bookmark_reader_theme">
-Theme
+주제
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+빛
 </string>
     <string name="bookmark_reader_theme_sepia">
-Sepia
+세피아
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+어두운
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+큰 소리로 듣기
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+읽기 일시 중지
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+읽기 중지
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+속도 %1$sx
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+음성 엔진 초기화 중…
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+이 기기에서는 TTS(텍스트 음성 변환)가 지원되지 않거나 설치되어 있지 않습니다.
 </string>
     <string name="bookmark_group_whatsapp">
-WhatsApp
+왓츠앱
 </string>
     <string name="bookmark_group_reddit">
-Reddit
+레딧
 </string>
     <string name="bookmark_group_youtube">
-YouTube
+유튜브
 </string>
     <string name="bookmark_group_twitter">
-Twitter / X
+트위터 / X
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+웹 및 기사
 </string>
     <string name="bookmark_group_telegram">
-Telegram
+전보
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+파일 및 문서
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+Vault로 그룹 잠금
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+그룹 잠금 해제
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+잠긴 북마크에 액세스하려면 인증하세요.
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+아직 북마크가 없습니다.
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+WhatsApp, Reddit 또는 브라우저에서 링크, 기사, 미디어 또는 파일을 공유하고 \"UFM으로 북마크\"를 선택하세요.
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+결과가 없습니다
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+\"%1$s\"와 일치하는 북마크가 없습니다. 다양한 키워드를 검색해 보세요.
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+북마크를 찾을 수 없습니다
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+선택한 필터 또는 컬렉션과 일치하는 북마크를 찾을 수 없습니다.
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -16974,67 +17120,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+평면도
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+재귀적 색인 브라우저
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+폴더 열기
 </string>
     <string name="flat_view_expand_all">
-Expand All
+모두 확장
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+모두 축소
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+시스템 폴더 포함
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+평면 보기에 Android/data, Android/obb 및 시스템 디렉터리 표시
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+기본값은 모두 확장됨
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+기본적으로 모든 폴더가 확장된 평면 보기 열기
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+이 볼륨에는 색인화된 파일이 없습니다.
 </string>
     <string name="flat_view_settings_title">
-Flat View
+평면도
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+재귀적 색인 검색 및 시스템 폴더 구성
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+인덱싱되지 않은 스토리지
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+Flat View에서는 이 스토리지 볼륨이 완전히 인덱싱되어야 합니다. 먼저 인덱싱을 실행해 보세요.
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%2$d개 폴더의 %1$d개 파일
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+%1$d 선택됨
 </string>
     <string name="flat_view_folder_files_count">
-%1$d files
+%1$d 파일
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+파일 삭제
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+%1$d 선택한 파일을 삭제하시겠습니까?
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+%1$d 파일을 삭제했습니다.
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+평면 보기 설정
 </string>
 </resources>
 

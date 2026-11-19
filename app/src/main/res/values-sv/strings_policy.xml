@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-Last Updated: November 2026
+Senast uppdaterad: november 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -80,11 +80,11 @@ Genom att ladda ner eller öppna Ultimate File Manager Pro från Google Play But
 </string>
 
     <string name="tc_s2_body">
-Ultimate File Manager Pro is a free Android app — available on both phones and Android TV — packed with tools to keep your files organised and secure.
+Ultimate File Manager Pro är en gratis Android-app – tillgänglig på både telefoner och Android TV – fullpackad med verktyg för att hålla dina filer organiserade och säkra.
 </string>
 
     <string name="tc_s3_body">
-We\'ve built this app with care, but here are some important realities you should know before using it.
+Vi har byggt den här appen med omsorg, men här är några viktiga realiteter som du bör känna till innan du använder den.
 </string>
 
     <string name="tc_s3a_body">
@@ -94,7 +94,7 @@ Appen erbjuder en valfri \"Fuel the Developer\" Tips Jar - tre frivilliga engån
 Alla transaktioner går via Google Play Billing. Vi ser aldrig dina kort- eller bankuppgifter.
 </string>
     <string name="tc_s3a_refunds">
-Tip purchases are voluntary and processed by Google Play. Refund requests are handled directly by Google Play in accordance with their refund policy and applicable law, including the South African Consumer Protection Act. KiloWatch does not process refunds independently.
+Tipsköp är frivilliga och behandlas av Google Play. Återbetalningsbegäranden hanteras direkt av Google Play i enlighet med deras återbetalningspolicy och tillämplig lag, inklusive den sydafrikanska konsumentskyddslagen. KiloWatch behandlar inte återbetalningar oberoende.
 </string>
     <string name="tc_s3a_recurring">
 Det finns inga prenumerationer. Varje dricks är ett engångsköp. Du kommer aldrig att debiteras automatiskt.
@@ -104,7 +104,7 @@ Dricks är helt frivilligt. Alla funktioner förblir tillgängliga kostnadsfritt
 </string>
 
     <string name="tc_s3b_body">
-The app supports connecting to a wide range of third-party cloud storage providers using the integrated RClone backend. When you use this feature, the following conditions apply:
+Appen stöder anslutning till ett brett utbud av tredjepartsleverantörer av molnlagring med den integrerade RClone-backend. När du använder den här funktionen gäller följande villkor:
 </string>
     <string-array name="tc_rclone_labels">
         <item>
@@ -142,27 +142,27 @@ När du väljer att aktivera rotåtkomst på en rotad mobil enhet använder Ulti
 </string>
 
     <string name="tc_s4_body">
-Using this app comes with a few simple responsibilities on your side.
+Att använda denna app kommer med några enkla ansvarsområden på din sida.
 </string>
 
     <string name="tc_s5_body">
-The app requests certain Android permissions to work properly. Here\'s exactly what each one is for.
+Appen begär vissa Android-behörigheter för att fungera korrekt. Här är exakt vad var och en är till för.
 </string>
 
     <string name="tc_s6_body">
-You\'re welcome to use the app freely; you\'re just not permitted to copy, redistribute, or sell it.
+Du är välkommen att använda appen fritt; du får helt enkelt inte kopiera, omdistribuera eller sälja den.
 </string>
 
     <string name="tc_s7_body">
-We built on the shoulders of some great open-source projects. Each is governed by its own licence — you can view the full licence text for each library inside the app at Settings → Legal → Open Source Licenses.
+Vi byggde på axlarna av några fantastiska projekt med öppen källkod. Var och en styrs av sin egen licens – du kan se hela licenstexten för varje bibliotek i appen under Inställningar → Juridisk → Licenser med öppen källkod.
 </string>
 
     <string name="tc_s8_body">
-We may update these Terms from time to time. When we do, we\'ll update the date at the top of this document. Continuing to use the app after any changes means you accept the updated Terms.
+Vi kan komma att uppdatera dessa villkor då och då. När vi gör det uppdaterar vi datumet högst upp i detta dokument. Om du fortsätter att använda appen efter ändringar innebär det att du accepterar de uppdaterade villkoren.
 </string>
 
     <string name="tc_s9_body">
-We reserve the right to suspend or terminate access to the app if these Terms are violated — for example, if the app is used for illegal activity, or to access another person\'s device without consent.
+Vi förbehåller oss rätten att stänga av eller avsluta åtkomsten till appen om dessa villkor brytes – till exempel om appen används för olaglig aktivitet, eller för att komma åt en annan persons enhet utan samtycke.
 </string>
 
     <string name="tc_s10_body">
@@ -180,82 +180,82 @@ Genom att använda Ultimate File Manager Pro bekräftar du att du har läst och 
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-File Browser — browse, copy, move, rename, and delete files anywhere on your device.
+Filläsare – bläddra, kopiera, flytta, byt namn på och ta bort filer var som helst på din enhet.
 </item>
         <item>
-Encrypted Vault — lock sensitive files behind AES-256-GCM encryption with your own PIN.
+Krypterat valv — lås känsliga filer bakom AES-256-GCM-kryptering med din egen PIN-kod.
 </item>
         <item>
-File Server — host an FTP or secure SFTP server directly on your device to share files across your local network.
+Filserver — värd för en FTP- eller säker SFTP-server direkt på din enhet för att dela filer över ditt lokala nätverk.
 </item>
         <item>
-Remote Management — manage files over your local Wi-Fi via a built-in HTTP server that supports uploading, downloading, and installing APKs remotely.
+Fjärrhantering – hantera filer över ditt lokala Wi-Fi via en inbyggd HTTP-server som stöder uppladdning, nedladdning och fjärrinstallation av APK-filer.
 </item>
         <item>
-Network Shares — connect to SMB, FTP, and NFS servers on your local network to browse, download, and manage remote files.
+Nätverksresurser — anslut till SMB-, FTP- och NFS-servrar på ditt lokala nätverk för att bläddra, ladda ner och hantera fjärrfiler.
 </item>
         <item>
-Folder Sync — automatically back up local phone folders to an SMB or FTP network share on a schedule you choose (interval or specific time daily, weekly, or monthly).
+Mappsynkronisering — säkerhetskopiera automatiskt lokala telefonmappar till en SMB- eller FTP-nätverksresurs enligt ett schema du väljer (intervall eller specifik tid dagligen, veckovis eller månadsvis).
 </item>
         <item>
-Device Pairing — pair your mobile phone and Android TV over local Wi-Fi to transfer and install files.
+Enhetsparning — koppla ihop din mobiltelefon och Android TV via lokalt Wi-Fi för att överföra och installera filer.
 </item>
         <item>
-ADB Terminal — connect to Android devices in Developer Mode over your local Wi-Fi using ADB (Android Debug Bridge) for direct shell access and advanced troubleshooting.
+ADB-terminal — anslut till Android-enheter i utvecklarläge över ditt lokala Wi-Fi med ADB (Android Debug Bridge) för direkt åtkomst till skalet och avancerad felsökning.
 </item>
         <item>
-Built-in Viewers — view text files, PDFs, animated images (APNG, GIF, animated WebP, AVIF, SVG and more), archives, and other formats directly within the app.
+Inbyggda tittare — visa textfiler, PDF-filer, animerade bilder (APNG, GIF, animerad WebP, AVIF, SVG och mer), arkiv och andra format direkt i appen.
 </item>
         <item>
-Advanced ZIP Support — create and extract password-protected and AES-encrypted ZIP archives.
+Avancerat ZIP-stöd – skapa och extrahera lösenordsskyddade och AES-krypterade ZIP-arkiv.
 </item>
         <item>
-Remote Screenshots — capture the screen of your paired Android TV over local Wi-Fi via ADB and save it directly to your phone\'s storage.
+Fjärrskärmsbilder — fånga skärmen på din parade Android TV över lokalt Wi-Fi via ADB och spara den direkt i telefonens lagring.
 </item>
         <item>
-7Z Archive Support — extract 7Z archives with LZMA/LZMA2 compression.
+7Z Archive Support — extrahera 7Z-arkiv med LZMA/LZMA2-komprimering.
 </item>
         <item>
-File Search — quickly find files and folders across your device storage.
+Filsökning – hitta snabbt filer och mappar på din enhetslagring.
 </item>
         <item>
-Storage Analyser — see a visual breakdown of what\'s using your storage space.
+Storage Analyzer — se en visuell uppdelning av vad som använder ditt lagringsutrymme.
 </item>
         <item>
-App Manager — view and manage all apps installed on your device, with debloat recommendations for pre-installed apps.
+Apphanterare – visa och hantera alla appar som är installerade på din enhet, med rekommendationer om debloat för förinstallerade appar.
 </item>
         <item>
-APK Installer — install Android apps and split APKs (XAPK) directly from files saved locally.
+APK Installer - installera Android-appar och dela APK-filer (XAPK) direkt från filer som sparats lokalt.
 </item>
         <item>
-Elevated Access (Porter, Shizuku, Shevery &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.
+Förhöjd åtkomst (Porter, Shizuku, Shevery &amp; ADB) – få root-liknande åtkomst för att hantera systemfiler och begränsade kataloger utan att faktiskt rota din enhet.
 </item>
         <item>
-Root Access (Mobile) — elevated Superuser access for rooted devices to browse, manage, and inspect system-level partitions and protected directories.
+Rotåtkomst (mobil) — förhöjd superanvändaråtkomst för rotade enheter för att bläddra, hantera och inspektera partitioner på systemnivå och skyddade kataloger.
 </item>
         <item>
-Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.
+Storage Indexer — skapa ett lokalt index av filmetadata för omedelbar sökning och blixtsnabb surfning.
 </item>
         <item>
-Storage Access Framework — other apps can access your files through UFM\'s document provider.
+Storage Access Framework — andra appar kan komma åt dina filer via UFM:s dokumentleverantör.
 </item>
         <item>
-Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.
+Tips Jar — valfria engångsköp för att stödja utvecklaren; appen är alltid gratis utan att dricka.
 </item>
         <item>
-UFM Media Player — play audio, video, and SMIL animated SVG/SVGZ vector files with background playback, notification controls, Picture-in-Picture mode, and playlist management.
+UFM Media Player — spela upp ljud-, video- och SMIL-animerade SVG/SVGZ-vektorfiler med bakgrundsuppspelning, aviseringskontroller, bild-i-bild-läge och spellisthantering.
 </item>
         <item>
-GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.
+GIF Creator — skapa animerade GIF-filer från utvalda bilder med anpassad bildhastighet, alternativ för storleksändring och dra-och-släpp-omordning av ramar.
 </item>
         <item>
-Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.
+Foto EXIF-verktyg — inspektera foto EXIF- och GPS-metadata, skrubba bort privata geotaggar och enhetsinformation och byt namn på bilder i grupp med hjälp av tidsstämplar och kamerametadata.
 </item>
         <item>
-Music Tag Editor (Mobile) — inspect, edit, clean, and batch-update audio metadata descriptions (title, artist, album, year, genre, lyrics) and embedded album art directly inside audio files.
+Music Tag Editor (mobil) — inspektera, redigera, rensa och batchuppdatera ljudmetadatabeskrivningar (titel, artist, album, år, genre, texter) och inbäddad albumomslag direkt i ljudfiler.
 </item>
         <item>
-Download Manager — download files via direct HTTP/HTTPS URLs and peer-to-peer Magnet links or .torrent files for open-source distributions, public domain media, and authorized content.
+Download Manager – ladda ner filer via direkta HTTP/HTTPS-URL:er och peer-to-peer-magnetlänkar eller .torrent-filer för distributioner med öppen källkod, media i offentlig egendom och auktoriserat innehåll.
 </item>
     </string-array>
 
@@ -352,52 +352,52 @@ Vårt totala ansvar är begränsat till det totala beloppet du betalade för kö
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
         <item>
-Keep regular backups of important files before performing bulk operations.
+Håll regelbundna säkerhetskopior av viktiga filer innan du utför massåtgärder.
 </item>
         <item>
-Store your Vault PIN and Recovery Code somewhere safe — we cannot retrieve them for you.
+Förvara din Vault-PIN och återställningskod på ett säkert ställe – vi kan inte hämta dem åt dig.
 </item>
         <item>
-Keep your PIN private. Anyone who knows it can access your Vault.
+Håll din PIN-kod privat. Alla som känner till det kan komma åt ditt valv.
 </item>
         <item>
-Keep your network share credentials safe — they are stored locally on your device.
+Håll dina nätverksdelningsuppgifter säkra – de lagras lokalt på din enhet.
 </item>
         <item>
-Review your Folder Sync remote paths carefully — syncing to an incorrect network folder may overwrite existing files.
+Granska dina mappsynkroniseringsvägar noggrant — synkronisering till en felaktig nätverksmapp kan skriva över befintliga filer.
 </item>
         <item>
-Exercise caution when removing system apps based on debloat recommendations.
+Var försiktig när du tar bort systemappar baserat på rekommendationer för debloat.
 </item>
         <item>
-Only connect via ADB Terminal to devices you own or have explicit permission to access. Do not use ADB Terminal to gain unauthorized access to any device.
+Anslut endast via ADB Terminal till enheter du äger eller har uttrycklig behörighet att komma åt. Använd inte ADB Terminal för att få obehörig åtkomst till någon enhet.
 </item>
         <item>
-Keep any ADB, Porter, Shizuku, or Shevery pairing PINs private — share these only with people you trust to have access to your device.
+Håll alla ADB-, Porter-, Shizuku- eller Shevery-PIN-koder privata – dela dessa endast med personer som du litar på har tillgång till din enhet.
 </item>
         <item>
-Secure your Porter, Shizuku or Shevery Manager — granting UFM elevated access via any of these managers gives it power over restricted files. Only grant this access if you trust the app.
+Säkra din Porter, Shizuku eller Shevery Manager – genom att ge UFM förhöjd åtkomst via någon av dessa managers får den makt över begränsade filer. Ge endast denna åtkomst om du litar på appen.
 </item>
         <item>
-Exercise extreme caution when Root Access is active — never delete or modify system files unless you understand the consequences to your device OS.
+Iaktta extrem försiktighet när Root Access är aktiv – ta aldrig bort eller ändra systemfiler om du inte förstår konsekvenserna för enhetens operativsystem.
 </item>
         <item>
-Only use the app for lawful purposes. Don\'t store, share, or distribute illegal content.
+Använd endast appen för lagliga ändamål. Lagra, dela eller distribuera inte olagligt innehåll.
 </item>
         <item>
-Don\'t use Remote Management to access another person\'s device without their permission.
+Använd inte fjärrhantering för att komma åt en annan persons enhet utan deras tillåtelse.
 </item>
         <item>
-Don\'t attempt to reverse-engineer, decompile, or tamper with the app.
+Försök inte att bakåtkonstruera, dekompilera eller manipulera appen.
 </item>
         <item>
-Manage your indexed records responsibly — you can delete records or ignore specific drives at any time via Settings -> Storage Indexer.
+Hantera dina indexerade poster på ett ansvarsfullt sätt - du kan ta bort poster eller ignorera specifika enheter när som helst via Inställningar -&gt; Lagringsindexerare.
 </item>
         <item>
-Verify the authenticity and safety of any APK files before installing them.
+Verifiera äktheten och säkerheten för eventuella APK-filer innan du installerar dem.
 </item>
         <item>
-Don\'t use the Download Manager, BitTorrent engine, or HTTP streamer to download, share, transmit, or facilitate infringement of copyrighted material without authorization from the copyright holder. You assume sole liability for downloaded content.
+Använd inte Download Manager, BitTorrent-motorn eller HTTP-streamern för att ladda ner, dela, överföra eller underlätta intrång i upphovsrättsskyddat material utan tillstånd från upphovsrättsinnehavaren. Du tar ensamt ansvar för nedladdat innehåll.
 </item>
     </string-array>
 
@@ -524,142 +524,142 @@ Ger haptisk feedback när du trycker på knappar på TV-fjärrkontrollen.
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD — lightweight HTTP server that powers Remote Management. (BSD-3-Clause)
+NanoHTTPD — lätt HTTP-server som driver fjärrhantering. (BSD-3-klausul)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3 client library for network share browsing and Folder Sync. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3-klientbibliotek för nätverksdelning och mappsynkronisering. (LGPL-2.1)
 </item>
         <item>
-smbj (hierynomus/smbj) — SMB2/SMB3 Java implementation used for network share access. (Apache-2.0)
+smbj (hierynomus/smbj) — SMB2/SMB3 Java-implementering som används för nätverksdelning. (Apache-2.0)
 </item>
         <item>
-EMC ECS NFS Client (com.emc.ecs:nfs-client) — NFS v3 client library for network share access. (Apache-2.0)
+EMC ECS NFS-klient (com.emc.ecs:nfs-client) — NFS v3-klientbibliotek för nätverksdelning. (Apache-2.0)
 </item>
         <item>
-libnfs (sahlberg/libnfs) — native NFS client library supporting NFSv2, NFSv3, and NFSv4. (LGPL-2.1 / BSD-2-Clause)
+libnfs (sahlberg/libnfs) — inbyggt NFS-klientbibliotek som stöder NFSv2, NFSv3 och NFSv4. (LGPL-2.1 / BSD-2-klausul)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access and hosting. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — omfattande SSHD-kärna-, SFTP- och SCP-klientbibliotek för säker nätverksdelning och värdskap. (Apache-2.0)
 </item>
         <item>
-Apache FtpServer (org.apache.ftpserver) — 100% pure Java FTP server. (Apache-2.0)
+Apache FtpServer (org.apache.ftpserver) — 100 % ren Java FTP-server. (Apache-2.0)
 </item>
         <item>
-Apache POI — document processing library for viewing office files. (Apache-2.0)
+Apache POI — dokumentbehandlingsbibliotek för visning av kontorsfiler. (Apache-2.0)
 </item>
         <item>
-Firebase Analytics — Google\'s analytics platform that helps us understand app usage. (Apache-2.0)
+Firebase Analytics — Googles analysplattform som hjälper oss att förstå appanvändning. (Apache-2.0)
 </item>
         <item>
-AndroidX Libraries (incl. Leanback for Android TV) — Google\'s Jetpack components for modern Android development. (Apache-2.0)
+AndroidX Libraries (inkl. Leanback för Android TV) — Googles Jetpack-komponenter för modern Android-utveckling. (Apache-2.0)
 </item>
         <item>
-Material Design Components — Google\'s UI library for a clean, consistent interface. (Apache-2.0)
+Material Design Components — Googles UI-bibliotek för ett rent, konsekvent gränssnitt. (Apache-2.0)
 </item>
         <item>
-Room Persistence Library — SQLite abstraction layer for local metadata indexing. (Apache-2.0)
+Room Persistence Library — SQLite abstraktionslager för lokal metadataindexering. (Apache-2.0)
 </item>
         <item>
-zip4j (net.lingala.zip4j) — advanced ZIP library for password-protected and AES-encrypted archives. (Apache-2.0)
+zip4j (net.lingala.zip4j) — avancerat ZIP-bibliotek för lösenordsskyddade och AES-krypterade arkiv. (Apache-2.0)
 </item>
         <item>
-Apache Commons Compress — library for reading and writing various archive formats (7z, zip, tar, etc). (Apache-2.0)
+Apache Commons Compress — bibliotek för att läsa och skriva olika arkivformat (7z, zip, tar, etc). (Apache-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) — implementation of XZ and LZMA compression. (Public Domain)
+XZ för Java (org.tukaani.xz) — implementering av XZ- och LZMA-komprimering. (Public Domain)
 </item>
         <item>
-zstd-jni (com.github.luben:zstd-jni) — JNI bindings for Zstandard compression and extraction library. (BSD-2-Clause)
+zstd-jni (com.github.luben:zstd-jni) — JNI-bindningar för Zstandard-komprimerings- och extraktionsbibliotek. (BSD-2-klausul)
 </item>
         <item>
-Junrar (com.github.junrar:junrar) — Java RAR extraction library. (BSD-3-Clause)
+Junrar (com.github.junrar:junrar) — Java RAR-extraktionsbibliotek. (BSD-3-klausul)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) — Android Debug Bridge library enabling secure connections to ADB-enabled devices for remote shell access and certificate-based pairing. (Apache-2.0)
+libadb-android (com.github.MuntashirAkon) — Android Debug Bridge-bibliotek som möjliggör säkra anslutningar till ADB-aktiverade enheter för fjärråtkomst av skal och certifikatbaserad parning. (Apache-2.0)
 </item>
         <item>
-libsu (com.github.topjohnwu.libsu) — complete Android su shell and root service solution. (Apache-2.0)
+libsu (com.github.topjohnwu.libsu) — komplett Android su-skal och rottjänstlösning. (Apache-2.0)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — omfattande SSHD-kärna-, SFTP- och SCP-klientbibliotek för säker nätverksdelning. (Apache-2.0)
 </item>
         <item>
-EdDSA for Java (net.i2p.crypto:eddsa) — implementation of EdDSA (Edwards-curve Digital Signature Algorithm) for Ed25519 SSH keys. (CC0-1.0)
+EdDSA för Java (net.i2p.crypto:eddsa) — implementering av EdDSA (Edwards-curve Digital Signature Algorithm) för Ed25519 SSH-nycklar. (CC0-1.0)
 </item>
         <item>
-SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding for Android used by the SSHD library. (MIT)
+SLF4J Android (se.uuid.slf4j:slf4j-android) — loggningsbindning för Android som används av SSHD-biblioteket. (MIT)
 </item>
         <item>
-BouncyCastle (org.bouncycastle) — cryptography library for RSA/EdDSA keypair generation and X.509 certificate creation; version 1.83. (MIT-style License)
+BouncyCastle (org.bouncycastle) — kryptografibibliotek för generering av RSA/EdDSA-nyckelpar och skapande av X.509-certifikat; version 1.83. (MIT-liknande licens)
 </item>
         <item>
-Google Play Billing Library — processes optional in-app tip purchases; governed by Google Play\'s Privacy Policy. (Apache-2.0)
+Google Play Billing Library — behandlar valfria tipsköp i appar; styrs av Google Plays sekretesspolicy. (Apache-2.0)
 </item>
         <item>
-Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)
+Google Play recensionsbibliotek — driver appens betygs- och recensionsfunktion i appen. (Apache-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, JXL, SVG) in the built-in image viewer. (Apache-2.0)
+Coil (io.coil-kt.coil3) — bildladdningsbibliotek som driver animerad bildrendering (APNG, GIF, animerad WebP, AVIF, JXL, SVG) i den inbyggda bildvisaren. (Apache-2.0)
 </item>
         <item>
-avif-coder (io.github.awxkee) — AVIF image decoding library providing native AVIF support on Android API 24–30; API 31+ uses the built-in ImageDecoder. (Apache-2.0)
+avif-coder (io.github.awxkee) — AVIF-bildavkodningsbibliotek som ger inbyggt AVIF-stöd på Android API 24–30; API 31+ använder den inbyggda ImageDecoder. (Apache-2.0)
 </item>
         <item>
-jxl-coder (io.github.awxkee) — JPEG XL image decoding and encoding library providing native JXL support on Android API 21+. (Apache-2.0 / BSD-3-Clause)
+jxl-coder (io.github.awxkee) — JPEG XL-bildavkodnings- och kodningsbibliotek som ger inbyggt JXL-stöd på Android API 21+. (Apache-2.0 / BSD-3-klausul)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)
+APNG4Android (com.github.penfeizhou.android.animation) — kärnbibliotek för avkodning och rendering av animerade PNG-filer på Android. (Apache-2.0)
 </item>
         <item>
-Porter SDK (com.github.d4rken-org.porter-api) — Android SDK enabling elevated file system access via the Porter, Shizuku or Shevery Manager apps. It embeds the Shizuku API (rikka.shizuku), licensed under MIT. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) — Android SDK som möjliggör förhöjd filsystemåtkomst via Porter-, Shizuku- eller Shevery Manager-apparna. Den bäddar in Shizuku API (rikka.shizuku), licensierad under MIT. (Apache-2.0)
 </item>
         <item>
-ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)
+ViewPager2 — Android-bibliotek för att glida mellan fragment och layouter. (Apache-2.0)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — animation library for rendering Adobe After Effects animations natively on Android, used for smooth UI animations throughout the app. (Apache-2.0)
+Lottie (com.airbnb.android:lottie) v6.3.0 — animationsbibliotek för att rendera Adobe After Effects-animationer på Android, som används för smidiga UI-animationer i hela appen. (Apache-2.0)
 </item>
         <item>
-Ktor (io.ktor) — lightweight web framework used to power the local File Server. (Apache-2.0)
+Ktor (io.ktor) — lätt webbramverk som används för att driva den lokala filservern. (Apache-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) — library for rendering and viewing PDF documents natively. (Apache-2.0)
+PDFBox-Android (com.tom-roush:pdfbox-android) — bibliotek för att rendera och visa PDF-dokument inbyggt. (Apache-2.0)
 </item>
         <item>
-ExoPlayer / Media3 (androidx.media3) — advanced media player for robust video and audio playback. (Apache-2.0)
+ExoPlayer / Media3 (androidx.media3) — avancerad mediaspelare för robust video- och ljuduppspelning. (Apache-2.0)
 </item>
         <item>
-Microsoft Authentication Library (MSAL) — handles OneDrive API authentication natively. (MIT)
+Microsoft Authentication Library (MSAL) — hanterar OneDrive API-autentisering inbyggt. (MIT)
 </item>
         <item>
-OkHttp (com.squareup.okhttp3) — robust HTTP &amp; HTTP/2 client for cloud storage network requests. (Apache-2.0)
+OkHttp (com.squareup.okhttp3) — robust HTTP- och HTTP/2-klient för förfrågningar om molnlagringsnätverk. (Apache-2.0)
 </item>
         <item>
-Gson (com.google.code.gson) — JSON processing library used for cloud storage integration. (Apache-2.0)
+Gson (com.google.code.gson) — JSON-behandlingsbibliotek som används för molnlagringsintegrering. (Apache-2.0)
 </item>
         <item>
-AndroidX Browser (androidx.browser) — Chrome Custom Tabs support for Google Drive API authentication. (Apache-2.0)
+AndroidX Browser (androidx.browser) — Chrome Custom Tabs-stöd för Google Drive API-autentisering. (Apache-2.0)
 </item>
         <item>
-ZXing (com.google.zxing:core) — barcode image processing library. (Apache-2.0)
+ZXing (com.google.zxing:core) — streckkodsbildbehandlingsbibliotek. (Apache-2.0)
 </item>
         <item>
-gifencoder (com.squareup:gifencoder) — pure Java GIF encoding library for creating animated GIF files from selected images. (Apache-2.0)
+gifencoder (com.squareup:gifencoder) — rent Java GIF-kodningsbibliotek för att skapa animerade GIF-filer från utvalda bilder. (Apache-2.0)
 </item>
         <item>
-AndroidX ExifInterface (androidx.exifinterface:exifinterface) — library for reading, writing, and stripping EXIF and GPS metadata across JPEG, PNG, WebP, HEIF, and DNG image formats. (Apache-2.0)
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) — bibliotek för att läsa, skriva och ta bort EXIF- och GPS-metadata i JPEG-, PNG-, WebP-, HEIF- och DNG-bildformat. (Apache-2.0)
 </item>
         <item>
-Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+Amazon Appstore SDK — behandlar valfria tipsköp i appen på Amazon-enheter. (Egendomsskyddad)
 </item>
         <item>
-jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — ljudtaggningsbibliotek för att läsa och redigera metadata och omslagsbilder i MP3-, FLAC-, M4A-, OGG-, OPUS-, WAV- och WMA-format. (LGPL-3.0 / LGPL-2.1)
 </item>
         <item>
-AndroidX WebKit (androidx.webkit) — library providing WebViewAssetLoader for secure, local-only rendering of SMIL animated SVG/SVGZ files in UFM Media Player without external network access or file-scheme vulnerabilities. (Apache-2.0)
+AndroidX WebKit (androidx.webkit) — bibliotek som tillhandahåller WebViewAssetLoader för säker, endast lokal rendering av SMIL-animerade SVG/SVGZ-filer i UFM Media Player utan extern nätverksåtkomst eller filschemasårbarheter. (Apache-2.0)
 </item>
         <item>
-libtorrent4j (org.libtorrent4j) — Java and Kotlin JNI wrapper around Rasterbar libtorrent for zero-seeding peer-to-peer BitTorrent downloading. (BSD-3-Clause / MIT)
+libtorrent4j (org.libtorrent4j) — Java och Kotlin JNI omsluter Rasterbar libtorrent för noll-seeding peer-to-peer BitTorrent-nedladdning. (BSD-3-klausul / MIT)
 </item>
     </string-array>
 
@@ -680,27 +680,27 @@ support@kilowatch.co.za
          PRIVACY POLICY
     ═══════════════════════════════════════════════════════════ -->
     <string name="pp_screen_title">
-Privacy Policy
+Sekretesspolicy
 </string>
     <string name="pp_summary">
-Your files stay on your device — we never see them. With your consent, we collect anonymous usage analytics via Firebase to make the app better. No ads, no data selling, no funny business.
+Dina filer finns kvar på din enhet – vi ser dem aldrig. Med ditt samtycke samlar vi in ​​anonym användningsanalys via Firebase för att göra appen bättre. Inga annonser, ingen dataförsäljning, inga roliga affärer.
 </string>
 
     <!-- Section titles -->
     <string name="pp_s1_title">
-1. Introduction
+1. Introduktion
 </string>
     <string name="pp_s2_title">
-2. Information We Collect
+2. Information vi samlar in
 </string>
     <string name="pp_s3_title">
-3. How We Use Your Information
+3. Hur vi använder din information
 </string>
     <string name="pp_s4_title">
-4. Permissions &amp; Why We Need Them
+4. Behörigheter och varför vi behöver dem
 </string>
     <string name="pp_s5_title">
-5. Data Security
+5. Datasäkerhet
 </string>
     <string name="pp_s6_title">
 6. Google API-tjänster — Redovisning av begränsad användning
@@ -1571,7 +1571,7 @@ Lokal appdata
 Valvkrypteringsnycklar
 </item>
         <item>
-Indexed File Metadata
+Indexerad filmetadata
 </item>
         <item>
 Google Drive / OneDrive / Dropbox OAuth-tokens
@@ -1635,7 +1635,7 @@ Bevilja eller dra tillbaka samtycke till Firebase Analytics när som helst via I
 Öppna Android-inställningar och gå till Appar.
 </item>
         <item>
-Find and tap Ultimate File Manager Pro.
+Hitta och tryck på Ultimate File Manager Pro.
 </item>
         <item>
 Tryck på Lagring → Rensa data, eller avinstallera helt enkelt appen.
@@ -1648,10 +1648,10 @@ Tryck på Lagring → Rensa data, eller avinstallera helt enkelt appen.
 Lagringsbehörigheter
 </item>
         <item>
-Network Permissions
+Nätverksbehörigheter
 </item>
         <item>
-Network State
+Nätverksstat
 </item>
         <item>
 Multicast
@@ -1669,7 +1669,7 @@ Förhöjd åtkomst (Porter, Shizuku &amp; Shevery)
 Förvaringsindexerare
 </item>
         <item>
-Query Packages
+Fråga paket
 </item>
         <item>
 Recensioner i appen
@@ -1678,18 +1678,18 @@ Recensioner i appen
 AVIF Image Support
 </item>
         <item>
-Lottie Animations
+Lottie animationer
 </item>
     </string-array>
     <string-array name="pp_compliance_details">
         <item>
-File browsing and management
+Filbläddring och hantering
 </item>
         <item>
-Remote file management, SMB/FTP/SFTP/SCP/NFS network shares, and device pairing over local Wi-Fi
+Fjärrfilhantering, SMB/FTP/SFTP/SCP/NFS-nätverksresurser och enhetsparkoppling över lokalt Wi-Fi
 </item>
         <item>
-VPN detection for Remote Management and network share connectivity
+VPN-detektering för fjärrhantering och nätverksdelning
 </item>
         <item>
 Lokal nätverksenhetsupptäckt (NSD/mDNS) för enhetsparning
@@ -1698,19 +1698,19 @@ Lokal nätverksenhetsupptäckt (NSD/mDNS) för enhetsparning
 Varningar om slutförande av drift och lagringsvarningar
 </item>
         <item>
-APK installation from local storage
+APK-installation från lokal lagring
 </item>
         <item>
 Avancerad filhantering i begränsade systemkataloger via Porter / Shizuku API
 </item>
         <item>
-Indexes file metadata locally for fast search
+Indexerar filmetadata lokalt för snabb sökning
 </item>
         <item>
-App Manager and Debloater features — reads installed package names, versions, sizes, and system/user flags on-device only. Not uploaded or shared. The Debloater cross-references package names locally against a publicly available debloat reference list.
+App Manager och Debloater-funktioner – läser installerade paketnamn, versioner, storlekar och system-/användarflaggor endast på enheten. Inte uppladdat eller delat. Debloatern korsrefererar paketnamn lokalt mot en allmänt tillgänglig referenslista för debloat.
 </item>
         <item>
-Google Play In-App Review API for collecting user feedback
+Google Play In-App Review API för att samla in feedback från användare
 </item>
         <item>
 Avkodar och visar AVIF-bilder i den inbyggda visningsprogrammet via avif-coder (io.github.awxkee) på API 24–30; API 31+ använder den inbyggda ImageDecoder

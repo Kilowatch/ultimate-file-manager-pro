@@ -8,10 +8,10 @@
 Ultimate File Manager Pro
 </string>
     <string name="policy_company">
-KiloWatch
+킬로워치
 </string>
     <string name="policy_last_updated">
-Last Updated: November 2026
+최종 업데이트: 2026년 11월
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -180,82 +180,82 @@ Ultimate File Manager Pro를 사용함으로써 귀하는 본 이용약관을 �
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-File Browser — browse, copy, move, rename, and delete files anywhere on your device.
+파일 브라우저 — 장치의 어느 곳에서나 파일을 찾아보고, 복사하고, 이동하고, 이름을 바꾸고, 삭제할 수 있습니다.
 </item>
         <item>
-Encrypted Vault — lock sensitive files behind AES-256-GCM encryption with your own PIN.
+암호화된 저장소 — 자신의 PIN을 사용하여 AES-256-GCM 암호화 뒤에 민감한 파일을 잠급니다.
 </item>
         <item>
-File Server — host an FTP or secure SFTP server directly on your device to share files across your local network.
+파일 서버 — 장치에서 직접 FTP 또는 보안 SFTP 서버를 호스팅하여 로컬 네트워크에서 파일을 공유합니다.
 </item>
         <item>
-Remote Management — manage files over your local Wi-Fi via a built-in HTTP server that supports uploading, downloading, and installing APKs remotely.
+원격 관리 — 원격으로 APK 업로드, 다운로드 및 설치를 지원하는 내장 HTTP 서버를 통해 로컬 Wi-Fi를 통해 파일을 관리합니다.
 </item>
         <item>
-Network Shares — connect to SMB, FTP, and NFS servers on your local network to browse, download, and manage remote files.
+네트워크 공유 — 로컬 네트워크의 SMB, FTP 및 NFS 서버에 연결하여 원격 파일을 탐색, 다운로드 및 관리합니다.
 </item>
         <item>
-Folder Sync — automatically back up local phone folders to an SMB or FTP network share on a schedule you choose (interval or specific time daily, weekly, or monthly).
+폴더 동기화 — 선택한 일정(간격 또는 특정 시간(매일, 매주 또는 매월))에 따라 로컬 전화 폴더를 SMB 또는 FTP 네트워크 공유에 자동으로 백업합니다.
 </item>
         <item>
-Device Pairing — pair your mobile phone and Android TV over local Wi-Fi to transfer and install files.
+장치 페어링 — 로컬 Wi-Fi를 통해 휴대폰과 Android TV를 페어링하여 파일을 전송하고 설치합니다.
 </item>
         <item>
-ADB Terminal — connect to Android devices in Developer Mode over your local Wi-Fi using ADB (Android Debug Bridge) for direct shell access and advanced troubleshooting.
+ADB 터미널 — 직접 셸 액세스 및 고급 문제 해결을 위해 ADB(Android 디버그 브리지)를 사용하여 로컬 Wi-Fi를 통해 개발자 모드에서 Android 장치에 연결합니다.
 </item>
         <item>
-Built-in Viewers — view text files, PDFs, animated images (APNG, GIF, animated WebP, AVIF, SVG and more), archives, and other formats directly within the app.
+내장 뷰어 — 텍스트 파일, PDF, 애니메이션 이미지(APNG, GIF, 애니메이션 WebP, AVIF, SVG 등), 아카이브 및 기타 형식을 앱 내에서 직접 볼 수 있습니다.
 </item>
         <item>
-Advanced ZIP Support — create and extract password-protected and AES-encrypted ZIP archives.
+고급 ZIP 지원 — 비밀번호로 보호되고 AES로 암호화된 ZIP 아카이브를 생성하고 추출합니다.
 </item>
         <item>
-Remote Screenshots — capture the screen of your paired Android TV over local Wi-Fi via ADB and save it directly to your phone\'s storage.
+원격 스크린샷 — ADB를 통해 로컬 Wi-Fi를 통해 페어링된 Android TV의 화면을 캡처하고 휴대폰 저장소에 직접 저장합니다.
 </item>
         <item>
-7Z Archive Support — extract 7Z archives with LZMA/LZMA2 compression.
+7Z 아카이브 지원 — LZMA/LZMA2 압축으로 7Z 아카이브를 추출합니다.
 </item>
         <item>
-File Search — quickly find files and folders across your device storage.
+파일 검색 — 장치 저장 공간에서 파일과 폴더를 빠르게 찾습니다.
 </item>
         <item>
-Storage Analyser — see a visual breakdown of what\'s using your storage space.
+스토리지 분석기 - 스토리지 공간을 사용하는 항목을 시각적으로 분석합니다.
 </item>
         <item>
-App Manager — view and manage all apps installed on your device, with debloat recommendations for pre-installed apps.
+앱 관리자 — 사전 설치된 앱에 대한 디블로트 권장 사항과 함께 장치에 설치된 모든 앱을 보고 관리합니다.
 </item>
         <item>
-APK Installer — install Android apps and split APKs (XAPK) directly from files saved locally.
+APK 설치 프로그램 — Android 앱을 설치하고 로컬에 저장된 파일에서 직접 APK(XAPK)를 분할합니다.
 </item>
         <item>
-Elevated Access (Porter, Shizuku, Shevery &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.
+높은 액세스(Porter, Shizuku, Shevery 및 ADB) — 장치를 실제로 루팅하지 않고도 시스템 파일과 제한된 디렉터리를 관리할 수 있는 루트와 같은 액세스 권한을 얻습니다.
 </item>
         <item>
-Root Access (Mobile) — elevated Superuser access for rooted devices to browse, manage, and inspect system-level partitions and protected directories.
+루트 액세스(모바일) — 시스템 수준 파티션 및 보호된 디렉터리를 검색, 관리 및 검사할 수 있도록 루팅된 장치에 대한 수퍼유저 액세스 권한이 향상되었습니다.
 </item>
         <item>
-Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.
+Storage Indexer — 즉각적인 검색과 매우 빠른 탐색을 위해 파일 메타데이터의 로컬 인덱스를 생성합니다.
 </item>
         <item>
-Storage Access Framework — other apps can access your files through UFM\'s document provider.
+저장소 액세스 프레임워크 — 다른 앱은 UFM의 문서 제공자를 통해 파일에 액세스할 수 있습니다.
 </item>
         <item>
-Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.
+Tip Jar — 개발자를 지원하기 위한 일회성 구매 옵션입니다. 앱은 팁 없이 항상 무료입니다.
 </item>
         <item>
-UFM Media Player — play audio, video, and SMIL animated SVG/SVGZ vector files with background playback, notification controls, Picture-in-Picture mode, and playlist management.
+UFM 미디어 플레이어 — 배경 재생, 알림 제어, Picture-in-Picture 모드 및 재생 목록 관리를 통해 오디오, 비디오 및 SMIL 애니메이션 SVG/SVGZ 벡터 파일을 재생합니다.
 </item>
         <item>
-GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.
+GIF 생성기 — 사용자 정의 프레임 속도, 크기 조정 옵션, 드래그 앤 드롭 프레임 재정렬을 사용하여 선택한 이미지에서 애니메이션 GIF 파일을 생성합니다.
 </item>
         <item>
-Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.
+사진 EXIF ​​도구 — 사진 EXIF ​​및 GPS 메타데이터를 검사하고, 개인 위치 태그 및 장치 정보를 삭제하고, 캡처 타임스탬프와 카메라 메타데이터를 사용하여 사진 이름을 일괄적으로 바꿉니다.
 </item>
         <item>
-Music Tag Editor (Mobile) — inspect, edit, clean, and batch-update audio metadata descriptions (title, artist, album, year, genre, lyrics) and embedded album art directly inside audio files.
+Music Tag Editor(모바일) — 오디오 메타데이터 설명(제목, 아티스트, 앨범, 연도, 장르, 가사) 및 포함된 앨범 아트를 오디오 파일 내에 직접 검사, 편집, 정리 및 일괄 업데이트합니다.
 </item>
         <item>
-Download Manager — download files via direct HTTP/HTTPS URLs and peer-to-peer Magnet links or .torrent files for open-source distributions, public domain media, and authorized content.
+다운로드 관리자 — 직접 HTTP/HTTPS URL과 P2P 마그넷 링크 또는 오픈 소스 배포판, 공개 도메인 미디어 및 인증된 콘텐츠를 위한 .torrent 파일을 통해 파일을 다운로드합니다.
 </item>
     </string-array>
 
@@ -352,52 +352,52 @@ Porter, Shizuku, Shevery 또는 ADB를 고급 액세스에 사용하면 앱이 �
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
         <item>
-Keep regular backups of important files before performing bulk operations.
+대량 작업을 수행하기 전에 중요한 파일을 정기적으로 백업하십시오.
 </item>
         <item>
-Store your Vault PIN and Recovery Code somewhere safe — we cannot retrieve them for you.
+Vault PIN과 복구 코드를 안전한 곳에 보관하세요. 당사에서는 이를 검색해드릴 수 없습니다.
 </item>
         <item>
-Keep your PIN private. Anyone who knows it can access your Vault.
+PIN을 비공개로 유지하세요. 이를 아는 사람은 누구나 귀하의 Vault에 액세스할 수 있습니다.
 </item>
         <item>
-Keep your network share credentials safe — they are stored locally on your device.
+네트워크 공유 자격 증명을 안전하게 보관하세요. 해당 자격 증명은 장치에 로컬로 저장됩니다.
 </item>
         <item>
-Review your Folder Sync remote paths carefully — syncing to an incorrect network folder may overwrite existing files.
+폴더 동기화 원격 경로를 주의 깊게 검토하십시오. 잘못된 네트워크 폴더에 동기화하면 기존 파일을 덮어쓸 수 있습니다.
 </item>
         <item>
-Exercise caution when removing system apps based on debloat recommendations.
+디블로트 권장 사항에 따라 시스템 앱을 제거할 때는 주의하세요.
 </item>
         <item>
-Only connect via ADB Terminal to devices you own or have explicit permission to access. Do not use ADB Terminal to gain unauthorized access to any device.
+귀하가 소유하고 있거나 명시적인 액세스 권한이 있는 장치에만 ADB 터미널을 통해 연결하세요. ADB 터미널을 사용하여 모든 장치에 무단으로 액세스하지 마십시오.
 </item>
         <item>
-Keep any ADB, Porter, Shizuku, or Shevery pairing PINs private — share these only with people you trust to have access to your device.
+ADB, Porter, Shizuku 또는 Shevery 페어링 PIN을 비공개로 유지하세요. 기기에 액세스할 수 있다고 신뢰하는 사람들과만 공유하세요.
 </item>
         <item>
-Secure your Porter, Shizuku or Shevery Manager — granting UFM elevated access via any of these managers gives it power over restricted files. Only grant this access if you trust the app.
+Porter, Shizuku 또는 Shevery Manager를 보호하십시오. 이러한 관리자 중 하나를 통해 UFM에 높은 액세스 권한을 부여하면 제한된 파일에 대한 권한이 부여됩니다. 앱을 신뢰하는 경우에만 이 액세스 권한을 부여하세요.
 </item>
         <item>
-Exercise extreme caution when Root Access is active — never delete or modify system files unless you understand the consequences to your device OS.
+루트 액세스가 활성화된 경우 각별히 주의하십시오. 장치 OS에 미치는 영향을 이해하지 못하는 한 시스템 파일을 삭제하거나 수정하지 마십시오.
 </item>
         <item>
-Only use the app for lawful purposes. Don\'t store, share, or distribute illegal content.
+합법적인 목적으로만 앱을 사용하세요. 불법 콘텐츠를 저장, 공유, 배포하지 마세요.
 </item>
         <item>
-Don\'t use Remote Management to access another person\'s device without their permission.
+원격 관리를 사용하여 다른 사람의 허가 없이 다른 사람의 장치에 액세스하지 마십시오.
 </item>
         <item>
-Don\'t attempt to reverse-engineer, decompile, or tamper with the app.
+앱을 리버스 엔지니어링하거나 디컴파일하거나 변조하려고 시도하지 마세요.
 </item>
         <item>
-Manage your indexed records responsibly — you can delete records or ignore specific drives at any time via Settings -> Storage Indexer.
+인덱싱된 레코드를 책임감 있게 관리하세요. 설정 -&gt; Storage Indexer를 통해 언제든지 레코드를 삭제하거나 특정 드라이브를 무시할 수 있습니다.
 </item>
         <item>
-Verify the authenticity and safety of any APK files before installing them.
+APK 파일을 설치하기 전에 해당 파일의 신뢰성과 안전성을 확인하세요.
 </item>
         <item>
-Don\'t use the Download Manager, BitTorrent engine, or HTTP streamer to download, share, transmit, or facilitate infringement of copyrighted material without authorization from the copyright holder. You assume sole liability for downloaded content.
+저작권 소유자의 승인 없이 저작권 자료를 다운로드, 공유, 전송하거나 침해를 조장하기 위해 다운로드 관리자, BitTorrent 엔진 또는 HTTP 스트리머를 사용하지 마십시오. 다운로드한 콘텐츠에 대한 책임은 전적으로 귀하에게 있습니다.
 </item>
     </string-array>
 
@@ -524,142 +524,142 @@ TV 리모컨의 버튼을 누를 때 촉각 피드백을 제공합니다.
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD — lightweight HTTP server that powers Remote Management. (BSD-3-Clause)
+NanoHTTPD — 원격 관리를 지원하는 경량 HTTP 서버입니다. (BSD-3-절)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3 client library for network share browsing and Folder Sync. (LGPL-2.1)
+jcifs-ng(AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — 네트워크 공유 검색 및 폴더 동기화를 위한 SMB2/SMB3 클라이언트 라이브러리. (LGPL-2.1)
 </item>
         <item>
-smbj (hierynomus/smbj) — SMB2/SMB3 Java implementation used for network share access. (Apache-2.0)
+smbj (hierynomus/smbj) — 네트워크 공유 액세스에 사용되는 SMB2/SMB3 Java 구현입니다. (아파치-2.0)
 </item>
         <item>
-EMC ECS NFS Client (com.emc.ecs:nfs-client) — NFS v3 client library for network share access. (Apache-2.0)
+EMC ECS NFS 클라이언트(com.emc.ecs:nfs-client) - 네트워크 공유 액세스를 위한 NFS v3 클라이언트 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-libnfs (sahlberg/libnfs) — native NFS client library supporting NFSv2, NFSv3, and NFSv4. (LGPL-2.1 / BSD-2-Clause)
+libnfs(sahlberg/libnfs) — NFSv2, NFSv3 및 NFSv4를 지원하는 기본 NFS 클라이언트 라이브러리입니다. (LGPL-2.1 / BSD-2 조항)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access and hosting. (Apache-2.0)
+Apache MINA SSHD(org.apache.sshd) — 보안 네트워크 공유 액세스 및 호스팅을 위한 포괄적인 SSHD 코어, SFTP 및 SCP 클라이언트 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-Apache FtpServer (org.apache.ftpserver) — 100% pure Java FTP server. (Apache-2.0)
+Apache FtpServer (org.apache.ftpserver) — 100% 순수 Java FTP 서버입니다. (아파치-2.0)
 </item>
         <item>
-Apache POI — document processing library for viewing office files. (Apache-2.0)
+Apache POI — 사무실 파일을 보기 위한 문서 처리 라이브러리. (아파치-2.0)
 </item>
         <item>
-Firebase Analytics — Google\'s analytics platform that helps us understand app usage. (Apache-2.0)
+Firebase Analytics — 앱 사용량을 이해하는 데 도움이 되는 Google의 분석 플랫폼입니다. (아파치-2.0)
 </item>
         <item>
-AndroidX Libraries (incl. Leanback for Android TV) — Google\'s Jetpack components for modern Android development. (Apache-2.0)
+AndroidX 라이브러리(Android TV용 Leanback 포함) — 최신 Android 개발을 위한 Google의 Jetpack 구성 요소입니다. (아파치-2.0)
 </item>
         <item>
-Material Design Components — Google\'s UI library for a clean, consistent interface. (Apache-2.0)
+머티리얼 디자인 구성요소 — 깔끔하고 일관된 인터페이스를 위한 Google의 UI 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-Room Persistence Library — SQLite abstraction layer for local metadata indexing. (Apache-2.0)
+Room Persistence Library — 로컬 메타데이터 인덱싱을 위한 SQLite 추상화 계층입니다. (아파치-2.0)
 </item>
         <item>
-zip4j (net.lingala.zip4j) — advanced ZIP library for password-protected and AES-encrypted archives. (Apache-2.0)
+zip4j (net.lingala.zip4j) — 비밀번호로 보호되고 AES로 암호화된 아카이브를 위한 고급 ZIP 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-Apache Commons Compress — library for reading and writing various archive formats (7z, zip, tar, etc). (Apache-2.0)
+Apache Commons Compress — 다양한 아카이브 형식(7z, zip, tar 등)을 읽고 쓰기 위한 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) — implementation of XZ and LZMA compression. (Public Domain)
+XZ for Java(org.tukaani.xz) — XZ 및 LZMA 압축 구현. (공개 도메인)
 </item>
         <item>
-zstd-jni (com.github.luben:zstd-jni) — JNI bindings for Zstandard compression and extraction library. (BSD-2-Clause)
+zstd-jni (com.github.luben:zstd-jni) — Zstandard 압축 및 추출 라이브러리용 JNI 바인딩입니다. (BSD-2-절)
 </item>
         <item>
-Junrar (com.github.junrar:junrar) — Java RAR extraction library. (BSD-3-Clause)
+Junrar(com.github.junrar:junrar) — Java RAR 추출 라이브러리. (BSD-3-절)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) — Android Debug Bridge library enabling secure connections to ADB-enabled devices for remote shell access and certificate-based pairing. (Apache-2.0)
+libadb-android (com.github.MuntashirAkon) — 원격 셸 액세스 및 인증서 기반 페어링을 위해 ADB 지원 장치에 대한 보안 연결을 지원하는 Android 디버그 브리지 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-libsu (com.github.topjohnwu.libsu) — complete Android su shell and root service solution. (Apache-2.0)
+libsu (com.github.topjohnwu.libsu) — 완전한 Android su 셸 및 루트 서비스 솔루션입니다. (아파치-2.0)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access. (Apache-2.0)
+Apache MINA SSHD(org.apache.sshd) — 보안 네트워크 공유 액세스를 위한 포괄적인 SSHD 코어, SFTP 및 SCP 클라이언트 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-EdDSA for Java (net.i2p.crypto:eddsa) — implementation of EdDSA (Edwards-curve Digital Signature Algorithm) for Ed25519 SSH keys. (CC0-1.0)
+Java용 EdDSA(net.i2p.crypto:eddsa) — Ed25519 SSH 키용 EdDSA(Edwards-curve Digital Signature Algorithm) 구현. (CC0-1.0)
 </item>
         <item>
-SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding for Android used by the SSHD library. (MIT)
+SLF4J Android(uk.uuid.slf4j:slf4j-android) — SSHD 라이브러리에서 사용하는 Android용 로깅 바인딩입니다. (MIT)
 </item>
         <item>
-BouncyCastle (org.bouncycastle) — cryptography library for RSA/EdDSA keypair generation and X.509 certificate creation; version 1.83. (MIT-style License)
+BouncyCastle(org.bouncycastle) — RSA/EdDSA 키 쌍 생성 및 X.509 인증서 생성을 위한 암호화 라이브러리. 버전 1.83. (MIT 스타일 라이선스)
 </item>
         <item>
-Google Play Billing Library — processes optional in-app tip purchases; governed by Google Play\'s Privacy Policy. (Apache-2.0)
+Google Play 결제 라이브러리 — 선택적인 인앱 팁 구매를 처리합니다. Google Play의 개인정보 보호정책이 적용됩니다. (아파치-2.0)
 </item>
         <item>
-Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)
+Google Play 리뷰 라이브러리 — 앱의 인앱 평가 및 리뷰 기능을 강화합니다. (아파치-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, JXL, SVG) in the built-in image viewer. (Apache-2.0)
+코일(io.coil-kt.coil3) — 내장 이미지 뷰어에서 애니메이션 이미지 렌더링(APNG, GIF, 애니메이션 WebP, AVIF, JXL, SVG)을 지원하는 이미지 로딩 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-avif-coder (io.github.awxkee) — AVIF image decoding library providing native AVIF support on Android API 24–30; API 31+ uses the built-in ImageDecoder. (Apache-2.0)
+avid-coder (io.github.awxkee) — Android API 24-30에서 기본 AVIF 지원을 제공하는 AVIF 이미지 디코딩 라이브러리입니다. API 31+는 내장 ImageDecoder를 사용합니다. (아파치-2.0)
 </item>
         <item>
-jxl-coder (io.github.awxkee) — JPEG XL image decoding and encoding library providing native JXL support on Android API 21+. (Apache-2.0 / BSD-3-Clause)
+jxl-coder(io.github.awxkee) — Android API 21+에서 기본 JXL 지원을 제공하는 JPEG XL 이미지 디코딩 및 인코딩 라이브러리입니다. (Apache-2.0 / BSD-3-절)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)
+APNG4Android(com.github.penfeizhou.android.animation) — Android에서 애니메이션 PNG 파일을 디코딩하고 렌더링하기 위한 핵심 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-Porter SDK (com.github.d4rken-org.porter-api) — Android SDK enabling elevated file system access via the Porter, Shizuku or Shevery Manager apps. It embeds the Shizuku API (rikka.shizuku), licensed under MIT. (Apache-2.0)
+Porter SDK(com.github.d4rken-org.porter-api) — Porter, Shizuku 또는 Shevery Manager 앱을 통해 향상된 파일 시스템 액세스를 가능하게 하는 Android SDK입니다. 여기에는 MIT 라이선스를 받은 Shizuku API(rikka.shizuku)가 포함되어 있습니다. (아파치-2.0)
 </item>
         <item>
-ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)
+ViewPager2 — 프래그먼트와 레이아웃 사이를 이동하기 위한 Android 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — animation library for rendering Adobe After Effects animations natively on Android, used for smooth UI animations throughout the app. (Apache-2.0)
+Lottie(com.airbnb.android:lottie) v6.3.0 — Android에서 기본적으로 Adobe After Effects 애니메이션을 렌더링하기 위한 애니메이션 라이브러리로, 앱 전체에서 부드러운 UI 애니메이션에 사용됩니다. (아파치-2.0)
 </item>
         <item>
-Ktor (io.ktor) — lightweight web framework used to power the local File Server. (Apache-2.0)
+Ktor(io.ktor) — 로컬 파일 서버를 구동하는 데 사용되는 경량 웹 프레임워크입니다. (아파치-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) — library for rendering and viewing PDF documents natively. (Apache-2.0)
+PDFBox-Android(com.tom-roush:pdfbox-android) — 기본적으로 PDF 문서를 렌더링하고 보기 위한 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-ExoPlayer / Media3 (androidx.media3) — advanced media player for robust video and audio playback. (Apache-2.0)
+ExoPlayer / Media3(androidx.media3) — 강력한 비디오 및 오디오 재생을 위한 고급 미디어 플레이어입니다. (아파치-2.0)
 </item>
         <item>
-Microsoft Authentication Library (MSAL) — handles OneDrive API authentication natively. (MIT)
+MSAL(Microsoft 인증 라이브러리) — OneDrive API 인증을 기본적으로 처리합니다. (MIT)
 </item>
         <item>
-OkHttp (com.squareup.okhttp3) — robust HTTP &amp; HTTP/2 client for cloud storage network requests. (Apache-2.0)
+OkHttp(com.squareup.okhttp3) — 클라우드 스토리지 네트워크 요청을 위한 강력한 HTTP 및 HTTP/2 클라이언트입니다. (아파치-2.0)
 </item>
         <item>
-Gson (com.google.code.gson) — JSON processing library used for cloud storage integration. (Apache-2.0)
+Gson(com.google.code.gson) — 클라우드 스토리지 통합에 사용되는 JSON 처리 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-AndroidX Browser (androidx.browser) — Chrome Custom Tabs support for Google Drive API authentication. (Apache-2.0)
+AndroidX 브라우저(androidx.browser) — Google Drive API 인증을 위한 Chrome 맞춤 탭 지원. (아파치-2.0)
 </item>
         <item>
-ZXing (com.google.zxing:core) — barcode image processing library. (Apache-2.0)
+ZXing(com.google.zxing:core) — 바코드 이미지 처리 라이브러리. (아파치-2.0)
 </item>
         <item>
-gifencoder (com.squareup:gifencoder) — pure Java GIF encoding library for creating animated GIF files from selected images. (Apache-2.0)
+gifencoder (com.squareup:gifencoder) — 선택한 이미지에서 애니메이션 GIF 파일을 생성하기 위한 순수 Java GIF 인코딩 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-AndroidX ExifInterface (androidx.exifinterface:exifinterface) — library for reading, writing, and stripping EXIF and GPS metadata across JPEG, PNG, WebP, HEIF, and DNG image formats. (Apache-2.0)
+AndroidX ExifInterface(androidx.exifinterface:exifinterface) — JPEG, PNG, WebP, HEIF 및 DNG 이미지 형식에서 EXIF ​​및 GPS 메타데이터를 읽고 쓰고 제거하기 위한 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+Amazon Appstore SDK — Amazon 장치에서 선택적 인앱 팁 구매를 처리합니다. (소유권)
 </item>
         <item>
-jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
+jaudiotagger(com.github.AdrienPoupa:jaaudiotagger) — MP3, FLAC, M4A, OGG, OPUS, WAV 및 WMA 형식의 메타데이터와 표지 아트를 읽고 편집하기 위한 오디오 태그 라이브러리입니다. (LGPL-3.0 / LGPL-2.1)
 </item>
         <item>
-AndroidX WebKit (androidx.webkit) — library providing WebViewAssetLoader for secure, local-only rendering of SMIL animated SVG/SVGZ files in UFM Media Player without external network access or file-scheme vulnerabilities. (Apache-2.0)
+AndroidX WebKit(androidx.webkit) — 외부 네트워크 액세스나 파일 구성표 취약점 없이 UFM 미디어 플레이어에서 SMIL 애니메이션 SVG/SVGZ 파일의 안전한 로컬 전용 렌더링을 위해 WebViewAssetLoader를 제공하는 라이브러리입니다. (아파치-2.0)
 </item>
         <item>
-libtorrent4j (org.libtorrent4j) — Java and Kotlin JNI wrapper around Rasterbar libtorrent for zero-seeding peer-to-peer BitTorrent downloading. (BSD-3-Clause / MIT)
+libtorrent4j (org.libtorrent4j) — 제로 시딩 P2P BitTorrent 다운로드를 위해 Rasterbar libtorrent를 둘러싼 Java 및 Kotlin JNI 래퍼입니다. (BSD-3 조항 / MIT)
 </item>
     </string-array>
 
@@ -797,7 +797,11 @@ Google Play 결제의 익명 구매 토큰은 팁 확인을 위해 기기에서 
 \n
 아무 것도 자동으로 전송되지 않습니다. 충돌 또는 멈춤 후에는 보고서를 KiloWatch(kilowatch.co.za)에 보낼지 묻는 메시지가 표시됩니다. \\\'아니요\\\'를 선택하면 로컬에서 삭제됩니다. 설정 → 충돌 및 ANR 보고를 통해 언제든지 충돌 및 멈춤 감지를 비활성화할 수 있습니다. 비활성화하면 보류 중인 보고서도 삭제됩니다.
 </string>
-    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+    <string name="pp_s2_crash_body">
+UFM은 충돌이나 정지 시 진단 정보를 캡처하여 문제를 해결할 수 있습니다. 여기에는 앱 버전, Android 버전, 기기 모델 및 제조업체, 예외 유형 및 메시지, 스택 추적이 포함됩니다. 여기에는 파일, 이름, 이메일 주소 또는 계정 정보가 포함되지 않습니다.\n
+\n
+자동으로 전송되는 것은 없습니다. 충돌 또는 정지 후에 보고서를 KiloWatch(kilowatch.co.za)로 보낼지 묻는 메시지가 나타납니다. \'아니요\'를 선택하면 로컬에서 삭제됩니다. 설정 → 충돌 및 ANR 보고를 통해 언제든지 충돌 및 정지 감지를 비활성화할 수 있습니다. 이를 비활성화하면 보류 중인 보고서도 삭제됩니다.
+</string>
 
     <string name="pp_s2_nocollect_heading">
 수집하지 않는 정보
@@ -1255,7 +1259,7 @@ API 29 미만 · 구형 기기에서 레거시 파일 수정
     <!-- Network permissions (Section 4) -->
     <string-array name="pp_network_perm_labels">
         <item>
-INTERNET
+인터넷
 </item>
         <item>
 ACCESS_WIFI_STATE
@@ -1492,22 +1496,22 @@ Drive 탐색: Drive 콘텐츠를 표시하기 위해 파일 및 폴더 메타데
     <!-- Third parties (Section 7) -->
     <string-array name="pp_third_party_names">
         <item>
-Firebase Analytics
+Firebase 분석
 </item>
         <item>
-Google Play Services
+구글 플레이 서비스
 </item>
         <item>
-Google Play Billing
+Google Play 결제
 </item>
         <item>
-Microsoft OneDrive API
+마이크로소프트 원드라이브 API
 </item>
         <item>
-Google Drive API
+구글 드라이브 API
 </item>
         <item>
-Dropbox API
+드롭박스 API
 </item>
         <item>
 AWS S3 / S3 호환 API (예: AWS S3, MinIO, IDrive E2)
@@ -1515,22 +1519,22 @@ AWS S3 / S3 호환 API (예: AWS S3, MinIO, IDrive E2)
     </string-array>
     <string-array name="pp_third_party_providers">
         <item>
-Google LLC
+구글 LLC
 </item>
         <item>
-Google LLC
+구글 LLC
 </item>
         <item>
-Google LLC
+구글 LLC
 </item>
         <item>
-Microsoft Corporation
+마이크로소프트사
 </item>
         <item>
-Google LLC
+구글 LLC
 </item>
         <item>
-Dropbox, Inc.
+드롭박스, Inc.
 </item>
         <item>
 Amazon Web Services 및 호환 제공업체

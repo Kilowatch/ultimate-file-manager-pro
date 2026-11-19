@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-Last Updated: November 2026
+Laatst bijgewerkt: november 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -180,82 +180,82 @@ Door Ultimate File Manager Pro te gebruiken, bevestigt u dat u deze Algemene voo
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-File Browser — browse, copy, move, rename, and delete files anywhere on your device.
+Bestandsbrowser: blader, kopieer, verplaats, hernoem en verwijder bestanden waar dan ook op uw apparaat.
 </item>
         <item>
-Encrypted Vault — lock sensitive files behind AES-256-GCM encryption with your own PIN.
+Gecodeerde kluis: vergrendel gevoelige bestanden achter AES-256-GCM-codering met uw eigen pincode.
 </item>
         <item>
-File Server — host an FTP or secure SFTP server directly on your device to share files across your local network.
+Bestandsserver — host een FTP- of beveiligde SFTP-server rechtstreeks op uw apparaat om bestanden via uw lokale netwerk te delen.
 </item>
         <item>
-Remote Management — manage files over your local Wi-Fi via a built-in HTTP server that supports uploading, downloading, and installing APKs remotely.
+Beheer op afstand – beheer bestanden via uw lokale Wi-Fi via een ingebouwde HTTP-server die het op afstand uploaden, downloaden en installeren van APK\'s ondersteunt.
 </item>
         <item>
-Network Shares — connect to SMB, FTP, and NFS servers on your local network to browse, download, and manage remote files.
+Netwerkshares: maak verbinding met SMB-, FTP- en NFS-servers op uw lokale netwerk om externe bestanden te doorzoeken, downloaden en beheren.
 </item>
         <item>
-Folder Sync — automatically back up local phone folders to an SMB or FTP network share on a schedule you choose (interval or specific time daily, weekly, or monthly).
+Mapsynchronisatie: maak automatisch een back-up van lokale telefoonmappen naar een SMB- of FTP-netwerkshare volgens een door u gekozen schema (interval of specifieke tijd dagelijks, wekelijks of maandelijks).
 </item>
         <item>
-Device Pairing — pair your mobile phone and Android TV over local Wi-Fi to transfer and install files.
+Apparaat koppelen: koppel uw mobiele telefoon en Android TV via lokale Wi-Fi om bestanden over te dragen en te installeren.
 </item>
         <item>
-ADB Terminal — connect to Android devices in Developer Mode over your local Wi-Fi using ADB (Android Debug Bridge) for direct shell access and advanced troubleshooting.
+ADB Terminal — maak verbinding met Android-apparaten in ontwikkelaarsmodus via uw lokale Wi-Fi met behulp van ADB (Android Debug Bridge) voor directe shell-toegang en geavanceerde probleemoplossing.
 </item>
         <item>
-Built-in Viewers — view text files, PDFs, animated images (APNG, GIF, animated WebP, AVIF, SVG and more), archives, and other formats directly within the app.
+Ingebouwde viewers: bekijk tekstbestanden, pdf\'s, geanimeerde afbeeldingen (APNG, GIF, geanimeerde WebP, AVIF, SVG en meer), archieven en andere formaten rechtstreeks in de app.
 </item>
         <item>
-Advanced ZIP Support — create and extract password-protected and AES-encrypted ZIP archives.
+Geavanceerde ZIP-ondersteuning — creëer en extraheer met een wachtwoord beveiligde en AES-gecodeerde ZIP-archieven.
 </item>
         <item>
-Remote Screenshots — capture the screen of your paired Android TV over local Wi-Fi via ADB and save it directly to your phone\'s storage.
+Externe screenshots: leg het scherm van uw gekoppelde Android TV vast via lokale Wi-Fi via ADB en sla dit rechtstreeks op in de opslag van uw telefoon.
 </item>
         <item>
-7Z Archive Support — extract 7Z archives with LZMA/LZMA2 compression.
+Ondersteuning voor 7Z-archief — extraheer 7Z-archieven met LZMA/LZMA2-compressie.
 </item>
         <item>
-File Search — quickly find files and folders across your device storage.
+Bestanden zoeken: vind snel bestanden en mappen op uw apparaatopslag.
 </item>
         <item>
-Storage Analyser — see a visual breakdown of what\'s using your storage space.
+Storage Analyzer — bekijk een visueel overzicht van wat uw opslagruimte gebruikt.
 </item>
         <item>
-App Manager — view and manage all apps installed on your device, with debloat recommendations for pre-installed apps.
+App Manager — bekijk en beheer alle apps die op uw apparaat zijn geïnstalleerd, met debloat-aanbevelingen voor vooraf geïnstalleerde apps.
 </item>
         <item>
-APK Installer — install Android apps and split APKs (XAPK) directly from files saved locally.
+APK-installatieprogramma: installeer Android-apps en splits APK\'s (XAPK) rechtstreeks vanuit lokaal opgeslagen bestanden.
 </item>
         <item>
-Elevated Access (Porter, Shizuku, Shevery &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.
+Verhoogde toegang (Porter, Shizuku, Shevery &amp; ADB) — verkrijg root-achtige toegang om systeembestanden en beperkte mappen te beheren zonder uw apparaat daadwerkelijk te rooten.
 </item>
         <item>
-Root Access (Mobile) — elevated Superuser access for rooted devices to browse, manage, and inspect system-level partitions and protected directories.
+Root Access (Mobiel) - verhoogde Superuser-toegang voor geroote apparaten om partities en beveiligde mappen op systeemniveau te doorzoeken, beheren en inspecteren.
 </item>
         <item>
-Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.
+Storage Indexer — maak een lokale index van bestandsmetagegevens voor direct zoeken en razendsnel browsen.
 </item>
         <item>
-Storage Access Framework — other apps can access your files through UFM\'s document provider.
+Storage Access Framework — andere apps hebben toegang tot uw bestanden via de documentprovider van UFM.
 </item>
         <item>
-Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.
+Fooienpot — optionele eenmalige aankopen om de ontwikkelaar te ondersteunen; de app is altijd gratis zonder fooi.
 </item>
         <item>
-UFM Media Player — play audio, video, and SMIL animated SVG/SVGZ vector files with background playback, notification controls, Picture-in-Picture mode, and playlist management.
+UFM Media Player — speel audio-, video- en SMIL-geanimeerde SVG/SVGZ-vectorbestanden af ​​met afspelen op de achtergrond, bedieningselementen voor meldingen, Picture-in-Picture-modus en beheer van afspeellijsten.
 </item>
         <item>
-GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.
+GIF Creator — maak geanimeerde GIF-bestanden van geselecteerde afbeeldingen met een aangepaste framesnelheid, opties voor het wijzigen van de grootte en het opnieuw ordenen van frames via slepen en neerzetten.
 </item>
         <item>
-Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.
+Foto-EXIF-tools — inspecteer EXIF- en GPS-metagegevens van foto\'s, wis privé-geotags en apparaatinformatie en hernoem foto\'s in batch met behulp van vastgelegde tijdstempels en camera-metagegevens.
 </item>
         <item>
-Music Tag Editor (Mobile) — inspect, edit, clean, and batch-update audio metadata descriptions (title, artist, album, year, genre, lyrics) and embedded album art directly inside audio files.
+Music Tag Editor (mobiel) — inspecteer, bewerk, opschoon en update de beschrijvingen van audiometagegevens (titel, artiest, album, jaar, genre, songteksten) en ingesloten albumhoezen rechtstreeks in audiobestanden.
 </item>
         <item>
-Download Manager — download files via direct HTTP/HTTPS URLs and peer-to-peer Magnet links or .torrent files for open-source distributions, public domain media, and authorized content.
+Download Manager — download bestanden via directe HTTP/HTTPS-URL\'s en peer-to-peer Magnet-links of .torrent-bestanden voor open-source distributies, publieke domeinmedia en geautoriseerde inhoud.
 </item>
     </string-array>
 
@@ -352,52 +352,52 @@ Onze totale aansprakelijkheid is beperkt tot het totale bedrag dat u voor in-app
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
         <item>
-Keep regular backups of important files before performing bulk operations.
+Maak regelmatig back-ups van belangrijke bestanden voordat u bulkbewerkingen uitvoert.
 </item>
         <item>
-Store your Vault PIN and Recovery Code somewhere safe — we cannot retrieve them for you.
+Bewaar uw kluispincode en herstelcode op een veilige plek. Wij kunnen deze niet voor u ophalen.
 </item>
         <item>
-Keep your PIN private. Anyone who knows it can access your Vault.
+Houd uw pincode privé. Iedereen die dit weet, heeft toegang tot uw kluis.
 </item>
         <item>
-Keep your network share credentials safe — they are stored locally on your device.
+Houd de inloggegevens voor uw netwerkshare veilig; deze worden lokaal op uw apparaat opgeslagen.
 </item>
         <item>
-Review your Folder Sync remote paths carefully — syncing to an incorrect network folder may overwrite existing files.
+Controleer de externe paden voor mapsynchronisatie zorgvuldig: bij synchronisatie met een onjuiste netwerkmap kunnen bestaande bestanden worden overschreven.
 </item>
         <item>
-Exercise caution when removing system apps based on debloat recommendations.
+Wees voorzichtig bij het verwijderen van systeem-apps op basis van debloat-aanbevelingen.
 </item>
         <item>
-Only connect via ADB Terminal to devices you own or have explicit permission to access. Do not use ADB Terminal to gain unauthorized access to any device.
+Maak alleen via ADB Terminal verbinding met apparaten waarvan u de eigenaar bent of waarvoor u expliciete toestemming heeft. Gebruik ADB Terminal niet om ongeautoriseerde toegang te krijgen tot welk apparaat dan ook.
 </item>
         <item>
-Keep any ADB, Porter, Shizuku, or Shevery pairing PINs private — share these only with people you trust to have access to your device.
+Houd eventuele ADB-, Porter-, Shizuku- of Shevery-koppelingspincodes privé. Deel deze alleen met mensen waarvan u vertrouwt dat ze toegang hebben tot uw apparaat.
 </item>
         <item>
-Secure your Porter, Shizuku or Shevery Manager — granting UFM elevated access via any of these managers gives it power over restricted files. Only grant this access if you trust the app.
+Beveilig uw Porter-, Shizuku- of Shevery-manager: door UFM verhoogde toegang te verlenen via een van deze managers, krijgt deze macht over beperkte bestanden. Verleen deze toegang alleen als u de app vertrouwt.
 </item>
         <item>
-Exercise extreme caution when Root Access is active — never delete or modify system files unless you understand the consequences to your device OS.
+Wees uiterst voorzichtig wanneer root-toegang actief is; verwijder of wijzig nooit systeembestanden tenzij u de gevolgen voor het besturingssysteem van uw apparaat begrijpt.
 </item>
         <item>
-Only use the app for lawful purposes. Don\'t store, share, or distribute illegal content.
+Gebruik de app alleen voor legale doeleinden. Bewaar, deel of verspreid geen illegale inhoud.
 </item>
         <item>
-Don\'t use Remote Management to access another person\'s device without their permission.
+Gebruik Extern beheer niet om zonder toestemming toegang te krijgen tot het apparaat van iemand anders.
 </item>
         <item>
-Don\'t attempt to reverse-engineer, decompile, or tamper with the app.
+Probeer de app niet te reverse-engineeren, decompileren of ermee te knoeien.
 </item>
         <item>
-Manage your indexed records responsibly — you can delete records or ignore specific drives at any time via Settings -> Storage Indexer.
+Beheer uw geïndexeerde records op verantwoorde wijze: u kunt op elk gewenst moment records verwijderen of specifieke schijven negeren via Instellingen -&gt; Storage Indexer.
 </item>
         <item>
-Verify the authenticity and safety of any APK files before installing them.
+Controleer de authenticiteit en veiligheid van eventuele APK-bestanden voordat u ze installeert.
 </item>
         <item>
-Don\'t use the Download Manager, BitTorrent engine, or HTTP streamer to download, share, transmit, or facilitate infringement of copyrighted material without authorization from the copyright holder. You assume sole liability for downloaded content.
+Gebruik de Download Manager, BitTorrent-engine of HTTP-streamer niet om auteursrechtelijk beschermd materiaal te downloaden, delen, verzenden of mogelijk te maken zonder toestemming van de houder van het auteursrecht. U bent als enige aansprakelijk voor gedownloade inhoud.
 </item>
     </string-array>
 
@@ -524,142 +524,142 @@ Biedt haptische feedback bij het indrukken van knoppen op de afstandsbediening v
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD — lightweight HTTP server that powers Remote Management. (BSD-3-Clause)
+NanoHTTPD — lichtgewicht HTTP-server die extern beheer mogelijk maakt. (BSD-3-clausule)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3 client library for network share browsing and Folder Sync. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3-clientbibliotheek voor bladeren door netwerkshares en mapsynchronisatie. (LGPL-2.1)
 </item>
         <item>
-smbj (hierynomus/smbj) — SMB2/SMB3 Java implementation used for network share access. (Apache-2.0)
+smbj (hierynomus/smbj) — SMB2/SMB3 Java-implementatie gebruikt voor toegang tot netwerkshares. (Apache-2.0)
 </item>
         <item>
-EMC ECS NFS Client (com.emc.ecs:nfs-client) — NFS v3 client library for network share access. (Apache-2.0)
+EMC ECS NFS Client (com.emc.ecs:nfs-client) — NFS v3-clientbibliotheek voor toegang tot netwerkshares. (Apache-2.0)
 </item>
         <item>
-libnfs (sahlberg/libnfs) — native NFS client library supporting NFSv2, NFSv3, and NFSv4. (LGPL-2.1 / BSD-2-Clause)
+libnfs (sahlberg/libnfs) — native NFS-clientbibliotheek die NFSv2, NFSv3 en NFSv4 ondersteunt. (LGPL-2.1 / BSD-2-clausule)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access and hosting. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) - uitgebreide SSHD core-, SFTP- en SCP-clientbibliotheek voor veilige toegang tot netwerkshares en hosting. (Apache-2.0)
 </item>
         <item>
-Apache FtpServer (org.apache.ftpserver) — 100% pure Java FTP server. (Apache-2.0)
+Apache FtpServer (org.apache.ftpserver) — 100% pure Java FTP-server. (Apache-2.0)
 </item>
         <item>
-Apache POI — document processing library for viewing office files. (Apache-2.0)
+Apache POI — documentverwerkingsbibliotheek voor het bekijken van Office-bestanden. (Apache-2.0)
 </item>
         <item>
-Firebase Analytics — Google\'s analytics platform that helps us understand app usage. (Apache-2.0)
+Firebase Analytics: het analyseplatform van Google dat ons helpt het app-gebruik te begrijpen. (Apache-2.0)
 </item>
         <item>
-AndroidX Libraries (incl. Leanback for Android TV) — Google\'s Jetpack components for modern Android development. (Apache-2.0)
+AndroidX-bibliotheken (incl. Leanback voor Android TV) - Jetpack-componenten van Google voor moderne Android-ontwikkeling. (Apache-2.0)
 </item>
         <item>
-Material Design Components — Google\'s UI library for a clean, consistent interface. (Apache-2.0)
+Material Design Components: de UI-bibliotheek van Google voor een overzichtelijke, consistente interface. (Apache-2.0)
 </item>
         <item>
-Room Persistence Library — SQLite abstraction layer for local metadata indexing. (Apache-2.0)
+Room Persistence Library — SQLite-abstractielaag voor lokale metadata-indexering. (Apache-2.0)
 </item>
         <item>
-zip4j (net.lingala.zip4j) — advanced ZIP library for password-protected and AES-encrypted archives. (Apache-2.0)
+zip4j (net.lingala.zip4j) — geavanceerde ZIP-bibliotheek voor met een wachtwoord beveiligde en AES-gecodeerde archieven. (Apache-2.0)
 </item>
         <item>
-Apache Commons Compress — library for reading and writing various archive formats (7z, zip, tar, etc). (Apache-2.0)
+Apache Commons Compress - bibliotheek voor het lezen en schrijven van verschillende archiefformaten (7z, zip, tar, enz.). (Apache-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) — implementation of XZ and LZMA compression. (Public Domain)
+XZ voor Java (org.tukaani.xz) - implementatie van XZ- en LZMA-compressie. (Publiek domein)
 </item>
         <item>
-zstd-jni (com.github.luben:zstd-jni) — JNI bindings for Zstandard compression and extraction library. (BSD-2-Clause)
+zstd-jni (com.github.luben:zstd-jni) - JNI-bindingen voor Zstandard-compressie- en extractiebibliotheek. (BSD-2-clausule)
 </item>
         <item>
-Junrar (com.github.junrar:junrar) — Java RAR extraction library. (BSD-3-Clause)
+Junrar (com.github.junrar:junrar) - Java RAR-extractiebibliotheek. (BSD-3-clausule)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) — Android Debug Bridge library enabling secure connections to ADB-enabled devices for remote shell access and certificate-based pairing. (Apache-2.0)
+libadb-android (com.github.MuntashirAkon) - Android Debug Bridge-bibliotheek die veilige verbindingen mogelijk maakt met ADB-compatibele apparaten voor externe shell-toegang en op certificaten gebaseerde koppeling. (Apache-2.0)
 </item>
         <item>
-libsu (com.github.topjohnwu.libsu) — complete Android su shell and root service solution. (Apache-2.0)
+libsu (com.github.topjohnwu.libsu) - complete Android su shell- en rootservice-oplossing. (Apache-2.0)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — uitgebreide SSHD core-, SFTP- en SCP-clientbibliotheek voor veilige toegang tot netwerkshares. (Apache-2.0)
 </item>
         <item>
-EdDSA for Java (net.i2p.crypto:eddsa) — implementation of EdDSA (Edwards-curve Digital Signature Algorithm) for Ed25519 SSH keys. (CC0-1.0)
+EdDSA voor Java (net.i2p.crypto:eddsa) - implementatie van EdDSA (Edwards-curve Digital Signature Algorithm) voor Ed25519 SSH-sleutels. (CC0-1.0)
 </item>
         <item>
-SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding for Android used by the SSHD library. (MIT)
+SLF4J Android (uk.uuid.slf4j:slf4j-android) - logboekbinding voor Android gebruikt door de SSHD-bibliotheek. (MIT)
 </item>
         <item>
-BouncyCastle (org.bouncycastle) — cryptography library for RSA/EdDSA keypair generation and X.509 certificate creation; version 1.83. (MIT-style License)
+BouncyCastle (org.bouncycastle) — cryptografiebibliotheek voor het genereren van RSA/EdDSA-sleutelparen en het maken van X.509-certificaten; versie 1.83. (MIT-stijl licentie)
 </item>
         <item>
-Google Play Billing Library — processes optional in-app tip purchases; governed by Google Play\'s Privacy Policy. (Apache-2.0)
+Google Play Billing Library - verwerkt optionele in-app-fooiaankopen; valt onder het privacybeleid van Google Play. (Apache-2.0)
 </item>
         <item>
-Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)
+Google Play Review-bibliotheek: zorgt voor de in-app beoordelings- en beoordelingsfunctionaliteit van de app. (Apache-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, JXL, SVG) in the built-in image viewer. (Apache-2.0)
+Coil (io.coil-kt.coil3) — bibliotheek voor het laden van afbeeldingen die de weergave van geanimeerde afbeeldingen mogelijk maakt (APNG, GIF, geanimeerde WebP, AVIF, JXL, SVG) in de ingebouwde afbeeldingsviewer. (Apache-2.0)
 </item>
         <item>
-avif-coder (io.github.awxkee) — AVIF image decoding library providing native AVIF support on Android API 24–30; API 31+ uses the built-in ImageDecoder. (Apache-2.0)
+avif-coder (io.github.awxkee) - AVIF-beelddecoderingsbibliotheek die native AVIF-ondersteuning biedt op Android API 24–30; API 31+ maakt gebruik van de ingebouwde ImageDecoder. (Apache-2.0)
 </item>
         <item>
-jxl-coder (io.github.awxkee) — JPEG XL image decoding and encoding library providing native JXL support on Android API 21+. (Apache-2.0 / BSD-3-Clause)
+jxl-coder (io.github.awxkee) - JPEG XL-beelddecoderings- en coderingsbibliotheek die native JXL-ondersteuning biedt op Android API 21+. (Apache-2.0 / BSD-3-clausule)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)
+APNG4Android (com.github.penfeizhou.android.animation) - kernbibliotheek voor het decoderen en weergeven van geanimeerde PNG-bestanden op Android. (Apache-2.0)
 </item>
         <item>
-Porter SDK (com.github.d4rken-org.porter-api) — Android SDK enabling elevated file system access via the Porter, Shizuku or Shevery Manager apps. It embeds the Shizuku API (rikka.shizuku), licensed under MIT. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) - Android SDK die verhoogde toegang tot het bestandssysteem mogelijk maakt via de Porter-, Shizuku- of Shevery Manager-apps. Het bevat de Shizuku API (rikka.shizuku), gelicentieerd onder MIT. (Apache-2.0)
 </item>
         <item>
-ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)
+ViewPager2 — Android-bibliotheek voor het schakelen tussen fragmenten en lay-outs. (Apache-2.0)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — animation library for rendering Adobe After Effects animations natively on Android, used for smooth UI animations throughout the app. (Apache-2.0)
+Lottie (com.airbnb.android:lottie) v6.3.0 — animatiebibliotheek voor het native weergeven van Adobe After Effects-animaties op Android, gebruikt voor vloeiende UI-animaties in de hele app. (Apache-2.0)
 </item>
         <item>
-Ktor (io.ktor) — lightweight web framework used to power the local File Server. (Apache-2.0)
+Ktor (io.ktor) — lichtgewicht webframework dat wordt gebruikt om de lokale bestandsserver van stroom te voorzien. (Apache-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) — library for rendering and viewing PDF documents natively. (Apache-2.0)
+PDFBox-Android (com.tom-roush:pdfbox-android) — bibliotheek voor het native weergeven en bekijken van PDF-documenten. (Apache-2.0)
 </item>
         <item>
-ExoPlayer / Media3 (androidx.media3) — advanced media player for robust video and audio playback. (Apache-2.0)
+ExoPlayer / Media3 (androidx.media3) — geavanceerde mediaspeler voor robuuste video- en audioweergave. (Apache-2.0)
 </item>
         <item>
-Microsoft Authentication Library (MSAL) — handles OneDrive API authentication natively. (MIT)
+Microsoft Authentication Library (MSAL) — verwerkt de OneDrive API-authenticatie native. (MIT)
 </item>
         <item>
-OkHttp (com.squareup.okhttp3) — robust HTTP &amp; HTTP/2 client for cloud storage network requests. (Apache-2.0)
+OkHttp (com.squareup.okhttp3) – robuuste HTTP- en HTTP/2-client voor netwerkverzoeken voor cloudopslag. (Apache-2.0)
 </item>
         <item>
-Gson (com.google.code.gson) — JSON processing library used for cloud storage integration. (Apache-2.0)
+Gson (com.google.code.gson) - JSON-verwerkingsbibliotheek gebruikt voor integratie van cloudopslag. (Apache-2.0)
 </item>
         <item>
-AndroidX Browser (androidx.browser) — Chrome Custom Tabs support for Google Drive API authentication. (Apache-2.0)
+AndroidX Browser (androidx.browser) - Ondersteuning voor aangepaste Chrome-tabbladen voor Google Drive API-authenticatie. (Apache-2.0)
 </item>
         <item>
-ZXing (com.google.zxing:core) — barcode image processing library. (Apache-2.0)
+ZXing (com.google.zxing:core) - bibliotheek voor beeldverwerking van streepjescodes. (Apache-2.0)
 </item>
         <item>
-gifencoder (com.squareup:gifencoder) — pure Java GIF encoding library for creating animated GIF files from selected images. (Apache-2.0)
+gifencoder (com.squareup:gifencoder) — pure Java GIF-coderingsbibliotheek voor het maken van geanimeerde GIF-bestanden van geselecteerde afbeeldingen. (Apache-2.0)
 </item>
         <item>
-AndroidX ExifInterface (androidx.exifinterface:exifinterface) — library for reading, writing, and stripping EXIF and GPS metadata across JPEG, PNG, WebP, HEIF, and DNG image formats. (Apache-2.0)
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) - bibliotheek voor het lezen, schrijven en strippen van EXIF- en GPS-metagegevens in JPEG-, PNG-, WebP-, HEIF- en DNG-beeldformaten. (Apache-2.0)
 </item>
         <item>
-Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+Amazon Appstore SDK - verwerkt optionele in-app-tipaankopen op Amazon-apparaten. (eigendom)
 </item>
         <item>
-jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) - bibliotheek voor audiotagging voor het lezen en bewerken van metadata en albumhoezen in de formaten MP3, FLAC, M4A, OGG, OPUS, WAV en WMA. (LGPL-3.0 / LGPL-2.1)
 </item>
         <item>
-AndroidX WebKit (androidx.webkit) — library providing WebViewAssetLoader for secure, local-only rendering of SMIL animated SVG/SVGZ files in UFM Media Player without external network access or file-scheme vulnerabilities. (Apache-2.0)
+AndroidX WebKit (androidx.webkit) - bibliotheek die WebViewAssetLoader biedt voor veilige, alleen lokale weergave van SMIL-geanimeerde SVG/SVGZ-bestanden in UFM Media Player zonder externe netwerktoegang of kwetsbaarheden in het bestandsschema. (Apache-2.0)
 </item>
         <item>
-libtorrent4j (org.libtorrent4j) — Java and Kotlin JNI wrapper around Rasterbar libtorrent for zero-seeding peer-to-peer BitTorrent downloading. (BSD-3-Clause / MIT)
+libtorrent4j (org.libtorrent4j) - Java en Kotlin JNI omsluiten Rasterbar libtorrent voor zero-seeding peer-to-peer BitTorrent-downloaden. (BSD-3-clausule / MIT)
 </item>
     </string-array>
 

@@ -350,7 +350,7 @@ Dosyalarınız her yerde — keşfetmek için bir sürücüye dokunun
 Klasör Yolunu Kopyala
 </string>
     <string name="folder_path_copied">
-Folder path copied to clipboard
+Klasör yolu panoya kopyalandı
 </string>
     <string name="close_twin_window">
 İkili Pencereyi Kapat
@@ -451,55 +451,55 @@ Sınırsız satır
 Tam adı gerektiği kadar satıra sarar
 </string>
     <string name="settings_file_name_display_truncate">
-Single line (Truncated end)
+Tek satır (Kesilmiş uç)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Truncates with ellipsis at end (abc…) without scrolling
+Kaydırmadan, sonunda üç nokta (abc…) olacak şekilde kesilir
 </string>
     <string name="settings_file_name_display_truncate_middle">
-Single line (Truncate middle)
+Tek satır (Ortayı kes)
 </string>
     <string name="settings_file_name_display_truncate_middle_desc">
-Truncates in middle (abc…xyz.ext) to preserve the end suffix
+Son eki korumak için ortası kesilir (abc…xyz.ext)
 </string>
     <string name="settings_marquee_speed_title">
-Scroll Speed
+Kaydırma Hızı
 </string>
     <string name="settings_marquee_speed_slow">
-Slow
+Yavaş
 </string>
     <string name="settings_marquee_speed_normal">
 Normal
 </string>
     <string name="settings_marquee_speed_fast">
-Fast
+Hızlı
 </string>
     <string name="settings_marquee_loop_title">
-Loop Mode
+Döngü Modu
 </string>
     <string name="settings_marquee_loop_one_shot">
-One-Shot
+Tek Çekim
 </string>
     <string name="settings_marquee_loop_one_shot_desc">
-Scrolls once and stops to save battery
+Bir kez kaydırır ve pilden tasarruf etmek için durur
 </string>
     <string name="settings_marquee_loop_continuous">
-Continuous
+Sürekli
 </string>
     <string name="settings_marquee_loop_continuous_desc">
-Repeats back and forth continuously
+Sürekli olarak ileri geri tekrarlanır
 </string>
     <string name="settings_marquee_scope_title">
-Scroll Scope
+Kaydırma Kapsamı
 </string>
     <string name="settings_marquee_scope_all">
-All Visible Files
+Tüm Görünür Dosyalar
 </string>
     <string name="settings_marquee_scope_focused">
-Focused / Selected Only
+Odaklanmış / Yalnızca Seçilmiş
 </string>
     <string name="settings_file_name_preview_title">
-Live Preview
+Canlı Önizleme
 </string>
     <string name="settings_file_name_preview_sample">
 VeryLongFileName_ProjectReport_2026_Final_v2.docx
@@ -712,7 +712,7 @@ Belgeler
 DCIM
 </string>
     <string name="widget_preview_mock_network">
-Home NAS
+Ev NAS\'ı
 </string>
     <string name="network_connection_restored_first">
 Bağlantı Başarısız\n
@@ -1206,7 +1206,7 @@ Büyük Dosyalar
 Kopyalar
 </string>
     <string name="analyzer_tab_incomplete">
-Incomplete
+Tamamlanmamış
 </string>
     <string name="analyzer_tab_junk">
 Çöp ve Eski
@@ -1233,10 +1233,10 @@ Incomplete
 %1$s tasarruf sağlar
 </string>
     <string name="analyzer_no_incomplete_files">
-No incomplete or sparse downloads found
+Eksik veya seyrek indirme bulunamadı
 </string>
     <string name="analyzer_incomplete_file_allocated">
-Size on disk: %1$s (%2$.1f%%)
+Diskteki boyut: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1321,97 +1321,97 @@ Sil
 
     <!-- Bulk duplicate deletion & retention strategy -->
     <string name="analyzer_select_all_duplicates">
-Select All Duplicates
+Tüm Kopyaları Seç
 </string>
     <string name="analyzer_clear_selection">
-Clear
+Temizlemek
 </string>
     <string name="analyzer_delete_all_duplicates">
-Delete All Duplicates
+Tüm Kopyaları Sil
 </string>
     <string name="analyzer_delete_selected_count">
-Delete Selected (%1$d)
+Seçileni Sil (%1$d)
 </string>
     <string name="analyzer_badge_original">
-Original
+Orijinal
 </string>
     <string name="analyzer_strategy_title">
-Duplicate Retention Strategy
+Yinelenen Saklama Stratejisi
 </string>
     <string name="analyzer_strategy_oldest">
-Keep Oldest (Original)
+En Eskisini Koru (Orijinal)
 </string>
     <string name="analyzer_strategy_oldest_desc">
-Preserves the oldest file by modification date and deletes newer copies.
+En eski dosyayı değişiklik tarihine göre korur ve daha yeni kopyaları siler.
 </string>
     <string name="analyzer_strategy_newest">
-Keep Newest
+En Yeniyi Tut
 </string>
     <string name="analyzer_strategy_newest_desc">
-Preserves the most recently modified file and deletes older copies.
+En son değiştirilen dosyayı korur ve eski kopyaları siler.
 </string>
     <string name="analyzer_strategy_remember">
-Remember my choice
+Seçimimi hatırla
 </string>
     <string name="analyzer_strategy_most_complete">
-Keep Most Complete
+En Eksiksiz Tut
 </string>
     <string name="analyzer_strategy_most_complete_desc">
-Preserves fully downloaded or most allocated files and deletes incomplete copies.
+Tamamen indirilen veya en çok tahsis edilen dosyaları korur ve eksik kopyaları siler.
 </string>
     <string name="analyzer_badge_partial">
-Partial (%1$.0f%%)
+Kısmi (%1$.0f%%)
 </string>
     <string name="analyzer_badge_sparse">
-Sparse
+Seyrek
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+%1$d Yinelenen Dosyalar Silinsin mi?
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+Her dosyanın bir orijinal kopyası saklanacaktır. %1$d kopya kopya, %2$s\'de yer açmak için kalıcı olarak silinecek.
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+Temizleme Tamamlandı
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+%1$d yinelenen dosya başarıyla silindi ve %2$s depolama alanı geri alındı.
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+%1$d dosya izinler nedeniyle silinemedi.
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+%2$d dosyadan %1$d tanesi siliniyor…
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d yinelenen grup · kaydeder %2$s
 </string>
     <string name="settings_duplicate_retention_title">
-Duplicate Retention Strategy
+Yinelenen Saklama Stratejisi
 </string>
     <string name="settings_duplicate_retention_dialog_subtitle">
-Choose which copy to preserve when selecting duplicate files for cleanup.
+Temizlemek için yinelenen dosyaları seçerken hangi kopyanın korunacağını seçin.
 </string>
     <string name="settings_duplicate_retention_summary_oldest">
-Keep oldest file (Original)
+En eski dosyayı sakla (Orijinal)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
-Keep newest file
+En yeni dosyayı sakla
 </string>
     <string name="settings_duplicate_retention_summary_most_complete">
-Keep most complete file
+En eksiksiz dosyayı sakla
 </string>
     <string name="settings_duplicate_retention_summary_ask">
-Always ask
+Her zaman sor
 </string>
     <string name="settings_duplicate_retention_desc_ask">
-Prompt to choose retention strategy each time duplicate files are selected.
+Yinelenen dosyalar her seçildiğinde saklama stratejisini seçme istemi.
 </string>
     <string name="settings_duplicate_retention_toast">
-Duplicate retention strategy set to: %s
+Yinelenen saklama stratejisi şu şekilde ayarlandı: %s
 </string>
     <string name="backup_pref_duplicate_retention">
-Duplicate Retention Strategy
+Yinelenen Saklama Stratejisi
 </string>
 
     <!-- Theme -->
@@ -1613,7 +1613,7 @@ Tam siyah — OLED ekranlarda pil tasarrufu sağlar
 Tema uygulandı
 </string>
     <string name="material_you_title">
-Material You
+Malzeme Siz
 </string>
     <string name="material_you_summary">
 Kişiselleştirilmiş bir görünüm için duvar kağıdınızın renklerini kullanın
@@ -1917,13 +1917,13 @@ Varsayılan Başlangıç Ekranı
 Uygulama açıldığında hangi ekranın açılacağını seçin
 </string>
     <string name="start_screen_last_opened">
-Last Opened Location
+Son Açılan Konum
 </string>
     <string name="start_screen_last_opened_desc">
-Reopen where you left off upon app launch
+Uygulama başlatıldığında kaldığınız yerden yeniden açın
 </string>
     <string name="storage_unavailable_redirect">
-Previous storage location is unavailable. Returned to Storage screen.
+Önceki depolama konumu kullanılamıyor. Depolama ekranına geri dönüldü.
 </string>
     <string name="start_screen_storage_browser">
 Ana Menü (Varsayılan)
@@ -2026,13 +2026,13 @@ Devre dışı — doğrudan akış (varsayılan)
 
     <!-- Network Transfer Multi-Threading Settings -->
     <string name="settings_network_transfer_threads_title">
-FTP, SFTP &amp; SMB Multi-threading
+FTP, SFTP ve SMB Çoklu iş parçacığı
 </string>
     <string name="settings_network_transfer_threads_dialog_title">
 Aktarım İş Parçacıkları
 </string>
     <string name="settings_network_transfer_threads_dialog_subtitle">
-Select the number of simultaneous connections for faster network file transfers
+Daha hızlı ağ dosya aktarımları için eşzamanlı bağlantı sayısını seçin
 </string>
     <string name="settings_network_transfer_threads_subtitle">
 %1$d iş parçacığı — daha hızlı aktarımlar için eşzamanlı bağlantılar
@@ -2047,40 +2047,40 @@ Select the number of simultaneous connections for faster network file transfers
 %1$d iş parçacığı (Önerilen)
 </string>
     <string name="settings_network_transfer_threads_maximum">
-%1$d threads (Maximum)
+%1$d ileti dizisi (Maksimum)
 </string>
     <string name="settings_network_transfer_threads_2">
 2 threads
 </string>
     <string name="settings_network_transfer_threads_4">
-4 threads (Recommended)
+4 konu (Önerilen)
 </string>
     <string name="settings_network_transfer_threads_6">
 6 threads
 </string>
     <string name="settings_network_transfer_threads_8">
-8 threads (Maximum)
+8 konu (Maksimum)
 </string>
     <string name="settings_network_transfer_threads_desc_1">
-Single connection, transfers files sequentially
+Tek bağlantı, dosyaları sırayla aktarır
 </string>
     <string name="settings_network_transfer_threads_desc_2">
-Light parallelism, ideal for slower connections
+Daha yavaş bağlantılar için ideal olan hafif paralellik
 </string>
     <string name="settings_network_transfer_threads_desc_4">
-Optimal balance of speed and stability for Wi-Fi and LAN
+Wi-Fi ve LAN için optimum hız ve kararlılık dengesi
 </string>
     <string name="settings_network_transfer_threads_desc_6">
-High throughput for Gigabit networks and fast Wi-Fi
+Gigabit ağları ve hızlı Wi-Fi için yüksek verim
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+Çoklu gigabit LAN ve Wi-Fi 7 için maksimum verim
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+Aktarım ileti dizileri %1$d olarak ayarlandı
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+FTP, SFTP ve SMB Çoklu İş Parçacığı Ayarları
 </string>
     <string name="network_field_threads">
 Aktarım iş parçacıkları
@@ -2091,28 +2091,28 @@ Varsayılan (%1$d iş parçacığı)
 
     <!-- Transfer Multi-Threading Telemetry -->
     <string name="transfer_threads_header">
-Threads (%1$d active)
+Konular (%1$d aktif)
 </string>
     <string name="transfer_threads_header_single">
-Thread (1 active)
+Konu (1 aktif)
 </string>
     <string name="transfer_per_thread_placeholder">
--- MB/s
+-- MB/sn
 </string>
     <string name="transfer_per_thread_format">
-Per thread: %1$.1f MB/s
+Konu başına: %1$.1f MB/s
 </string>
     <string name="transfer_per_thread_single_format">
-Single thread: %1$.1f MB/s
+Tek iş parçacığı: %1$.1f MB/s
 </string>
     <string name="transfer_thread_initial">
 Thread %1$d: --
 </string>
     <string name="transfer_thread_speed_item">
-Thread %1$d: %2$.1f MB/s
+Konu %1$d: %2$.1f MB/s
 </string>
     <string name="transfer_thread_speed_single">
-Thread %1$d: %2$.1f MB/s (Single-threaded)
+Konu %1$d: %2$.1f MB/s (Tek iş parçacıklı)
 </string>
 
     <!-- Open Source Licenses -->
@@ -2960,7 +2960,7 @@ SMB, FTP ve daha fazlası
 Ağ Paylaşımları
 </string>
     <string name="network_shares_subtitle">
-SMB · FTP
+KOBİ · FTP
 </string>
     <string name="network_shares_info_notice">
 Yerel ağınızdaki SMB, FTP, SFTP, SCP ve NFS paylaşımlarına bağlanarak dosyaları sorunsuzca görüntüleyin, aktarın ve düzenleyin.
@@ -4568,7 +4568,7 @@ Kaydet
 
     <!-- ADB Terminal -->
     <string name="adb_terminal_title">
-ADB Terminal
+ADB Terminali
 </string>
     <string name="adb_terminal_subtitle">
 ADB ile kabuk komutları çalıştırın
@@ -5554,13 +5554,27 @@ Ekrana sığdır
 Oynat / Duraklat
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+İnteraktif Mod
+</string>
+    <string name="svg_transport_mode">
+Oyuncu Kontrolleri
+</string>
+    <string name="svg_restart">
+Animasyonu Yeniden Başlat
+</string>
+    <string name="svg_playback_speed">
+Oynatma Hızı
+</string>
+    <string name="svg_next_panel">
+Sonraki Panel
+</string>
+    <string name="svg_prev_panel">
+Önceki Panel
+</string>
+    <string name="svg_tv_interactive_hint">
+İnteraktif Mod — Oynatıcı Kontrolleri için Geri veya Menü tuşuna basın
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 Ses Parçası
@@ -5869,10 +5883,10 @@ BURAYA KAYDET
 UFM\\\'ye Kaydet
 </string>
     <string name="share_target_save_to">
-Save to…
+Şuraya kaydet:
 </string>
     <string name="share_target_open_in">
-Open in…
+Şu tarihte aç:
 </string>
     <string name="share_receive_from">
 %s\\\'dan dosya alınıyor
@@ -7030,7 +7044,7 @@ Dosya %1$d / %2$d — %3$s
 %1$s / %2$s
 </string>
     <string name="transfer_speed_mbs">
-%1$.1f MB/s
+%1$.1f MB/sn
 </string>
     <string name="cannot_read_source_file">
 Kaynak dosya okunamıyor
@@ -7377,10 +7391,10 @@ Büyük Dosyaları İncele
 512 MB\\\'tan büyük %1$d dosya bulundu.
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+Eksik / Seyrek İndirmeler
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+Disk alanı tüketen %1$d eksik veya seyrek dosya bulundu.
 </string>
     <string name="old_unused_files">
 Eski Kullanılmayan Dosyalar
@@ -7975,10 +7989,18 @@ Senkronizasyon etkin
     <string name="sync_disabled">
 Senkronizasyon devre dışı
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+Profili Etkinleştir
+</string>
+    <string name="sync_action_disable">
+Profili Devre Dışı Bırak
+</string>
+    <string name="sync_status_enabled">
+Aktif
+</string>
+    <string name="sync_status_disabled">
+Duraklatıldı
+</string>
     <string name="sync_delete_profile_confirm_msg">
 \"%1$s\" öğesini silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
 </string>
@@ -8323,16 +8345,16 @@ Yinelenen
 WhatsApp
 </string>
     <string name="whatsapp_business">
-WhatsApp Business
+WhatsApp İş
 </string>
     <string name="telegram">
-Telegram
+Telgraf
 </string>
     <string name="instagram">
 Instagram
 </string>
     <string name="snapchat">
-Snapchat
+Snapchat\'te
 </string>
     <string name="tiktok">
 TikTok
@@ -8344,7 +8366,7 @@ Facebook
 Twitter / X
 </string>
     <string name="discord">
-Discord
+Anlaşmazlık
 </string>
     <string name="spotify">
 Spotify
@@ -8356,13 +8378,13 @@ Netflix
 YouTube
 </string>
     <string name="signal">
-Signal
+Sinyal
 </string>
     <string name="viber">
 Viber
 </string>
     <string name="line">
-Line
+Astar
 </string>
     <string name="opening_itemlabel">
 📂 %1$s açılıyor
@@ -8428,7 +8450,7 @@ boş
 kullanılan
 </string>
     <string name="android_tv">
-Android TV
+AndroidTV
 </string>
     <string name="jcifsng_euagno3">
 jcifs-ng (eu.agno3)
@@ -8440,22 +8462,22 @@ FFmpeg (LGPL Derlemesi)
 smbj (hierynomus)
 </string>
     <string name="apache_commons_net">
-Apache Commons Net
+Apache Commons Ağı
 </string>
     <string name="apache_commons_compress">
-Apache Commons Compress
+Apache Commons Sıkıştırması
 </string>
     <string name="zip4j_netlingalazip4j">
 zip4j (net.lingala.zip4j)
 </string>
     <string name="xz_for_java_orgtukaanixz">
-XZ for Java (org.tukaani.xz)
+Java için XZ (org.tukaani.xz)
 </string>
     <string name="public_domain">
 Kamu Malı
 </string>
     <string name="apache_poi">
-Apache POI
+Apache İÇN\'si
 </string>
     <string name="nanohttpd">
 NanoHTTPD
@@ -8464,13 +8486,13 @@ NanoHTTPD
 Google Firebase Analytics
 </string>
     <string name="google_billing_library">
-Google Billing Library
+Google Faturalandırma Kitaplığı
 </string>
     <string name="google_play_review_library">
-Google Play Review Library
+Google Play İnceleme Kitaplığı
 </string>
     <string name="androidx_libraries">
-AndroidX Libraries
+AndroidX Kitaplıkları
 </string>
     <string name="viewpager2">
 ViewPager2
@@ -8485,7 +8507,7 @@ BouncyCastle (org.bouncycastle) · v1.83
 Apache MINA SSHD
 </string>
     <string name="eddsa_java">
-EdDSA for Java
+Java için EdDSA
 </string>
     <string name="slf4j_android">
 SLF4J Android
@@ -8494,10 +8516,10 @@ SLF4J Android
 AndroidSVG (com.caverock)
 </string>
     <string name="coil_iocoilkt">
-Coil (io.coil-kt.coil3)
+Bobin (io.coil-kt.coil3)
 </string>
     <string name="bouncy_castle_license_mitstyle">
-Bouncy Castle License (MIT-style)
+Zıplayan Kale Lisansı (MIT tarzı)
 </string>
     <string name="storage_volume">
 Depolama Birimi
@@ -8615,16 +8637,16 @@ Dropbox\'a başarıyla bağlanıldı
 Doğrulama başarısız: %1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+Kimlik Doğrulama Başarısız
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+Bağlantı veya doğrulama hatası
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+Yetkilendirme kodu Dropbox ile doğrulanamıyor. Lütfen kodun doğru girildiğini, süresinin dolmadığını ve cihazınızın tarih/saatinin doğru olduğunu kontrol edin.
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+Cihaz tarih ve saat hatası algılandı. TV sisteminizin tarihi/saati geçmişte görünüyor ve bu da Dropbox\'a güvenli bağlantıyı engelliyor. Lütfen Android TV Ayarlarında doğru tarih ve saati ayarlayın.
 </string>
     <string name="dropbox_auth_verifying">
 Kod doğrulanıyor…
@@ -8776,7 +8798,7 @@ Yetkilendirme reddedildi veya iptal edildi.
 Yükseltilmiş Erişim
 </string>
     <string name="shizuku_subtitle">
-Porter / Shizuku / Shevery
+Kapıcı / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
@@ -8909,7 +8931,7 @@ Standart Android ayrıcalıklı API köprüsü
 Mevcut Yöneticiler
 </string>
     <string name="shizuku_manager_shizuku_title">
-Shizuku
+Şizuku
 </string>
     <string name="shizuku_manager_shizuku_desc">
 GitHub\\\'dan standart yükseltilmiş hizmet
@@ -8921,7 +8943,7 @@ Shevery
 Hafif ve hızlı alternatif
 </string>
     <string name="shizuku_manager_porter_title">
-Porter
+Kapıcı
 </string>
     <string name="shizuku_manager_porter_desc">
 Etkin olarak bakımı yapılan Shizuku devamı
@@ -8951,16 +8973,16 @@ Durum kullanılamıyor
 Yükseltilmiş erişim denetleniyor…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+Porter\'ı edinin
 </string>
     <string name="elevated_prerelease_badge">
 Ön sürüm
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+Shizuku\'yu alın
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+Shevery\'yi alın
 </string>
     <string name="shizuku_open_manager">
 %1$s Yöneticisini Aç
@@ -8969,7 +8991,7 @@ Get Shevery
 3 Adımlı Kurulum Rehberi
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1. Kurulum Yöneticisi
 </string>
     <string name="shizuku_step_2">
 2. Hizmeti Başlatın
@@ -9008,17 +9030,23 @@ Yönetici açılamadı. Lütfen önce Porter, Shizuku veya Shevery\\\'yi yükley
 İndir ve Yükle (%1$s)
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+Yükseltilmiş Erişimin Bağlantısı Kesilsin mi?
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+Bu, UFM\'deki %1$s yükseltilmiş erişiminin bağlantısını kesecektir. İstediğiniz zaman yeniden etkinleştirebilirsiniz.
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+Bağlantıyı kes
 </string>
-    <string name="shizuku_allow_app_access">Allow app access</string>
-    <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
-    <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
+    <string name="shizuku_allow_app_access">
+Uygulama erişimine izin ver
+</string>
+    <string name="shizuku_app_access_granted_toast">
+%1$s için yükseltilmiş erişim etkinleştirildi
+</string>
+    <string name="shizuku_app_access_revoked">
+%1$s için yükseltilmiş erişim devre dışı bırakıldı
+</string>
     <string name="elevated_fetching_toast">
 En son %1$s sürümü kontrol ediliyor…
 </string>
@@ -9315,7 +9343,7 @@ Durdur
 Yönetmek için dokunun
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+Dosya sunucusu durduruldu: Android 6 saatlik yürütme sınırına ulaşıldı
 </string>
     <string name="opening_file_server">
 Dosya Sunucusu açılıyor…
@@ -9368,7 +9396,7 @@ Destek Ol!
 Bağış kartını kapat
 </string>
     <string name="tip_jar_global_label">
-Global
+Küresel
 </string>
     <string name="tip_jar_global_title">
 Global İlerleme
@@ -9623,34 +9651,34 @@ Yine de devam et
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+Güvenilmeyen/kendinden imzalı sertifikaya izin ver
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+Kendinden imzalı veya özel CA SSL sertifikalarını kabul edin (yerel NAS cihazlarında yaygındır)
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+Şifre (güncel tutmak için boş bırakın)
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+Güvenilmeyen SSL Sertifikası
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+%1$s adresindeki sunucu, güvenilmeyen veya kendinden imzalı bir SSL sertifikası sundu. Bu bağlantıya güvenmeden önce aşağıdaki sertifika ayrıntılarını doğrulayın.
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+Ders
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+İhraççı
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+Geçerlilik
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+SHA-256 Parmak İzi
 </string>
     <string name="webdav_cert_dialog_trust">
-Trust &amp; Connect
+Güven ve Bağlan
 </string>
 
     <!-- About Section -->
@@ -9682,7 +9710,7 @@ Sürüm: %1$s (%2$s)
 Mobil
 </string>
     <string name="flavor_tv">
-Android TV
+AndroidTV
 </string>
     <string name="about_tile_subtitle">
 Uygulama bilgisi ve ayrıntılar
@@ -9977,10 +10005,10 @@ WiFi / ADB ile Bağlan
 %1$s\'a WiFi ile bağlan
 </string>
     <string name="remote_device_bt_suffix">
- — Bluetooth
+- Bluetooth
 </string>
     <string name="remote_device_wifi_suffix">
- — WiFi
+- Wifi
 </string>
     <string name="remote_transport_no_wifi_tvs_title">
 Kumanda için Etkinleştirilmiş TV Yok
@@ -10191,7 +10219,7 @@ Not yazın ve kaydedin
 Not Defteri açılıyor
 </string>
     <string name="notepad_default_name">
-Notepad.txt
+Not Defteri.txt
 </string>
     <string name="save_note">
 Kaydet
@@ -10492,7 +10520,7 @@ Tara
 Kamera
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+Bu cihazda kamera uygulaması bulunamadı
 </string>
     <string name="scanner_capture_gallery">
 Galeriden Seç
@@ -11606,7 +11634,7 @@ Dosyaları doğrudan diğer cihazlara kopyala
 Hedef cihaz türünü seçin:
 </string>
     <string name="target_tv">
-Android TV / Fire TV
+Android TV / Yangın TV
 </string>
     <string name="target_tv_desc">
 Kablosuz ADB gönderme kullanarak dosyaları doğrudan Android TV\\\'ye kopyala
@@ -11749,7 +11777,7 @@ PRO
 
     <!-- RClone Cloud Storage Support -->
     <string name="add_online_storage_rclone">
-RClone
+RClon
 </string>
     <string name="add_online_storage_auth_rclone">
 Depolama Kurulumu
@@ -11824,7 +11852,7 @@ Mega
 Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
-Premiumize
+Premiumlaştır
 </string>
     <string name="rclone_provider_box">
 Box
@@ -11848,7 +11876,7 @@ Sunucu URL\\\'si
 Oturum açma şifrenizi değil, Koofr hesap ayarlarınızda oluşturulan bir uygulama şifresi kullanın
 </string>
     <string name="rclone_provider_protondrive">
-Proton Drive
+Proton Sürücüsü
 </string>
     <string name="rclone_field_username">
 Kullanıcı adı veya e-posta
@@ -11948,100 +11976,100 @@ Atlama uzunluğu %1$s olarak ayarlandı
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+Altyazı stili
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+Uygulama içi altyazı görünümünü, yazı tipi boyutunu ve sistem altyazı senkronizasyonunu yapılandırın.
 </string>
     <string name="subtitle_style_summary_system">
-System caption style
+Sistem altyazı stili
 </string>
     <string name="subtitle_style_summary_custom">
-UFM custom style (%1$s)
+UFM özel stili (%1$s)
 </string>
     <string name="subtitle_style_dialog_title">
-Subtitle Style
+Altyazı Stili
 </string>
     <string name="subtitle_style_mode_system">
-System Caption Style
+Sistem Altyazı Stili
 </string>
     <string name="subtitle_style_mode_system_desc">
-Follows device Accessibility caption settings even when system captions are disabled.
+Sistem altyazıları devre dışı bırakıldığında bile cihazın Erişilebilirlik altyazı ayarlarını takip eder.
 </string>
     <string name="subtitle_style_mode_custom">
-UFM Custom Style
+UFM Özel Stil
 </string>
     <string name="subtitle_style_mode_custom_desc">
-Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+Ayarlanabilir boyut, renkler, kenar efektleri ve konumlandırmayla özel uygulama içi stil.
 </string>
     <string name="subtitle_style_open_system">
-Open Device Caption Settings
+Cihaz Altyazı Ayarlarını Aç
 </string>
     <string name="subtitle_style_system_unavailable">
-System caption settings not available on this device; using UFM style.
+Sistem altyazı ayarları bu cihazda mevcut değil; UFM stilini kullanarak.
 </string>
     <string name="subtitle_style_preview_title">
-Preview
+Önizleme
 </string>
     <string name="subtitle_style_preview_line1">
 Ultimate File Manager Pro
 </string>
     <string name="subtitle_style_preview_line2">
-Live subtitle preview • Crisp text styling
+Canlı altyazı önizlemesi • Net metin stili
 </string>
     <string name="subtitle_style_text_size">
-Text size
+Metin boyutu
 </string>
     <string name="subtitle_style_text_color">
-Text color
+Metin rengi
 </string>
     <string name="subtitle_style_bg_color">
-Background opacity
+Arka plan opaklığı
 </string>
     <string name="subtitle_style_edge_type">
-Edge effect
+Kenar efekti
 </string>
     <string name="subtitle_style_edge_none">
 None
 </string>
     <string name="subtitle_style_edge_outline">
-Outline
+Taslak
 </string>
     <string name="subtitle_style_edge_drop_shadow">
-Drop shadow
+Alt gölge
 </string>
     <string name="subtitle_style_edge_raised">
-Raised
+Kabarık
 </string>
     <string name="subtitle_style_edge_depressed">
-Depressed
+Depresyonda
 </string>
     <string name="subtitle_style_bottom_margin">
-Bottom margin
+Alt kenar boşluğu
 </string>
     <string name="subtitle_style_apply_embedded">
-Apply embedded styles (ASS/SSA/TTML)
+Gömülü stilleri uygulama (ASS/SSA/TTML)
 </string>
     <string name="subtitle_style_apply_embedded_desc">
-When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+Devre dışı bırakıldığında, UFM altyazı stili, optimum okunabilirlik için gömülü yazı tipi ve renk etiketlerini geçersiz kılar.
 </string>
     <string name="subtitle_style_color_yellow">
-Yellow
+Sarı
 </string>
     <string name="subtitle_style_color_white">
-White
+Beyaz
 </string>
     <string name="subtitle_style_color_cyan">
-Cyan
+Camgöbeği
 </string>
     <string name="subtitle_style_color_green">
-Green
+Yeşil
 </string>
     <string name="subtitle_style_color_magenta">
-Magenta
+Macenta
 </string>
     <string name="subtitle_style_color_orange">
-Orange
+Turuncu
 </string>
     <string name="subtitle_style_bg_transparent">
 None
@@ -12056,13 +12084,13 @@ None
 75%
 </string>
     <string name="subtitle_style_bg_100">
-Solid
+Sağlam
 </string>
     <string name="player_track_sheet_subtitle_style">
-Subtitle Style…
+Altyazı Stili…
 </string>
     <string name="player_track_sheet_subtitle_style_desc">
-Customize colors, size &amp; appearance
+Renkleri, boyutu ve görünümü özelleştirin
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -12103,10 +12131,10 @@ Tekrar açık
 Tekrar kapalı
 </string>
     <string name="player_toast_repeat_all">
-Repeat all
+Tümünü tekrarla
 </string>
     <string name="player_toast_repeat_one">
-Repeat current track
+Geçerli parçayı tekrarla
 </string>
     <string name="player_toast_audio_track">
 Ses parçası
@@ -12265,13 +12293,13 @@ Konum:
 Boyut:
 </string>
     <string name="properties_label_size_on_disk">
-Size on disk:
+Diskteki boyut:
 </string>
     <string name="properties_sparse_badge">
-Partial Download (Sparse)
+Kısmi İndirme (Seyrek)
 </string>
     <string name="properties_sparse_allocated_pct">
-%1$.1f%% allocated
+%1$.1f%% tahsis edildi
 </string>
     <string name="properties_label_contains">
 İçerik:
@@ -12986,61 +13014,61 @@ Teknik Özellikler
 </string>
     <!-- Music Tag Online Sync & High-Res Cover Picker -->
     <string name="music_tag_btn_search_online_cover">
-Search Online Art
+Çevrimiçi Sanatta Ara
 </string>
     <string name="music_tag_btn_musicbrainz_sync">
-Identify Online (MusicBrainz)
+Çevrimiçi Tanımla (MusicBrainz)
 </string>
     <string name="music_tag_cover_picker_title">
-Search Online Artwork
+Çevrimiçi Sanat Eseri Ara
 </string>
     <string name="music_tag_search_covers_hint">
-Artist and Album name…
+Sanatçı ve Albüm adı…
 </string>
     <string name="music_tag_searching_artwork">
-Searching Apple Music, Deezer &amp; Cover Art Archive…
+Apple Music, Deezer ve Cover Art Arşivi aranıyor…
 </string>
     <string name="music_tag_no_artwork_found">
-No artwork found for this query
+Bu sorgu için resim bulunamadı
 </string>
     <string name="music_tag_cover_applied">
-Applied online album artwork
+Uygulamalı çevrimiçi albüm kapağı
 </string>
     <string name="music_tag_cover_download_error">
-Failed to download artwork
+Sanat eseri indirilemedi
 </string>
     <string name="music_tag_musicbrainz_search_title">
-MusicBrainz Tag Search
+MusicBrainz Etiket Arama
 </string>
     <string name="music_tag_search_query_hint">
-Track title or Album name…
+Parça başlığı veya Albüm adı…
 </string>
     <string name="music_tag_searching_musicbrainz">
-Searching MusicBrainz…
+MusicBrainz aranıyor…
 </string>
     <string name="music_tag_no_musicbrainz_results">
-No matching recordings or releases found
+Eşleşen kayıt veya yayın bulunamadı
 </string>
     <string name="music_tag_diff_title">
-Review Online Tags
+Çevrimiçi Etiketleri İnceleyin
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+İzlemeye uygulanacak alanları seçin
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+Seçilen Etiketleri Uygula
 </string>
     <string name="music_tag_select_all">
-Select All
+Tümünü Seç
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+Kayıtlar
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+Albümler / Yayınlar
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d parça
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -13432,7 +13460,7 @@ Kamera + Tarih
 + {MM}
 </string>
     <string name="exif_rename_token_day">
-+ {DD}
++ {GG}
 </string>
     <string name="exif_rename_token_time">
 + {hh}{mm}{ss}
@@ -13441,7 +13469,7 @@ Kamera + Tarih
 + {MODEL}
 </string>
     <string name="exif_rename_token_original">
-+ {ORIGINAL}
++ {ORİJİNAL}
 </string>
     <string name="exif_rename_token_seq">+ {#}</string>
     <string name="exif_rename_preview_header">
@@ -13478,7 +13506,7 @@ Bu işlem %1$d orijinal fotoğrafın meta verilerini kalıcı olarak değiştire
 %1$s için gizlilik meta verileri temizlendi
 </string>
     <string name="exif_has_gps_badge">
-📍 GPS
+📍GPS
 </string>
     <string name="exif_no_gps_badge">
 GPS yok
@@ -14254,10 +14282,10 @@ Bu depolama alanından erişimi kaldırmak için bir klasör seçin. Dosyaların
 Bu depolama alanı için takılı klasör kalmadı.
 </string>
     <string name="restricted_storage_empty_title">
-All Files Access Required
+Tüm Dosyalara Erişim Gerekli
 </string>
     <string name="restricted_storage_empty_desc">
-To access and manage files in this storage, please enable All Files Access in Android Settings.
+Bu depolama alanındaki dosyalara erişmek ve bunları yönetmek için lütfen Android Ayarlarında Tüm Dosyalara Erişimi etkinleştirin.
 </string>
     <string name="restricted_storage_grant_all_files">
 Ayarlar\'da Tüm Dosyalara Erişimi Etkinleştir
@@ -14308,7 +14336,7 @@ Klasör erişimi kaldırıldı
 Kök Durumu
 </string>
     <string name="root_status_not_rooted">
-Not Rooted
+Köklenmedi
 </string>
     <string name="root_status_detected">
 Köklendi (%1$s)
@@ -14317,31 +14345,31 @@ Köklendi (%1$s)
 Magisk
 </string>
     <string name="root_type_kernelsu">
-KernelSU
+ÇekirdekSU
 </string>
     <string name="root_type_apatch">
 AYaması
 </string>
     <string name="root_type_supersu">
-SuperSU
+SüperSU
 </string>
     <string name="root_type_generic">
 su ikili
 </string>
     <string name="root_details_title">
-Root Diagnostics
+Kök Teşhisi
 </string>
     <string name="root_details_binaries">
 Algılanan İkili Dosyalar: %1$s
 </string>
     <string name="root_details_packages">
-Detected Packages: %1$s
+Algılanan Paketler: %1$s
 </string>
     <string name="root_details_test_keys">
 Oluşturma Etiketleri: Özel / Test Anahtarları
 </string>
     <string name="root_details_none">
-No root binaries or manager packages detected on this device.
+Bu cihazda kök ikili dosyası veya yönetici paketi algılanmadı.
 </string>
     <!-- Phase 2: Root Integration & Authorization (Mobile) -->
     <string name="icon_settings_root_access">
@@ -14695,10 +14723,10 @@ Dosyaları Karşılaştır
 ✗ Dosyalar farklıdır (farklı boyutlar: %1$s ve %2$s)
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ Eşleşen Başlık ve Veri — Eksik İndirme (%1$.1f%% vs %2$.1f%% tahsis edildi)
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
-Size on disk: %1$s (%2$.1f%%)
+Diskteki boyut: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 Aynı boyut (%1$s). İçeriği doğrulamak için karma işlemi yapılıyor…
@@ -14768,19 +14796,19 @@ Harici uygulama için kök dosya hazırlanamadı
     
     <!-- Mobile Security & App Lock -->
     <string name="settings_section_security">
-Security
+Güvenlik
 </string>
     <string name="settings_security_app_lock_title">
 Uygulama Kilidi
 </string>
     <string name="settings_security_app_lock_subtitle">
-Require authentication to open Ultimate File Manager Pro
+Ultimate File Manager Pro\'yu açmak için kimlik doğrulamayı zorunlu kılın
 </string>
     <string name="settings_security_method_title">
-Authentication Method
+Kimlik Doğrulama Yöntemi
 </string>
     <string name="settings_security_method_picker_title">
-Choose Security Method
+Güvenlik Yöntemini Seçin
 </string>
     <string name="settings_security_method_picker_subtitle">
 Dosyalarınızı nasıl korumak istediğinizi seçin
@@ -14789,7 +14817,7 @@ Dosyalarınızı nasıl korumak istediğinizi seçin
 Hiçbiri
 </string>
     <string name="settings_security_method_pin">
-4-Digit PIN
+4 Haneli PIN
 </string>
     <string name="settings_security_method_pin_desc">
 Hızlı, sayısal tuş takımı kilidini açma
@@ -15017,7 +15045,7 @@ Bulut
     
     <!-- SAF & External File Pickers Exposure -->
     <string name="expose_to_saf_title">
-Expose to SAF &amp; Pickers
+SAF ve Pickers\'a sunun
 </string>
     <string name="expose_to_saf_subtitle">
 Sistem dosyası seçicilerine, Projectivy Launcher duvar kağıtlarına ve harici uygulamalara görünür yapın
@@ -15026,7 +15054,7 @@ Sistem dosyası seçicilerine, Projectivy Launcher duvar kağıtlarına ve haric
 Başlatıcıların ve harici uygulamaların (Projectivy gibi) bu ağ paylaşımından klasörlere göz atmasına ve medya akışı yapmasına izin verir.
 </string>
     <string name="expose_to_saf_cloud_hint">
-Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
+Başlatıcıların ve harici uygulamaların (Projectivy gibi) bu çevrimiçi depolama alanından klasörlere göz atmasına ve medya akışı yapmasına izin verir.
 </string>
     <!-- Archive Modification (Copy / Move into Archive) -->
     <string name="action_add_to_existing_archive">
@@ -15585,240 +15613,358 @@ Sürücüyü Bağla
 </string>
 
     <!-- Grid Text Placement Settings -->
-    <string name="settings_grid_text_position_title">Grid Text Placement</string>
-    <string name="settings_grid_text_position_subtitle">Position file names below or overlaid on grid items</string>
-    <string name="settings_grid_text_position_below">Below Block (Default)</string>
-    <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
-    <string name="backup_pref_grid_text_position">Grid text placement settings</string>
-    <string name="backup_pref_view_styles">View density &amp; preset styles</string>
+    <string name="settings_grid_text_position_title">
+Izgara Metin Yerleşimi
+</string>
+    <string name="settings_grid_text_position_subtitle">
+Dosya adlarını aşağıya veya ızgara öğelerinin üzerine yerleştirin
+</string>
+    <string name="settings_grid_text_position_below">
+Blok Altı (Varsayılan)
+</string>
+    <string name="settings_grid_text_position_overlay">
+Blokta Yer Paylaşımlı
+</string>
+    <string name="backup_pref_grid_text_position">
+Izgara metni yerleştirme ayarları
+</string>
+    <string name="backup_pref_view_styles">
+Yoğunluğu ve önceden ayarlanmış stilleri görüntüleyin
+</string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
-    <string name="open_as">Open As…</string>
-    <string name="open_as_desc">Choose a viewer or player to open this file</string>
-    <string name="presentation_viewer">Presentation Viewer</string>
-    <string name="slide_counter">Slide %1$d of %2$d</string>
-    <string name="open_in_powerpoint">Open in Presentation App</string>
-    <string name="open_as_text">Text / Code Viewer</string>
-    <string name="open_as_text_desc">Built-in code &amp; text editor with syntax highlighting</string>
-    <string name="open_as_hex">Hex / Binary Viewer</string>
-    <string name="open_as_hex_desc">Raw byte hex dump and binary inspector</string>
-    <string name="open_as_presentation">Presentation / Slide Deck</string>
-    <string name="open_as_presentation_desc">Built-in slide deck viewer with speaker notes</string>
-    <string name="open_as_spreadsheet">Spreadsheet / Table</string>
-    <string name="open_as_spreadsheet_desc">Built-in spreadsheet table viewer</string>
-    <string name="open_as_image">Image Viewer</string>
-    <string name="open_as_image_desc">High-resolution photo viewer with zoom &amp; pan</string>
-    <string name="open_as_audio">Audio Player</string>
-    <string name="open_as_audio_desc">Media3 audio player with background playback</string>
-    <string name="open_as_video">Video Player</string>
-    <string name="open_as_video_desc">Media3 hardware-accelerated video player</string>
-    <string name="open_as_archive">Archive Browser</string>
-    <string name="open_as_archive_desc">Explore ZIP, 7Z, TAR, RAR, and compressed files</string>
-    <string name="open_as_other">Choose External App…</string>
-    <string name="open_as_other_desc">Open with an installed third-party app</string>
-    <string name="speaker_notes">Speaker Notes</string>
-    <string name="no_slides_found">No slides found in this presentation</string>
-    <string name="next_slide">Next Slide</string>
-    <string name="prev_slide">Previous Slide</string>
-    <string name="view_raw_text">View as Raw Text</string>
-    <string name="ufm_slide_deck_viewer">UFM Slide Deck</string>
-    <string name="open_with_presentation_app">Presentation App (PowerPoint / Slides)</string>
-    <string name="open_with_presentation_app_desc">Open in Microsoft PowerPoint, Google Slides, or office suite</string>
-    <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
+    <string name="open_as">
+Farklı Aç…
+</string>
+    <string name="open_as_desc">
+Bu dosyayı açmak için bir izleyici veya oynatıcı seçin
+</string>
+    <string name="presentation_viewer">
+Sunum Görüntüleyici
+</string>
+    <string name="slide_counter">
+%2$d slaytından %1$d kaydırın
+</string>
+    <string name="open_in_powerpoint">
+Sunum Uygulamasında Aç
+</string>
+    <string name="open_as_text">
+Metin / Kod Görüntüleyici
+</string>
+    <string name="open_as_text_desc">
+Sözdizimi vurgulamalı yerleşik kod ve metin düzenleyici
+</string>
+    <string name="open_as_hex">
+Hex / İkili Görüntüleyici
+</string>
+    <string name="open_as_hex_desc">
+Ham bayt hex dökümü ve ikili denetçi
+</string>
+    <string name="open_as_presentation">
+Sunum / Slayt Destesi
+</string>
+    <string name="open_as_presentation_desc">
+Konuşmacı notlarına sahip yerleşik slayt destesi görüntüleyici
+</string>
+    <string name="open_as_spreadsheet">
+Elektronik Tablo / Tablo
+</string>
+    <string name="open_as_spreadsheet_desc">
+Yerleşik elektronik tablo tablosu görüntüleyici
+</string>
+    <string name="open_as_image">
+Resim Görüntüleyici
+</string>
+    <string name="open_as_image_desc">
+Yakınlaştırma ve kaydırma özellikli yüksek çözünürlüklü fotoğraf görüntüleyici
+</string>
+    <string name="open_as_audio">
+Ses Çalar
+</string>
+    <string name="open_as_audio_desc">
+Arka planda oynatma özelliğine sahip Media3 ses oynatıcısı
+</string>
+    <string name="open_as_video">
+Video Oynatıcı
+</string>
+    <string name="open_as_video_desc">
+Media3 donanım hızlandırmalı video oynatıcı
+</string>
+    <string name="open_as_archive">
+Arşiv Tarayıcı
+</string>
+    <string name="open_as_archive_desc">
+ZIP, 7Z, TAR, RAR ve sıkıştırılmış dosyaları keşfedin
+</string>
+    <string name="open_as_other">
+Harici Uygulamayı Seçin…
+</string>
+    <string name="open_as_other_desc">
+Yüklü bir üçüncü taraf uygulamasıyla açın
+</string>
+    <string name="speaker_notes">
+Konuşmacı Notları
+</string>
+    <string name="no_slides_found">
+Bu sunumda slayt bulunamadı
+</string>
+    <string name="next_slide">
+Sonraki Slayt
+</string>
+    <string name="prev_slide">
+Önceki Slayt
+</string>
+    <string name="view_raw_text">
+Ham Metin Olarak Görüntüle
+</string>
+    <string name="ufm_slide_deck_viewer">
+UFM Slayt Destesi
+</string>
+    <string name="open_with_presentation_app">
+Sunum Uygulaması (PowerPoint / Slides)
+</string>
+    <string name="open_with_presentation_app_desc">
+Microsoft PowerPoint, Google Slaytlar veya ofis paketinde açın
+</string>
+    <string name="ufm_slide_viewer_desc">
+Slaytları, kapak küçük resimlerini ve notları UFM\'de görüntüleyin
+</string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
-    <string name="action_open_with">Open With…</string>
-    <string name="action_open_as">Open As…</string>
-    <string name="toolbar_open_with">Open With</string>
-    <string name="toolbar_open_as">Open As</string>
-    <string name="action_extract_subtitles">Extract Subtitles</string>
-    <string name="action_extract_audio">Extract Audio</string>
+    <string name="action_open_with">
+Şununla Aç…
+</string>
+    <string name="action_open_as">
+Farklı Aç…
+</string>
+    <string name="toolbar_open_with">
+Birlikte Aç
+</string>
+    <string name="toolbar_open_as">
+Farklı Aç
+</string>
+    <string name="action_extract_subtitles">
+Altyazıları Çıkart
+</string>
+    <string name="action_extract_audio">
+Sesi Çıkart
+</string>
     <string name="action_convert_to_mp4">
-Convert to MP4
+MP4\'e dönüştür
 </string>
-    <string name="toolbar_extract_subtitles">Extract Subtitles</string>
-    <string name="toolbar_extract_audio">Extract Audio</string>
+    <string name="toolbar_extract_subtitles">
+Altyazıları Çıkart
+</string>
+    <string name="toolbar_extract_audio">
+Sesi Çıkart
+</string>
     <string name="toolbar_convert_to_mp4">
-Convert to MP4
+MP4\'e dönüştür
 </string>
-    <string name="extracting_subtitles">Extracting subtitle track…</string>
-    <string name="extracting_audio">Extracting audio track…</string>
+    <string name="extracting_subtitles">
+Altyazı parçası çıkarılıyor…
+</string>
+    <string name="extracting_audio">
+Ses parçası çıkarılıyor…
+</string>
     <string name="convert_to_mp4_progress">
-Converting video to MP4…
+Video MP4\'e dönüştürülüyor…
 </string>
     <string name="convert_to_mp4_success">
-Video converted to %1$s
+Video %1$s biçimine dönüştürüldü
 </string>
     <string name="convert_to_mp4_failed">
-Failed to convert video
+Video dönüştürülemedi
 </string>
     <string name="convert_to_mp4_title">
-Convert to MP4
+MP4\'e dönüştür
 </string>
     <string name="convert_to_mp4_confirm">
-Convert \"%1$s\" to universal MP4 format?
+\"%1$s\" evrensel MP4 biçimine dönüştürülsün mü?
 </string>
-    <string name="subtitles_extracted_success">Subtitles extracted successfully.</string>
-    <string name="audio_extracted_success">Audio extracted successfully.</string>
+    <string name="subtitles_extracted_success">
+Altyazılar başarıyla çıkarıldı.
+</string>
+    <string name="audio_extracted_success">
+Ses başarıyla çıkarıldı.
+</string>
     <string name="audio_format_universal">
-Universal M4A
+Evrensel M4A
 </string>
     <string name="audio_format_original">
-Original Stream
+Orijinal Akış
 </string>
     <string name="audio_format_universal_desc">
-High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+Yüksek kaliteli AAC (.m4a) — telefonlarda, arabalarda ve müzik uygulamalarında her yerde oynatılır
 </string>
     <string name="audio_format_original_desc">
-Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+Kayıpsız doğrudan akış kopyası (.eac3, .dts, .ac3, .flac)
 </string>
     <string name="codec_unsupported_title">
-Audio Codec Not Supported
+Ses Codec Bileşeni Desteklenmiyor
 </string>
     <string name="codec_unsupported_message">
-This device lacks a native hardware decoder for %1$s audio.\n
+Bu cihazda %1$s ses için yerel bir donanım kod çözücüsü yok.\n
 \n
-Would you like to convert it to Universal M4A (AAC) for seamless playback?
+Kesintisiz oynatma için onu Evrensel M4A\'ya (AAC) dönüştürmek ister misiniz?
 </string>
     <string name="convert_and_play">
-Convert &amp; Play
+Dönüştür ve Oynat
 </string>
     <string name="converting_audio">
-Converting audio to M4A…
+Sesi M4A\'ya dönüştürüyor…
 </string>
     <string name="convert_to_m4a">
-Convert to M4A
+M4A\'ya dönüştür
 </string>
-    <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
-    <string name="media_technical_details">Media Stream Details</string>
-    <string name="media_format">Container</string>
-    <string name="media_bitrate">Overall Bitrate</string>
-    <string name="error_generic">An error occurred</string>
-    <string name="failed_to_open_file">Failed to open file</string>
-    <string name="slide_badge_format">Slide %1$d</string>
-    <string name="slide_counter_format">Slide %1$d of %2$d</string>
-    <string name="no_app_to_open_file">No app found to open this file</string>
+    <string name="no_subtitles_found_in_video">
+Bu videoda gömülü altyazı parçası bulunamadı
+</string>
+    <string name="media_technical_details">
+Medya Akışı Ayrıntıları
+</string>
+    <string name="media_format">
+Konteyner
+</string>
+    <string name="media_bitrate">
+Genel Bit Hızı
+</string>
+    <string name="error_generic">
+Bir hata oluştu
+</string>
+    <string name="failed_to_open_file">
+Dosya açılamadı
+</string>
+    <string name="slide_badge_format">
+%1$d kaydır
+</string>
+    <string name="slide_counter_format">
+%2$d slaytından %1$d kaydırın
+</string>
+    <string name="no_app_to_open_file">
+Bu dosyayı açacak uygulama bulunamadı
+</string>
     <string name="select_subtitle_track">
-Select Subtitle Track
+Altyazı Parçasını Seçin
 </string>
     <string name="extract_all_subtitles">
-Extract All Tracks
+Tüm Parçaları Çıkart
 </string>
     <string name="extract_all_subtitles_desc">
-Extract all %1$d subtitle tracks into separate files
+Tüm %1$d altyazı parçalarını ayrı dosyalara çıkartın
 </string>
     <string name="subtitles_extracted_multiple_success">
-Successfully extracted %1$d subtitle files.
+%1$d altyazı dosyası başarıyla çıkarıldı.
 </string>
     <string name="select_audio_track">
-Select Audio Track
+Ses Parçasını Seçin
 </string>
     <string name="extract_all_audio">
-Extract All Tracks
+Tüm Parçaları Çıkart
 </string>
     <string name="extract_all_audio_desc">
-Extract all %1$d audio tracks into separate files
+Tüm %1$d ses parçalarını ayrı dosyalara çıkartın
 </string>
     <string name="audio_extracted_multiple_success">
-Successfully extracted %1$d audio files.
+%1$d ses dosyası başarıyla çıkarıldı.
 </string>
     <string name="no_audio_found_in_video">
-No audio tracks found in this video
+Bu videoda ses parçası bulunamadı
 </string>
 
     <!-- Floating Bottom Bar Dock -->
     <string name="floating_bar_settings_title">
-Floating Bottom Bar
+Yüzer Alt Çubuk
 </string>
     <string name="floating_bar_settings_subtitle">
-Show a modern floating dock at the bottom of the main menu for quick access
+Hızlı erişim için ana menünün alt kısmında modern bir yüzer iskele gösterin
 </string>
     <string name="floating_bar_manage_title">
-Manage Floating Bar
+Kayan Çubuğu Yönet
 </string>
     <string name="floating_bar_manage_subtitle">
-Add, remove, and reorder quick-access shortcuts
+Hızlı erişim kısayollarını ekleyin, kaldırın ve yeniden sıralayın
 </string>
     <string name="floating_bar_enable_switch">
-Enable Floating Bar
+Kayan Çubuğu Etkinleştir
 </string>
     <string name="floating_bar_enable_desc">
-Docked tiles appear in the bottom floating bar and are hidden from the main menu
+Yerleştirilmiş kutucuklar alttaki kayan çubukta görünür ve ana menüde gizlenir
 </string>
     <string name="floating_bar_docked_section">
-Docked Items
+Yerleştirilmiş Öğeler
 </string>
     <string name="floating_bar_docked_hint">
-Drag handle to reorder. Tap Remove to return item to main menu.
+Yeniden sıralamak için tutamacı sürükleyin. Öğeyi ana menüye döndürmek için Kaldır\'a dokunun.
 </string>
     <string name="floating_bar_available_section">
-Available Tiles
+Mevcut Döşemeler
 </string>
     <string name="floating_bar_available_hint">
-Tap + to add a tile to the floating bottom bar
+Kayan alt çubuğa bir döşeme eklemek için +\'ya dokunun
 </string>
     <string name="floating_bar_empty_docked">
-No items docked yet. Add tiles from the list below.
+Henüz yerleştirilmiş öğe yok. Aşağıdaki listeden döşemeleri ekleyin.
 </string>
     <string name="floating_bar_empty_available">
-All available tiles have been added to the floating bar.
+Mevcut tüm döşemeler kayan çubuğa eklendi.
 </string>
     <string name="floating_bar_add">
-Add
+Eklemek
 </string>
     <string name="floating_bar_remove">
-Remove
+Kaldırmak
 </string>
     <string name="backup_pref_floating_bar">
-Floating Bottom Bar
+Yüzer Alt Çubuk
 </string>
 
     <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
     <string name="quick_access_title">
-Quick Access
+Hızlı Erişim
 </string>
     <string name="quick_access_mode_title">
-Quick Access Style
+Hızlı Erişim Stili
 </string>
     <string name="quick_access_mode_subtitle">
-Choose how quick-access shortcuts are presented
+Hızlı erişim kısayollarının nasıl sunulacağını seçin
 </string>
     <string name="quick_access_mode_disabled">
-Disabled
+Engelli
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+Alt Yüzer Çubuk
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+Kenardan Kaydırma Menüsü
 </string>
     <string name="quick_access_edge_title">
-Swipe Edge
+Kenarı Kaydır
 </string>
     <string name="quick_access_edge_left">
-Left Edge
+Sol Kenar
 </string>
     <string name="quick_access_edge_right">
-Right Edge
+Sağ Kenar
 </string>
     <string name="quick_access_edge_handle_title">
-Edge Handle Indicator
+Kenar Tutamağı Göstergesi
 </string>
     <string name="quick_access_edge_handle_desc">
-Show a subtle indicator on the screen edge for easy opening
+Kolay açılma için ekranın kenarında ince bir gösterge gösterin
 </string>
     <string name="quick_access_hide_tiles_title">
-Hide Docked Tiles on Main Menu
+Ana Menüdeki Yerleştirilmiş Döşemeleri Gizle
 </string>
     <string name="quick_access_hide_tiles_desc">
-Keep the main dashboard clean by hiding tiles docked in Quick Access
+Hızlı Erişim\'e yerleştirilmiş kutucukları gizleyerek ana kontrol panelini temiz tutun
 </string>
     <string name="quick_access_manage_tiles">
-Manage Tiles
+Kutucukları Yönet
 </string>
     <string name="quick_access_empty_hint">
-No tiles docked yet.\n
-Tap Manage Tiles to add shortcuts.
+Henüz sabitlenmiş parça yok.\n
+Kısayol eklemek için Kutucukları Yönet\'e dokunun.
 </string>
     <string name="quick_access_mode_disabled_desc">Hızlı erişim kısayollarını devre dışı bırak</string>
     <string name="quick_access_mode_bottom_bar_desc">Ana menünün alt kısmında modern kayan çubuk</string>
@@ -15829,373 +15975,373 @@ Tap Manage Tiles to add shortcuts.
 
     <!-- Direct Remote Media & Media Operation Worker -->
     <string name="settings_network_media_process_title">
-Network Media Processing
+Ağ Medya İşleme
 </string>
     <string name="settings_network_media_process_subtitle_off">
-Direct stream processing (zero local copy of video)
+Doğrudan akış işleme (videonun sıfır yerel kopyası)
 </string>
     <string name="settings_network_media_process_subtitle_on">
-Copy full video to local storage before processing
+İşlemeden önce videonun tamamını yerel depolamaya kopyalayın
 </string>
     <string name="backup_pref_network_media_process">
-Network Media Processing
+Ağ Medya İşleme
 </string>
     <string name="dialog_copy_before_process_title">
-Copy to Local Storage?
+Yerel Depolamaya Kopyalansın mı?
 </string>
     <string name="dialog_copy_before_process_msg">
-This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+Bu işlem önce \"%1$s\" (%2$s) dosyasını ağ depolama alanından cihazınızın yerel depolama alanına kopyalayacaktır.\n
 \n
-Depending on file size and connection speed, this may take some time.\n
+Dosya boyutuna ve bağlantı hızına bağlı olarak bu işlem biraz zaman alabilir.\n
 \n
-Do you want to proceed?
+Devam etmek istiyor musunuz?
 </string>
     <string name="action_copy_and_proceed">
-Copy &amp; Proceed
+Kopyala ve Devam Et
 </string>
     <string name="media_operation_channel_name">
-Media Operations
+Medya Operasyonları
 </string>
     <string name="media_operation_channel_desc">
-Background video conversion and track extraction
+Arka plan video dönüştürme ve parça çıkarma
 </string>
     <string name="media_op_converting_video">
-Converting Video to MP4…
+Video MP4\'e dönüştürülüyor…
 </string>
     <string name="media_op_extracting_audio">
-Extracting Audio Track…
+Ses Parçası Çıkarılıyor…
 </string>
     <string name="media_op_extracting_subtitles">
-Extracting Subtitles…
+Altyazılar çıkarılıyor…
 </string>
     <string name="media_op_completed_title">
-Media Operation Completed
+Medya İşlemi Tamamlandı
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+Medya İşlemi Başarısız
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+Uzak video yerel önbelleğe indiriliyor…
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+Sonuç uzak klasöre yükleniyor…
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+Arka planda devam ediyor. İlerleme durumu için bildirimleri kontrol edin.
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+Uzaktan Paylaşım Salt Okunurdur
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+Çıkarılan dosya, paylaşım salt okunur olduğundan \"%1$s\" konumuna kaydedilemedi.\n
 \n
-Would you like to save it to your local device instead?
+Bunun yerine dosyayı yerel cihazınıza kaydetmek ister misiniz?
 </string>
     <string name="action_save_locally">
-Save to Device
+Cihaza Kaydet
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+Salt Okunur Paylaşım
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+\"%1$s\" paylaşımı salt okunurdur.\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+Çıkarılan veya dönüştürülen dosya uzak paylaşıma geri kaydedilemez, dolayısıyla bunun yerine yerel İndirilenler klasörünüze kaydedilecektir.\n
 \n
-Do you want to proceed?
+Devam etmek istiyor musunuz?
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+Diğer Depolama
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+Yüklü bulut ve belge sağlayıcıları
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+Cihazınızda yüklü olan üçüncü taraf belge sağlayıcılarına erişin
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+%1$d belge sağlayıcı mevcut
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+1 belge sağlayıcı mevcut
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+Hiçbir üçüncü taraf belge sağlayıcısı bulunamadı
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+Dosyalara Gözat (SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+Depolama Klasörünü Bağla
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+UFM Native Engine aracılığıyla bağlanın
 </string>
     <string name="action_open_app">
-Open App
+Uygulamayı Aç
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+Depolama Konumu Ekle
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+Dizini / Klasörü Bağla
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+Termux, SD kart veya USB sürücüsünden bir klasör seçin
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+Yüklü Belge Sağlayıcıları
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+Proton Drive\'a, Synology DS dosyasına, Google Drive\'a ve daha fazlasına erişin
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+Yüksek Hızlı Bulut ve Ağ
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+RClone (Proton/Google Drive) veya SMB/WebDAV aracılığıyla tam 2 yönlü senkronizasyon
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+Dosyayı Aç veya Kopyala
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+\"%1$s\" ile ne yapmak istersiniz?
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+UFM Görüntüleyicide Aç
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+Yerel Depolamaya Kopyala
 </string>
     <string name="saf_file_action_remember">
-Remember my choice
+Seçimimi hatırla
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+Her Zaman Sor
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+%1$d dosya İndirilenler\'e kopyalandı
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+SAF Seçilen Dosya Eylemi
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+Her zaman açmayı mı yoksa kopyalamayı mı istediğinizi sorun
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+Her zaman UFM Viewer\'da aç
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+Her zaman yerel depolamaya kopyala
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+Belge Sağlayıcı
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+%1$s\'ı yönet
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+Dosyalara Göz Atın ve İndirin
 </string>
     <string name="doc_provider_action_browse_subtitle">Dosyaları görüntülemek veya yerel olarak kopyalamak için %1$s açın</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+Dosyayı %1$s Konumuna Yükle
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+%1$s içine kaydetmek için UFM\'de yerel bir dosya seçin
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+%1$s kaldırılsın mı?
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+%1$s depolama alanından kaldırılsın mı? Dilediğiniz zaman Diğer Depolama alanından yeniden ekleyebilirsiniz.
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+Depolama Alanından Kaldır
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+%1$s depolama alanından kaldırıldı
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+%1$s depolama alanına eklendi
 </string>
     <string name="other_storage_all_added">
-All available providers added
+Mevcut tüm sağlayıcılar eklendi
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+Kurulu tüm belge sağlayıcıları Ana Depolama Menünüze zaten eklenmiştir.
 </string>
     <string name="saf_copy_destination_title">
-Destination: %1$s
+Hedef: %1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+Klasörü Değiştir…
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+Hedef klasörü seçin
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+Kopyalama Hedefini Ayarla
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+SAF Seçilen Dosya Hedefi
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+Belge sağlayıcılardan kopyalanan dosyalar \"%1$s\" dizinine kaydedilecek.
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+Diğer Depolama ve SAF Transferleri
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+Hedef Klasörü Kopyala
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+Varsayılana Sıfırla (İndirilenler)
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+Yeni Klasörü Seçin…
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+Hedef sıfırlamayı İndirilenler\'e kopyala
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+Belge Sağlayıcıya Aktar
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+Doğrudan bağlı bir buluta veya belge sağlayıcıya kaydedin
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+Hedef Sağlayıcıyı Seçin
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+Birden Çok Dosyayı Dışa Aktar
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+Bu %1$d dosyalarını %2$s cihazına nasıl aktarmak istersiniz?
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+ZIP Arşivi olarak dışa aktar
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+Sistem Yükleme Sayfasını Kullan
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+\"%1$s\", %2$s konumuna kaydedildi
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+Klasöre Monte Edilebilir
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+Dosyalar ve Bulut
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+Yerel Senkronizasyon Mevcut
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+Diğer Depolama Alanına Yükle
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+Seçilen dosya veya klasörleri harici belge sağlayıcılara yükleyin
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+Diğer Depolama Alanına Yükle
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+Hiçbir depolama sağlayıcısı eklenmedi. Eklenecek sağlayıcıyı seçin.
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+%1$d dosya/dosyalar %2$s hedefine kopyalandı
 </string>
     <string name="share_export_folder_title">
-Export Folder
+Dışa Aktarma Klasörü
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+Klasörler doğrudan Belge Sağlayıcılar aracılığıyla yüklenemez. \"%1$s\" dosyasını, %2$s klasörüne yüklemek üzere bir ZIP arşivine sıkıştırmak ister misiniz?
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+Tek bir ZIP arşivine sıkıştırın ve yükleyin
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+Öğeleri Android sistem yükleme sayfasını kullanarak gönderin
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+Takılı bir sağlayıcı seçin veya Diğer Depolamayı açın
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+%1$s için sıkıştırılıyor…
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+Diğer Depolama için Sıkıştırma…
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+%1$s aracılığıyla yükle
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+Dosyaları doğrudan %1$s içine gönder
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+Bir ZIP arşivine sıkıştırın ve %1$s içinde hedef klasörü seçin
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+%1$s dosyasındaki ZIP arşivindeki klasör yapısını ve orijinal dizini korur
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+Tek tek dosyaları doğrudan %1$s içine yükler (harici yükleme ekranları dizin oluşturamaz)
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+Klasör Yükleme Bildirimi
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+Harici yükleme ekranları (%2$s gibi) dizin oluşturamaz.\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+Orijinal klasörün kendisi değil, yalnızca \"%1$s\" içindeki dosyalar yüklenecektir.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Dizin yapısının tamamını korumak için bunun yerine \"ZIP Arşivi Olarak Dışa Aktar\"ı seçin.
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+Harici yükleme ekranları (%1$s gibi) dizin oluşturamaz.\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+Orijinal klasörlerin kendisi değil, yalnızca seçilen klasörlerin içindeki dosyalar yüklenecektir.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Dizin yapısının tamamını korumak için bunun yerine \"ZIP Arşivi Olarak Dışa Aktar\"ı seçin.
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+Yalnızca Dosyaları Yükle
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+Ana Ekran Seçenekleri
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+Ana ekrana ekle
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+Ana ekrandan kaldır
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+Favoriyi sil
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+Kısayol istendi — ana ekranınızı kontrol edin
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+Kısayol devre dışı bırakıldı. Ana ekranınızdan manuel olarak kaldırın.
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+UFM Favorileri
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+Kanal onaylanmadı. Bunu daha sonra TV Ayarları → Kanallar bölümünden etkinleştirebilirsiniz.
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+Öğe kullanılamıyor
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+Dosya veya klasör bulunamadı. Taşınmış, silinmiş veya kullanılamayan bir depolama alanında bulunuyor olabilir.
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -16215,382 +16361,382 @@ Kullanılabilir sürücü veya favori yok
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+Şununla aç:
 </string>
     <string name="open_with_search_hint">
-Search apps…
+Uygulamaları arayın…
 </string>
     <string name="open_with_just_once">
-Just once
+Sadece bir kez
 </string>
     <string name="open_with_always">
-Always
+Her zaman
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+.%1$s dosyaları için her zaman seçilen uygulamayı kullan
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+Her zaman seçilen uygulamayı kullan
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+.%1$s dosyaları için varsayılanı hatırla
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+Bu dosyayı açacak yüklü uygulama bulunamadı
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+Google Play Store\'da Ara
 </string>
     <string name="open_with_app_info">
-App info
+Uygulama bilgisi
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+Uygulama ayrıntılarını ve sistem ayarlarını görüntüleyin
 </string>
     <string name="open_with_set_default">
-Always use this app
+Her zaman bu uygulamayı kullan
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+%1$s başlatılamıyor. Sistem seçiciye geri dönüyoruz…
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+Açmak için Tamam\'a basın • Varsayılan uygulama seçenekleri için Tamam\'a uzun basın
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+Hedef Olarak Seçin
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+İzleyici Hedefi
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+Hedef Klasörü Onayla
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+Seçilen klasör, UFM Görüntüleyici ve Slayt Gösterisi\'ndeki hızlı Kopyalama ve Taşıma işlemleri için kullanılacaktır.
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+Dosya Eylemleri
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+Hedef Klasör
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+Hedef seçilmedi; seçmek için dokunun
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+Değiştirmek
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+%1$s\'a kopyala
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+%1$s konumuna taşı
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+Hedefe kopyala
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+Hedefe taşı
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+%1$s konumuna kopyalandı
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+%1$s konumuna taşındı
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+Kaynak ve hedef aynı klasör
 </string>
     <string name="backup_pref_viewer_transfer">
-Viewer Transfer Destination
+İzleyici Aktarım Hedefi
 </string>
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+Ana Ekrana Ekle
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+Kısayol Adı
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+Depolama Kısayolu
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+\"%1$s\" zaten ana ekranınıza sabitlendi.
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+Ana Ekrana Ekle
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+Kısayol adı boş olamaz
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
     <string name="download_manager_title">
-Download Manager
+İndirme Yöneticisi
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+Torrent, Magnet ve HTTP indirmeleri
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+Sıfır tohumlama gizlilik korumasına sahip yüksek hızlı yerel doğrudan ve eşler arası indirme yöneticisi.
 </string>
     <string name="download_no_transfers">
-No active downloads
+Aktif indirme yok
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+İndirme Klasörü olarak seçin
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+Klasörü İndir
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+İndirme Konumunu Onaylayın
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+İndirilenler doğrudan bu dizine kaydedilecektir.
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+Doğrudan İndirmeler
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+Torrent İndirmeleri
 </string>
     <string name="download_location_label">
-Download location
+İndirme konumu
 </string>
     <string name="download_change_location">
-Change
+Değiştirmek
 </string>
     <string name="download_action_start">
-Start
+Başlangıç
 </string>
     <string name="download_action_pause">
 Pause
 </string>
     <string name="download_action_resume">
-Resume
+Sürdürmek
 </string>
     <string name="download_action_cancel">
-Cancel
+İptal etmek
 </string>
     <string name="download_action_delete">
-Delete
+Silmek
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+Doğrudan İndirme URL\'si
 </string>
     <string name="download_enter_url_hint">
 https://example.com/file.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+İndirmek
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+Torrent veya Magnet Bağlantısı
 </string>
     <string name="download_enter_magnet_hint">
-magnet:?xt=urn:btih:...
+mıknatıs:?xt=urn:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+.torrent Dosyasını Aç
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+İndirme Yöneticisi ve P2P Bildirimi
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+Kabul Edilebilir Kullanım ve Gizlilik Bilgileri
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+Eşler arası indirmelerin sürü içinde IP adresimi paylaştığını anlıyorum ve bu aracı kesinlikle yasal, hak ihlalinde bulunmayan içerik için kullanmayı kabul ediyorum.
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+Depolama Sınırı Aşıldı
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+Hedef dosya boyutu (%1$s), bu sürücüdeki FAT32 dosya sistemi tarafından desteklenen 4 GB sınırını aşıyor.\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+Lütfen exFAT, NTFS veya dahili depolama biçiminde biçimlendirilmiş farklı bir indirme konumu seçin.
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+Yetersiz Depolama Alanı
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+Seçilen depolama sürücüsünde yeterli boş alan yok.\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+Gerekli: %1$s\n
+Kullanılabilir: %2$s\n
 \n
-Please select another drive or free up space.
+Lütfen başka bir sürücü seçin veya alanı boşaltın.
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+Konum Seçin
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+Mobil Veri Bağlantısı
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+Şu anda bir hücresel ağa bağlısınız ve yalnızca Wi-Fi modu etkin.\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+Bu aktarımı Wi-Fi bağlanana kadar sıraya koymak mı yoksa indirmeler için mobil veriye izin vermek mi istersiniz?
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+Wi-Fi kuyruğu
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+Mobil Verilere İzin Ver
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+Ağ Politikası
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+İndirmeler için ağ bağlantısı kurallarını seçin
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+Yalnızca Wi-Fi (Önerilen)
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+İndirilenleri yalnızca sınırsız Wi-Fi\'ye bağlanıldığında aktarın
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+Tüm Ağlar (Wi-Fi ve Hücresel)
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+Hücresel mobil veriler ve Wi-Fi ağları üzerinden aktarımlara izin ver
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+Korsanlıkla Mücadele Şartlarını İnceleyin
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+P2P sürüsünün ifşasını, gizliliğini ve sıfır tohumlama şartlarını görüntüleyin
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+P2P Sürü ve IP Görünürlüğü
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+BitTorrent, değişim parçalarını doğrudan sürüdeki diğer eş cihazlara aktarır. Genel IP adresiniz aktarım sırasında aktif eşler tarafından görülebilir.
 </string>
     <string name="download_legal_zero_seeding_title">
-Zero-Seeding Privacy
+Sıfır Tohumlama Gizliliği
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+UFM katı bir şekilde sıfır tohumlama uygular. İndirme işlemi tamamlandığı anda (%100), tüm sürü bağlantıları kesilir ve izleyici duyuruları anında durdurulur.
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+Yalnızca Yasal İçerik
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+Bu aracı kesinlikle yasal, açık kaynaklı, kamuya açık veya yetkili dosyalar için kullanmayı kabul edersiniz. Telif hakkıyla korunan materyalin izinsiz indirilmesi veya dağıtılması yasaktır.
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+Kabul Et ve Devam Et
 </string>
     <string name="download_legal_understood">
-Understood
+Anlaşıldı
 </string>
     <string name="download_state_downloading">
-Downloading
+İndiriliyor
 </string>
     <string name="download_state_paused">
-Paused
+Duraklatıldı
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+Wi-Fi için sıraya alındı
 </string>
     <string name="download_state_completed">
-Completed
+Tamamlanmış
 </string>
     <string name="download_state_error">
-Error
+Hata
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+İndirme Yöneticisi Aktarımları
 </string>
     <string name="download_notif_channel_desc">
-Ongoing download progress and status updates
+Devam eden indirme ilerlemesi ve durum güncellemeleri
 </string>
     <string name="download_timeout_stopped">
-Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+İndirmeler duraklatıldı: Android 6 saatlik yürütme sınırına ulaşıldı. Devam etmek için dokunun.
 </string>
 
     <!-- Torrent & Magnet Selective File Download & Content Inspector -->
     <string name="torrent_select_all">
-Select All
+Tümünü Seç
 </string>
     <string name="torrent_deselect_all">
-Deselect All
+Tümünün Seçimini Kaldır
 </string>
     <string name="torrent_selected_summary">
-Selected: %1$d of %2$d files (%3$s of %4$s)
+Seçilenler: %1$d / %2$d dosya (%3$s / %4$s)
 </string>
     <string name="torrent_files_count">
-%1$d files
+%1$d dosya
 </string>
     <string name="torrent_file_selection_title">
-Torrent Content
+Torrent İçeriği
 </string>
     <string name="torrent_file_selection_subtitle">
-Select files and folders to download
+İndirilecek dosya ve klasörleri seçin
 </string>
     <string name="torrent_fetching_metadata">
-Fetching torrent metadata from swarm…
+Sürüden torrent meta verileri getiriliyor…
 </string>
     <string name="torrent_fetching_metadata_desc">
-Contacting DHT nodes and peers to retrieve file list…
+Dosya listesini almak için DHT düğümleri ve eşleriyle iletişim kuruluyor…
 </string>
     <string name="torrent_metadata_timeout_title">
-Metadata Fetch Timeout
+Meta Veri Alma Zaman Aşımı
 </string>
     <string name="torrent_metadata_timeout_msg">
-Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+Dosya listesini eşlerden almak normalden daha uzun sürüyor. Aramaya devam etmek mi yoksa tüm dosyaları doğrudan indirmek mi istiyorsunuz?
 </string>
     <string name="torrent_keep_waiting">
-Keep Waiting
+Beklemeye Devam Edin
 </string>
     <string name="torrent_download_all_direct">
-Download All Directly
+Tümünü Doğrudan İndir
 </string>
     <string name="torrent_zero_selected_error">
-Please select at least one file to download
+Lütfen indirmek için en az bir dosya seçin
 </string>
     <string name="torrent_search_hint">
-Search files…
+Dosyaları ara…
 </string>
 
     <!-- Transfer Action Dialog -->
     <string name="transfer_action_title">
-Transfer Actions
+Transfer İşlemleri
 </string>
     <string name="transfer_action_pause">
-Pause Transfer
+Aktarımı Duraklat
 </string>
     <string name="transfer_action_resume">
-Resume Transfer
+Aktarımı Devam Ettir
 </string>
     <string name="transfer_action_open_folder">
-Open Download Folder
+İndirme Klasörünü Aç
 </string>
     <string name="transfer_action_delete_title">
-Remove Transfer
+Aktarımı Kaldır
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+Bu aktarımın İndirme Yöneticisinden nasıl kaldırılacağını seçin:
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+Yalnızca Aktarımı Kaldır
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+İndirilen dosyaları cihazınızda tutun
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+Dosyaları Kaldır ve Sil
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+İndirilen dosyaları diskten kalıcı olarak silin
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16651,79 +16797,79 @@ TV indirme konumu güncellenemedi: %1$s
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+Akıllı Yer İmleri
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+Kaydedilen bağlantıları, medyayı ve paylaşımları düzenleyin
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%2$d grupta %1$d öğe
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+Henüz kayıtlı yer işareti yok
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+UFM ile yer imi
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+Yer İmini Kaydet
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+%1$s kaynağından paylaşıldı
 </string>
     <string name="bookmark_field_title_hint">
-Title
+Başlık
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+Koleksiyon / Grup
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+Kişisel not ekleyin (isteğe bağlı)
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+Yer İmini Kaydet
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+Zaten yer imlerine eklendi — notlar ve zaman güncellendi
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+Yer işareti %1$s konumuna kaydedildi
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+Gruplar
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+Tümünü görüntüle ›
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+Koleksiyonlar ve Kaynaklar
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+Koleksiyonları, filtreyi ve kasa korumasını yönetin
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+Koleksiyonlarda ara…
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+Tüm Yer İmleri
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+Tüm kaynaklardaki kilidi açılmış tüm yer işaretlerini göster
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+Koleksiyonlarım
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+Kullanıcı tarafından oluşturulan koleksiyonlar • Kasa kilitlenebilir
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+Uygulama Kaynakları
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+Paylaşılan uygulamalardan otomatik olarak oluşturulmuştur
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16732,193 +16878,193 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+Bu cihazda cihaz güvenliği (PIN, desen veya parmak izi) ayarlanmadı.
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+Kasa Kilitli
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+Apps Kasası kilidini kaldırmak için kimlik doğrulaması yapın
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+Koleksiyon Apps Kasası ile kilitlendi
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+Koleksiyonun kilidi açıldı
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+Yeni Yer İşareti Grubu
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+Grup Adı
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+Grup Oluştur
 </string>
     <string name="bookmark_filter_all">
-All
+Tüm
 </string>
     <string name="bookmark_filter_links">
-Links
+Bağlantılar
 </string>
     <string name="bookmark_filter_media">
-Media
+Medya
 </string>
     <string name="bookmark_filter_docs">
-Documents
+Belgeler
 </string>
     <string name="bookmark_filter_notes">
-Notes
+Notlar
 </string>
     <string name="bookmark_filter_starred">
-Starred
+Yıldızlı
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+Yer imlerinde, notlarda veya alanlarda arama yapın…
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+Yer İşaretlerini Sırala
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+En yeniden en eskiye
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+En eskiden en yeniye
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+Başlık (A’dan Z’ye)
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+Başlık (Z-A)
 </string>
     <string name="bookmark_sort_size">
-File Size
+Dosya Boyutu
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+Koleksiyona göre gruplandır
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+Koleksiyon: A\'dan Z\'ye
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+Koleksiyon: Z\'den A\'ya
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+Koleksiyonu Sil
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+\"%1$s\" koleksiyonunu silmek istediğinizden emin misiniz?
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+Makaleyi Oku
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+Tarayıcıda Aç
 </string>
     <string name="bookmark_action_open_file">
-Open File
+Dosyayı Aç
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+Bağlantıyı Kopyala
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+Metni Kopyala
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+Depolama Alanına Kaydet
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+Gruba Taşı
 </string>
     <string name="bookmark_action_delete">
-Delete
+Silmek
 </string>
     <string name="bookmark_view_note">
-View Note
+Notu Görüntüle
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+Kilit Koleksiyonu (Kasa)
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+Görüntülemek için parmak izi veya PIN gerektir
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+Koleksiyon Seçenekleri
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+Kilit Koleksiyonu
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+Koleksiyonun Kilidini Aç
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+Yer işareti silindi
 </string>
     <string name="bookmark_undo">
-Undo
+Geri al
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+Seçilen %1$d öğe
 </string>
     <string name="bookmark_batch_move">
-Move
+Taşınmak
 </string>
     <string name="bookmark_batch_delete">
-Delete
+Silmek
 </string>
     <string name="bookmark_batch_export">
-Export
+İhracat
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+Yer İşaretlerini Dışa Aktar
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+Tarayıcı HTML Yer İmleri (.html)
 </string>
     <string name="bookmark_export_markdown">
-Markdown Document (.md)
+İşaretleme Belgesi (.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+%1$d yer işareti %2$s hedefine aktarıldı
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+Okuyucu Modu
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+Metin Boyutu
 </string>
     <string name="bookmark_reader_theme">
-Theme
+Tema
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+Işık
 </string>
     <string name="bookmark_reader_theme_sepia">
-Sepia
+Sepya
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+Karanlık
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+Yüksek Sesle Dinle
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+Okumayı Duraklat
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+Okumayı Durdur
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+Hız %1$sx
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+Ses motoru başlatılıyor…
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+Metinden konuşmaya desteklenmiyor veya bu cihazda yüklü değil
 </string>
     <string name="bookmark_group_whatsapp">
 WhatsApp
@@ -16933,40 +17079,40 @@ YouTube
 Twitter / X
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+Web ve Makaleler
 </string>
     <string name="bookmark_group_telegram">
-Telegram
+Telgraf
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+Dosyalar ve Belgeler
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+Kasalı Kilit Grubu
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+Grubun Kilidini Aç
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+Kilitli yer imlerine erişmek için kimlik doğrulaması yapın
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+Henüz Yer İşareti Yok
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+WhatsApp, Reddit veya tarayıcınızdan bağlantıları, makaleleri, medyayı veya dosyaları paylaşın ve \"UFM ile yer imlerine ekleyin\"i seçin.
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+Sonuç Bulunamadı
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+\"%1$s\" ile eşleşen yer işareti yok. Farklı anahtar kelimeler aramayı deneyin.
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+Yer İşareti Bulunamadı
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+Seçilen filtre veya koleksiyonla eşleşen yer işareti bulunamadı.
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -16974,67 +17120,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+Düz Görünüm
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+Özyinelemeli Dizine Alınmış Tarayıcı
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+Klasörü Aç
 </string>
     <string name="flat_view_expand_all">
-Expand All
+Tümünü Genişlet
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+Tümünü Daralt
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+Sistem Klasörlerini Ekle
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+Düz Görünüm\'de Android/data, Android/obb ve sistem dizinlerini göster
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+Varsayılan olarak Tümü Genişletilmiş
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+Tüm klasörlerin varsayılan olarak genişletildiği Düz Görünümü açın
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+Bu birimde dizine eklenmiş dosya bulunamadı
 </string>
     <string name="flat_view_settings_title">
-Flat View
+Düz Görünüm
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+Özyinelemeli dizine alınmış taramayı ve sistem klasörlerini yapılandırma
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+Depolama Dizine Alınmamış
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+Flat View, bu depolama biriminin tamamen indekslenmesini gerektirir. Lütfen önce indekslemeyi çalıştırın.
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%2$d klasördeki %1$d dosya
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+%1$d seçildi
 </string>
     <string name="flat_view_folder_files_count">
-%1$d files
+%1$d dosya
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+Dosyaları Sil
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+Seçilen %1$d dosyayı silmek istediğinizden emin misiniz?
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+%1$d dosya silindi
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+Düz Görünüm ayarları
 </string>
 </resources>
 

@@ -451,55 +451,55 @@ UFM Pro
 يلف الاسم الكامل على عدد الأسطر اللازمة
 </string>
     <string name="settings_file_name_display_truncate">
-Single line (Truncated end)
+سطر واحد (نهاية مبتورة)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Truncates with ellipsis at end (abc…) without scrolling
+يتم الاقتطاع باستخدام علامة الحذف في النهاية (abc...) دون التمرير
 </string>
     <string name="settings_file_name_display_truncate_middle">
-Single line (Truncate middle)
+سطر واحد (اقتطاع الأوسط)
 </string>
     <string name="settings_file_name_display_truncate_middle_desc">
-Truncates in middle (abc…xyz.ext) to preserve the end suffix
+يتم اقتطاعه من المنتصف (abc…xyz.ext) للحفاظ على لاحقة النهاية
 </string>
     <string name="settings_marquee_speed_title">
-Scroll Speed
+سرعة التمرير
 </string>
     <string name="settings_marquee_speed_slow">
-Slow
+بطيء
 </string>
     <string name="settings_marquee_speed_normal">
 Normal
 </string>
     <string name="settings_marquee_speed_fast">
-Fast
+سريع
 </string>
     <string name="settings_marquee_loop_title">
-Loop Mode
+وضع الحلقة
 </string>
     <string name="settings_marquee_loop_one_shot">
-One-Shot
+طلقة واحدة
 </string>
     <string name="settings_marquee_loop_one_shot_desc">
-Scrolls once and stops to save battery
+يتم التمرير مرة واحدة ويتوقف لحفظ البطارية
 </string>
     <string name="settings_marquee_loop_continuous">
-Continuous
+مستمر
 </string>
     <string name="settings_marquee_loop_continuous_desc">
-Repeats back and forth continuously
+يتكرر ذهابًا وإيابًا بشكل مستمر
 </string>
     <string name="settings_marquee_scope_title">
-Scroll Scope
+نطاق التمرير
 </string>
     <string name="settings_marquee_scope_all">
-All Visible Files
+جميع الملفات المرئية
 </string>
     <string name="settings_marquee_scope_focused">
-Focused / Selected Only
+مركّز/مختار فقط
 </string>
     <string name="settings_file_name_preview_title">
-Live Preview
+المعاينة المباشرة
 </string>
     <string name="settings_file_name_preview_sample">
 VeryLongFileName_ProjectReport_2026_Final_v2.docx
@@ -655,7 +655,7 @@ SFTP
 إيقاف
 </string>
     <string name="widget_ftp_sftp_ip">
-IP: %1$s
+عنوان IP: %1$s
 </string>
     <string name="file_server_tiles_title">
 بلاطات نظام خادم الملفات
@@ -1206,7 +1206,7 @@ APK
 المكررات
 </string>
     <string name="analyzer_tab_incomplete">
-Incomplete
+غير مكتمل
 </string>
     <string name="analyzer_tab_junk">
 النفايات والقديم
@@ -1233,10 +1233,10 @@ Incomplete
 يوفر %1$s
 </string>
     <string name="analyzer_no_incomplete_files">
-No incomplete or sparse downloads found
+لم يتم العثور على تنزيلات غير كاملة أو متفرقة
 </string>
     <string name="analyzer_incomplete_file_allocated">
-Size on disk: %1$s (%2$.1f%%)
+الحجم على القرص: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1321,97 +1321,97 @@ Size on disk: %1$s (%2$.1f%%)
 
     <!-- Bulk duplicate deletion & retention strategy -->
     <string name="analyzer_select_all_duplicates">
-Select All Duplicates
+حدد كافة التكرارات
 </string>
     <string name="analyzer_clear_selection">
-Clear
+واضح
 </string>
     <string name="analyzer_delete_all_duplicates">
-Delete All Duplicates
+حذف كافة التكرارات
 </string>
     <string name="analyzer_delete_selected_count">
-Delete Selected (%1$d)
+حذف المحدد (%1$d)
 </string>
     <string name="analyzer_badge_original">
-Original
+إبداعي
 </string>
     <string name="analyzer_strategy_title">
-Duplicate Retention Strategy
+استراتيجية الاحتفاظ المكررة
 </string>
     <string name="analyzer_strategy_oldest">
-Keep Oldest (Original)
+الاحتفاظ بالأقدم (الأصلي)
 </string>
     <string name="analyzer_strategy_oldest_desc">
-Preserves the oldest file by modification date and deletes newer copies.
+يحافظ على الملف الأقدم حسب تاريخ التعديل ويحذف النسخ الأحدث.
 </string>
     <string name="analyzer_strategy_newest">
-Keep Newest
+احتفظ بالأحدث
 </string>
     <string name="analyzer_strategy_newest_desc">
-Preserves the most recently modified file and deletes older copies.
+يحافظ على الملف الذي تم تعديله مؤخرًا ويحذف النسخ الأقدم.
 </string>
     <string name="analyzer_strategy_remember">
-Remember my choice
+تذكر خياري
 </string>
     <string name="analyzer_strategy_most_complete">
-Keep Most Complete
+الحفاظ على الأكثر اكتمالا
 </string>
     <string name="analyzer_strategy_most_complete_desc">
-Preserves fully downloaded or most allocated files and deletes incomplete copies.
+يحافظ على الملفات التي تم تنزيلها بالكامل أو معظم الملفات المخصصة ويحذف النسخ غير المكتملة.
 </string>
     <string name="analyzer_badge_partial">
-Partial (%1$.0f%%)
+جزئي (%1$.0f%%)
 </string>
     <string name="analyzer_badge_sparse">
-Sparse
+متناثر
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+هل تريد حذف %1$d الملفات المكررة؟
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+سيتم الاحتفاظ بنسخة أصلية واحدة من كل ملف. %1$d سيتم حذف النسخ المكررة نهائيًا لإخلاء %2$s.
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+اكتملت عملية التنظيف
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+تم بنجاح حذف %1$d من الملفات المكررة واستعادة %2$s من مساحة التخزين.
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+%1$d تعذر حذف الملفات بسبب الأذونات.
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+جارٍ حذف %1$d من %2$d من الملفات...
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d مجموعات مكررة · عمليات حفظ %2$s
 </string>
     <string name="settings_duplicate_retention_title">
-Duplicate Retention Strategy
+استراتيجية الاحتفاظ المكررة
 </string>
     <string name="settings_duplicate_retention_dialog_subtitle">
-Choose which copy to preserve when selecting duplicate files for cleanup.
+اختر النسخة التي تريد الاحتفاظ بها عند تحديد الملفات المكررة للتنظيف.
 </string>
     <string name="settings_duplicate_retention_summary_oldest">
-Keep oldest file (Original)
+احتفظ بالملف الأقدم (الأصلي)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
-Keep newest file
+احتفظ بأحدث ملف
 </string>
     <string name="settings_duplicate_retention_summary_most_complete">
-Keep most complete file
+احتفظ بالملف الأكثر اكتمالا
 </string>
     <string name="settings_duplicate_retention_summary_ask">
-Always ask
+اسأل دائما
 </string>
     <string name="settings_duplicate_retention_desc_ask">
-Prompt to choose retention strategy each time duplicate files are selected.
+المطالبة باختيار استراتيجية الاحتفاظ في كل مرة يتم فيها تحديد الملفات المكررة.
 </string>
     <string name="settings_duplicate_retention_toast">
-Duplicate retention strategy set to: %s
+تم تعيين إستراتيجية الاحتفاظ المكررة على: %s
 </string>
     <string name="backup_pref_duplicate_retention">
-Duplicate Retention Strategy
+استراتيجية الاحتفاظ المكررة
 </string>
 
     <!-- Theme -->
@@ -1613,7 +1613,7 @@ AMOLED أسود
 تم تطبيق السمة
 </string>
     <string name="material_you_title">
-Material You
+المادة أنت
 </string>
     <string name="material_you_summary">
 استخدم ألوان خلفية الشاشة للحصول على مظهر مخصص
@@ -1917,13 +1917,13 @@ Ultimate File Manager Pro
 اختر الشاشة التي تفتح عند التشغيل
 </string>
     <string name="start_screen_last_opened">
-Last Opened Location
+آخر موقع مفتوح
 </string>
     <string name="start_screen_last_opened_desc">
-Reopen where you left off upon app launch
+أعد الفتح من حيث توقفت عند تشغيل التطبيق
 </string>
     <string name="storage_unavailable_redirect">
-Previous storage location is unavailable. Returned to Storage screen.
+موقع التخزين السابق غير متاح. عاد إلى شاشة التخزين.
 </string>
     <string name="start_screen_storage_browser">
 القائمة الرئيسية (افتراضي)
@@ -2026,13 +2026,13 @@ Previous storage location is unavailable. Returned to Storage screen.
 
     <!-- Network Transfer Multi-Threading Settings -->
     <string name="settings_network_transfer_threads_title">
-FTP, SFTP &amp; SMB Multi-threading
+FTP وSFTP وSMB متعدد الخيوط
 </string>
     <string name="settings_network_transfer_threads_dialog_title">
 خيوط النقل
 </string>
     <string name="settings_network_transfer_threads_dialog_subtitle">
-Select the number of simultaneous connections for faster network file transfers
+حدد عدد الاتصالات المتزامنة لنقل ملفات الشبكة بشكل أسرع
 </string>
     <string name="settings_network_transfer_threads_subtitle">
 %1$d خيوط — اتصالات متزامنة لعمليات نقل أسرع
@@ -2047,40 +2047,40 @@ Select the number of simultaneous connections for faster network file transfers
 %1$d خيوط (مُوصى بها)
 </string>
     <string name="settings_network_transfer_threads_maximum">
-%1$d threads (Maximum)
+%1$d المواضيع (الحد الأقصى)
 </string>
     <string name="settings_network_transfer_threads_2">
 2 threads
 </string>
     <string name="settings_network_transfer_threads_4">
-4 threads (Recommended)
+4 مواضيع (مستحسن)
 </string>
     <string name="settings_network_transfer_threads_6">
 6 threads
 </string>
     <string name="settings_network_transfer_threads_8">
-8 threads (Maximum)
+8 المواضيع (الحد الأقصى)
 </string>
     <string name="settings_network_transfer_threads_desc_1">
-Single connection, transfers files sequentially
+اتصال واحد، ينقل الملفات بالتسلسل
 </string>
     <string name="settings_network_transfer_threads_desc_2">
-Light parallelism, ideal for slower connections
+التوازي الخفيف، مثالي للاتصالات الأبطأ
 </string>
     <string name="settings_network_transfer_threads_desc_4">
-Optimal balance of speed and stability for Wi-Fi and LAN
+التوازن الأمثل بين السرعة والاستقرار لشبكة Wi-Fi وLAN
 </string>
     <string name="settings_network_transfer_threads_desc_6">
-High throughput for Gigabit networks and fast Wi-Fi
+إنتاجية عالية لشبكات Gigabit وشبكة Wi-Fi سريعة
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+الحد الأقصى من الإنتاجية لشبكة LAN متعددة جيجابت وWi-Fi 7
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+تم تعيين نقل المواضيع إلى %1$d
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+إعدادات FTP وSFTP وSMB متعددة الخيوط
 </string>
     <string name="network_field_threads">
 خيوط النقل
@@ -2091,28 +2091,28 @@ FTP, SFTP &amp; SMB Multi-threading Settings
 
     <!-- Transfer Multi-Threading Telemetry -->
     <string name="transfer_threads_header">
-Threads (%1$d active)
+المواضيع (%1$d نشطة)
 </string>
     <string name="transfer_threads_header_single">
-Thread (1 active)
+الموضوع (1 نشط)
 </string>
     <string name="transfer_per_thread_placeholder">
--- MB/s
+- ميجابايت / ثانية
 </string>
     <string name="transfer_per_thread_format">
-Per thread: %1$.1f MB/s
+لكل سلسلة: %1$.1f ميجابايت/ثانية
 </string>
     <string name="transfer_per_thread_single_format">
-Single thread: %1$.1f MB/s
+مؤشر ترابط واحد: %1$.1f ميجابايت/ثانية
 </string>
     <string name="transfer_thread_initial">
 Thread %1$d: --
 </string>
     <string name="transfer_thread_speed_item">
-Thread %1$d: %2$.1f MB/s
+الموضوع %1$d: %2$.1f ميجابايت/ثانية
 </string>
     <string name="transfer_thread_speed_single">
-Thread %1$d: %2$.1f MB/s (Single-threaded)
+الموضوع %1$d: %2$.1f ميجابايت/ثانية (مؤشر ترابط فردي)
 </string>
 
     <!-- Open Source Licenses -->
@@ -2195,7 +2195,7 @@ Thread %1$d: %2$.1f MB/s (Single-threaded)
 الأرشيفات
 </string>
     <string name="filter_apks">
-APKs
+ملفات APK
 </string>
     <string name="filter_date_title">
 تاريخ التعديل
@@ -2960,7 +2960,7 @@ SMB, FTP والمزيد
 مشاركات الشبكة
 </string>
     <string name="network_shares_subtitle">
-SMB · FTP
+الشركات الصغيرة والمتوسطة · بروتوكول نقل الملفات
 </string>
     <string name="network_shares_info_notice">
 اتصل بمشاركات SMB وFTP وSFTP وSCP وNFS على شبكتك المحلية لتصفح الملفات ونقلها وتنظيمها بسلاسة.
@@ -3252,7 +3252,7 @@ SMB3 فقط (آمن حديث)
 بجدية، شكرًا لك. لقد أضفت البهجة إلى يومي! 🙌
 </string>
     <string name="google_play_store">
-Google Play Store
+متجر جوجل بلاي
 </string>
     <!-- Amazon IAP Tip Jar strings -->
     <!-- Shown when AMAZON_IAP_ENABLED = false (feature not yet live on the Amazon Appstore) -->
@@ -3351,7 +3351,7 @@ Google Play Store
 تخطي هذه
 </string>
     <string name="filter_extensions_hint">
-jpg, png, mp4
+JPG، بابوا نيو غينيا، MP4
 </string>
     <string name="filter_extensions_label">
 امتدادات الملفات
@@ -5554,13 +5554,27 @@ APK جاهز للتثبيت
 تشغيل / إيقاف مؤقت
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+الوضع التفاعلي
+</string>
+    <string name="svg_transport_mode">
+ضوابط اللاعب
+</string>
+    <string name="svg_restart">
+إعادة تشغيل الرسوم المتحركة
+</string>
+    <string name="svg_playback_speed">
+سرعة التشغيل
+</string>
+    <string name="svg_next_panel">
+اللوحة التالية
+</string>
+    <string name="svg_prev_panel">
+اللوحة السابقة
+</string>
+    <string name="svg_tv_interactive_hint">
+الوضع التفاعلي - اضغط على \"رجوع\" أو \"القائمة\" لعناصر تحكم المشغل
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 المسار الصوتي
@@ -5869,10 +5883,10 @@ UFM لا يدعم اختيار هذه المجلدات عبر منتقي الن�
 حفظ إلى UFM
 </string>
     <string name="share_target_save_to">
-Save to…
+حفظ إلى...
 </string>
     <string name="share_target_open_in">
-Open in…
+فتح في…
 </string>
     <string name="share_receive_from">
 استلام ملف من %s
@@ -7030,7 +7044,7 @@ ROOT
 %1$s / %2$s
 </string>
     <string name="transfer_speed_mbs">
-%1$.1f MB/s
+%1$.1f ميجابايت/ثانية
 </string>
     <string name="cannot_read_source_file">
 لا يمكن قراءة ملف المصدر
@@ -7379,10 +7393,10 @@ Debloater
 تم العثور على %1$d ملفات أكبر من 512 ميغابايت.
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+التنزيلات غير كاملة / متفرقة
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+تم العثور على %1$d ملفات غير كاملة أو متفرقة تستهلك مساحة على القرص.
 </string>
     <string name="old_unused_files">
 التلفاز المتصل
@@ -7491,7 +7505,9 @@ Found %1$d incomplete or sparse files consuming disk space.
     <string name="smart_sort_category_documents">
 الأرشيفات
 </string>
-    <string name="smart_sort_category_archives">Archives</string>
+    <string name="smart_sort_category_archives">
+أرشيف
+</string>
     <string name="smart_sort_category_apps">
 التطبيقات
 </string>
@@ -7975,10 +7991,18 @@ Found %1$d incomplete or sparse files consuming disk space.
     <string name="sync_disabled">
 المزامنة معطلة
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+تمكين الملف الشخصي
+</string>
+    <string name="sync_action_disable">
+تعطيل الملف الشخصي
+</string>
+    <string name="sync_status_enabled">
+نشيط
+</string>
+    <string name="sync_status_disabled">
+متوقف مؤقتًا
+</string>
     <string name="sync_delete_profile_confirm_msg">
 هل تريد بالتأكيد حذف \"%1$s\"؟ لا يمكن التراجع عن هذا الإجراء.
 </string>
@@ -8320,49 +8344,49 @@ Found %1$d incomplete or sparse files consuming disk space.
 مكرر
 </string>
     <string name="whatsapp">
-WhatsApp
+واتساب
 </string>
     <string name="whatsapp_business">
-WhatsApp Business
+واتساب للأعمال
 </string>
     <string name="telegram">
-Telegram
+برقية
 </string>
     <string name="instagram">
-Instagram
+انستغرام
 </string>
     <string name="snapchat">
-Snapchat
+سناب شات
 </string>
     <string name="tiktok">
-TikTok
+تيك توك
 </string>
     <string name="facebook">
-Facebook
+فيسبوك
 </string>
     <string name="twitter_x">
-Twitter / X
+تويتر / اكس
 </string>
     <string name="discord">
-Discord
+الفتنة
 </string>
     <string name="spotify">
-Spotify
+سبوتيفي
 </string>
     <string name="netflix">
-Netflix
+نيتفليكس
 </string>
     <string name="youtube">
-YouTube
+يوتيوب
 </string>
     <string name="signal">
-Signal
+إشارة
 </string>
     <string name="viber">
-Viber
+فايبر
 </string>
     <string name="line">
-Line
+خط
 </string>
     <string name="opening_itemlabel">
 📂 فتح %1$s
@@ -8428,7 +8452,7 @@ Line
 مستخدم
 </string>
     <string name="android_tv">
-Android TV
+تلفزيون أندرويد
 </string>
     <string name="jcifsng_euagno3">
 jcifs-ng (eu.agno3)
@@ -8437,43 +8461,43 @@ jcifs-ng (eu.agno3)
 FFmpeg (إصدار LGPL)
 </string>
     <string name="smbj_hierynomus">
-smbj (hierynomus)
+سمبج (هيرينوموس)
 </string>
     <string name="apache_commons_net">
-Apache Commons Net
+أباتشي كومنز نت
 </string>
     <string name="apache_commons_compress">
-Apache Commons Compress
+أباتشي كومنز ضغط
 </string>
     <string name="zip4j_netlingalazip4j">
 zip4j (net.lingala.zip4j)
 </string>
     <string name="xz_for_java_orgtukaanixz">
-XZ for Java (org.tukaani.xz)
+XZ لجافا (org.tukaani.xz)
 </string>
     <string name="public_domain">
 المجال العام
 </string>
     <string name="apache_poi">
-Apache POI
+أباتشي النقاط المهمة
 </string>
     <string name="nanohttpd">
-NanoHTTPD
+نانوHTTPD
 </string>
     <string name="google_firebase_analytics">
-Google Firebase Analytics
+تحليلات جوجل Firebase
 </string>
     <string name="google_billing_library">
-Google Billing Library
+مكتبة فواتير جوجل
 </string>
     <string name="google_play_review_library">
-Google Play Review Library
+مكتبة مراجعة جوجل بلاي
 </string>
     <string name="androidx_libraries">
-AndroidX Libraries
+مكتبات أندرويد إكس
 </string>
     <string name="viewpager2">
-ViewPager2
+عرضPager2
 </string>
     <string name="libadbandroid_comgithubmuntashirakon">
 libadb-android (com.github.MuntashirAkon)
@@ -8482,22 +8506,22 @@ libadb-android (com.github.MuntashirAkon)
 BouncyCastle (org.bouncycastle) · v1.83
 </string>
     <string name="apache_sshd_core">
-Apache MINA SSHD
+أباتشي مينا SSHD
 </string>
     <string name="eddsa_java">
-EdDSA for Java
+EdDSA لجافا
 </string>
     <string name="slf4j_android">
-SLF4J Android
+SLF4J أندرويد
 </string>
     <string name="androidsvg_comcaverock">
 AndroidSVG (com.caverock)
 </string>
     <string name="coil_iocoilkt">
-Coil (io.coil-kt.coil3)
+الملف (io.coil-kt.coil3)
 </string>
     <string name="bouncy_castle_license_mitstyle">
-Bouncy Castle License (MIT-style)
+رخصة نطاط القلعة (نمط معهد ماساتشوستس للتكنولوجيا)
 </string>
     <string name="storage_volume">
 وحدة تخزين
@@ -8615,16 +8639,16 @@ Dropbox
 فشل التوثيق: %1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+فشلت المصادقة
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+خطأ في الاتصال أو التحقق
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+غير قادر على التحقق من رمز التفويض باستخدام Dropbox. يرجى التحقق من إدخال الرمز بشكل صحيح، وعدم انتهاء صلاحيته، ومن صحة تاريخ/وقت جهازك.
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+تم اكتشاف خطأ في تاريخ ووقت الجهاز. يبدو أن تاريخ/وقت نظام التلفزيون الخاص بك قد أصبح في الماضي، مما يمنع الاتصال الآمن بـ Dropbox. يرجى ضبط التاريخ والوقت الصحيحين في إعدادات Android TV.
 </string>
     <string name="dropbox_auth_verifying">
 جارٍ التحقق من الرمز...
@@ -8776,7 +8800,7 @@ Box — انتهت الجلسة
 وصول موسع
 </string>
     <string name="shizuku_subtitle">
-Porter / Shizuku / Shevery
+بورتر / شيزوكو / شيفيري
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
@@ -8909,19 +8933,19 @@ ADB غير متصل. اتصل عبر محطة ADB لتمكين الوصول ال
 التطبيقات الإدارية المتاحة
 </string>
     <string name="shizuku_manager_shizuku_title">
-Shizuku
+شيزوكو
 </string>
     <string name="shizuku_manager_shizuku_desc">
 الخدمة الموسعة القياسية من GitHub
 </string>
     <string name="shizuku_manager_shevery_title">
-Shevery
+شيفيري
 </string>
     <string name="shizuku_manager_shevery_desc">
 بديل خفيف وسريع
 </string>
     <string name="shizuku_manager_porter_title">
-Porter
+حمال
 </string>
     <string name="shizuku_manager_porter_desc">
 استمرار Shizuku الذي يتم صيانته بنشاط
@@ -8951,16 +8975,16 @@ Porter مثبت لكن خدمته لا تعمل. الاتصال ينتظر Porte
 جارٍ التحقق من الوصول المرتفع…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+احصل على بورتر
 </string>
     <string name="elevated_prerelease_badge">
 إصدار تجريبي
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+احصل على شيزوكو
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+احصل على شيفيري
 </string>
     <string name="shizuku_open_manager">
 فتح تطبيق %1$s الإداري
@@ -8969,7 +8993,7 @@ Get Shevery
 دليل الإعداد في 3 خطوات
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1. تثبيت المدير
 </string>
     <string name="shizuku_step_2">
 2. ابدأ الخدمة
@@ -9008,17 +9032,23 @@ ADB / تصحيح الأخطاء اللاسلكي
 تنزيل وتثبيت (%1$s)
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+هل تريد قطع الاتصال بالوصول المرتفع؟
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+سيؤدي هذا إلى قطع اتصال %1$s بالوصول المرتفع إلى UFM. ويمكنك إعادة تمكينه في أي وقت.
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+قطع الاتصال
 </string>
-    <string name="shizuku_allow_app_access">Allow app access</string>
-    <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
-    <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
+    <string name="shizuku_allow_app_access">
+السماح بالوصول إلى التطبيق
+</string>
+    <string name="shizuku_app_access_granted_toast">
+تم تمكين الوصول العالي لـ %1$s
+</string>
+    <string name="shizuku_app_access_revoked">
+تم تعطيل الوصول العالي لـ %1$s
+</string>
     <string name="elevated_fetching_toast">
 جارٍ التحقق من أحدث إصدار لـ %1$s…
 </string>
@@ -9315,7 +9345,7 @@ DLNA
 انقر للإدارة
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+توقف خادم الملفات: تم الوصول إلى حد تنفيذ Android وهو 6 ساعات
 </string>
     <string name="opening_file_server">
 جارٍ فتح خادم الملفات…
@@ -9476,7 +9506,7 @@ $%1$d
 </string>
     <!-- Short provider labels used in S3SetupActivity title -->
     <string name="add_online_storage_aws_s3">
-AWS S3
+أوس S3
 </string>
     <string name="add_online_storage_idrive_e2">
 تخزين S3
@@ -9623,34 +9653,34 @@ URL الخادم (مثل: https://cloud.example.com/…)
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+السماح بشهادة غير موثوقة / موقعة ذاتيًا
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+قبول شهادات CA SSL الموقعة ذاتيًا أو الخاصة (الشائعة في أجهزة NAS المحلية)
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+كلمة المرور (اتركها فارغة لتبقى محدثة)
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+شهادة SSL غير موثوقة
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+قدم الخادم في %1$s شهادة SSL غير موثوقة أو موقعة ذاتيًا. تحقق من تفاصيل الشهادة أدناه قبل الوثوق بهذا الاتصال.
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+موضوع
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+المصدر
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+صحة
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+SHA-256 بصمة الإصبع
 </string>
     <string name="webdav_cert_dialog_trust">
-Trust &amp; Connect
+الثقة والاتصال
 </string>
 
     <!-- About Section -->
@@ -9682,7 +9712,7 @@ support@kilowatch.co.za
 الجوال
 </string>
     <string name="flavor_tv">
-Android TV
+تلفزيون أندرويد
 </string>
     <string name="about_tile_subtitle">
 معلومات التطبيق والتفاصيل
@@ -9977,10 +10007,10 @@ Bluetooth متوقف
 اتصال بـ %1$s عبر WiFi
 </string>
     <string name="remote_device_bt_suffix">
- — Bluetooth
+ - بلوتوث
 </string>
     <string name="remote_device_wifi_suffix">
- — WiFi
+ - واي فاي
 </string>
     <string name="remote_transport_no_wifi_tvs_title">
 لا توجد تلفزيونات مفعلة لجهاز التحكم
@@ -10492,7 +10522,7 @@ PDF (متعدد الصفحات فقط)
 الكاميرا
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+لم يتم العثور على تطبيق كاميرا على هذا الجهاز
 </string>
     <string name="scanner_capture_gallery">
 اختيار من المعرض
@@ -10789,7 +10819,7 @@ No camera app found on this device
 داكن
 </string>
     <string name="default_icon_color_section_amoled">
-AMOLED
+أموليد
 </string>
     <string name="default_icon_color_preview_label">
 معاينة
@@ -11606,7 +11636,7 @@ SAF
 اختر نوع الجهاز الهدف:
 </string>
     <string name="target_tv">
-Android TV / Fire TV
+أندرويد تي في/ فاير تي في
 </string>
     <string name="target_tv_desc">
 نسخ الملفات مباشرة إلى Android TV باستخدام الدفع اللاسلكي عبر ADB
@@ -11630,7 +11660,7 @@ Android TV / Fire TV
 رمز PIN للجلسة
 </string>
     <string name="adb_device_badge">
-Android TV (ADB)
+تلفزيون أندرويد (إي دي بي)
 </string>
     <string name="connecting_to_device">
 جارٍ الاتصال بـ %1$s…
@@ -11744,7 +11774,7 @@ Ultimate File Manager Pro
 جارٍ إرسال الملف…
 </string>
     <string name="pro_badge">
-PRO
+للمحترفين
 </string>
 
     <!-- RClone Cloud Storage Support -->
@@ -11824,7 +11854,7 @@ Mega
 Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
-Premiumize
+قسط
 </string>
     <string name="rclone_provider_box">
 Box
@@ -11848,7 +11878,7 @@ Box
 استخدم كلمة مرور التطبيق التي تم إنشاؤها في إعدادات حساب Koofr، وليس كلمة مرور تسجيل الدخول الخاصة بك
 </string>
     <string name="rclone_provider_protondrive">
-Proton Drive
+محرك بروتون
 </string>
     <string name="rclone_field_username">
 اسم المستخدم أو البريد الإلكتروني
@@ -11948,100 +11978,100 @@ Proton Drive
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+أسلوب الترجمة
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+قم بتكوين مظهر الترجمة داخل التطبيق وحجم الخط ومزامنة التسميات التوضيحية للنظام.
 </string>
     <string name="subtitle_style_summary_system">
-System caption style
+نمط التسمية التوضيحية للنظام
 </string>
     <string name="subtitle_style_summary_custom">
-UFM custom style (%1$s)
+نمط UFM المخصص (%1$s)
 </string>
     <string name="subtitle_style_dialog_title">
-Subtitle Style
+نمط الترجمة
 </string>
     <string name="subtitle_style_mode_system">
-System Caption Style
+نمط التسمية التوضيحية للنظام
 </string>
     <string name="subtitle_style_mode_system_desc">
-Follows device Accessibility caption settings even when system captions are disabled.
+يتبع إعدادات التسميات التوضيحية لإمكانية الوصول إلى الجهاز حتى عند تعطيل التسميات التوضيحية للنظام.
 </string>
     <string name="subtitle_style_mode_custom">
-UFM Custom Style
+UFM نمط مخصص
 </string>
     <string name="subtitle_style_mode_custom_desc">
-Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+تصميم مخصص داخل التطبيق مع حجم وألوان وتأثيرات حافة وموضع قابل للتعديل.
 </string>
     <string name="subtitle_style_open_system">
-Open Device Caption Settings
+افتح إعدادات التسمية التوضيحية للجهاز
 </string>
     <string name="subtitle_style_system_unavailable">
-System caption settings not available on this device; using UFM style.
+إعدادات التسمية التوضيحية للنظام غير متوفرة على هذا الجهاز؛ باستخدام أسلوب UFM.
 </string>
     <string name="subtitle_style_preview_title">
-Preview
+معاينة
 </string>
     <string name="subtitle_style_preview_line1">
 Ultimate File Manager Pro
 </string>
     <string name="subtitle_style_preview_line2">
-Live subtitle preview • Crisp text styling
+معاينة الترجمة المباشرة • تصميم نص واضح
 </string>
     <string name="subtitle_style_text_size">
-Text size
+حجم النص
 </string>
     <string name="subtitle_style_text_color">
-Text color
+لون النص
 </string>
     <string name="subtitle_style_bg_color">
-Background opacity
+عتامة الخلفية
 </string>
     <string name="subtitle_style_edge_type">
-Edge effect
+تأثير الحافة
 </string>
     <string name="subtitle_style_edge_none">
 None
 </string>
     <string name="subtitle_style_edge_outline">
-Outline
+الخطوط العريضة
 </string>
     <string name="subtitle_style_edge_drop_shadow">
-Drop shadow
+إسقاط الظل
 </string>
     <string name="subtitle_style_edge_raised">
-Raised
+نشأ
 </string>
     <string name="subtitle_style_edge_depressed">
-Depressed
+مكتئب
 </string>
     <string name="subtitle_style_bottom_margin">
-Bottom margin
+محاذاه لأسفل
 </string>
     <string name="subtitle_style_apply_embedded">
-Apply embedded styles (ASS/SSA/TTML)
+تطبيق الأنماط المضمنة (ASS/SSA/TTML)
 </string>
     <string name="subtitle_style_apply_embedded_desc">
-When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+عند التعطيل، يتجاوز تنسيق الترجمة UFM علامات الخط واللون المضمنة لتحقيق أفضل قابلية للقراءة.
 </string>
     <string name="subtitle_style_color_yellow">
-Yellow
+أصفر
 </string>
     <string name="subtitle_style_color_white">
-White
+ابيض
 </string>
     <string name="subtitle_style_color_cyan">
-Cyan
+كيان
 </string>
     <string name="subtitle_style_color_green">
-Green
+أخضر
 </string>
     <string name="subtitle_style_color_magenta">
-Magenta
+أرجواني
 </string>
     <string name="subtitle_style_color_orange">
-Orange
+البرتقالي
 </string>
     <string name="subtitle_style_bg_transparent">
 None
@@ -12056,13 +12086,13 @@ None
 75%
 </string>
     <string name="subtitle_style_bg_100">
-Solid
+صلب
 </string>
     <string name="player_track_sheet_subtitle_style">
-Subtitle Style…
+نمط العنوان الفرعي
 </string>
     <string name="player_track_sheet_subtitle_style_desc">
-Customize colors, size &amp; appearance
+تخصيص الألوان والحجم والمظهر
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -12103,10 +12133,10 @@ Customize colors, size &amp; appearance
 إيقاف التكرار
 </string>
     <string name="player_toast_repeat_all">
-Repeat all
+كرر كل شيء
 </string>
     <string name="player_toast_repeat_one">
-Repeat current track
+إعادة المسار الحالي
 </string>
     <string name="player_toast_audio_track">
 المسار الصوتي
@@ -12265,13 +12295,13 @@ Repeat current track
 الحجم:
 </string>
     <string name="properties_label_size_on_disk">
-Size on disk:
+الحجم على القرص:
 </string>
     <string name="properties_sparse_badge">
-Partial Download (Sparse)
+تنزيل جزئي (متفرق)
 </string>
     <string name="properties_sparse_allocated_pct">
-%1$.1f%% allocated
+%1$.1f%% مخصصة
 </string>
     <string name="properties_label_contains">
 يحتوي على:
@@ -12307,19 +12337,19 @@ Partial Download (Sparse)
 أنواع متعددة
 </string>
     <string name="properties_viewer_photo">
-UFM Photo Viewer
+عارض الصور
 </string>
     <string name="properties_viewer_player">
-UFM Player
+مشغّل UFM
 </string>
     <string name="properties_viewer_text">
-UFM Text Viewer
+أداة عرض النص
 </string>
     <string name="properties_viewer_archive">
-UFM Archive Viewer
+عارض أرشيف UFM
 </string>
     <string name="properties_viewer_pdf">
-UFM PDF Viewer
+عارض الملف
 </string>
     <string name="properties_viewer_spreadsheet">
 UFM Spreadsheet Viewer
@@ -13025,22 +13055,22 @@ No matching recordings or releases found
 Review Online Tags
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+حدد الحقول لتطبيقها على التتبع
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+تطبيق العلامات المحددة
 </string>
     <string name="music_tag_select_all">
-Select All
+حدد الكل
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+التسجيلات
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+الألبومات / الإصدارات
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d المسارات
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -13426,22 +13456,22 @@ Albums / Releases
 الكاميرا + التاريخ
 </string>
     <string name="exif_rename_token_year">
-+ {YYYY}
++ {سسسس}
 </string>
     <string name="exif_rename_token_month">
-+ {MM}
++ {ملم}
 </string>
     <string name="exif_rename_token_day">
 + {DD}
 </string>
     <string name="exif_rename_token_time">
-+ {hh}{mm}{ss}
++ {سه}{مم}{سس}
 </string>
     <string name="exif_rename_token_model">
-+ {MODEL}
++ {موديل}
 </string>
     <string name="exif_rename_token_original">
-+ {ORIGINAL}
++ {الأصلي}
 </string>
     <string name="exif_rename_token_seq">+ {#}</string>
     <string name="exif_rename_preview_header">
@@ -13478,7 +13508,7 @@ Albums / Releases
 تم تنظيف بيانات الخصوصية لـ %1$s
 </string>
     <string name="exif_has_gps_badge">
-📍 GPS
+📍نظام تحديد المواقع
 </string>
     <string name="exif_no_gps_badge">
 لا يوجد GPS
@@ -14239,25 +14269,25 @@ support@kilowatch.co.za
 منح الوصول إلى مجلد في وحدة التخزين هذه
 </string>
     <string name="action_remove_folder_from_storage">
-Remove Folder
+إزالة المجلد
 </string>
     <string name="action_remove_folder_from_storage_desc">
-Remove mounted folder access from this storage
+قم بإزالة الوصول إلى المجلد المثبت من وحدة التخزين هذه
 </string>
     <string name="dialog_remove_folders_title">
-Remove Mounted Folders
+إزالة المجلدات المثبتة
 </string>
     <string name="dialog_remove_folders_desc">
-Select a folder to remove access from this storage. Your files will not be deleted.
+حدد مجلدًا لإزالة الوصول من وحدة التخزين هذه. لن يتم حذف الملفات الخاصة بك.
 </string>
     <string name="no_mounted_folders_hint">
-No mounted folders remaining for this storage.
+لا توجد مجلدات مثبتة متبقية لوحدة التخزين هذه.
 </string>
     <string name="restricted_storage_empty_title">
 مطلوب الوصول إلى كافة الملفات
 </string>
     <string name="restricted_storage_empty_desc">
-To access and manage files in this storage, please enable All Files Access in Android Settings.
+للوصول إلى الملفات الموجودة في وحدة التخزين هذه وإدارتها، يرجى تمكين All Files Access في إعدادات Android.
 </string>
     <string name="restricted_storage_grant_all_files">
 تمكين الوصول إلى كافة الملفات في الإعدادات
@@ -14695,10 +14725,10 @@ MD5
 ✗ تختلف الملفات (أحجام مختلفة: %1$s مقابل %2$s)
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ مطابقة الرأس والبيانات - تنزيل غير مكتمل (تم تخصيص %1$.1f%% مقابل %2$.1f%%)
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
-Size on disk: %1$s (%2$.1f%%)
+الحجم على القرص: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 الحجم مطابق (%1$s). التجزئة للتحقق من المحتوى…
@@ -14825,16 +14855,16 @@ Size on disk: %1$s (%2$.1f%%)
 قم بتحديث كلمة المرور الأبجدية الرقمية المخصصة الخاصة بك
 </string>
     <string name="settings_security_verify_old_pin">
-Enter your current 4-digit PIN to continue
+أدخل رقم التعريف الشخصي الحالي المكون من 4 أرقام للمتابعة
 </string>
     <string name="settings_security_verify_old_password_title">
 التحقق من كلمة المرور الحالية
 </string>
     <string name="settings_security_verify_old_password_subtitle">
-Enter your old password before changing
+أدخل كلمة المرور القديمة قبل تغييرها
 </string>
     <string name="settings_security_disable_pin_title">
-Disable App Lock
+تعطيل قفل التطبيقات
 </string>
     <string name="settings_security_disable_pin_subtitle">
 أدخل رقم التعريف الشخصي المكون من 4 أرقام لإيقاف تشغيل App Lock
@@ -14849,13 +14879,13 @@ Disable App Lock
 تعطيل قفل التطبيقات
 </string>
     <string name="settings_security_disable_biometric_subtitle">
-Authenticate to turn off App Lock
+قم بالمصادقة لإيقاف تشغيل قفل التطبيقات
 </string>
     <string name="settings_security_pin_setup_subtitle">
-Enter a 4-digit PIN to secure UFM
+أدخل رقم التعريف الشخصي المكون من 4 أرقام لتأمين UFM
 </string>
     <string name="settings_security_password_title">
-Set Password
+تعيين كلمة المرور
 </string>
     <string name="settings_security_password_subtitle">
 أدخل كلمة مرور آمنة لـ UFM
@@ -15436,7 +15466,7 @@ Set Password
 معاينة مباشرة
 </string>
     <string name="live_preview_sample_filename">
-Quarterly_Financial_Report_2026_Final.pdf
+ربع_التقرير_المالي_2026_النهائي.pdf
 </string>
     <string name="live_preview_sample_info">
 3.8 ميجابايت · عُدّل اليوم، 13:45
@@ -15585,100 +15615,200 @@ Quarterly_Financial_Report_2026_Final.pdf
 </string>
 
     <!-- Grid Text Placement Settings -->
-    <string name="settings_grid_text_position_title">Grid Text Placement</string>
-    <string name="settings_grid_text_position_subtitle">Position file names below or overlaid on grid items</string>
-    <string name="settings_grid_text_position_below">Below Block (Default)</string>
-    <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
-    <string name="backup_pref_grid_text_position">Grid text placement settings</string>
-    <string name="backup_pref_view_styles">View density &amp; preset styles</string>
+    <string name="settings_grid_text_position_title">
+موضع نص الشبكة
+</string>
+    <string name="settings_grid_text_position_subtitle">
+ضع أسماء الملفات أدناه أو متراكبة على عناصر الشبكة
+</string>
+    <string name="settings_grid_text_position_below">
+الكتلة السفلية (افتراضي)
+</string>
+    <string name="settings_grid_text_position_overlay">
+متراكبة على الكتلة
+</string>
+    <string name="backup_pref_grid_text_position">
+إعدادات وضع نص الشبكة
+</string>
+    <string name="backup_pref_view_styles">
+عرض الكثافة والأنماط المحددة مسبقًا
+</string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
-    <string name="open_as">Open As…</string>
-    <string name="open_as_desc">Choose a viewer or player to open this file</string>
-    <string name="presentation_viewer">Presentation Viewer</string>
-    <string name="slide_counter">Slide %1$d of %2$d</string>
-    <string name="open_in_powerpoint">Open in Presentation App</string>
-    <string name="open_as_text">Text / Code Viewer</string>
-    <string name="open_as_text_desc">Built-in code &amp; text editor with syntax highlighting</string>
-    <string name="open_as_hex">Hex / Binary Viewer</string>
-    <string name="open_as_hex_desc">Raw byte hex dump and binary inspector</string>
-    <string name="open_as_presentation">Presentation / Slide Deck</string>
-    <string name="open_as_presentation_desc">Built-in slide deck viewer with speaker notes</string>
-    <string name="open_as_spreadsheet">Spreadsheet / Table</string>
-    <string name="open_as_spreadsheet_desc">Built-in spreadsheet table viewer</string>
-    <string name="open_as_image">Image Viewer</string>
-    <string name="open_as_image_desc">High-resolution photo viewer with zoom &amp; pan</string>
-    <string name="open_as_audio">Audio Player</string>
-    <string name="open_as_audio_desc">Media3 audio player with background playback</string>
-    <string name="open_as_video">Video Player</string>
-    <string name="open_as_video_desc">Media3 hardware-accelerated video player</string>
-    <string name="open_as_archive">Archive Browser</string>
-    <string name="open_as_archive_desc">Explore ZIP, 7Z, TAR, RAR, and compressed files</string>
-    <string name="open_as_other">Choose External App…</string>
-    <string name="open_as_other_desc">Open with an installed third-party app</string>
-    <string name="speaker_notes">Speaker Notes</string>
-    <string name="no_slides_found">No slides found in this presentation</string>
-    <string name="next_slide">Next Slide</string>
-    <string name="prev_slide">Previous Slide</string>
-    <string name="view_raw_text">View as Raw Text</string>
-    <string name="ufm_slide_deck_viewer">UFM Slide Deck</string>
-    <string name="open_with_presentation_app">Presentation App (PowerPoint / Slides)</string>
-    <string name="open_with_presentation_app_desc">Open in Microsoft PowerPoint, Google Slides, or office suite</string>
-    <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
+    <string name="open_as">
+فتح باسم...
+</string>
+    <string name="open_as_desc">
+اختر عارضًا أو مشغلًا لفتح هذا الملف
+</string>
+    <string name="presentation_viewer">
+عارض العروض التقديمية
+</string>
+    <string name="slide_counter">
+الشريحة %1$d من %2$d
+</string>
+    <string name="open_in_powerpoint">
+افتح في تطبيق العرض التقديمي
+</string>
+    <string name="open_as_text">
+عارض النص / الكود
+</string>
+    <string name="open_as_text_desc">
+محرر التعليمات البرمجية والنصوص المدمج مع تسليط الضوء على بناء الجملة
+</string>
+    <string name="open_as_hex">
+عارض سداسي عشري/ثنائي
+</string>
+    <string name="open_as_hex_desc">
+تفريغ البايت الخام والمفتش الثنائي
+</string>
+    <string name="open_as_presentation">
+العرض التقديمي / سطح الشريحة
+</string>
+    <string name="open_as_presentation_desc">
+عارض شرائح مدمج مع ملاحظات المتحدث
+</string>
+    <string name="open_as_spreadsheet">
+جدول البيانات / الجدول
+</string>
+    <string name="open_as_spreadsheet_desc">
+المدمج في عارض جدول جداول البيانات
+</string>
+    <string name="open_as_image">
+عارض الصور
+</string>
+    <string name="open_as_image_desc">
+عارض صور عالي الدقة مع التكبير/التصغير والتحريك
+</string>
+    <string name="open_as_audio">
+مشغل الصوت
+</string>
+    <string name="open_as_audio_desc">
+مشغل صوت Media3 مع تشغيل في الخلفية
+</string>
+    <string name="open_as_video">
+مشغل فيديو
+</string>
+    <string name="open_as_video_desc">
+مشغل فيديو Media3 المسرع للأجهزة
+</string>
+    <string name="open_as_archive">
+متصفح الأرشيف
+</string>
+    <string name="open_as_archive_desc">
+استكشف ملفات ZIP و7Z وTAR وRAR والملفات المضغوطة
+</string>
+    <string name="open_as_other">
+اختر التطبيق الخارجي...
+</string>
+    <string name="open_as_other_desc">
+افتح باستخدام تطبيق جهة خارجية مثبت
+</string>
+    <string name="speaker_notes">
+ملاحظات المتحدث
+</string>
+    <string name="no_slides_found">
+لم يتم العثور على شرائح في هذا العرض التقديمي
+</string>
+    <string name="next_slide">
+الشريحة التالية
+</string>
+    <string name="prev_slide">
+الشريحة السابقة
+</string>
+    <string name="view_raw_text">
+عرض كنص خام
+</string>
+    <string name="ufm_slide_deck_viewer">
+سطح الشريحة UFM
+</string>
+    <string name="open_with_presentation_app">
+تطبيق العرض التقديمي (PowerPoint / الشرائح)
+</string>
+    <string name="open_with_presentation_app_desc">
+افتح في Microsoft PowerPoint أو Google Slides أو مجموعة المكتب
+</string>
+    <string name="ufm_slide_viewer_desc">
+عرض الشرائح، الصورة المصغرة للغلاف، والملاحظات في UFM
+</string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
-    <string name="action_open_with">Open With…</string>
-    <string name="action_open_as">Open As…</string>
-    <string name="toolbar_open_with">Open With</string>
-    <string name="toolbar_open_as">Open As</string>
-    <string name="action_extract_subtitles">Extract Subtitles</string>
-    <string name="action_extract_audio">Extract Audio</string>
+    <string name="action_open_with">
+فتح باستخدام…
+</string>
+    <string name="action_open_as">
+فتح باسم...
+</string>
+    <string name="toolbar_open_with">
+فتح باستخدام
+</string>
+    <string name="toolbar_open_as">
+افتح باسم
+</string>
+    <string name="action_extract_subtitles">
+استخراج الترجمة
+</string>
+    <string name="action_extract_audio">
+استخراج الصوت
+</string>
     <string name="action_convert_to_mp4">
-Convert to MP4
+تحويل إلى MP4
 </string>
-    <string name="toolbar_extract_subtitles">Extract Subtitles</string>
-    <string name="toolbar_extract_audio">Extract Audio</string>
+    <string name="toolbar_extract_subtitles">
+استخراج الترجمة
+</string>
+    <string name="toolbar_extract_audio">
+استخراج الصوت
+</string>
     <string name="toolbar_convert_to_mp4">
-Convert to MP4
+تحويل إلى MP4
 </string>
-    <string name="extracting_subtitles">Extracting subtitle track…</string>
-    <string name="extracting_audio">Extracting audio track…</string>
+    <string name="extracting_subtitles">
+جارٍ استخراج مسار الترجمة...
+</string>
+    <string name="extracting_audio">
+جارٍ استخراج المسار الصوتي...
+</string>
     <string name="convert_to_mp4_progress">
-Converting video to MP4…
+تحويل الفيديو إلى MP4…
 </string>
     <string name="convert_to_mp4_success">
-Video converted to %1$s
+تم تحويل الفيديو إلى %1$s
 </string>
     <string name="convert_to_mp4_failed">
-Failed to convert video
+فشل في تحويل الفيديو
 </string>
     <string name="convert_to_mp4_title">
-Convert to MP4
+تحويل إلى MP4
 </string>
     <string name="convert_to_mp4_confirm">
-Convert \"%1$s\" to universal MP4 format?
+هل تريد تحويل \"%1$s\" إلى تنسيق MP4 العالمي؟
 </string>
-    <string name="subtitles_extracted_success">Subtitles extracted successfully.</string>
-    <string name="audio_extracted_success">Audio extracted successfully.</string>
+    <string name="subtitles_extracted_success">
+تم استخراج الترجمات بنجاح.
+</string>
+    <string name="audio_extracted_success">
+تم استخراج الصوت بنجاح.
+</string>
     <string name="audio_format_universal">
-Universal M4A
+عالمي M4A
 </string>
     <string name="audio_format_original">
-Original Stream
+الدفق الأصلي
 </string>
     <string name="audio_format_universal_desc">
-High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+AAC (.m4a) عالي الجودة - يتم تشغيله في كل مكان على الهواتف والسيارات وتطبيقات الموسيقى
 </string>
     <string name="audio_format_original_desc">
-Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+نسخة البث المباشر بدون فقدان (.eac3، .dts، .ac3، .flac)
 </string>
     <string name="codec_unsupported_title">
-Audio Codec Not Supported
+برنامج ترميز الصوت غير مدعوم
 </string>
     <string name="codec_unsupported_message">
-This device lacks a native hardware decoder for %1$s audio.\n
+يفتقر هذا الجهاز إلى وحدة فك ترميز الأجهزة الأصلية للصوت %1$s.\n
 \n
-Would you like to convert it to Universal M4A (AAC) for seamless playback?
+هل ترغب في تحويله إلى Universal M4A (AAC) لتشغيل سلس؟
 </string>
     <string name="convert_and_play">
 Convert &amp; Play
@@ -15689,15 +15819,33 @@ Converting audio to M4A…
     <string name="convert_to_m4a">
 Convert to M4A
 </string>
-    <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
-    <string name="media_technical_details">Media Stream Details</string>
-    <string name="media_format">Container</string>
-    <string name="media_bitrate">Overall Bitrate</string>
-    <string name="error_generic">An error occurred</string>
-    <string name="failed_to_open_file">Failed to open file</string>
-    <string name="slide_badge_format">Slide %1$d</string>
-    <string name="slide_counter_format">Slide %1$d of %2$d</string>
-    <string name="no_app_to_open_file">No app found to open this file</string>
+    <string name="no_subtitles_found_in_video">
+No embedded subtitle tracks found in this video
+</string>
+    <string name="media_technical_details">
+Media Stream Details
+</string>
+    <string name="media_format">
+Container
+</string>
+    <string name="media_bitrate">
+Overall Bitrate
+</string>
+    <string name="error_generic">
+An error occurred
+</string>
+    <string name="failed_to_open_file">
+Failed to open file
+</string>
+    <string name="slide_badge_format">
+Slide %1$d
+</string>
+    <string name="slide_counter_format">
+الشريحة %1$d من %2$d
+</string>
+    <string name="no_app_to_open_file">
+No app found to open this file
+</string>
     <string name="select_subtitle_track">
 Select Subtitle Track
 </string>
@@ -15787,10 +15935,10 @@ Choose how quick-access shortcuts are presented
 Disabled
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+شريط عائم سفلي
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+قائمة انتقاد الحافة
 </string>
     <string name="quick_access_edge_title">
 Swipe Edge
@@ -15872,330 +16020,330 @@ Extracting Subtitles…
 Media Operation Completed
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+فشل تشغيل الوسائط
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+جارٍ تنزيل الفيديو عن بعد إلى ذاكرة التخزين المؤقت المحلية...
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+جارٍ تحميل النتيجة إلى المجلد البعيد...
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+الاستمرار في الخلفية. تحقق من الإخطارات للتقدم.
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+المشاركة عن بعد للقراءة فقط
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+تعذر حفظ الملف المستخرج في \"%1$s\" لأن المشاركة للقراءة فقط.\n
 \n
-Would you like to save it to your local device instead?
+هل ترغب في حفظه على جهازك المحلي بدلاً من ذلك؟
 </string>
     <string name="action_save_locally">
-Save to Device
+حفظ إلى الجهاز
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+مشاركة للقراءة فقط
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+المشاركة \"%1$s\" للقراءة فقط.\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+لا يمكن حفظ الملف المستخرج أو المحول مرة أخرى في المشاركة البعيدة، لذلك سيتم حفظه في مجلد التنزيلات المحلي بدلاً من ذلك.\n
 \n
-Do you want to proceed?
+هل تريد المتابعة؟
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+تخزين أخرى
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+موفرو السحابة والمستندات المثبتة
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+قم بالوصول إلى موفري المستندات التابعين لجهات خارجية والمثبتين على جهازك
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+%1$d موفري المستندات متاحون
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+يتوفر مزود مستندات واحد
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+لم يتم العثور على موفري مستندات تابعين لجهات خارجية
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+تصفح الملفات (SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+جبل مجلد التخزين
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+الاتصال عبر محرك UFM الأصلي
 </string>
     <string name="action_open_app">
-Open App
+افتح التطبيق
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+إضافة موقع التخزين
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+جبل الدليل / المجلد
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+حدد مجلدًا من Termux أو بطاقة SD أو محرك أقراص USB
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+موفري المستندات المثبتة
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+يمكنك الوصول إلى Proton Drive وملف Synology DS وGoogle Drive والمزيد
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+سحابة وشبكة عالية السرعة
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+مزامنة كاملة ثنائية الاتجاه عبر RClone (Proton/Google Drive) أو SMB/WebDAV
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+فتح أو نسخ الملف
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+ماذا تريد أن تفعل بـ \"%1$s\"؟
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+افتح في عارض UFM
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+نسخ إلى التخزين المحلي
 </string>
     <string name="saf_file_action_remember">
-Remember my choice
+تذكر خياري
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+اسأل دائما
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+تم نسخ %1$d ملف (ملفات) إلى التنزيلات
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+إجراء الملف المختار من SAF
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+اسأل دائمًا ما إذا كنت تريد فتحه أو نسخه
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+مفتوح دائمًا في UFM Viewer
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+انسخ دائمًا إلى وحدة التخزين المحلية
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+مزود المستندات
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+إدارة %1$s
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+تصفح وتحميل الملفات
 </string>
     <string name="doc_provider_action_browse_subtitle">افتح %1$s لاختيار الملفات لعرضها أو نسخها محليًا</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+تحميل الملف إلى %1$s
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+حدد ملفًا محليًا في UFM لحفظه في %1$s
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+هل تريد إزالة %1$s؟
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+هل تريد إزالة %1$s من مساحة التخزين؟ يمكنك إعادة إضافته في أي وقت من وحدة التخزين الأخرى.
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+إزالة من التخزين
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+تمت إزالة %1$s من مساحة التخزين
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+تمت إضافة %1$s إلى مساحة التخزين
 </string>
     <string name="other_storage_all_added">
-All available providers added
+تمت إضافة جميع مقدمي الخدمات المتاحين
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+تمت إضافة جميع موفري المستندات المثبتين بالفعل إلى قائمة التخزين الرئيسية لديك.
 </string>
     <string name="saf_copy_destination_title">
-Destination: %1$s
+الوجهة: %1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+تغيير المجلد...
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+حدد المجلد الوجهة
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+قم بتعيين وجهة النسخ
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+وجهة الملفات المختارة من SAF
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+سيتم حفظ الملفات المنسوخة من موفري المستندات في \"%1$s\".
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+وحدات تخزين أخرى وعمليات نقل SAF
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+نسخ المجلد الوجهة
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+إعادة التعيين إلى الوضع الافتراضي (التنزيلات)
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+حدد مجلد جديد...
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+انسخ إعادة تعيين الوجهة إلى التنزيلات
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+تصدير إلى موفر المستندات
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+احفظ مباشرة في السحابة المثبتة أو موفر المستندات
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+حدد موفر الوجهة
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+تصدير ملفات متعددة
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+كيف تريد تصدير هذه الملفات %1$d إلى %2$s؟
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+تصدير كأرشيف ZIP
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+استخدم ورقة تحميل النظام
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+تم حفظ \"%1$s\" في %2$s
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+مجلد قابل للتركيب
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+الملفات والسحابة
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+المزامنة الأصلية متاحة
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+تحميل إلى وحدة تخزين أخرى
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+قم بتحميل الملفات أو المجلدات المحددة إلى موفري المستندات الخارجيين
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+تحميل إلى وحدة تخزين أخرى
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+لم تتم إضافة أي مزود تخزين. حدد موفرًا لإضافته.
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+تم نسخ %1$d ملف (ملفات) إلى %2$s
 </string>
     <string name="share_export_folder_title">
-Export Folder
+مجلد التصدير
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+لا يمكن تحميل المجلدات مباشرة عبر موفري المستندات. هل ترغب في ضغط \"%1$s\" في أرشيف ZIP لتحميله إلى %2$s؟
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+ضغط في أرشيف ZIP واحد وقم بتحميله
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+أرسل العناصر باستخدام ورقة تحميل نظام Android
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+حدد موفرًا مثبتًا أو افتح وحدة تخزين أخرى
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+جارٍ الضغط على %1$s…
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+جارٍ الضغط على وحدات تخزين أخرى...
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+التحميل عبر %1$s
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+إرسال الملفات مباشرة إلى %1$s
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+اضغط في أرشيف ZIP واختر مجلد الوجهة في %1$s
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+يحافظ على بنية المجلد والدليل الأصلي داخل أرشيف ZIP في %1$s
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+تحميل الملفات الفردية مباشرةً إلى %1$s (لا يمكن لشاشات التحميل الخارجية إنشاء أدلة)
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+إشعار تحميل المجلد
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+لا يمكن لشاشات التحميل الخارجية (مثل %2$s) إنشاء أدلة.\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+سيتم تحميل الملفات الموجودة داخل \"%1$s\" فقط، وليس المجلد الأصلي نفسه.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+للحفاظ على بنية الدليل الكاملة، اختر \"تصدير كأرشيف ZIP\" بدلاً من ذلك.
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+لا يمكن لشاشات التحميل الخارجية (مثل %1$s) إنشاء أدلة.\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+سيتم تحميل الملفات الموجودة داخل المجلدات المحددة فقط، وليس المجلدات الأصلية نفسها.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+للحفاظ على بنية الدليل الكاملة، اختر \"تصدير كأرشيف ZIP\" بدلاً من ذلك.
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+تحميل الملفات فقط
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+خيارات الشاشة الرئيسية
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+أضف إلى الشاشة الرئيسية
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+إزالة من الشاشة الرئيسية
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+حذف المفضلة
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+تم طلب الاختصار - تحقق من شاشتك الرئيسية
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+تم تعطيل الاختصار. قم بإزالته يدويًا من شاشتك الرئيسية.
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+المفضلة لدى UFM
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+لم تتم الموافقة على القناة. يمكنك تمكينه لاحقًا في إعدادات التلفزيون → القنوات.
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+العنصر غير متاح
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+تعذر العثور على الملف أو المجلد. ربما تم نقله أو حذفه أو أنه موجود على مساحة تخزين غير متاحة.
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -16215,382 +16363,382 @@ OK
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+فتح مع
 </string>
     <string name="open_with_search_hint">
-Search apps…
+تطبيقات البحث...
 </string>
     <string name="open_with_just_once">
-Just once
+مرة واحدة فقط
 </string>
     <string name="open_with_always">
-Always
+دائماً
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+استخدم دائمًا التطبيق المحدد لملفات ‎.%1$s.
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+استخدم دائمًا التطبيق المحدد
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+تذكر الإعداد الافتراضي لملفات ‎.%1$s.
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+لم يتم العثور على تطبيقات مثبتة لفتح هذا الملف
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+ابحث في متجر جوجل بلاي
 </string>
     <string name="open_with_app_info">
-App info
+معلومات التطبيق
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+عرض تفاصيل التطبيق وإعدادات النظام
 </string>
     <string name="open_with_set_default">
-Always use this app
+استخدم هذا التطبيق دائمًا
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+غير قادر على إطلاق %1$s. الرجوع إلى منتقي النظام...
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+اضغط على \"موافق\" لفتح • اضغط لفترة طويلة على \"موافق\" للحصول على خيارات التطبيق الافتراضية
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+اختر كوجهة
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+وجهة المشاهد
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+تأكيد مجلد الوجهة
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+سيتم استخدام المجلد المحدد لإجراءات النسخ والنقل السريعة في UFM Viewer وSlide Show.
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+إجراءات الملف
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+مجلد الوجهة
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+لم يتم تحديد وجهة — انقر للاختيار
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+يتغير
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+نسخ إلى %1$s
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+الانتقال إلى %1$s
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+نسخ إلى الوجهة
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+الانتقال إلى الوجهة
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+تم النسخ إلى %1$s
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+تم النقل إلى %1$s
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+المصدر والوجهة هما نفس المجلد
 </string>
     <string name="backup_pref_viewer_transfer">
-Viewer Transfer Destination
+وجهة نقل المشاهد
 </string>
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+أضف إلى الشاشة الرئيسية
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+اسم الاختصار
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+اختصار التخزين
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+\"%1$s\" مثبت بالفعل على شاشتك الرئيسية.
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+أضف إلى الشاشة الرئيسية
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+لا يمكن أن يكون اسم الاختصار فارغًا
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
     <string name="download_manager_title">
-Download Manager
+مدير التحميل
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+تنزيلات Torrent وMagnet وHTTP
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+مدير التنزيل المباشر الأصلي عالي السرعة ومن نظير إلى نظير مع حماية الخصوصية الصفرية.
 </string>
     <string name="download_no_transfers">
-No active downloads
+لا توجد تنزيلات نشطة
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+حدد كمجلد التنزيل
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+تحميل المجلد
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+تأكيد موقع التنزيل
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+سيتم حفظ التنزيلات مباشرة في هذا الدليل.
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+التنزيلات المباشرة
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+تنزيلات تورنت
 </string>
     <string name="download_location_label">
-Download location
+موقع التنزيل
 </string>
     <string name="download_change_location">
-Change
+يتغير
 </string>
     <string name="download_action_start">
-Start
+يبدأ
 </string>
     <string name="download_action_pause">
 Pause
 </string>
     <string name="download_action_resume">
-Resume
+سيرة ذاتية
 </string>
     <string name="download_action_cancel">
-Cancel
+يلغي
 </string>
     <string name="download_action_delete">
-Delete
+يمسح
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+عنوان URL للتنزيل المباشر
 </string>
     <string name="download_enter_url_hint">
 https://example.com/file.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+تحميل
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+رابط تورنت أو مغناطيس
 </string>
     <string name="download_enter_magnet_hint">
-magnet:?xt=urn:btih:...
+المغناطيس:?xt=جرة:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+افتح ملف تورنت
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+مدير التنزيل وإشعار P2P
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+الاستخدام المقبول ومعلومات الخصوصية
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+أدرك أن التنزيلات من نظير إلى نظير تشارك عنوان IP الخاص بي داخل السرب، وأوافق على استخدام هذه الأداة بشكل صارم للمحتوى القانوني وغير المخالف.
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+تم تجاوز حد التخزين
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+يتجاوز حجم الملف الهدف (%1$s) الحد الأقصى البالغ 4 غيغابايت الذي يدعمه نظام الملفات FAT32 على محرك الأقراص هذا.\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+الرجاء اختيار موقع تنزيل مختلف بتنسيق exFAT، أو NTFS، أو وحدة التخزين الداخلية.
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+مساحة تخزين غير كافية
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+لا توجد مساحة حرة كافية على محرك التخزين المحدد.\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+المطلوب: %1$s\n
+متوفر: %2$s\n
 \n
-Please select another drive or free up space.
+الرجاء تحديد محرك أقراص آخر أو تحرير مساحة.
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+اختر الموقع
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+اتصال البيانات المتنقلة
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+أنت متصل حاليًا بشبكة خلوية وتم تمكين وضع Wi-Fi فقط.\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+هل ترغب في وضع عملية النقل هذه في قائمة الانتظار حتى يتم اتصال Wi-Fi أو السماح بتنزيلات بيانات الجوال؟
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+قائمة الانتظار لشبكة Wi-Fi
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+السماح ببيانات الجوال
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+سياسة الشبكة
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+اختر قواعد اتصال الشبكة للتنزيلات
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+Wi-Fi فقط (مستحسن)
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+لا يمكنك نقل التنزيلات إلا عند الاتصال بشبكة Wi-Fi غير محدودة
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+جميع الشبكات (واي فاي وخلوي)
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+السماح بعمليات النقل عبر بيانات الهاتف المحمول وشبكات Wi-Fi
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+مراجعة شروط عدم القرصنة
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+عرض الكشف عن سرب P2P، والخصوصية، وشروط البذر الصفري
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+سرب P2P ورؤية IP
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+يقوم BitTorrent بنقل قطع التبادل مباشرة مع الأجهزة النظيرة الأخرى في السرب. يكون عنوان IP العام الخاص بك مرئيًا للأقران النشطين أثناء النقل.
 </string>
     <string name="download_legal_zero_seeding_title">
-Zero-Seeding Privacy
+الخصوصية الصفرية
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+تفرض UFM مبدأ عدم البذر الصارم. في اللحظة التي يكتمل فيها التنزيل (100%)، يتم قطع جميع اتصالات السرب وتتوقف إعلانات التتبع على الفور.
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+المحتوى القانوني فقط
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+أنت توافق على استخدام هذه الأداة بشكل صارم للملفات القانونية أو مفتوحة المصدر أو المجال العام أو الملفات المصرح بها. يحظر تنزيل أو توزيع المواد المحمية بحقوق الطبع والنشر دون إذن.
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+الموافقة والمتابعة
 </string>
     <string name="download_legal_understood">
-Understood
+مفهوم
 </string>
     <string name="download_state_downloading">
-Downloading
+جارٍ التنزيل
 </string>
     <string name="download_state_paused">
-Paused
+متوقف مؤقتًا
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+في قائمة الانتظار للحصول على خدمة الواي فاي
 </string>
     <string name="download_state_completed">
-Completed
+مكتمل
 </string>
     <string name="download_state_error">
-Error
+خطأ
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+تحميل مدير النقل
 </string>
     <string name="download_notif_channel_desc">
-Ongoing download progress and status updates
+التقدم المستمر في التنزيل وتحديثات الحالة
 </string>
     <string name="download_timeout_stopped">
-Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+توقفت التنزيلات مؤقتًا: تم الوصول إلى الحد الأقصى للتنفيذ لمدة 6 ساعات لنظام التشغيل Android. انقر للاستئناف.
 </string>
 
     <!-- Torrent & Magnet Selective File Download & Content Inspector -->
     <string name="torrent_select_all">
-Select All
+حدد الكل
 </string>
     <string name="torrent_deselect_all">
-Deselect All
+قم بإلغاء تحديد الكل
 </string>
     <string name="torrent_selected_summary">
-Selected: %1$d of %2$d files (%3$s of %4$s)
+تم التحديد: %1$d من %2$d من الملفات (%3$s من %4$s)
 </string>
     <string name="torrent_files_count">
-%1$d files
+%1$d ملفات
 </string>
     <string name="torrent_file_selection_title">
-Torrent Content
+محتوى تورنت
 </string>
     <string name="torrent_file_selection_subtitle">
-Select files and folders to download
+حدد الملفات والمجلدات المراد تنزيلها
 </string>
     <string name="torrent_fetching_metadata">
-Fetching torrent metadata from swarm…
+جارٍ جلب بيانات تعريف التورنت من Swarm...
 </string>
     <string name="torrent_fetching_metadata_desc">
-Contacting DHT nodes and peers to retrieve file list…
+الاتصال بعقد DHT وأقرانها لاسترداد قائمة الملفات...
 </string>
     <string name="torrent_metadata_timeout_title">
-Metadata Fetch Timeout
+انتهت مهلة جلب البيانات التعريفية
 </string>
     <string name="torrent_metadata_timeout_msg">
-Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+يستغرق استرداد قائمة الملفات من النظراء وقتًا أطول من المعتاد. هل ترغب في مواصلة البحث، أو تنزيل كافة الملفات مباشرة؟
 </string>
     <string name="torrent_keep_waiting">
-Keep Waiting
+استمر في الانتظار
 </string>
     <string name="torrent_download_all_direct">
-Download All Directly
+تحميل الكل مباشرة
 </string>
     <string name="torrent_zero_selected_error">
-Please select at least one file to download
+الرجاء تحديد ملف واحد على الأقل لتنزيله
 </string>
     <string name="torrent_search_hint">
-Search files…
+بحث في الملفات...
 </string>
 
     <!-- Transfer Action Dialog -->
     <string name="transfer_action_title">
-Transfer Actions
+إجراءات النقل
 </string>
     <string name="transfer_action_pause">
-Pause Transfer
+نقل وقفة
 </string>
     <string name="transfer_action_resume">
-Resume Transfer
+استئناف النقل
 </string>
     <string name="transfer_action_open_folder">
-Open Download Folder
+افتح مجلد التنزيل
 </string>
     <string name="transfer_action_delete_title">
-Remove Transfer
+إزالة النقل
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+اختر كيفية إزالة هذا النقل من Download Manager:
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+إزالة النقل فقط
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+احتفظ بالملفات التي تم تنزيلها على جهازك
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+إزالة وحذف الملفات
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+حذف الملفات التي تم تنزيلها من القرص نهائيًا
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16651,79 +16799,79 @@ Permanently delete downloaded files from disk
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+الإشارات المرجعية الذكية
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+تنظيم الروابط المحفوظة والوسائط والمشاركات
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%1$d العناصر عبر %2$d المجموعات
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+لم يتم حفظ أي إشارات مرجعية حتى الآن
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+المرجعية مع UFM
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+حفظ الإشارة المرجعية
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+تمت المشاركة من %1$s
 </string>
     <string name="bookmark_field_title_hint">
-Title
+عنوان
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+جمع / مجموعة
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+إضافة ملاحظة شخصية (اختياري)
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+حفظ الإشارة المرجعية
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+تم وضع إشارة مرجعية بالفعل - تم تحديث الملاحظات والوقت
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+تم حفظ الإشارة المرجعية في %1$s
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+المجموعات
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+عرض الكل ›
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+المجموعات والمصادر
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+إدارة المجموعات، والتصفية، وحماية القبو
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+بحث في المجموعات…
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+جميع الإشارات المرجعية
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+إظهار جميع الإشارات المرجعية غير المؤمنة عبر جميع المصادر
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+مجموعاتي
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+المجموعات التي أنشأها المستخدم • قبو قابل للقفل
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+مصادر التطبيق
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+يتم إنشاؤها تلقائيًا من التطبيقات المشتركة
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16732,241 +16880,241 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+لم يتم إعداد أمان الجهاز (رقم التعريف الشخصي أو النمط أو بصمة الإصبع) على هذا الجهاز.
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+قبو مغلق
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+قم بالمصادقة لإزالة قفل Vault
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+المجموعة مقفلة باستخدام Vault
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+تم فتح المجموعة
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+مجموعة الإشارات المرجعية الجديدة
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+اسم المجموعة
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+إنشاء مجموعة
 </string>
     <string name="bookmark_filter_all">
-All
+الجميع
 </string>
     <string name="bookmark_filter_links">
-Links
+روابط
 </string>
     <string name="bookmark_filter_media">
-Media
+وسائط
 </string>
     <string name="bookmark_filter_docs">
-Documents
+وثائق
 </string>
     <string name="bookmark_filter_notes">
-Notes
+ملحوظات
 </string>
     <string name="bookmark_filter_starred">
-Starred
+المميزة بنجمة
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+البحث في الإشارات المرجعية أو الملاحظات أو المجالات...
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+فرز الإشارات المرجعية
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+الأحدث إلى الأقدم
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+الأقدم إلى الأحدث
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+العنوان (أ–ي)
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+العنوان (ي – أ)
 </string>
     <string name="bookmark_sort_size">
-File Size
+حجم الملف
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+المجموعة حسب المجموعة
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+المجموعة: من الألف إلى الياء
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+المجموعة: Z إلى A
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+حذف المجموعة
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+هل أنت متأكد أنك تريد حذف المجموعة \"%1$s\"؟
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+اقرأ المقال
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+فتح في المتصفح
 </string>
     <string name="bookmark_action_open_file">
-Open File
+افتح الملف
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+نسخ الوصلة
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+نسخ النص
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+حفظ إلى التخزين
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+الانتقال إلى المجموعة
 </string>
     <string name="bookmark_action_delete">
-Delete
+يمسح
 </string>
     <string name="bookmark_view_note">
-View Note
+عرض الملاحظة
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+مجموعة القفل (المدفن)
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+تتطلب بصمة الإصبع أو رقم التعريف الشخصي للعرض
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+خيارات المجموعة
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+مجموعة القفل
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+فتح المجموعة
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+تم حذف الإشارة المرجعية
 </string>
     <string name="bookmark_undo">
-Undo
+تراجع
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+تم تحديد %1$d من العناصر
 </string>
     <string name="bookmark_batch_move">
-Move
+يتحرك
 </string>
     <string name="bookmark_batch_delete">
-Delete
+يمسح
 </string>
     <string name="bookmark_batch_export">
-Export
+يصدّر
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+تصدير الإشارات المرجعية
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+إشارات HTML المرجعية للمتصفح (.html)
 </string>
     <string name="bookmark_export_markdown">
-Markdown Document (.md)
+مستند تخفيض السعر (.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+تم تصدير %1$d إشارات مرجعية إلى %2$s
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+وضع القارئ
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+حجم النص
 </string>
     <string name="bookmark_reader_theme">
-Theme
+سمة
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+ضوء
 </string>
     <string name="bookmark_reader_theme_sepia">
-Sepia
+بني داكن
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+مظلم
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+استمع بصوت عال
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+وقفة القراءة
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+توقف عن القراءة
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+السرعة %1$s×
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+جارٍ تهيئة المحرك الصوتي…
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+تحويل النص إلى كلام غير مدعوم أو غير مثبت على هذا الجهاز
 </string>
     <string name="bookmark_group_whatsapp">
-WhatsApp
+واتساب
 </string>
     <string name="bookmark_group_reddit">
-Reddit
+رديت
 </string>
     <string name="bookmark_group_youtube">
-YouTube
+يوتيوب
 </string>
     <string name="bookmark_group_twitter">
-Twitter / X
+تويتر / اكس
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+الويب والمقالات
 </string>
     <string name="bookmark_group_telegram">
-Telegram
+برقية
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+الملفات والمستندات
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+قفل المجموعة باستخدام Vault
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+فتح المجموعة
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+قم بالمصادقة للوصول إلى الإشارات المرجعية المقفلة
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+لا توجد إشارات مرجعية حتى الآن
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+قم بمشاركة الروابط أو المقالات أو الوسائط أو الملفات من WhatsApp أو Reddit أو متصفحك واختر \"Bookmark with UFM\".
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+لم يتم العثور على نتائج
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+لا توجد إشارات مرجعية تطابق \"%1$s\". حاول البحث عن كلمات رئيسية مختلفة.
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+لم يتم العثور على إشارات مرجعية
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+لم يتم العثور على إشارات مرجعية تطابق الفلتر أو المجموعة المحددة.
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -16974,67 +17122,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+عرض مسطح
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+متصفح مفهرسة العودية
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+افتح المجلد
 </string>
     <string name="flat_view_expand_all">
-Expand All
+قم بتوسيع الكل
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+طي الكل
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+تضمين مجلدات النظام
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+إظهار أدلة Android/data وAndroid/obb والنظام في Flat View
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+الافتراضي للكل الموسع
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+افتح Flat View مع توسيع كافة المجلدات بشكل افتراضي
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+لم يتم العثور على ملفات مفهرسة في هذا المجلد
 </string>
     <string name="flat_view_settings_title">
-Flat View
+عرض مسطح
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+تكوين التصفح المفهرس العودي ومجلدات النظام
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+التخزين غير مفهرسة
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+يتطلب العرض المسطح أن تتم فهرسة حجم التخزين هذا بالكامل. الرجاء تشغيل الفهرسة أولاً.
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%1$d الملفات عبر %2$d المجلدات
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+تم تحديد %1$d
 </string>
     <string name="flat_view_folder_files_count">
-%1$d files
+%1$d ملفات
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+حذف الملفات
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+هل أنت متأكد أنك تريد حذف %1$d الملفات المحددة؟
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+تم حذف %1$d من الملفات
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+إعدادات العرض المسطح
 </string>
 </resources>
 

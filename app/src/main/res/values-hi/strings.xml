@@ -51,10 +51,10 @@ Ultimate File Manager Pro
 डच (नीदरलैंड्स)
 </string>
     <string name="language_chinese">
-Chinese (中文)
+चीनी (中文)
 </string>
     <string name="language_swedish">
-Swedish (Svenska)
+स्वीडिश (स्वेन्स्का)
 </string>
     <string name="select_language">
 भाषा चुनें
@@ -451,55 +451,55 @@ UFM प्लेयर में अगला स्वतः चलाएँ
 आवश्यकतानुसार कई पंक्तियों में पूरा नाम लपेटता है
 </string>
     <string name="settings_file_name_display_truncate">
-Single line (Truncated end)
+एकल पंक्ति (छोटा अंत)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Truncates with ellipsis at end (abc…) without scrolling
+स्क्रॉल किए बिना अंत में दीर्घवृत्त (एबीसी…) के साथ काट दिया जाता है
 </string>
     <string name="settings_file_name_display_truncate_middle">
-Single line (Truncate middle)
+एकल पंक्ति (मध्य को छोटा करें)
 </string>
     <string name="settings_file_name_display_truncate_middle_desc">
-Truncates in middle (abc…xyz.ext) to preserve the end suffix
+अंतिम प्रत्यय को सुरक्षित रखने के लिए बीच में काट-छाँट करता है (abc…xyz.ext)।
 </string>
     <string name="settings_marquee_speed_title">
-Scroll Speed
+स्क्रॉल गति
 </string>
     <string name="settings_marquee_speed_slow">
-Slow
+धीमा
 </string>
     <string name="settings_marquee_speed_normal">
 Normal
 </string>
     <string name="settings_marquee_speed_fast">
-Fast
+तेज़
 </string>
     <string name="settings_marquee_loop_title">
-Loop Mode
+लूप मोड
 </string>
     <string name="settings_marquee_loop_one_shot">
-One-Shot
+एक शॉट
 </string>
     <string name="settings_marquee_loop_one_shot_desc">
-Scrolls once and stops to save battery
+बैटरी बचाने के लिए एक बार स्क्रॉल करें और रुकें
 </string>
     <string name="settings_marquee_loop_continuous">
-Continuous
+निरंतर
 </string>
     <string name="settings_marquee_loop_continuous_desc">
-Repeats back and forth continuously
+लगातार आगे-पीछे दोहराता है
 </string>
     <string name="settings_marquee_scope_title">
-Scroll Scope
+स्क्रॉल दायरा
 </string>
     <string name="settings_marquee_scope_all">
-All Visible Files
+सभी दृश्यमान फ़ाइलें
 </string>
     <string name="settings_marquee_scope_focused">
-Focused / Selected Only
+केवल फोकस्ड/चयनित
 </string>
     <string name="settings_file_name_preview_title">
-Live Preview
+लाइव पूर्वावलोकन
 </string>
     <string name="settings_file_name_preview_sample">
 VeryLongFileName_ProjectReport_2026_Final_v2.docx
@@ -655,7 +655,7 @@ SFTP
 रोकें
 </string>
     <string name="widget_ftp_sftp_ip">
-IP: %1$s
+आईपी: %1$s
 </string>
     <string name="file_server_tiles_title">
 फ़ाइल सर्वर सिस्टम टाइलें
@@ -1184,7 +1184,7 @@ APK
 दस्तावेज़
 </string>
     <string name="analyzer_category_apks">
-APKs
+आपके पास ऐसे APK
 </string>
     <string name="analyzer_category_other">
 अन्य
@@ -1206,7 +1206,7 @@ APKs
 डुप्लिकेट
 </string>
     <string name="analyzer_tab_incomplete">
-Incomplete
+अधूरा
 </string>
     <string name="analyzer_tab_junk">
 जंक और पुरानी
@@ -1233,10 +1233,10 @@ Incomplete
 %1$s बचाता है
 </string>
     <string name="analyzer_no_incomplete_files">
-No incomplete or sparse downloads found
+कोई अपूर्ण या विरल डाउनलोड नहीं मिला
 </string>
     <string name="analyzer_incomplete_file_allocated">
-Size on disk: %1$s (%2$.1f%%)
+डिस्क पर आकार: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1321,97 +1321,97 @@ Size on disk: %1$s (%2$.1f%%)
 
     <!-- Bulk duplicate deletion & retention strategy -->
     <string name="analyzer_select_all_duplicates">
-Select All Duplicates
+सभी डुप्लिकेट चुनें
 </string>
     <string name="analyzer_clear_selection">
-Clear
+स्पष्ट
 </string>
     <string name="analyzer_delete_all_duplicates">
-Delete All Duplicates
+सभी डुप्लिकेट हटाएँ
 </string>
     <string name="analyzer_delete_selected_count">
-Delete Selected (%1$d)
+चयनित हटाएं (%1$d)
 </string>
     <string name="analyzer_badge_original">
-Original
+मूल
 </string>
     <string name="analyzer_strategy_title">
-Duplicate Retention Strategy
+डुप्लिकेट प्रतिधारण रणनीति
 </string>
     <string name="analyzer_strategy_oldest">
-Keep Oldest (Original)
+सबसे पुराना (मूल) रखें
 </string>
     <string name="analyzer_strategy_oldest_desc">
-Preserves the oldest file by modification date and deletes newer copies.
+संशोधन तिथि के अनुसार सबसे पुरानी फ़ाइल को सुरक्षित रखता है और नई प्रतियों को हटा देता है।
 </string>
     <string name="analyzer_strategy_newest">
-Keep Newest
+नवीनतम रखें
 </string>
     <string name="analyzer_strategy_newest_desc">
-Preserves the most recently modified file and deletes older copies.
+सबसे हाल ही में संशोधित फ़ाइल को सुरक्षित रखता है और पुरानी प्रतियों को हटा देता है।
 </string>
     <string name="analyzer_strategy_remember">
-Remember my choice
+मेरी पसंद याद रखें
 </string>
     <string name="analyzer_strategy_most_complete">
-Keep Most Complete
+सर्वाधिक पूर्ण रखें
 </string>
     <string name="analyzer_strategy_most_complete_desc">
-Preserves fully downloaded or most allocated files and deletes incomplete copies.
+पूरी तरह से डाउनलोड की गई या अधिकांश आवंटित फ़ाइलों को सुरक्षित रखता है और अधूरी प्रतियों को हटा देता है।
 </string>
     <string name="analyzer_badge_partial">
-Partial (%1$.0f%%)
+आंशिक (%1$.0f%%)
 </string>
     <string name="analyzer_badge_sparse">
-Sparse
+विरल
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+%1$d डुप्लिकेट फ़ाइलें हटाएं?
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+प्रत्येक फ़ाइल की एक मूल प्रति रखी जाएगी. %1$d %2$s को खाली करने के लिए डुप्लिकेट प्रतियां स्थायी रूप से हटा दी जाएंगी।
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+सफ़ाई पूर्ण
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+%1$d डुप्लिकेट फ़ाइलें सफलतापूर्वक हटा दी गईं और %2$s संग्रहण स्थान पुनः प्राप्त कर लिया गया।
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+%1$d अनुमतियों के कारण फ़ाइलें हटाई नहीं जा सकीं।
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+%2$d में से %1$d फ़ाइलें हटाई जा रही हैं...
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d डुप्लिकेट समूह · सहेजता है %2$s
 </string>
     <string name="settings_duplicate_retention_title">
-Duplicate Retention Strategy
+डुप्लिकेट प्रतिधारण रणनीति
 </string>
     <string name="settings_duplicate_retention_dialog_subtitle">
-Choose which copy to preserve when selecting duplicate files for cleanup.
+क्लीन अप के लिए डुप्लिकेट फ़ाइलें चुनते समय तय करें कि कौन-सी कॉपी सुरक्षित रखी जाए।
 </string>
     <string name="settings_duplicate_retention_summary_oldest">
-Keep oldest file (Original)
+सबसे पुरानी फ़ाइल रखें (मूल)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
-Keep newest file
+सबसे नई फ़ाइल रखें
 </string>
     <string name="settings_duplicate_retention_summary_most_complete">
-Keep most complete file
+सबसे ज़्यादा पूरी फ़ाइल रखें
 </string>
     <string name="settings_duplicate_retention_summary_ask">
-Always ask
+हमेशा पूछें
 </string>
     <string name="settings_duplicate_retention_desc_ask">
-Prompt to choose retention strategy each time duplicate files are selected.
+हर बार डुप्लिकेट फ़ाइलें चुनी जाने पर रिटेंशन स्ट्रैटेजी चुनने का प्रॉम्प्ट दें।
 </string>
     <string name="settings_duplicate_retention_toast">
-Duplicate retention strategy set to: %s
+डुप्लिकेट रिटेंशन स्ट्रैटेजी इस पर सेट की गई है: %s
 </string>
     <string name="backup_pref_duplicate_retention">
-Duplicate Retention Strategy
+डुप्लिकेट प्रतिधारण रणनीति
 </string>
 
     <!-- Theme -->
@@ -1507,7 +1507,7 @@ PIN मेल नहीं खाते — कृपया पुनः प्�
 अपना PIN रीसेट करने के लिए अपना 16 अक्षर का रिकवरी कोड दर्ज करें
 </string>
     <string name="vault_recovery_entry_hint">
-XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXX
 </string>
     <string name="vault_recovery_invalid">
 गलत रिकवरी कोड
@@ -1917,13 +1917,13 @@ USB और स्थानीय स्टोरेज ड्राइव का
 चुनें कि लॉन्च पर कौन सी स्क्रीन खुले
 </string>
     <string name="start_screen_last_opened">
-Last Opened Location
+पिछली बार खोली गई लोकेशन
 </string>
     <string name="start_screen_last_opened_desc">
-Reopen where you left off upon app launch
+ऐप लॉन्च होने पर वहीं से फिर से खोलें जहाँ आपने छोड़ा था
 </string>
     <string name="storage_unavailable_redirect">
-Previous storage location is unavailable. Returned to Storage screen.
+पिछला स्टोरेज स्थान उपलब्ध नहीं है। \'स्टोरेज\' स्क्रीन पर वापस आए।
 </string>
     <string name="start_screen_storage_browser">
 मुख्य मेनू (डिफ़ॉल्ट)
@@ -2026,13 +2026,13 @@ HTTP, FTP और WebDAV फ़ाइल सर्वर नियंत्रण
 
     <!-- Network Transfer Multi-Threading Settings -->
     <string name="settings_network_transfer_threads_title">
-FTP, SFTP &amp; SMB Multi-threading
+FTP, SFTP और SMB मल्टी-थ्रेडिंग
 </string>
     <string name="settings_network_transfer_threads_dialog_title">
 स्थानांतरण थ्रेड्स
 </string>
     <string name="settings_network_transfer_threads_dialog_subtitle">
-Select the number of simultaneous connections for faster network file transfers
+ज़्यादा तेज़ी से नेटवर्क फ़ाइल ट्रांसफ़र करने के लिए एक साथ होने वाले कनेक्शन की संख्या चुनें
 </string>
     <string name="settings_network_transfer_threads_subtitle">
 %1$d थ्रेड्स — तेज़ स्थानांतरण के लिए एक साथ कनेक्शन
@@ -2047,40 +2047,40 @@ Select the number of simultaneous connections for faster network file transfers
 %1$d थ्रेड्स (अनुशंसित)
 </string>
     <string name="settings_network_transfer_threads_maximum">
-%1$d threads (Maximum)
+%1$d थ्रेड्स (अधिकतम)
 </string>
     <string name="settings_network_transfer_threads_2">
 2 threads
 </string>
     <string name="settings_network_transfer_threads_4">
-4 threads (Recommended)
+4 थ्रेड (सुझाया गया)
 </string>
     <string name="settings_network_transfer_threads_6">
 6 threads
 </string>
     <string name="settings_network_transfer_threads_8">
-8 threads (Maximum)
+8 थ्रेड (अधिकतम)
 </string>
     <string name="settings_network_transfer_threads_desc_1">
-Single connection, transfers files sequentially
+सिंगल कनेक्शन, फ़ाइलें क्रमानुसार ट्रांसफ़र करता है
 </string>
     <string name="settings_network_transfer_threads_desc_2">
-Light parallelism, ideal for slower connections
+हल्का समानांतरता, धीमी कनेक्शन के लिए आदर्श
 </string>
     <string name="settings_network_transfer_threads_desc_4">
-Optimal balance of speed and stability for Wi-Fi and LAN
+वाई-फ़ाई और LAN के लिए स्पीड और स्टेबिलिटी का बेहतरीन संतुलन
 </string>
     <string name="settings_network_transfer_threads_desc_6">
-High throughput for Gigabit networks and fast Wi-Fi
+गीगाबिट नेटवर्कों और तेज़ वाई-फ़ाई के लिए हाई थ्रूपुट
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+मल्टी-गीगाबिट LAN और Wi- -Fi 7 के लिए अधिकतम थ्रूपुट
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+थ्रेड सेट को %1$d पर ट्रांसफ़र किया गया
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+FTP, SFTP और SMB मल्टी-थ्रेडिंग सेटिंग
 </string>
     <string name="network_field_threads">
 स्थानांतरण थ्रेड्स
@@ -2195,7 +2195,7 @@ Z → A
 संग्रह
 </string>
     <string name="filter_apks">
-APKs
+आपके पास ऐसे APK
 </string>
     <string name="filter_date_title">
 संशोधित तिथि
@@ -4797,7 +4797,7 @@ TV मुख्य मेनू में \"पेयर्ड फोन\" च�
 %s से लिंक किया गया
 </string>
     <string name="tv_server_channel_name">
-UFM TV Server
+यूएफएम टीवी सर्वर
 </string>
     <string name="tv_server_channel_desc">
 पेयर किए गए मोबाइल डिवाइसों के लिए TV फ़ाइल साझाकरण सक्रिय रखता है
@@ -5554,13 +5554,27 @@ TV का नाम बदलकर %1$s कर दिया गया
 चलाएं / रोकें
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+इंटरैक्टिव मोड
+</string>
+    <string name="svg_transport_mode">
+प्लेयर नियंत्रण
+</string>
+    <string name="svg_restart">
+एनिमेशन पुनः प्रारंभ करें
+</string>
+    <string name="svg_playback_speed">
+प्लेबैक गति
+</string>
+    <string name="svg_next_panel">
+अगला पैनल
+</string>
+    <string name="svg_prev_panel">
+पिछला पैनल
+</string>
+    <string name="svg_tv_interactive_hint">
+इंटरएक्टिव मोड - प्लेयर नियंत्रण के लिए बैक या मेनू दबाएँ
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 ऑडियो ट्रैक
@@ -5869,10 +5883,10 @@ PIN दर्ज करें
 UFM में सहेजें
 </string>
     <string name="share_target_save_to">
-Save to…
+में सुरक्षित करें…
 </string>
     <string name="share_target_open_in">
-Open in…
+में खोलें…
 </string>
     <string name="share_receive_from">
 %s से फ़ाइल प्राप्त की जा रही है
@@ -6029,7 +6043,7 @@ Open in…
 
     <!-- Remote Manager Web Interface -->
     <string name="remote_title">
-Ultimate File Manager Pro Remote
+अल्टीमेट फाइल मैनेजर प्रो रिमोट
 </string>
     <string name="remote_subtitle_login">
 सुरक्षित पहुंच — 4 अंकों का PIN दर्ज करें
@@ -7377,10 +7391,10 @@ SAF आउटपुट स्ट्रीम विफल
 512 MB से बड़ी %1$d फ़ाइलें मिलीं।
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+अपूर्ण / विरल डाउनलोड
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+%1$d अपूर्ण या विरल फ़ाइलें मिलीं जो डिस्क स्थान का उपभोग कर रही हैं।
 </string>
     <string name="old_unused_files">
 पुरानी अप्रयुक्त फ़ाइलें
@@ -7975,10 +7989,18 @@ SMB/FTP सेट करें
     <string name="sync_disabled">
 सिंक अक्षम
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+प्रोफ़ाइल सक्षम करें
+</string>
+    <string name="sync_action_disable">
+प्रोफ़ाइल अक्षम करें
+</string>
+    <string name="sync_status_enabled">
+सक्रिय
+</string>
+    <string name="sync_status_disabled">
+रुका हुआ
+</string>
     <string name="sync_delete_profile_confirm_msg">
 क्या आप वाकई \"%1$s\" को हटाना चाहते हैं? इसे पूर्ववत नहीं किया जा सकता।
 </string>
@@ -8323,10 +8345,10 @@ Android उपकरण
 WhatsApp
 </string>
     <string name="whatsapp_business">
-WhatsApp Business
+व्हाट्सएप बिजनेस
 </string>
     <string name="telegram">
-Telegram
+टेलीग्राम
 </string>
     <string name="instagram">
 Instagram
@@ -8335,16 +8357,16 @@ Instagram
 Snapchat
 </string>
     <string name="tiktok">
-TikTok
+टिकटोक
 </string>
     <string name="facebook">
-Facebook
+फेसबुक
 </string>
     <string name="twitter_x">
 ट्विटर / X
 </string>
     <string name="discord">
-Discord
+कलह
 </string>
     <string name="spotify">
 Spotify
@@ -8353,16 +8375,16 @@ Spotify
 Netflix
 </string>
     <string name="youtube">
-YouTube
+यूट्यूब
 </string>
     <string name="signal">
-Signal
+संकेत
 </string>
     <string name="viber">
-Viber
+वाइबर
 </string>
     <string name="line">
-Line
+रेखा
 </string>
     <string name="opening_itemlabel">
 📂 %1$s खोला जा रहा है
@@ -8428,7 +8450,7 @@ DCIM बैकअप
 उपयोग किया गया
 </string>
     <string name="android_tv">
-Android TV
+एंड्रॉइड टीवी
 </string>
     <string name="jcifsng_euagno3">
 jcifs-ng (eu.agno3)
@@ -8437,40 +8459,40 @@ jcifs-ng (eu.agno3)
 FFmpeg (LGPL बिल्ड)
 </string>
     <string name="smbj_hierynomus">
-smbj (hierynomus)
+एसएमबीजे (हिरिनोमस)
 </string>
     <string name="apache_commons_net">
-Apache Commons Net
+अपाचे कॉमन्स नेट
 </string>
     <string name="apache_commons_compress">
-Apache Commons Compress
+अपाचे कॉमन्स कंप्रेस
 </string>
     <string name="zip4j_netlingalazip4j">
 zip4j (net.lingala.zip4j)
 </string>
     <string name="xz_for_java_orgtukaanixz">
-XZ for Java (org.tukaani.xz)
+जावा के लिए XZ (org.tukaani.xz)
 </string>
     <string name="public_domain">
 सार्वजनिक डोमेन
 </string>
     <string name="apache_poi">
-Apache POI
+अपाचे POI
 </string>
     <string name="nanohttpd">
-NanoHTTPD
+नैनोHTTPD
 </string>
     <string name="google_firebase_analytics">
-Google Firebase Analytics
+गूगल फायरबेस एनालिटिक्स
 </string>
     <string name="google_billing_library">
-Google Billing Library
+गूगल बिलिंग लाइब्रेरी
 </string>
     <string name="google_play_review_library">
-Google Play Review Library
+Google Play समीक्षा लाइब्रेरी
 </string>
     <string name="androidx_libraries">
-AndroidX Libraries
+एंड्रॉइडएक्स लाइब्रेरीज़
 </string>
     <string name="viewpager2">
 ViewPager2
@@ -8479,25 +8501,25 @@ ViewPager2
 libadb-android (com.github.MuntashirAkon)
 </string>
     <string name="bouncycastle_orgbouncycastle">
-BouncyCastle (org.bouncycastle) · v1.83
+बाउंसीकैसल (org.bouncycastle) · v1.83
 </string>
     <string name="apache_sshd_core">
-Apache MINA SSHD
+अपाचे मीना एसएसएचडी
 </string>
     <string name="eddsa_java">
-EdDSA for Java
+जावा के लिए एडडीएसए
 </string>
     <string name="slf4j_android">
-SLF4J Android
+SLF4J एंड्रॉइड
 </string>
     <string name="androidsvg_comcaverock">
 AndroidSVG (com.caverock)
 </string>
     <string name="coil_iocoilkt">
-Coil (io.coil-kt.coil3)
+कुंडल (io.coil-kt.coil3)
 </string>
     <string name="bouncy_castle_license_mitstyle">
-Bouncy Castle License (MIT-style)
+बाउंसी कैसल लाइसेंस (एमआईटी-शैली)
 </string>
     <string name="storage_volume">
 स्टोरेज वॉल्यूम
@@ -8509,7 +8531,7 @@ Bouncy Castle License (MIT-style)
 $bytes B
 </string>
     <string name="q1f_mb">
-%.1f MB
+%.1f एमबी
 </string>
     <string name="sheet_sheetsheetname">
 ═══ शीट: %1$s ═══
@@ -8615,16 +8637,16 @@ Dropbox से सफलतापूर्वक कनेक्ट हुआ
 प्रमाणीकरण विफल: %1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+प्रमाणीकरण विफल होना
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+कनेक्शन या सत्यापन त्रुटि
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+ड्रॉपबॉक्स के साथ प्राधिकरण कोड को सत्यापित करने में असमर्थ। कृपया जांचें कि कोड सही ढंग से दर्ज किया गया था, समाप्त नहीं हुआ है, और आपके डिवाइस की तारीख/समय सही है।
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+डिवाइस दिनांक और समय त्रुटि का पता चला। ऐसा प्रतीत होता है कि आपके टीवी सिस्टम की तारीख/समय अतीत में है, जो ड्रॉपबॉक्स से सुरक्षित कनेक्शन को रोकता है। कृपया एंड्रॉइड टीवी सेटिंग्स में सही तारीख और समय सेट करें।
 </string>
     <string name="dropbox_auth_verifying">
 कोड सत्यापित किया जा रहा है…
@@ -8776,7 +8798,7 @@ Box को अधिकृत करें
 उन्नत पहुंच
 </string>
     <string name="shizuku_subtitle">
-Porter / Shizuku / Shevery
+पोर्टर / शिज़ुकु / शेवेरी
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
@@ -8909,19 +8931,19 @@ Android/data और obb तक पूर्ण पढ़ने/लिखने �
 उपलब्ध मैनेजर
 </string>
     <string name="shizuku_manager_shizuku_title">
-Shizuku
+शिज़ुकु
 </string>
     <string name="shizuku_manager_shizuku_desc">
 GitHub से मानक एलिवेटेड सेवा
 </string>
     <string name="shizuku_manager_shevery_title">
-Shevery
+शेवरी
 </string>
     <string name="shizuku_manager_shevery_desc">
 हल्का और तेज़ विकल्प
 </string>
     <string name="shizuku_manager_porter_title">
-Porter
+बोझ ढोनेवाला
 </string>
     <string name="shizuku_manager_porter_desc">
 सक्रिय रूप से अनुरक्षित Shizuku का निरंतर संस्करण
@@ -8951,16 +8973,16 @@ Porter इंस्टॉल है लेकिन इसकी सेवा �
 एलिवेटेड एक्सेस की जाँच की जा रही है…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+कुली प्राप्त करें
 </string>
     <string name="elevated_prerelease_badge">
 प्री-रिलीज़
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+शिज़ुकु प्राप्त करें
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+शेवरी प्राप्त करें
 </string>
     <string name="shizuku_open_manager">
 %1$s मैनेजर खोलें
@@ -8969,7 +8991,7 @@ Get Shevery
 3-चरण सेटअप गाइड
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1. प्रबंधक स्थापित करें
 </string>
     <string name="shizuku_step_2">
 2. सेवा प्रारंभ करें
@@ -9008,17 +9030,23 @@ ADB / वायरलेस डिबगिंग
 डाउनलोड और इंस्टॉल करें (%1$s)
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+एलिवेटेड एक्सेस डिस्कनेक्ट करें?
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+यह UFM में %1$s उन्नत पहुंच को डिस्कनेक्ट कर देगा। आप इसे किसी भी समय पुनः सक्षम कर सकते हैं.
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+डिस्कनेक्ट
 </string>
-    <string name="shizuku_allow_app_access">Allow app access</string>
-    <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
-    <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
+    <string name="shizuku_allow_app_access">
+ऐप एक्सेस की अनुमति दें
+</string>
+    <string name="shizuku_app_access_granted_toast">
+%1$s के लिए उन्नत पहुंच सक्षम की गई
+</string>
+    <string name="shizuku_app_access_revoked">
+%1$s के लिए उन्नत पहुंच अक्षम की गई
+</string>
     <string name="elevated_fetching_toast">
 नवीनतम %1$s रिलीज़ की जाँच की जा रही है…
 </string>
@@ -9092,7 +9120,7 @@ DLNA सर्वर सक्षम करने से पहले कम स
 DLNA सेटिंग्स
 </string>
     <string name="dlna_server_running">
-DLNA: %1$s:%2$d
+डीएलएनए: %1$s:%2$d
 </string>
     <string name="dlna_renderer_running">
 DLNA रेंडरर: %1$s
@@ -9315,7 +9343,7 @@ FTP और SFTP सर्वर चल रहे हैं
 प्रबंधित करने के लिए टैप करें
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+फ़ाइल सर्वर बंद हो गया: Android की 6-घंटे की निष्पादन सीमा पूरी हो गई
 </string>
     <string name="opening_file_server">
 फ़ाइल सर्वर खोला जा रहा है…
@@ -9413,13 +9441,13 @@ $%1$d शेष
 सदस्य स्थिति
 </string>
     <string name="loyalty_tier_legend">
-Legend
+दंतकथा
 </string>
     <string name="loyalty_tier_champion">
-Champion
+चैंपियन
 </string>
     <string name="loyalty_tier_supporter">
-Supporter
+समर्थक
 </string>
     <string name="loyalty_tier_free">
 मुफ्त उपयोगकर्ता
@@ -9476,7 +9504,7 @@ S3 स्टोरेज से कनेक्ट करें
 </string>
     <!-- Short provider labels used in S3SetupActivity title -->
     <string name="add_online_storage_aws_s3">
-AWS S3
+एडब्लूएस एस3
 </string>
     <string name="add_online_storage_idrive_e2">
 S3 स्टोरेज
@@ -9623,34 +9651,34 @@ URL http:// या https:// से शुरू होना चाहिए
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+अविश्वसनीय/स्व-हस्ताक्षरित प्रमाणपत्र की अनुमति दें
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+स्व-हस्ताक्षरित या निजी सीए एसएसएल प्रमाणपत्र स्वीकार करें (स्थानीय एनएएस उपकरणों पर आम)
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+पासवर्ड (वर्तमान रखने के लिए खाली छोड़ दें)
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+अविश्वसनीय एसएसएल प्रमाणपत्र
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+%1$s पर सर्वर ने एक अविश्वसनीय या स्व-हस्ताक्षरित SSL प्रमाणपत्र प्रस्तुत किया। इस कनेक्शन पर भरोसा करने से पहले नीचे दिए गए प्रमाणपत्र विवरण सत्यापित करें।
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+विषय
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+जारीकर्ता
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+वैधता
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+SHA-256 फ़िंगरप्रिंट
 </string>
     <string name="webdav_cert_dialog_trust">
-Trust &amp; Connect
+भरोसा करें और जुड़ें
 </string>
 
     <!-- About Section -->
@@ -9682,7 +9710,7 @@ support@kilowatch.co.za
 मोबाइल
 </string>
     <string name="flavor_tv">
-Android TV
+एंड्रॉइड टीवी
 </string>
     <string name="about_tile_subtitle">
 ऐप जानकारी और विवरण
@@ -9980,7 +10008,7 @@ WiFi के माध्यम से %1$s से कनेक्ट करे�
  — ब्लूटूथ
 </string>
     <string name="remote_device_wifi_suffix">
- — WiFi
+ - वाईफ़ाई
 </string>
     <string name="remote_transport_no_wifi_tvs_title">
 रिमोट के लिए कोई TV सक्षम नहीं
@@ -10191,7 +10219,7 @@ WiFi रिमोट डिस्कनेक्ट हुआ
 नोटपैड खोल रहा है
 </string>
     <string name="notepad_default_name">
-Notepad.txt
+नोटपैड.txt
 </string>
     <string name="save_note">
 सहेजें
@@ -10492,7 +10520,7 @@ PDF (केवल बहु-पृष्ठ)
 कैमरा
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+इस डिवाइस पर कोई कैमरा ऐप नहीं मिला
 </string>
     <string name="scanner_capture_gallery">
 गैलरी से चुनें
@@ -11606,7 +11634,7 @@ UFM लोकल कॉपी सेंटर
 लक्ष्य उपकरण प्रकार चुनें:
 </string>
     <string name="target_tv">
-Android TV / Fire TV
+एंड्रॉइड टीवी/फायर टीवी
 </string>
     <string name="target_tv_desc">
 वायरलेस ADB पुश का उपयोग करके फ़ाइलें सीधे Android TV पर कॉपी करें
@@ -11630,7 +11658,7 @@ Android TV / Fire TV
 सत्र PIN
 </string>
     <string name="adb_device_badge">
-Android TV (ADB)
+एंड्रॉइड टीवी (एडीबी)
 </string>
     <string name="connecting_to_device">
 %1$s से कनेक्ट हो रहा है…
@@ -11744,12 +11772,12 @@ Ultimate File Manager Pro
 फ़ाइल भेजा जा रहा है…
 </string>
     <string name="pro_badge">
-PRO
+प्रो
 </string>
 
     <!-- RClone Cloud Storage Support -->
     <string name="add_online_storage_rclone">
-RClone
+आरक्लोन
 </string>
     <string name="add_online_storage_auth_rclone">
 स्टोरेज सेट अप करें
@@ -11824,7 +11852,7 @@ Mega
 Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
-Premiumize
+प्रीमियमीकरण करें
 </string>
     <string name="rclone_provider_box">
 Box
@@ -11848,7 +11876,7 @@ Box
 अपने Koofr खाता सेटिंग्स में उत्पन्न ऐप पासवर्ड का उपयोग करें, अपने लॉगिन पासवर्ड का नहीं
 </string>
     <string name="rclone_provider_protondrive">
-Proton Drive
+प्रोटोन ड्राइव
 </string>
     <string name="rclone_field_username">
 उपयोगकर्ता नाम या ईमेल
@@ -11948,10 +11976,10 @@ Proton Drive
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+उपशीर्षक शैली
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+इन-ऐप उपशीर्षक उपस्थिति, फ़ॉन्ट आकार और सिस्टम कैप्शन सिंक्रनाइज़ेशन कॉन्फ़िगर करें।
 </string>
     <string name="subtitle_style_summary_system">
 System caption style
@@ -12989,58 +13017,58 @@ UFM ने आपके पिछले सत्र में प्रति�
 Search Online Art
 </string>
     <string name="music_tag_btn_musicbrainz_sync">
-Identify Online (MusicBrainz)
+ऑनलाइन पहचानें (MusicBrainz)
 </string>
     <string name="music_tag_cover_picker_title">
-Search Online Artwork
+ऑनलाइन कलाकृति खोजें
 </string>
     <string name="music_tag_search_covers_hint">
-Artist and Album name…
+कलाकार और एल्बम का नाम…
 </string>
     <string name="music_tag_searching_artwork">
-Searching Apple Music, Deezer &amp; Cover Art Archive…
+Apple Music, Deezer और कवर आर्ट आर्काइव खोजा जा रहा है…
 </string>
     <string name="music_tag_no_artwork_found">
-No artwork found for this query
+इस क्वेरी के लिए कोई कलाकृति नहीं मिली
 </string>
     <string name="music_tag_cover_applied">
-Applied online album artwork
+ऑनलाइन एल्बम कलाकृति लागू की गई
 </string>
     <string name="music_tag_cover_download_error">
-Failed to download artwork
+कलाकृति डाउनलोड करने में विफल
 </string>
     <string name="music_tag_musicbrainz_search_title">
-MusicBrainz Tag Search
+MusicBrainz टैग खोज
 </string>
     <string name="music_tag_search_query_hint">
-Track title or Album name…
+ट्रैक का शीर्षक या एल्बम का नाम...
 </string>
     <string name="music_tag_searching_musicbrainz">
-Searching MusicBrainz…
+MusicBrainz खोजा जा रहा है...
 </string>
     <string name="music_tag_no_musicbrainz_results">
-No matching recordings or releases found
+कोई मेल खाती रिकॉर्डिंग या रिलीज़ नहीं मिली
 </string>
     <string name="music_tag_diff_title">
-Review Online Tags
+ऑनलाइन टैग की समीक्षा करें
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+ट्रैक पर लागू करने के लिए फ़ील्ड का चयन करें
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+चयनित टैग लागू करें
 </string>
     <string name="music_tag_select_all">
-Select All
+सबका चयन करें
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+रिकॉर्डिंग
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+एल्बम/रिलीज़
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d ट्रैक
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -13429,19 +13457,19 @@ GPS जियोटैग हटाएं (अक्षांश, देशा�
 + {YYYY}
 </string>
     <string name="exif_rename_token_month">
-+ {MM}
++ {एमएम}
 </string>
     <string name="exif_rename_token_day">
-+ {DD}
++ {डीडी}
 </string>
     <string name="exif_rename_token_time">
-+ {hh}{mm}{ss}
++ {हह} {ममममममस}
 </string>
     <string name="exif_rename_token_model">
-+ {MODEL}
++ {मॉडल}
 </string>
     <string name="exif_rename_token_original">
-+ {ORIGINAL}
++ {मूल}
 </string>
     <string name="exif_rename_token_seq">+ {#}</string>
     <string name="exif_rename_preview_header">
@@ -13478,7 +13506,7 @@ GPS जियोटैग हटाएं (अक्षांश, देशा�
 %1$s के लिए गोपनीयता मेटाडेटा साफ़ किया गया
 </string>
     <string name="exif_has_gps_badge">
-📍 GPS
+📍जीपीएस
 </string>
     <string name="exif_no_gps_badge">
 कोई GPS नहीं
@@ -14219,13 +14247,13 @@ SAF स्टोरेज
 अपने डिवाइस पर उन फ़ोल्डरों को चुनें जिन्हें UFM एक्सेस और प्रबंधित कर सकता है।
 </string>
     <string name="btn_add_another_folder">
-Add Folder
+फ़ोल्डर जोड़ें
 </string>
     <string name="selected_folders_count">
 %1$d फ़ोल्डर चयनित
 </string>
     <string name="no_folders_selected_hint">
-No folders added yet. Tap \"Add Folder\" to choose folders.
+अभी तक कोई फ़ोल्डर नहीं जोड़ा गया. फ़ोल्डर चुनने के लिए \"फ़ोल्डर जोड़ें\" पर टैप करें।
 </string>
     <string name="btn_done">
 हो गया
@@ -14233,7 +14261,7 @@ No folders added yet. Tap \"Add Folder\" to choose folders.
 
     <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-Add Folder
+फ़ोल्डर जोड़ें
 </string>
     <string name="action_add_folder_to_storage_desc">
 इस संग्रहण में किसी फ़ोल्डर तक पहुंच प्रदान करें
@@ -14251,7 +14279,7 @@ Add Folder
 इस स्टोरेज से एक्सेस हटाने के लिए एक फ़ोल्डर का चयन करें। आपकी फ़ाइलें हटाई नहीं जाएंगी.
 </string>
     <string name="no_mounted_folders_hint">
-No mounted folders remaining for this storage.
+इस भंडारण के लिए कोई माउंटेड फ़ोल्डर शेष नहीं है।
 </string>
     <string name="restricted_storage_empty_title">
 सभी फ़ाइलों तक पहुंच आवश्यक है
@@ -14695,10 +14723,10 @@ AndroidManifest.xml को डीकोड करने में असमर�
 ✗ फ़ाइलें अलग-अलग हैं (विभिन्न आकार: %1$s बनाम %2$s)
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ मिलान हेडर और डेटा - अधूरा डाउनलोड (%1$.1f%% बनाम %2$.1f%% आवंटित)
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
-Size on disk: %1$s (%2$.1f%%)
+डिस्क पर आकार: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 समान आकार (%1$s). सामग्री को सत्यापित करने के लिए हैशिंग…
@@ -14810,10 +14838,10 @@ Ultimate File Manager Pro को खोलने के लिए प्रम�
 इस डिवाइस पर बायोमेट्रिक्स उपलब्ध नहीं है
 </string>
     <string name="settings_security_biometric_none_enrolled">
-No biometrics or device lock set up in Android Settings
+एंड्रॉइड सेटिंग्स में कोई बायोमेट्रिक्स या डिवाइस लॉक सेट अप नहीं है
 </string>
     <string name="settings_security_change_pin">
-Change PIN
+पिन बदलें
 </string>
     <string name="settings_security_change_pin_subtitle">
 अपना वर्तमान 4-अंकीय सुरक्षा पिन अपडेट करें
@@ -15436,7 +15464,7 @@ UFM के लिए एक सुरक्षित पासवर्ड द�
 लाइव पूर्वावलोकन
 </string>
     <string name="live_preview_sample_filename">
-Quarterly_Financial_Report_2026_Final.pdf
+त्रैमासिक_वित्तीय_रिपोर्ट_2026_अंतिम.pdf
 </string>
     <string name="live_preview_sample_info">
 3.8 MB · आज संशोधित, 13:45
@@ -15585,50 +15613,128 @@ USB OTG ड्राइव सिम्युलेट करें
 </string>
 
     <!-- Grid Text Placement Settings -->
-    <string name="settings_grid_text_position_title">Grid Text Placement</string>
-    <string name="settings_grid_text_position_subtitle">Position file names below or overlaid on grid items</string>
-    <string name="settings_grid_text_position_below">Below Block (Default)</string>
-    <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
-    <string name="backup_pref_grid_text_position">Grid text placement settings</string>
-    <string name="backup_pref_view_styles">View density &amp; preset styles</string>
+    <string name="settings_grid_text_position_title">
+ग्रिड टेक्स्ट प्लेसमेंट
+</string>
+    <string name="settings_grid_text_position_subtitle">
+फ़ाइल नाम नीचे रखें या ग्रिड आइटम पर मढ़ा करें
+</string>
+    <string name="settings_grid_text_position_below">
+ब्लॉक के नीचे (डिफ़ॉल्ट)
+</string>
+    <string name="settings_grid_text_position_overlay">
+ब्लॉक पर मढ़ा हुआ
+</string>
+    <string name="backup_pref_grid_text_position">
+ग्रिड टेक्स्ट प्लेसमेंट सेटिंग्स
+</string>
+    <string name="backup_pref_view_styles">
+घनत्व और पूर्व निर्धारित शैलियाँ देखें
+</string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
-    <string name="open_as">Open As…</string>
-    <string name="open_as_desc">Choose a viewer or player to open this file</string>
-    <string name="presentation_viewer">Presentation Viewer</string>
-    <string name="slide_counter">Slide %1$d of %2$d</string>
-    <string name="open_in_powerpoint">Open in Presentation App</string>
-    <string name="open_as_text">Text / Code Viewer</string>
-    <string name="open_as_text_desc">Built-in code &amp; text editor with syntax highlighting</string>
-    <string name="open_as_hex">Hex / Binary Viewer</string>
-    <string name="open_as_hex_desc">Raw byte hex dump and binary inspector</string>
-    <string name="open_as_presentation">Presentation / Slide Deck</string>
-    <string name="open_as_presentation_desc">Built-in slide deck viewer with speaker notes</string>
-    <string name="open_as_spreadsheet">Spreadsheet / Table</string>
-    <string name="open_as_spreadsheet_desc">Built-in spreadsheet table viewer</string>
-    <string name="open_as_image">Image Viewer</string>
-    <string name="open_as_image_desc">High-resolution photo viewer with zoom &amp; pan</string>
-    <string name="open_as_audio">Audio Player</string>
-    <string name="open_as_audio_desc">Media3 audio player with background playback</string>
-    <string name="open_as_video">Video Player</string>
-    <string name="open_as_video_desc">Media3 hardware-accelerated video player</string>
-    <string name="open_as_archive">Archive Browser</string>
-    <string name="open_as_archive_desc">Explore ZIP, 7Z, TAR, RAR, and compressed files</string>
-    <string name="open_as_other">Choose External App…</string>
-    <string name="open_as_other_desc">Open with an installed third-party app</string>
-    <string name="speaker_notes">Speaker Notes</string>
-    <string name="no_slides_found">No slides found in this presentation</string>
-    <string name="next_slide">Next Slide</string>
-    <string name="prev_slide">Previous Slide</string>
-    <string name="view_raw_text">View as Raw Text</string>
-    <string name="ufm_slide_deck_viewer">UFM Slide Deck</string>
-    <string name="open_with_presentation_app">Presentation App (PowerPoint / Slides)</string>
-    <string name="open_with_presentation_app_desc">Open in Microsoft PowerPoint, Google Slides, or office suite</string>
-    <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
+    <string name="open_as">
+इस रूप में खोलें...
+</string>
+    <string name="open_as_desc">
+इस फ़ाइल को खोलने के लिए कोई दर्शक या प्लेयर चुनें
+</string>
+    <string name="presentation_viewer">
+प्रस्तुति दर्शक
+</string>
+    <string name="slide_counter">
+%2$d में से स्लाइड %1$d
+</string>
+    <string name="open_in_powerpoint">
+प्रेजेंटेशन ऐप में खोलें
+</string>
+    <string name="open_as_text">
+पाठ/कोड व्यूअर
+</string>
+    <string name="open_as_text_desc">
+सिंटैक्स हाइलाइटिंग के साथ अंतर्निहित कोड और टेक्स्ट संपादक
+</string>
+    <string name="open_as_hex">
+हेक्स/बाइनरी व्यूअर
+</string>
+    <string name="open_as_hex_desc">
+रॉ बाइट हेक्स डंप और बाइनरी इंस्पेक्टर
+</string>
+    <string name="open_as_presentation">
+प्रस्तुति/स्लाइड डेक
+</string>
+    <string name="open_as_presentation_desc">
+स्पीकर नोट्स के साथ अंतर्निर्मित स्लाइड डेक व्यूअर
+</string>
+    <string name="open_as_spreadsheet">
+स्प्रेडशीट/टेबल
+</string>
+    <string name="open_as_spreadsheet_desc">
+अंतर्निर्मित स्प्रेडशीट टेबल व्यूअर
+</string>
+    <string name="open_as_image">
+छवि दर्शक
+</string>
+    <string name="open_as_image_desc">
+ज़ूम और पैन के साथ उच्च-रिज़ॉल्यूशन फोटो व्यूअर
+</string>
+    <string name="open_as_audio">
+ऑडियो प्लेयर
+</string>
+    <string name="open_as_audio_desc">
+बैकग्राउंड प्लेबैक के साथ Media3 ऑडियो प्लेयर
+</string>
+    <string name="open_as_video">
+वीडियो प्लेयर
+</string>
+    <string name="open_as_video_desc">
+Media3 हार्डवेयर-त्वरित वीडियो प्लेयर
+</string>
+    <string name="open_as_archive">
+पुरालेख ब्राउज़र
+</string>
+    <string name="open_as_archive_desc">
+ZIP, 7Z, TAR, RAR और संपीड़ित फ़ाइलों का अन्वेषण करें
+</string>
+    <string name="open_as_other">
+बाहरी ऐप चुनें...
+</string>
+    <string name="open_as_other_desc">
+किसी इंस्टॉल किए गए तृतीय-पक्ष ऐप से खोलें
+</string>
+    <string name="speaker_notes">
+वक्ता नोट्स
+</string>
+    <string name="no_slides_found">
+इस प्रस्तुति में कोई स्लाइड नहीं मिली
+</string>
+    <string name="next_slide">
+अगली स्लाइड
+</string>
+    <string name="prev_slide">
+पिछली स्लाइड
+</string>
+    <string name="view_raw_text">
+कच्चे पाठ के रूप में देखें
+</string>
+    <string name="ufm_slide_deck_viewer">
+यूएफएम स्लाइड डेक
+</string>
+    <string name="open_with_presentation_app">
+प्रेजेंटेशन ऐप (पावरप्वाइंट/स्लाइड्स)
+</string>
+    <string name="open_with_presentation_app_desc">
+Microsoft PowerPoint, Google Slides, या Office सुइट में खोलें
+</string>
+    <string name="ufm_slide_viewer_desc">
+यूएफएम में स्लाइड, कवर थंबनेल और नोट्स देखें
+</string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
     <string name="action_open_with">Open With…</string>
-    <string name="action_open_as">Open As…</string>
+    <string name="action_open_as">
+इस रूप में खोलें...
+</string>
     <string name="toolbar_open_with">Open With</string>
     <string name="toolbar_open_as">Open As</string>
     <string name="action_extract_subtitles">Extract Subtitles</string>
@@ -15681,144 +15787,162 @@ This device lacks a native hardware decoder for %1$s audio.\n
 Would you like to convert it to Universal M4A (AAC) for seamless playback?
 </string>
     <string name="convert_and_play">
-Convert &amp; Play
+कनवर्ट करें और खेलें
 </string>
     <string name="converting_audio">
-Converting audio to M4A…
+ऑडियो को M4A में कनवर्ट किया जा रहा है...
 </string>
     <string name="convert_to_m4a">
-Convert to M4A
+M4A में कनवर्ट करें
 </string>
-    <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
-    <string name="media_technical_details">Media Stream Details</string>
-    <string name="media_format">Container</string>
-    <string name="media_bitrate">Overall Bitrate</string>
-    <string name="error_generic">An error occurred</string>
-    <string name="failed_to_open_file">Failed to open file</string>
-    <string name="slide_badge_format">Slide %1$d</string>
-    <string name="slide_counter_format">Slide %1$d of %2$d</string>
-    <string name="no_app_to_open_file">No app found to open this file</string>
+    <string name="no_subtitles_found_in_video">
+इस वीडियो में कोई एम्बेडेड उपशीर्षक ट्रैक नहीं मिला
+</string>
+    <string name="media_technical_details">
+मीडिया स्ट्रीम विवरण
+</string>
+    <string name="media_format">
+पात्र
+</string>
+    <string name="media_bitrate">
+कुल मिलाकर बिटरेट
+</string>
+    <string name="error_generic">
+एक त्रुटि पाई गई
+</string>
+    <string name="failed_to_open_file">
+फ़ाइल खोलने में विफल
+</string>
+    <string name="slide_badge_format">
+स्लाइड %1$d
+</string>
+    <string name="slide_counter_format">
+%2$d में से स्लाइड %1$d
+</string>
+    <string name="no_app_to_open_file">
+इस फ़ाइल को खोलने के लिए कोई ऐप नहीं मिला
+</string>
     <string name="select_subtitle_track">
-Select Subtitle Track
+उपशीर्षक ट्रैक चुनें
 </string>
     <string name="extract_all_subtitles">
-Extract All Tracks
+सभी ट्रैक निकालें
 </string>
     <string name="extract_all_subtitles_desc">
-Extract all %1$d subtitle tracks into separate files
+सभी %1$d उपशीर्षक ट्रैक को अलग-अलग फ़ाइलों में निकालें
 </string>
     <string name="subtitles_extracted_multiple_success">
-Successfully extracted %1$d subtitle files.
+%1$d उपशीर्षक फ़ाइलें सफलतापूर्वक निकाली गईं।
 </string>
     <string name="select_audio_track">
-Select Audio Track
+ऑडियो ट्रैक चुनें
 </string>
     <string name="extract_all_audio">
-Extract All Tracks
+सभी ट्रैक निकालें
 </string>
     <string name="extract_all_audio_desc">
-Extract all %1$d audio tracks into separate files
+सभी %1$d ऑडियो ट्रैक को अलग-अलग फ़ाइलों में निकालें
 </string>
     <string name="audio_extracted_multiple_success">
-Successfully extracted %1$d audio files.
+%1$d ऑडियो फ़ाइलें सफलतापूर्वक निकाली गईं।
 </string>
     <string name="no_audio_found_in_video">
-No audio tracks found in this video
+इस वीडियो में कोई ऑडियो ट्रैक नहीं मिला
 </string>
 
     <!-- Floating Bottom Bar Dock -->
     <string name="floating_bar_settings_title">
-Floating Bottom Bar
+फ्लोटिंग बॉटम बार
 </string>
     <string name="floating_bar_settings_subtitle">
-Show a modern floating dock at the bottom of the main menu for quick access
+त्वरित पहुंच के लिए मुख्य मेनू के नीचे एक आधुनिक फ्लोटिंग डॉक दिखाएं
 </string>
     <string name="floating_bar_manage_title">
-Manage Floating Bar
+फ़्लोटिंग बार प्रबंधित करें
 </string>
     <string name="floating_bar_manage_subtitle">
-Add, remove, and reorder quick-access shortcuts
+त्वरित-पहुंच शॉर्टकट जोड़ें, हटाएं और पुन: व्यवस्थित करें
 </string>
     <string name="floating_bar_enable_switch">
-Enable Floating Bar
+फ़्लोटिंग बार सक्षम करें
 </string>
     <string name="floating_bar_enable_desc">
-Docked tiles appear in the bottom floating bar and are hidden from the main menu
+डॉक की गई टाइलें नीचे फ्लोटिंग बार में दिखाई देती हैं और मुख्य मेनू से छिपी होती हैं
 </string>
     <string name="floating_bar_docked_section">
-Docked Items
+डॉक की गई वस्तुएँ
 </string>
     <string name="floating_bar_docked_hint">
-Drag handle to reorder. Tap Remove to return item to main menu.
+पुन: व्यवस्थित करने के लिए हैंडल खींचें. आइटम को मुख्य मेनू पर वापस लाने के लिए निकालें पर टैप करें।
 </string>
     <string name="floating_bar_available_section">
-Available Tiles
+उपलब्ध टाइल्स
 </string>
     <string name="floating_bar_available_hint">
-Tap + to add a tile to the floating bottom bar
+फ्लोटिंग बॉटम बार में टाइल जोड़ने के लिए + टैप करें
 </string>
     <string name="floating_bar_empty_docked">
-No items docked yet. Add tiles from the list below.
+अभी तक कोई आइटम डॉक नहीं किया गया. नीचे दी गई सूची से टाइलें जोड़ें.
 </string>
     <string name="floating_bar_empty_available">
-All available tiles have been added to the floating bar.
+सभी उपलब्ध टाइलें फ्लोटिंग बार में जोड़ दी गई हैं।
 </string>
     <string name="floating_bar_add">
-Add
+जोड़ना
 </string>
     <string name="floating_bar_remove">
-Remove
+निकालना
 </string>
     <string name="backup_pref_floating_bar">
-Floating Bottom Bar
+फ्लोटिंग बॉटम बार
 </string>
 
     <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
     <string name="quick_access_title">
-Quick Access
+त्वरित पहुँच
 </string>
     <string name="quick_access_mode_title">
-Quick Access Style
+त्वरित पहुँच शैली
 </string>
     <string name="quick_access_mode_subtitle">
-Choose how quick-access shortcuts are presented
+चुनें कि त्वरित-पहुंच वाले शॉर्टकट कैसे प्रस्तुत किए जाएं
 </string>
     <string name="quick_access_mode_disabled">
-Disabled
+अक्षम
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+बॉटम फ्लोटिंग बार
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+एज स्वाइप मेनू
 </string>
     <string name="quick_access_edge_title">
-Swipe Edge
+किनारे को स्वाइप करें
 </string>
     <string name="quick_access_edge_left">
-Left Edge
+बायां किनारा
 </string>
     <string name="quick_access_edge_right">
-Right Edge
+दाहिना किनारा
 </string>
     <string name="quick_access_edge_handle_title">
-Edge Handle Indicator
+एज हैंडल इंडिकेटर
 </string>
     <string name="quick_access_edge_handle_desc">
-Show a subtle indicator on the screen edge for easy opening
+आसानी से खोलने के लिए स्क्रीन किनारे पर एक सूक्ष्म संकेतक दिखाएं
 </string>
     <string name="quick_access_hide_tiles_title">
-Hide Docked Tiles on Main Menu
+मुख्य मेनू पर डॉक की गई टाइलें छिपाएँ
 </string>
     <string name="quick_access_hide_tiles_desc">
-Keep the main dashboard clean by hiding tiles docked in Quick Access
+क्विक एक्सेस में डॉक की गई टाइलों को छिपाकर मुख्य डैशबोर्ड को साफ रखें
 </string>
     <string name="quick_access_manage_tiles">
-Manage Tiles
+टाइल्स प्रबंधित करें
 </string>
     <string name="quick_access_empty_hint">
-No tiles docked yet.\n
-Tap Manage Tiles to add shortcuts.
+अभी तक कोई टाइल डॉक नहीं की गई है।\n
+शॉर्टकट जोड़ने के लिए टाइल प्रबंधित करें पर टैप करें।
 </string>
     <string name="quick_access_mode_disabled_desc">त्वरित पहुंच शॉर्टकट अक्षम करें</string>
     <string name="quick_access_mode_bottom_bar_desc">मुख्य मेनू के नीचे आधुनिक फ्लोटिंग बार</string>
@@ -15829,373 +15953,373 @@ Tap Manage Tiles to add shortcuts.
 
     <!-- Direct Remote Media & Media Operation Worker -->
     <string name="settings_network_media_process_title">
-Network Media Processing
+नेटवर्क मीडिया प्रोसेसिंग
 </string>
     <string name="settings_network_media_process_subtitle_off">
-Direct stream processing (zero local copy of video)
+डायरेक्ट स्ट्रीम प्रोसेसिंग (वीडियो की शून्य स्थानीय प्रतिलिपि)
 </string>
     <string name="settings_network_media_process_subtitle_on">
-Copy full video to local storage before processing
+प्रसंस्करण से पहले पूर्ण वीडियो को स्थानीय भंडारण में कॉपी करें
 </string>
     <string name="backup_pref_network_media_process">
-Network Media Processing
+नेटवर्क मीडिया प्रोसेसिंग
 </string>
     <string name="dialog_copy_before_process_title">
-Copy to Local Storage?
+स्थानीय संग्रहण में कॉपी करें?
 </string>
     <string name="dialog_copy_before_process_msg">
-This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+यह ऑपरेशन नेटवर्क स्टोरेज से \"%1$s\" (%2$s) को पहले आपके डिवाइस के स्थानीय स्टोरेज में कॉपी करेगा।\n
 \n
-Depending on file size and connection speed, this may take some time.\n
+फ़ाइल आकार और कनेक्शन की गति के आधार पर, इसमें कुछ समय लग सकता है।\n
 \n
-Do you want to proceed?
+क्या आप आगे बढ़ना चाहते हैं?
 </string>
     <string name="action_copy_and_proceed">
-Copy &amp; Proceed
+कॉपी करें और आगे बढ़ें
 </string>
     <string name="media_operation_channel_name">
-Media Operations
+मीडिया संचालन
 </string>
     <string name="media_operation_channel_desc">
-Background video conversion and track extraction
+पृष्ठभूमि वीडियो रूपांतरण और ट्रैक निष्कर्षण
 </string>
     <string name="media_op_converting_video">
-Converting Video to MP4…
+वीडियो को MP4 में कनवर्ट किया जा रहा है…
 </string>
     <string name="media_op_extracting_audio">
-Extracting Audio Track…
+ऑडियो ट्रैक निकाला जा रहा है...
 </string>
     <string name="media_op_extracting_subtitles">
-Extracting Subtitles…
+उपशीर्षक निकाला जा रहा है...
 </string>
     <string name="media_op_completed_title">
-Media Operation Completed
+मीडिया ऑपरेशन पूरा हुआ
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+मीडिया ऑपरेशन विफल
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+दूरस्थ वीडियो को स्थानीय कैश में डाउनलोड किया जा रहा है...
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+परिणाम को दूरस्थ फ़ोल्डर में अपलोड किया जा रहा है...
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+पृष्ठभूमि में जारी है. प्रगति के लिए सूचनाएं जांचें.
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+रिमोट शेयर केवल पढ़ने के लिए है
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+निकाली गई फ़ाइल को \"%1$s\" में सहेजा नहीं जा सका क्योंकि शेयर केवल पढ़ने के लिए है।\n
 \n
-Would you like to save it to your local device instead?
+क्या आप इसके बजाय इसे अपने स्थानीय डिवाइस पर सहेजना चाहेंगे?
 </string>
     <string name="action_save_locally">
-Save to Device
+डिवाइस में सहेजें
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+केवल पढ़ने के लिए साझा करें
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+शेयर \"%1$s\" केवल पढ़ने के लिए है।\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+निकाली गई या परिवर्तित फ़ाइल को रिमोट शेयर में वापस सहेजा नहीं जा सकता है, इसलिए इसे इसके बजाय आपके स्थानीय डाउनलोड फ़ोल्डर में सहेजा जाएगा।\n
 \n
-Do you want to proceed?
+क्या आप आगे बढ़ना चाहते हैं?
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+अन्य भंडारण
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+स्थापित क्लाउड और दस्तावेज़ प्रदाता
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+अपने डिवाइस पर इंस्टॉल किए गए तृतीय-पक्ष दस्तावेज़ प्रदाताओं तक पहुंचें
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+%1$d दस्तावेज़ प्रदाता उपलब्ध हैं
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+1 दस्तावेज़ प्रदाता उपलब्ध है
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+कोई तृतीय-पक्ष दस्तावेज़ प्रदाता नहीं मिला
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+फ़ाइलें ब्राउज़ करें (SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+भंडारण फ़ोल्डर माउंट करें
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+यूएफएम नेटिव इंजन के माध्यम से कनेक्ट करें
 </string>
     <string name="action_open_app">
-Open App
+ऐप खोलें
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+संग्रहण स्थान जोड़ें
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+निर्देशिका/फ़ोल्डर माउंट करें
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+टर्मक्स, एसडी कार्ड या यूएसबी ड्राइव से एक फ़ोल्डर चुनें
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+स्थापित दस्तावेज़ प्रदाता
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+प्रोटॉन ड्राइव, सिनोलॉजी डीएस फ़ाइल, गूगल ड्राइव और बहुत कुछ तक पहुंचें
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+हाई-स्पीड क्लाउड और नेटवर्क
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+आरक्लोन (प्रोटॉन/गूगल ड्राइव) या एसएमबी/वेबडीएवी के माध्यम से पूर्ण 2-तरफा सिंक
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+फ़ाइल खोलें या कॉपी करें
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+आप \"%1$s\" के साथ क्या करना चाहेंगे?
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+यूएफएम व्यूअर में खोलें
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+स्थानीय संग्रहण में कॉपी करें
 </string>
     <string name="saf_file_action_remember">
-Remember my choice
+मेरी पसंद याद रखें
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+हमेशा पूछिये
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+%1$d फ़ाइल(फ़ाइलों) को डाउनलोड में कॉपी किया गया
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+एसएएफ ने फ़ाइल कार्रवाई चुनी
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+हमेशा पूछें कि क्या खोलना है या कॉपी करना है
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+हमेशा यूएफएम व्यूअर में खोलें
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+हमेशा स्थानीय भंडारण में कॉपी करें
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+दस्तावेज़ प्रदाता
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+%1$s प्रबंधित करें
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+फ़ाइलें ब्राउज़ करें और डाउनलोड करें
 </string>
     <string name="doc_provider_action_browse_subtitle">फ़ाइलें देखने या स्थानीय रूप से कॉपी करने के लिए %1$s खोलें</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+%1$s पर फ़ाइल अपलोड करें
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+%1$s में सहेजने के लिए UFM में एक स्थानीय फ़ाइल का चयन करें
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+%1$s हटाएं?
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+%1$s को स्टोरेज से हटाएं? आप इसे अन्य स्टोरेज से किसी भी समय पुनः जोड़ सकते हैं।
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+भंडारण से निकालें
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+%1$s को भंडारण से हटा दिया गया
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+%1$s को स्टोरेज में जोड़ा गया
 </string>
     <string name="other_storage_all_added">
-All available providers added
+सभी उपलब्ध प्रदाता जोड़े गए
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+सभी स्थापित दस्तावेज़ प्रदाता पहले से ही आपके मुख्य संग्रहण मेनू में जोड़े गए हैं।
 </string>
     <string name="saf_copy_destination_title">
-Destination: %1$s
+गंतव्य: %1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+फ़ोल्डर परिवर्तन करें…
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+गंतव्य फ़ोल्डर चुनें
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+प्रतिलिपि गंतव्य सेट करें
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+एसएएफ द्वारा चयनित फ़ाइलें गंतव्य
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+दस्तावेज़ प्रदाताओं से कॉपी की गई फ़ाइलें \"%1$s\" में सहेजी जाएंगी।
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+अन्य भंडारण एवं एसएएफ स्थानान्तरण
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+गंतव्य फ़ोल्डर कॉपी करें
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+डिफ़ॉल्ट पर रीसेट करें (डाउनलोड)
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+नया फ़ोल्डर चुनें...
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+गंतव्य रीसेट को डाउनलोड में कॉपी करें
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+दस्तावेज़ प्रदाता को निर्यात करें
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+माउंटेड क्लाउड या दस्तावेज़ प्रदाता पर सीधे सहेजें
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+गंतव्य प्रदाता का चयन करें
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+एकाधिक फ़ाइलें निर्यात करें
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+आप इन %1$d फ़ाइलों को %2$s में कैसे निर्यात करना चाहेंगे?
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+ज़िप संग्रह के रूप में निर्यात करें
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+सिस्टम अपलोड शीट का उपयोग करें
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+\"%1$s\" को %2$s में सहेजा गया
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+फ़ोल्डर माउंट करने योग्य
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+फ़ाइलें और बादल
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+मूल सिंक उपलब्ध है
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+अन्य संग्रहण पर अपलोड करें
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+चयनित फ़ाइलों या फ़ोल्डरों को बाहरी दस्तावेज़ प्रदाताओं पर अपलोड करें
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+अन्य संग्रहण पर अपलोड करें
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+कोई संग्रहण प्रदाता नहीं जोड़ा गया. जोड़ने के लिए एक प्रदाता चुनें.
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+%1$d फ़ाइल(फ़ाइलों) को %2$s में कॉपी किया गया
 </string>
     <string name="share_export_folder_title">
-Export Folder
+फ़ोल्डर निर्यात करें
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+दस्तावेज़ प्रदाताओं के माध्यम से फ़ोल्डर सीधे अपलोड नहीं किए जा सकते। क्या आप %2$s पर अपलोड करने के लिए \"%1$s\" को ज़िप संग्रह में संपीड़ित करना चाहेंगे?
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+एक ज़िप संग्रह में संपीड़ित करें और अपलोड करें
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+एंड्रॉइड सिस्टम अपलोड शीट का उपयोग करके आइटम भेजें
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+माउंटेड प्रदाता का चयन करें या अन्य संग्रहण खोलें
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+%1$s के लिए ज़िपिंग...
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+अन्य भंडारण के लिए ज़िपिंग…
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+%1$s के माध्यम से अपलोड करें
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+फ़ाइलें सीधे %1$s में भेजें
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+एक ज़िप संग्रह में संपीड़ित करें और %1$s में गंतव्य फ़ोल्डर चुनें
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+%1$s में ज़िप संग्रह के अंदर फ़ोल्डर संरचना और मूल निर्देशिका को सुरक्षित रखता है
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+अलग-अलग फ़ाइलों को सीधे %1$s में अपलोड करता है (बाहरी अपलोड स्क्रीन निर्देशिका नहीं बना सकती)
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+फ़ोल्डर अपलोड सूचना
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+बाहरी अपलोड स्क्रीन (जैसे कि %2$s) निर्देशिका नहीं बना सकती हैं।\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+केवल \"%1$s\" के अंदर की फ़ाइलें अपलोड की जाएंगी, मूल फ़ोल्डर नहीं।\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+पूर्ण निर्देशिका संरचना को संरक्षित करने के लिए, इसके बजाय \"ज़िप संग्रह के रूप में निर्यात करें\" चुनें।
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+बाहरी अपलोड स्क्रीन (जैसे कि %1$s) निर्देशिका नहीं बना सकती हैं।\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+केवल चयनित फ़ोल्डर के अंदर की फ़ाइलें अपलोड की जाएंगी, मूल फ़ोल्डर नहीं।\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+पूर्ण निर्देशिका संरचना को संरक्षित करने के लिए, इसके बजाय \"ज़िप संग्रह के रूप में निर्यात करें\" चुनें।
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+केवल फ़ाइलें अपलोड करें
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+होम स्क्रीन विकल्प
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+होम स्क्रीन में शामिल करें
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+होम स्क्रीन से हटाएँ
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+पसंदीदा हटाएँ
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+शॉर्टकट का अनुरोध किया गया - अपनी होम स्क्रीन जांचें
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+शॉर्टकट अक्षम किया गया. इसे अपनी होम स्क्रीन से मैन्युअल रूप से हटाएं।
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+यूएफएम पसंदीदा
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+चैनल स्वीकृत नहीं है. आप इसे बाद में टीवी सेटिंग्स → चैनल में सक्षम कर सकते हैं।
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+आइटम अनुपलब्ध
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+फ़ाइल या फ़ोल्डर नहीं मिल सका. हो सकता है कि इसे स्थानांतरित कर दिया गया हो, हटा दिया गया हो, या अनुपलब्ध संग्रहण पर हो।
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -16215,382 +16339,382 @@ OK
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+के साथ खोलें
 </string>
     <string name="open_with_search_hint">
-Search apps…
+ऐप्स खोजें…
 </string>
     <string name="open_with_just_once">
-Just once
+बस एक बार
 </string>
     <string name="open_with_always">
-Always
+हमेशा
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+.%1$s फ़ाइलों के लिए हमेशा चयनित ऐप का उपयोग करें
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+हमेशा चयनित ऐप का उपयोग करें
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+.%1$s फ़ाइलों के लिए डिफ़ॉल्ट याद रखें
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+इस फ़ाइल को खोलने के लिए कोई इंस्टॉल किया गया एप्लिकेशन नहीं मिला
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+Google Play Store खोजें
 </string>
     <string name="open_with_app_info">
-App info
+अनुप्रयोग की जानकारी
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+एप्लिकेशन विवरण और सिस्टम सेटिंग्स देखें
 </string>
     <string name="open_with_set_default">
-Always use this app
+हमेशा इस ऐप का इस्तेमाल करें
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+%1$s लॉन्च करने में असमर्थ. सिस्टम चयनकर्ता पर वापस आ रहा हूँ...
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+खोलने के लिए ओके दबाएँ • डिफ़ॉल्ट ऐप विकल्पों के लिए ओके को देर तक दबाएँ
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+गंतव्य के रूप में चयन करें
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+दर्शक गंतव्य
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+गंतव्य फ़ोल्डर की पुष्टि करें
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+चयनित फ़ोल्डर का उपयोग यूएफएम व्यूअर और स्लाइड शो में त्वरित कॉपी और मूव क्रियाओं के लिए किया जाएगा।
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+फ़ाइल क्रियाएँ
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+गंतव्य फ़ोल्डर
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+कोई गंतव्य चयनित नहीं - चुनने के लिए टैप करें
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+परिवर्तन
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+%1$s पर कॉपी करें
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+%1$s पर जाएं
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+गंतव्य पर कॉपी करें
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+गंतव्य की ओर बढ़ें
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+%1$s पर कॉपी किया गया
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+%1$s में ले जाया गया
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+स्रोत और गंतव्य एक ही फ़ोल्डर हैं
 </string>
     <string name="backup_pref_viewer_transfer">
-Viewer Transfer Destination
+दर्शक स्थानांतरण गंतव्य
 </string>
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+होम स्क्रीन में शामिल करें
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+शॉर्टकट नाम
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+भंडारण शॉर्टकट
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+\"%1$s\" पहले से ही आपकी होम स्क्रीन पर पिन किया हुआ है।
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+होम स्क्रीन में शामिल करें
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+शॉर्टकट नाम खाली नहीं हो सकता
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
     <string name="download_manager_title">
-Download Manager
+अधःभारण प्रबंधक
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+टोरेंट, मैग्नेट और HTTP डाउनलोड
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+शून्य-सीडिंग गोपनीयता सुरक्षा के साथ हाई-स्पीड नेटिव डायरेक्ट और पीयर-टू-पीयर डाउनलोड मैनेजर।
 </string>
     <string name="download_no_transfers">
-No active downloads
+कोई सक्रिय डाउनलोड नहीं
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+डाउनलोड फ़ोल्डर के रूप में चयन करें
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+डाउनलोड फ़ोल्डर
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+डाउनलोड स्थान की पुष्टि करें
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+डाउनलोड सीधे इस निर्देशिका में सहेजे जाएंगे।
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+प्रत्यक्ष डाउनलोड
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+टोरेंट डाउनलोड
 </string>
     <string name="download_location_label">
-Download location
+स्थान डाउनलोड करें
 </string>
     <string name="download_change_location">
-Change
+परिवर्तन
 </string>
     <string name="download_action_start">
-Start
+शुरू
 </string>
     <string name="download_action_pause">
 Pause
 </string>
     <string name="download_action_resume">
-Resume
+फिर शुरू करना
 </string>
     <string name="download_action_cancel">
-Cancel
+रद्द करना
 </string>
     <string name="download_action_delete">
-Delete
+मिटाना
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+डायरेक्ट डाउनलोड यूआरएल
 </string>
     <string name="download_enter_url_hint">
 https://example.com/file.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+डाउनलोड करना
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+टोरेंट या मैग्नेट लिंक
 </string>
     <string name="download_enter_magnet_hint">
-magnet:?xt=urn:btih:...
+चुम्बक:?xt=कलश:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+.टोरेंट फ़ाइल खोलें
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+मैनेजर और पी2पी नोटिस डाउनलोड करें
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+स्वीकार्य उपयोग एवं गोपनीयता जानकारी
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+मैं समझता हूं कि पीयर-टू-पीयर डाउनलोड मेरे आईपी पते को झुंड के भीतर साझा करते हैं, और मैं इस उपकरण का उपयोग वैध, गैर-उल्लंघनकारी सामग्री के लिए सख्ती से करने के लिए सहमत हूं।
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+भंडारण सीमा पार हो गई
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+लक्ष्य फ़ाइल आकार (%1$s) इस ड्राइव पर FAT32 फ़ाइल सिस्टम द्वारा समर्थित 4 जीबी सीमा से अधिक है।\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+कृपया exFAT, NTFS, या आंतरिक भंडारण में स्वरूपित एक अलग डाउनलोड स्थान चुनें।
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+अपर्याप्त भंडारण स्थान
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+चयनित स्टोरेज ड्राइव पर पर्याप्त खाली स्थान नहीं है।\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+आवश्यक: %1$s\n
+उपलब्ध: %2$s\n
 \n
-Please select another drive or free up space.
+कृपया कोई अन्य ड्राइव चुनें या स्थान खाली करें।
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+स्थान का चयन
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+मोबाइल डेटा कनेक्शन
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+आप वर्तमान में एक सेल्युलर नेटवर्क से जुड़े हुए हैं और केवल वाई-फ़ाई मोड सक्षम है।\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+क्या आप वाई-फ़ाई कनेक्ट होने तक इस स्थानांतरण को कतारबद्ध करना चाहेंगे या डाउनलोड के लिए मोबाइल डेटा की अनुमति देना चाहेंगे?
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+वाई-फ़ाई के लिए कतार
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+मोबाइल डेटा की अनुमति दें
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+नेटवर्क नीति
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+डाउनलोड के लिए नेटवर्क कनेक्शन नियम चुनें
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+केवल वाई-फ़ाई (अनुशंसित)
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+बिना मीटर वाले वाई-फाई से कनेक्ट होने पर ही डाउनलोड ट्रांसफर करें
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+सभी नेटवर्क (वाई-फ़ाई और सेल्युलर)
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+सेल्युलर मोबाइल डेटा और वाई-फ़ाई नेटवर्क पर स्थानांतरण की अनुमति दें
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+गैर-पाइरेसी शर्तों की समीक्षा करें
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+पी2पी झुंड प्रकटीकरण, गोपनीयता और शून्य-बीजारोपण शर्तें देखें
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+पी2पी झुंड और आईपी दृश्यता
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+बिटटोरेंट झुंड में अन्य सहकर्मी उपकरणों के साथ सीधे विनिमय टुकड़े को स्थानांतरित करता है। स्थानांतरण करते समय आपका सार्वजनिक आईपी पता सक्रिय साथियों को दिखाई देता है।
 </string>
     <string name="download_legal_zero_seeding_title">
-Zero-Seeding Privacy
+जीरो-सीडिंग गोपनीयता
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+यूएफएम सख्त शून्य-सीडिंग लागू करता है। जैसे ही डाउनलोड पूरा हो जाता है (100%), सभी झुंड कनेक्शन विच्छेद हो जाते हैं और ट्रैकर घोषणाएँ तुरंत बंद हो जाती हैं।
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+केवल वैध सामग्री
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+आप इस टूल का उपयोग वैध, ओपन-सोर्स, सार्वजनिक डोमेन या अधिकृत फ़ाइलों के लिए सख्ती से करने के लिए सहमत हैं। बिना अनुमति के कॉपीराइट सामग्री को डाउनलोड करना या वितरित करना प्रतिबंधित है।
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+सहमत और जारी रखें
 </string>
     <string name="download_legal_understood">
-Understood
+समझा
 </string>
     <string name="download_state_downloading">
-Downloading
+डाउनलोड
 </string>
     <string name="download_state_paused">
-Paused
+रुका हुआ
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+वाई-फ़ाई के लिए कतार में लग गए
 </string>
     <string name="download_state_completed">
-Completed
+पुरा होना।
 </string>
     <string name="download_state_error">
-Error
+गलती
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+प्रबंधक स्थानांतरण डाउनलोड करें
 </string>
     <string name="download_notif_channel_desc">
-Ongoing download progress and status updates
+चल रही डाउनलोड प्रगति और स्थिति अपडेट
 </string>
     <string name="download_timeout_stopped">
-Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+डाउनलोड रोके गए: एंड्रॉइड 6-घंटे की निष्पादन सीमा तक पहुंच गया। फिर से शुरू करने के लिए टैप करें.
 </string>
 
     <!-- Torrent & Magnet Selective File Download & Content Inspector -->
     <string name="torrent_select_all">
-Select All
+सबका चयन करें
 </string>
     <string name="torrent_deselect_all">
-Deselect All
+सबको अचयनित करो
 </string>
     <string name="torrent_selected_summary">
-Selected: %1$d of %2$d files (%3$s of %4$s)
+चयनित: %1$d में से %2$d फ़ाइलें (%3$s में से %4$s)
 </string>
     <string name="torrent_files_count">
-%1$d files
+%1$d फ़ाइलें
 </string>
     <string name="torrent_file_selection_title">
-Torrent Content
+टोरेंट सामग्री
 </string>
     <string name="torrent_file_selection_subtitle">
-Select files and folders to download
+डाउनलोड करने के लिए फ़ाइलें और फ़ोल्डर्स चुनें
 </string>
     <string name="torrent_fetching_metadata">
-Fetching torrent metadata from swarm…
+झुंड से टोरेंट मेटाडेटा लाया जा रहा है...
 </string>
     <string name="torrent_fetching_metadata_desc">
-Contacting DHT nodes and peers to retrieve file list…
+फ़ाइल सूची पुनः प्राप्त करने के लिए DHT नोड्स और साथियों से संपर्क किया जा रहा है…
 </string>
     <string name="torrent_metadata_timeout_title">
-Metadata Fetch Timeout
+मेटाडेटा फ़ेच टाइमआउट
 </string>
     <string name="torrent_metadata_timeout_msg">
-Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+साथियों से फ़ाइल सूची पुनर्प्राप्त करने में सामान्य से अधिक समय लग रहा है। क्या आप खोज जारी रखना चाहेंगे, या सभी फ़ाइलें सीधे डाउनलोड करना चाहेंगे?
 </string>
     <string name="torrent_keep_waiting">
-Keep Waiting
+इंतज़ार करते रहें
 </string>
     <string name="torrent_download_all_direct">
-Download All Directly
+सभी सीधे डाउनलोड करें
 </string>
     <string name="torrent_zero_selected_error">
-Please select at least one file to download
+कृपया डाउनलोड करने के लिए कम से कम एक फ़ाइल चुनें
 </string>
     <string name="torrent_search_hint">
-Search files…
+फ़ाइलें खोजें…
 </string>
 
     <!-- Transfer Action Dialog -->
     <string name="transfer_action_title">
-Transfer Actions
+स्थानांतरण क्रियाएँ
 </string>
     <string name="transfer_action_pause">
-Pause Transfer
+स्थानांतरण रोकें
 </string>
     <string name="transfer_action_resume">
-Resume Transfer
+स्थानांतरण फिर से शुरू करें
 </string>
     <string name="transfer_action_open_folder">
-Open Download Folder
+डाउनलोड फ़ोल्डर खोलें
 </string>
     <string name="transfer_action_delete_title">
-Remove Transfer
+स्थानांतरण हटाएँ
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+डाउनलोड प्रबंधक से इस स्थानांतरण को हटाने का तरीका चुनें:
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+केवल स्थानांतरण हटाएँ
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+डाउनलोड की गई फ़ाइलें अपने डिवाइस पर रखें
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+फ़ाइलें हटाएँ और हटाएँ
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+डाउनलोड की गई फ़ाइलों को डिस्क से स्थायी रूप से हटाएं
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16651,79 +16775,79 @@ Permanently delete downloaded files from disk
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+स्मार्ट बुकमार्क
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+सहेजे गए लिंक, मीडिया और शेयर व्यवस्थित करें
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%1$d समूहों में आइटम
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+अभी तक कोई बुकमार्क सहेजा नहीं गया
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+यूएफएम के साथ बुकमार्क करें
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+बुकमार्क सहेजें
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+%1$s से साझा किया गया
 </string>
     <string name="bookmark_field_title_hint">
-Title
+शीर्षक
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+संग्रह/समूह
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+व्यक्तिगत नोट जोड़ें (वैकल्पिक)
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+बुकमार्क सहेजें
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+पहले से ही बुकमार्क किया हुआ - नोट्स और समय अपडेट किया गया
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+बुकमार्क को %1$s में सहेजा गया
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+समूह
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+सभी को देखें &gt;
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+संग्रह एवं स्रोत
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+संग्रह, फ़िल्टर और वॉल्ट सुरक्षा प्रबंधित करें
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+संग्रह खोजें…
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+सभी बुकमार्क
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+सभी स्रोतों में सभी अनलॉक किए गए बुकमार्क दिखाएं
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+मेरे संग्रह
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+उपयोगकर्ता-निर्मित संग्रह • वॉल्ट लॉक करने योग्य
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+ऐप स्रोत
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+साझा अनुप्रयोगों से स्वतः उत्पन्न
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16732,193 +16856,193 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+इस डिवाइस पर डिवाइस सुरक्षा (पिन, पैटर्न या फ़िंगरप्रिंट) सेट नहीं की गई है।
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+तिजोरी बंद है
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+वॉल्ट लॉक हटाने के लिए प्रमाणित करें
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+संग्रह को तिजोरी में बंद कर दिया गया
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+संग्रह अनलॉक हो गया
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+नया बुकमार्क समूह
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+समूह नाम
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+समूह बनाना
 </string>
     <string name="bookmark_filter_all">
-All
+सभी
 </string>
     <string name="bookmark_filter_links">
-Links
+लिंक
 </string>
     <string name="bookmark_filter_media">
-Media
+मिडिया
 </string>
     <string name="bookmark_filter_docs">
-Documents
+दस्तावेज़
 </string>
     <string name="bookmark_filter_notes">
-Notes
+टिप्पणियाँ
 </string>
     <string name="bookmark_filter_starred">
-Starred
+तारांकित
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+बुकमार्क, नोट्स, या डोमेन खोजें…
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+बुकमार्क क्रमबद्ध करें
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+नवीनतम से सबसे पुराना
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+सबसे पुराने से नवीनतम
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+शीर्षक (ए-जेड)
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+शीर्षक (जेड-ए)
 </string>
     <string name="bookmark_sort_size">
-File Size
+फ़ाइल का साइज़
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+संग्रह द्वारा समूह
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+संग्रह: ए से ज़ेड
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+संग्रह: Z से A
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+संग्रह हटाएँ
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+क्या आप वाकई \"%1$s\" संग्रह को हटाना चाहते हैं?
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+आलेख पढ़ें
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+ब्राउज़र में खोलें
 </string>
     <string name="bookmark_action_open_file">
-Open File
+खुली फाइल
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+लिंक की प्रतिलिपि करें
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+टेक्स्ट कॉपी करें
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+भंडारण में सहेजें
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+समूह में ले जाएँ
 </string>
     <string name="bookmark_action_delete">
-Delete
+मिटाना
 </string>
     <string name="bookmark_view_note">
-View Note
+नोट देखें
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+ताला संग्रह (तिजोरी)
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+देखने के लिए फ़िंगरप्रिंट या पिन की आवश्यकता है
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+संग्रहण विकल्प
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+ताला संग्रह
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+संग्रह अनलॉक करें
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+बुकमार्क हटा दिया गया
 </string>
     <string name="bookmark_undo">
-Undo
+पूर्ववत
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+चयनित %1$d आइटम
 </string>
     <string name="bookmark_batch_move">
-Move
+कदम
 </string>
     <string name="bookmark_batch_delete">
-Delete
+मिटाना
 </string>
     <string name="bookmark_batch_export">
-Export
+निर्यात
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+बुकमार्क निर्यात करें
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+ब्राउज़र HTML बुकमार्क (.html)
 </string>
     <string name="bookmark_export_markdown">
-Markdown Document (.md)
+मार्कडाउन दस्तावेज़ (.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+%1$d बुकमार्क को %2$s में निर्यात किया गया
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+रीडर मोड
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+टेक्स्ट का साइज़
 </string>
     <string name="bookmark_reader_theme">
-Theme
+विषय
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+रोशनी
 </string>
     <string name="bookmark_reader_theme_sepia">
-Sepia
+एक प्रकार की मछली
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+अँधेरा
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+ज़ोर से सुनो
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+पढ़ना रोकें
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+पढ़ना बंद करो
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+गति %1$sx
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+ध्वनि इंजन प्रारंभ किया जा रहा है...
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+इस डिवाइस पर टेक्स्ट-टू-स्पीच समर्थित नहीं है या इंस्टॉल नहीं है
 </string>
     <string name="bookmark_group_whatsapp">
 WhatsApp
@@ -16927,46 +17051,46 @@ WhatsApp
 Reddit
 </string>
     <string name="bookmark_group_youtube">
-YouTube
+यूट्यूब
 </string>
     <string name="bookmark_group_twitter">
-Twitter / X
+ट्विटर/एक्स
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+वेब और लेख
 </string>
     <string name="bookmark_group_telegram">
-Telegram
+टेलीग्राम
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+फ़ाइलें एवं दस्तावेज़
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+वॉल्ट के साथ समूह को लॉक करें
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+समूह को अनलॉक करें
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+लॉक किए गए बुकमार्क तक पहुंचने के लिए प्रमाणित करें
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+अभी तक कोई बुकमार्क नहीं
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+व्हाट्सएप, रेडिट या अपने ब्राउज़र से लिंक, लेख, मीडिया या फ़ाइलें साझा करें और \"यूएफएम के साथ बुकमार्क करें\" चुनें।
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+कोई परिणाम नहीं मिला
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+कोई भी बुकमार्क \"%1$s\" से मेल नहीं खाता। भिन्न-भिन्न कीवर्ड खोजने का प्रयास करें.
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+कोई बुकमार्क नहीं मिला
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+चयनित फ़िल्टर या संग्रह से मेल खाता कोई बुकमार्क नहीं मिला।
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -16974,67 +17098,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+समतल दृश्य
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+पुनरावर्ती अनुक्रमित ब्राउज़र
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+फोल्डर खोलें
 </string>
     <string name="flat_view_expand_all">
-Expand All
+सभी का विस्तार
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+सभी को संकुचित करें
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+सिस्टम फ़ोल्डर शामिल करें
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+फ़्लैट व्यू में Android/डेटा, Android/obb और सिस्टम निर्देशिकाएँ दिखाएँ
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+सभी विस्तारित के लिए डिफ़ॉल्ट
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+डिफ़ॉल्ट रूप से विस्तारित सभी फ़ोल्डरों के साथ फ़्लैट व्यू खोलें
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+इस वॉल्यूम में कोई अनुक्रमित फ़ाइलें नहीं मिलीं
 </string>
     <string name="flat_view_settings_title">
-Flat View
+समतल दृश्य
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+पुनरावर्ती अनुक्रमित ब्राउज़िंग और सिस्टम फ़ोल्डर कॉन्फ़िगर करें
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+भंडारण अनुक्रमित नहीं है
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+फ़्लैट व्यू के लिए आवश्यक है कि इस संग्रहण वॉल्यूम को पूरी तरह से अनुक्रमित किया जाए। कृपया पहले अनुक्रमणिका चलाएँ.
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%1$d फ़ाइलें %2$d फ़ोल्डर में
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+%1$d चयनित
 </string>
     <string name="flat_view_folder_files_count">
-%1$d files
+%1$d फ़ाइलें
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+फाइलों को नष्ट
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+क्या आप वाकई %1$d चयनित फ़ाइलें हटाना चाहते हैं?
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+%1$d फ़ाइलें हटा दी गईं
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+फ़्लैट व्यू सेटिंग्स
 </string>
 </resources>
 

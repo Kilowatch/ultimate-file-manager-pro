@@ -45,16 +45,16 @@ Turki (Türkçe)
 Ukraina (українська)
 </string>
     <string name="language_italian">
-Italian (Italiano)
+Italia (Italia)
 </string>
     <string name="language_dutch">
-Dutch (Nederlands)
+Belanda (Nederland)
 </string>
     <string name="language_chinese">
-Chinese (中文)
+Cina (中文)
 </string>
     <string name="language_swedish">
-Swedish (Svenska)
+Swedia (Svenska)
 </string>
     <string name="select_language">
 Pilih Bahasa
@@ -157,7 +157,7 @@ Grid • Besar
 Grid 2 kolom lega dengan thumbnail besar
 </string>
     <string name="spreadsheet_viewer_fallback_title">
-Spreadsheet
+lembar bentang
 </string>
     <string name="spreadsheet_performance_warning">
 Peringatan Kinerja: Dokumen besar dipotong hingga %1$d baris pertama.
@@ -347,10 +347,10 @@ Manajemen file panel ganda
 Jendela Kembar
 </string>
     <string name="copy_folder_path">
-Copy Folder Path
+Salin Jalur Folder
 </string>
     <string name="folder_path_copied">
-Folder path copied to clipboard
+Jalur folder disalin ke clipboard
 </string>
     <string name="close_twin_window">
 Tutup Jendela Kembar
@@ -451,55 +451,55 @@ Baris tak terbatas
 Membungkus nama lengkap sebanyak baris yang diperlukan
 </string>
     <string name="settings_file_name_display_truncate">
-Single line (Truncated end)
+Garis tunggal (Ujung terpotong)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Truncates with ellipsis at end (abc…) without scrolling
+Memotong dengan elipsis di akhir (abc…) tanpa menggulir
 </string>
     <string name="settings_file_name_display_truncate_middle">
-Single line (Truncate middle)
+Garis tunggal (Potong bagian tengah)
 </string>
     <string name="settings_file_name_display_truncate_middle_desc">
-Truncates in middle (abc…xyz.ext) to preserve the end suffix
+Dipotong di tengah (abc…xyz.ext) untuk mempertahankan akhiran akhir
 </string>
     <string name="settings_marquee_speed_title">
-Scroll Speed
+Kecepatan Gulir
 </string>
     <string name="settings_marquee_speed_slow">
-Slow
+Lambat
 </string>
     <string name="settings_marquee_speed_normal">
 Normal
 </string>
     <string name="settings_marquee_speed_fast">
-Fast
+Cepat
 </string>
     <string name="settings_marquee_loop_title">
-Loop Mode
+Modus Lingkaran
 </string>
     <string name="settings_marquee_loop_one_shot">
-One-Shot
+Satu Tembakan
 </string>
     <string name="settings_marquee_loop_one_shot_desc">
-Scrolls once and stops to save battery
+Menggulir sekali dan berhenti untuk menghemat baterai
 </string>
     <string name="settings_marquee_loop_continuous">
-Continuous
+Kontinu
 </string>
     <string name="settings_marquee_loop_continuous_desc">
-Repeats back and forth continuously
+Mengulangi bolak-balik terus menerus
 </string>
     <string name="settings_marquee_scope_title">
-Scroll Scope
+Lingkup Gulir
 </string>
     <string name="settings_marquee_scope_all">
-All Visible Files
+Semua File yang Terlihat
 </string>
     <string name="settings_marquee_scope_focused">
-Focused / Selected Only
+Terfokus / Terpilih Saja
 </string>
     <string name="settings_file_name_preview_title">
-Live Preview
+Pratinjau Langsung
 </string>
     <string name="settings_file_name_preview_sample">
 VeryLongFileName_ProjectReport_2026_Final_v2.docx
@@ -712,7 +712,7 @@ Dokumen
 DCIM
 </string>
     <string name="widget_preview_mock_network">
-Home NAS
+Beranda NAS
 </string>
     <string name="network_connection_restored_first">
 Koneksi Gagal\n
@@ -1206,7 +1206,7 @@ File Besar
 Duplikat
 </string>
     <string name="analyzer_tab_incomplete">
-Incomplete
+Tidak lengkap
 </string>
     <string name="analyzer_tab_junk">
 Sampah &amp; Lama
@@ -1218,7 +1218,7 @@ Saran
 %1$d file tidak dimodifikasi dalam lebih dari 180 hari.
 </string>
     <string name="analyzer_file_count_singular">
-%1$d file
+%1$d berkas
 </string>
     <string name="analyzer_file_count_plural">
 %1$d file
@@ -1233,10 +1233,10 @@ Saran
 menghemat %1$s
 </string>
     <string name="analyzer_no_incomplete_files">
-No incomplete or sparse downloads found
+Tidak ditemukan unduhan yang tidak lengkap atau jarang
 </string>
     <string name="analyzer_incomplete_file_allocated">
-Size on disk: %1$s (%2$.1f%%)
+Ukuran pada disk: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1321,97 +1321,97 @@ Hapus
 
     <!-- Bulk duplicate deletion & retention strategy -->
     <string name="analyzer_select_all_duplicates">
-Select All Duplicates
+Pilih Semua Duplikat
 </string>
     <string name="analyzer_clear_selection">
-Clear
+Jernih
 </string>
     <string name="analyzer_delete_all_duplicates">
-Delete All Duplicates
+Hapus Semua Duplikat
 </string>
     <string name="analyzer_delete_selected_count">
-Delete Selected (%1$d)
+Hapus yang Dipilih (%1$d)
 </string>
     <string name="analyzer_badge_original">
-Original
+Asli
 </string>
     <string name="analyzer_strategy_title">
-Duplicate Retention Strategy
+Strategi Retensi Duplikat
 </string>
     <string name="analyzer_strategy_oldest">
-Keep Oldest (Original)
+Pertahankan Yang Terlama (Asli)
 </string>
     <string name="analyzer_strategy_oldest_desc">
-Preserves the oldest file by modification date and deletes newer copies.
+Mempertahankan file terlama berdasarkan tanggal modifikasi dan menghapus salinan baru.
 </string>
     <string name="analyzer_strategy_newest">
-Keep Newest
+Tetap Terbaru
 </string>
     <string name="analyzer_strategy_newest_desc">
-Preserves the most recently modified file and deletes older copies.
+Mempertahankan file yang paling baru diubah dan menghapus salinan lama.
 </string>
     <string name="analyzer_strategy_remember">
-Remember my choice
+Ingat pilihanku
 </string>
     <string name="analyzer_strategy_most_complete">
-Keep Most Complete
+Tetap Terlengkap
 </string>
     <string name="analyzer_strategy_most_complete_desc">
-Preserves fully downloaded or most allocated files and deletes incomplete copies.
+Mempertahankan file yang diunduh sepenuhnya atau sebagian besar file yang dialokasikan dan menghapus salinan yang tidak lengkap.
 </string>
     <string name="analyzer_badge_partial">
-Partial (%1$.0f%%)
+Parsial (%1$.0f%%)
 </string>
     <string name="analyzer_badge_sparse">
-Sparse
+Jarang
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+Hapus %1$d File Duplikat?
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+Satu salinan asli dari setiap file akan disimpan. %1$d salinan duplikat akan dihapus secara permanen untuk mengosongkan %2$s.
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+Pembersihan Selesai
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+Berhasil menghapus %1$d file duplikat dan mendapatkan kembali %2$s ruang penyimpanan.
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+File %1$d tidak dapat dihapus karena izin.
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+Menghapus %1$d dari %2$d file…
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d grup duplikat · menyimpan %2$s
 </string>
     <string name="settings_duplicate_retention_title">
-Duplicate Retention Strategy
+Strategi Retensi Duplikat
 </string>
     <string name="settings_duplicate_retention_dialog_subtitle">
-Choose which copy to preserve when selecting duplicate files for cleanup.
+Pilih salinan mana yang ingin disimpan saat memilih file duplikat untuk dibersihkan.
 </string>
     <string name="settings_duplicate_retention_summary_oldest">
-Keep oldest file (Original)
+Simpan file terlama (Asli)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
-Keep newest file
+Simpan file terbaru
 </string>
     <string name="settings_duplicate_retention_summary_most_complete">
-Keep most complete file
+Simpan file terlengkap
 </string>
     <string name="settings_duplicate_retention_summary_ask">
-Always ask
+Selalu bertanya
 </string>
     <string name="settings_duplicate_retention_desc_ask">
-Prompt to choose retention strategy each time duplicate files are selected.
+Minta untuk memilih strategi retensi setiap kali file duplikat dipilih.
 </string>
     <string name="settings_duplicate_retention_toast">
-Duplicate retention strategy set to: %s
+Strategi retensi duplikat ditetapkan ke: %s
 </string>
     <string name="backup_pref_duplicate_retention">
-Duplicate Retention Strategy
+Strategi Retensi Duplikat
 </string>
 
     <!-- Theme -->
@@ -1507,7 +1507,7 @@ Masukkan Kode Pemulihan
 Masukkan kode pemulihan 16 karakter untuk mereset PIN Anda
 </string>
     <string name="vault_recovery_entry_hint">
-XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXX
 </string>
     <string name="vault_recovery_invalid">
 Kode pemulihan salah
@@ -1613,7 +1613,7 @@ Hitam murni — menghemat baterai di layar OLED
 Tema diterapkan
 </string>
     <string name="material_you_title">
-Material You
+Materi Anda
 </string>
     <string name="material_you_summary">
 Gunakan warna wallpaper Anda untuk tampilan yang dipersonalisasi
@@ -1728,13 +1728,13 @@ Yakin ingin mengatur ulang semua label drive kustom kembali ke nama sistem defau
 Semua nama drive diatur ulang ke default
 </string>
     <string name="reset_action">
-Reset
+Mengatur ulang
 </string>
     <string name="status_online">
-Online
+On line
 </string>
     <string name="status_offline">
-Offline
+Luring
 </string>
     <string name="rename_action">
 Ubah Nama
@@ -1917,13 +1917,13 @@ Layar Mulai Default
 Pilih layar yang terbuka saat peluncuran
 </string>
     <string name="start_screen_last_opened">
-Last Opened Location
+Lokasi Terakhir Dibuka
 </string>
     <string name="start_screen_last_opened_desc">
-Reopen where you left off upon app launch
+Buka kembali dari bagian terakhir yang Anda tinggalkan saat peluncuran aplikasi
 </string>
     <string name="storage_unavailable_redirect">
-Previous storage location is unavailable. Returned to Storage screen.
+Lokasi penyimpanan sebelumnya tidak tersedia. Kembali ke layar Penyimpanan.
 </string>
     <string name="start_screen_storage_browser">
 Menu Utama (Default)
@@ -2032,7 +2032,7 @@ FTP, SFTP &amp; SMB Multi-threading
 Utas Transfer
 </string>
     <string name="settings_network_transfer_threads_dialog_subtitle">
-Select the number of simultaneous connections for faster network file transfers
+Pilih jumlah koneksi simultan untuk transfer file jaringan yang lebih cepat
 </string>
     <string name="settings_network_transfer_threads_subtitle">
 %1$d utas — koneksi simultan untuk transfer lebih cepat
@@ -2047,40 +2047,40 @@ Select the number of simultaneous connections for faster network file transfers
 %1$d utas (Disarankan)
 </string>
     <string name="settings_network_transfer_threads_maximum">
-%1$d threads (Maximum)
+%1$d rangkaian pesan (Maksimum)
 </string>
     <string name="settings_network_transfer_threads_2">
 2 threads
 </string>
     <string name="settings_network_transfer_threads_4">
-4 threads (Recommended)
+4 utas (Disarankan)
 </string>
     <string name="settings_network_transfer_threads_6">
 6 threads
 </string>
     <string name="settings_network_transfer_threads_8">
-8 threads (Maximum)
+8 utas (Maksimal)
 </string>
     <string name="settings_network_transfer_threads_desc_1">
-Single connection, transfers files sequentially
+Koneksi tunggal, mentransfer file secara berurutan
 </string>
     <string name="settings_network_transfer_threads_desc_2">
-Light parallelism, ideal for slower connections
+Paralelisme ringan, ideal untuk koneksi yang lebih lambat
 </string>
     <string name="settings_network_transfer_threads_desc_4">
-Optimal balance of speed and stability for Wi-Fi and LAN
+Keseimbangan optimal antara kecepatan dan stabilitas untuk Wi-Fi dan LAN
 </string>
     <string name="settings_network_transfer_threads_desc_6">
-High throughput for Gigabit networks and fast Wi-Fi
+Throughput tinggi untuk jaringan Gigabit dan Wi-Fi cepat
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+Throughput maksimum untuk LAN multi-gigabit dan Wi-Fi 7
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+Rangkaian transfer disetel ke %1$d
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+Pengaturan Multi-threading FTP, SFTP &amp; SMB
 </string>
     <string name="network_field_threads">
 Utas transfer
@@ -2091,28 +2091,28 @@ Default (%1$d utas)
 
     <!-- Transfer Multi-Threading Telemetry -->
     <string name="transfer_threads_header">
-Threads (%1$d active)
+Rangkaian pesan (%1$d aktif)
 </string>
     <string name="transfer_threads_header_single">
-Thread (1 active)
+Rangkaian pesan (1 aktif)
 </string>
     <string name="transfer_per_thread_placeholder">
--- MB/s
+-- MB/dtk
 </string>
     <string name="transfer_per_thread_format">
-Per thread: %1$.1f MB/s
+Per rangkaian pesan: %1$.1f MB/dtk
 </string>
     <string name="transfer_per_thread_single_format">
-Single thread: %1$.1f MB/s
+Rangkaian tunggal: %1$.1f MB/dtk
 </string>
     <string name="transfer_thread_initial">
 Thread %1$d: --
 </string>
     <string name="transfer_thread_speed_item">
-Thread %1$d: %2$.1f MB/s
+Rangkaian pesan %1$d: %2$0,1f MB/dtk
 </string>
     <string name="transfer_thread_speed_single">
-Thread %1$d: %2$.1f MB/s (Single-threaded)
+Thread %1$d: %2$.1f MB/s (utas tunggal)
 </string>
 
     <!-- Open Source Licenses -->
@@ -2159,10 +2159,10 @@ Menaik
 Menurun
 </string>
     <string name="sort_order_a_to_z">
-A → Z
+SEBUAH → Z
 </string>
     <string name="sort_order_z_to_a">
-Z → A
+Z → SEBUAH
 </string>
     <string name="sort_order_small_to_large">
 Kecil → Besar
@@ -2775,57 +2775,57 @@ Cari di semua penyimpanan yang terhubung
 Buka Lokasi Folder
 </string>
     <string name="search_choose_specific_folder">
-Choose Specific Folder…
+Pilih Folder Tertentu…
 </string>
     <string name="search_choose_specific_folder_desc">
-Search inside a specific directory
+Cari di dalam direktori tertentu
 </string>
     <string name="search_custom_folder_scope">
-Folder: %1$s
+Map: %1$s
 </string>
     <string name="search_selection_summary">
-%1$d selected • %2$s
+%1$d dipilih • %2$s
 </string>
 
     <!-- Search Limit Settings -->
     <string name="settings_search_limit_title">
-Search Results Limit
+Batas Hasil Pencarian
 </string>
     <string name="settings_search_limit_subtitle">
-%1$d results per page
+%1$d hasil per halaman
 </string>
     <string name="settings_search_limit_dialog_title">
-Search Results Limit
+Batas Hasil Pencarian
 </string>
     <string name="settings_search_limit_dialog_subtitle">
-Choose how many results load per page as you scroll
+Pilih berapa banyak hasil yang dimuat per halaman saat Anda menggulir
 </string>
     <string name="settings_search_limit_200">
-200 results
+200 hasil
 </string>
     <string name="settings_search_limit_200_desc">
-Minimal · Faster on older devices
+Minimal · Lebih cepat pada perangkat lama
 </string>
     <string name="settings_search_limit_500">
-500 results
+500 hasil
 </string>
     <string name="settings_search_limit_500_desc">
-Recommended · Balanced speed &amp; coverage
+Direkomendasikan · Kecepatan &amp; jangkauan seimbang
 </string>
     <string name="settings_search_limit_1000">
-1,000 results
+1.000 hasil
 </string>
     <string name="settings_search_limit_1000_desc">
-Extended · For large collections
+Diperluas · Untuk koleksi besar
 </string>
     <string name="settings_search_limit_2000">
-2,000 results
+2.000 hasil
 </string>
     <string name="settings_search_limit_2000_desc">
-Maximum · Extensive search batches
+Maksimum · Kumpulan pencarian ekstensif
 </string>
     <string name="settings_search_limit_toast">
-Search results limit set to %1$d
+Batas hasil penelusuran ditetapkan ke %1$d
 </string>
 
     <!-- Policy Selection -->
@@ -2960,7 +2960,7 @@ SMB, FTP, dan lainnya
 Berbagi Jaringan
 </string>
     <string name="network_shares_subtitle">
-SMB · FTP
+UKM · FTP
 </string>
     <string name="network_shares_info_notice">
 Hubungkan ke berbagi SMB, FTP, SFTP, SCP, dan NFS di jaringan lokal Anda untuk menjelajah, mentransfer, dan mengatur file dengan mulus.
@@ -3174,7 +3174,7 @@ Memuat harga dari Google Play…
 UFM dibuat sepenuhnya gratis tanpa iklan, dan akan tetap seperti itu. Memberi tip sepenuhnya opsional — ini hanya membantu menjaga kopi tetap mengalir dan fitur baru terus hadir! ☕
 </string>
     <string name="tip_jar_ristretto_title">
-Ristretto Shot
+Tembakan Ristreto
 </string>
     <string name="tip_jar_ristretto_desc">
 Terbuka! Anda adalah pendukung sejati.
@@ -3252,7 +3252,7 @@ Kamu Legenda! ☕🏆✨
 Serius, terima kasih. Kamu baru saja membuat hariku! 🙌
 </string>
     <string name="google_play_store">
-Google Play Store
+Google Play Toko
 </string>
     <!-- Amazon IAP Tip Jar strings -->
     <!-- Shown when AMAZON_IAP_ENABLED = false (feature not yet live on the Amazon Appstore) -->
@@ -5031,7 +5031,7 @@ Atur jadwal Anda sendiri
 Tambah Profil
 </string>
     <string name="setup">
-SETUP
+PENYIAPAN
 </string>
     <string name="grant_permissions">
 Beri Izin
@@ -5329,7 +5329,7 @@ Terapkan
 Urutkan berdasarkan
 </string>
     <string name="filter">
-Filter
+Menyaring
 </string>
     <string name="please_fill_all_required_fields">
 Harap isi semua bidang yang diperlukan
@@ -5554,13 +5554,27 @@ Sesuaikan dengan layar
 Putar / Jeda
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+Mode Interaktif
+</string>
+    <string name="svg_transport_mode">
+Kontrol Pemain
+</string>
+    <string name="svg_restart">
+Mulai Ulang Animasi
+</string>
+    <string name="svg_playback_speed">
+Kecepatan Pemutaran
+</string>
+    <string name="svg_next_panel">
+Panel Berikutnya
+</string>
+    <string name="svg_prev_panel">
+Panel Sebelumnya
+</string>
+    <string name="svg_tv_interactive_hint">
+Mode Interaktif — Tekan Kembali atau Menu untuk Kontrol Pemain
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 Track Audio
@@ -5742,7 +5756,7 @@ Menyiapkan…
 
     <!-- TV Remote -->
     <string name="tv_remote">
-Remote
+Terpencil
 </string>
     <string name="tv_remote_title">
 Remote TV
@@ -5869,10 +5883,10 @@ SIMPAN DI SINI
 Simpan ke UFM
 </string>
     <string name="share_target_save_to">
-Save to…
+Simpan ke…
 </string>
     <string name="share_target_open_in">
-Open in…
+Buka di…
 </string>
     <string name="share_receive_from">
 Menerima file dari %s
@@ -5917,7 +5931,7 @@ Pilih volume untuk dijelajahi
 Tidak dapat mendekode gambar
 </string>
     <string name="folder">
-Folder
+Map
 </string>
 
     <!-- Recycle Bin -->
@@ -6029,7 +6043,7 @@ Membuka pengaturan Tempat Sampah
 
     <!-- Remote Manager Web Interface -->
     <string name="remote_title">
-Ultimate File Manager Pro Remote
+Manajer File Utama Pro Jarak Jauh
 </string>
     <string name="remote_subtitle_login">
 Akses Aman — Masukkan PIN 4 digit
@@ -6173,7 +6187,7 @@ Belum ada folder terenkripsi
 Buka
 </string>
     <string name="remote_item">
-item
+barang
 </string>
     <string name="remote_items">
 item
@@ -6469,7 +6483,7 @@ Aplikasi
 Lihat aplikasi terinstal
 </string>
     <string name="remote_vol_vault">
-Vault
+Kubah
 </string>
     <string name="remote_vol_vault_secure">
 Aman
@@ -6631,7 +6645,7 @@ Tidak ada aplikasi ditemukan
 %d aplikasi
 </string>
     <string name="remote_msg_item_singular">
-%d item
+%d barang
 </string>
     <string name="remote_msg_items_plural">
 %d item
@@ -6670,10 +6684,10 @@ chunk gagal (HTTP %d)
 kesalahan jaringan
 </string>
     <string name="remote_msg_folder_label">
-folder
+map
 </string>
     <string name="remote_msg_split_apk_label">
-Split APK
+Pisahkan APK
 </string>
     <string name="remote_msg_skipped">
 dilewati
@@ -6748,7 +6762,7 @@ Enkripsi folder ini dan tambahkan ke brankas?
 ROOT
 </string>
     <string name="remote_badge_remote">
-REMOTE
+TERPENCIL
 </string>
     <string name="remote_app_installed_date">
 Tanggal Instalasi
@@ -6874,13 +6888,13 @@ Papan Klip (%1$d file)
 Kesalahan memuat direktori: %1$s
 </string>
     <string name="sideload_apk">
-Sideload APK
+APK pemuatan samping
 </string>
     <string name="sideload_apk_subtitle">
 Pasang paket APK tunggal ke TV
 </string>
     <string name="sideload_xapk">
-Sideload XAPK
+Unduh XAPK
 </string>
     <string name="sideload_xapk_subtitle">
 Pasang aplikasi XAPK / APKM bundel ke TV
@@ -6969,16 +6983,16 @@ Pengaturan Umum Aplikasi
 Pengaturan: %1$s
 </string>
     <string name="smb_share_prefix">
-SMB Share: %1$s (%2$s)
+Berbagi UKM: %1$s (%2$s)
 </string>
     <string name="ftp_share_prefix">
-FTP Share: %1$s (%2$s)
+Berbagi FTP: %1$s (%2$s)
 </string>
     <string name="sftp_share_prefix">
-SFTP Share: %1$s (%2$s)
+Berbagi SFTP: %1$s (%2$s)
 </string>
     <string name="scp_share_prefix">
-SCP Share: %1$s (%2$s)
+Pembagian SCP: %1$s (%2$s)
 </string>
     <string name="file_server_port_item">
 Port Server File (%1$d)
@@ -7030,7 +7044,7 @@ Berkas %1$d dari %2$d — %3$s
 %1$s / %2$s
 </string>
     <string name="transfer_speed_mbs">
-%1$.1f MB/s
+%1$.1f MB/dtk
 </string>
     <string name="cannot_read_source_file">
 Tidak dapat membaca berkas sumber
@@ -7213,7 +7227,7 @@ Memperbarui daftar debloat…
 Aplikasi Sistem
 </string>
     <string name="debloater">
-Debloater
+Debloator
 </string>
     <string name="package_apppackagename">
 Paket: %1$s
@@ -7377,10 +7391,10 @@ Tinjau Berkas Besar
 Ditemukan %1$d berkas lebih besar dari 512 MB.
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+Unduhan Tidak Lengkap / Jarang
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+Ditemukan %1$d file tidak lengkap atau jarang yang menghabiskan ruang disk.
 </string>
     <string name="old_unused_files">
 Berkas Lama yang Tidak Digunakan
@@ -7424,7 +7438,7 @@ Tidak ada aplikasi yang dapat membuka pola berkas ini
 
     <!-- Smart Sort -->
     <string name="smart_sort_title">
-Smart Sort
+Penyortiran Cerdas
 </string>
     <string name="smart_sort_tile_subtitle">
 Atur berkas ke dalam kategori
@@ -7595,7 +7609,7 @@ Memindahkan: %1$s (%2$d/%3$d)
 Folder Bawaan
 </string>
     <string name="smart_sort_folder_label">
-Folder: %1$s
+Map: %1$s
 </string>
     <string name="smart_sort_validation_error">
 Kesalahan Validasi
@@ -7682,7 +7696,7 @@ Deskripsi
 Tambah Ekstensi
 </string>
     <string name="smart_sort_edit_rule">
-Edit
+Sunting
 </string>
     <string name="smart_sort_delete_rule">
 Hapus
@@ -7889,10 +7903,10 @@ Memindahkan berkas...
 Menyalin berkas...
 </string>
     <string name="item_0_totalfiles">
-Item 0 / %1$d
+Butir 0 / %1$d
 </string>
     <string name="item_index_totalcount">
-Item %1$d / %2$d
+Barang %1$d / %2$d
 </string>
     <string name="copiedmb_mb_totalmb_mb_percent">
 %1$s MB / %2$s MB (%3$d%%)
@@ -7975,10 +7989,18 @@ Sinkronisasi diaktifkan
     <string name="sync_disabled">
 Sinkronisasi dinonaktifkan
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+Aktifkan Profil
+</string>
+    <string name="sync_action_disable">
+Nonaktifkan Profil
+</string>
+    <string name="sync_status_enabled">
+Aktif
+</string>
+    <string name="sync_status_disabled">
+Dijeda
+</string>
     <string name="sync_delete_profile_confirm_msg">
 Yakin ingin menghapus \"%1$s\"? Tindakan ini tidak dapat dibatalkan.
 </string>
@@ -8004,7 +8026,7 @@ Dijadwalkan pada %1$s
 Sinkronisasi terakhir: %1$s (%2$d berkas)
 </string>
     <string name="edit">
-Edit
+Sunting
 </string>
     <string name="sync_now">
 Sinkronisasi Sekarang
@@ -8320,10 +8342,10 @@ Gagal menghitung drive: %1$s
 Duplikat
 </string>
     <string name="whatsapp">
-WhatsApp
+Ada apa
 </string>
     <string name="whatsapp_business">
-WhatsApp Business
+Bisnis WhatsApp
 </string>
     <string name="telegram">
 Telegram
@@ -8344,7 +8366,7 @@ Facebook
 Twitter / X
 </string>
     <string name="discord">
-Discord
+Perselisihan
 </string>
     <string name="spotify">
 Spotify
@@ -8356,13 +8378,13 @@ Netflix
 YouTube
 </string>
     <string name="signal">
-Signal
+Sinyal
 </string>
     <string name="viber">
-Viber
+getaran
 </string>
     <string name="line">
-Line
+Garis
 </string>
     <string name="opening_itemlabel">
 📂 Membuka %1$s
@@ -8428,28 +8450,28 @@ gratis
 terpakai
 </string>
     <string name="android_tv">
-Android TV
+TV Android
 </string>
     <string name="jcifsng_euagno3">
 jcifs-ng (eu.agno3)
 </string>
     <string name="ffmpeg_lgpl_build">
-FFmpeg (LGPL Build)
+FFmpeg (Pembangunan LGPL)
 </string>
     <string name="smbj_hierynomus">
-smbj (hierynomus)
+seseorang (hierynomus)
 </string>
     <string name="apache_commons_net">
-Apache Commons Net
+Apache Commons Bersih
 </string>
     <string name="apache_commons_compress">
-Apache Commons Compress
+Kompres Apache Commons
 </string>
     <string name="zip4j_netlingalazip4j">
 zip4j (net.lingala.zip4j)
 </string>
     <string name="xz_for_java_orgtukaanixz">
-XZ for Java (org.tukaani.xz)
+XZ untuk Java (org.tukaani.xz)
 </string>
     <string name="public_domain">
 Domain Publik
@@ -8464,16 +8486,16 @@ NanoHTTPD
 Google Firebase Analytics
 </string>
     <string name="google_billing_library">
-Google Billing Library
+Perpustakaan Penagihan Google
 </string>
     <string name="google_play_review_library">
-Google Play Review Library
+Perpustakaan Ulasan Google Play
 </string>
     <string name="androidx_libraries">
-AndroidX Libraries
+Perpustakaan AndroidX
 </string>
     <string name="viewpager2">
-ViewPager2
+Lihat Pager2
 </string>
     <string name="libadbandroid_comgithubmuntashirakon">
 libadb-android (com.github.MuntashirAkon)
@@ -8485,7 +8507,7 @@ BouncyCastle (org.bouncycastle) · v1.83
 Apache MINA SSHD
 </string>
     <string name="eddsa_java">
-EdDSA for Java
+EdDSA untuk Java
 </string>
     <string name="slf4j_android">
 SLF4J Android
@@ -8494,10 +8516,10 @@ SLF4J Android
 AndroidSVG (com.caverock)
 </string>
     <string name="coil_iocoilkt">
-Coil (io.coil-kt.coil3)
+Kumparan (io.coil-kt.coil3)
 </string>
     <string name="bouncy_castle_license_mitstyle">
-Bouncy Castle License (MIT-style)
+Lisensi Bouncy Castle (gaya MIT)
 </string>
     <string name="storage_volume">
 Volume Penyimpanan
@@ -8509,7 +8531,7 @@ Gambar
 $bytes B
 </string>
     <string name="q1f_mb">
-%.1f MB
+%.1fMB
 </string>
     <string name="sheet_sheetsheetname">
 ═══ Lembar: %1$s ═══
@@ -8518,7 +8540,7 @@ $bytes B
 ═══ Lembar %1$d ═══
 </string>
     <string name="slide_idx_1">
-═══ Slide %1$d ═══
+═══ Geser %1$d ═══
 </string>
     <string name="app_icon">
 Ikon Aplikasi
@@ -8615,16 +8637,16 @@ Berhasil terhubung ke Dropbox
 Gagal mengautentikasi: %1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+Otentikasi Gagal
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+Kesalahan koneksi atau verifikasi
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+Tidak dapat memverifikasi kode otorisasi dengan Dropbox. Harap periksa apakah kode telah dimasukkan dengan benar, belum kedaluwarsa, dan tanggal/waktu perangkat Anda sudah benar.
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+Kesalahan tanggal &amp; waktu perangkat terdeteksi. Tanggal/waktu sistem TV Anda tampaknya sudah berlalu, sehingga mencegah koneksi aman ke Dropbox. Silakan atur tanggal dan waktu yang benar di Pengaturan Android TV.
 </string>
     <string name="dropbox_auth_verifying">
 Memverifikasi kode…
@@ -8776,7 +8798,7 @@ Otorisasi ditolak atau dibatalkan.
 Akses Istimewa
 </string>
     <string name="shizuku_subtitle">
-Porter / Shizuku / Shevery
+Portir / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
@@ -8951,16 +8973,16 @@ Status tidak tersedia
 Memeriksa akses yang ditingkatkan…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+Dapatkan Porter
 </string>
     <string name="elevated_prerelease_badge">
 Pra-rilis
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+Dapatkan Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+Dapatkan Shevery
 </string>
     <string name="shizuku_open_manager">
 Buka Pengelola %1$s
@@ -8969,7 +8991,7 @@ Buka Pengelola %1$s
 Panduan Penyiapan 3 Langkah
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1. Manajer Instal
 </string>
     <string name="shizuku_step_2">
 2. Mulai Layanan
@@ -9008,17 +9030,23 @@ Unduh %1$s: v%2$s
 Unduh &amp; Pasang (%1$s)
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+Putuskan Sambungan Akses Tinggi?
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+Ini akan memutuskan %1$s akses tinggi di UFM. Anda dapat mengaktifkannya kembali kapan saja.
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+Memutuskan
 </string>
-    <string name="shizuku_allow_app_access">Allow app access</string>
-    <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
-    <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
+    <string name="shizuku_allow_app_access">
+Izinkan akses aplikasi
+</string>
+    <string name="shizuku_app_access_granted_toast">
+Akses yang lebih tinggi diaktifkan untuk %1$s
+</string>
+    <string name="shizuku_app_access_revoked">
+Akses yang lebih tinggi dinonaktifkan untuk %1$s
+</string>
     <string name="elevated_fetching_toast">
 Memeriksa rilis terbaru %1$s…
 </string>
@@ -9068,13 +9096,13 @@ Izinkan perangkat lain mendorong media ke UFM untuk diputar
 Nama Server
 </string>
     <string name="dlna_server_name_default">
-UFM Media Server
+Server Media UFM
 </string>
     <string name="dlna_renderer_name_label">
 Nama Pemutar
 </string>
     <string name="dlna_renderer_name_default">
-UFM Player
+Pemain UFM
 </string>
     <string name="dlna_shared_folders_label">
 Folder Bersama
@@ -9315,7 +9343,7 @@ Berhenti
 Ketuk untuk mengelola
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+Server file berhenti: Batas eksekusi Android 6 jam tercapai
 </string>
     <string name="opening_file_server">
 Membuka Server File…
@@ -9623,34 +9651,34 @@ Batal
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+Izinkan sertifikat tidak tepercaya/ditandatangani sendiri
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+Menerima sertifikat CA SSL yang ditandatangani sendiri atau pribadi (umum pada perangkat NAS lokal)
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+Kata Sandi (biarkan kosong agar tetap terkini)
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+Sertifikat SSL tidak tepercaya
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+Server di %1$s menyajikan sertifikat SSL yang tidak tepercaya atau ditandatangani sendiri. Verifikasi detail sertifikat di bawah sebelum memercayai koneksi ini.
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+Subjek
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+Penerbit
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+Keabsahan
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+Sidik Jari SHA-256
 </string>
     <string name="webdav_cert_dialog_trust">
-Trust &amp; Connect
+Percayai &amp; Hubungkan
 </string>
 
     <!-- About Section -->
@@ -9682,7 +9710,7 @@ Versi: %1$s (%2$s)
 Seluler
 </string>
     <string name="flavor_tv">
-Android TV
+TV Android
 </string>
     <string name="about_tile_subtitle">
 Info &amp; detail aplikasi
@@ -10015,7 +10043,7 @@ Alamat IP ini sudah ada di daftar perangkat. Silakan pilih TV yang sudah ada dar
 Silakan masukkan alamat IP yang valid
 </string>
     <string name="manual_device_suffix">
- — Manual
+— petunjuk
 </string>
     <string name="remote_remove_manual_title">
 Hapus TV Manual
@@ -10177,7 +10205,7 @@ Kesalahan menyimpan gambar: %1$s
 
     <!-- PDF Viewer -->
     <string name="zoom_level">
-Zoom: %1$d%%
+Perbesar: %1$d%%
 </string>
 
     <!-- Notepad -->
@@ -10492,7 +10520,7 @@ Pindai
 Kamera
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+Tidak ada aplikasi kamera yang ditemukan di perangkat ini
 </string>
     <string name="scanner_capture_gallery">
 Pilih dari Galeri
@@ -10702,7 +10730,7 @@ Pengaturan dan Tema
 Lokasi Penyimpanan
 </string>
     <string name="auto_backup_location_default">
-Default (Documents/UFM)
+Default (Dokumen/UFM)
 </string>
     <string name="auto_backup_location_custom">
 Lokasi khusus
@@ -11606,7 +11634,7 @@ Salin file langsung ke perangkat lain
 Pilih jenis perangkat target:
 </string>
     <string name="target_tv">
-Android TV / Fire TV
+TV Android / TV Api
 </string>
     <string name="target_tv_desc">
 Salin file langsung ke Android TV menggunakan push ADB Nirkabel
@@ -11630,7 +11658,7 @@ Untuk PC, tablet, atau ponsel dengan browser:
 PIN Sesi
 </string>
     <string name="adb_device_badge">
-Android TV (ADB)
+TV Android (ADB)
 </string>
     <string name="connecting_to_device">
 Menghubungkan ke %1$s…
@@ -11685,7 +11713,7 @@ Instalasi Berhasil!
 
     <!-- Web Share Portal HTML strings -->
     <string name="web_portal_html_title">
-UFM Web Share
+Berbagi Web UFM
 </string>
     <string name="web_portal_html_header">
 Ultimate File Manager Pro
@@ -11749,7 +11777,7 @@ PRO
 
     <!-- RClone Cloud Storage Support -->
     <string name="add_online_storage_rclone">
-RClone
+RClon
 </string>
     <string name="add_online_storage_auth_rclone">
 Siapkan Penyimpanan
@@ -11779,7 +11807,7 @@ Koneksi gagal: %s
 Penyedia RClone disimpan
 </string>
     <string name="rclone_field_email">
-Email
+E-mail
 </string>
     <string name="rclone_field_password">
 Kata Sandi
@@ -11824,7 +11852,7 @@ Mega
 Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
-Premiumize
+Premiumkan
 </string>
     <string name="rclone_provider_box">
 Box
@@ -11848,7 +11876,7 @@ URL Server
 Gunakan kata sandi aplikasi yang dibuat di pengaturan akun Koofr Anda, bukan kata sandi masuk Anda
 </string>
     <string name="rclone_provider_protondrive">
-Proton Drive
+Penggerak Proton
 </string>
     <string name="rclone_field_username">
 Nama pengguna atau Email
@@ -11907,19 +11935,19 @@ Panjang lompatan
 Pilih seberapa jauh lompat maju atau mundur saat mencari posisi dalam pemutaran media.
 </string>
     <string name="skip_length_option_3s">
-3s
+3 detik
 </string>
     <string name="skip_length_option_5s">
-5s
+5 detik
 </string>
     <string name="skip_length_option_10s">
-10s
+10 detik
 </string>
     <string name="skip_length_option_20s">
-20s
+20an
 </string>
     <string name="skip_length_option_30s">
-30s
+30an
 </string>
     <string name="skip_length_option_disable">
 Nonaktif
@@ -11948,100 +11976,100 @@ Panjang lompatan disetel ke %1$s
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+Gaya subjudul
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+Konfigurasikan tampilan subtitle dalam aplikasi, ukuran font, dan sinkronisasi teks sistem.
 </string>
     <string name="subtitle_style_summary_system">
-System caption style
+Gaya keterangan sistem
 </string>
     <string name="subtitle_style_summary_custom">
-UFM custom style (%1$s)
+Gaya khusus UFM (%1$s)
 </string>
     <string name="subtitle_style_dialog_title">
-Subtitle Style
+Gaya Subjudul
 </string>
     <string name="subtitle_style_mode_system">
-System Caption Style
+Gaya Teks Sistem
 </string>
     <string name="subtitle_style_mode_system_desc">
-Follows device Accessibility caption settings even when system captions are disabled.
+Mengikuti pengaturan teks Aksesibilitas perangkat bahkan ketika teks sistem dinonaktifkan.
 </string>
     <string name="subtitle_style_mode_custom">
-UFM Custom Style
+Gaya Kustom UFM
 </string>
     <string name="subtitle_style_mode_custom_desc">
-Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+Penataan gaya dalam aplikasi khusus dengan ukuran, warna, efek tepi, dan posisi yang dapat disesuaikan.
 </string>
     <string name="subtitle_style_open_system">
-Open Device Caption Settings
+Buka Pengaturan Teks Perangkat
 </string>
     <string name="subtitle_style_system_unavailable">
-System caption settings not available on this device; using UFM style.
+Pengaturan keterangan sistem tidak tersedia pada perangkat ini; menggunakan gaya UFM.
 </string>
     <string name="subtitle_style_preview_title">
-Preview
+Pratinjau
 </string>
     <string name="subtitle_style_preview_line1">
 Ultimate File Manager Pro
 </string>
     <string name="subtitle_style_preview_line2">
-Live subtitle preview • Crisp text styling
+Pratinjau subtitle langsung • Gaya teks yang tajam
 </string>
     <string name="subtitle_style_text_size">
-Text size
+Ukuran teks
 </string>
     <string name="subtitle_style_text_color">
-Text color
+Warna teks
 </string>
     <string name="subtitle_style_bg_color">
-Background opacity
+Opasitas latar belakang
 </string>
     <string name="subtitle_style_edge_type">
-Edge effect
+Efek tepi
 </string>
     <string name="subtitle_style_edge_none">
 None
 </string>
     <string name="subtitle_style_edge_outline">
-Outline
+Garis besar
 </string>
     <string name="subtitle_style_edge_drop_shadow">
-Drop shadow
+Jatuhkan bayangan
 </string>
     <string name="subtitle_style_edge_raised">
-Raised
+Dinaikkan
 </string>
     <string name="subtitle_style_edge_depressed">
-Depressed
+Tertekan
 </string>
     <string name="subtitle_style_bottom_margin">
-Bottom margin
+Margin bawah
 </string>
     <string name="subtitle_style_apply_embedded">
-Apply embedded styles (ASS/SSA/TTML)
+Menerapkan gaya tersemat (ASS/SSA/TTML)
 </string>
     <string name="subtitle_style_apply_embedded_desc">
-When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+Saat dinonaktifkan, gaya subtitle UFM menggantikan font dan tag warna yang tertanam untuk keterbacaan optimal.
 </string>
     <string name="subtitle_style_color_yellow">
-Yellow
+Kuning
 </string>
     <string name="subtitle_style_color_white">
-White
+Putih
 </string>
     <string name="subtitle_style_color_cyan">
-Cyan
+Sian
 </string>
     <string name="subtitle_style_color_green">
-Green
+Hijau
 </string>
     <string name="subtitle_style_color_magenta">
-Magenta
+ungu
 </string>
     <string name="subtitle_style_color_orange">
-Orange
+Oranye
 </string>
     <string name="subtitle_style_bg_transparent">
 None
@@ -12056,13 +12084,13 @@ None
 75%
 </string>
     <string name="subtitle_style_bg_100">
-Solid
+Padat
 </string>
     <string name="player_track_sheet_subtitle_style">
-Subtitle Style…
+Gaya Subtitel…
 </string>
     <string name="player_track_sheet_subtitle_style_desc">
-Customize colors, size &amp; appearance
+Sesuaikan warna, ukuran &amp; penampilan
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -12103,10 +12131,10 @@ Ulang aktif
 Ulang nonaktif
 </string>
     <string name="player_toast_repeat_all">
-Repeat all
+Ulangi semuanya
 </string>
     <string name="player_toast_repeat_one">
-Repeat current track
+Ulangi trek saat ini
 </string>
     <string name="player_toast_audio_track">
 Jalur audio
@@ -12135,13 +12163,13 @@ Lewati maju
 
     <!-- UFM Media Player — Gesture Controls -->
     <string name="pref_player_gestures_title">
-Player Gestures
+Gerakan Pemain
 </string>
     <string name="pref_player_gestures_summary">
-Swipe for volume, brightness, and seeking. Double-tap to seek.
+Gesek untuk volume, kecerahan, dan pencarian. Ketuk dua kali untuk mencari.
 </string>
     <string name="player_gesture_brightness">
-Brightness
+Kecerahan
 </string>
     <string name="player_gesture_volume">
 Volume
@@ -12149,16 +12177,16 @@ Volume
 
     <!-- UFM Media Player — Button Feedback Toasts -->
     <string name="pref_player_button_toasts_title">
-Button Feedback Toasts
+Tombol Umpan Balik Bersulang
 </string>
     <string name="pref_player_button_toasts_summary">
-Show pop-up message when pressing player controls
+Tampilkan pesan pop-up saat menekan kontrol pemutar
 </string>
     <string name="settings_player_toasts_subtitle_on">
-On
+Pada
 </string>
     <string name="settings_player_toasts_subtitle_off">
-Off
+Mati
 </string>
 
     <!-- UFM Media Player — Mini-Player -->
@@ -12265,13 +12293,13 @@ Lokasi:
 Ukuran:
 </string>
     <string name="properties_label_size_on_disk">
-Size on disk:
+Ukuran pada disk:
 </string>
     <string name="properties_sparse_badge">
-Partial Download (Sparse)
+Unduhan Sebagian (Jarang)
 </string>
     <string name="properties_sparse_allocated_pct">
-%1$.1f%% allocated
+%1$.1f%% dialokasikan
 </string>
     <string name="properties_label_contains">
 Berisi:
@@ -12394,7 +12422,7 @@ Tag yang Dibuat
 Belum ada tag yang dibuat
 </string>
     <string name="action_tag">
-Tag
+Menandai
 </string>
     <string name="action_tools">
 Alat
@@ -12929,10 +12957,10 @@ Detail File Audio
 Format
 </string>
     <string name="music_tag_tech_bitrate">
-Bitrate
+Kecepatan bit
 </string>
     <string name="music_tag_tech_sample_rate">
-Sample Rate
+Tingkat Sampel
 </string>
     <string name="music_tag_tech_duration">
 Durasi
@@ -12986,61 +13014,61 @@ Spesifikasi Teknis
 </string>
     <!-- Music Tag Online Sync & High-Res Cover Picker -->
     <string name="music_tag_btn_search_online_cover">
-Search Online Art
+Cari Seni Online
 </string>
     <string name="music_tag_btn_musicbrainz_sync">
-Identify Online (MusicBrainz)
+Identifikasi Online (MusicBrainz)
 </string>
     <string name="music_tag_cover_picker_title">
-Search Online Artwork
+Cari Karya Seni Online
 </string>
     <string name="music_tag_search_covers_hint">
-Artist and Album name…
+Nama Artis dan Album…
 </string>
     <string name="music_tag_searching_artwork">
-Searching Apple Music, Deezer &amp; Cover Art Archive…
+Mencari Arsip Apple Music, Deezer &amp; Cover Art…
 </string>
     <string name="music_tag_no_artwork_found">
-No artwork found for this query
+Tidak ada karya seni yang ditemukan untuk kueri ini
 </string>
     <string name="music_tag_cover_applied">
-Applied online album artwork
+Karya seni album online terapan
 </string>
     <string name="music_tag_cover_download_error">
-Failed to download artwork
+Gagal mengunduh karya seni
 </string>
     <string name="music_tag_musicbrainz_search_title">
-MusicBrainz Tag Search
+Pencarian Tag MusicBrainz
 </string>
     <string name="music_tag_search_query_hint">
-Track title or Album name…
+Judul lagu atau nama Album…
 </string>
     <string name="music_tag_searching_musicbrainz">
-Searching MusicBrainz…
+Mencari MusicBrainz…
 </string>
     <string name="music_tag_no_musicbrainz_results">
-No matching recordings or releases found
+Tidak ditemukan rekaman atau rilis yang cocok
 </string>
     <string name="music_tag_diff_title">
-Review Online Tags
+Tinjau Tag Online
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+Pilih bidang yang akan diterapkan untuk dilacak
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+Terapkan Tag yang Dipilih
 </string>
     <string name="music_tag_select_all">
-Select All
+Pilih Semua
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+Rekaman
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+Album / Rilis
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d trek
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -13441,7 +13469,7 @@ Kamera + Tanggal
 + {MODEL}
 </string>
     <string name="exif_rename_token_original">
-+ {ORIGINAL}
++ {ASLI}
 </string>
     <string name="exif_rename_token_seq">+ {#}</string>
     <string name="exif_rename_preview_header">
@@ -13478,7 +13506,7 @@ Ini akan mengubah metadata secara permanen pada %1$d foto asli. Apakah Anda ingi
 Metadata privasi dibersihkan untuk %1$s
 </string>
     <string name="exif_has_gps_badge">
-📍 GPS
+GPS
 </string>
     <string name="exif_no_gps_badge">
 Tanpa GPS
@@ -13732,7 +13760,7 @@ Tautan Pusat Terjemahan disalin ke papan klip
 Informasi Aplikasi
 </string>
     <string name="about_section_system">
-Device &amp; System
+Perangkat &amp; Sistem
 </string>
     <string name="about_section_support">
 Pengembang &amp; Tautan
@@ -13809,7 +13837,7 @@ Daftar satu kolom datar (Besar, Sedang, Kecil)
 %1$d item
 </string>
     <string name="main_menu_section_item_count_single">
-1 item
+1 barang
 </string>
 
     <!-- Reset Category Layout -->
@@ -14164,154 +14192,154 @@ Hapus aksi
 
     <!-- ADB Session & Preferences -->
     <string name="adb_session_notification_channel_name">
-ADB Session
+Sesi ADB
 </string>
     <string name="adb_session_notification_channel_desc">
-Maintains active ADB connection in the background
+Mempertahankan koneksi ADB aktif di latar belakang
 </string>
     <string name="adb_session_notification_title">
-ADB Connected
+ADB Terhubung
 </string>
     <string name="adb_session_notification_desc">
-Connected to %1$s:%2$d
+Terhubung ke %1$s:%2$d
 </string>
     <string name="backup_pref_adb_settings">
-ADB Connection Settings
+Pengaturan Koneksi ADB
 </string>
     <string name="invalid_ip_or_port">
-Please enter a valid IP address and port (1-65535)
+Silakan masukkan alamat IP dan port yang valid (1-65535)
 </string>
 
     <!-- Storage Access Permission & Selected Folders Mode -->
     <string name="perm_storage_access_title">
-Storage Access
+Akses Penyimpanan
 </string>
     <string name="perm_storage_access_desc">
-Choose Selected Folders for privacy, or grant All Files Access for unrestricted device management.
+Pilih Folder Terpilih untuk privasi, atau berikan Akses Semua File untuk pengelolaan perangkat tanpa batas.
 </string>
     <string name="perm_choice_dialog_title">
-Storage Access
+Akses Penyimpanan
 </string>
     <string name="perm_choice_dialog_subtitle">
-Choose how UFM accesses your storage. You can change this at any time in Settings.
+Pilih bagaimana UFM mengakses penyimpanan Anda. Anda dapat mengubahnya kapan saja di Pengaturan.
 </string>
     <string name="perm_choice_selected_folders_title">
-Selected Folders (Recommended)
+Folder yang Dipilih (Disarankan)
 </string>
     <string name="perm_choice_selected_folders_desc">
-Choose only the folders UFM is allowed to access. Keeps your other files private.
+Pilih hanya folder yang boleh diakses oleh UFM. Menjaga privasi file Anda yang lain.
 </string>
     <string name="perm_choice_all_files_title">
-All Files Access (Advanced)
+Akses Semua File (Lanjutan)
 </string>
     <string name="perm_choice_all_files_desc">
-Unrestricted access to all files on the device for complete file management.
+Akses tidak terbatas ke semua file di perangkat untuk manajemen file lengkap.
 </string>
     <string name="perm_switch_to_all_files">
-Switch to All Files Access (Advanced)
+Beralih ke Akses Semua File (Lanjutan)
 </string>
 
     <!-- Multi-Folder Startup Setup Dialog -->
     <string name="dialog_setup_folders_title">
-Select Storage Folders
+Pilih Folder Penyimpanan
 </string>
     <string name="dialog_setup_folders_desc">
-Choose the folders on your device UFM is allowed to access and manage.
+Pilih folder di perangkat Anda yang boleh diakses dan dikelola oleh UFM.
 </string>
     <string name="btn_add_another_folder">
-Add Folder
+Tambahkan Map
 </string>
     <string name="selected_folders_count">
-%1$d folder(s) selected
+%1$d folder dipilih
 </string>
     <string name="no_folders_selected_hint">
-No folders added yet. Tap \"Add Folder\" to choose folders.
+Belum ada folder yang ditambahkan. Ketuk \"Tambah Folder\" untuk memilih folder.
 </string>
     <string name="btn_done">
-Done
+Selesai
 </string>
 
     <!-- In-Storage Browsing: Add / Remove Folder and Empty State -->
     <string name="action_add_folder_to_storage">
-Add Folder
+Tambahkan Map
 </string>
     <string name="action_add_folder_to_storage_desc">
-Grant access to a folder in this storage
+Berikan akses ke folder di penyimpanan ini
 </string>
     <string name="action_remove_folder_from_storage">
-Remove Folder
+Hapus Folder
 </string>
     <string name="action_remove_folder_from_storage_desc">
-Remove mounted folder access from this storage
+Hapus akses folder terpasang dari penyimpanan ini
 </string>
     <string name="dialog_remove_folders_title">
-Remove Mounted Folders
+Hapus Folder yang Dipasang
 </string>
     <string name="dialog_remove_folders_desc">
-Select a folder to remove access from this storage. Your files will not be deleted.
+Pilih folder untuk menghapus akses dari penyimpanan ini. File Anda tidak akan dihapus.
 </string>
     <string name="no_mounted_folders_hint">
-No mounted folders remaining for this storage.
+Tidak ada folder terpasang yang tersisa untuk penyimpanan ini.
 </string>
     <string name="restricted_storage_empty_title">
-All Files Access Required
+Semua Akses File Diperlukan
 </string>
     <string name="restricted_storage_empty_desc">
-To access and manage files in this storage, please enable All Files Access in Android Settings.
+Untuk mengakses dan mengelola file di penyimpanan ini, aktifkan Akses Semua File di Pengaturan Android.
 </string>
     <string name="restricted_storage_grant_all_files">
-Enable All Files Access in Settings
+Aktifkan Akses Semua File di Pengaturan
 </string>
     <string name="storage_selected_folders_mode">
-Selected Folders (%1$d)
+Folder Terpilih (%1$d)
 </string>
 
     <!-- Settings Switch for All Files Access -->
     <string name="settings_all_files_access_title">
-All Files Access
+Akses Semua File
 </string>
     <string name="settings_all_files_access_enabled">
-Full device-wide storage access enabled
+Akses penyimpanan penuh di seluruh perangkat diaktifkan
 </string>
     <string name="settings_all_files_access_disabled">
-Selected folders mode active (restricted access)
+Mode folder yang dipilih aktif (akses terbatas)
 </string>
 
     <!-- Feature Gating Guidance Dialog -->
     <string name="restricted_feature_dialog_title">
-All Files Access Required
+Semua Akses File Diperlukan
 </string>
     <string name="restricted_feature_dialog_desc">
-This feature requires unrestricted device-wide storage access. You can grant All Files Access in Settings or continue using selected folders.
+Fitur ini memerlukan akses penyimpanan seluruh perangkat yang tidak dibatasi. Anda dapat memberikan Akses Semua File di Pengaturan atau terus menggunakan folder yang dipilih.
 </string>
     <!-- Unmount / Remove Folder Access -->
     <string name="unmount_folder_title">
-Remove Folder Access?
+Hapus Akses Folder?
 </string>
     <string name="unmount_folder_confirm">
-Remove access to \"%1$s\" from this storage? No physical files will be deleted.
+Hapus akses ke \"%1$s\" dari penyimpanan ini? Tidak ada file fisik yang akan dihapus.
 </string>
     <string name="unmount_folder_action">
-Remove Access
+Hapus Akses
 </string>
     <string name="folder_access_removed">
-Folder access removed
+Akses folder dihapus
 </string>
     <string name="indexing_saf_folder_started">
-Indexing %1$s...
+Mengindeks %1$s...
 </string>
     <string name="btn_manage">
-Manage
+Mengelola
 </string>
     <!-- Root Detection & Diagnostics (Mobile) -->
     <string name="root_status_title">
-Root Status
+Status Akar
 </string>
     <string name="root_status_not_rooted">
-Not Rooted
+Tidak Berakar
 </string>
     <string name="root_status_detected">
-Rooted (%1$s)
+Berakar (%1$s)
 </string>
     <string name="root_type_magisk">
 Magisk
@@ -14320,28 +14348,28 @@ Magisk
 KernelSU
 </string>
     <string name="root_type_apatch">
-APatch
+Patch
 </string>
     <string name="root_type_supersu">
 SuperSU
 </string>
     <string name="root_type_generic">
-su binary
+su biner
 </string>
     <string name="root_details_title">
-Root Diagnostics
+Diagnostik Akar
 </string>
     <string name="root_details_binaries">
-Detected Binaries: %1$s
+Biner Terdeteksi: %1$s
 </string>
     <string name="root_details_packages">
-Detected Packages: %1$s
+Paket Terdeteksi: %1$s
 </string>
     <string name="root_details_test_keys">
-Build Tags: Custom / Test-Keys
+Tag Bangun: Kunci Khusus / Uji
 </string>
     <string name="root_details_none">
-No root binaries or manager packages detected on this device.
+Tidak ada biner root atau paket manajer yang terdeteksi pada perangkat ini.
 </string>
     <!-- Phase 2: Root Integration & Authorization (Mobile) -->
     <string name="icon_settings_root_access">
@@ -14351,48 +14379,48 @@ Root Access
 Root Storage
 </string>
     <string name="root_storage_title">
-Root Storage
+Penyimpanan Akar
 </string>
     <string name="root_storage_subtitle">
-System partition (/)
+Partisi sistem (/)
 </string>
     <string name="settings_root_access_title">
-Root Access
+Akses Root
 </string>
     <string name="settings_root_access_desc">
-Allow elevated superuser access for system partition and protected directories
+Izinkan akses pengguna super yang lebih tinggi untuk partisi sistem dan direktori yang dilindungi
 </string>
     <string name="settings_root_access_enabled_subtitle">
-Enabled — Superuser access active
+Diaktifkan — Akses pengguna super aktif
 </string>
     <string name="settings_root_access_disabled_subtitle">
-Disabled
+Dengan disabilitas
 </string>
     <string name="settings_root_access_disabled_unrooted">
-Root not detected on this device
+Root tidak terdeteksi pada perangkat ini
 </string>
     <string name="root_grant_dialog_title">
-Grant Root Access?
+Berikan Akses Root?
 </string>
     <string name="root_grant_dialog_desc">
-Ultimate File Manager Pro will request Superuser permissions from your root manager (%1$s). This grants access to browse and manage system-level files.\n
+Ultimate File Manager Pro akan meminta izin Pengguna Super dari manajer root Anda (%1$s). Ini memberikan akses untuk menelusuri dan mengelola file tingkat sistem.\n
 \n
-Only grant root access if you understand the risks of modifying system files.
+Hanya berikan akses root jika Anda memahami risiko memodifikasi file sistem.
 </string>
     <string name="root_grant_dialog_grant">
-Grant Root
+Berikan Akar
 </string>
     <string name="root_denied_title">
-Root Permission Denied
+Izin Root Ditolak
 </string>
     <string name="root_denied_desc">
-Superuser access was denied by your root manager. Root features will remain disabled.
+Akses pengguna super ditolak oleh manajer root Anda. Fitur root akan tetap dinonaktifkan.
 </string>
     <string name="root_requesting_title">
-Requesting Root Access...
+Meminta Akses Root...
 </string>
     <string name="root_storage_dialog_title">
-Root Storage
+Penyimpanan Akar
 </string>
     <string name="root_storage_dialog_desc">
 Root partition (/) is accessible via Superuser privileges.\n
@@ -14402,105 +14430,105 @@ Root partition (/) is accessible via Superuser privileges.\n
 • Access Mode: Superuser Active
 </string>
     <string name="backup_pref_root">
-Root Access Settings
+Pengaturan Akses Root
 </string>
     <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
     <string name="root_permission_required_desc">
-Superuser access is required to access protected root directories.
+Akses pengguna super diperlukan untuk mengakses direktori root yang dilindungi.
 </string>
     <string name="root_remount_failed">
-Failed to remount partition as read-write.
+Gagal memasang ulang partisi sebagai baca-tulis.
 </string>
     <string name="root_file_saved">
-Saved with superuser permissions
+Disimpan dengan izin pengguna super
 </string>
     <string name="root_posix_permissions">
-Permissions
+Izin
 </string>
     <string name="root_selinux_context">
-SELinux Context
+Konteks SELinux
 </string>
     <string name="root_owner_group">
-Owner / Group
+Pemilik / Grup
 </string>
     <string name="root_symlink_target">
-Link Target
+Tautan Sasaran
 </string>
 
     <!-- FOSS GitHub Release Update Checker -->
     <string name="settings_foss_update_title">
-Check for Updates
+Periksa Pembaruan
 </string>
     <string name="settings_foss_update_subtitle_on">
-Automatic release checks on app open (GitHub)
+Pemeriksaan rilis otomatis saat aplikasi dibuka (GitHub)
 </string>
     <string name="settings_foss_update_subtitle_off">
-Automatic release checks disabled
+Pemeriksaan rilis otomatis dinonaktifkan
 </string>
     <string name="settings_foss_update_check_now">
-Check for Updates
+Periksa Pembaruan
 </string>
     <string name="update_checking_toast">
-Checking for updates...
+Memeriksa pembaruan...
 </string>
     <string name="update_already_latest_title">
-You\'re Up to Date
+Anda Terkini
 </string>
     <string name="update_already_latest_msg">
-Ultimate File Manager Pro v%1$s is the latest release.
+Ultimate File Manager Pro v%1$s adalah rilis terbaru.
 </string>
     <string name="update_available_title">
-Update Available: v%1$s
+Pembaruan Tersedia: v%1$s
 </string>
     <string name="update_available_msg">
-A new version of Ultimate File Manager Pro is available on GitHub.
+Versi baru Ultimate File Manager Pro tersedia di GitHub.
 </string>
     <string name="update_version_comparison">
-Installed: v%1$s  •  Latest: v%2$s
+Terpasang: v%1$s • Terbaru: v%2$s
 </string>
     <string name="update_btn_download">
-Download Update (%1$s)
+Unduh Pembaruan (%1$s)
 </string>
     <string name="update_btn_view_release">
-View on GitHub
+Lihat di GitHub
 </string>
     <string name="update_btn_remind_later">
-Remind Me Later
+Ingatkan Saya Nanti
 </string>
     <string name="update_notification_title">
-UFM Update Available: v%1$s
+Pembaruan UFM Tersedia: v%1$s
 </string>
     <string name="update_notification_desc">
-A new release (v%1$s) is available on GitHub. Tap to download.
+Rilis baru (v%1$s) tersedia di GitHub. Ketuk untuk mengunduh.
 </string>
     <string name="update_downloading_toast">
-Opening download link...
+Membuka tautan unduhan...
 </string>
     <string name="update_check_failed">
-Unable to check for updates. Please check your internet connection.
+Tidak dapat memeriksa pembaruan. Silakan periksa koneksi internet Anda.
 </string>
     <string name="btn_download">
-Download
+Unduh
 </string>
     <string name="btn_cancel">
-Cancel
+Membatalkan
 </string>
     <string name="notif_channel_app_updates">
-App Updates
+Pembaruan Aplikasi
 </string>
     <string name="settings_foss_update_enable_dialog_title">
-Enable Update Checks?
+Aktifkan Pemeriksaan Pembaruan?
 </string>
     <string name="settings_foss_update_enable_dialog_desc">
-When enabled, Ultimate File Manager Pro will check for new GitHub releases when the app opens and notify you when a new version is available for download.\n
+Jika diaktifkan, Ultimate File Manager Pro akan memeriksa rilis GitHub baru saat aplikasi dibuka dan memberi tahu Anda saat versi baru tersedia untuk diunduh.\n
 \n
-No personal data is collected or transmitted during this check.
+Tidak ada data pribadi yang dikumpulkan atau dikirimkan selama pemeriksaan ini.
 </string>
     <string name="settings_foss_update_enable_btn">
-Enable
+Memungkinkan
 </string>
     <string name="backup_pref_foss_update">
-Update Check Settings
+Perbarui Pengaturan Periksa
 </string>
     <string name="icon_settings_foss_update">
 Check for Updates
@@ -14528,19 +14556,19 @@ Unduhan dibatalkan
 
     <!-- APK / XAPK Properties App Details -->
     <string name="apk_details_title">
-App Details
+Detail Aplikasi
 </string>
     <string name="apk_details_version">
-Version:
+Versi:
 </string>
     <string name="apk_details_installed">
-Installed:
+Dipasang:
 </string>
     <string name="apk_details_not_installed">
-Not installed
+Tidak dipasang
 </string>
     <string name="apk_details_open">
-Open
+Membuka
 </string>
     <string name="apk_details_target_sdk">
 Target:
@@ -14549,31 +14577,31 @@ Target:
 Minimum:
 </string>
     <string name="apk_details_play_store">
-Play Store
+Mainkan Toko
 </string>
     <string name="apk_details_manifest">
-Manifest
+Tampak
 </string>
     <string name="apk_details_certificate">
-Certificate
+Sertifikat
 </string>
     <string name="apk_details_cert_title">
-Certificate Information
+Informasi Sertifikat
 </string>
     <string name="apk_details_subject">
-Subject
+Subjek
 </string>
     <string name="apk_details_issuer">
-Issuer
+Penerbit
 </string>
     <string name="apk_details_validity">
-Validity
+Keabsahan
 </string>
     <string name="apk_details_algorithm">
-Algorithm
+Algoritma
 </string>
     <string name="apk_details_serial">
-Serial Number
+Nomor seri
 </string>
     <string name="apk_details_fingerprint_md5">
 MD5
@@ -14585,174 +14613,174 @@ SHA-1
 SHA-256
 </string>
     <string name="apk_details_copied">
-Copied to clipboard
+Disalin ke papan klip
 </string>
     <string name="apk_details_copy_package">
-Copy Package Name
+Salin Nama Paket
 </string>
     <string name="apk_details_status_same">
-Installed
+Dipasang
 </string>
     <string name="apk_details_status_update">
-Update
+Memperbarui
 </string>
     <string name="apk_details_status_downgrade">
-Downgrade
+Turunkan versi
 </string>
     <string name="apk_details_install">
-Install
+Memasang
 </string>
     <string name="apk_details_manifest_error">
-Unable to decode AndroidManifest.xml
+Tidak dapat memecahkan kode AndroidManifest.xml
 </string>
     <string name="apk_details_cert_error">
-Unable to extract signing certificate
+Tidak dapat mengekstrak sertifikat penandatanganan
 </string>
     <string name="apk_details_splits">
-Splits
+Perpecahan
 </string>
     <string name="apk_details_arch">
-Architecture
+Arsitektur
 </string>
     <string name="tv_player_folder_videos">
-Folder Videos
+Video Folder
 </string>
     <string name="tv_player_playlist_empty">
-No other videos in this folder
+Tidak ada video lain di folder ini
 </string>
     <string name="tv_player_playlist_count">
-%1$d videos
+%1$d video
 </string>
     <string name="tv_player_now_playing">
-Now Playing
+Sedang Dimainkan
 </string>
     <string name="tv_player_button_playlist">
-Playlist
+Daftar putar
 </string>
 
     <!-- Checksum & Hash Verification Tools -->
     <string name="action_checksum">
-Checksum Tools
+Alat Checksum
 </string>
     <string name="action_compare_files">
-Compare Files
+Bandingkan File
 </string>
     <string name="action_verify_checksum_file">
-Verify Checksum File
+Verifikasi File Checksum
 </string>
     <string name="checksum_sheet_title">
-Checksum &amp; Hash Verification
+Verifikasi Checksum &amp; Hash
 </string>
     <string name="checksum_generate">
-Generate
+Menghasilkan
 </string>
     <string name="checksum_generate_all">
-Generate All
+Hasilkan Semua
 </string>
     <string name="checksum_generating">
-Calculating checksum…
+Menghitung checksum…
 </string>
     <string name="checksum_verify_hint">
-Paste hash to verify
+Tempel hash untuk memverifikasi
 </string>
     <string name="checksum_match">
-✓ Match — Hash matches verified file
+✓ Cocok — Hash cocok dengan file terverifikasi
 </string>
     <string name="checksum_mismatch">
-✗ Mismatch — Hash does not match
+✗ Ketidakcocokan — Hash tidak cocok
 </string>
     <string name="checksum_prompt_compute_algo">
-Pasted %1$s hash. Tap to compute and verify
+Hash %1$s ditempel. Ketuk untuk menghitung dan memverifikasi
 </string>
     <string name="checksum_copy_all">
-Copy All
+Salin Semua
 </string>
     <string name="checksum_copied">
-Checksum copied to clipboard
+Checksum disalin ke papan klip
 </string>
     <string name="checksum_all_copied">
-All checksums copied to clipboard
+Semua checksum disalin ke clipboard
 </string>
     <string name="checksum_export">
-Export Manifest
+Ekspor Manifes
 </string>
     <string name="checksum_export_success">
-Exported %1$s
+Diekspor %1$s
 </string>
     <string name="checksum_export_error">
-Failed to export manifest
+Gagal mengekspor manifes
 </string>
     <string name="checksum_compare_title">
-Compare Files
+Bandingkan File
 </string>
     <string name="checksum_compare_identical">
-✓ Files are identical
+✓ File identik
 </string>
     <string name="checksum_compare_different">
-✗ Files differ
+✗ File berbeda
 </string>
     <string name="checksum_compare_diff_sizes">
-✗ Files differ (different sizes: %1$s vs %2$s)
+✗ File berbeda (ukuran berbeda: %1$s vs %2$s)
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ Header &amp; Data Cocok — Unduhan Tidak Lengkap (alokasi %1$.1f%% vs %2$.1f%%)
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
-Size on disk: %1$s (%2$.1f%%)
+Ukuran pada disk: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
-Identical size (%1$s). Hashing to verify content…
+Ukuran identik (%1$s). Hashing untuk memverifikasi konten…
 </string>
     <string name="checksum_compare_select_hint">
-Select 1 file in each pane, or 2 files in one pane to compare
+Pilih 1 file di setiap panel, atau 2 file dalam satu panel untuk dibandingkan
 </string>
     <string name="checksum_large_file_warning_title">
-Large File Warning
+Peringatan File Besar
 </string>
     <string name="checksum_large_file_warning_msg">
-This file is %1$s and may take a while to read. Continue?
+File ini berukuran %1$s dan mungkin memerlukan waktu beberapa saat untuk dibaca. Melanjutkan?
 </string>
     <string name="checksum_dont_ask_again">
-Don\'t ask again
+Jangan bertanya lagi
 </string>
     <string name="checksum_manifest_verify_title">
-Verify Checksum Manifest
+Verifikasi Manifes Checksum
 </string>
     <string name="checksum_manifest_reading">
-Reading manifest…
+Manifes bacaan…
 </string>
     <string name="checksum_manifest_summary">
-%1$d verified, %2$d failed, %3$d missing
+%1$d terverifikasi, %2$d gagal, %3$d hilang
 </string>
     <string name="checksum_manifest_status_ok">
 OK
 </string>
     <string name="checksum_manifest_status_failed">
-FAILED
+GAGAL
 </string>
     <string name="checksum_manifest_status_missing">
-MISSING
+HILANG
 </string>
     <string name="checksum_manifest_status_size_mismatch">
-SIZE MISMATCH
+UKURAN TIDAK SESUAI
 </string>
     <string name="checksum_speed_format">
-%1$.1f MB/s
+%1$.1f MB/dtk
 </string>
     <string name="checksum_eta_format">
-ETA: %1$ds
+Waktu tempuh: %1$ds
 </string>
     <string name="checksum_batch_progress_format">
-File %1$d of %2$d (%3$d%%)
+File %1$d dari %2$d (%3$d%%)
 </string>
     <string name="toolbar_desc_checksum">
-Generate and verify file hashes (CRC32, MD5, SHA-1, SHA-256, SHA-512)
+Hasilkan dan verifikasi hash file (CRC32, MD5, SHA-1, SHA-256, SHA-512)
 </string>
     <string name="icon_toolbar_checksum">
 Checksum Tools
 </string>
     <string name="backup_pref_checksum">
-Checksum Preferences
+Preferensi Checksum
 </string>
 
     <!-- Root Staging & Sync -->
@@ -14768,195 +14796,195 @@ Tidak dapat menyiapkan file root untuk aplikasi eksternal
     
     <!-- Mobile Security & App Lock -->
     <string name="settings_section_security">
-Security
+Keamanan
 </string>
     <string name="settings_security_app_lock_title">
-App Lock
+Kunci Aplikasi
 </string>
     <string name="settings_security_app_lock_subtitle">
-Require authentication to open Ultimate File Manager Pro
+Memerlukan otentikasi untuk membuka Ultimate File Manager Pro
 </string>
     <string name="settings_security_method_title">
-Authentication Method
+Metode Otentikasi
 </string>
     <string name="settings_security_method_picker_title">
-Choose Security Method
+Pilih Metode Keamanan
 </string>
     <string name="settings_security_method_picker_subtitle">
-Select how you want to protect your files
+Pilih bagaimana Anda ingin melindungi file Anda
 </string>
     <string name="settings_security_method_none">
 None
 </string>
     <string name="settings_security_method_pin">
-4-Digit PIN
+PIN 4 Digit
 </string>
     <string name="settings_security_method_pin_desc">
-Fast, numeric keypad unlock
+Buka kunci keypad numerik dengan cepat
 </string>
     <string name="settings_security_method_password">
-Custom Password
+Kata Sandi Khusus
 </string>
     <string name="settings_security_method_password_desc">
-Alphanumeric phrase with letters and symbols
+Frasa alfanumerik dengan huruf dan simbol
 </string>
     <string name="settings_security_method_biometric">
-Biometrics / Device Lock
+Biometrik / Kunci Perangkat
 </string>
     <string name="settings_security_method_biometric_desc">
-Fingerprint, Face unlock, or Pattern
+Sidik Jari, Buka Kunci Wajah, atau Pola
 </string>
     <string name="settings_security_biometric_unavailable">
-Biometrics not available on this device
+Biometrik tidak tersedia di perangkat ini
 </string>
     <string name="settings_security_biometric_none_enrolled">
-No biometrics or device lock set up in Android Settings
+Tidak ada biometrik atau kunci perangkat yang diatur di Pengaturan Android
 </string>
     <string name="settings_security_change_pin">
-Change PIN
+Ganti PIN
 </string>
     <string name="settings_security_change_pin_subtitle">
-Update your current 4-digit security PIN
+Perbarui PIN keamanan 4 digit Anda saat ini
 </string>
     <string name="settings_security_change_password">
-Change Password
+Ubah Kata Sandi
 </string>
     <string name="settings_security_change_password_subtitle">
-Update your custom alphanumeric password
+Perbarui kata sandi alfanumerik khusus Anda
 </string>
     <string name="settings_security_verify_old_pin">
-Enter your current 4-digit PIN to continue
+Masukkan PIN 4 digit Anda saat ini untuk melanjutkan
 </string>
     <string name="settings_security_verify_old_password_title">
-Verify Current Password
+Verifikasi Kata Sandi Saat Ini
 </string>
     <string name="settings_security_verify_old_password_subtitle">
-Enter your old password before changing
+Masukkan kata sandi lama Anda sebelum mengubahnya
 </string>
     <string name="settings_security_disable_pin_title">
-Disable App Lock
+Nonaktifkan Kunci Aplikasi
 </string>
     <string name="settings_security_disable_pin_subtitle">
-Enter your 4-digit PIN to turn off App Lock
+Masukkan PIN 4 digit Anda untuk mematikan Kunci Aplikasi
 </string>
     <string name="settings_security_disable_password_title">
-Disable App Lock
+Nonaktifkan Kunci Aplikasi
 </string>
     <string name="settings_security_disable_password_subtitle">
-Enter your password to turn off App Lock
+Masukkan kata sandi Anda untuk mematikan Kunci Aplikasi
 </string>
     <string name="settings_security_disable_biometric_title">
-Disable App Lock
+Nonaktifkan Kunci Aplikasi
 </string>
     <string name="settings_security_disable_biometric_subtitle">
-Authenticate to turn off App Lock
+Otentikasi untuk mematikan Kunci Aplikasi
 </string>
     <string name="settings_security_pin_setup_subtitle">
-Enter a 4-digit PIN to secure UFM
+Masukkan PIN 4 digit untuk mengamankan UFM
 </string>
     <string name="settings_security_password_title">
-Set Password
+Tetapkan Kata Sandi
 </string>
     <string name="settings_security_password_subtitle">
-Enter a secure password for UFM
+Masukkan kata sandi aman untuk UFM
 </string>
     <string name="settings_security_password_create_title">
-Create Password
+Buat Kata Sandi
 </string>
     <string name="settings_security_password_create_subtitle">
-Enter a secure alphanumeric password (at least 4 characters)
+Masukkan kata sandi alfanumerik yang aman (minimal 4 karakter)
 </string>
     <string name="settings_security_password_confirm_title">
-Confirm Password
+Konfirmasi Kata Sandi
 </string>
     <string name="settings_security_password_confirm_subtitle">
-Re-enter your password to confirm
+Masukkan kembali kata sandi Anda untuk mengonfirmasi
 </string>
     <string name="settings_security_lock_frequency">
-Lock Frequency
+Frekuensi Kunci
 </string>
     <string name="settings_security_lock_fresh_open">
-On new / fresh open only
+Hanya pada yang baru / baru dibuka
 </string>
     <string name="settings_security_lock_immediately">
-Immediately on background
+Segera di latar belakang
 </string>
     <string name="settings_security_lock_1min">
-After 1 minute
+Setelah 1 menit
 </string>
     <string name="settings_security_lock_5min">
-After 5 minutes
+Setelah 5 menit
 </string>
     <string name="settings_security_lock_frequency_dialog_title">
-Select Lock Frequency
+Pilih Frekuensi Kunci
 </string>
     <string name="security_warning_title">
-Important Security Notice
+Pemberitahuan Keamanan Penting
 </string>
     <string name="security_warning_message">
-If you forget your PIN or Password and lose your Recovery Key, you will be permanently locked out of Ultimate File Manager Pro.\n
+Jika Anda lupa PIN atau Kata Sandi dan kehilangan Kunci Pemulihan, Anda akan terkunci secara permanen dari Ultimate File Manager Pro.\n
 \n
-Neither KiloWatch nor anyone else can recover your credentials or unlock your files. Make sure to keep your Recovery Key in a safe, secure place.
+Baik KiloWatch maupun orang lain tidak dapat memulihkan kredensial atau membuka kunci file Anda. Pastikan untuk menyimpan Kunci Pemulihan Anda di tempat yang aman dan terlindungi.
 </string>
     <string name="security_warning_confirm">
-I Understand — Show Recovery Key
+Saya Mengerti — Tampilkan Kunci Pemulihan
 </string>
     <string name="security_recovery_code_title">
-Security Recovery Key
+Kunci Pemulihan Keamanan
 </string>
     <string name="security_recovery_code_body">
-Write down this key. It is the ONLY way to unlock UFM if you forget your PIN or Password.
+Tuliskan kunci ini. Ini adalah SATU-SATUNYA cara untuk membuka kunci UFM jika Anda lupa PIN atau Kata Sandi Anda.
 </string>
     <string name="security_recovery_code_copy">
-Copy Recovery Key
+Salin Kunci Pemulihan
 </string>
     <string name="security_recovery_code_copied_autoclear">
-Recovery Key copied. Clipboard will automatically clear in 60 seconds for security.
+Kunci Pemulihan disalin. Clipboard akan otomatis dihapus dalam 60 detik untuk keamanan.
 </string>
     <string name="security_recovery_code_hint">
-16-Character Key
+Kunci 16 Karakter
 </string>
     <string name="security_recovery_entry_title">
-Enter Recovery Key
+Masukkan Kunci Pemulihan
 </string>
     <string name="security_recovery_entry_subtitle">
-Type your 16-character recovery key to regain access and reset your credentials
+Ketik kunci pemulihan 16 karakter Anda untuk mendapatkan kembali akses dan mengatur ulang kredensial Anda
 </string>
     <string name="security_recovery_success">
-Recovery key verified successfully
+Kunci pemulihan berhasil diverifikasi
 </string>
     <string name="security_unlock_enter_pin">
-Enter PIN to Unlock
+Masukkan PIN untuk Membuka Kunci
 </string>
     <string name="security_unlock_enter_password">
-Enter Password to Unlock
+Masukkan Kata Sandi untuk Membuka Kunci
 </string>
     <string name="security_unlock_forgot_credential">
-Forgot PIN or Password? Enter Recovery Key
+Lupa PIN atau Kata Sandi? Masukkan Kunci Pemulihan
 </string>
     <string name="security_unlock_biometric_prompt">
-Touch sensor or look at camera
+Sensor sentuh atau lihat kamera
 </string>
     <string name="security_unlock_tap_to_authenticate">
-Tap to Authenticate
+Ketuk untuk Mengautentikasi
 </string>
     <string name="security_unlock_use_device_lock">
-Use Device PIN / Pattern
+Gunakan PIN / Pola Perangkat
 </string>
     <string name="security_unlock_invalid_pin">
-Incorrect PIN. %1$d attempts remaining
+PIN salah. %1$d upaya tersisa
 </string>
     <string name="security_unlock_invalid_password">
-Incorrect password. %1$d attempts remaining
+Kata sandi salah. %1$d upaya tersisa
 </string>
     <string name="security_unlock_invalid_password_short">
-Incorrect password
+Kata sandi salah
 </string>
     <string name="security_unlock_too_many_attempts">
-Too Many Failed Attempts
+Terlalu Banyak Upaya yang Gagal
 </string>
     <string name="security_unlock_try_again_after_timer">
-For your security, try again after the timer expires
+Demi keamanan Anda, coba lagi setelah penghitung waktu berakhir
 </string>
     <string name="icon_settings_security">
 Security
@@ -15012,21 +15040,21 @@ Ubah nama tab
 Jaringan
 </string>
     <string name="storage_cloud">
-Cloud
+Awan
 </string>
     
     <!-- SAF & External File Pickers Exposure -->
     <string name="expose_to_saf_title">
-Expose to SAF &amp; Pickers
+Paparan ke SAF &amp; Pickers
 </string>
     <string name="expose_to_saf_subtitle">
-Make visible to system file pickers, Projectivy Launcher wallpapers, and external apps
+Jadikan terlihat oleh pemetik file sistem, wallpaper Projectivy Launcher, dan aplikasi eksternal
 </string>
     <string name="expose_to_saf_network_hint">
-Allows launchers and external apps (like Projectivy) to browse folders and stream media from this network share.
+Mengizinkan peluncur dan aplikasi eksternal (seperti Projectivy) menelusuri folder dan mengalirkan media dari jaringan berbagi ini.
 </string>
     <string name="expose_to_saf_cloud_hint">
-Allows launchers and external apps (like Projectivy) to browse folders and stream media from this online storage.
+Mengizinkan peluncur dan aplikasi eksternal (seperti Projectivy) menelusuri folder dan mengalirkan media dari penyimpanan online ini.
 </string>
     <!-- Archive Modification (Copy / Move into Archive) -->
     <string name="action_add_to_existing_archive">
@@ -15180,16 +15208,16 @@ Durasi
 Bitrate Keseluruhan
 </string>
     <string name="video_info_codec">
-Codec
+Kodek
 </string>
     <string name="video_info_resolution">
 Resolusi
 </string>
     <string name="video_info_framerate">
-Frame Rate
+Kecepatan Bingkai
 </string>
     <string name="video_info_bitrate">
-Bitrate
+Kecepatan bit
 </string>
     <string name="video_info_hdr">
 Rentang Dinamis
@@ -15210,7 +15238,7 @@ Format Piksel
 Saluran
 </string>
     <string name="video_info_sample_rate">
-Sample Rate
+Tingkat Sampel
 </string>
     <string name="video_info_language">
 Bahasa
@@ -15228,7 +15256,7 @@ Salin Info Teknis
 Detail teknis disalin ke clipboard
 </string>
     <string name="video_info_not_available">
-N/A
+T/A
 </string>
     <string name="video_info_no_video">
 Tidak ada stream video yang terdeteksi
@@ -15243,7 +15271,7 @@ Tidak ada subtitle yang terdeteksi
 Trek Audio %1$d
 </string>
     <string name="video_info_track_subtitle">
-Subtitle %1$d
+Subjudul %1$d
 </string>
     <string name="player_toast_info">
 Informasi Media
@@ -15436,7 +15464,7 @@ Simpan
 PRATINJAU LANGSUNG
 </string>
     <string name="live_preview_sample_filename">
-Quarterly_Financial_Report_2026_Final.pdf
+Laporan_Keuangan_Kuartalan_2026_Final.pdf
 </string>
     <string name="live_preview_sample_info">
 3.8 MB · Diubah hari ini, 13:45
@@ -15585,240 +15613,358 @@ Pasang Drive
 </string>
 
     <!-- Grid Text Placement Settings -->
-    <string name="settings_grid_text_position_title">Grid Text Placement</string>
-    <string name="settings_grid_text_position_subtitle">Position file names below or overlaid on grid items</string>
-    <string name="settings_grid_text_position_below">Below Block (Default)</string>
-    <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
-    <string name="backup_pref_grid_text_position">Grid text placement settings</string>
-    <string name="backup_pref_view_styles">View density &amp; preset styles</string>
+    <string name="settings_grid_text_position_title">
+Penempatan Teks Kotak
+</string>
+    <string name="settings_grid_text_position_subtitle">
+Posisikan nama file di bawah atau dihamparkan pada item kisi
+</string>
+    <string name="settings_grid_text_position_below">
+Di Bawah Blok (Default)
+</string>
+    <string name="settings_grid_text_position_overlay">
+Dilapisi di Blok
+</string>
+    <string name="backup_pref_grid_text_position">
+Pengaturan penempatan teks kisi
+</string>
+    <string name="backup_pref_view_styles">
+Lihat kepadatan &amp; gaya preset
+</string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
-    <string name="open_as">Open As…</string>
-    <string name="open_as_desc">Choose a viewer or player to open this file</string>
-    <string name="presentation_viewer">Presentation Viewer</string>
-    <string name="slide_counter">Slide %1$d of %2$d</string>
-    <string name="open_in_powerpoint">Open in Presentation App</string>
-    <string name="open_as_text">Text / Code Viewer</string>
-    <string name="open_as_text_desc">Built-in code &amp; text editor with syntax highlighting</string>
-    <string name="open_as_hex">Hex / Binary Viewer</string>
-    <string name="open_as_hex_desc">Raw byte hex dump and binary inspector</string>
-    <string name="open_as_presentation">Presentation / Slide Deck</string>
-    <string name="open_as_presentation_desc">Built-in slide deck viewer with speaker notes</string>
-    <string name="open_as_spreadsheet">Spreadsheet / Table</string>
-    <string name="open_as_spreadsheet_desc">Built-in spreadsheet table viewer</string>
-    <string name="open_as_image">Image Viewer</string>
-    <string name="open_as_image_desc">High-resolution photo viewer with zoom &amp; pan</string>
-    <string name="open_as_audio">Audio Player</string>
-    <string name="open_as_audio_desc">Media3 audio player with background playback</string>
-    <string name="open_as_video">Video Player</string>
-    <string name="open_as_video_desc">Media3 hardware-accelerated video player</string>
-    <string name="open_as_archive">Archive Browser</string>
-    <string name="open_as_archive_desc">Explore ZIP, 7Z, TAR, RAR, and compressed files</string>
-    <string name="open_as_other">Choose External App…</string>
-    <string name="open_as_other_desc">Open with an installed third-party app</string>
-    <string name="speaker_notes">Speaker Notes</string>
-    <string name="no_slides_found">No slides found in this presentation</string>
-    <string name="next_slide">Next Slide</string>
-    <string name="prev_slide">Previous Slide</string>
-    <string name="view_raw_text">View as Raw Text</string>
-    <string name="ufm_slide_deck_viewer">UFM Slide Deck</string>
-    <string name="open_with_presentation_app">Presentation App (PowerPoint / Slides)</string>
-    <string name="open_with_presentation_app_desc">Open in Microsoft PowerPoint, Google Slides, or office suite</string>
-    <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
+    <string name="open_as">
+Buka Sebagai…
+</string>
+    <string name="open_as_desc">
+Pilih penampil atau pemutar untuk membuka file ini
+</string>
+    <string name="presentation_viewer">
+Penampil Presentasi
+</string>
+    <string name="slide_counter">
+Geser %1$d dari %2$d
+</string>
+    <string name="open_in_powerpoint">
+Buka di Aplikasi Presentasi
+</string>
+    <string name="open_as_text">
+Penampil Teks / Kode
+</string>
+    <string name="open_as_text_desc">
+Kode &amp; editor teks bawaan dengan penyorotan sintaksis
+</string>
+    <string name="open_as_hex">
+Hex / Penampil Biner
+</string>
+    <string name="open_as_hex_desc">
+Dump hex byte mentah dan inspektur biner
+</string>
+    <string name="open_as_presentation">
+Presentasi / Dek Slide
+</string>
+    <string name="open_as_presentation_desc">
+Penampil dek slide internal dengan catatan pembicara
+</string>
+    <string name="open_as_spreadsheet">
+Lembar Bentang / Tabel
+</string>
+    <string name="open_as_spreadsheet_desc">
+Penampil tabel spreadsheet bawaan
+</string>
+    <string name="open_as_image">
+Penampil Gambar
+</string>
+    <string name="open_as_image_desc">
+Penampil foto resolusi tinggi dengan zoom &amp; pan
+</string>
+    <string name="open_as_audio">
+Pemutar Audio
+</string>
+    <string name="open_as_audio_desc">
+Pemutar audio Media3 dengan pemutaran latar belakang
+</string>
+    <string name="open_as_video">
+Pemutar Video
+</string>
+    <string name="open_as_video_desc">
+Pemutar video dengan akselerasi perangkat keras Media3
+</string>
+    <string name="open_as_archive">
+Peramban Arsip
+</string>
+    <string name="open_as_archive_desc">
+Jelajahi file ZIP, 7Z, TAR, RAR, dan terkompresi
+</string>
+    <string name="open_as_other">
+Pilih Aplikasi Eksternal…
+</string>
+    <string name="open_as_other_desc">
+Buka dengan aplikasi pihak ketiga yang diinstal
+</string>
+    <string name="speaker_notes">
+Catatan Pembicara
+</string>
+    <string name="no_slides_found">
+Tidak ada slide yang ditemukan dalam presentasi ini
+</string>
+    <string name="next_slide">
+Slide Berikutnya
+</string>
+    <string name="prev_slide">
+Slide Sebelumnya
+</string>
+    <string name="view_raw_text">
+Lihat sebagai Teks Mentah
+</string>
+    <string name="ufm_slide_deck_viewer">
+Dek Geser UFM
+</string>
+    <string name="open_with_presentation_app">
+Aplikasi Presentasi (PowerPoint / Slide)
+</string>
+    <string name="open_with_presentation_app_desc">
+Buka di Microsoft PowerPoint, Google Slides, atau office suite
+</string>
+    <string name="ufm_slide_viewer_desc">
+Lihat slide, thumbnail sampul, dan catatan di UFM
+</string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
-    <string name="action_open_with">Open With…</string>
-    <string name="action_open_as">Open As…</string>
-    <string name="toolbar_open_with">Open With</string>
-    <string name="toolbar_open_as">Open As</string>
-    <string name="action_extract_subtitles">Extract Subtitles</string>
-    <string name="action_extract_audio">Extract Audio</string>
+    <string name="action_open_with">
+Buka Dengan…
+</string>
+    <string name="action_open_as">
+Buka Sebagai…
+</string>
+    <string name="toolbar_open_with">
+Buka Dengan
+</string>
+    <string name="toolbar_open_as">
+Buka Sebagai
+</string>
+    <string name="action_extract_subtitles">
+Ekstrak Subtitle
+</string>
+    <string name="action_extract_audio">
+Ekstrak Audio
+</string>
     <string name="action_convert_to_mp4">
-Convert to MP4
+Konversikan ke MP4
 </string>
-    <string name="toolbar_extract_subtitles">Extract Subtitles</string>
-    <string name="toolbar_extract_audio">Extract Audio</string>
+    <string name="toolbar_extract_subtitles">
+Ekstrak Subtitle
+</string>
+    <string name="toolbar_extract_audio">
+Ekstrak Audio
+</string>
     <string name="toolbar_convert_to_mp4">
-Convert to MP4
+Konversikan ke MP4
 </string>
-    <string name="extracting_subtitles">Extracting subtitle track…</string>
-    <string name="extracting_audio">Extracting audio track…</string>
+    <string name="extracting_subtitles">
+Mengekstrak trek subtitle…
+</string>
+    <string name="extracting_audio">
+Mengekstrak trek audio…
+</string>
     <string name="convert_to_mp4_progress">
-Converting video to MP4…
+Mengonversi video ke MP4…
 </string>
     <string name="convert_to_mp4_success">
-Video converted to %1$s
+Video dikonversi ke %1$s
 </string>
     <string name="convert_to_mp4_failed">
-Failed to convert video
+Gagal mengonversi video
 </string>
     <string name="convert_to_mp4_title">
-Convert to MP4
+Konversikan ke MP4
 </string>
     <string name="convert_to_mp4_confirm">
-Convert \"%1$s\" to universal MP4 format?
+Konversikan \"%1$s\" ke format MP4 universal?
 </string>
-    <string name="subtitles_extracted_success">Subtitles extracted successfully.</string>
-    <string name="audio_extracted_success">Audio extracted successfully.</string>
+    <string name="subtitles_extracted_success">
+Subtitle berhasil diekstraksi.
+</string>
+    <string name="audio_extracted_success">
+Audio berhasil diekstraksi.
+</string>
     <string name="audio_format_universal">
-Universal M4A
+M4A sejagat
 </string>
     <string name="audio_format_original">
-Original Stream
+Aliran Asli
 </string>
     <string name="audio_format_universal_desc">
-High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+AAC (.m4a) berkualitas tinggi — diputar di mana saja di ponsel, mobil &amp; aplikasi musik
 </string>
     <string name="audio_format_original_desc">
-Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+Salinan aliran langsung tanpa kehilangan (.eac3, .dts, .ac3, .flac)
 </string>
     <string name="codec_unsupported_title">
-Audio Codec Not Supported
+Kodek Audio Tidak Didukung
 </string>
     <string name="codec_unsupported_message">
-This device lacks a native hardware decoder for %1$s audio.\n
+Perangkat ini tidak memiliki dekoder perangkat keras asli untuk audio %1$s.\n
 \n
-Would you like to convert it to Universal M4A (AAC) for seamless playback?
+Apakah Anda ingin mengonversinya ke Universal M4A (AAC) untuk pemutaran yang lancar?
 </string>
     <string name="convert_and_play">
-Convert &amp; Play
+Konversi &amp; Mainkan
 </string>
     <string name="converting_audio">
-Converting audio to M4A…
+Mengonversi audio ke M4A…
 </string>
     <string name="convert_to_m4a">
-Convert to M4A
+Konversikan ke M4A
 </string>
-    <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
-    <string name="media_technical_details">Media Stream Details</string>
-    <string name="media_format">Container</string>
-    <string name="media_bitrate">Overall Bitrate</string>
-    <string name="error_generic">An error occurred</string>
-    <string name="failed_to_open_file">Failed to open file</string>
-    <string name="slide_badge_format">Slide %1$d</string>
-    <string name="slide_counter_format">Slide %1$d of %2$d</string>
-    <string name="no_app_to_open_file">No app found to open this file</string>
+    <string name="no_subtitles_found_in_video">
+Tidak ada trek subtitle tersemat yang ditemukan dalam video ini
+</string>
+    <string name="media_technical_details">
+Detail Aliran Media
+</string>
+    <string name="media_format">
+Wadah
+</string>
+    <string name="media_bitrate">
+Kecepatan Bit Keseluruhan
+</string>
+    <string name="error_generic">
+Terjadi kesalahan
+</string>
+    <string name="failed_to_open_file">
+Gagal membuka file
+</string>
+    <string name="slide_badge_format">
+Geser %1$d
+</string>
+    <string name="slide_counter_format">
+Geser %1$d dari %2$d
+</string>
+    <string name="no_app_to_open_file">
+Tidak ditemukan aplikasi untuk membuka file ini
+</string>
     <string name="select_subtitle_track">
-Select Subtitle Track
+Pilih Subtitle Lagu
 </string>
     <string name="extract_all_subtitles">
-Extract All Tracks
+Ekstrak Semua Lagu
 </string>
     <string name="extract_all_subtitles_desc">
-Extract all %1$d subtitle tracks into separate files
+Ekstrak semua trek subtitle %1$d ke dalam file terpisah
 </string>
     <string name="subtitles_extracted_multiple_success">
-Successfully extracted %1$d subtitle files.
+Berhasil mengekstrak file subtitle %1$d.
 </string>
     <string name="select_audio_track">
-Select Audio Track
+Pilih Trek Audio
 </string>
     <string name="extract_all_audio">
-Extract All Tracks
+Ekstrak Semua Lagu
 </string>
     <string name="extract_all_audio_desc">
-Extract all %1$d audio tracks into separate files
+Ekstrak semua trek audio %1$d ke dalam file terpisah
 </string>
     <string name="audio_extracted_multiple_success">
-Successfully extracted %1$d audio files.
+Berhasil mengekstrak file audio %1$d.
 </string>
     <string name="no_audio_found_in_video">
-No audio tracks found in this video
+Tidak ada trek audio yang ditemukan dalam video ini
 </string>
 
     <!-- Floating Bottom Bar Dock -->
     <string name="floating_bar_settings_title">
-Floating Bottom Bar
+Bilah Bawah Mengambang
 </string>
     <string name="floating_bar_settings_subtitle">
-Show a modern floating dock at the bottom of the main menu for quick access
+Tampilkan dermaga apung modern di bagian bawah menu utama untuk akses cepat
 </string>
     <string name="floating_bar_manage_title">
-Manage Floating Bar
+Kelola Floating Bar
 </string>
     <string name="floating_bar_manage_subtitle">
-Add, remove, and reorder quick-access shortcuts
+Menambah, menghapus, dan menyusun ulang pintasan akses cepat
 </string>
     <string name="floating_bar_enable_switch">
-Enable Floating Bar
+Aktifkan Bilah Mengambang
 </string>
     <string name="floating_bar_enable_desc">
-Docked tiles appear in the bottom floating bar and are hidden from the main menu
+Ubin berlabuh muncul di bilah mengambang bawah dan disembunyikan dari menu utama
 </string>
     <string name="floating_bar_docked_section">
-Docked Items
+Item Berlabuh
 </string>
     <string name="floating_bar_docked_hint">
-Drag handle to reorder. Tap Remove to return item to main menu.
+Seret pegangan untuk menyusun ulang. Ketuk Hapus untuk mengembalikan item ke menu utama.
 </string>
     <string name="floating_bar_available_section">
-Available Tiles
+Ubin yang Tersedia
 </string>
     <string name="floating_bar_available_hint">
-Tap + to add a tile to the floating bottom bar
+Ketuk + untuk menambahkan ubin ke bilah bawah mengambang
 </string>
     <string name="floating_bar_empty_docked">
-No items docked yet. Add tiles from the list below.
+Belum ada item yang dipasang ke dok. Tambahkan ubin dari daftar di bawah.
 </string>
     <string name="floating_bar_empty_available">
-All available tiles have been added to the floating bar.
+Semua ubin yang tersedia telah ditambahkan ke bilah mengambang.
 </string>
     <string name="floating_bar_add">
-Add
+Menambahkan
 </string>
     <string name="floating_bar_remove">
-Remove
+Menghapus
 </string>
     <string name="backup_pref_floating_bar">
-Floating Bottom Bar
+Bilah Bawah Mengambang
 </string>
 
     <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
     <string name="quick_access_title">
-Quick Access
+Akses Cepat
 </string>
     <string name="quick_access_mode_title">
-Quick Access Style
+Gaya Akses Cepat
 </string>
     <string name="quick_access_mode_subtitle">
-Choose how quick-access shortcuts are presented
+Pilih cara pintasan akses cepat disajikan
 </string>
     <string name="quick_access_mode_disabled">
-Disabled
+Dengan disabilitas
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+Bar Mengambang Bawah
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+Menu Gesek Tepi
 </string>
     <string name="quick_access_edge_title">
-Swipe Edge
+Gesek Tepi
 </string>
     <string name="quick_access_edge_left">
-Left Edge
+Tepi Kiri
 </string>
     <string name="quick_access_edge_right">
-Right Edge
+Tepi Kanan
 </string>
     <string name="quick_access_edge_handle_title">
-Edge Handle Indicator
+Indikator Pegangan Tepi
 </string>
     <string name="quick_access_edge_handle_desc">
-Show a subtle indicator on the screen edge for easy opening
+Tampilkan indikator halus di tepi layar agar mudah dibuka
 </string>
     <string name="quick_access_hide_tiles_title">
-Hide Docked Tiles on Main Menu
+Sembunyikan Ubin Berlabuh di Menu Utama
 </string>
     <string name="quick_access_hide_tiles_desc">
-Keep the main dashboard clean by hiding tiles docked in Quick Access
+Jaga kebersihan dasbor utama dengan menyembunyikan ubin yang dipasang di Akses Cepat
 </string>
     <string name="quick_access_manage_tiles">
-Manage Tiles
+Kelola Ubin
 </string>
     <string name="quick_access_empty_hint">
-No tiles docked yet.\n
-Tap Manage Tiles to add shortcuts.
+Belum ada ubin yang dipasang ke dok.\n
+Ketuk Kelola Ubin untuk menambahkan pintasan.
 </string>
     <string name="quick_access_mode_disabled_desc">Nonaktifkan pintasan akses cepat</string>
     <string name="quick_access_mode_bottom_bar_desc">Bilah mengambang modern di bagian bawah menu utama</string>
@@ -15829,373 +15975,373 @@ Tap Manage Tiles to add shortcuts.
 
     <!-- Direct Remote Media & Media Operation Worker -->
     <string name="settings_network_media_process_title">
-Network Media Processing
+Pemrosesan Media Jaringan
 </string>
     <string name="settings_network_media_process_subtitle_off">
-Direct stream processing (zero local copy of video)
+Pemrosesan streaming langsung (tidak ada salinan video lokal)
 </string>
     <string name="settings_network_media_process_subtitle_on">
-Copy full video to local storage before processing
+Salin video lengkap ke penyimpanan lokal sebelum diproses
 </string>
     <string name="backup_pref_network_media_process">
-Network Media Processing
+Pemrosesan Media Jaringan
 </string>
     <string name="dialog_copy_before_process_title">
-Copy to Local Storage?
+Salin ke Penyimpanan Lokal?
 </string>
     <string name="dialog_copy_before_process_msg">
-This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+Operasi ini akan menyalin \"%1$s\" (%2$s) dari penyimpanan jaringan ke penyimpanan lokal perangkat Anda terlebih dahulu.\n
 \n
-Depending on file size and connection speed, this may take some time.\n
+Tergantung pada ukuran file dan kecepatan koneksi, ini mungkin memerlukan waktu.\n
 \n
-Do you want to proceed?
+Apakah Anda ingin melanjutkan?
 </string>
     <string name="action_copy_and_proceed">
-Copy &amp; Proceed
+Salin &amp; Lanjutkan
 </string>
     <string name="media_operation_channel_name">
-Media Operations
+Operasi Media
 </string>
     <string name="media_operation_channel_desc">
-Background video conversion and track extraction
+Konversi video latar belakang dan ekstraksi trek
 </string>
     <string name="media_op_converting_video">
-Converting Video to MP4…
+Mengonversi Video ke MP4…
 </string>
     <string name="media_op_extracting_audio">
-Extracting Audio Track…
+Mengekstrak Trek Audio…
 </string>
     <string name="media_op_extracting_subtitles">
-Extracting Subtitles…
+Mengekstrak Subtitle…
 </string>
     <string name="media_op_completed_title">
-Media Operation Completed
+Operasi Media Selesai
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+Operasi Media Gagal
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+Mengunduh video jarak jauh ke cache lokal…
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+Mengunggah hasil ke folder jarak jauh…
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+Melanjutkan di latar belakang. Periksa pemberitahuan untuk kemajuan.
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+Berbagi Jarak Jauh bersifat Hanya-Baca
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+File yang diekstraksi tidak dapat disimpan ke \"%1$s\" karena file yang dibagikan bersifat hanya baca.\n
 \n
-Would you like to save it to your local device instead?
+Apakah Anda ingin menyimpannya ke perangkat lokal Anda?
 </string>
     <string name="action_save_locally">
-Save to Device
+Simpan ke Perangkat
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+Bagikan Hanya Baca
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+Berbagi \"%1$s\" bersifat hanya-baca.\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+File yang diekstrak atau dikonversi tidak dapat disimpan kembali ke berbagi jarak jauh, sehingga akan disimpan ke folder Unduhan lokal Anda.\n
 \n
-Do you want to proceed?
+Apakah Anda ingin melanjutkan?
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+Penyimpanan Lainnya
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+Penyedia cloud &amp; dokumen yang diinstal
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+Akses penyedia dokumen pihak ketiga yang diinstal pada perangkat Anda
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+%1$d penyedia dokumen tersedia
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+1 penyedia dokumen tersedia
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+Tidak ditemukan penyedia dokumen pihak ketiga
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+Telusuri File (SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+Pasang Folder Penyimpanan
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+Terhubung melalui Mesin Asli UFM
 </string>
     <string name="action_open_app">
-Open App
+Buka Aplikasi
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+Tambahkan Lokasi Penyimpanan
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+Pasang Direktori/Folder
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+Pilih folder dari Termux, kartu SD, atau drive USB
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+Penyedia Dokumen Terpasang
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+Akses Proton Drive, file Synology DS, Google Drive &amp; lainnya
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+Cloud &amp; Jaringan Berkecepatan Tinggi
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+Sinkronisasi 2 arah penuh melalui RClone (Proton/Google Drive) atau SMB/WebDAV
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+Buka atau Salin File
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+Apa yang ingin Anda lakukan dengan \"%1$s\"?
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+Buka di Penampil UFM
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+Salin ke Penyimpanan Lokal
 </string>
     <string name="saf_file_action_remember">
-Remember my choice
+Ingat pilihanku
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+Selalu Bertanya
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+Menyalin %1$d file ke Unduhan
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+Tindakan File yang Dipilih SAF
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+Selalu tanyakan apakah akan membuka atau menyalin
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+Selalu terbuka di UFM Viewer
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+Selalu salin ke penyimpanan lokal
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+Penyedia Dokumen
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+Kelola %1$s
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+Jelajahi &amp; Unduh File
 </string>
     <string name="doc_provider_action_browse_subtitle">Buka %1$s untuk memilih file yang ingin dilihat atau disalin secara lokal</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+Unggah Berkas ke %1$s
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+Pilih file lokal di UFM untuk disimpan ke %1$s
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+Hapus %1$s?
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+Hapus %1$s dari penyimpanan? Anda dapat menambahkannya kembali kapan saja dari Penyimpanan Lain.
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+Hapus dari Penyimpanan
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+%1$s dihapus dari penyimpanan
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+%1$s ditambahkan ke penyimpanan
 </string>
     <string name="other_storage_all_added">
-All available providers added
+Semua penyedia yang tersedia ditambahkan
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+Semua penyedia dokumen yang terinstal sudah ditambahkan ke Menu Penyimpanan Utama Anda.
 </string>
     <string name="saf_copy_destination_title">
-Destination: %1$s
+Tujuan: %1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+Ganti Folder…
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+Pilih folder tujuan
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+Tetapkan Tujuan Salin
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+Tujuan File yang Dipilih SAF
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+File yang disalin dari penyedia dokumen akan disimpan ke \"%1$s\".
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+Penyimpanan Lainnya &amp; Transfer SAF
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+Salin Folder Tujuan
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+Atur Ulang ke Default (Unduhan)
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+Pilih Folder Baru…
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+Salin pengaturan ulang tujuan ke Unduhan
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+Ekspor ke Penyedia Dokumen
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+Simpan langsung ke cloud atau penyedia dokumen yang terpasang
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+Pilih Penyedia Tujuan
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+Ekspor Banyak File
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+Bagaimana Anda ingin mengekspor file %1$d ini ke %2$s?
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+Ekspor sebagai Arsip ZIP
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+Gunakan Lembar Unggahan Sistem
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+\"%1$s\" disimpan ke %2$s
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+Folder Dapat Dipasang
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+File &amp; Awan
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+Sinkronisasi Asli Tersedia
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+Unggah ke Penyimpanan Lain
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+Unggah file atau folder yang dipilih ke penyedia dokumen eksternal
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+Unggah ke Penyimpanan Lain
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+Tidak ada penyedia penyimpanan yang ditambahkan. Pilih penyedia untuk ditambahkan.
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+Menyalin %1$d file ke %2$s
 </string>
     <string name="share_export_folder_title">
-Export Folder
+Ekspor Folder
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+Folder tidak dapat diunggah langsung melalui Penyedia Dokumen. Apakah Anda ingin mengompresi \"%1$s\" menjadi arsip ZIP untuk diunggah ke %2$s?
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+Kompres menjadi satu arsip ZIP dan unggah
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+Kirim item menggunakan lembar unggahan sistem Android
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+Pilih penyedia yang terpasang atau buka Penyimpanan Lainnya
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+Membuat zip untuk %1$s…
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+Zip untuk Penyimpanan Lainnya…
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+Unggah melalui %1$s
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+Kirim file langsung ke %1$s
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+Kompres ke dalam arsip ZIP dan pilih folder tujuan di %1$s
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+Mempertahankan struktur folder dan direktori asli di dalam arsip ZIP di %1$s
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+Mengunggah file individual langsung ke %1$s (layar unggahan eksternal tidak dapat membuat direktori)
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+Pemberitahuan Pengunggahan Folder
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+Layar unggahan eksternal (seperti %2$s) tidak dapat membuat direktori.\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+Hanya file di dalam \"%1$s\" yang akan diunggah, bukan folder aslinya.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Untuk mempertahankan struktur direktori lengkap, pilih \"Ekspor sebagai Arsip ZIP\".
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+Layar unggahan eksternal (seperti %1$s) tidak dapat membuat direktori.\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+Hanya file di dalam folder terpilih yang akan diunggah, bukan folder aslinya.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Untuk mempertahankan struktur direktori lengkap, pilih \"Ekspor sebagai Arsip ZIP\".
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+Unggah File Saja
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+Opsi Layar Beranda
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+Tambahkan ke layar beranda
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+Hapus dari layar beranda
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+Hapus favorit
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+Pintasan diminta — periksa layar beranda Anda
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+Pintasan dinonaktifkan. Hapus secara manual dari layar beranda Anda.
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+Favorit UFM
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+Saluran tidak disetujui. Anda dapat mengaktifkannya nanti di Pengaturan TV → Saluran.
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+Barang tidak tersedia
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+File atau folder tidak dapat ditemukan. Mungkin telah dipindahkan, dihapus, atau berada di penyimpanan yang tidak tersedia.
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -16215,300 +16361,300 @@ Tidak ada drive atau favorit yang tersedia
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+Buka dengan
 </string>
     <string name="open_with_search_hint">
-Search apps…
+Telusuri aplikasi…
 </string>
     <string name="open_with_just_once">
-Just once
+Sekali saja
 </string>
     <string name="open_with_always">
-Always
+Selalu
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+Selalu gunakan aplikasi yang dipilih untuk file .%1$s
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+Selalu gunakan aplikasi yang dipilih
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+Ingat default untuk file .%1$s
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+Tidak ditemukan aplikasi terinstal untuk membuka file ini
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+Cari di Google Play Store
 </string>
     <string name="open_with_app_info">
-App info
+Informasi aplikasi
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+Lihat detail aplikasi dan pengaturan sistem
 </string>
     <string name="open_with_set_default">
-Always use this app
+Selalu gunakan aplikasi ini
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+Tidak dapat meluncurkan %1$s. Kembali ke pemilih sistem…
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+Tekan OK untuk membuka • Tekan lama OK untuk opsi aplikasi default
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+Pilih sebagai Tujuan
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+Tujuan Penonton
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+Konfirmasi Folder Tujuan
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+Folder yang dipilih akan digunakan untuk tindakan Salin dan Pindahkan dengan cepat di UFM Viewer dan Slide Show.
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+Tindakan File
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+Folder Tujuan
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+Tidak ada tujuan yang dipilih — ketuk untuk memilih
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+Mengubah
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+Salin ke %1$s
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+Pindah ke %1$s
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+Salin ke tujuan
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+Pindah ke tujuan
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+Disalin ke %1$s
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+Dipindahkan ke %1$s
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+Sumber dan tujuan adalah folder yang sama
 </string>
     <string name="backup_pref_viewer_transfer">
-Viewer Transfer Destination
+Tujuan Transfer Penonton
 </string>
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+Tambahkan ke Layar Utama
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+Nama Pintasan
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+Pintasan Penyimpanan
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+\"%1$s\" sudah disematkan ke layar beranda Anda.
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+Tambahkan ke Layar Utama
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+Nama pintasan tidak boleh kosong
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
     <string name="download_manager_title">
-Download Manager
+Pengelola Unduhan
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+Unduhan Torrent, Magnet &amp; HTTP
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+Pengelola unduhan langsung dan peer-to-peer asli berkecepatan tinggi dengan perlindungan privasi tanpa penyemaian.
 </string>
     <string name="download_no_transfers">
-No active downloads
+Tidak ada unduhan aktif
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+Pilih sebagai Folder Unduhan
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+Unduh Folder
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+Konfirmasikan Lokasi Unduhan
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+Unduhan akan disimpan langsung ke direktori ini.
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+Unduhan Langsung
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+Unduhan Torrent
 </string>
     <string name="download_location_label">
-Download location
+Lokasi pengunduhan
 </string>
     <string name="download_change_location">
-Change
+Mengubah
 </string>
     <string name="download_action_start">
-Start
+Awal
 </string>
     <string name="download_action_pause">
 Pause
 </string>
     <string name="download_action_resume">
-Resume
+Melanjutkan
 </string>
     <string name="download_action_cancel">
-Cancel
+Membatalkan
 </string>
     <string name="download_action_delete">
-Delete
+Menghapus
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+URL Unduhan Langsung
 </string>
     <string name="download_enter_url_hint">
 https://example.com/file.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+Unduh
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+Tautan Torrent atau Magnet
 </string>
     <string name="download_enter_magnet_hint">
-magnet:?xt=urn:btih:...
+magnet:?xt=guci:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+Buka File .torrent
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+Unduh Manajer &amp; Pemberitahuan P2P
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+Penggunaan yang Dapat Diterima &amp; Informasi Privasi
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+Saya memahami bahwa pengunduhan peer-to-peer membagikan alamat IP saya dalam gerombolan tersebut, dan saya setuju untuk menggunakan alat ini hanya untuk konten yang sah dan tidak melanggar.
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+Batas Penyimpanan Terlampaui
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+Ukuran file target (%1$s) melebihi batas 4 GB yang didukung oleh sistem file FAT32 di drive ini.\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+Silakan pilih lokasi download lain yang diformat dalam exFAT, NTFS, atau penyimpanan internal.
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+Ruang Penyimpanan Tidak Memadai
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+Ruang kosong di drive penyimpanan yang dipilih tidak cukup.\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+Diperlukan: %1$s\n
+Tersedia: %2$s\n
 \n
-Please select another drive or free up space.
+Silakan pilih drive lain atau kosongkan ruang.
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+Pilih Lokasi
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+Koneksi Data Seluler
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+Saat ini Anda tersambung ke jaringan seluler dan mode Wi-Fi saja diaktifkan.\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+Apakah Anda ingin mengantri transfer ini hingga Wi-Fi tersambung atau mengizinkan data seluler untuk diunduh?
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+Antrian untuk Wi-Fi
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+Izinkan Data Seluler
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+Kebijakan Jaringan
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+Pilih aturan koneksi jaringan untuk pengunduhan
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+Hanya Wi-Fi (Disarankan)
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+Hanya transfer unduhan saat terhubung ke Wi-Fi tanpa meteran
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+Semua Jaringan (Wi-Fi &amp; Seluler)
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+Izinkan transfer melalui data seluler seluler dan jaringan Wi-Fi
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+Tinjau Ketentuan Non-Pembajakan
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+Lihat pengungkapan kawanan P2P, privasi, dan persyaratan zero-seeding
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+Kawanan P2P &amp; Visibilitas IP
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+BitTorrent mentransfer potongan pertukaran secara langsung dengan perangkat rekan lainnya di gerombolan. Alamat IP publik Anda terlihat oleh rekan-rekan aktif saat mentransfer.
 </string>
     <string name="download_legal_zero_seeding_title">
-Zero-Seeding Privacy
+Privasi Tanpa Pembibitan
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+UFM menerapkan zero-seeding yang ketat. Saat pengunduhan selesai (100%), semua koneksi gerombolan terputus dan pengumuman pelacak segera dihentikan.
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+Hanya Konten yang Sah
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+Anda setuju untuk menggunakan alat ini hanya untuk file yang sah, bersumber terbuka, domain publik, atau resmi. Dilarang mengunduh atau mendistribusikan materi berhak cipta tanpa izin.
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+Setuju &amp; Lanjutkan
 </string>
     <string name="download_legal_understood">
-Understood
+Dipahami
 </string>
     <string name="download_state_downloading">
-Downloading
+Mengunduh
 </string>
     <string name="download_state_paused">
-Paused
+Dijeda
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+Mengantri untuk Wi-Fi
 </string>
     <string name="download_state_completed">
-Completed
+Selesai
 </string>
     <string name="download_state_error">
-Error
+Kesalahan
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+Unduh Transfer Manajer
 </string>
     <string name="download_notif_channel_desc">
 Ongoing download progress and status updates
@@ -16578,19 +16724,19 @@ Open Download Folder
 Remove Transfer
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+Pilih cara menghapus transfer ini dari Pengelola Unduhan:
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+Hapus Transfer Saja
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+Simpan file yang diunduh di perangkat Anda
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+Hapus &amp; Hapus File
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+Hapus file yang diunduh dari disk secara permanen
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16651,79 +16797,79 @@ Gagal memperbarui lokasi unduhan TV: %1$s
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+Bookmark Cerdas
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+Atur tautan, media &amp; pembagian yang disimpan
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%1$d item di %2$d grup
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+Belum ada bookmark yang disimpan
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+Tandai dengan UFM
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+Simpan Bookmark
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+Dibagikan dari %1$s
 </string>
     <string name="bookmark_field_title_hint">
-Title
+Judul
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+Koleksi / Grup
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+Tambahkan catatan pribadi (opsional)
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+Simpan Penanda
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+Sudah ditandai — catatan &amp; waktu diperbarui
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+Bookmark disimpan ke %1$s
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+Grup
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+Lihat semua ›
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+Koleksi &amp; Sumber
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+Kelola koleksi, filter, dan lindungi brankas
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+Telusuri koleksi…
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+Semua Bookmark
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+Tampilkan semua bookmark yang tidak terkunci di semua sumber
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+Koleksi Saya
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+Koleksi buatan pengguna • Vault dapat dikunci
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+Sumber Aplikasi
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+Dibuat secara otomatis dari aplikasi bersama
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16732,196 +16878,196 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+Keamanan perangkat (PIN, pola, atau sidik jari) tidak diatur di perangkat ini.
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+Gudang Terkunci
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+Autentikasi untuk menghapus kunci Vault
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+Koleksi dikunci dengan Vault
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+Koleksi tidak terkunci
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+Grup Bookmark Baru
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+Nama Grup
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+Buat Grup
 </string>
     <string name="bookmark_filter_all">
-All
+Semua
 </string>
     <string name="bookmark_filter_links">
-Links
+Tautan
 </string>
     <string name="bookmark_filter_media">
 Media
 </string>
     <string name="bookmark_filter_docs">
-Documents
+Dokumen
 </string>
     <string name="bookmark_filter_notes">
-Notes
+Catatan
 </string>
     <string name="bookmark_filter_starred">
-Starred
+Berbintang
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+Telusuri bookmark, catatan, atau domain…
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+Urutkan Bookmark
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+Terbaru hingga Terlama
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+Terlama hingga Terbaru
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+Judul (A–Z)
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+Judul (Z–A)
 </string>
     <string name="bookmark_sort_size">
-File Size
+Ukuran Berkas
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+Kelompokkan berdasarkan Koleksi
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+Koleksi: A sampai Z
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+Koleksi: Z hingga A
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+Hapus Koleksi
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+Apakah Anda yakin ingin menghapus koleksi \"%1$s\"?
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+Baca Artikel
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+Buka di Peramban
 </string>
     <string name="bookmark_action_open_file">
-Open File
+Buka Berkas
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+Salin Tautan
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+Salin Teks
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+Simpan ke Penyimpanan
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+Pindah ke Grup
 </string>
     <string name="bookmark_action_delete">
-Delete
+Menghapus
 </string>
     <string name="bookmark_view_note">
-View Note
+Lihat Catatan
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+Koleksi Kunci (Vault)
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+Memerlukan sidik jari atau PIN untuk melihatnya
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+Opsi Koleksi
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+Koleksi Kunci
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+Buka Kunci Koleksi
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+Penanda dihapus
 </string>
     <string name="bookmark_undo">
-Undo
+Membuka
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+Item %1$d yang dipilih
 </string>
     <string name="bookmark_batch_move">
-Move
+Bergerak
 </string>
     <string name="bookmark_batch_delete">
-Delete
+Menghapus
 </string>
     <string name="bookmark_batch_export">
-Export
+Ekspor
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+Ekspor Bookmark
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+Bookmark HTML Peramban (.html)
 </string>
     <string name="bookmark_export_markdown">
-Markdown Document (.md)
+Dokumen Penurunan Harga (.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+Mengekspor %1$d bookmark ke %2$s
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+Modus Pembaca
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+Ukuran Teks
 </string>
     <string name="bookmark_reader_theme">
-Theme
+Tema
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+Lampu
 </string>
     <string name="bookmark_reader_theme_sepia">
-Sepia
+Warna coklat tua
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+Gelap
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+Dengarkan dengan Keras
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+Jeda Membaca
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+Berhenti Membaca
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+Kecepatan %1$sx
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+Menginisialisasi mesin suara…
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+Text-to-speech tidak didukung atau tidak diinstal pada perangkat ini
 </string>
     <string name="bookmark_group_whatsapp">
-WhatsApp
+Ada apa
 </string>
     <string name="bookmark_group_reddit">
 Reddit
@@ -16933,40 +17079,40 @@ YouTube
 Twitter / X
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+Web &amp; Artikel
 </string>
     <string name="bookmark_group_telegram">
 Telegram
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+File &amp; Dokumen
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+Kunci Grup dengan Vault
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+Buka Kunci Grup
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+Otentikasi untuk mengakses bookmark yang terkunci
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+Belum Ada Bookmark
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+Bagikan tautan, artikel, media, atau file dari WhatsApp, Reddit, atau browser Anda dan pilih \"Bookmark dengan UFM\".
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+Tidak Ada Hasil yang Ditemukan
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+Tidak ada bookmark yang cocok dengan \"%1$s\". Coba cari kata kunci yang berbeda.
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+Tidak Ada Bookmark yang Ditemukan
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+Tidak ditemukan bookmark yang cocok dengan filter atau koleksi yang dipilih.
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -16974,67 +17120,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+Tampilan Datar
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+Browser Terindeks Rekursif
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+Buka Folder
 </string>
     <string name="flat_view_expand_all">
-Expand All
+Perluas Semua
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+Ciutkan Semua
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+Sertakan Folder Sistem
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+Tampilkan direktori Android/data, Android/obb, dan sistem dalam Tampilan Datar
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+Default ke Semua Diperluas
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+Buka Tampilan Datar dengan semua folder diperluas secara default
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+Tidak ada file yang diindeks ditemukan dalam volume ini
 </string>
     <string name="flat_view_settings_title">
-Flat View
+Tampilan Datar
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+Konfigurasikan penjelajahan terindeks rekursif dan folder sistem
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+Penyimpanan Tidak Terindeks
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+Tampilan Datar mengharuskan volume penyimpanan ini diindeks sepenuhnya. Silakan jalankan pengindeksan terlebih dahulu.
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%1$d file di seluruh %2$d folder
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+%1$d dipilih
 </string>
     <string name="flat_view_folder_files_count">
 %1$d files
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+Hapus File
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+Apakah Anda yakin ingin menghapus %1$d file yang dipilih?
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+File %1$d dihapus
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+Pengaturan Tampilan Datar
 </string>
 </resources>
 

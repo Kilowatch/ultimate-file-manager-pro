@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
-            android:text="@string/dialog_cancel"
+            android:text="@string/cancel"
             android:background="@drawable/selector_tv_button_yellow"
             android:textColor="@color/tv_text_primary"
             android:focusable="true" />

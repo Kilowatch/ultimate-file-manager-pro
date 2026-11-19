@@ -8,10 +8,10 @@
 Ultimate File Manager Pro
 </string>
     <string name="policy_company">
-KiloWatch
+キロウォッチ
 </string>
     <string name="policy_last_updated">
-Last Updated: November 2026
+最終更新日: 2026 年 11 月
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -180,82 +180,82 @@ Ultimate File Manager Proを使用することにより、本利用規約を読�
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-File Browser — browse, copy, move, rename, and delete files anywhere on your device.
+ファイル ブラウザ — デバイス上のどこにでもファイルを参照、コピー、移動、名前変更、削除できます。
 </item>
         <item>
-Encrypted Vault — lock sensitive files behind AES-256-GCM encryption with your own PIN.
+暗号化された保管庫 — 独自の PIN を使用して、AES-256-GCM 暗号化の背後で機密ファイルをロックします。
 </item>
         <item>
-File Server — host an FTP or secure SFTP server directly on your device to share files across your local network.
+ファイル サーバー — FTP サーバーまたは安全な SFTP サーバーをデバイス上で直接ホストし、ローカル ネットワーク全体でファイルを共有します。
 </item>
         <item>
-Remote Management — manage files over your local Wi-Fi via a built-in HTTP server that supports uploading, downloading, and installing APKs remotely.
+リモート管理 — APK のリモートでのアップロード、ダウンロード、インストールをサポートする内蔵 HTTP サーバーを介して、ローカル Wi-Fi 経由でファイルを管理します。
 </item>
         <item>
-Network Shares — connect to SMB, FTP, and NFS servers on your local network to browse, download, and manage remote files.
+ネットワーク共有 — ローカル ネットワーク上の SMB、FTP、NFS サーバーに接続して、リモート ファイルを参照、ダウンロード、管理します。
 </item>
         <item>
-Folder Sync — automatically back up local phone folders to an SMB or FTP network share on a schedule you choose (interval or specific time daily, weekly, or monthly).
+フォルダー同期 — 選択したスケジュール (間隔または特定の時間、毎日、毎週、または毎月) でローカルの電話フォルダーを SMB または FTP ネットワーク共有に自動的にバックアップします。
 </item>
         <item>
-Device Pairing — pair your mobile phone and Android TV over local Wi-Fi to transfer and install files.
+デバイスのペアリング — ローカル Wi-Fi 経由で携帯電話と Android TV をペアリングし、ファイルを転送してインストールします。
 </item>
         <item>
-ADB Terminal — connect to Android devices in Developer Mode over your local Wi-Fi using ADB (Android Debug Bridge) for direct shell access and advanced troubleshooting.
+ADB ターミナル — ADB (Android Debug Bridge) を使用して、ローカル Wi-Fi 経由で開発者モードで Android デバイスに接続し、直接シェル アクセスと高度なトラブルシューティングを行います。
 </item>
         <item>
-Built-in Viewers — view text files, PDFs, animated images (APNG, GIF, animated WebP, AVIF, SVG and more), archives, and other formats directly within the app.
+内蔵ビューア — テキスト ファイル、PDF、アニメーション画像 (APNG、GIF、アニメーション WebP、AVIF、SVG など)、アーカイブ、その他の形式をアプリ内で直接表示します。
 </item>
         <item>
-Advanced ZIP Support — create and extract password-protected and AES-encrypted ZIP archives.
+高度な ZIP サポート — パスワードで保護され、AES で暗号化された ZIP アーカイブを作成および抽出します。
 </item>
         <item>
-Remote Screenshots — capture the screen of your paired Android TV over local Wi-Fi via ADB and save it directly to your phone\'s storage.
+リモート スクリーンショット — ADB 経由でローカル Wi-Fi 経由でペアリングされた Android TV の画面をキャプチャし、携帯電話のストレージに直接保存します。
 </item>
         <item>
-7Z Archive Support — extract 7Z archives with LZMA/LZMA2 compression.
+7Z アーカイブのサポート — LZMA/LZMA2 圧縮を使用して 7Z アーカイブを抽出します。
 </item>
         <item>
-File Search — quickly find files and folders across your device storage.
+ファイル検索 — デバイスのストレージ全体でファイルやフォルダーをすばやく検索します。
 </item>
         <item>
-Storage Analyser — see a visual breakdown of what\'s using your storage space.
+ストレージ アナライザー — ストレージ スペースを使用しているものの視覚的な内訳を確認します。
 </item>
         <item>
-App Manager — view and manage all apps installed on your device, with debloat recommendations for pre-installed apps.
+アプリマネージャー — デバイスにインストールされているすべてのアプリを表示および管理し、プレインストールされたアプリのデブロートに関する推奨事項を示します。
 </item>
         <item>
-APK Installer — install Android apps and split APKs (XAPK) directly from files saved locally.
+APK インストーラー — Android アプリをインストールし、ローカルに保存されたファイルから直接 APK (XAPK) を分割します。
 </item>
         <item>
-Elevated Access (Porter, Shizuku, Shevery &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.
+昇格されたアクセス (Porter、Shizuku、Shevery、ADB) — 実際にデバイスを root 化することなく、システム ファイルや制限されたディレクトリを管理するための root のようなアクセスを取得します。
 </item>
         <item>
-Root Access (Mobile) — elevated Superuser access for rooted devices to browse, manage, and inspect system-level partitions and protected directories.
+ルート アクセス (モバイル) — ルート化されたデバイスがシステム レベルのパーティションと保護されたディレクトリを参照、管理、検査するための昇格されたスーパーユーザー アクセス。
 </item>
         <item>
-Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.
+Storage Indexer — ファイル メタデータのローカル インデックスを作成して、瞬時の検索と超高速のブラウジングを実現します。
 </item>
         <item>
-Storage Access Framework — other apps can access your files through UFM\'s document provider.
+ストレージ アクセス フレームワーク — 他のアプリは、UFM のドキュメント プロバイダーを通じてファイルにアクセスできます。
 </item>
         <item>
-Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.
+Tip Jar — 開発者をサポートするためのオプションの 1 回限りの購入。アプリはチップなしでいつでも無料です。
 </item>
         <item>
-UFM Media Player — play audio, video, and SMIL animated SVG/SVGZ vector files with background playback, notification controls, Picture-in-Picture mode, and playlist management.
+UFM Media Player — バックグラウンド再生、通知コントロール、ピクチャ イン ピクチャ モード、およびプレイリスト管理を使用して、オーディオ、ビデオ、および SMIL アニメーション SVG/SVGZ ベクトル ファイルを再生します。
 </item>
         <item>
-GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.
+GIF Creator — カスタム フレーム レート、サイズ変更オプション、ドラッグ アンド ドロップ フレームの並べ替えを使用して、選択した画像からアニメーション GIF ファイルを作成します。
 </item>
         <item>
-Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.
+写真 EXIF ツール — 写真の EXIF と GPS メタデータを検査し、プライベート ジオタグとデバイス情報をスクラブし、キャプチャ タイムスタンプとカメラ メタデータを使用して写真の名前をバッチ変更します。
 </item>
         <item>
-Music Tag Editor (Mobile) — inspect, edit, clean, and batch-update audio metadata descriptions (title, artist, album, year, genre, lyrics) and embedded album art directly inside audio files.
+ミュージック タグ エディター (モバイル) — オーディオ メタデータの説明 (タイトル、アーティスト、アルバム、年、ジャンル、歌詞) とオーディオ ファイル内に埋め込まれたアルバム アートを直接検査、編集、クリーンアップ、バッチ更新します。
 </item>
         <item>
-Download Manager — download files via direct HTTP/HTTPS URLs and peer-to-peer Magnet links or .torrent files for open-source distributions, public domain media, and authorized content.
+ダウンロード マネージャー — 直接 HTTP/HTTPS URL およびピアツーピア マグネット リンク、またはオープンソース ディストリビューション、パブリック ドメイン メディア、および承認されたコンテンツの .torrent ファイルを介してファイルをダウンロードします。
 </item>
     </string-array>
 
@@ -352,52 +352,52 @@ ADBペアリングでは、デバイスとターゲットデバイス間でロ�
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
         <item>
-Keep regular backups of important files before performing bulk operations.
+一括操作を実行する前に、重要なファイルを定期的にバックアップしてください。
 </item>
         <item>
-Store your Vault PIN and Recovery Code somewhere safe — we cannot retrieve them for you.
+Vault PIN とリカバリ コードは安全な場所に保管してください。当社がそれらを取得することはできません。
 </item>
         <item>
-Keep your PIN private. Anyone who knows it can access your Vault.
+PIN は秘密にしておいてください。それを知っている人は誰でもあなたの Vault にアクセスできます。
 </item>
         <item>
-Keep your network share credentials safe — they are stored locally on your device.
+ネットワーク共有認証情報は安全に保管してください。認証情報はデバイス上にローカルに保存されます。
 </item>
         <item>
-Review your Folder Sync remote paths carefully — syncing to an incorrect network folder may overwrite existing files.
+フォルダー同期のリモート パスを注意深く確認してください。間違ったネットワーク フォルダーに同期すると、既存のファイルが上書きされる可能性があります。
 </item>
         <item>
-Exercise caution when removing system apps based on debloat recommendations.
+デブロートの推奨事項に基づいてシステム アプリを削除する場合は注意してください。
 </item>
         <item>
-Only connect via ADB Terminal to devices you own or have explicit permission to access. Do not use ADB Terminal to gain unauthorized access to any device.
+ADB ターミナルを介して、自分が所有するデバイス、または明示的にアクセス許可を持っているデバイスにのみ接続してください。 ADB ターミナルを使用してデバイスに不正にアクセスしないでください。
 </item>
         <item>
-Keep any ADB, Porter, Shizuku, or Shevery pairing PINs private — share these only with people you trust to have access to your device.
+ADB、Porter、Shizuku、または Shevery のペアリング PIN は非公開にしておきます。これらの PIN は、デバイスにアクセスできると信頼できる人とのみ共有してください。
 </item>
         <item>
-Secure your Porter, Shizuku or Shevery Manager — granting UFM elevated access via any of these managers gives it power over restricted files. Only grant this access if you trust the app.
+Porter、Shizuku、または Shevery Manager を保護します。これらのマネージャーのいずれかを介して UFM に昇格アクセスを許可すると、制限されたファイルに対する権限が与えられます。アプリを信頼する場合にのみ、このアクセスを許可してください。
 </item>
         <item>
-Exercise extreme caution when Root Access is active — never delete or modify system files unless you understand the consequences to your device OS.
+ルート アクセスがアクティブなときは細心の注意を払ってください。デバイスの OS への影響を理解していない限り、システム ファイルを削除したり変更したりしないでください。
 </item>
         <item>
-Only use the app for lawful purposes. Don\'t store, share, or distribute illegal content.
+アプリは合法的な目的でのみ使用してください。違法なコンテンツを保存、共有、配布しないでください。
 </item>
         <item>
-Don\'t use Remote Management to access another person\'s device without their permission.
+リモート管理を使用して、許可なく他人のデバイスにアクセスしないでください。
 </item>
         <item>
-Don\'t attempt to reverse-engineer, decompile, or tamper with the app.
+アプリのリバース エンジニアリング、逆コンパイル、または改ざんを試みないでください。
 </item>
         <item>
-Manage your indexed records responsibly — you can delete records or ignore specific drives at any time via Settings -> Storage Indexer.
+インデックス付けされたレコードを責任を持って管理します。[設定] -&gt; [Storage Indexer] でいつでもレコードを削除したり、特定のドライブを無視したりできます。
 </item>
         <item>
-Verify the authenticity and safety of any APK files before installing them.
+APK ファイルをインストールする前に、そのファイルの信頼性と安全性を確認してください。
 </item>
         <item>
-Don\'t use the Download Manager, BitTorrent engine, or HTTP streamer to download, share, transmit, or facilitate infringement of copyrighted material without authorization from the copyright holder. You assume sole liability for downloaded content.
+著作権所有者の許可なく、ダウンロード マネージャー、BitTorrent エンジン、または HTTP ストリーマーを使用して、著作権で保護されたマテリアルのダウンロード、共有、送信、または侵害を促進しないでください。ダウンロードしたコンテンツについては、お客様が単独で責任を負うものとします。
 </item>
     </string-array>
 
@@ -524,142 +524,142 @@ TVリモコンのボタンを押したときに触覚フィードバックを提
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD — lightweight HTTP server that powers Remote Management. (BSD-3-Clause)
+NanoHTTPD — リモート管理を強化する軽量の HTTP サーバー。 (BSD-3 条項)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3 client library for network share browsing and Folder Sync. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — ネットワーク共有の参照およびフォルダー同期用の SMB2/SMB3 クライアント ライブラリ。 (LGPL-2.1)
 </item>
         <item>
-smbj (hierynomus/smbj) — SMB2/SMB3 Java implementation used for network share access. (Apache-2.0)
+smbj (hierynomus/smbj) — ネットワーク共有アクセスに使用される SMB2/SMB3 Java 実装。 (Apache-2.0)
 </item>
         <item>
-EMC ECS NFS Client (com.emc.ecs:nfs-client) — NFS v3 client library for network share access. (Apache-2.0)
+EMC ECS NFS クライアント (com.emc.ecs:nfs-client) — ネットワーク共有アクセス用の NFS v3 クライアント ライブラリ。 (Apache-2.0)
 </item>
         <item>
-libnfs (sahlberg/libnfs) — native NFS client library supporting NFSv2, NFSv3, and NFSv4. (LGPL-2.1 / BSD-2-Clause)
+libnfs (sahlberg/libnfs) — NFSv2、NFSv3、および NFSv4 をサポートするネイティブ NFS クライアント ライブラリ。 (LGPL-2.1 / BSD-2 条項)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access and hosting. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — 安全なネットワーク共有アクセスとホスティングのための包括的な SSHD コア、SFTP、および SCP クライアント ライブラリ。 (Apache-2.0)
 </item>
         <item>
-Apache FtpServer (org.apache.ftpserver) — 100% pure Java FTP server. (Apache-2.0)
+Apache FtpServer (org.apache.ftpserver) — 100% 純粋な Java FTP サーバー。 (Apache-2.0)
 </item>
         <item>
-Apache POI — document processing library for viewing office files. (Apache-2.0)
+Apache POI — Office ファイルを表示するための文書処理ライブラリ。 (Apache-2.0)
 </item>
         <item>
-Firebase Analytics — Google\'s analytics platform that helps us understand app usage. (Apache-2.0)
+Firebase Analytics — アプリの使用状況を把握するのに役立つ Google の分析プラットフォーム。 (Apache-2.0)
 </item>
         <item>
-AndroidX Libraries (incl. Leanback for Android TV) — Google\'s Jetpack components for modern Android development. (Apache-2.0)
+AndroidX ライブラリ (Android TV 用 Leanback を含む) — 最新の Android 開発用の Google の Jetpack コンポーネント。 (Apache-2.0)
 </item>
         <item>
-Material Design Components — Google\'s UI library for a clean, consistent interface. (Apache-2.0)
+マテリアル デザイン コンポーネント — クリーンで一貫したインターフェイスのための Google の UI ライブラリ。 (Apache-2.0)
 </item>
         <item>
-Room Persistence Library — SQLite abstraction layer for local metadata indexing. (Apache-2.0)
+Room Persistence Library — ローカル メタデータ インデックス作成のための SQLite 抽象化レイヤー。 (Apache-2.0)
 </item>
         <item>
-zip4j (net.lingala.zip4j) — advanced ZIP library for password-protected and AES-encrypted archives. (Apache-2.0)
+zip4j (net.lingala.zip4j) — パスワードで保護され、AES 暗号化されたアーカイブ用の高度な ZIP ライブラリ。 (Apache-2.0)
 </item>
         <item>
-Apache Commons Compress — library for reading and writing various archive formats (7z, zip, tar, etc). (Apache-2.0)
+Apache Commons Compress — さまざまなアーカイブ形式 (7z、zip、tar など) を読み書きするためのライブラリ。 (Apache-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) — implementation of XZ and LZMA compression. (Public Domain)
+XZ for Java (org.tukaani.xz) — XZ および LZMA 圧縮の実装。 (パブリックドメイン)
 </item>
         <item>
-zstd-jni (com.github.luben:zstd-jni) — JNI bindings for Zstandard compression and extraction library. (BSD-2-Clause)
+zstd-jni (com.github.luben:zstd-jni) — Zstandard 圧縮および抽出ライブラリの JNI バインディング。 (BSD-2 条項)
 </item>
         <item>
-Junrar (com.github.junrar:junrar) — Java RAR extraction library. (BSD-3-Clause)
+Junrar (com.github.junrar:junrar) — Java RAR 抽出ライブラリ。 (BSD-3 条項)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) — Android Debug Bridge library enabling secure connections to ADB-enabled devices for remote shell access and certificate-based pairing. (Apache-2.0)
+libadb-android (com.github.MuntasirAkon) — リモート シェル アクセスと証明書ベースのペアリングのために ADB 対応デバイスへの安全な接続を可能にする Android デバッグ ブリッジ ライブラリ。 (Apache-2.0)
 </item>
         <item>
-libsu (com.github.topjohnwu.libsu) — complete Android su shell and root service solution. (Apache-2.0)
+libsu (com.github.topjohnwu.libsu) — 完全な Android su シェルおよびルート サービス ソリューション。 (Apache-2.0)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — 安全なネットワーク共有アクセスのための包括的な SSHD コア、SFTP、および SCP クライアント ライブラリ。 (Apache-2.0)
 </item>
         <item>
-EdDSA for Java (net.i2p.crypto:eddsa) — implementation of EdDSA (Edwards-curve Digital Signature Algorithm) for Ed25519 SSH keys. (CC0-1.0)
+EdDSA for Java (net.i2p.crypto:eddsa) — Ed25519 SSH キー用の EdDSA (エドワーズ曲線デジタル署名アルゴリズム) の実装。 (CC0-1.0)
 </item>
         <item>
-SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding for Android used by the SSHD library. (MIT)
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — SSHD ライブラリで使用される Android のロギング バインディング。 (マサチューセッツ工科大学)
 </item>
         <item>
-BouncyCastle (org.bouncycastle) — cryptography library for RSA/EdDSA keypair generation and X.509 certificate creation; version 1.83. (MIT-style License)
+BouncyCastle (org.bouncycastle) — RSA/EdDSA キーペア生成および X.509 証明書作成用の暗号化ライブラリ。バージョン1.83。 (MIT スタイルのライセンス)
 </item>
         <item>
-Google Play Billing Library — processes optional in-app tip purchases; governed by Google Play\'s Privacy Policy. (Apache-2.0)
+Google Play Billing Library — オプションのアプリ内チップ購入を処理します。 Google Play のプライバシー ポリシーによって管理されます。 (Apache-2.0)
 </item>
         <item>
-Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)
+Google Play レビュー ライブラリ — アプリのアプリ内評価とレビュー機能を強化します。 (Apache-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, JXL, SVG) in the built-in image viewer. (Apache-2.0)
+コイル (io.coil-kt.coil3) — 内蔵画像ビューアでのアニメーション画像レンダリング (APNG、GIF、アニメーション WebP、AVIF、JXL、SVG) を強化する画像読み込みライブラリ。 (Apache-2.0)
 </item>
         <item>
-avif-coder (io.github.awxkee) — AVIF image decoding library providing native AVIF support on Android API 24–30; API 31+ uses the built-in ImageDecoder. (Apache-2.0)
+avif-coder (io.github.awxkee) — Android API 24 ～ 30 でネイティブ AVIF サポートを提供する AVIF 画像デコード ライブラリ。 API 31+ は組み込みの ImageDecoder を使用します。 (Apache-2.0)
 </item>
         <item>
-jxl-coder (io.github.awxkee) — JPEG XL image decoding and encoding library providing native JXL support on Android API 21+. (Apache-2.0 / BSD-3-Clause)
+jxl-coder (io.github.awxkee) — Android API 21 以降でネイティブ JXL サポートを提供する JPEG XL 画像のデコードおよびエンコード ライブラリ。 (Apache-2.0 / BSD-3-Clause)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)
+APNG4Android (com.github.penfeizhou.android.animation) — Android 上でアニメーション PNG ファイルをデコードおよびレンダリングするためのコア ライブラリ。 (Apache-2.0)
 </item>
         <item>
-Porter SDK (com.github.d4rken-org.porter-api) — Android SDK enabling elevated file system access via the Porter, Shizuku or Shevery Manager apps. It embeds the Shizuku API (rikka.shizuku), licensed under MIT. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) — Porter、Shizuku、または Shevery Manager アプリを介した昇格されたファイル システム アクセスを可能にする Android SDK。これには、MIT の下でライセンス供与された Shizuku API (rikka.shizuku) が組み込まれています。 (Apache-2.0)
 </item>
         <item>
-ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)
+ViewPager2 — フラグメントとレイアウトの間をスライドするための Android ライブラリ。 (Apache-2.0)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — animation library for rendering Adobe After Effects animations natively on Android, used for smooth UI animations throughout the app. (Apache-2.0)
+Lottie (com.airbnb.android:lottie) v6.3.0 — Android 上で Adob​​e After Effects アニメーションをネイティブにレンダリングするためのアニメーション ライブラリ。アプリ全体でスムーズな UI アニメーションに使用されます。 (Apache-2.0)
 </item>
         <item>
-Ktor (io.ktor) — lightweight web framework used to power the local File Server. (Apache-2.0)
+Ktor (io.ktor) — ローカル ファイル サーバーを強化するために使用される軽量の Web フレームワーク。 (Apache-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) — library for rendering and viewing PDF documents natively. (Apache-2.0)
+PDFBox-Android (com.tom-roush:pdfbox-android) — PDF ドキュメントをネイティブにレンダリングおよび表示するためのライブラリ。 (Apache-2.0)
 </item>
         <item>
-ExoPlayer / Media3 (androidx.media3) — advanced media player for robust video and audio playback. (Apache-2.0)
+ExoPlayer / Media3 (androidx.media3) — 堅牢なビデオとオーディオの再生のための高度なメディア プレーヤー。 (Apache-2.0)
 </item>
         <item>
-Microsoft Authentication Library (MSAL) — handles OneDrive API authentication natively. (MIT)
+Microsoft Authentication Library (MSAL) — OneDrive API 認証をネイティブに処理します。 (マサチューセッツ工科大学)
 </item>
         <item>
-OkHttp (com.squareup.okhttp3) — robust HTTP &amp; HTTP/2 client for cloud storage network requests. (Apache-2.0)
+OkHttp (com.squareup.okhttp3) — クラウド ストレージ ネットワーク リクエスト用の堅牢な HTTP および HTTP/2 クライアント。 (Apache-2.0)
 </item>
         <item>
-Gson (com.google.code.gson) — JSON processing library used for cloud storage integration. (Apache-2.0)
+Gson (com.google.code.gson) — クラウド ストレージの統合に使用される JSON 処理ライブラリ。 (Apache-2.0)
 </item>
         <item>
-AndroidX Browser (androidx.browser) — Chrome Custom Tabs support for Google Drive API authentication. (Apache-2.0)
+AndroidX ブラウザ (androidx.browser) — Chrome カスタム タブは Google Drive API 認証をサポートします。 (Apache-2.0)
 </item>
         <item>
-ZXing (com.google.zxing:core) — barcode image processing library. (Apache-2.0)
+ZXing (com.google.zxing:core) — バーコード画像処理ライブラリ。 (Apache-2.0)
 </item>
         <item>
-gifencoder (com.squareup:gifencoder) — pure Java GIF encoding library for creating animated GIF files from selected images. (Apache-2.0)
+gifencoder (com.squareup:gifencoder) — 選択した画像からアニメーション GIF ファイルを作成するための純粋な Java GIF エンコーディング ライブラリ。 (Apache-2.0)
 </item>
         <item>
-AndroidX ExifInterface (androidx.exifinterface:exifinterface) — library for reading, writing, and stripping EXIF and GPS metadata across JPEG, PNG, WebP, HEIF, and DNG image formats. (Apache-2.0)
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) — JPEG、PNG、WebP、HEIF、および DNG 画像形式にわたる EXIF および GPS メタデータの読み取り、書き込み、および削除のためのライブラリ。 (Apache-2.0)
 </item>
         <item>
-Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+Amazon Appstore SDK — Amazon デバイスでのオプションのアプリ内チップ購入を処理します。 (独自)
 </item>
         <item>
-jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — MP3、FLAC、M4A、OGG、OPUS、WAV、および WMA 形式にわたるメタデータとカバー アートを読み取り、編集するためのオーディオ タグ付けライブラリ。 (LGPL-3.0 / LGPL-2.1)
 </item>
         <item>
-AndroidX WebKit (androidx.webkit) — library providing WebViewAssetLoader for secure, local-only rendering of SMIL animated SVG/SVGZ files in UFM Media Player without external network access or file-scheme vulnerabilities. (Apache-2.0)
+AndroidX WebKit (androidx.webkit) — 外部ネットワーク アクセスやファイル スキームの脆弱性を持たずに、UFM Media Player で SMIL アニメーション SVG/SVGZ ファイルを安全にローカルのみでレンダリングするための WebViewAssetLoader を提供するライブラリ。 (Apache-2.0)
 </item>
         <item>
-libtorrent4j (org.libtorrent4j) — Java and Kotlin JNI wrapper around Rasterbar libtorrent for zero-seeding peer-to-peer BitTorrent downloading. (BSD-3-Clause / MIT)
+libtorrent4j (org.libtorrent4j) — ゼロシーディングのピアツーピア BitTorrent ダウンロード用の Rasterbar libtorrent の Java および Kotlin JNI ラッパー。 (BSD-3 条項 / MIT)
 </item>
     </string-array>
 
@@ -797,7 +797,11 @@ Google Play請求からの匿名購入トークンは、チップを確認する
 \n
 自動的に送信されることはありません。クラッシュやフリーズが発生すると、レポートをKiloWatch（kilowatch.co.za）に送信するかどうかを確認するプロンプトが表示されます。「No Thanks」を選択すると、レポートはローカルで削除されます。クラッシュおよびフリーズの検出は、いつでも設定 → クラッシュとANRレポートから無効にできます。無効にすると、保留中のレポートも削除されます。
 </string>
-    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+    <string name="pp_s2_crash_body">
+UFM は、クラッシュまたはフリーズしたときに診断情報をキャプチャできるため、問題を解決できます。これには、アプリのバージョン、Android のバージョン、デバイスのモデルと製造元、例外の種類とメッセージ、スタック トレースが含まれます。ファイル、名前、電子メール アドレス、アカウント情報は決して含まれません。\n
+\n
+何も自動的には送信されません。クラッシュまたはフリーズの後、レポートを KiloWatch (kilowatch.co.za) に送信するかどうかを尋ねるプロンプトが表示されます。 「いいえ、ありがとう」を選択すると、ローカルで削除されます。 [設定] → [クラッシュと ANR レポート] からいつでもクラッシュとフリーズの検出を無効にできます。これを無効にすると、保留中のレポートも削除されます。
+</string>
 
     <string name="pp_s2_nocollect_heading">
 収集しない情報
@@ -1231,7 +1235,7 @@ PINまたは復旧コード
     <!-- Storage permissions (Section 4) -->
     <string-array name="pp_storage_perm_labels">
         <item>
-MANAGE_EXTERNAL_STORAGE
+管理_外部_ストレージ
 </item>
         <item>
 READ_EXTERNAL_STORAGE
@@ -1255,10 +1259,10 @@ API 29未満 · 古いデバイスでの従来のファイル変更
     <!-- Network permissions (Section 4) -->
     <string-array name="pp_network_perm_labels">
         <item>
-INTERNET
+インターネット
 </item>
         <item>
-ACCESS_WIFI_STATE
+アクセス_WIFI_状態
 </item>
         <item>
 ACCESS_NETWORK_STATE
@@ -1291,7 +1295,7 @@ POST_NOTIFICATIONS
 moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API
 </item>
         <item>
-RECEIVE_BOOT_COMPLETED
+RECEIVE_Boot_COMPLETED
 </item>
         <item>
 REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
@@ -1306,7 +1310,7 @@ QUERY_ALL_PACKAGES
 FOREGROUND_SERVICE / FOREGROUND_SERVICE_DATA_SYNC
 </item>
         <item>
-WAKE_LOCK
+ウェイクロック
 </item>
     </string-array>
     <string-array name="pp_other_perm_details">
@@ -1492,19 +1496,19 @@ Driveの参照: ファイルとフォルダのメタデータを取得してDriv
     <!-- Third parties (Section 7) -->
     <string-array name="pp_third_party_names">
         <item>
-Firebase Analytics
+Firebase アナリティクス
 </item>
         <item>
-Google Play Services
+Google Play サービス
 </item>
         <item>
-Google Play Billing
+Google Play の請求
 </item>
         <item>
 Microsoft OneDrive API
 </item>
         <item>
-Google Drive API
+GoogleドライブAPI
 </item>
         <item>
 Dropbox API
@@ -1524,13 +1528,13 @@ Google LLC
 Google LLC
 </item>
         <item>
-Microsoft Corporation
+マイクロソフト株式会社
 </item>
         <item>
 Google LLC
 </item>
         <item>
-Dropbox, Inc.
+ドロップボックス株式会社
 </item>
         <item>
 Amazon Web Servicesおよび互換プロバイダー

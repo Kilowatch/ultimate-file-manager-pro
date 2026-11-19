@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-Last Updated: November 2026
+Terakhir Diperbarui: November 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -180,82 +180,82 @@ Dengan menggunakan Ultimate File Manager Pro, Anda mengonfirmasi bahwa Anda tela
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-File Browser — browse, copy, move, rename, and delete files anywhere on your device.
+File Browser — menelusuri, menyalin, memindahkan, mengganti nama, dan menghapus file di mana saja di perangkat Anda.
 </item>
         <item>
-Encrypted Vault — lock sensitive files behind AES-256-GCM encryption with your own PIN.
+Gudang Terenkripsi — mengunci file sensitif di balik enkripsi AES-256-GCM dengan PIN Anda sendiri.
 </item>
         <item>
-File Server — host an FTP or secure SFTP server directly on your device to share files across your local network.
+File Server — host FTP atau server SFTP aman langsung di perangkat Anda untuk berbagi file melalui jaringan lokal Anda.
 </item>
         <item>
-Remote Management — manage files over your local Wi-Fi via a built-in HTTP server that supports uploading, downloading, and installing APKs remotely.
+Manajemen Jarak Jauh — kelola file melalui Wi-Fi lokal Anda melalui server HTTP internal yang mendukung pengunggahan, pengunduhan, dan pemasangan APK dari jarak jauh.
 </item>
         <item>
-Network Shares — connect to SMB, FTP, and NFS servers on your local network to browse, download, and manage remote files.
+Berbagi Jaringan — terhubung ke server SMB, FTP, dan NFS di jaringan lokal Anda untuk menelusuri, mengunduh, dan mengelola file jarak jauh.
 </item>
         <item>
-Folder Sync — automatically back up local phone folders to an SMB or FTP network share on a schedule you choose (interval or specific time daily, weekly, or monthly).
+Sinkronisasi Folder — secara otomatis mencadangkan folder telepon lokal ke jaringan SMB atau FTP sesuai jadwal yang Anda pilih (interval atau waktu tertentu setiap hari, mingguan, atau bulanan).
 </item>
         <item>
-Device Pairing — pair your mobile phone and Android TV over local Wi-Fi to transfer and install files.
+Pemasangan Perangkat — pasangkan ponsel Anda dan Android TV melalui Wi-Fi lokal untuk mentransfer dan menginstal file.
 </item>
         <item>
-ADB Terminal — connect to Android devices in Developer Mode over your local Wi-Fi using ADB (Android Debug Bridge) for direct shell access and advanced troubleshooting.
+Terminal ADB — sambungkan ke perangkat Android dalam Mode Pengembang melalui Wi-Fi lokal Anda menggunakan ADB (Android Debug Bridge) untuk akses shell langsung dan pemecahan masalah tingkat lanjut.
 </item>
         <item>
-Built-in Viewers — view text files, PDFs, animated images (APNG, GIF, animated WebP, AVIF, SVG and more), archives, and other formats directly within the app.
+Penampil Bawaan — melihat file teks, PDF, gambar animasi (APNG, GIF, WebP animasi, AVIF, SVG, dan lainnya), arsip, dan format lain langsung di dalam aplikasi.
 </item>
         <item>
-Advanced ZIP Support — create and extract password-protected and AES-encrypted ZIP archives.
+Dukungan ZIP Tingkat Lanjut — membuat dan mengekstrak arsip ZIP yang dilindungi kata sandi dan dienkripsi AES.
 </item>
         <item>
-Remote Screenshots — capture the screen of your paired Android TV over local Wi-Fi via ADB and save it directly to your phone\'s storage.
+Tangkapan Layar Jarak Jauh — ambil layar TV Android pasangan Anda melalui Wi-Fi lokal melalui ADB dan simpan langsung ke penyimpanan ponsel Anda.
 </item>
         <item>
-7Z Archive Support — extract 7Z archives with LZMA/LZMA2 compression.
+Dukungan Arsip 7Z — mengekstrak arsip 7Z dengan kompresi LZMA/LZMA2.
 </item>
         <item>
-File Search — quickly find files and folders across your device storage.
+Pencarian File — temukan file dan folder dengan cepat di seluruh penyimpanan perangkat Anda.
 </item>
         <item>
-Storage Analyser — see a visual breakdown of what\'s using your storage space.
+Storage Analyzer — lihat perincian visual tentang apa yang menggunakan ruang penyimpanan Anda.
 </item>
         <item>
-App Manager — view and manage all apps installed on your device, with debloat recommendations for pre-installed apps.
+Manajer Aplikasi — melihat dan mengelola semua aplikasi yang terinstal di perangkat Anda, dengan rekomendasi debloat untuk aplikasi pra-instal.
 </item>
         <item>
-APK Installer — install Android apps and split APKs (XAPK) directly from files saved locally.
+Penginstal APK — instal aplikasi Android dan pisahkan APK (XAPK) langsung dari file yang disimpan secara lokal.
 </item>
         <item>
-Elevated Access (Porter, Shizuku, Shevery &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.
+Akses yang Ditinggikan (Porter, Shizuku, Shevery &amp; ADB) — dapatkan akses seperti root untuk mengelola file sistem dan direktori terbatas tanpa benar-benar me-rooting perangkat Anda.
 </item>
         <item>
-Root Access (Mobile) — elevated Superuser access for rooted devices to browse, manage, and inspect system-level partitions and protected directories.
+Akses Root (Seluler) — peningkatan akses Pengguna Super untuk perangkat yang di-rooting untuk menelusuri, mengelola, dan memeriksa partisi tingkat sistem dan direktori yang dilindungi.
 </item>
         <item>
-Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.
+Pengindeks Penyimpanan — membuat indeks lokal metadata file untuk pencarian instan dan penelusuran cepat.
 </item>
         <item>
-Storage Access Framework — other apps can access your files through UFM\'s document provider.
+Kerangka Akses Penyimpanan — aplikasi lain dapat mengakses file Anda melalui penyedia dokumen UFM.
 </item>
         <item>
-Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.
+Tip Jar — pembelian satu kali opsional untuk mendukung pengembang; aplikasi ini selalu gratis tanpa memberikan tip.
 </item>
         <item>
-UFM Media Player — play audio, video, and SMIL animated SVG/SVGZ vector files with background playback, notification controls, Picture-in-Picture mode, and playlist management.
+UFM Media Player — putar audio, video, dan file vektor SVG/SVGZ animasi SMIL dengan pemutaran latar belakang, kontrol notifikasi, mode Gambar dalam Gambar, dan pengelolaan daftar putar.
 </item>
         <item>
-GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.
+Pembuat GIF — buat file GIF animasi dari gambar yang dipilih dengan kecepatan bingkai kustom, opsi pengubahan ukuran, dan pengurutan ulang bingkai dengan cara seret dan lepas.
 </item>
         <item>
-Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.
+Alat EXIF Foto — periksa metadata EXIF dan GPS foto, hapus geotag pribadi dan informasi perangkat, serta ganti nama foto secara batch menggunakan stempel waktu pengambilan dan metadata kamera.
 </item>
         <item>
-Music Tag Editor (Mobile) — inspect, edit, clean, and batch-update audio metadata descriptions (title, artist, album, year, genre, lyrics) and embedded album art directly inside audio files.
+Music Tag Editor (Seluler) — periksa, edit, bersihkan, dan perbarui secara batch deskripsi metadata audio (judul, artis, album, tahun, genre, lirik) dan sampul album yang disematkan langsung di dalam file audio.
 </item>
         <item>
-Download Manager — download files via direct HTTP/HTTPS URLs and peer-to-peer Magnet links or .torrent files for open-source distributions, public domain media, and authorized content.
+Pengelola Unduhan — unduh file melalui URL HTTP/HTTPS langsung dan tautan Magnet peer-to-peer atau file .torrent untuk distribusi sumber terbuka, media domain publik, dan konten resmi.
 </item>
     </string-array>
 
@@ -352,52 +352,52 @@ Tanggung jawab total kami dibatasi pada jumlah total yang Anda bayarkan untuk pe
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
         <item>
-Keep regular backups of important files before performing bulk operations.
+Lakukan pencadangan berkas penting secara rutin sebelum melakukan operasi massal.
 </item>
         <item>
-Store your Vault PIN and Recovery Code somewhere safe — we cannot retrieve them for you.
+Simpan PIN Vault dan Kode Pemulihan Anda di tempat yang aman — kami tidak dapat mengambilnya untuk Anda.
 </item>
         <item>
-Keep your PIN private. Anyone who knows it can access your Vault.
+Rahasiakan PIN Anda. Siapa pun yang mengetahuinya dapat mengakses Vault Anda.
 </item>
         <item>
-Keep your network share credentials safe — they are stored locally on your device.
+Jaga keamanan kredensial berbagi jaringan Anda — kredensial tersebut disimpan secara lokal di perangkat Anda.
 </item>
         <item>
-Review your Folder Sync remote paths carefully — syncing to an incorrect network folder may overwrite existing files.
+Tinjau jalur jarak jauh Sinkronisasi Folder Anda dengan cermat — sinkronisasi ke folder jaringan yang salah dapat menimpa file yang sudah ada.
 </item>
         <item>
-Exercise caution when removing system apps based on debloat recommendations.
+Berhati-hatilah saat menghapus aplikasi sistem berdasarkan rekomendasi debloat.
 </item>
         <item>
-Only connect via ADB Terminal to devices you own or have explicit permission to access. Do not use ADB Terminal to gain unauthorized access to any device.
+Hanya hubungkan melalui ADB Terminal ke perangkat yang Anda miliki atau yang Anda miliki izin akses secara eksplisit. Jangan gunakan ADB Terminal untuk mendapatkan akses tanpa izin ke perangkat apa pun.
 </item>
         <item>
-Keep any ADB, Porter, Shizuku, or Shevery pairing PINs private — share these only with people you trust to have access to your device.
+Rahasiakan semua PIN pemasangan ADB, Porter, Shizuku, atau Shevery — bagikan PIN ini hanya kepada orang yang Anda percayai untuk mengakses perangkat Anda.
 </item>
         <item>
-Secure your Porter, Shizuku or Shevery Manager — granting UFM elevated access via any of these managers gives it power over restricted files. Only grant this access if you trust the app.
+Amankan Porter, Shizuku, atau Manajer Shevery Anda — memberikan UFM akses yang lebih tinggi melalui salah satu manajer ini akan memberikannya kendali atas file yang dibatasi. Berikan akses ini hanya jika Anda memercayai aplikasi tersebut.
 </item>
         <item>
-Exercise extreme caution when Root Access is active — never delete or modify system files unless you understand the consequences to your device OS.
+Berhati-hatilah saat Akses Root aktif — jangan pernah menghapus atau mengubah file sistem kecuali Anda memahami konsekuensinya terhadap OS perangkat Anda.
 </item>
         <item>
-Only use the app for lawful purposes. Don\'t store, share, or distribute illegal content.
+Hanya gunakan aplikasi untuk tujuan yang sah. Jangan menyimpan, membagikan, atau mendistribusikan konten ilegal.
 </item>
         <item>
-Don\'t use Remote Management to access another person\'s device without their permission.
+Jangan gunakan Manajemen Jarak Jauh untuk mengakses perangkat orang lain tanpa izin mereka.
 </item>
         <item>
-Don\'t attempt to reverse-engineer, decompile, or tamper with the app.
+Jangan mencoba merekayasa balik, mendekompilasi, atau mengutak-atik aplikasi.
 </item>
         <item>
-Manage your indexed records responsibly — you can delete records or ignore specific drives at any time via Settings -> Storage Indexer.
+Manage your indexed records responsibly — you can delete records or ignore specific drives at any time via Settings -&gt; Storage Indexer.
 </item>
         <item>
-Verify the authenticity and safety of any APK files before installing them.
+Verifikasi keaslian dan keamanan file APK apa pun sebelum menginstalnya.
 </item>
         <item>
-Don\'t use the Download Manager, BitTorrent engine, or HTTP streamer to download, share, transmit, or facilitate infringement of copyrighted material without authorization from the copyright holder. You assume sole liability for downloaded content.
+Jangan gunakan Pengelola Unduhan, mesin BitTorrent, atau streamer HTTP untuk mengunduh, membagikan, mengirimkan, atau memfasilitasi pelanggaran materi berhak cipta tanpa izin dari pemegang hak cipta. Anda bertanggung jawab penuh atas konten yang diunduh.
 </item>
     </string-array>
 
@@ -431,7 +431,7 @@ Instal Paket
 Penagihan
 </item>
         <item>
-ADB Debug Bridge
+Jembatan Debug ADB
 </item>
         <item>
 Akses yang Ditingkatkan (Porter, Shizuku &amp; Shevery)
@@ -524,149 +524,149 @@ Memberikan umpan balik haptik saat menekan tombol di Remote TV.
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD — lightweight HTTP server that powers Remote Management. (BSD-3-Clause)
+NanoHTTPD — server HTTP ringan yang mendukung Manajemen Jarak Jauh. (Klausul BSD-3)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3 client library for network share browsing and Folder Sync. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — Pustaka klien SMB2/SMB3 untuk penjelajahan berbagi jaringan dan Sinkronisasi Folder. (LGPL-2.1)
 </item>
         <item>
-smbj (hierynomus/smbj) — SMB2/SMB3 Java implementation used for network share access. (Apache-2.0)
+smbj (hierynomus/smbj) — Implementasi Java SMB2/SMB3 yang digunakan untuk akses berbagi jaringan. (Apache-2.0)
 </item>
         <item>
-EMC ECS NFS Client (com.emc.ecs:nfs-client) — NFS v3 client library for network share access. (Apache-2.0)
+Klien NFS EMC ECS (com.emc.ecs:nfs-client) — Pustaka klien NFS v3 untuk akses berbagi jaringan. (Apache-2.0)
 </item>
         <item>
-libnfs (sahlberg/libnfs) — native NFS client library supporting NFSv2, NFSv3, and NFSv4. (LGPL-2.1 / BSD-2-Clause)
+libnfs (sahlberg/libnfs) — pustaka klien NFS asli yang mendukung NFSv2, NFSv3, dan NFSv4. (Klausul LGPL-2.1 / BSD-2)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access and hosting. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — pustaka klien inti SSHD, SFTP, dan SCP yang komprehensif untuk akses berbagi jaringan dan hosting yang aman. (Apache-2.0)
 </item>
         <item>
-Apache FtpServer (org.apache.ftpserver) — 100% pure Java FTP server. (Apache-2.0)
+Apache FtpServer (org.apache.ftpserver) — 100% server Java FTP murni. (Apache-2.0)
 </item>
         <item>
-Apache POI — document processing library for viewing office files. (Apache-2.0)
+Apache POI — perpustakaan pemrosesan dokumen untuk melihat file kantor. (Apache-2.0)
 </item>
         <item>
-Firebase Analytics — Google\'s analytics platform that helps us understand app usage. (Apache-2.0)
+Firebase Analytics — Platform analisis Google yang membantu kami memahami penggunaan aplikasi. (Apache-2.0)
 </item>
         <item>
-AndroidX Libraries (incl. Leanback for Android TV) — Google\'s Jetpack components for modern Android development. (Apache-2.0)
+Perpustakaan AndroidX (termasuk Leanback untuk Android TV) — Komponen Jetpack Google untuk pengembangan Android modern. (Apache-2.0)
 </item>
         <item>
-Material Design Components — Google\'s UI library for a clean, consistent interface. (Apache-2.0)
+Komponen Desain Material — Pustaka UI Google untuk antarmuka yang bersih dan konsisten. (Apache-2.0)
 </item>
         <item>
-Room Persistence Library — SQLite abstraction layer for local metadata indexing. (Apache-2.0)
+Perpustakaan Persistensi Ruangan — Lapisan abstraksi SQLite untuk pengindeksan metadata lokal. (Apache-2.0)
 </item>
         <item>
-zip4j (net.lingala.zip4j) — advanced ZIP library for password-protected and AES-encrypted archives. (Apache-2.0)
+zip4j (net.lingala.zip4j) — pustaka ZIP tingkat lanjut untuk arsip yang dilindungi kata sandi dan dienkripsi AES. (Apache-2.0)
 </item>
         <item>
-Apache Commons Compress — library for reading and writing various archive formats (7z, zip, tar, etc). (Apache-2.0)
+Apache Commons Compress — perpustakaan untuk membaca dan menulis berbagai format arsip (7z, zip, tar, dll). (Apache-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) — implementation of XZ and LZMA compression. (Public Domain)
+XZ untuk Java (org.tukaani.xz) — implementasi kompresi XZ dan LZMA. (Domain Publik)
 </item>
         <item>
-zstd-jni (com.github.luben:zstd-jni) — JNI bindings for Zstandard compression and extraction library. (BSD-2-Clause)
+zstd-jni (com.github.luben:zstd-jni) — Pengikatan JNI untuk pustaka kompresi dan ekstraksi Zstandard. (Klausul BSD-2)
 </item>
         <item>
-Junrar (com.github.junrar:junrar) — Java RAR extraction library. (BSD-3-Clause)
+Junrar (com.github.junrar:junrar) — perpustakaan ekstraksi Java RAR. (Klausul BSD-3)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) — Android Debug Bridge library enabling secure connections to ADB-enabled devices for remote shell access and certificate-based pairing. (Apache-2.0)
+libadb-android (com.github.MuntashirAkon) — Pustaka Android Debug Bridge memungkinkan koneksi aman ke perangkat berkemampuan ADB untuk akses shell jarak jauh dan pemasangan berbasis sertifikat. (Apache-2.0)
 </item>
         <item>
-libsu (com.github.topjohnwu.libsu) — complete Android su shell and root service solution. (Apache-2.0)
+libsu (com.github.topjohnwu.libsu) — menyelesaikan solusi su shell dan layanan root Android. (Apache-2.0)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — pustaka klien inti SSHD, SFTP, dan SCP yang komprehensif untuk akses berbagi jaringan yang aman. (Apache-2.0)
 </item>
         <item>
-EdDSA for Java (net.i2p.crypto:eddsa) — implementation of EdDSA (Edwards-curve Digital Signature Algorithm) for Ed25519 SSH keys. (CC0-1.0)
+EdDSA untuk Java (net.i2p.crypto:eddsa) — implementasi EdDSA (Algoritma Tanda Tangan Digital kurva Edwards) untuk kunci SSH Ed25519. (CC0-1.0)
 </item>
         <item>
-SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding for Android used by the SSHD library. (MIT)
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding untuk Android yang digunakan oleh perpustakaan SSHD. (MIT)
 </item>
         <item>
-BouncyCastle (org.bouncycastle) — cryptography library for RSA/EdDSA keypair generation and X.509 certificate creation; version 1.83. (MIT-style License)
+BouncyCastle (org.bouncycastle) — perpustakaan kriptografi untuk pembuatan pasangan kunci RSA/EdDSA dan pembuatan sertifikat X.509; versi 1.83. (Lisensi gaya MIT)
 </item>
         <item>
-Google Play Billing Library — processes optional in-app tip purchases; governed by Google Play\'s Privacy Policy. (Apache-2.0)
+Perpustakaan Penagihan Google Play — memproses pembelian tip opsional dalam aplikasi; diatur oleh Kebijakan Privasi Google Play. (Apache-2.0)
 </item>
         <item>
-Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)
+Pustaka Tinjauan Google Play — mendukung fungsi penilaian dan ulasan dalam aplikasi. (Apache-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, JXL, SVG) in the built-in image viewer. (Apache-2.0)
+Coil (io.coil-kt.coil3) — pustaka pemuatan gambar yang mendukung rendering gambar animasi (APNG, GIF, WebP animasi, AVIF, JXL, SVG) di penampil gambar bawaan. (Apache-2.0)
 </item>
         <item>
-avif-coder (io.github.awxkee) — AVIF image decoding library providing native AVIF support on Android API 24–30; API 31+ uses the built-in ImageDecoder. (Apache-2.0)
+avif-coder (io.github.awxkee) — Pustaka decoding gambar AVIF yang menyediakan dukungan AVIF asli di Android API 24–30; API 31+ menggunakan ImageDecoder bawaan. (Apache-2.0)
 </item>
         <item>
-jxl-coder (io.github.awxkee) — JPEG XL image decoding and encoding library providing native JXL support on Android API 21+. (Apache-2.0 / BSD-3-Clause)
+jxl-coder (io.github.awxkee) — Pustaka decoding dan pengkodean gambar JPEG XL yang menyediakan dukungan JXL asli di Android API 21+. (Klausul Apache-2.0 / BSD-3)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)
+APNG4Android (com.github.penfeizhou.android.animation) — perpustakaan inti untuk mendekode dan merender file PNG animasi di Android. (Apache-2.0)
 </item>
         <item>
-Porter SDK (com.github.d4rken-org.porter-api) — Android SDK enabling elevated file system access via the Porter, Shizuku or Shevery Manager apps. It embeds the Shizuku API (rikka.shizuku), licensed under MIT. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) — Android SDK memungkinkan akses sistem file yang lebih tinggi melalui aplikasi Porter, Shizuku, atau Shevery Manager. Itu menyematkan Shizuku API (rikka.shizuku), berlisensi di bawah MIT. (Apache-2.0)
 </item>
         <item>
-ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)
+ViewPager2 — Pustaka Android untuk berpindah antar fragmen dan tata letak. (Apache-2.0)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — animation library for rendering Adobe After Effects animations natively on Android, used for smooth UI animations throughout the app. (Apache-2.0)
+Lottie (com.airbnb.android:lottie) v6.3.0 — pustaka animasi untuk merender animasi Adobe After Effects secara asli di Android, digunakan untuk animasi UI yang halus di seluruh aplikasi. (Apache-2.0)
 </item>
         <item>
-Ktor (io.ktor) — lightweight web framework used to power the local File Server. (Apache-2.0)
+Ktor (io.ktor) — kerangka web ringan yang digunakan untuk memberi daya pada Server File lokal. (Apache-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) — library for rendering and viewing PDF documents natively. (Apache-2.0)
+PDFBox-Android (com.tom-roush:pdfbox-android) — perpustakaan untuk merender dan melihat dokumen PDF secara asli. (Apache-2.0)
 </item>
         <item>
-ExoPlayer / Media3 (androidx.media3) — advanced media player for robust video and audio playback. (Apache-2.0)
+ExoPlayer / Media3 (androidx.media3) — pemutar media canggih untuk pemutaran video dan audio yang tangguh. (Apache-2.0)
 </item>
         <item>
-Microsoft Authentication Library (MSAL) — handles OneDrive API authentication natively. (MIT)
+Microsoft Authentication Library (MSAL) — menangani otentikasi OneDrive API secara asli. (MIT)
 </item>
         <item>
-OkHttp (com.squareup.okhttp3) — robust HTTP &amp; HTTP/2 client for cloud storage network requests. (Apache-2.0)
+OkHttp (com.squareup.okhttp3) — klien HTTP &amp; HTTP/2 yang tangguh untuk permintaan jaringan penyimpanan cloud. (Apache-2.0)
 </item>
         <item>
-Gson (com.google.code.gson) — JSON processing library used for cloud storage integration. (Apache-2.0)
+Gson (com.google.code.gson) — Pustaka pemrosesan JSON yang digunakan untuk integrasi penyimpanan cloud. (Apache-2.0)
 </item>
         <item>
-AndroidX Browser (androidx.browser) — Chrome Custom Tabs support for Google Drive API authentication. (Apache-2.0)
+Browser AndroidX (androidx.browser) — Dukungan Tab Kustom Chrome untuk autentikasi API Google Drive. (Apache-2.0)
 </item>
         <item>
-ZXing (com.google.zxing:core) — barcode image processing library. (Apache-2.0)
+ZXing (com.google.zxing:core) — perpustakaan pemrosesan gambar kode batang. (Apache-2.0)
 </item>
         <item>
-gifencoder (com.squareup:gifencoder) — pure Java GIF encoding library for creating animated GIF files from selected images. (Apache-2.0)
+gifencoder (com.squareup:gifencoder) — pustaka pengkodean Java GIF murni untuk membuat file GIF animasi dari gambar yang dipilih. (Apache-2.0)
 </item>
         <item>
-AndroidX ExifInterface (androidx.exifinterface:exifinterface) — library for reading, writing, and stripping EXIF and GPS metadata across JPEG, PNG, WebP, HEIF, and DNG image formats. (Apache-2.0)
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) — perpustakaan untuk membaca, menulis, dan menghapus metadata EXIF ​​dan GPS dalam format gambar JPEG, PNG, WebP, HEIF, dan DNG. (Apache-2.0)
 </item>
         <item>
-Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+Amazon Appstore SDK — memproses pembelian tip dalam aplikasi opsional di perangkat Amazon. (Hak milik)
 </item>
         <item>
-jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — perpustakaan penandaan audio untuk membaca dan mengedit metadata dan sampul seni dalam format MP3, FLAC, M4A, OGG, OPUS, WAV, dan WMA. (LGPL-3.0 / LGPL-2.1)
 </item>
         <item>
-AndroidX WebKit (androidx.webkit) — library providing WebViewAssetLoader for secure, local-only rendering of SMIL animated SVG/SVGZ files in UFM Media Player without external network access or file-scheme vulnerabilities. (Apache-2.0)
+AndroidX WebKit (androidx.webkit) — pustaka yang menyediakan WebViewAssetLoader untuk rendering file SVG/SVGZ animasi SMIL yang aman dan hanya lokal di UFM Media Player tanpa akses jaringan eksternal atau kerentanan skema file. (Apache-2.0)
 </item>
         <item>
-libtorrent4j (org.libtorrent4j) — Java and Kotlin JNI wrapper around Rasterbar libtorrent for zero-seeding peer-to-peer BitTorrent downloading. (BSD-3-Clause / MIT)
+libtorrent4j (org.libtorrent4j) — Java dan Kotlin JNI membungkus Rasterbar libtorrent untuk pengunduhan BitTorrent peer-to-peer tanpa penyemaian. (Klausul BSD-3 / MIT)
 </item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
     <string-array name="tc_contact_labels">
         <item>
-Email
+E-mail
 </item>
     </string-array>
     <string-array name="tc_contact_values">
@@ -797,7 +797,11 @@ Pelaporan Crash &amp; ANR (Diagnostik) UFM dapat menangkap informasi diagnostik 
 \n
 Tidak ada yang dikirim secara otomatis: setelah crash atau freeze, akan muncul pertanyaan apakah Anda ingin mengirim laporan ke KiloWatch (kilowatch.co.za). Memilih \\\'Tidak, terima kasih\\\' akan menghapusnya secara lokal. Anda dapat menonaktifkan deteksi crash dan freeze kapan saja melalui Pengaturan → Pelaporan Crash &amp; ANR; menonaktifkannya juga akan menghapus laporan yang tertunda.
 </string>
-    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+    <string name="pp_s2_crash_body">
+UFM dapat menangkap informasi diagnostik ketika crash atau macet sehingga kami dapat memperbaiki masalahnya. Ini mencakup versi aplikasi, versi Android, model dan produsen perangkat, jenis dan pesan pengecualian, serta pelacakan tumpukan. Itu tidak pernah menyertakan file, nama, alamat email, atau informasi akun Anda.\n
+\n
+Tidak ada yang dikirim secara otomatis: setelah crash atau macet, pesan akan menanyakan apakah Anda ingin mengirim laporan ke KiloWatch (kilowatch.co.za). Memilih \'Tidak, Terima kasih\' akan menghapusnya secara lokal. Anda dapat menonaktifkan deteksi kerusakan dan pembekuan kapan saja melalui Pengaturan → Pelaporan Kerusakan &amp; ANR; menonaktifkannya juga akan menghapus laporan yang tertunda.
+</string>
 
     <string name="pp_s2_nocollect_heading">
 Apa yang Tidak Pernah Kami Kumpulkan
@@ -1234,10 +1238,10 @@ Membuat keputusan pengembangan yang tepat
 MANAGE_EXTERNAL_STORAGE
 </item>
         <item>
-READ_EXTERNAL_STORAGE
+BACA_EXTERNAL_STORAGE
 </item>
         <item>
-WRITE_EXTERNAL_STORAGE
+TULIS_EXTERNAL_STORAGE
 </item>
     </string-array>
     <string-array name="pp_storage_perm_details">
@@ -1306,7 +1310,7 @@ QUERY_ALL_PACKAGES
 FOREGROUND_SERVICE / FOREGROUND_SERVICE_DATA_SYNC
 </item>
         <item>
-WAKE_LOCK
+BANGUN_LOCK
 </item>
     </string-array>
     <string-array name="pp_other_perm_details">
@@ -1353,7 +1357,7 @@ Otentikasi
     </string-array>
     <string-array name="pp_encryption_details">
         <item>
-AES-256-GCM (Advanced Encryption Standard with Galois/Counter Mode)
+AES-256-GCM (Standar Enkripsi Tingkat Lanjut dengan Mode Galois/Penghitung)
 </item>
         <item>
 Android Keystore — penyimpanan aman yang didukung perangkat keras
@@ -1492,22 +1496,22 @@ Mentransfer data pengguna Google ke pihak ketiga mana pun dengan alasan apa pun 
     <!-- Third parties (Section 7) -->
     <string-array name="pp_third_party_names">
         <item>
-Firebase Analytics
+Analisis Firebase
 </item>
         <item>
-Google Play Services
+Layanan Google Play
 </item>
         <item>
-Google Play Billing
+Penagihan Google Play
 </item>
         <item>
-Microsoft OneDrive API
+API Microsoft OneDrive
 </item>
         <item>
-Google Drive API
+API Google Drive
 </item>
         <item>
-Dropbox API
+API Dropbox
 </item>
         <item>
 AWS S3 / API Kompatibel S3 (misal AWS S3, MinIO, IDrive E2)
@@ -1524,7 +1528,7 @@ Google LLC
 Google LLC
 </item>
         <item>
-Microsoft Corporation
+Perusahaan Microsoft
 </item>
         <item>
 Google LLC
@@ -1722,7 +1726,7 @@ Merender animasi UI yang halus di seluruh aplikasi melalui pustaka Lottie v6.3.0
     <!-- Contact (Section 14) -->
     <string-array name="pp_contact_labels">
         <item>
-Email
+E-mail
 </item>
     </string-array>
     <string-array name="pp_contact_values">

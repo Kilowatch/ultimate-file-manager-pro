@@ -451,55 +451,55 @@ USB-накопитель
 Переносит полное имя на столько строк, сколько потребуется
 </string>
     <string name="settings_file_name_display_truncate">
-Single line (Truncated end)
+Одна строка (обрезанный конец)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Truncates with ellipsis at end (abc…) without scrolling
+Усекается с многоточием в конце (abc…) без прокрутки
 </string>
     <string name="settings_file_name_display_truncate_middle">
-Single line (Truncate middle)
+Одна строка (обрезать середину)
 </string>
     <string name="settings_file_name_display_truncate_middle_desc">
-Truncates in middle (abc…xyz.ext) to preserve the end suffix
+Усекается в середине (abc…xyz.ext), чтобы сохранить конечный суффикс.
 </string>
     <string name="settings_marquee_speed_title">
-Scroll Speed
+Скорость прокрутки
 </string>
     <string name="settings_marquee_speed_slow">
-Slow
+Медленный
 </string>
     <string name="settings_marquee_speed_normal">
 Normal
 </string>
     <string name="settings_marquee_speed_fast">
-Fast
+Быстрый
 </string>
     <string name="settings_marquee_loop_title">
-Loop Mode
+Режим цикла
 </string>
     <string name="settings_marquee_loop_one_shot">
-One-Shot
+Один выстрел
 </string>
     <string name="settings_marquee_loop_one_shot_desc">
-Scrolls once and stops to save battery
+Прокручивается один раз и останавливается для экономии заряда батареи.
 </string>
     <string name="settings_marquee_loop_continuous">
-Continuous
+Непрерывный
 </string>
     <string name="settings_marquee_loop_continuous_desc">
-Repeats back and forth continuously
+Постоянно повторяется взад и вперед
 </string>
     <string name="settings_marquee_scope_title">
-Scroll Scope
+Область прокрутки
 </string>
     <string name="settings_marquee_scope_all">
-All Visible Files
+Все видимые файлы
 </string>
     <string name="settings_marquee_scope_focused">
-Focused / Selected Only
+Сосредоточенные/только выбранные
 </string>
     <string name="settings_file_name_preview_title">
-Live Preview
+Живой просмотр
 </string>
     <string name="settings_file_name_preview_sample">
 VeryLongFileName_ProjectReport_2026_Final_v2.docx
@@ -1206,7 +1206,7 @@ APK
 Дубликаты
 </string>
     <string name="analyzer_tab_incomplete">
-Incomplete
+Неполный
 </string>
     <string name="analyzer_tab_junk">
 Мусор и старые
@@ -1233,10 +1233,10 @@ Incomplete
 экономит %1$s
 </string>
     <string name="analyzer_no_incomplete_files">
-No incomplete or sparse downloads found
+Неполных или редких загрузок не обнаружено.
 </string>
     <string name="analyzer_incomplete_file_allocated">
-Size on disk: %1$s (%2$.1f%%)
+Размер на диске: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1321,97 +1321,97 @@ Size on disk: %1$s (%2$.1f%%)
 
     <!-- Bulk duplicate deletion & retention strategy -->
     <string name="analyzer_select_all_duplicates">
-Select All Duplicates
+Выбрать все дубликаты
 </string>
     <string name="analyzer_clear_selection">
-Clear
+Прозрачный
 </string>
     <string name="analyzer_delete_all_duplicates">
-Delete All Duplicates
+Удалить все дубликаты
 </string>
     <string name="analyzer_delete_selected_count">
-Delete Selected (%1$d)
+Удалить выбранное (%1$d)
 </string>
     <string name="analyzer_badge_original">
-Original
+Оригинал
 </string>
     <string name="analyzer_strategy_title">
-Duplicate Retention Strategy
+Стратегия хранения дубликатов
 </string>
     <string name="analyzer_strategy_oldest">
-Keep Oldest (Original)
+Сохранить самое старое (оригинал)
 </string>
     <string name="analyzer_strategy_oldest_desc">
-Preserves the oldest file by modification date and deletes newer copies.
+Сохраняет самый старый файл по дате изменения и удаляет более новые копии.
 </string>
     <string name="analyzer_strategy_newest">
-Keep Newest
+Держите новейшее
 </string>
     <string name="analyzer_strategy_newest_desc">
-Preserves the most recently modified file and deletes older copies.
+Сохраняет последний измененный файл и удаляет более старые копии.
 </string>
     <string name="analyzer_strategy_remember">
-Remember my choice
+Помни мой выбор
 </string>
     <string name="analyzer_strategy_most_complete">
-Keep Most Complete
+Сохраняйте наиболее полную
 </string>
     <string name="analyzer_strategy_most_complete_desc">
-Preserves fully downloaded or most allocated files and deletes incomplete copies.
+Сохраняет полностью загруженные или наиболее выделенные файлы и удаляет неполные копии.
 </string>
     <string name="analyzer_badge_partial">
-Partial (%1$.0f%%)
+Частично (%1$.0f%%)
 </string>
     <string name="analyzer_badge_sparse">
-Sparse
+Редкий
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+Удалить %1$d повторяющиеся файлы?
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+Сохраняется одна оригинальная копия каждого файла. %1$d дублирующиеся копии будут удалены без возможности восстановления, чтобы освободить %2$s.
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+Очистка завершена
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+Успешно удалено %1$d повторяющихся файлов и освобождено %2$s дискового пространства.
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+%1$d файлы не удалось удалить из-за разрешений.
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+Удаление %1$d из %2$d файлов…
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d повторяющиеся группы · сохраняет %2$s
 </string>
     <string name="settings_duplicate_retention_title">
-Duplicate Retention Strategy
+Стратегия хранения дубликатов
 </string>
     <string name="settings_duplicate_retention_dialog_subtitle">
-Choose which copy to preserve when selecting duplicate files for cleanup.
+Выберите, какую копию сохранить при выборе повторяющихся файлов для очистки.
 </string>
     <string name="settings_duplicate_retention_summary_oldest">
-Keep oldest file (Original)
+Сохранить самый старый файл (оригинал)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
-Keep newest file
+Сохранить самый новый файл
 </string>
     <string name="settings_duplicate_retention_summary_most_complete">
-Keep most complete file
+Сохранять наиболее полный файл
 </string>
     <string name="settings_duplicate_retention_summary_ask">
-Always ask
+Всегда спрашивайте
 </string>
     <string name="settings_duplicate_retention_desc_ask">
-Prompt to choose retention strategy each time duplicate files are selected.
+Предлагать выбрать стратегию хранения каждый раз, когда выбираются повторяющиеся файлы.
 </string>
     <string name="settings_duplicate_retention_toast">
-Duplicate retention strategy set to: %s
+Для стратегии хранения повторяющихся данных установлено значение: %s
 </string>
     <string name="backup_pref_duplicate_retention">
-Duplicate Retention Strategy
+Стратегия хранения дубликатов
 </string>
 
     <!-- Theme -->
@@ -1507,7 +1507,7 @@ PIN-коды не совпадают — попробуйте снова
 Введите ваш 16-символьный код восстановления для сброса PIN
 </string>
     <string name="vault_recovery_entry_hint">
-XXXXXXXXXXXXXXXX
+ХХХХХХХХХХХХХ
 </string>
     <string name="vault_recovery_invalid">
 Неверный код восстановления
@@ -1613,7 +1613,7 @@ AMOLED чёрный
 Тема применена
 </string>
     <string name="material_you_title">
-Material You
+Материальный ты
 </string>
     <string name="material_you_summary">
 Используйте цвета обоев для персонализированного вида
@@ -1917,13 +1917,13 @@ Ultimate File Manager Pro
 Выберите, какой экран открывается при запуске
 </string>
     <string name="start_screen_last_opened">
-Last Opened Location
+Последнее открытое местоположение
 </string>
     <string name="start_screen_last_opened_desc">
-Reopen where you left off upon app launch
+Откройте снова с того места, где вы остановились, после запуска приложения.
 </string>
     <string name="storage_unavailable_redirect">
-Previous storage location is unavailable. Returned to Storage screen.
+Предыдущее место хранения недоступно. Вернулся на экран «Хранилище».
 </string>
     <string name="start_screen_storage_browser">
 Главное меню (по умолчанию)
@@ -2026,13 +2026,13 @@ Previous storage location is unavailable. Returned to Storage screen.
 
     <!-- Network Transfer Multi-Threading Settings -->
     <string name="settings_network_transfer_threads_title">
-FTP, SFTP &amp; SMB Multi-threading
+Многопоточность FTP, SFTP и SMB
 </string>
     <string name="settings_network_transfer_threads_dialog_title">
 Потоки передачи
 </string>
     <string name="settings_network_transfer_threads_dialog_subtitle">
-Select the number of simultaneous connections for faster network file transfers
+Выберите количество одновременных подключений для более быстрой передачи файлов по сети.
 </string>
     <string name="settings_network_transfer_threads_subtitle">
 %1$d потоков — одновременные соединения для более быстрой передачи
@@ -2047,40 +2047,40 @@ Select the number of simultaneous connections for faster network file transfers
 %1$d потоков (рекомендуется)
 </string>
     <string name="settings_network_transfer_threads_maximum">
-%1$d threads (Maximum)
+%1$d тем (максимум)
 </string>
     <string name="settings_network_transfer_threads_2">
 2 threads
 </string>
     <string name="settings_network_transfer_threads_4">
-4 threads (Recommended)
+4 потока (рекомендуется)
 </string>
     <string name="settings_network_transfer_threads_6">
 6 threads
 </string>
     <string name="settings_network_transfer_threads_8">
-8 threads (Maximum)
+8 потоков (Максимум)
 </string>
     <string name="settings_network_transfer_threads_desc_1">
-Single connection, transfers files sequentially
+Одиночное соединение, передача файлов последовательно
 </string>
     <string name="settings_network_transfer_threads_desc_2">
-Light parallelism, ideal for slower connections
+Легкий параллелизм, идеально подходит для медленных соединений
 </string>
     <string name="settings_network_transfer_threads_desc_4">
-Optimal balance of speed and stability for Wi-Fi and LAN
+Оптимальный баланс скорости и стабильности Wi-Fi и LAN.
 </string>
     <string name="settings_network_transfer_threads_desc_6">
-High throughput for Gigabit networks and fast Wi-Fi
+Высокая пропускная способность для гигабитных сетей и быстрый Wi-Fi
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+Максимальная пропускная способность для мультигигабитной локальной сети и Wi-Fi 7
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+Перенос тем установлен на %1$d
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+Настройки многопоточности FTP, SFTP и SMB
 </string>
     <string name="network_field_threads">
 Потоки передачи
@@ -2091,28 +2091,28 @@ FTP, SFTP &amp; SMB Multi-threading Settings
 
     <!-- Transfer Multi-Threading Telemetry -->
     <string name="transfer_threads_header">
-Threads (%1$d active)
+Темы (%1$d активны)
 </string>
     <string name="transfer_threads_header_single">
-Thread (1 active)
+Тема (1 активная)
 </string>
     <string name="transfer_per_thread_placeholder">
--- MB/s
+-- МБ/с
 </string>
     <string name="transfer_per_thread_format">
-Per thread: %1$.1f MB/s
+На поток: %1$.1f МБ/с.
 </string>
     <string name="transfer_per_thread_single_format">
-Single thread: %1$.1f MB/s
+Один поток: %1$.1f МБ/с.
 </string>
     <string name="transfer_thread_initial">
 Thread %1$d: --
 </string>
     <string name="transfer_thread_speed_item">
-Thread %1$d: %2$.1f MB/s
+Тема %1$d: %2$.1f МБ/с
 </string>
     <string name="transfer_thread_speed_single">
-Thread %1$d: %2$.1f MB/s (Single-threaded)
+Поток %1$d: %2$.1f МБ/с (однопоточный)
 </string>
 
     <!-- Open Source Licenses -->
@@ -2159,10 +2159,10 @@ Thread %1$d: %2$.1f MB/s (Single-threaded)
 По убыванию
 </string>
     <string name="sort_order_a_to_z">
-A → Z
+А → Я
 </string>
     <string name="sort_order_z_to_a">
-Z → A
+Я → А
 </string>
     <string name="sort_order_small_to_large">
 Маленькие → Большие
@@ -2376,10 +2376,10 @@ APK-файлы
 Внешнее приложение
 </string>
     <string name="default_apps_action_player">
-UFM Player
+УФМ Игрок
 </string>
     <string name="default_apps_action_slideshow">
-UFM Slide Show
+Слайд-шоу УФМ
 </string>
     <string name="default_apps_context_local">
 Локально
@@ -2680,7 +2680,7 @@ UFM Slide Show
 Имя файла
 </string>
     <string name="new_file_default">
-New File.txt
+Новый файл.txt
 </string>
     <string name="new_file_create">
 Создать
@@ -2887,7 +2887,7 @@ New File.txt
 Открыть с помощью UFM
 </string>
     <string name="saf_info_subtitle">
-Storage Access Framework
+Платформа доступа к хранилищу
 </string>
     <string name="saf_info_heading">
 Использовать UFM как источник файлов
@@ -3252,7 +3252,7 @@ UFM создан полностью бесплатным без рекламы �
 Серьезно, спасибо. Вы сделали мой день! 🙌
 </string>
     <string name="google_play_store">
-Google Play Store
+Google Play Маркет
 </string>
     <!-- Amazon IAP Tip Jar strings -->
     <!-- Shown when AMAZON_IAP_ENABLED = false (feature not yet live on the Amazon Appstore) -->
@@ -4797,7 +4797,7 @@ IP-адрес целевого устройства
 Связано с %s
 </string>
     <string name="tv_server_channel_name">
-UFM TV Server
+УФМ ТВ Сервер
 </string>
     <string name="tv_server_channel_desc">
 Поддерживает активный обмен файлами на ТВ для сопряженных мобильных устройств
@@ -5554,13 +5554,27 @@ APK готов к установке
 Воспроизведение / Пауза
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+Интерактивный режим
+</string>
+    <string name="svg_transport_mode">
+Управление игроком
+</string>
+    <string name="svg_restart">
+Перезапустить анимацию
+</string>
+    <string name="svg_playback_speed">
+Скорость воспроизведения
+</string>
+    <string name="svg_next_panel">
+Следующая панель
+</string>
+    <string name="svg_prev_panel">
+Предыдущая панель
+</string>
+    <string name="svg_tv_interactive_hint">
+Интерактивный режим — нажмите «Назад» или «Меню» для управления игроком.
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 Аудиодорожка
@@ -5869,10 +5883,10 @@ UFM не поддерживает выбор этих папок через си
 Сохранить в UFM
 </string>
     <string name="share_target_save_to">
-Save to…
+Сохранить в…
 </string>
     <string name="share_target_open_in">
-Open in…
+Открыть в…
 </string>
     <string name="share_receive_from">
 Получение файла от %s
@@ -6673,7 +6687,7 @@ ABI (архитектура):
 папка
 </string>
     <string name="remote_msg_split_apk_label">
-Split APK
+Разделить АПК
 </string>
     <string name="remote_msg_skipped">
 пропущено
@@ -6748,7 +6762,7 @@ PIN-код хранилища
 ROOT
 </string>
     <string name="remote_badge_remote">
-REMOTE
+УДАЛЕННЫЙ
 </string>
     <string name="remote_app_installed_date">
 Дата установки
@@ -7030,7 +7044,7 @@ SCP-ресурс: %1$s (%2$s)
 %1$s / %2$s
 </string>
     <string name="transfer_speed_mbs">
-%1$.1f MB/s
+%1$.1f МБ/с
 </string>
     <string name="cannot_read_source_file">
 Не удается прочитать исходный файл
@@ -7377,10 +7391,10 @@ SCP-ресурс: %1$s (%2$s)
 Найдено %1$d файлов размером более 512 МБ.
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+Неполные/редкие загрузки
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+Обнаружено %1$d неполных или редких файлов, занимающих дисковое пространство.
 </string>
     <string name="old_unused_files">
 Старые неиспользуемые файлы
@@ -7975,10 +7989,18 @@ USB-накопитель (%1$s)
     <string name="sync_disabled">
 Синхронизация отключена
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+Включить профиль
+</string>
+    <string name="sync_action_disable">
+Отключить профиль
+</string>
+    <string name="sync_status_enabled">
+Активный
+</string>
+    <string name="sync_status_disabled">
+Приостановлено
+</string>
     <string name="sync_delete_profile_confirm_msg">
 Вы уверены, что хотите удалить «%1$s»? Это действие необратимо.
 </string>
@@ -8323,46 +8345,46 @@ URL лицензии
 WhatsApp
 </string>
     <string name="whatsapp_business">
-WhatsApp Business
+WhatsApp Бизнес
 </string>
     <string name="telegram">
-Telegram
+Телеграмма
 </string>
     <string name="instagram">
-Instagram
+Инстаграм
 </string>
     <string name="snapchat">
 Snapchat
 </string>
     <string name="tiktok">
-TikTok
+ТикТок
 </string>
     <string name="facebook">
-Facebook
+Фейсбук
 </string>
     <string name="twitter_x">
-Twitter / X
+Твиттер / Х
 </string>
     <string name="discord">
-Discord
+Раздор
 </string>
     <string name="spotify">
-Spotify
+Спотифай
 </string>
     <string name="netflix">
-Netflix
+Нетфликс
 </string>
     <string name="youtube">
-YouTube
+Ютуб
 </string>
     <string name="signal">
-Signal
+Сигнал
 </string>
     <string name="viber">
-Viber
+Вайбер
 </string>
     <string name="line">
-Line
+Линия
 </string>
     <string name="opening_itemlabel">
 📂 Открытие %1$s
@@ -8428,7 +8450,7 @@ Line
 используется
 </string>
     <string name="android_tv">
-Android TV
+Андроид ТВ
 </string>
     <string name="jcifsng_euagno3">
 jcifs-ng (eu.agno3)
@@ -8437,43 +8459,43 @@ jcifs-ng (eu.agno3)
 FFmpeg (LGPL-сборка)
 </string>
     <string name="smbj_hierynomus">
-smbj (hierynomus)
+smbj (иерином)
 </string>
     <string name="apache_commons_net">
-Apache Commons Net
+Сеть сообщества Apache
 </string>
     <string name="apache_commons_compress">
-Apache Commons Compress
+Сжатие Apache Commons
 </string>
     <string name="zip4j_netlingalazip4j">
 zip4j (net.lingala.zip4j)
 </string>
     <string name="xz_for_java_orgtukaanixz">
-XZ for Java (org.tukaani.xz)
+XZ для Java (org.tukaani.xz)
 </string>
     <string name="public_domain">
 Общественное достояние
 </string>
     <string name="apache_poi">
-Apache POI
+Апач POI
 </string>
     <string name="nanohttpd">
-NanoHTTPD
+НаноHTTPD
 </string>
     <string name="google_firebase_analytics">
-Google Firebase Analytics
+Google Firebase Аналитика
 </string>
     <string name="google_billing_library">
-Google Billing Library
+Платежная библиотека Google
 </string>
     <string name="google_play_review_library">
-Google Play Review Library
+Библиотека обзоров Google Play
 </string>
     <string name="androidx_libraries">
-AndroidX Libraries
+Библиотеки AndroidX
 </string>
     <string name="viewpager2">
-ViewPager2
+ПросмотрПейджер2
 </string>
     <string name="libadbandroid_comgithubmuntashirakon">
 libadb-android (com.github.MuntashirAkon)
@@ -8482,7 +8504,7 @@ libadb-android (com.github.MuntashirAkon)
 BouncyCastle (org.bouncycastle) · v1.83
 </string>
     <string name="apache_sshd_core">
-Apache MINA SSHD
+SSHD Apache МИНА
 </string>
     <string name="eddsa_java">
 EdDSA для Java
@@ -8494,7 +8516,7 @@ SLF4J Android
 AndroidSVG (com.caverock)
 </string>
     <string name="coil_iocoilkt">
-Coil (io.coil-kt.coil3)
+Катушка (io.coil-kt.coil3)
 </string>
     <string name="bouncy_castle_license_mitstyle">
 Лицензия Bouncy Castle (MIT)
@@ -8615,16 +8637,16 @@ Dropbox
 Ошибка авторизации: %1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+Аутентификация не удалась
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+Ошибка подключения или проверки
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+Невозможно проверить код авторизации в Dropbox. Убедитесь, что код был введен правильно, срок его действия не истек, а дата/время на вашем устройстве указаны правильно.
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+Обнаружена ошибка даты и времени устройства. Кажется, что дата/время вашей ТВ-системы остались в прошлом, что препятствует безопасному подключению к Dropbox. Установите правильную дату и время в настройках Android TV.
 </string>
     <string name="dropbox_auth_verifying">
 Проверка кода…
@@ -8776,7 +8798,7 @@ Box — сессия истекла
 Расширенный доступ
 </string>
     <string name="shizuku_subtitle">
-Porter / Shizuku / Shevery
+Портер / Шизуку / Шевери
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
@@ -8909,19 +8931,19 @@ ADB не подключён. Подключитесь через ADB-терми�
 Доступные менеджеры
 </string>
     <string name="shizuku_manager_shizuku_title">
-Shizuku
+Шизуку
 </string>
     <string name="shizuku_manager_shizuku_desc">
 Стандартная расширенная служба с GitHub
 </string>
     <string name="shizuku_manager_shevery_title">
-Shevery
+Шевери
 </string>
     <string name="shizuku_manager_shevery_desc">
 Легкая и быстрая альтернатива
 </string>
     <string name="shizuku_manager_porter_title">
-Porter
+Портье
 </string>
     <string name="shizuku_manager_porter_desc">
 Активно поддерживаемое продолжение Shizuku
@@ -8951,16 +8973,16 @@ Porter установлен, но его служба не запущена. П�
 Проверка расширенного доступа…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+Получить Портер
 </string>
     <string name="elevated_prerelease_badge">
 Предварительная версия
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+Получить Шизуку
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+Получить Шевери
 </string>
     <string name="shizuku_open_manager">
 Открыть менеджер %1$s
@@ -8969,7 +8991,7 @@ Get Shevery
 Инструкция по настройке за 3 шага
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1. Менеджер установки
 </string>
     <string name="shizuku_step_2">
 2. Запустите службу
@@ -9008,17 +9030,23 @@ ADB / беспроводная отладка
 Скачать и установить (%1$s)
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+Отключить повышенный доступ?
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+Это отключит повышенный доступ %1$s в UFM. Вы можете снова включить его в любое время.
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+Отключить
 </string>
-    <string name="shizuku_allow_app_access">Allow app access</string>
-    <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
-    <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
+    <string name="shizuku_allow_app_access">
+Разрешить доступ к приложению
+</string>
+    <string name="shizuku_app_access_granted_toast">
+Повышенный доступ включен для %1$s
+</string>
+    <string name="shizuku_app_access_revoked">
+Повышенный доступ отключен для %1$s
+</string>
     <string name="elevated_fetching_toast">
 Проверка последней версии %1$s…
 </string>
@@ -9068,13 +9096,13 @@ DLNA медиа-рендерер
 Имя сервера
 </string>
     <string name="dlna_server_name_default">
-UFM Media Server
+Медиа-сервер УФМ
 </string>
     <string name="dlna_renderer_name_label">
 Имя рендерера
 </string>
     <string name="dlna_renderer_name_default">
-UFM Player
+УФМ Игрок
 </string>
     <string name="dlna_shared_folders_label">
 Общие папки
@@ -9095,7 +9123,7 @@ UFM Player
 DLNA: %1$s:%2$d
 </string>
     <string name="dlna_renderer_running">
-DLNA Renderer: %1$s
+DLNA-рендерер: %1$s
 </string>
     <string name="dlna_new_server_found">
 Обнаружен новый DLNA-сервер: %1$s по адресу %2$s. Подключайтесь только к серверам, которым доверяете.
@@ -9315,7 +9343,7 @@ FTP и SFTP серверы запущены
 Нажмите для управления
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+Файловый сервер остановлен: достигнут 6-часовой лимит выполнения Android
 </string>
     <string name="opening_file_server">
 Открытие файлового сервера…
@@ -9476,7 +9504,7 @@ $%1$d
 </string>
     <!-- Short provider labels used in S3SetupActivity title -->
     <string name="add_online_storage_aws_s3">
-AWS S3
+АВС С3
 </string>
     <string name="add_online_storage_idrive_e2">
 Хранилище S3
@@ -9623,34 +9651,34 @@ URL должен начинаться с http:// или https://
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+Разрешить ненадежный/самозаверяющий сертификат
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+Принимать самозаверяющие или частные SSL-сертификаты CA (обычно на локальных устройствах NAS).
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+Пароль (оставьте пустым, чтобы сохранить актуальность)
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+Ненадежный SSL-сертификат
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+Сервер %1$s представил ненадежный или самозаверяющий сертификат SSL. Проверьте данные сертификата ниже, прежде чем доверять этому соединению.
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+Предмет
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+Эмитент
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+Срок действия
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+SHA-256 Отпечаток пальца
 </string>
     <string name="webdav_cert_dialog_trust">
-Trust &amp; Connect
+Доверяй и подключайся
 </string>
 
     <!-- About Section -->
@@ -9682,7 +9710,7 @@ support@kilowatch.co.za
 Мобильный
 </string>
     <string name="flavor_tv">
-Android TV
+Андроид ТВ
 </string>
     <string name="about_tile_subtitle">
 Информация и детали приложения
@@ -9937,7 +9965,7 @@ Bluetooth должен быть включен для использования
 </string>
     <string name="bt_remote_keyboard_backspace">⌫</string>
     <string name="bt_remote_keyboard_tab">
-Tab
+Вкладка
 </string>
     <string name="bt_remote_keyboard_enter">↩</string>
 
@@ -9977,7 +10005,7 @@ Tab
 Подключиться к %1$s через Wi-Fi
 </string>
     <string name="remote_device_bt_suffix">
- — Bluetooth
+- Bluetooth
 </string>
     <string name="remote_device_wifi_suffix">
  — Wi-Fi
@@ -10492,7 +10520,7 @@ PDF (только многостраничный)
 Камера
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+На этом устройстве не найдено приложение камеры.
 </string>
     <string name="scanner_capture_gallery">
 Выбрать из галереи
@@ -10789,7 +10817,7 @@ No camera app found on this device
 Тёмная
 </string>
     <string name="default_icon_color_section_amoled">
-AMOLED
+АМОЛЕД
 </string>
     <string name="default_icon_color_preview_label">
 Предпросмотр
@@ -11606,7 +11634,7 @@ UFM Локальный центр копирования
 Выберите тип целевого устройства:
 </string>
     <string name="target_tv">
-Android TV / Fire TV
+Android ТВ/Огненное ТВ
 </string>
     <string name="target_tv_desc">
 Копировать файлы напрямую на Android TV с помощью беспроводной ADB push
@@ -11621,7 +11649,7 @@ Android TV / Fire TV
 Найденные телевизоры и устройства
 </string>
     <string name="web_portal_card">
-Web Share Portal
+Веб-портал общего доступа
 </string>
     <string name="web_portal_desc">
 Для ПК, планшетов или телефонов с браузерами:
@@ -11630,7 +11658,7 @@ Web Share Portal
 Пин-код сеанса
 </string>
     <string name="adb_device_badge">
-Android TV (ADB)
+Андроид ТВ (АБР)
 </string>
     <string name="connecting_to_device">
 Подключение к %1$s…
@@ -11685,7 +11713,7 @@ Android TV (ADB)
 
     <!-- Web Share Portal HTML strings -->
     <string name="web_portal_html_title">
-UFM Web Share
+Веб-ресурс UFM
 </string>
     <string name="web_portal_html_header">
 Ultimate File Manager Pro
@@ -11744,7 +11772,7 @@ Ultimate File Manager Pro
 Отправка файла…
 </string>
     <string name="pro_badge">
-PRO
+ПРО
 </string>
 
     <!-- RClone Cloud Storage Support -->
@@ -11824,7 +11852,7 @@ Mega
 Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
-Premiumize
+Премиумизировать
 </string>
     <string name="rclone_provider_box">
 Box
@@ -11848,7 +11876,7 @@ URL сервера
 Используйте пароль приложения, созданный в настройках вашей учётной записи Koofr, а не пароль для входа
 </string>
     <string name="rclone_provider_protondrive">
-Proton Drive
+Протон Драйв
 </string>
     <string name="rclone_field_username">
 Имя пользователя или Email
@@ -11948,100 +11976,100 @@ Proton Drive
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+Стиль субтитров
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+Настройте внешний вид субтитров в приложении, размер шрифта и синхронизацию системных титров.
 </string>
     <string name="subtitle_style_summary_system">
-System caption style
+Системный стиль подписи
 </string>
     <string name="subtitle_style_summary_custom">
-UFM custom style (%1$s)
+Пользовательский стиль UFM (%1$s)
 </string>
     <string name="subtitle_style_dialog_title">
-Subtitle Style
+Стиль субтитров
 </string>
     <string name="subtitle_style_mode_system">
-System Caption Style
+Системный стиль заголовка
 </string>
     <string name="subtitle_style_mode_system_desc">
-Follows device Accessibility caption settings even when system captions are disabled.
+Соответствует настройкам подписей специальных возможностей устройства, даже если системные подписи отключены.
 </string>
     <string name="subtitle_style_mode_custom">
-UFM Custom Style
+Пользовательский стиль UFM
 </string>
     <string name="subtitle_style_mode_custom_desc">
-Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+Пользовательский стиль в приложении с регулируемым размером, цветами, эффектами краев и расположением.
 </string>
     <string name="subtitle_style_open_system">
-Open Device Caption Settings
+Открыть настройки подписи устройства
 </string>
     <string name="subtitle_style_system_unavailable">
-System caption settings not available on this device; using UFM style.
+Настройки системных титров недоступны на этом устройстве; используя стиль UFM.
 </string>
     <string name="subtitle_style_preview_title">
-Preview
+Предварительный просмотр
 </string>
     <string name="subtitle_style_preview_line1">
 Ultimate File Manager Pro
 </string>
     <string name="subtitle_style_preview_line2">
-Live subtitle preview • Crisp text styling
+Предварительный просмотр субтитров в реальном времени • Четкий стиль текста
 </string>
     <string name="subtitle_style_text_size">
-Text size
+Размер текста
 </string>
     <string name="subtitle_style_text_color">
-Text color
+Цвет текста
 </string>
     <string name="subtitle_style_bg_color">
-Background opacity
+Непрозрачность фона
 </string>
     <string name="subtitle_style_edge_type">
-Edge effect
+Краевой эффект
 </string>
     <string name="subtitle_style_edge_none">
 None
 </string>
     <string name="subtitle_style_edge_outline">
-Outline
+Контур
 </string>
     <string name="subtitle_style_edge_drop_shadow">
-Drop shadow
+Тень
 </string>
     <string name="subtitle_style_edge_raised">
-Raised
+Поднятый
 </string>
     <string name="subtitle_style_edge_depressed">
-Depressed
+Подавленный
 </string>
     <string name="subtitle_style_bottom_margin">
-Bottom margin
+Нижнее поле
 </string>
     <string name="subtitle_style_apply_embedded">
-Apply embedded styles (ASS/SSA/TTML)
+Применение встроенных стилей (ASS/SSA/TTML)
 </string>
     <string name="subtitle_style_apply_embedded_desc">
-When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+Если этот параметр отключен, стиль субтитров UFM переопределяет встроенные теги шрифта и цвета для оптимальной читаемости.
 </string>
     <string name="subtitle_style_color_yellow">
-Yellow
+Желтый
 </string>
     <string name="subtitle_style_color_white">
-White
+Белый
 </string>
     <string name="subtitle_style_color_cyan">
-Cyan
+Голубой
 </string>
     <string name="subtitle_style_color_green">
-Green
+Зеленый
 </string>
     <string name="subtitle_style_color_magenta">
-Magenta
+Пурпурный
 </string>
     <string name="subtitle_style_color_orange">
-Orange
+Апельсин
 </string>
     <string name="subtitle_style_bg_transparent">
 None
@@ -12056,13 +12084,13 @@ None
 75%
 </string>
     <string name="subtitle_style_bg_100">
-Solid
+Твердый
 </string>
     <string name="player_track_sheet_subtitle_style">
-Subtitle Style…
+Стиль субтитров…
 </string>
     <string name="player_track_sheet_subtitle_style_desc">
-Customize colors, size &amp; appearance
+Настройте цвета, размер и внешний вид
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -12103,10 +12131,10 @@ Customize colors, size &amp; appearance
 Повтор выкл.
 </string>
     <string name="player_toast_repeat_all">
-Repeat all
+Повторить все
 </string>
     <string name="player_toast_repeat_one">
-Repeat current track
+Повторить текущий трек
 </string>
     <string name="player_toast_audio_track">
 Аудиодорожка
@@ -12265,13 +12293,13 @@ Repeat current track
 Размер:
 </string>
     <string name="properties_label_size_on_disk">
-Size on disk:
+Размер на диске:
 </string>
     <string name="properties_sparse_badge">
-Partial Download (Sparse)
+Частичная загрузка (редкая)
 </string>
     <string name="properties_sparse_allocated_pct">
-%1$.1f%% allocated
+%1$.1f%% выделено
 </string>
     <string name="properties_label_contains">
 Содержит:
@@ -12986,61 +13014,61 @@ UFM перестал отвечать во время вашего послед�
 </string>
     <!-- Music Tag Online Sync & High-Res Cover Picker -->
     <string name="music_tag_btn_search_online_cover">
-Search Online Art
+Поиск онлайн-искусства
 </string>
     <string name="music_tag_btn_musicbrainz_sync">
-Identify Online (MusicBrainz)
+Идентификация онлайн (MusicBrainz)
 </string>
     <string name="music_tag_cover_picker_title">
-Search Online Artwork
+Поиск произведений искусства в Интернете
 </string>
     <string name="music_tag_search_covers_hint">
-Artist and Album name…
+Исполнитель и название альбома…
 </string>
     <string name="music_tag_searching_artwork">
-Searching Apple Music, Deezer &amp; Cover Art Archive…
+Поиск в Apple Music, Deezer и архиве обложек…
 </string>
     <string name="music_tag_no_artwork_found">
-No artwork found for this query
+По этому запросу иллюстрации не найдены
 </string>
     <string name="music_tag_cover_applied">
-Applied online album artwork
+Прикладное оформление онлайн-альбомов
 </string>
     <string name="music_tag_cover_download_error">
-Failed to download artwork
+Не удалось загрузить иллюстрацию
 </string>
     <string name="music_tag_musicbrainz_search_title">
-MusicBrainz Tag Search
+Поиск по тегам MusicBrainz
 </string>
     <string name="music_tag_search_query_hint">
-Track title or Album name…
+Название трека или название альбома…
 </string>
     <string name="music_tag_searching_musicbrainz">
-Searching MusicBrainz…
+Поиск в MusicBrainz…
 </string>
     <string name="music_tag_no_musicbrainz_results">
-No matching recordings or releases found
+Подходящих записей или релизов не найдено.
 </string>
     <string name="music_tag_diff_title">
-Review Online Tags
+Обзор онлайн-тегов
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+Выберите поля, которые нужно применить для отслеживания
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+Применить выбранные теги
 </string>
     <string name="music_tag_select_all">
-Select All
+Выбрать все
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+Записи
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+Альбомы/Релизы
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d треков
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -13261,7 +13289,7 @@ Android 11+ ограничивает доступ к папкам Android/data �
 
     <!-- Photo EXIF Inspector, Privacy Cleaner & Batch Renamer -->
     <string name="action_exif_cleaner_renamer">
-Photo EXIF Cleaner &amp; Renamer
+Очистка и переименование EXIF ​​фотографий
 </string>
     <string name="exif_tools_title">
 Инструменты EXIF для фото
@@ -13426,22 +13454,22 @@ Photo EXIF Cleaner &amp; Renamer
 Камера + Дата
 </string>
     <string name="exif_rename_token_year">
-+ {YYYY}
++ {ГГГГ}
 </string>
     <string name="exif_rename_token_month">
-+ {MM}
++ {ММ}
 </string>
     <string name="exif_rename_token_day">
-+ {DD}
++ {ДД}
 </string>
     <string name="exif_rename_token_time">
-+ {hh}{mm}{ss}
++ {чч}{мм}{сс}
 </string>
     <string name="exif_rename_token_model">
-+ {MODEL}
++ {МОДЕЛЬ}
 </string>
     <string name="exif_rename_token_original">
-+ {ORIGINAL}
++ {ОРИГИНАЛ}
 </string>
     <string name="exif_rename_token_seq">+ {#}</string>
     <string name="exif_rename_preview_header">
@@ -13732,7 +13760,7 @@ support@kilowatch.co.za
 Информация о приложении
 </string>
     <string name="about_section_system">
-Device &amp; System
+Устройство и система
 </string>
     <string name="about_section_support">
 Разработчик и ссылки
@@ -14311,13 +14339,13 @@ Device &amp; System
 Не укоренен
 </string>
     <string name="root_status_detected">
-Rooted (%1$s)
+Укоренено (%1$s)
 </string>
     <string name="root_type_magisk">
 Магиск
 </string>
     <string name="root_type_kernelsu">
-KernelSU
+КернелСУ
 </string>
     <string name="root_type_apatch">
 APatch
@@ -14695,10 +14723,10 @@ MD5
 ✗ Файлы разные (разные размеры: %1$s и %2$s)
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ Соответствие заголовка и данных — неполная загрузка (выделено %1$.1f%% против %2$.1f%%)
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
-Size on disk: %1$s (%2$.1f%%)
+Размер на диске: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 Идентичный размер (%1$s). Хеширование для проверки контента…
@@ -14923,7 +14951,7 @@ Size on disk: %1$s (%2$.1f%%)
 Введите 16-значный ключ восстановления, чтобы восстановить доступ и сбросить учетные данные.
 </string>
     <string name="security_recovery_success">
-Recovery key verified successfully
+Ключ восстановления успешно подтвержден
 </string>
     <string name="security_unlock_enter_pin">
 Введите PIN-код для разблокировки
@@ -14932,22 +14960,22 @@ Recovery key verified successfully
 Введите пароль для разблокировки
 </string>
     <string name="security_unlock_forgot_credential">
-Forgot PIN or Password? Enter Recovery Key
+Забыли PIN-код или пароль? Введите ключ восстановления
 </string>
     <string name="security_unlock_biometric_prompt">
 Прикоснитесь к сенсору или посмотрите в камеру
 </string>
     <string name="security_unlock_tap_to_authenticate">
-Tap to Authenticate
+Нажмите, чтобы пройти аутентификацию
 </string>
     <string name="security_unlock_use_device_lock">
-Use Device PIN / Pattern
+Использовать PIN-код устройства или графический ключ
 </string>
     <string name="security_unlock_invalid_pin">
-Incorrect PIN. %1$d attempts remaining
+Неверный ПИН-код. Осталось %1$d попыток
 </string>
     <string name="security_unlock_invalid_password">
-Incorrect password. %1$d attempts remaining
+Неправильный пароль. Осталось %1$d попыток
 </string>
     <string name="security_unlock_invalid_password_short">
 Неправильный пароль
@@ -14956,7 +14984,7 @@ Incorrect password. %1$d attempts remaining
 Слишком много неудачных попыток
 </string>
     <string name="security_unlock_try_again_after_timer">
-For your security, try again after the timer expires
+В целях безопасности повторите попытку по истечении времени таймера.
 </string>
     <string name="icon_settings_security">
 Безопасность
@@ -15436,7 +15464,7 @@ For your security, try again after the timer expires
 ПРЕДПРОСМОТР
 </string>
     <string name="live_preview_sample_filename">
-Quarterly_Financial_Report_2026_Final.pdf
+Ежеквартальный_финансовый_отчет_2026_Final.pdf
 </string>
     <string name="live_preview_sample_info">
 3,8 МБ · Изменён сегодня, 13:45
@@ -15585,240 +15613,358 @@ OTG-флешка (тестовая)
 </string>
 
     <!-- Grid Text Placement Settings -->
-    <string name="settings_grid_text_position_title">Grid Text Placement</string>
-    <string name="settings_grid_text_position_subtitle">Position file names below or overlaid on grid items</string>
-    <string name="settings_grid_text_position_below">Below Block (Default)</string>
-    <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
-    <string name="backup_pref_grid_text_position">Grid text placement settings</string>
-    <string name="backup_pref_view_styles">View density &amp; preset styles</string>
+    <string name="settings_grid_text_position_title">
+Размещение текста в сетке
+</string>
+    <string name="settings_grid_text_position_subtitle">
+Размещайте имена файлов ниже или накладывайте их на элементы сетки.
+</string>
+    <string name="settings_grid_text_position_below">
+Ниже блока (по умолчанию)
+</string>
+    <string name="settings_grid_text_position_overlay">
+Наложение на блок
+</string>
+    <string name="backup_pref_grid_text_position">
+Настройки размещения текста сетки
+</string>
+    <string name="backup_pref_view_styles">
+Просмотр плотности и предустановленных стилей
+</string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
-    <string name="open_as">Open As…</string>
-    <string name="open_as_desc">Choose a viewer or player to open this file</string>
-    <string name="presentation_viewer">Presentation Viewer</string>
-    <string name="slide_counter">Slide %1$d of %2$d</string>
-    <string name="open_in_powerpoint">Open in Presentation App</string>
-    <string name="open_as_text">Text / Code Viewer</string>
-    <string name="open_as_text_desc">Built-in code &amp; text editor with syntax highlighting</string>
-    <string name="open_as_hex">Hex / Binary Viewer</string>
-    <string name="open_as_hex_desc">Raw byte hex dump and binary inspector</string>
-    <string name="open_as_presentation">Presentation / Slide Deck</string>
-    <string name="open_as_presentation_desc">Built-in slide deck viewer with speaker notes</string>
-    <string name="open_as_spreadsheet">Spreadsheet / Table</string>
-    <string name="open_as_spreadsheet_desc">Built-in spreadsheet table viewer</string>
-    <string name="open_as_image">Image Viewer</string>
-    <string name="open_as_image_desc">High-resolution photo viewer with zoom &amp; pan</string>
-    <string name="open_as_audio">Audio Player</string>
-    <string name="open_as_audio_desc">Media3 audio player with background playback</string>
-    <string name="open_as_video">Video Player</string>
-    <string name="open_as_video_desc">Media3 hardware-accelerated video player</string>
-    <string name="open_as_archive">Archive Browser</string>
-    <string name="open_as_archive_desc">Explore ZIP, 7Z, TAR, RAR, and compressed files</string>
-    <string name="open_as_other">Choose External App…</string>
-    <string name="open_as_other_desc">Open with an installed third-party app</string>
-    <string name="speaker_notes">Speaker Notes</string>
-    <string name="no_slides_found">No slides found in this presentation</string>
-    <string name="next_slide">Next Slide</string>
-    <string name="prev_slide">Previous Slide</string>
-    <string name="view_raw_text">View as Raw Text</string>
-    <string name="ufm_slide_deck_viewer">UFM Slide Deck</string>
-    <string name="open_with_presentation_app">Presentation App (PowerPoint / Slides)</string>
-    <string name="open_with_presentation_app_desc">Open in Microsoft PowerPoint, Google Slides, or office suite</string>
-    <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
+    <string name="open_as">
+Открыть как…
+</string>
+    <string name="open_as_desc">
+Выберите программу просмотра или проигрыватель, чтобы открыть этот файл.
+</string>
+    <string name="presentation_viewer">
+Просмотр презентаций
+</string>
+    <string name="slide_counter">
+Слайд %1$d из %2$d
+</string>
+    <string name="open_in_powerpoint">
+Открыть в приложении «Презентация»
+</string>
+    <string name="open_as_text">
+Средство просмотра текста/кода
+</string>
+    <string name="open_as_text_desc">
+Встроенный редактор кода и текста с подсветкой синтаксиса.
+</string>
+    <string name="open_as_hex">
+Шестнадцатеричный/двоичный просмотрщик
+</string>
+    <string name="open_as_hex_desc">
+Шестнадцатеричный дамп необработанных байтов и двоичный инспектор
+</string>
+    <string name="open_as_presentation">
+Презентация / слайд-шоу
+</string>
+    <string name="open_as_presentation_desc">
+Встроенный просмотрщик слайдов с заметками докладчика
+</string>
+    <string name="open_as_spreadsheet">
+Электронная таблица/таблица
+</string>
+    <string name="open_as_spreadsheet_desc">
+Встроенный просмотрщик электронных таблиц.
+</string>
+    <string name="open_as_image">
+Просмотр изображений
+</string>
+    <string name="open_as_image_desc">
+Просмотр фотографий высокого разрешения с масштабированием и панорамированием
+</string>
+    <string name="open_as_audio">
+Аудиоплеер
+</string>
+    <string name="open_as_audio_desc">
+Аудиоплеер Media3 с фоновым воспроизведением
+</string>
+    <string name="open_as_video">
+Видеоплеер
+</string>
+    <string name="open_as_video_desc">
+Видеоплеер Media3 с аппаратным ускорением
+</string>
+    <string name="open_as_archive">
+Браузер архивов
+</string>
+    <string name="open_as_archive_desc">
+Исследуйте ZIP, 7Z, TAR, RAR и сжатые файлы.
+</string>
+    <string name="open_as_other">
+Выберите внешнее приложение…
+</string>
+    <string name="open_as_other_desc">
+Открыть с помощью установленного стороннего приложения
+</string>
+    <string name="speaker_notes">
+Заметки докладчика
+</string>
+    <string name="no_slides_found">
+В этой презентации не найдено слайдов
+</string>
+    <string name="next_slide">
+Следующий слайд
+</string>
+    <string name="prev_slide">
+Предыдущий слайд
+</string>
+    <string name="view_raw_text">
+Просмотреть как необработанный текст
+</string>
+    <string name="ufm_slide_deck_viewer">
+Слайд-дека UFM
+</string>
+    <string name="open_with_presentation_app">
+Приложение для презентаций (PowerPoint/Слайды)
+</string>
+    <string name="open_with_presentation_app_desc">
+Открыть в Microsoft PowerPoint, Google Slides или офисном пакете.
+</string>
+    <string name="ufm_slide_viewer_desc">
+Просматривайте слайды, миниатюры обложек и заметки в UFM.
+</string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
-    <string name="action_open_with">Open With…</string>
-    <string name="action_open_as">Open As…</string>
-    <string name="toolbar_open_with">Open With</string>
-    <string name="toolbar_open_as">Open As</string>
-    <string name="action_extract_subtitles">Extract Subtitles</string>
-    <string name="action_extract_audio">Extract Audio</string>
+    <string name="action_open_with">
+Открыть с помощью…
+</string>
+    <string name="action_open_as">
+Открыть как…
+</string>
+    <string name="toolbar_open_with">
+Открыть с помощью
+</string>
+    <string name="toolbar_open_as">
+Открыть как
+</string>
+    <string name="action_extract_subtitles">
+Извлечь субтитры
+</string>
+    <string name="action_extract_audio">
+Извлечь аудио
+</string>
     <string name="action_convert_to_mp4">
-Convert to MP4
+Конвертировать в MP4
 </string>
-    <string name="toolbar_extract_subtitles">Extract Subtitles</string>
-    <string name="toolbar_extract_audio">Extract Audio</string>
+    <string name="toolbar_extract_subtitles">
+Извлечь субтитры
+</string>
+    <string name="toolbar_extract_audio">
+Извлечь аудио
+</string>
     <string name="toolbar_convert_to_mp4">
-Convert to MP4
+Конвертировать в MP4
 </string>
-    <string name="extracting_subtitles">Extracting subtitle track…</string>
-    <string name="extracting_audio">Extracting audio track…</string>
+    <string name="extracting_subtitles">
+Извлечение дорожки субтитров…
+</string>
+    <string name="extracting_audio">
+Извлечение звуковой дорожки…
+</string>
     <string name="convert_to_mp4_progress">
-Converting video to MP4…
+Конвертирование видео в MP4…
 </string>
     <string name="convert_to_mp4_success">
-Video converted to %1$s
+Видео преобразовано в %1$s
 </string>
     <string name="convert_to_mp4_failed">
-Failed to convert video
+Не удалось конвертировать видео
 </string>
     <string name="convert_to_mp4_title">
-Convert to MP4
+Конвертировать в MP4
 </string>
     <string name="convert_to_mp4_confirm">
-Convert \"%1$s\" to universal MP4 format?
+Преобразовать \"%1$s\" в универсальный формат MP4?
 </string>
-    <string name="subtitles_extracted_success">Subtitles extracted successfully.</string>
-    <string name="audio_extracted_success">Audio extracted successfully.</string>
+    <string name="subtitles_extracted_success">
+Субтитры успешно извлечены.
+</string>
+    <string name="audio_extracted_success">
+Аудио успешно извлечено.
+</string>
     <string name="audio_format_universal">
-Universal M4A
+Универсальный М4А
 </string>
     <string name="audio_format_original">
-Original Stream
+Оригинальный поток
 </string>
     <string name="audio_format_universal_desc">
-High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+Высококачественный AAC (.m4a) — воспроизводится повсюду на телефонах, в автомобилях и в музыкальных приложениях.
 </string>
     <string name="audio_format_original_desc">
-Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+Прямое копирование потока без потерь (.eac3, .dts, .ac3, .flac)
 </string>
     <string name="codec_unsupported_title">
-Audio Codec Not Supported
+Аудиокодек не поддерживается
 </string>
     <string name="codec_unsupported_message">
-This device lacks a native hardware decoder for %1$s audio.\n
+На этом устройстве отсутствует встроенный аппаратный декодер для звука %1$s.\n
 \n
-Would you like to convert it to Universal M4A (AAC) for seamless playback?
+Хотите преобразовать его в универсальный M4A (AAC) для плавного воспроизведения?
 </string>
     <string name="convert_and_play">
-Convert &amp; Play
+Конвертируйте и играйте
 </string>
     <string name="converting_audio">
-Converting audio to M4A…
+Преобразование аудио в M4A…
 </string>
     <string name="convert_to_m4a">
-Convert to M4A
+Конвертировать в M4A
 </string>
-    <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
-    <string name="media_technical_details">Media Stream Details</string>
-    <string name="media_format">Container</string>
-    <string name="media_bitrate">Overall Bitrate</string>
-    <string name="error_generic">An error occurred</string>
-    <string name="failed_to_open_file">Failed to open file</string>
-    <string name="slide_badge_format">Slide %1$d</string>
-    <string name="slide_counter_format">Slide %1$d of %2$d</string>
-    <string name="no_app_to_open_file">No app found to open this file</string>
+    <string name="no_subtitles_found_in_video">
+В этом видео не найдено встроенных субтитров.
+</string>
+    <string name="media_technical_details">
+Подробности медиапотока
+</string>
+    <string name="media_format">
+Контейнер
+</string>
+    <string name="media_bitrate">
+Общий битрейт
+</string>
+    <string name="error_generic">
+Произошла ошибка
+</string>
+    <string name="failed_to_open_file">
+Не удалось открыть файл
+</string>
+    <string name="slide_badge_format">
+Слайд %1$d
+</string>
+    <string name="slide_counter_format">
+Слайд %1$d из %2$d
+</string>
+    <string name="no_app_to_open_file">
+Не найдено приложение для открытия этого файла
+</string>
     <string name="select_subtitle_track">
-Select Subtitle Track
+Выберите дорожку субтитров
 </string>
     <string name="extract_all_subtitles">
-Extract All Tracks
+Извлечь все треки
 </string>
     <string name="extract_all_subtitles_desc">
-Extract all %1$d subtitle tracks into separate files
+Извлечь все дорожки субтитров %1$d в отдельные файлы.
 </string>
     <string name="subtitles_extracted_multiple_success">
-Successfully extracted %1$d subtitle files.
+Успешно извлечены файлы субтитров %1$d.
 </string>
     <string name="select_audio_track">
-Select Audio Track
+Выберите аудиодорожку
 </string>
     <string name="extract_all_audio">
-Extract All Tracks
+Извлечь все треки
 </string>
     <string name="extract_all_audio_desc">
-Extract all %1$d audio tracks into separate files
+Извлечь все аудиодорожки %1$d в отдельные файлы.
 </string>
     <string name="audio_extracted_multiple_success">
-Successfully extracted %1$d audio files.
+%1$d аудиофайлов успешно извлечены.
 </string>
     <string name="no_audio_found_in_video">
-No audio tracks found in this video
+В этом видео не найдено звуковых дорожек
 </string>
 
     <!-- Floating Bottom Bar Dock -->
     <string name="floating_bar_settings_title">
-Floating Bottom Bar
+Плавающая нижняя панель
 </string>
     <string name="floating_bar_settings_subtitle">
-Show a modern floating dock at the bottom of the main menu for quick access
+Покажите современный плавучий док внизу главного меню для быстрого доступа.
 </string>
     <string name="floating_bar_manage_title">
-Manage Floating Bar
+Управление плавающей панелью
 </string>
     <string name="floating_bar_manage_subtitle">
-Add, remove, and reorder quick-access shortcuts
+Добавляйте, удаляйте и меняйте порядок ярлыков быстрого доступа.
 </string>
     <string name="floating_bar_enable_switch">
-Enable Floating Bar
+Включить плавающую панель
 </string>
     <string name="floating_bar_enable_desc">
-Docked tiles appear in the bottom floating bar and are hidden from the main menu
+Закрепленные плитки отображаются в нижней плавающей панели и скрыты из главного меню.
 </string>
     <string name="floating_bar_docked_section">
-Docked Items
+Закрепленные элементы
 </string>
     <string name="floating_bar_docked_hint">
-Drag handle to reorder. Tap Remove to return item to main menu.
+Перетащите маркер, чтобы изменить порядок. Нажмите «Удалить», чтобы вернуть элемент в главное меню.
 </string>
     <string name="floating_bar_available_section">
-Available Tiles
+Доступные плитки
 </string>
     <string name="floating_bar_available_hint">
-Tap + to add a tile to the floating bottom bar
+Нажмите +, чтобы добавить плитку на плавающую нижнюю панель.
 </string>
     <string name="floating_bar_empty_docked">
-No items docked yet. Add tiles from the list below.
+Ни один элемент еще не закреплен. Добавьте плитки из списка ниже.
 </string>
     <string name="floating_bar_empty_available">
-All available tiles have been added to the floating bar.
+Все доступные плитки были добавлены на плавающую панель.
 </string>
     <string name="floating_bar_add">
-Add
+Добавлять
 </string>
     <string name="floating_bar_remove">
-Remove
+Удалять
 </string>
     <string name="backup_pref_floating_bar">
-Floating Bottom Bar
+Плавающая нижняя панель
 </string>
 
     <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
     <string name="quick_access_title">
-Quick Access
+Быстрый доступ
 </string>
     <string name="quick_access_mode_title">
-Quick Access Style
+Стиль быстрого доступа
 </string>
     <string name="quick_access_mode_subtitle">
-Choose how quick-access shortcuts are presented
+Выберите способ отображения ярлыков быстрого доступа.
 </string>
     <string name="quick_access_mode_disabled">
-Disabled
+Неполноценный
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+Нижняя плавающая полоса
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+Краевое меню
 </string>
     <string name="quick_access_edge_title">
-Swipe Edge
+Проведите по краю
 </string>
     <string name="quick_access_edge_left">
-Left Edge
+Левый край
 </string>
     <string name="quick_access_edge_right">
-Right Edge
+Правый край
 </string>
     <string name="quick_access_edge_handle_title">
-Edge Handle Indicator
+Индикатор краевой ручки
 </string>
     <string name="quick_access_edge_handle_desc">
-Show a subtle indicator on the screen edge for easy opening
+Покажите тонкий индикатор по краю экрана для облегчения открытия.
 </string>
     <string name="quick_access_hide_tiles_title">
-Hide Docked Tiles on Main Menu
+Скрыть закрепленные плитки в главном меню
 </string>
     <string name="quick_access_hide_tiles_desc">
-Keep the main dashboard clean by hiding tiles docked in Quick Access
+Поддерживайте чистоту главной панели управления, скрывая плитки, прикрепленные к панели быстрого доступа.
 </string>
     <string name="quick_access_manage_tiles">
-Manage Tiles
+Управление плитками
 </string>
     <string name="quick_access_empty_hint">
-No tiles docked yet.\n
-Tap Manage Tiles to add shortcuts.
+Ни одна плитка еще не закреплена.\n
+Нажмите «Управление плитками», чтобы добавить ярлыки.
 </string>
     <string name="quick_access_mode_disabled_desc">Отключить ярлыки быстрого доступа</string>
     <string name="quick_access_mode_bottom_bar_desc">Современная плавающая панель внизу главного меню</string>
@@ -15829,373 +15975,373 @@ Tap Manage Tiles to add shortcuts.
 
     <!-- Direct Remote Media & Media Operation Worker -->
     <string name="settings_network_media_process_title">
-Network Media Processing
+Сетевая обработка мультимедиа
 </string>
     <string name="settings_network_media_process_subtitle_off">
-Direct stream processing (zero local copy of video)
+Прямая потоковая обработка (нулевая локальная копия видео)
 </string>
     <string name="settings_network_media_process_subtitle_on">
-Copy full video to local storage before processing
+Скопируйте полное видео в локальное хранилище перед обработкой.
 </string>
     <string name="backup_pref_network_media_process">
-Network Media Processing
+Сетевая обработка мультимедиа
 </string>
     <string name="dialog_copy_before_process_title">
-Copy to Local Storage?
+Копировать в локальное хранилище?
 </string>
     <string name="dialog_copy_before_process_msg">
-This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+В ходе этой операции сначала будет скопировано \"%1$s\" (%2$s) из сетевого хранилища в локальное хранилище вашего устройства.\n
 \n
-Depending on file size and connection speed, this may take some time.\n
+В зависимости от размера файла и скорости соединения это может занять некоторое время.\n
 \n
-Do you want to proceed?
+Продолжить?
 </string>
     <string name="action_copy_and_proceed">
-Copy &amp; Proceed
+Копировать и продолжить
 </string>
     <string name="media_operation_channel_name">
-Media Operations
+Операции со СМИ
 </string>
     <string name="media_operation_channel_desc">
-Background video conversion and track extraction
+Преобразование фонового видео и извлечение треков
 </string>
     <string name="media_op_converting_video">
-Converting Video to MP4…
+Конвертирование видео в MP4…
 </string>
     <string name="media_op_extracting_audio">
-Extracting Audio Track…
+Извлечение аудиодорожки…
 </string>
     <string name="media_op_extracting_subtitles">
-Extracting Subtitles…
+Извлечение субтитров…
 </string>
     <string name="media_op_completed_title">
-Media Operation Completed
+Операция с носителем завершена
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+Операция с носителем не удалась
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+Загрузка удаленного видео в локальный кэш…
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+Загрузка результата в удаленную папку…
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+Продолжаем в фоновом режиме. Проверьте уведомления о прогрессе.
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+Удаленный общий доступ доступен только для чтения
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+Извлеченный файл не удалось сохранить в «%1$s», поскольку этот общий ресурс доступен только для чтения.\n
 \n
-Would you like to save it to your local device instead?
+Хотите вместо этого сохранить его на локальном устройстве?
 </string>
     <string name="action_save_locally">
-Save to Device
+Сохранить на устройство
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+Общий доступ только для чтения
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+Общий ресурс «%1$s» доступен только для чтения.\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+Извлеченный или преобразованный файл нельзя сохранить обратно в удаленный общий ресурс, поэтому вместо этого он будет сохранен в вашей локальной папке «Загрузки».\n
 \n
-Do you want to proceed?
+Хотите продолжить?
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+Другое хранилище
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+Установленные поставщики облачных услуг и документов
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+Доступ к сторонним поставщикам документов, установленным на вашем устройстве
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+Доступны %1$d поставщики документов
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+Доступен 1 ​​поставщик документов
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+Сторонние поставщики документов не найдены
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+Просмотр файлов (SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+Подключить папку хранения
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+Подключение через UFM Native Engine
 </string>
     <string name="action_open_app">
-Open App
+Открыть приложение
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+Добавить место хранения
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+Каталог / папка монтирования
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+Выберите папку на Termux, SD-карте или USB-накопителе.
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+Установленные поставщики документов
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+Доступ к Proton Drive, файлу Synology DS, Google Drive и т. д.
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+Высокоскоростное облако и сеть
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+Полная двусторонняя синхронизация через RClone (Proton/Google Drive) или SMB/WebDAV.
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+Открыть или скопировать файл
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+Что бы вы хотели сделать с «%1$s»?
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+Открыть в средстве просмотра UFM
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+Копировать в локальное хранилище
 </string>
     <string name="saf_file_action_remember">
-Remember my choice
+Помни мой выбор
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+Всегда спрашивайте
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+Скопировано %1$d файлов в раздел «Загрузки».
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+Действие выбранного файла SAF
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+Всегда спрашивайте, открывать или копировать
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+Всегда открывать в UFM Viewer
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+Всегда копировать в локальное хранилище
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+Поставщик документов
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+Управление %1$s
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+Просмотр и загрузка файлов
 </string>
     <string name="doc_provider_action_browse_subtitle">Открыть %1$s для выбора файлов для просмотра или копирования</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+Загрузить файл в %1$s
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+Выберите локальный файл в UFM для сохранения в %1$s
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+Удалить %1$s?
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+Удалить %1$s из хранилища? Вы можете повторно добавить его в любое время из «Другого хранилища».
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+Удалить из хранилища
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+%1$s удалено из хранилища.
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+%1$s добавлен в хранилище
 </string>
     <string name="other_storage_all_added">
-All available providers added
+Добавлены все доступные провайдеры
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+Все установленные поставщики документов уже добавлены в ваше главное меню хранилища.
 </string>
     <string name="saf_copy_destination_title">
-Destination: %1$s
+Пункт назначения: %1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+Изменить папку…
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+Выберите папку назначения
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+Установить назначение копирования
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+Назначение выбранных файлов SAF
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+Файлы, скопированные от поставщиков документов, будут сохранены в «%1$s».
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+Прочее хранение и передача SAF
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+Копировать папку назначения
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+Сброс к настройкам по умолчанию (Загрузки)
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+Выберите новую папку…
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+Скопировать сброс места назначения в «Загрузки»
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+Экспорт в поставщика документов
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+Сохраняйте непосредственно в подключенном облаке или поставщике документов.
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+Выберите целевого поставщика
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+Экспорт нескольких файлов
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+Как бы вы хотели экспортировать эти файлы %1$d в %2$s?
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+Экспортировать как ZIP-архив
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+Использовать лист загрузки системы
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+\"%1$s\" сохранено в %2$s
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+Папка монтируется
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+Файлы и облако
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+Доступна встроенная синхронизация
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+Загрузить в другое хранилище
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+Загрузите выбранные файлы или папки внешним поставщикам документов.
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+Загрузить в другое хранилище
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+Поставщик хранилища не добавлен. Выберите провайдера, которого хотите добавить.
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+Скопировано %1$d файлов в %2$s
 </string>
     <string name="share_export_folder_title">
-Export Folder
+Экспортировать папку
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+Папки нельзя загружать напрямую через поставщиков документов. Хотите сжать \"%1$s\" в ZIP-архив и загрузить в %2$s?
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+Сжать в один ZIP-архив и загрузить.
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+Отправляйте элементы с помощью листа загрузки системы Android.
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+Выберите подключенный провайдер или откройте «Другое хранилище».
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+Архивирование для %1$s…
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+Архивирование для другого хранилища…
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+Загрузить через %1$s
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+Отправляйте файлы прямо в %1$s
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+Сжать в ZIP-архив и выбрать папку назначения в %1$s
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+Сохраняет структуру папок и исходный каталог внутри ZIP-архива в %1$s
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+Загружает отдельные файлы непосредственно в %1$s (на внешних экранах загрузки нельзя создавать каталоги)
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+Уведомление о загрузке папки
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+Внешние экраны загрузки (например, %2$s) не могут создавать каталоги.\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+Будут загружены только файлы внутри «%1$s», а не сама исходная папка.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Чтобы сохранить полную структуру каталогов, вместо этого выберите «Экспортировать как ZIP-архив».
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+Внешние экраны загрузки (например, %1$s) не могут создавать каталоги.\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+Будут загружены только файлы внутри выбранных папок, а не сами исходные папки.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Чтобы сохранить полную структуру каталогов, вместо этого выберите «Экспортировать как ZIP-архив».
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+Загружать только файлы
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+Параметры главного экрана
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+Добавить на главный экран
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+Удалить с главного экрана
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+Удалить избранное
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+Запрошен ярлык — проверьте главный экран
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+Ярлык отключен. Удалите его вручную с главного экрана.
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+УФМ Избранное
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+Канал не одобрен. Вы можете включить его позже в «Настройки телевизора» → «Каналы».
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+Товар недоступен
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+Файл или папка не найдены. Возможно, он был перемещен, удален или находится в недоступном хранилище.
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -16215,382 +16361,382 @@ OK
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+Открыть с помощью
 </string>
     <string name="open_with_search_hint">
-Search apps…
+Поиск приложений…
 </string>
     <string name="open_with_just_once">
-Just once
+только один раз
 </string>
     <string name="open_with_always">
-Always
+Всегда
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+Всегда использовать выбранное приложение для файлов .%1$s
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+Всегда использовать выбранное приложение
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+Помните значение по умолчанию для файлов .%1$s
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+Не найдено установленных приложений, позволяющих открыть этот файл.
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+Поиск в магазине Google Play
 </string>
     <string name="open_with_app_info">
-App info
+Информация о приложении
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+Просмотр сведений о приложении и системных настройках
 </string>
     <string name="open_with_set_default">
-Always use this app
+Всегда используйте это приложение
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+Невозможно запустить %1$s. Возвращаемся к выбору системы…
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+Нажмите OK, чтобы открыть • Нажмите и удерживайте OK, чтобы открыть параметры приложения по умолчанию.
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+Выбрать в качестве пункта назначения
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+Назначение просмотра
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+Подтвердите папку назначения
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+Выбранная папка будет использоваться для быстрого копирования и перемещения в UFM Viewer и слайд-шоу.
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+Действия с файлами
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+Папка назначения
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+Пункт назначения не выбран — нажмите, чтобы выбрать
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+Изменять
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+Копировать в %1$s
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+Переехать в %1$s
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+Копировать в пункт назначения
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+Двигаться к месту назначения
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+Скопировано в %1$s
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+Перемещено в %1$s
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+Источник и место назначения — одна и та же папка.
 </string>
     <string name="backup_pref_viewer_transfer">
-Viewer Transfer Destination
+Назначение просмотра для передачи
 </string>
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+Добавить на главный экран
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+Имя ярлыка
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+Ярлык хранилища
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+«%1$s» уже закреплено на главном экране.
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+Добавить на главный экран
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+Название ярлыка не может быть пустым.
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
     <string name="download_manager_title">
-Download Manager
+Менеджер загрузок
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+Загрузка через торрент, магнит и HTTP
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+Высокоскоростной собственный прямой и одноранговый менеджер загрузок с нулевой защитой конфиденциальности.
 </string>
     <string name="download_no_transfers">
-No active downloads
+Нет активных загрузок
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+Выбрать в качестве папки загрузки
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+Скачать папку
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+Подтвердите место загрузки
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+Загрузки будут сохраняться непосредственно в этот каталог.
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+Прямые загрузки
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+Торрент-загрузки
 </string>
     <string name="download_location_label">
-Download location
+Местоположение загрузки
 </string>
     <string name="download_change_location">
-Change
+Изменять
 </string>
     <string name="download_action_start">
-Start
+Начинать
 </string>
     <string name="download_action_pause">
 Pause
 </string>
     <string name="download_action_resume">
-Resume
+Резюме
 </string>
     <string name="download_action_cancel">
-Cancel
+Отмена
 </string>
     <string name="download_action_delete">
-Delete
+Удалить
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+URL-адрес прямой загрузки
 </string>
     <string name="download_enter_url_hint">
 https://example.com/file.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+Скачать
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+Торрент или магнитная ссылка
 </string>
     <string name="download_enter_magnet_hint">
-magnet:?xt=urn:btih:...
+магнит:?xt=urn:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+Открыть файл .torrent
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+Менеджер загрузок и уведомление о P2P
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+Информация о приемлемом использовании и конфиденциальности
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+Я понимаю, что одноранговые загрузки используют мой IP-адрес внутри группы, и я согласен использовать этот инструмент исключительно для законного контента, не нарушающего авторские права.
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+Превышен лимит хранилища
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+Размер целевого файла (%1$s) превышает ограничение в 4 ГБ, поддерживаемое файловой системой FAT32 на этом диске.\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+Выберите другое место загрузки, отформатированное в exFAT, NTFS или во внутреннем хранилище.
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+Недостаточно места для хранения
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+На выбранном накопителе недостаточно свободного места.\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+Требуется: %1$s\n
+Доступно: %2$s\n
 \n
-Please select another drive or free up space.
+Выберите другой диск или освободите место.
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+Выберите местоположение
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+Мобильная передача данных
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+В настоящее время вы подключены к сотовой сети и включен режим только Wi-Fi.\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+Хотите ли вы поставить эту передачу в очередь до тех пор, пока не подключится Wi-Fi, или разрешить загрузку мобильных данных?
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+Очередь на Wi-Fi
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+Разрешить мобильные данные
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+Сетевая политика
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+Выберите правила сетевого подключения для загрузок
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+Только Wi-Fi (рекомендуется)
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+Передавать загрузки только при подключении к безлимитному Wi-Fi.
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+Все сети (Wi-Fi и сотовая связь)
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+Разрешить передачу данных через сотовые мобильные данные и сети Wi-Fi.
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+Ознакомьтесь с условиями, не связанными с пиратством
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+Ознакомьтесь с условиями раскрытия информации о P2P-рое, конфиденциальности и нулевого заполнения
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+P2P Swarm и видимость IP
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+BitTorrent передает фрагменты обмена напрямую с другими одноранговыми устройствами в группе. Ваш общедоступный IP-адрес виден активным узлам во время передачи.
 </string>
     <string name="download_legal_zero_seeding_title">
-Zero-Seeding Privacy
+Конфиденциальность с нулевым разглашением
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+UFM обеспечивает строгий нулевой разсев. В момент завершения загрузки (100%) все соединения группы рвутся, и объявления трекера немедленно прекращаются.
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+Только законный контент
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+Вы соглашаетесь использовать этот инструмент исключительно для законных файлов, файлов с открытым исходным кодом, общедоступных или авторизованных файлов. Загрузка или распространение материалов, защищенных авторским правом, без разрешения запрещено.
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+Согласиться и продолжить
 </string>
     <string name="download_legal_understood">
-Understood
+Понял
 </string>
     <string name="download_state_downloading">
-Downloading
+Загрузка
 </string>
     <string name="download_state_paused">
-Paused
+Приостановлено
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+В очереди на Wi-Fi
 </string>
     <string name="download_state_completed">
-Completed
+Завершенный
 </string>
     <string name="download_state_error">
-Error
+Ошибка
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+Трансферы диспетчера загрузок
 </string>
     <string name="download_notif_channel_desc">
-Ongoing download progress and status updates
+Текущий прогресс загрузки и обновления статуса
 </string>
     <string name="download_timeout_stopped">
-Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+Загрузки приостановлены: достигнут 6-часовой лимит выполнения Android. Нажмите, чтобы возобновить.
 </string>
 
     <!-- Torrent & Magnet Selective File Download & Content Inspector -->
     <string name="torrent_select_all">
-Select All
+Выбрать все
 </string>
     <string name="torrent_deselect_all">
-Deselect All
+Отменить выбор всех
 </string>
     <string name="torrent_selected_summary">
-Selected: %1$d of %2$d files (%3$s of %4$s)
+Выбрано: %1$d из %2$d файлов (%3$s из %4$s)
 </string>
     <string name="torrent_files_count">
-%1$d files
+%1$d файлов
 </string>
     <string name="torrent_file_selection_title">
-Torrent Content
+Торрент-контент
 </string>
     <string name="torrent_file_selection_subtitle">
-Select files and folders to download
+Выберите файлы и папки для загрузки
 </string>
     <string name="torrent_fetching_metadata">
-Fetching torrent metadata from swarm…
+Получение метаданных торрента из роя…
 </string>
     <string name="torrent_fetching_metadata_desc">
-Contacting DHT nodes and peers to retrieve file list…
+Обращение к узлам и узлам DHT для получения списка файлов…
 </string>
     <string name="torrent_metadata_timeout_title">
-Metadata Fetch Timeout
+Тайм-аут получения метаданных
 </string>
     <string name="torrent_metadata_timeout_msg">
-Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+Получение списка файлов от одноранговых узлов занимает больше времени, чем обычно. Хотите продолжить поиск или загрузить все файлы напрямую?
 </string>
     <string name="torrent_keep_waiting">
-Keep Waiting
+Продолжайте ждать
 </string>
     <string name="torrent_download_all_direct">
-Download All Directly
+Скачать все напрямую
 </string>
     <string name="torrent_zero_selected_error">
-Please select at least one file to download
+Пожалуйста, выберите хотя бы один файл для загрузки
 </string>
     <string name="torrent_search_hint">
-Search files…
+Поиск файлов…
 </string>
 
     <!-- Transfer Action Dialog -->
     <string name="transfer_action_title">
-Transfer Actions
+Действия по передаче
 </string>
     <string name="transfer_action_pause">
-Pause Transfer
+Пауза передачи
 </string>
     <string name="transfer_action_resume">
-Resume Transfer
+Возобновить передачу
 </string>
     <string name="transfer_action_open_folder">
-Open Download Folder
+Открыть папку загрузки
 </string>
     <string name="transfer_action_delete_title">
-Remove Transfer
+Удалить передачу
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+Выберите способ удаления этой передачи из диспетчера загрузок:
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+Удалить только передачу
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+Храните загруженные файлы на своем устройстве
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+Удаление и удаление файлов
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+Безвозвратно удалить загруженные файлы с диска
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16651,79 +16797,79 @@ Magnet-ссылка
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+Умные закладки
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+Упорядочивайте сохраненные ссылки, медиафайлы и публикации
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%1$d элементов в %2$d группах
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+Закладки пока не сохранены
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+Сделать закладку с помощью UFM
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+Сохранить закладку
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+Опубликовано из %1$s
 </string>
     <string name="bookmark_field_title_hint">
-Title
+Заголовок
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+Коллекция/Группа
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+Добавить личное примечание (необязательно)
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+Сохранить закладку
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+Уже добавлено в закладки — примечания и время обновлены
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+Закладка сохранена в %1$s
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+Группы
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+Посмотреть все ›
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+Коллекции и источники
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+Управляйте коллекциями, фильтруйте и защищайте хранилище
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+Поиск коллекций…
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+Все закладки
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+Показать все разблокированные закладки во всех источниках
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+Мои коллекции
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+Коллекции, созданные пользователями • Запираемое хранилище
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+Источники приложений
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+Автоматически создается из общих приложений
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16732,241 +16878,241 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+Безопасность устройства (PIN-код, графический ключ или отпечаток пальца) не настроена на этом устройстве.
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+Хранилище заблокировано
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+Пройдите аутентификацию, чтобы снять блокировку Vault.
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+Коллекция заблокирована в Хранилище
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+Коллекция разблокирована
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+Новая группа закладок
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+Имя группы
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+Создать группу
 </string>
     <string name="bookmark_filter_all">
-All
+Все
 </string>
     <string name="bookmark_filter_links">
-Links
+Ссылки
 </string>
     <string name="bookmark_filter_media">
-Media
+СМИ
 </string>
     <string name="bookmark_filter_docs">
-Documents
+Документы
 </string>
     <string name="bookmark_filter_notes">
-Notes
+Примечания
 </string>
     <string name="bookmark_filter_starred">
-Starred
+Помечено
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+Поиск закладок, заметок или доменов…
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+Сортировать закладки
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+От самого нового к самому старому
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+От самого старого к самому новому
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+Название (А–Я)
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+Название (Z – A)
 </string>
     <string name="bookmark_sort_size">
-File Size
+Размер файла
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+Группировать по коллекции
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+Коллекция: от А до Я
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+Коллекция: От Я до А
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+Удалить коллекцию
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+Вы уверены, что хотите удалить коллекцию «%1$s»?
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+Читать статью
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+Открыть в браузере
 </string>
     <string name="bookmark_action_open_file">
-Open File
+Открыть файл
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+Копировать ссылку
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+Копировать текст
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+Сохранить в хранилище
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+Перейти в группу
 </string>
     <string name="bookmark_action_delete">
-Delete
+Удалить
 </string>
     <string name="bookmark_view_note">
-View Note
+Посмотреть заметку
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+Коллекция замков (Хранилище)
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+Требовать отпечаток пальца или PIN-код для просмотра
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+Варианты коллекции
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+Коллекция замков
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+Разблокировать коллекцию
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+Закладка удалена
 </string>
     <string name="bookmark_undo">
-Undo
+Отменить
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+Выбрано %1$d элементов
 </string>
     <string name="bookmark_batch_move">
-Move
+Двигаться
 </string>
     <string name="bookmark_batch_delete">
-Delete
+Удалить
 </string>
     <string name="bookmark_batch_export">
-Export
+Экспорт
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+Экспортировать закладки
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+HTML-закладки браузера (.html)
 </string>
     <string name="bookmark_export_markdown">
-Markdown Document (.md)
+Документ уценки (.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+Закладки %1$d экспортированы в %2$s
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+Режим чтения
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+Размер текста
 </string>
     <string name="bookmark_reader_theme">
-Theme
+Тема
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+Свет
 </string>
     <string name="bookmark_reader_theme_sepia">
-Sepia
+Сепия
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+Темный
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+Слушайте вслух
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+Пауза в чтении
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+Хватит читать
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+Скорость %1$sx
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+Инициализация голосового механизма…
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+Преобразование текста в речь не поддерживается или не установлено на этом устройстве.
 </string>
     <string name="bookmark_group_whatsapp">
 WhatsApp
 </string>
     <string name="bookmark_group_reddit">
-Reddit
+Реддит
 </string>
     <string name="bookmark_group_youtube">
-YouTube
+Ютуб
 </string>
     <string name="bookmark_group_twitter">
-Twitter / X
+Твиттер / Х
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+Интернет и статьи
 </string>
     <string name="bookmark_group_telegram">
-Telegram
+Телеграмма
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+Файлы и документы
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+Заблокировать группу с помощью хранилища
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+Разблокировать группу
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+Аутентификация для доступа к заблокированным закладкам
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+Закладок пока нет
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+Поделитесь ссылками, статьями, мультимедиа или файлами из WhatsApp, Reddit или вашего браузера и выберите «Добавить в закладки с помощью UFM».
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+Результаты не найдены
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+Нет закладок, соответствующих \"%1$s\". Попробуйте поискать по другим ключевым словам.
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+Закладки не найдены
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+Не найдено закладок, соответствующих выбранному фильтру или коллекции.
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -16974,67 +17120,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+Плоский вид
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+Рекурсивный индексированный браузер
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+Открыть папку
 </string>
     <string name="flat_view_expand_all">
-Expand All
+Развернуть все
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+Свернуть все
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+Включить системные папки
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+Показывать каталоги Android/data, Android/obb и системные каталоги в плоском представлении.
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+По умолчанию все развернуто
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+Открыть плоский вид со всеми папками, развернутыми по умолчанию
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+В этом томе не найдено проиндексированных файлов.
 </string>
     <string name="flat_view_settings_title">
-Flat View
+Плоский вид
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+Настройка рекурсивного индексированного просмотра и системных папок
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+Хранилище не проиндексировано
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+Flat View требует, чтобы этот том хранилища был полностью проиндексирован. Пожалуйста, сначала запустите индексацию.
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%1$d файлов в %2$d папках
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+%1$d выбрано
 </string>
     <string name="flat_view_folder_files_count">
-%1$d files
+%1$d файлов
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+Удалить файлы
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+Вы уверены, что хотите удалить %1$d выбранных файлов?
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+Удалены файлы %1$d
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+Настройки плоского просмотра
 </string>
 </resources>
 

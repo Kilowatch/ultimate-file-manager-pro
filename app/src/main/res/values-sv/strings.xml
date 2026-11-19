@@ -6,55 +6,55 @@ Ultimate File Manager Pro
 Språk
 </string>
     <string name="language_english">
-English
+engelska
 </string>
     <string name="language_german">
-German (Deutsch)
+tyska (tyska)
 </string>
     <string name="language_japanese">
-Japanese (日本語)
+japanska (日本語)
 </string>
     <string name="language_arabic">
-Arabic (العربية)
+Arabiska (العربية)
 </string>
     <string name="language_spanish">
-Spanish (Español)
+Spanska (Español)
 </string>
     <string name="language_french">
-French (Français)
+franska (français)
 </string>
     <string name="language_hindi">
-Hindi (हिन्दी)
+hindi (हिन्दी)
 </string>
     <string name="language_indonesian">
-Indonesian (Bahasa Indonesia)
+Indonesiska (Bahasa Indonesia)
 </string>
     <string name="language_korean">
-Korean (한국어)
+koreanska (한국어)
 </string>
     <string name="language_portuguese">
-Portuguese (Português)
+Portugisiska (Português)
 </string>
     <string name="language_russian">
-Russian (Русский)
+ryska (Русский)
 </string>
     <string name="language_turkish">
-Turkish (Türkçe)
+turkiska (Türkçe)
 </string>
     <string name="language_ukrainian">
-Ukrainian (українська)
+ukrainska (українська)
 </string>
     <string name="language_italian">
-Italian (Italiano)
+italienska (Italiano)
 </string>
     <string name="language_dutch">
-Dutch (Nederlands)
+Holländska (Nederländerna)
 </string>
     <string name="language_chinese">
-Chinese (中文)
+kinesiska (中文)
 </string>
     <string name="language_swedish">
-Swedish (Svenska)
+svenska (svenska)
 </string>
     <string name="select_language">
 Välj språk
@@ -66,7 +66,7 @@ Systemstandard
 Matcha enhetens systemspråk
 </string>
     <string name="language_section_system">
-System Preference
+Systempreferens
 </string>
     <string name="language_section_available">
 Tillgängliga språk
@@ -83,7 +83,7 @@ Justera radstorlek för inställningar
 Portrait
 </string>
     <string name="view_mode_grid">
-Landscape
+Landskap
 </string>
     <string name="dialog_view_mode_title">
 Välj visningsläge
@@ -92,7 +92,7 @@ Välj visningsläge
 Listvy -> Liten
 </string>
     <string name="view_mode_list_medium">
-Listview -> Medium
+Listvy -&gt; Medium
 </string>
     <string name="view_mode_list_large">
 Listvy -> Stor
@@ -104,7 +104,7 @@ Listvy -> Extra stor
 Rutnätsvy -> Liten
 </string>
     <string name="view_mode_grid_medium">
-Gridview -> Medium
+Gridview -&gt; Medium
 </string>
     <string name="view_mode_grid_large">
 Rutnätsvy -> Stor
@@ -112,7 +112,7 @@ Rutnätsvy -> Stor
 
     <!-- View Mode Dialog Descriptions -->
     <string name="view_mode_dialog_desc">
-Select your preferred layout and item size:
+Välj önskad layout och objektstorlek:
 </string>
     <string name="view_mode_title_list_small">
 Lista • Liten
@@ -148,7 +148,7 @@ Kompakt rutnätslayout med flera kolumner
 Rutnät • Medium
 </string>
     <string name="view_mode_desc_grid_medium">
-Standard grid layout with balanced previews
+Standard rutnätslayout med balanserade förhandsvisningar
 </string>
     <string name="view_mode_title_grid_large">
 Rutnät • Stor
@@ -157,7 +157,7 @@ Rutnät • Stor
 Rymligt rutnät med 2 kolumner med stora miniatyrer
 </string>
     <string name="spreadsheet_viewer_fallback_title">
-Spreadsheet
+Kalkylblad
 </string>
     <string name="spreadsheet_performance_warning">
 Prestandavarning: Stort dokument avkortat till de första %1$d raderna.
@@ -172,7 +172,7 @@ Stående läge
 Landskapsläge
 </string>
     <string name="spreadsheet_rotate_screen">
-Rotate Screen
+Rotera skärmen
 </string>
 
     <!-- Welcome & Language Selection -->
@@ -208,13 +208,13 @@ Hantera alla dina filer med lätthet.\nGe de nödvändiga behörigheterna för a
 Hantera alla dina filer med lätthet. Ge de\nnödvändiga behörigheterna för att komma igång.
 </string>
     <string name="btn_continue">
-Continue
+Fortsätta
 </string>
     <string name="welcome_footer_hint">
 Ge alla nödvändiga behörigheter för att fortsätta
 </string>
     <string name="btn_grant">
-Grant
+Bevilja
 </string>
     <string name="btn_enable">
 Aktivera
@@ -225,13 +225,13 @@ Aktivera
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
-Notifications
+Aviseringar
 </string>
     <string name="perm_audio_title">
 Musik &amp; ljud
 </string>
     <string name="perm_photos_videos_title">
-Photos &amp; Videos
+Foton och videor
 </string>
     <string name="perm_media_title">
 Media Access
@@ -254,10 +254,10 @@ Få aviseringar när filöverföringar slutförs, USB-enheter ansluts eller lagr
 Bläddra, kopiera, flytta och organisera dina musik- och ljudfiler på alla lagringsenheter.
 </string>
     <string name="perm_photos_videos_desc">
-View, copy, move, and manage your photos and video files across all storage devices.
+Visa, kopiera, flytta och hantera dina foton och videofiler på alla lagringsenheter.
 </string>
     <string name="perm_media_desc">
-Browse, copy, move, and organize your music, photos, and video files across all storage devices.
+Bläddra, kopiera, flytta och organisera din musik, foton och videofiler på alla lagringsenheter.
 </string>
     <string name="perm_all_files_desc">
 Fullständig filhantering: skapa, byt namn på, kopiera, flytta och radera valfri fil eller mapp på din enhet.
@@ -266,18 +266,18 @@ Fullständig filhantering: skapa, byt namn på, kopiera, flytta och radera valfr
 Installera valfritt APK-filer som hittas i din lagring — du blir alltid ombedd att bekräfta varje installation.
 </string>
     <string name="perm_query_apps_desc">
-Required by App Manager, Debloater, and Remote File Server. Reads the full list of installed packages (app names, package IDs, versions, APK sizes, install/update timestamps, system/user classification). Data stays on your device locally but may be transmitted over your local network for remote management when the File Server is enabled. No data is ever transmitted to KiloWatch or any third party.
+Krävs av App Manager, Debloater och Remote File Server. Läser hela listan över installerade paket (appnamn, paket-ID, versioner, APK-storlekar, installation/uppdatering av tidsstämplar, system/användarklassificering). Data stannar på din enhet lokalt men kan överföras över ditt lokala nätverk för fjärrhantering när filservern är aktiverad. Ingen data överförs någonsin till KiloWatch eller någon tredje part.
 </string>
     <string name="pd_accept">
-I Understand
+Jag förstår
 </string>
 
     <!-- Permission Status -->
     <string name="status_granted">
-Granted
+Beviljas
 </string>
     <string name="status_denied">
-Denied
+Nekad
 </string>
     <string name="status_required">
 Obligatorisk
@@ -306,13 +306,13 @@ Internt lagringsutrymme
 SD-kort
 </string>
     <string name="storage_usb">
-USB Drive
+USB-enhet
 </string>
     <string name="storage_unknown">
 Okänd lagring
 </string>
     <string name="showing_results_count">
-Showing %1$d results
+Visar %1$d resultat
 </string>
     <string name="storage_unknown_pattern">
 Lagring (%1$s)
@@ -449,28 +449,28 @@ Obegränsat antal rader
 Radbryter hela namnet över så många rader som behövs
 </string>
     <string name="settings_file_name_display_truncate">
-Single line (Truncated end)
+Enkel rad (stympad ände)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Truncates with ellipsis at end (abc…) without scrolling
+Trunkeras med ellips i slutet (abc...) utan att rulla
 </string>
     <string name="settings_file_name_display_truncate_middle">
-Single line (Truncate middle)
+Enkel rad (stympad mitten)
 </string>
     <string name="settings_file_name_display_truncate_middle_desc">
-Truncates in middle (abc…xyz.ext) to preserve the end suffix
+Trunkerar i mitten (abc…xyz.ext) för att bevara slutsuffixet
 </string>
     <string name="settings_marquee_speed_title">
 Scroll Speed
 </string>
     <string name="settings_marquee_speed_slow">
-Slow
+Långsam
 </string>
     <string name="settings_marquee_speed_normal">
 Normal
 </string>
     <string name="settings_marquee_speed_fast">
-Fast
+Snabb
 </string>
     <string name="settings_marquee_loop_title">
 Loop Mode
@@ -479,22 +479,22 @@ Loop Mode
 One-Shot
 </string>
     <string name="settings_marquee_loop_one_shot_desc">
-Scrolls once and stops to save battery
+Scrollar en gång och stannar för att spara batteri
 </string>
     <string name="settings_marquee_loop_continuous">
-Continuous
+Kontinuerlig
 </string>
     <string name="settings_marquee_loop_continuous_desc">
-Repeats back and forth continuously
+Upprepas fram och tillbaka kontinuerligt
 </string>
     <string name="settings_marquee_scope_title">
 Scroll Scope
 </string>
     <string name="settings_marquee_scope_all">
-All Visible Files
+Alla synliga filer
 </string>
     <string name="settings_marquee_scope_focused">
-Focused / Selected Only
+Fokuserad / Endast valda
 </string>
     <string name="settings_file_name_preview_title">
 Live Preview
@@ -984,7 +984,7 @@ Det gick inte att importera certifikatet
 Ta bort anpassat certifikat
 </string>
     <string name="remote_cert_remove_msg">
-This will remove the custom certificate and the server will revert to the auto-generated CA.
+Detta tar bort det anpassade certifikatet och servern återgår till den automatiskt genererade CA.
 </string>
     <string name="remote_cert_remove">
 Ta bort
@@ -1016,7 +1016,7 @@ Fjärrhanteraren kan inte fungera medan en VPN är aktiv. VPN:et förhindrar upp
 Stäng
 </string>
     <string name="vpn_warning_continue">
-Continue anyway
+Fortsätt i alla fall
 </string>
     <string name="policy_blocked_title">
 Åtkomst begränsad
@@ -1028,7 +1028,7 @@ Företagspolicy upptäckt
 \"Det verkar som att din enhet eller organisation har begränsat åtkomsten till den här lagringsleverantören.\n\nVanliga orsaker inkluderar:\n• Intune-/MDM-policyer\n• Regler för villkorsstyrd åtkomst\n• Blockeringar på nätverksnivå\n\nKontakta din IT-administratör för att tillåta \"Ultimate File Manager Pro\" åtkomst till molnlagring.\"
 </string>
     <string name="policy_blocked_details">
-Technical Details
+Tekniska detaljer
 </string>
 
     <!-- Search -->
@@ -1048,31 +1048,31 @@ Sök efter filnamn...
 Inga filer hittades
 </string>
     <string name="search_searching">
-Searching...
+Sökande...
 </string>
     <string name="search_chip_images">
-Images
+Bilder
 </string>
     <string name="search_chip_videos">
-Videos
+Videor
 </string>
     <string name="search_chip_audio">
 Ljud
 </string>
     <string name="search_chip_documents">
-Documents
+Dokument
 </string>
     <string name="search_chip_apk">
 APK
 </string>
     <string name="search_chip_archives">
-Archives
+Arkiv
 </string>
     <string name="search_filter_hint">
-Tip: size&gt;5MB · ext:pdf · type:video · date:7d
+Tips: storlek&gt;5MB · ext:pdf · typ:video · datum:7d
 </string>
     <string name="search_recent_header">
-Recent Searches
+Senaste sökningar
 </string>
     <string name="search_load_more">
 Ladda fler resultat
@@ -1085,10 +1085,10 @@ Filstorlek
 Filtyp
 </string>
     <string name="search_pill_extension">
-Extension
+Förlängning
 </string>
     <string name="search_pill_date">
-Date
+Datum
 </string>
     <!-- Filter dialog labels -->
     <string name="search_filter_apply">
@@ -1113,13 +1113,13 @@ till exempel 100
 Filtrera efter filtyp
 </string>
     <string name="search_filter_ext_title">
-Filter by Extension
+Filtrera efter tillägg
 </string>
     <string name="search_filter_ext_hint">
 till exempel pdf, jpg, mp4
 </string>
     <string name="search_filter_date_title">
-Filter by Date Modified
+Filtrera efter ändringsdatum
 </string>
     <string name="search_filter_date_body">
 Visa endast filer som ändrats de senaste N dagarna.
@@ -1136,7 +1136,7 @@ Rensa
 Sök i dokument...
 </string>
     <string name="search_match_count">
-%1$d of %2$d
+%1$d av %2$d
 </string>
     <string name="search_match_zero">
 0 av 0
@@ -1193,7 +1193,7 @@ Stora filer
 Dubletter
 </string>
     <string name="analyzer_tab_incomplete">
-Incomplete
+Ofullständig
 </string>
     <string name="analyzer_tab_junk">
 Skräp &amp; gammalt
@@ -1220,10 +1220,10 @@ Förslag
 sparar %1$s
 </string>
     <string name="analyzer_no_incomplete_files">
-No incomplete or sparse downloads found
+Inga ofullständiga eller glesa nedladdningar hittades
 </string>
     <string name="analyzer_incomplete_file_allocated">
-Size on disk: %1$s (%2$.1f%%)
+Storlek på disk: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1308,97 +1308,97 @@ Radera
 
     <!-- Bulk duplicate deletion & retention strategy -->
     <string name="analyzer_select_all_duplicates">
-Select All Duplicates
+Välj Alla dubbletter
 </string>
     <string name="analyzer_clear_selection">
-Clear
+Rensa
 </string>
     <string name="analyzer_delete_all_duplicates">
-Delete All Duplicates
+Ta bort alla dubbletter
 </string>
     <string name="analyzer_delete_selected_count">
-Delete Selected (%1$d)
+Ta bort markerade (%1$d)
 </string>
     <string name="analyzer_badge_original">
 Original
 </string>
     <string name="analyzer_strategy_title">
-Duplicate Retention Strategy
+Dubblettretentionsstrategi
 </string>
     <string name="analyzer_strategy_oldest">
-Keep Oldest (Original)
+Behåll äldst (original)
 </string>
     <string name="analyzer_strategy_oldest_desc">
-Preserves the oldest file by modification date and deletes newer copies.
+Bevarar den äldsta filen efter ändringsdatum och tar bort nyare kopior.
 </string>
     <string name="analyzer_strategy_newest">
-Keep Newest
+Behåll senaste
 </string>
     <string name="analyzer_strategy_newest_desc">
-Preserves the most recently modified file and deletes older copies.
+Bevarar den senast ändrade filen och tar bort äldre kopior.
 </string>
     <string name="analyzer_strategy_remember">
-Remember my choice
+Kom ihåg mitt val
 </string>
     <string name="analyzer_strategy_most_complete">
-Keep Most Complete
+Håll mest komplett
 </string>
     <string name="analyzer_strategy_most_complete_desc">
-Preserves fully downloaded or most allocated files and deletes incomplete copies.
+Bevarar helt nedladdade eller mest allokerade filer och tar bort ofullständiga kopior.
 </string>
     <string name="analyzer_badge_partial">
-Partial (%1$.0f%%)
+Partiell (%1$.0f%%)
 </string>
     <string name="analyzer_badge_sparse">
-Sparse
+Gles
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+Vill du ta bort %1$d dubbletter av filer?
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+En originalkopia av varje fil kommer att behållas. %1$d dubbletter kommer att raderas permanent för att frigöra %2$s.
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+Rengöring klar
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+Har raderat %1$d dubblettfiler och återtagit %2$s lagringsutrymme.
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+%1$d filer kunde inte raderas på grund av behörigheter.
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+Tar bort %1$d av %2$d filer...
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d dubbletter av grupper · sparar %2$s
 </string>
     <string name="settings_duplicate_retention_title">
-Duplicate Retention Strategy
+Dubblettretentionsstrategi
 </string>
     <string name="settings_duplicate_retention_dialog_subtitle">
-Choose which copy to preserve when selecting duplicate files for cleanup.
+Välj vilken kopia som ska bevaras när du väljer dubblettfiler för rensning.
 </string>
     <string name="settings_duplicate_retention_summary_oldest">
-Keep oldest file (Original)
+Behåll den äldsta filen (original)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
-Keep newest file
+Behåll den senaste filen
 </string>
     <string name="settings_duplicate_retention_summary_most_complete">
-Keep most complete file
+Behåll den mest kompletta filen
 </string>
     <string name="settings_duplicate_retention_summary_ask">
-Always ask
+Fråga alltid
 </string>
     <string name="settings_duplicate_retention_desc_ask">
-Prompt to choose retention strategy each time duplicate files are selected.
+Uppmana att välja lagringsstrategi varje gång duplicerade filer väljs.
 </string>
     <string name="settings_duplicate_retention_toast">
-Duplicate retention strategy set to: %s
+Dubblettlagringsstrategi inställd på: %s
 </string>
     <string name="backup_pref_duplicate_retention">
-Duplicate Retention Strategy
+Dubblettretentionsstrategi
 </string>
 
     <!-- Theme -->
@@ -1573,13 +1573,13 @@ Färgpalett
 Temaläge
 </string>
     <string name="theme_light">
-Light
+Ljus
 </string>
     <string name="theme_light_desc">
-Clean bright interface
+Rent ljust gränssnitt
 </string>
     <string name="theme_dark">
-Dark
+Mörk
 </string>
     <string name="theme_dark_desc">
 Bekvämt mörkt tema för svag belysning
@@ -1591,16 +1591,16 @@ Systemstandard
 Följ systemets dag-/nattschema
 </string>
     <string name="theme_amoled">
-AMOLED Black
+AMOLED Svart
 </string>
     <string name="theme_amoled_desc">
-Pure black — saves battery on OLED screens
+Ren svart — sparar batteri på OLED-skärmar
 </string>
     <string name="theme_applied">
 Tema tillämpat
 </string>
     <string name="material_you_title">
-Material You
+Material du
 </string>
     <string name="material_you_summary">
 Använd din bakgrundsbilds färger för ett personligt utseende
@@ -1667,7 +1667,7 @@ Byt namn på USB- och lokala lagringsenheter
 Anslutna lagringsenheter
 </string>
     <string name="storage_rename_section_offline">
-Offline / Disconnected Drives
+Offline / frånkopplade enheter
 </string>
     <string name="storage_rename_original_details">
 Original: %1$s • %2$s
@@ -1904,13 +1904,13 @@ Standard startskärm
 Välj vilken skärm som öppnas vid start
 </string>
     <string name="start_screen_last_opened">
-Last Opened Location
+Senast öppnade plats
 </string>
     <string name="start_screen_last_opened_desc">
-Reopen where you left off upon app launch
+Öppna igen där du slutade när appen startade
 </string>
     <string name="storage_unavailable_redirect">
-Previous storage location is unavailable. Returned to Storage screen.
+Tidigare lagringsplats är inte tillgänglig. Återgick till lagringsskärmen.
 </string>
     <string name="start_screen_storage_browser">
 Huvudmeny (standard)
@@ -2019,7 +2019,7 @@ FTP, SFTP &amp; SMB Multi-threading
 Överföringstrådar
 </string>
     <string name="settings_network_transfer_threads_dialog_subtitle">
-Select the number of simultaneous connections for faster network file transfers
+Välj antalet samtidiga anslutningar för snabbare nätverksfilöverföringar
 </string>
     <string name="settings_network_transfer_threads_subtitle">
 %1$d trådar — samtidiga anslutningar för snabbare överföringar
@@ -2034,40 +2034,40 @@ Select the number of simultaneous connections for faster network file transfers
 %1$d trådar (Rekommenderad)
 </string>
     <string name="settings_network_transfer_threads_maximum">
-%1$d threads (Maximum)
+%1$d trådar (max)
 </string>
     <string name="settings_network_transfer_threads_2">
 2 threads
 </string>
     <string name="settings_network_transfer_threads_4">
-4 threads (Recommended)
+4 trådar (rekommenderas)
 </string>
     <string name="settings_network_transfer_threads_6">
 6 threads
 </string>
     <string name="settings_network_transfer_threads_8">
-8 threads (Maximum)
+8 trådar (max)
 </string>
     <string name="settings_network_transfer_threads_desc_1">
-Single connection, transfers files sequentially
+Enkel anslutning, överför filer sekventiellt
 </string>
     <string name="settings_network_transfer_threads_desc_2">
-Light parallelism, ideal for slower connections
+Lätt parallellitet, idealisk för långsammare anslutningar
 </string>
     <string name="settings_network_transfer_threads_desc_4">
-Optimal balance of speed and stability for Wi-Fi and LAN
+Optimal balans mellan hastighet och stabilitet för Wi-Fi och LAN
 </string>
     <string name="settings_network_transfer_threads_desc_6">
-High throughput for Gigabit networks and fast Wi-Fi
+Hög genomströmning för Gigabit-nätverk och snabb Wi-Fi
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+Maximal genomströmning för multi-gigabit LAN och Wi-Fi 7
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+Överför trådar inställda på %1$d
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+FTP, SFTP &amp; SMB Multi-threading-inställningar
 </string>
     <string name="network_field_threads">
 Överföringstrådar
@@ -2078,28 +2078,28 @@ Standard (%1$d trådar)
 
     <!-- Transfer Multi-Threading Telemetry -->
     <string name="transfer_threads_header">
-Threads (%1$d active)
+Trådar (%1$d aktiva)
 </string>
     <string name="transfer_threads_header_single">
-Thread (1 active)
+Tråd (1 aktiv)
 </string>
     <string name="transfer_per_thread_placeholder">
 -- MB/s
 </string>
     <string name="transfer_per_thread_format">
-Per thread: %1$.1f MB/s
+Per tråd: %1$.1f MB/s
 </string>
     <string name="transfer_per_thread_single_format">
-Single thread: %1$.1f MB/s
+Enkel tråd: %1$.1f MB/s
 </string>
     <string name="transfer_thread_initial">
 Thread %1$d: --
 </string>
     <string name="transfer_thread_speed_item">
-Thread %1$d: %2$.1f MB/s
+Tråd %1$d: %2$.1f MB/s
 </string>
     <string name="transfer_thread_speed_single">
-Thread %1$d: %2$.1f MB/s (Single-threaded)
+Tråd %1$d: %2$.1f MB/s (entrådig)
 </string>
 
     <!-- Open Source Licenses -->
@@ -2771,7 +2771,7 @@ Sök i en specifik katalog
 Mapp: %1$s
 </string>
     <string name="search_selection_summary">
-%1$d selected • %2$s
+%1$d har valts • %2$s
 </string>
 
     <!-- Search Limit Settings -->
@@ -3170,7 +3170,7 @@ Olåst! Du är en sann supporter.
 En snabb espresso
 </string>
     <string name="tip_jar_espresso_desc">
-The start of something great.
+Början på något stort.
 </string>
     <string name="tip_jar_cappuccino_title">
 Cappuccino
@@ -3239,7 +3239,7 @@ Du är en legend! ☕🏆✨
 Seriöst, tack. Du gjorde precis min dag! 🙌
 </string>
     <string name="google_play_store">
-Google Play Store
+Google Play Butik
 </string>
     <!-- Amazon IAP Tip Jar strings -->
     <!-- Shown when AMAZON_IAP_ENABLED = false (feature not yet live on the Amazon Appstore) -->
@@ -3262,7 +3262,7 @@ Amazon köpfel: %1$s
 Köp är inte tillgängliga ännu. Försök igen om ett ögonblick.
 </string>
     <string name="tile_hidden_with_name">
-\"%1$s\" tile hidden
+\"%1$s\"-brickan dold
 </string>
 
     <!-- Folder Sync -->
@@ -3299,7 +3299,7 @@ Synkronisera filtrering
 Destination
 </string>
     <string name="conflict_handling">
-Conflict handling
+Konflikthantering
 </string>
     <string name="manual">
 Manuell
@@ -3308,7 +3308,7 @@ Manuell
 Välj destination
 </string>
     <string name="switch_to_twoway">
-Switch to Two-way
+Byt till tvåvägs
 </string>
     <string name="move_files_upload">
 Flytta filer efter uppladdning
@@ -4039,7 +4039,7 @@ Exempel undertext
 Ikon
 </string>
     <string name="tile_icon_pick_builtin">
-Built-in icons
+Inbyggda ikoner
 </string>
     <string name="tile_icon_browse">
 Bläddra i filen...
@@ -4787,13 +4787,13 @@ UFM TV-server
 Håller TV-fildelning aktiv för ihopparade mobila enheter
 </string>
     <string name="tv_server_notification_title">
-UFM TV Server Active
+UFM TV-server aktiv
 </string>
     <string name="tv_server_notification_desc">
 Redo för anslutning från ihopparade enheter
 </string>
     <string name="settings_tv_background_server_title">
-Background TV Sharing
+Bakgrunds-TV-delning
 </string>
     <string name="settings_tv_background_server_subtitle_on">
 Aktiv i bakgrunden när ihopparade enheter finns
@@ -4805,7 +4805,7 @@ Endast aktiv medan UFM är öppen på TV:n
 Låter ihopparade mobila enheter bläddra i TV:ns lagringsutrymme även när UFM är stängd på TV:n. Startar automatiskt när ihopparade enheter finns och stoppar när alla har tagits bort.
 </string>
     <string name="backup_pref_tv_server">
-Background TV Sharing
+Bakgrunds-TV-delning
 </string>
     <string name="type_here_to_search">
 Skriv här för att söka
@@ -4814,7 +4814,7 @@ Skriv här för att söka
 A
 </string>
     <string name="hello_world">
-Hello World!
+Hej världen!
 </string>
     <string name="view_mode">
 Visningsläge
@@ -4832,7 +4832,7 @@ Urklipp
 Rensa alla
 </string>
     <string name="paste_here">
-Paste here
+Klistra in här
 </string>
     <string name="thirdparty_library_attributions">
 Bibliotekstillskrivningar från tredje part
@@ -5388,7 +5388,7 @@ Installationen lyckades
 %1$s har installerats.
 </string>
     <string name="install_error_signature_mismatch">
-Update failed: Signature mismatch. The package signature does not match the currently installed version of this app.
+Uppdateringen misslyckades: Signaturen matchar inte. Paketsignaturen matchar inte den för närvarande installerade versionen av den här appen.
 </string>
     <string name="install_error_incompatible">
 Installationen misslyckades: Paketet är inkompatibelt med din enhetsarkitektur eller Android-version.
@@ -5400,7 +5400,7 @@ Installationen misslyckades: Otillräckligt lagringsutrymme.
 Installationen misslyckades: Ogiltig eller skadad paketfil.
 </string>
     <string name="install_error_blocked">
-Installation blocked by Play Protect or system security.
+Installation blockerad av Play Protect eller systemsäkerhet.
 </string>
     <string name="install_error_aborted">
 Installationen avbröts.
@@ -5412,7 +5412,7 @@ Installationen misslyckades: %1$s
 Öppna
 </string>
     <string name="btn_dismiss">
-Dismiss
+Avfärda
 </string>
     <string name="error_no_apk_in_xapk">
 Inga APK-filer hittades i XAPK
@@ -5421,13 +5421,13 @@ Inga APK-filer hittades i XAPK
 Inga APK-delningar extraherades från XAPK
 </string>
     <string name="error_missing_path">
-Missing path
+Saknad väg
 </string>
     <string name="error_file_not_found">
 Filen hittades inte
 </string>
     <string name="error_missing_job_id">
-Missing jobId
+JobId saknas
 </string>
     <string name="error_missing_filename">
 Saknar filnamn
@@ -5538,13 +5538,27 @@ Anpassa till skärmen
 Spela / Pausa
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+Interaktivt läge
+</string>
+    <string name="svg_transport_mode">
+Spelarkontroller
+</string>
+    <string name="svg_restart">
+Starta om animering
+</string>
+    <string name="svg_playback_speed">
+Uppspelningshastighet
+</string>
+    <string name="svg_next_panel">
+Nästa panel
+</string>
+    <string name="svg_prev_panel">
+Föregående panel
+</string>
+    <string name="svg_tv_interactive_hint">
+Interaktivt läge — Tryck på Tillbaka eller Meny för spelarkontroller
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 Ljudspår
@@ -5853,10 +5867,10 @@ SPARA HÄR
 Spara till UFM
 </string>
     <string name="share_target_save_to">
-Save to…
+Spara till...
 </string>
     <string name="share_target_open_in">
-Open in…
+Öppna i...
 </string>
     <string name="share_receive_from">
 Tar emot fil från %s
@@ -6911,7 +6925,7 @@ Autentisera för att säkert överföra inställningar till TV:n
 Nätverksresurser
 </string>
     <string name="transfer_settings_section_fileserver">
-File Server
+Filserver
 </string>
     <string name="transfer_settings_from_device">
 Från: %1$s
@@ -6923,16 +6937,16 @@ appinställningar
 nätverksresurs(er)
 </string>
     <string name="transfer_settings_timeout_countdown">
-Auto-dismiss in %1$d seconds…
+Stäng automatiskt om %1$d sekunder...
 </string>
     <string name="transfer_settings_success">
 Inställningarna överfördes till %1$s
 </string>
     <string name="transfer_settings_success_count">
-%1$d item(s) applied successfully
+%1$d objekt har tillämpats
 </string>
     <string name="transfer_settings_rejected">
-Transfer rejected
+Överföring avvisad
 </string>
     <string name="transfer_settings_timeout">
 TV:n svarade inte i tid. Försök igen.
@@ -7361,10 +7375,10 @@ Granska stora filer
 Hittade %1$d filer större än 512 MB.
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+Ofullständiga/glesa nedladdningar
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+Hittade %1$d ofullständiga eller glesa filer som konsumerar diskutrymme.
 </string>
     <string name="old_unused_files">
 Gamla oanvända filer
@@ -7837,7 +7851,7 @@ Filen hittades inte
 Redigeringsläge: Tryck på (X) för att dölja, dra för att ändra ordning
 </string>
     <string name="tile_configuration_saved">
-✓ Tile configuration saved
+✓ Kakelkonfiguration sparad
 </string>
     <string name="dpad_moves_tile_ok_saves_back_cancels">
 ↕ D-Pad flyttar brickan • OK sparar • Tillbaka avbryter
@@ -7858,7 +7872,7 @@ Bytt namn till %1$s
 Vill du ta bort %1$s?
 </string>
     <string name="name_deleted">
-%1$s deleted
+%1$s raderade
 </string>
     <string name="failed_to_delete_name">
 Det gick inte att ta bort %1$s
@@ -7959,10 +7973,18 @@ Synkronisering aktiverad
     <string name="sync_disabled">
 Synkronisering inaktiverad
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+Aktivera profil
+</string>
+    <string name="sync_action_disable">
+Inaktivera profil
+</string>
+    <string name="sync_status_enabled">
+Aktiv
+</string>
+    <string name="sync_status_disabled">
+Pausad
+</string>
     <string name="sync_delete_profile_confirm_msg">
 Är du säker på att du vill ta bort \"%1$s\"? Detta kan inte ångras.
 </string>
@@ -8141,7 +8163,7 @@ Godkänd!
 Anslutningen misslyckades eller nekades.
 </string>
     <string name="ufm_file_transfer">
-UFM File Transfer
+UFM filöverföring
 </string>
     <string name="transferring_files_1">
 Överför filer...
@@ -8168,10 +8190,10 @@ Det gick inte att nå destinationen — överföringen stoppades
 UFM Viewer
 </string>
     <string name="ufm_slideshow">
-UFM Slide Show
+UFM bildspel
 </string>
     <string name="ufm_slideshow_desc">
-Play as Slide Show
+Spela som bildspel
 </string>
     <string name="open_with_builtin_viewer">
 Öppna med inbyggd visare
@@ -8180,10 +8202,10 @@ Play as Slide Show
 UFM Media Player
 </string>
     <string name="ufm_media_player_desc">
-Play with UFM Media Player
+Spela med UFM Media Player
 </string>
     <string name="ufm_media_player_stream_desc">
-Stream with UFM Media Player
+Streama med UFM Media Player
 </string>
     <string name="external_app">
 Extern app
@@ -8192,10 +8214,10 @@ Extern app
 Välj en annan app att öppna med
 </string>
     <string name="page_firstvisible_1_total">
-Page %1$d / %2$d
+Sida %1$d / %2$d
 </string>
     <string name="page_1_pagecount">
-Page 1 / %1$d
+Sida 1 / %1$d
 </string>
     <string name="error_emessage">
 Fel: %1$s
@@ -8222,13 +8244,13 @@ Fel vid läsning av fil: %1$s
 Fel vid extrahering av Word-innehåll: %1$s
 </string>
     <string name="no_text_content_found">
-(No text content found)
+(Inget textinnehåll hittades)
 </string>
     <string name="error_extracting_excel_content_emessage">
 Fel vid extrahering av Excel-innehåll: %1$s
 </string>
     <string name="no_content_found">
-(No content found)
+(Inget innehåll hittades)
 </string>
     <string name="error_extracting_powerpoint_content_emessage">
 Fel vid extrahering av PowerPoint-innehåll: %1$s
@@ -8599,16 +8621,16 @@ Ansluts framgångsrikt till Dropbox
 Det gick inte att autentisera: %1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+Autentiseringen misslyckades
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+Anslutnings- eller verifieringsfel
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+Det gick inte att verifiera auktoriseringskoden med Dropbox. Kontrollera att koden angavs korrekt, inte har gått ut och att din enhets datum/tid är korrekt.
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+Fel på enhetens datum och tid har upptäckts. Ditt TV-systems datum/tid verkar vara i det förflutna, vilket förhindrar säker anslutning till Dropbox. Ställ in rätt datum och tid i Android TV-inställningarna.
 </string>
     <string name="dropbox_auth_verifying">
 Verifierar koden...
@@ -8752,7 +8774,7 @@ Det gick inte att starta autentisering: %1$s
 Nätverksfel. Kontrollera din anslutning och försök igen.
 </string>
     <string name="box_auth_denied">
-Authorization was denied or cancelled.
+Auktorisering nekades eller avbröts.
 </string>
 
     <!-- Shizuku & Shevery Elevated Access Manager -->
@@ -8764,16 +8786,16 @@ Porter / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
-USB Drive (Restricted)
+USB-enhet (begränsad)
 </string>
     <string name="shizuku_usb_access_subtitle">
 Fire TV begränsar direkt USB-åtkomst — använd Porter / Shizuku / Shevery
 </string>
     <string name="opening_shizuku">
-Opening Elevated Manager…
+Öppnar Elevated Manager...
 </string>
     <string name="shizuku_status_label">
-Service Status
+Servicestatus
 </string>
     <string name="shizuku_not_installed">
 Elevated Manager är inte installerad
@@ -8782,7 +8804,7 @@ Elevated Manager är inte installerad
 Porter, Shizuku och Shevery låter appar använda API:er på systemnivå direkt, vilket möjliggör avancerade funktioner som filhantering i bakgrunden och körning av systemkommandon utan att root krävs på de flesta Android-versioner.
 </string>
     <string name="shizuku_service_status">
-Service Status
+Servicestatus
 </string>
     <string name="shizuku_service_running">
 Den förhöjda tjänsten körs
@@ -8794,7 +8816,7 @@ Den förhöjda tjänsten körs inte
 Aktivera tjänst
 </string>
     <string name="shizuku_authorized">
-Authorized
+Auktoriserad
 </string>
     <string name="shizuku_not_authorized">
 Ej auktoriserad
@@ -8821,7 +8843,7 @@ Auktorisera förhöjd åtkomst
 UFM kräver auktorisation för att utföra avancerade filoperationer. Vänligen ge tillstånd i följande systemdialogruta.
 </string>
     <string name="shizuku_btn_authorize">
-Authorize
+Godkänna
 </string>
     <string name="shizuku_btn_start_service">
 Aktivera förhöjd åtkomst
@@ -8935,16 +8957,16 @@ Status ej tillgänglig
 Kontrollerar förhöjd åtkomst…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+Hämta Porter
 </string>
     <string name="elevated_prerelease_badge">
 Förhandsversion
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+Skaffa Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+Hämta Shevery
 </string>
     <string name="shizuku_open_manager">
 Öppna %1$s Manager
@@ -8953,7 +8975,7 @@ Get Shevery
 3-stegs installationsguide
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1. Installera Manager
 </string>
     <string name="shizuku_step_2">
 2. Starta Service
@@ -8992,17 +9014,23 @@ Ladda ner %1$s: v%2$s
 Ladda ner och installera (%1$s)
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+Koppla bort förhöjd åtkomst?
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+Detta kommer att koppla bort %1$s förhöjd åtkomst i UFM. Du kan återaktivera den när som helst.
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+Koppla från
 </string>
-    <string name="shizuku_allow_app_access">Allow app access</string>
-    <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
-    <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
+    <string name="shizuku_allow_app_access">
+Tillåt appåtkomst
+</string>
+    <string name="shizuku_app_access_granted_toast">
+Förhöjd åtkomst aktiverad för %1$s
+</string>
+    <string name="shizuku_app_access_revoked">
+Förhöjd åtkomst inaktiverad för %1$s
+</string>
     <string name="elevated_fetching_toast">
 Söker efter senaste versionen av %1$s…
 </string>
@@ -9132,10 +9160,10 @@ Port 8200 · Okrypterad mediaströmning
 
     <!-- DLNA Quick Settings Tile -->
     <string name="settings_dlna_tile_title">
-DLNA Server
+DLNA-server
 </string>
     <string name="settings_dlna_tile_summary">
-Show a Quick Settings tile to toggle the DLNA server
+Visa en ruta för snabbinställningar för att växla mellan DLNA-servern
 </string>
 
     <!-- DLNA Icon (for icon customization system) -->
@@ -9160,7 +9188,7 @@ Tryck för att konfigurera
 DLNA-inställningar
 </string>
     <string name="dlna_settings_row_subtitle">
-Shared folders, server name
+Delade mappar, servernamn
 </string>
 
     <string name="anonymous_access">
@@ -9170,7 +9198,7 @@ Anonym åtkomst
 Tillåt anslutningar utan inloggningsuppgifter
 </string>
     <string name="server_profiles">
-Server Profiles
+Serverprofiler
 </string>
     <string name="no_profiles_yet">
 Inga profiler har konfigurerats än.\nTryck på + för att skapa en.
@@ -9188,7 +9216,7 @@ Ta bort profil
 Ta bort profilen \"%1$s\"? Detta kan inte ångras.
 </string>
     <string name="profile_saved">
-Profile saved
+Profilen har sparats
 </string>
     <string name="username">
 Användarnamn
@@ -9248,7 +9276,7 @@ SSH-nyckel
 Lösenord + SSH-nyckel
 </string>
     <string name="ftp_needs_password_title">
-FTP Server Requires Password
+FTP-server kräver lösenord
 </string>
     <string name="ftp_needs_password_msg">
 FTP stöder inte autentisering med SSH-nyckel. Skapa först en profil med användarnamn och lösenord, eller redigera en befintlig profil för att lägga till ett lösenord.
@@ -9260,7 +9288,7 @@ Ogiltig nyckelfil
 Detta är en PRIVAT NYCKEL-fil. Filer med publika nycklar innehåller rader som börjar med \"ssh-rsa\", \"ssh-ed25519\" etc. Välj .pub-filen istället.
 </string>
     <string name="authorized_keys_bad_format" formatted="false">
-Invalid SSH public key format on line %d: \"%s\"
+Ogiltigt format för offentlig SSH-nyckel på rad %d: \"%s\"
 </string>
     <string name="authorized_keys_invalid_key">
 Den här filen innehåller inga giltiga publika SSH-nycklar.
@@ -9278,7 +9306,7 @@ Välj standardplats
 Välj en standardplats
 </string>
     <string name="file_server_ftp_running">
-FTP Server Running
+FTP-server igång
 </string>
     <string name="file_server_sftp_running">
 SFTP-server körs
@@ -9296,10 +9324,10 @@ Stopp
 Tryck för att hantera
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+Filserver stoppad: Android 6-timmars körningsgräns nådd
 </string>
     <string name="opening_file_server">
-Opening File Server…
+Öppnar filserver...
 </string>
     <string name="select">
 Välja
@@ -9604,31 +9632,31 @@ Avboka
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+Tillåt opålitligt/självsignerat certifikat
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+Acceptera självsignerade eller privata CA SSL-certifikat (vanligt på lokala NAS-enheter)
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+Lösenord (lämna tomt för att hålla det aktuellt)
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+Otillförlitligt SSL-certifikat
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+Servern på %1$s presenterade ett opålitligt eller självsignerat SSL-certifikat. Verifiera certifikatdetaljerna nedan innan du litar på den här anslutningen.
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+Ämne
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+Emittent
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+Giltighet
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+SHA-256 Fingeravtryck
 </string>
     <string name="webdav_cert_dialog_trust">
 Trust &amp; Connect
@@ -9686,22 +9714,22 @@ Lösenord
 Bekräfta lösenord
 </string>
     <string name="pdf_convert_btn">
-Convert
+Konvertera
 </string>
     <string name="pdf_convert_pwd_mismatch">
 Lösenord stämmer inte överens eller är tomma
 </string>
     <string name="pdf_convert_converting">
-Converting to PDF…
+Konverterar till PDF...
 </string>
     <string name="pdf_convert_success">
-PDF saved: %1$s
+PDF sparad: %1$s
 </string>
     <string name="pdf_convert_failed">
 Konverteringen misslyckades
 </string>
     <string name="pdf_converting_title">
-Converting to PDF
+Konvertera till PDF
 </string>
     <string name="pdf_converting_desc">
 %1$s
@@ -9724,7 +9752,7 @@ Fel
 Enheten stöds inte
 </string>
     <string name="bt_remote_unsupported_message">
-The Bluetooth Remote requires Android 9 (Pie) or higher. Your device is running an older version of Android and cannot use this feature.
+Bluetooth-fjärrkontrollen kräver Android 9 (Pie) eller högre. Din enhet kör en äldre version av Android och kan inte använda den här funktionen.
 </string>
     <string name="permission_denied">
 Tillstånd nekad
@@ -9764,7 +9792,7 @@ Hem
 Vol: PÅ
 </string>
     <string name="bt_remote_volume_off">
-Vol: OFF
+Vol: AV
 </string>
     <string name="bt_remote_select_tv">
 Välj TV att ansluta
@@ -9788,7 +9816,7 @@ Tillbaka
 Avboka
 </string>
     <string name="bt_remote_tv_options">
-%1$s Options
+%1$s Alternativ
 </string>
     <string name="bt_remote_bluetooth_settings">
 Bluetooth-inställningar
@@ -9800,10 +9828,10 @@ Skickar Bluetooth-tangenthändelser · Fungerar systemomfattande på alla TV-app
 Lägg till / Välj TV
 </string>
     <string name="bt_remote_add_device">
-Add TV
+Lägg till TV
 </string>
     <string name="bt_remote_add_tv">
-Add TV
+Lägg till TV
 </string>
     <string name="bt_remote_connect_set_default">
 Ange som standard
@@ -9829,13 +9857,13 @@ Visar anslutningsstatus för TV-fjärrkontrollen
 Startar fjärrkontroll…
 </string>
     <string name="bt_remote_notification_connecting">
-Connecting to TV…
+Ansluter till TV...
 </string>
     <string name="bt_remote_notification_connected">
-Connected to %1$s
+Ansluten till %1$s
 </string>
     <string name="bt_remote_notification_waiting">
-Waiting for TV to connect…
+Väntar på att TV:n ska ansluta...
 </string>
 
     <!-- BT Remote Status Card States -->
@@ -9849,10 +9877,10 @@ Para ihop din TV
 Inte ansluten
 </string>
     <string name="bt_remote_card_disconnected_subtitle">
-Tap Connect to reconnect to %1$s
+Tryck på Anslut för att återansluta till %1$s
 </string>
     <string name="bt_remote_card_connecting_title">
-Connecting to %1$s…
+Ansluter till %1$s...
 </string>
     <string name="bt_remote_card_connecting_subtitle">
 Vänta
@@ -9861,7 +9889,7 @@ Vänta
 Ansluten till %1$s
 </string>
     <string name="bt_remote_card_bt_off_title">
-Bluetooth is off
+Bluetooth är avstängt
 </string>
     <string name="bt_remote_card_bt_off_subtitle">
 Bluetooth måste vara påslaget för att använda fjärrkontrollen
@@ -9876,19 +9904,19 @@ Bluetooth-behörighet krävs för att använda fjärrkontrollen
 Öppna Bluetooth-inställningar
 </string>
     <string name="bt_remote_card_action_pair_tv">
-Pair TV
+Para TV
 </string>
     <string name="bt_remote_card_action_connect">
 Ansluta
 </string>
     <string name="bt_remote_card_action_connect_to">
-Connect to %1$s
+Anslut till %1$s
 </string>
     <string name="bt_remote_card_action_disconnect">
-Disconnect
+Koppla från
 </string>
     <string name="bt_remote_card_action_turn_on">
-Turn On
+Sätta på
 </string>
     <string name="bt_remote_card_action_grant_permission">
 Ge behörighet
@@ -9908,17 +9936,17 @@ Skriv här — skickas till TV:n
 Markera allt
 </string>
     <string name="bt_remote_keyboard_clear">
-Clear
+Rensa
 </string>
     <string name="bt_remote_keyboard_switch_to_remote">
 Växla till fjärrkontroll
 </string>
     <string name="bt_remote_saved_device_suffix">
- (saved)
+(sparad)
 </string>
     <string name="bt_remote_keyboard_backspace">⌫</string>
     <string name="bt_remote_keyboard_tab">
-Tab
+Flik
 </string>
     <string name="bt_remote_keyboard_enter">↩</string>
 
@@ -9929,7 +9957,7 @@ Okänd enhet
 Om den inte ansluter automatiskt, välj \'UFM Remote\' i TV:ns Bluetooth-inställningar
 </string>
     <string name="bt_remote_use_phone_volume">
-Use phone volume buttons
+Använd telefonens volymknappar
 </string>
     <string name="bt_remote_volume_phone_hint">
 Styr volymen med telefonens knappar
@@ -9937,19 +9965,19 @@ Styr volymen med telefonens knappar
 
     <!-- WiFi ADB Remote Transport -->
     <string name="remote_transport_picker_title">
-Connect to TV
+Anslut till TV
 </string>
     <string name="remote_transport_bt_option">
-Connect via Bluetooth
+Anslut via Bluetooth
 </string>
     <string name="remote_transport_wifi_option">
-Connect via WiFi / ADB
+Anslut via WiFi / ADB
 </string>
     <string name="remote_transport_bt_connecting">
 Ansluter via Bluetooth till %1$s...
 </string>
     <string name="remote_transport_wifi_connecting">
-Connecting via WiFi to %1$s…
+Ansluter via WiFi till %1$s...
 </string>
     <string name="remote_connect_via_bt">
 Anslut till %1$s via Bluetooth
@@ -10202,7 +10230,7 @@ Det gick inte att spara anteckningen: %1$s
 Anteckningen är tom
 </string>
     <string name="notes_folder_title">
-My Notes
+Mina anteckningar
 </string>
     <string name="export_txt_desc">
 Vanligt textdokument (.txt)
@@ -10214,7 +10242,7 @@ Kommaseparerade värden (.csv)
 Portable Document Format (.pdf)
 </string>
     <string name="notepad_select_format_desc">
-Choose the export format for your document
+Välj exportformat för ditt dokument
 </string>
     <string name="notepad_destination_label">
 Sparmål
@@ -10408,7 +10436,7 @@ Lista över begärda manifestbehörigheter (behörigheter)
 fil(er)
 </string>
     <string name="export_format">
-Format
+Formatera
 </string>
 
     <!-- Document Scanner -->
@@ -10434,7 +10462,7 @@ Spara till: %1$s
 Välj mapp
 </string>
     <string name="scanner_pages">
-%1$d page(s)
+%1$d sida(r)
 </string>
     <string name="scanner_format_jpeg">
 JPEG
@@ -10464,7 +10492,7 @@ Använd den här mappen
 Välj mapp för att spara skanningar
 </string>
     <string name="scanner_no_pages">
-No pages scanned yet
+Inga sidor har skannats ännu
 </string>
     <string name="scanner_default_filename">
 Skanning
@@ -10473,7 +10501,7 @@ Skanning
 Camera
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+Ingen kameraapp hittades på den här enheten
 </string>
     <string name="scanner_capture_gallery">
 Välj från Galleri
@@ -10525,7 +10553,7 @@ Det gick inte att importera inställningarna
 Det gick inte att dekryptera säkerhetskopian av inställningarna. Filen kan vara skadad eller manipulerad.
 </string>
     <string name="backup_import_invalid_error">
-Invalid backup file format
+Ogiltigt filformat för backup
 </string>
     <string name="backup_select_items">
 Välj objekt att exportera
@@ -10546,7 +10574,7 @@ Nätverksresurser
 Onlinelagringskonton
 </string>
     <string name="backup_cat_ftp_server_profiles">
-FTP Server Profiles
+FTP-serverprofiler
 </string>
     <string name="backup_cat_storage_renames">
 Anpassade partitions-/enhetsnamn
@@ -10564,7 +10592,7 @@ Förhandsgranskning av import
 Skapa en exporterbar säkerhetskopia av dina inställningar, anpassade brickor och nätverksresurser, eller återställ från ett tidigare exporterat säkerhetskopiearkiv.
 </string>
     <string name="backup_restore_section_actions">
-Actions
+Åtgärder
 </string>
     <string name="backup_export_notice">
 Välj de konfigurationskategorier och komponenter du vill inkludera i det här säkerhetskopiearkivet.
@@ -10926,10 +10954,10 @@ Radera
 Photo EXIF Cleaner &amp; Renamer
 </string>
     <string name="export_pack">
-Export Pack
+Exportpaket
 </string>
     <string name="import_pack">
-Import Pack
+Importpaket
 </string>
     <string name="reset_all_icons">
 Återställ alla ikoner
@@ -10944,7 +10972,7 @@ Import Pack
 Är du säker på att du vill återställa alla ikoner till standard? Detta kan inte ångras.
 </string>
     <string name="pick_builtin_icon">
-Built-in icons
+Inbyggda ikoner
 </string>
     <string name="browse_icon_file">
 Bläddra i fil
@@ -10991,7 +11019,7 @@ Import Icons
 
     <!-- New Icon Categories -->
     <string name="category_media_player">
-Media Player
+Mediaspelare
 </string>
     <string name="category_utility">
 Utility / Action
@@ -11003,10 +11031,10 @@ Status / Alert
 Visningslägen
 </string>
     <string name="category_feature_tiles">
-Feature Tiles
+Funktionsplattor
 </string>
     <string name="category_misc">
-Miscellaneous
+Diverse
 </string>
     <string name="icon_media_play">
 Play
@@ -11271,7 +11299,7 @@ Visibility Off
 </string>
 
     <string name="backup_import_details_subtitle">
-Review items to be restored
+Granska objekt som ska återställas
 </string>
     <string name="backup_import_action_btn">
 Importera och starta om
@@ -11370,7 +11398,7 @@ APK-extraktionsinställningar
 Säker cachekopieringsinställningar
 </string>
     <string name="backup_pref_video_thumb_time">
-Video Thumbnail Time
+Videominiatyrtid
 </string>
     <string name="backup_pref_custom_tiles">
 Anpassade brickor och grupper
@@ -11388,7 +11416,7 @@ Indikatorer för rutnätsvy
 Rullande textanimering
 </string>
     <string name="backup_pref_file_server">
-File Server Configuration
+Filserverkonfiguration
 </string>
     <string name="backup_pref_tile_icons">
 Anpassade ikoner för brickor
@@ -11709,13 +11737,13 @@ Inga filer delas för närvarande.
 3. Ange följande URL:
 </string>
     <string name="tv_share_step_pin">
-4. Enter the Session PIN:
+4. Ange sessions-PIN:
 </string>
     <string name="tv_share_status_waiting">
-Web server running. Waiting for connection…
+Webbserver igång. Väntar på anslutning...
 </string>
     <string name="connect_manually">
-Connect Manually
+Anslut manuellt
 </string>
     <string name="sending_file">
 Skickar fil…
@@ -11753,10 +11781,10 @@ Anslutningen lyckades
 Anslutningen misslyckades: %s
 </string>
     <string name="rclone_save_success">
-RClone provider saved
+RClone-leverantören har sparats
 </string>
     <string name="rclone_field_email">
-Email
+E-post
 </string>
     <string name="rclone_field_password">
 Lösenord
@@ -11780,7 +11808,7 @@ Ingen nätverksanslutning
 Sparande…
 </string>
     <string name="rclone_testing">
-Testing…
+Testning…
 </string>
     <string name="field_required">
 Detta fält är obligatoriskt
@@ -11801,7 +11829,7 @@ Mega
 Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
-Premiumize
+Premiumisera
 </string>
     <string name="rclone_provider_box">
 Låda
@@ -11878,7 +11906,7 @@ Dold
 Förblir pausad efter avbrott
 </string>
     <string name="settings_skip_length_title">
-Skip length
+Skiplängd
 </string>
     <string name="settings_skip_length_dialog_desc">
 Välj hur långt du vill hoppa framåt eller bakåt när du söker i mediauppspelning.
@@ -11911,108 +11939,108 @@ Hoppa över 5 sekunder
 Hoppa 10 sekunder (standard)
 </string>
     <string name="skip_length_desc_20s">
-Skip by 20 seconds
+Hoppa över 20 sekunder
 </string>
     <string name="skip_length_desc_30s">
-Skip by 30 seconds
+Hoppa över med 30 sekunder
 </string>
     <string name="skip_length_desc_disable">
 Dölj knappar för att hoppa framåt och bakåt
 </string>
     <string name="skip_length_toast_set">
-Skip length set to %1$s
+Hoppa längd inställd på %1$s
 </string>
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+Undertextstil
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+Konfigurera undertexternas utseende, teckenstorlek och systemtextsynkronisering i appen.
 </string>
     <string name="subtitle_style_summary_system">
-System caption style
+Systemtextstil
 </string>
     <string name="subtitle_style_summary_custom">
-UFM custom style (%1$s)
+UFM anpassad stil (%1$s)
 </string>
     <string name="subtitle_style_dialog_title">
-Subtitle Style
+Undertextstil
 </string>
     <string name="subtitle_style_mode_system">
-System Caption Style
+Systemtextstil
 </string>
     <string name="subtitle_style_mode_system_desc">
-Follows device Accessibility caption settings even when system captions are disabled.
+Följer enhetstextinställningar för tillgänglighet även när systemtexter är inaktiverade.
 </string>
     <string name="subtitle_style_mode_custom">
-UFM Custom Style
+UFM anpassad stil
 </string>
     <string name="subtitle_style_mode_custom_desc">
-Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+Anpassad styling i appen med justerbar storlek, färger, kanteffekter och positionering.
 </string>
     <string name="subtitle_style_open_system">
-Open Device Caption Settings
+Öppna Inställningar för enhetstext
 </string>
     <string name="subtitle_style_system_unavailable">
-System caption settings not available on this device; using UFM style.
+Systemtextinställningar är inte tillgängliga på den här enheten; använder UFM-stil.
 </string>
     <string name="subtitle_style_preview_title">
-Preview
+Förhandsvisning
 </string>
     <string name="subtitle_style_preview_line1">
 Ultimate File Manager Pro
 </string>
     <string name="subtitle_style_preview_line2">
-Live subtitle preview • Crisp text styling
+Live undertextförhandsvisning • Skarp textstil
 </string>
     <string name="subtitle_style_text_size">
-Text size
+Textstorlek
 </string>
     <string name="subtitle_style_text_color">
-Text color
+Textfärg
 </string>
     <string name="subtitle_style_bg_color">
-Background opacity
+Bakgrundens opacitet
 </string>
     <string name="subtitle_style_edge_type">
-Edge effect
+Kanteffekt
 </string>
     <string name="subtitle_style_edge_none">
 None
 </string>
     <string name="subtitle_style_edge_outline">
-Outline
+Skissera
 </string>
     <string name="subtitle_style_edge_drop_shadow">
-Drop shadow
+Skugga
 </string>
     <string name="subtitle_style_edge_raised">
-Raised
+Upphöjd
 </string>
     <string name="subtitle_style_edge_depressed">
-Depressed
+Deprimerad
 </string>
     <string name="subtitle_style_bottom_margin">
-Bottom margin
+Nedre marginal
 </string>
     <string name="subtitle_style_apply_embedded">
-Apply embedded styles (ASS/SSA/TTML)
+Använd inbäddade stilar (ASS/SSA/TTML)
 </string>
     <string name="subtitle_style_apply_embedded_desc">
-When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+När den är inaktiverad åsidosätter UFM-undertextstilen inbäddade teckensnitt och färgtaggar för optimal läsbarhet.
 </string>
     <string name="subtitle_style_color_yellow">
-Yellow
+Gul
 </string>
     <string name="subtitle_style_color_white">
-White
+Vit
 </string>
     <string name="subtitle_style_color_cyan">
 Cyan
 </string>
     <string name="subtitle_style_color_green">
-Green
+Grön
 </string>
     <string name="subtitle_style_color_magenta">
 Magenta
@@ -12033,21 +12061,21 @@ None
 75%
 </string>
     <string name="subtitle_style_bg_100">
-Solid
+Fast
 </string>
     <string name="player_track_sheet_subtitle_style">
-Subtitle Style…
+Undertextstil...
 </string>
     <string name="player_track_sheet_subtitle_style_desc">
-Customize colors, size &amp; appearance
+Anpassa färger, storlek och utseende
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
     <string name="player_speed_title">
-Playback speed
+Uppspelningshastighet
 </string>
     <string name="player_speed_toast">
-%1$s speed
+%1$s hastighet
 </string>
     <string name="player_skip_forward_toast">
 &gt;&gt; %1$s
@@ -12068,46 +12096,46 @@ Nästa
 Föregående
 </string>
     <string name="player_toast_shuffle_on">
-Shuffle on
+Blanda på
 </string>
     <string name="player_toast_shuffle_off">
-Shuffle off
+Blanda av
 </string>
     <string name="player_toast_repeat_on">
-Repeat on
+Upprepa på
 </string>
     <string name="player_toast_repeat_off">
-Repeat off
+Upprepa av
 </string>
     <string name="player_toast_repeat_all">
-Repeat all
+Upprepa allt
 </string>
     <string name="player_toast_repeat_one">
-Repeat current track
+Upprepa aktuellt spår
 </string>
     <string name="player_toast_audio_track">
 Ljudspår
 </string>
     <string name="player_toast_subtitles">
-Subtitles
+Undertexter
 </string>
     <string name="player_toast_mute">
-Mute
+Stum
 </string>
     <string name="player_toast_unmute">
-Unmute
+Slå på ljudet
 </string>
     <string name="player_toast_fullscreen_enter">
-Fullscreen
+Helskärm
 </string>
     <string name="player_toast_fullscreen_exit">
-Exit fullscreen
+Avsluta helskärm
 </string>
     <string name="player_skip_back_content_desc">
-Skip back
+Hoppa tillbaka
 </string>
     <string name="player_skip_forward_content_desc">
-Skip forward
+Hoppa framåt
 </string>
 
     <!-- UFM Media Player — Gesture Controls -->
@@ -12118,24 +12146,24 @@ Spelargester
 Svep för volym, ljusstyrka och sökning. Dubbeltryck för att söka.
 </string>
     <string name="player_gesture_brightness">
-Brightness
+Ljusstyrka
 </string>
     <string name="player_gesture_volume">
-Volume
+Volym
 </string>
 
     <!-- UFM Media Player — Button Feedback Toasts -->
     <string name="pref_player_button_toasts_title">
-Button Feedback Toasts
+Knapp Feedback skålar
 </string>
     <string name="pref_player_button_toasts_summary">
 Visa popup-meddelande vid tryck på spelarkontroller
 </string>
     <string name="settings_player_toasts_subtitle_on">
-On
+På
 </string>
     <string name="settings_player_toasts_subtitle_off">
-Off
+Av
 </string>
 
     <!-- UFM Media Player — Mini-Player -->
@@ -12157,20 +12185,20 @@ Kommande
 Avbryt
 </string>
     <string name="next_track_skip">
-Skip
+Hoppa
 </string>
 
     <!-- UFM Media Player — Queue -->
     <string name="queue_title">
-Playback Queue
+Uppspelningskö
 </string>
     <string name="queue_empty">
-Queue is empty
+Kön är tom
 </string>
 
     <!-- UFM Media Player — Audio -->
     <string name="audio_no_metadata">
-Unknown Artist
+Okänd konstnär
 </string>
 
     <!-- UFM Media Player — Notification -->
@@ -12178,10 +12206,10 @@ Unknown Artist
 Mediauppspelning
 </string>
     <string name="notification_channel_description">
-Controls for media currently playing
+Kontroller för media som spelas för närvarande
 </string>
     <string name="notification_playing">
-Playing
+Spelar
 </string>
     <string name="notification_paused">
 Pausad
@@ -12242,13 +12270,13 @@ Plats:
 Storlek:
 </string>
     <string name="properties_label_size_on_disk">
-Size on disk:
+Storlek på disk:
 </string>
     <string name="properties_sparse_badge">
-Partial Download (Sparse)
+Partiell nedladdning (gles)
 </string>
     <string name="properties_sparse_allocated_pct">
-%1$.1f%% allocated
+%1$.1f%% tilldelas
 </string>
     <string name="properties_label_contains">
 Innehåller:
@@ -12861,7 +12889,7 @@ Ljudtaggar
 Titel
 </string>
     <string name="music_tag_hint_artist">
-Artist
+Konstnär
 </string>
     <string name="music_tag_hint_album">
 Album
@@ -12903,7 +12931,7 @@ Inbäddade låttexter (USLT)
 Information om ljudfil
 </string>
     <string name="music_tag_tech_format">
-Format
+Formatera
 </string>
     <string name="music_tag_tech_bitrate">
 Bithastighet
@@ -12963,61 +12991,61 @@ Tekniska specifikationer
 </string>
     <!-- Music Tag Online Sync & High-Res Cover Picker -->
     <string name="music_tag_btn_search_online_cover">
-Search Online Art
+Sök onlinekonst
 </string>
     <string name="music_tag_btn_musicbrainz_sync">
-Identify Online (MusicBrainz)
+Identifiera online (MusicBrainz)
 </string>
     <string name="music_tag_cover_picker_title">
-Search Online Artwork
+Sök onlinekonstverk
 </string>
     <string name="music_tag_search_covers_hint">
-Artist and Album name…
+Artist och albumnamn...
 </string>
     <string name="music_tag_searching_artwork">
-Searching Apple Music, Deezer &amp; Cover Art Archive…
+Söker i Apple Music, Deezer &amp; Cover Art Archive...
 </string>
     <string name="music_tag_no_artwork_found">
-No artwork found for this query
+Inget konstverk hittades för denna fråga
 </string>
     <string name="music_tag_cover_applied">
-Applied online album artwork
+Tillämpade albumbilder online
 </string>
     <string name="music_tag_cover_download_error">
-Failed to download artwork
+Det gick inte att ladda ned konstverk
 </string>
     <string name="music_tag_musicbrainz_search_title">
 MusicBrainz Tag Search
 </string>
     <string name="music_tag_search_query_hint">
-Track title or Album name…
+Spårtitel eller albumnamn...
 </string>
     <string name="music_tag_searching_musicbrainz">
-Searching MusicBrainz…
+Söker MusicBrainz...
 </string>
     <string name="music_tag_no_musicbrainz_results">
-No matching recordings or releases found
+Inga matchande inspelningar eller releaser hittades
 </string>
     <string name="music_tag_diff_title">
-Review Online Tags
+Granska onlinetaggar
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+Välj fält att tillämpa på spåret
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+Använd valda taggar
 </string>
     <string name="music_tag_select_all">
-Select All
+Välj Alla
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+Inspelningar
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+Album/släpp
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d spår
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -13170,7 +13198,7 @@ Extrahera filer och välj destination med knappen Extrahera här
 Filer extraherade. Bläddra till destinationen och tryck på Extrahera här.
 </string>
     <string name="extract_move_success">
-Extracted %1$d item(s) successfully
+Extraherade %1$d objekt(er) framgångsrikt
 </string>
 
     <!-- Universal Open With -->
@@ -13692,7 +13720,7 @@ Maila utvecklingsteamet direkt
 Support e-post kopierad till urklipp
 </string>
     <string name="support_section_community">
-Community
+Gemenskap
 </string>
     <string name="support_translation_hub_title">
 Översättningsnav för Community
@@ -14328,7 +14356,7 @@ Root Access
 Rotlagring
 </string>
     <string name="root_storage_title">
-Root Storage
+Rotlagring
 </string>
     <string name="root_storage_subtitle">
 Systempartition (/)
@@ -14406,34 +14434,34 @@ Länkmål
 
     <!-- FOSS GitHub Release Update Checker -->
     <string name="settings_foss_update_title">
-Check for Updates
+Sök efter uppdateringar
 </string>
     <string name="settings_foss_update_subtitle_on">
-Automatic release checks on app open (GitHub)
+Automatiska utsläppskontroller när appen är öppen (GitHub)
 </string>
     <string name="settings_foss_update_subtitle_off">
 Automatiska släppkontroller inaktiverade
 </string>
     <string name="settings_foss_update_check_now">
-Check for Updates
+Sök efter uppdateringar
 </string>
     <string name="update_checking_toast">
-Checking for updates...
+Söker efter uppdateringar...
 </string>
     <string name="update_already_latest_title">
-You\'re Up to Date
+Du är uppdaterad
 </string>
     <string name="update_already_latest_msg">
-Ultimate File Manager Pro v%1$s is the latest release.
+Ultimate File Manager Pro v%1$s är den senaste versionen.
 </string>
     <string name="update_available_title">
-Update Available: v%1$s
+Uppdatering tillgänglig: v%1$s
 </string>
     <string name="update_available_msg">
-A new version of Ultimate File Manager Pro is available on GitHub.
+En ny version av Ultimate File Manager Pro är tillgänglig på GitHub.
 </string>
     <string name="update_version_comparison">
-Installed: v%1$s  •  Latest: v%2$s
+Installerad: v%1$s • Senaste: v%2$s
 </string>
     <string name="update_btn_download">
 Ladda ned uppdatering (%1$s)
@@ -14454,19 +14482,19 @@ En ny version (v%1$s) är tillgänglig på GitHub. Tryck för att ladda ner.
 Öppnar nedladdningslänk...
 </string>
     <string name="update_check_failed">
-Unable to check for updates. Please check your internet connection.
+Det går inte att söka efter uppdateringar. Kontrollera din internetanslutning.
 </string>
     <string name="btn_download">
 Ladda ner
 </string>
     <string name="btn_cancel">
-Cancel
+Avboka
 </string>
     <string name="notif_channel_app_updates">
-App Updates
+Appuppdateringar
 </string>
     <string name="settings_foss_update_enable_dialog_title">
-Enable Update Checks?
+Aktivera uppdateringskontroller?
 </string>
     <string name="settings_foss_update_enable_dialog_desc">
 När den är aktiverad kommer Ultimate File Manager Pro att leta efter nya GitHub-versioner när appen öppnas och meddela dig när en ny version är tillgänglig för nedladdning.\n
@@ -14477,7 +14505,7 @@ Ingen personlig data samlas in eller överförs under denna kontroll.
 Aktivera
 </string>
     <string name="backup_pref_foss_update">
-Update Check Settings
+Uppdatera Kontrollera inställningar
 </string>
     <string name="icon_settings_foss_update">
 Sök efter uppdateringar
@@ -14672,10 +14700,10 @@ Jämför filer
 ✗ Filer skiljer sig åt (olika storlekar: %1$s jämfört med %2$s)
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ Matchande rubrik och data — ofullständig nedladdning (%1$.1f%% mot %2$.1f%% tilldelad)
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
-Size on disk: %1$s (%2$.1f%%)
+Storlek på disk: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 Identisk storlek (%1$s). Hashing för att verifiera innehåll...
@@ -14802,13 +14830,13 @@ Uppdatera din nuvarande 4-siffriga säkerhets-PIN
 Uppdatera ditt anpassade alfanumeriska lösenord
 </string>
     <string name="settings_security_verify_old_pin">
-Enter your current 4-digit PIN to continue
+Ange din nuvarande 4-siffriga PIN-kod för att fortsätta
 </string>
     <string name="settings_security_verify_old_password_title">
-Verify Current Password
+Verifiera aktuellt lösenord
 </string>
     <string name="settings_security_verify_old_password_subtitle">
-Enter your old password before changing
+Ange ditt gamla lösenord innan du ändrar
 </string>
     <string name="settings_security_disable_pin_title">
 Inaktivera applås
@@ -14823,7 +14851,7 @@ Inaktivera applås
 Ange ditt lösenord för att stänga av App Lock
 </string>
     <string name="settings_security_disable_biometric_title">
-Disable App Lock
+Inaktivera applås
 </string>
     <string name="settings_security_disable_biometric_subtitle">
 Autentisera för att stänga av App Lock
@@ -14838,7 +14866,7 @@ Ange lösenord
 Ange ett säkert lösenord för UFM
 </string>
     <string name="settings_security_password_create_title">
-Create Password
+Skapa lösenord
 </string>
     <string name="settings_security_password_create_subtitle">
 Ange ett säkert alfanumeriskt lösenord (minst 4 tecken)
@@ -15166,7 +15194,7 @@ Upplösning
 Bildfrekvens
 </string>
     <string name="video_info_bitrate">
-Bitrate
+Bithastighet
 </string>
     <string name="video_info_hdr">
 Dynamiskt omfång
@@ -15562,240 +15590,352 @@ Montera enhet
 </string>
 
     <!-- Grid Text Placement Settings -->
-    <string name="settings_grid_text_position_title">Grid Text Placement</string>
-    <string name="settings_grid_text_position_subtitle">Position file names below or overlaid on grid items</string>
-    <string name="settings_grid_text_position_below">Below Block (Default)</string>
-    <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
-    <string name="backup_pref_grid_text_position">Grid text placement settings</string>
-    <string name="backup_pref_view_styles">View density &amp; preset styles</string>
+    <string name="settings_grid_text_position_title">
+Rutnätstextplacering
+</string>
+    <string name="settings_grid_text_position_subtitle">
+Placera filnamnen under eller överlagrade på rutnätsobjekt
+</string>
+    <string name="settings_grid_text_position_below">
+Under block (standard)
+</string>
+    <string name="settings_grid_text_position_overlay">
+Överlagrat på blocket
+</string>
+    <string name="backup_pref_grid_text_position">
+Inställningar för placering av rutnätstext
+</string>
+    <string name="backup_pref_view_styles">
+Visa densitet och förinställda stilar
+</string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
-    <string name="open_as">Open As…</string>
-    <string name="open_as_desc">Choose a viewer or player to open this file</string>
-    <string name="presentation_viewer">Presentation Viewer</string>
-    <string name="slide_counter">Slide %1$d of %2$d</string>
-    <string name="open_in_powerpoint">Open in Presentation App</string>
-    <string name="open_as_text">Text / Code Viewer</string>
-    <string name="open_as_text_desc">Built-in code &amp; text editor with syntax highlighting</string>
+    <string name="open_as">
+Öppna som...
+</string>
+    <string name="open_as_desc">
+Välj en tittare eller spelare för att öppna den här filen
+</string>
+    <string name="presentation_viewer">
+Presentationsvisare
+</string>
+    <string name="slide_counter">
+Bild %1$d av %2$d
+</string>
+    <string name="open_in_powerpoint">
+Öppna i presentationsappen
+</string>
+    <string name="open_as_text">
+Text / Kodvisare
+</string>
+    <string name="open_as_text_desc">
+Inbyggd kod- och textredigerare med syntaxmarkering
+</string>
     <string name="open_as_hex">Hex / Binary Viewer</string>
-    <string name="open_as_hex_desc">Raw byte hex dump and binary inspector</string>
+    <string name="open_as_hex_desc">
+Råbyte hex dump och binär inspektör
+</string>
     <string name="open_as_presentation">Presentation / Slide Deck</string>
-    <string name="open_as_presentation_desc">Built-in slide deck viewer with speaker notes</string>
-    <string name="open_as_spreadsheet">Spreadsheet / Table</string>
-    <string name="open_as_spreadsheet_desc">Built-in spreadsheet table viewer</string>
-    <string name="open_as_image">Image Viewer</string>
-    <string name="open_as_image_desc">High-resolution photo viewer with zoom &amp; pan</string>
-    <string name="open_as_audio">Audio Player</string>
-    <string name="open_as_audio_desc">Media3 audio player with background playback</string>
-    <string name="open_as_video">Video Player</string>
-    <string name="open_as_video_desc">Media3 hardware-accelerated video player</string>
-    <string name="open_as_archive">Archive Browser</string>
-    <string name="open_as_archive_desc">Explore ZIP, 7Z, TAR, RAR, and compressed files</string>
-    <string name="open_as_other">Choose External App…</string>
-    <string name="open_as_other_desc">Open with an installed third-party app</string>
-    <string name="speaker_notes">Speaker Notes</string>
-    <string name="no_slides_found">No slides found in this presentation</string>
-    <string name="next_slide">Next Slide</string>
-    <string name="prev_slide">Previous Slide</string>
-    <string name="view_raw_text">View as Raw Text</string>
+    <string name="open_as_presentation_desc">
+Inbyggd bildspelsvisning med högtalaranteckningar
+</string>
+    <string name="open_as_spreadsheet">
+Kalkylblad / Tabell
+</string>
+    <string name="open_as_spreadsheet_desc">
+Inbyggd kalkylbladstabellvisare
+</string>
+    <string name="open_as_image">
+Bildvisare
+</string>
+    <string name="open_as_image_desc">
+Högupplöst fotovisare med zoom och panorering
+</string>
+    <string name="open_as_audio">
+Ljudspelare
+</string>
+    <string name="open_as_audio_desc">
+Media3 ljudspelare med bakgrundsuppspelning
+</string>
+    <string name="open_as_video">
+Videospelare
+</string>
+    <string name="open_as_video_desc">
+Media3 hårdvaruaccelererad videospelare
+</string>
+    <string name="open_as_archive">
+Arkivwebbläsare
+</string>
+    <string name="open_as_archive_desc">
+Utforska ZIP, 7Z, TAR, RAR och komprimerade filer
+</string>
+    <string name="open_as_other">
+Välj Extern app...
+</string>
+    <string name="open_as_other_desc">
+Öppna med en installerad tredjepartsapp
+</string>
+    <string name="speaker_notes">
+Talarens anteckningar
+</string>
+    <string name="no_slides_found">
+Inga bilder hittades i denna presentation
+</string>
+    <string name="next_slide">
+Nästa bild
+</string>
+    <string name="prev_slide">
+Föregående bild
+</string>
+    <string name="view_raw_text">
+Visa som råtext
+</string>
     <string name="ufm_slide_deck_viewer">UFM Slide Deck</string>
-    <string name="open_with_presentation_app">Presentation App (PowerPoint / Slides)</string>
-    <string name="open_with_presentation_app_desc">Open in Microsoft PowerPoint, Google Slides, or office suite</string>
-    <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
+    <string name="open_with_presentation_app">
+Presentationsapp (PowerPoint / Slides)
+</string>
+    <string name="open_with_presentation_app_desc">
+Öppna i Microsoft PowerPoint, Google Slides eller kontorspaket
+</string>
+    <string name="ufm_slide_viewer_desc">
+Visa bilder, omslagsminiatyr och anteckningar i UFM
+</string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
-    <string name="action_open_with">Open With…</string>
-    <string name="action_open_as">Open As…</string>
-    <string name="toolbar_open_with">Open With</string>
-    <string name="toolbar_open_as">Open As</string>
-    <string name="action_extract_subtitles">Extract Subtitles</string>
-    <string name="action_extract_audio">Extract Audio</string>
+    <string name="action_open_with">
+Öppna med...
+</string>
+    <string name="action_open_as">
+Öppna som...
+</string>
+    <string name="toolbar_open_with">
+Öppna med
+</string>
+    <string name="toolbar_open_as">
+Öppna som
+</string>
+    <string name="action_extract_subtitles">
+Extrahera undertexter
+</string>
+    <string name="action_extract_audio">
+Extrahera ljud
+</string>
     <string name="action_convert_to_mp4">
-Convert to MP4
+Konvertera till MP4
 </string>
-    <string name="toolbar_extract_subtitles">Extract Subtitles</string>
-    <string name="toolbar_extract_audio">Extract Audio</string>
+    <string name="toolbar_extract_subtitles">
+Extrahera undertexter
+</string>
+    <string name="toolbar_extract_audio">
+Extrahera ljud
+</string>
     <string name="toolbar_convert_to_mp4">
-Convert to MP4
+Konvertera till MP4
 </string>
-    <string name="extracting_subtitles">Extracting subtitle track…</string>
-    <string name="extracting_audio">Extracting audio track…</string>
+    <string name="extracting_subtitles">
+Extraherar undertextspår...
+</string>
+    <string name="extracting_audio">
+Extraherar ljudspår...
+</string>
     <string name="convert_to_mp4_progress">
-Converting video to MP4…
+Konverterar video till MP4...
 </string>
     <string name="convert_to_mp4_success">
-Video converted to %1$s
+Video konverterad till %1$s
 </string>
     <string name="convert_to_mp4_failed">
-Failed to convert video
+Det gick inte att konvertera video
 </string>
     <string name="convert_to_mp4_title">
-Convert to MP4
+Konvertera till MP4
 </string>
     <string name="convert_to_mp4_confirm">
-Convert \"%1$s\" to universal MP4 format?
+Konvertera \"%1$s\" till universellt MP4-format?
 </string>
-    <string name="subtitles_extracted_success">Subtitles extracted successfully.</string>
-    <string name="audio_extracted_success">Audio extracted successfully.</string>
+    <string name="subtitles_extracted_success">
+Undertexter extraherades.
+</string>
+    <string name="audio_extracted_success">
+Ljudet extraherades.
+</string>
     <string name="audio_format_universal">
 Universal M4A
 </string>
     <string name="audio_format_original">
-Original Stream
+Originalström
 </string>
     <string name="audio_format_universal_desc">
-High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+Högkvalitativ AAC (.m4a) — spelar överallt på telefoner, bilar och musikappar
 </string>
     <string name="audio_format_original_desc">
-Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+Förlustfri direktströmkopia (.eac3, .dts, .ac3, .flac)
 </string>
     <string name="codec_unsupported_title">
-Audio Codec Not Supported
+Audio Codec stöds inte
 </string>
     <string name="codec_unsupported_message">
-This device lacks a native hardware decoder for %1$s audio.\n
+Den här enheten saknar en inbyggd hårdvaruavkodare för %1$s-ljud.\n
 \n
-Would you like to convert it to Universal M4A (AAC) for seamless playback?
+Vill du konvertera den till Universal M4A (AAC) för sömlös uppspelning?
 </string>
     <string name="convert_and_play">
-Convert &amp; Play
+Konvertera och spela
 </string>
     <string name="converting_audio">
-Converting audio to M4A…
+Konverterar ljud till M4A...
 </string>
     <string name="convert_to_m4a">
-Convert to M4A
+Konvertera till M4A
 </string>
-    <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
-    <string name="media_technical_details">Media Stream Details</string>
-    <string name="media_format">Container</string>
-    <string name="media_bitrate">Overall Bitrate</string>
-    <string name="error_generic">An error occurred</string>
-    <string name="failed_to_open_file">Failed to open file</string>
-    <string name="slide_badge_format">Slide %1$d</string>
-    <string name="slide_counter_format">Slide %1$d of %2$d</string>
-    <string name="no_app_to_open_file">No app found to open this file</string>
+    <string name="no_subtitles_found_in_video">
+Inga inbäddade undertextspår hittades i den här videon
+</string>
+    <string name="media_technical_details">
+Information om mediaström
+</string>
+    <string name="media_format">
+Behållare
+</string>
+    <string name="media_bitrate">
+Total bithastighet
+</string>
+    <string name="error_generic">
+Ett fel uppstod
+</string>
+    <string name="failed_to_open_file">
+Det gick inte att öppna filen
+</string>
+    <string name="slide_badge_format">
+Skjut %1$d
+</string>
+    <string name="slide_counter_format">
+Bild %1$d av %2$d
+</string>
+    <string name="no_app_to_open_file">
+Ingen app hittades för att öppna den här filen
+</string>
     <string name="select_subtitle_track">
-Select Subtitle Track
+Välj Undertextspår
 </string>
     <string name="extract_all_subtitles">
-Extract All Tracks
+Extrahera alla spår
 </string>
     <string name="extract_all_subtitles_desc">
-Extract all %1$d subtitle tracks into separate files
+Extrahera alla %1$d undertextspår till separata filer
 </string>
     <string name="subtitles_extracted_multiple_success">
-Successfully extracted %1$d subtitle files.
+%1$d undertextfiler har extraherats.
 </string>
     <string name="select_audio_track">
-Select Audio Track
+Välj Ljudspår
 </string>
     <string name="extract_all_audio">
-Extract All Tracks
+Extrahera alla spår
 </string>
     <string name="extract_all_audio_desc">
-Extract all %1$d audio tracks into separate files
+Extrahera alla %1$d ljudspår till separata filer
 </string>
     <string name="audio_extracted_multiple_success">
-Successfully extracted %1$d audio files.
+%1$d ljudfiler har extraherats.
 </string>
     <string name="no_audio_found_in_video">
-No audio tracks found in this video
+Inga ljudspår hittades i den här videon
 </string>
 
     <!-- Floating Bottom Bar Dock -->
     <string name="floating_bar_settings_title">
-Floating Bottom Bar
+Flytande bottenstång
 </string>
     <string name="floating_bar_settings_subtitle">
-Show a modern floating dock at the bottom of the main menu for quick access
+Visa en modern flytdocka längst ner på huvudmenyn för snabb åtkomst
 </string>
     <string name="floating_bar_manage_title">
-Manage Floating Bar
+Hantera flytande stång
 </string>
     <string name="floating_bar_manage_subtitle">
-Add, remove, and reorder quick-access shortcuts
+Lägg till, ta bort och ändra ordning på snabbåtkomstgenvägar
 </string>
     <string name="floating_bar_enable_switch">
-Enable Floating Bar
+Aktivera flytande stapel
 </string>
     <string name="floating_bar_enable_desc">
-Docked tiles appear in the bottom floating bar and are hidden from the main menu
+Dockade brickor visas i den nedre flytande stapeln och är dolda från huvudmenyn
 </string>
     <string name="floating_bar_docked_section">
-Docked Items
+Dockade föremål
 </string>
     <string name="floating_bar_docked_hint">
-Drag handle to reorder. Tap Remove to return item to main menu.
+Dra i handtaget för att ändra ordning. Tryck på Ta bort för att återgå till huvudmenyn.
 </string>
     <string name="floating_bar_available_section">
-Available Tiles
+Tillgängliga plattor
 </string>
     <string name="floating_bar_available_hint">
-Tap + to add a tile to the floating bottom bar
+Tryck på + för att lägga till en bricka i den flytande bottenraden
 </string>
     <string name="floating_bar_empty_docked">
-No items docked yet. Add tiles from the list below.
+Inga objekt dockade än. Lägg till brickor från listan nedan.
 </string>
     <string name="floating_bar_empty_available">
-All available tiles have been added to the floating bar.
+Alla tillgängliga brickor har lagts till i den flytande baren.
 </string>
     <string name="floating_bar_add">
-Add
+Tillägga
 </string>
     <string name="floating_bar_remove">
-Remove
+Ta bort
 </string>
     <string name="backup_pref_floating_bar">
-Floating Bottom Bar
+Flytande bottenstång
 </string>
 
     <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
     <string name="quick_access_title">
-Quick Access
+Snabb åtkomst
 </string>
     <string name="quick_access_mode_title">
-Quick Access Style
+Snabbåtkomststil
 </string>
     <string name="quick_access_mode_subtitle">
-Choose how quick-access shortcuts are presented
+Välj hur snabbåtkomstgenvägar ska visas
 </string>
     <string name="quick_access_mode_disabled">
-Disabled
+Inaktiverad
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+Botten flytande stång
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+Kantsvepmeny
 </string>
     <string name="quick_access_edge_title">
-Swipe Edge
+Svep Edge
 </string>
     <string name="quick_access_edge_left">
-Left Edge
+Vänster kant
 </string>
     <string name="quick_access_edge_right">
-Right Edge
+Höger kant
 </string>
     <string name="quick_access_edge_handle_title">
-Edge Handle Indicator
+Kanthandtagsindikator
 </string>
     <string name="quick_access_edge_handle_desc">
-Show a subtle indicator on the screen edge for easy opening
+Visa en subtil indikator på skärmens kant för enkel öppning
 </string>
     <string name="quick_access_hide_tiles_title">
-Hide Docked Tiles on Main Menu
+Dölj dockade brickor på huvudmenyn
 </string>
     <string name="quick_access_hide_tiles_desc">
-Keep the main dashboard clean by hiding tiles docked in Quick Access
+Håll huvudinstrumentpanelen ren genom att dölja brickor som är dockade i snabbåtkomst
 </string>
     <string name="quick_access_manage_tiles">
-Manage Tiles
+Hantera plattor
 </string>
     <string name="quick_access_empty_hint">
-No tiles docked yet.\n
-Tap Manage Tiles to add shortcuts.
+Inga brickor dockade än.\n
+Knacka på Hantera brickor för att lägga till genvägar.
 </string>
     <string name="quick_access_mode_disabled_desc">Inaktivera snabbåtkomstgenvägar</string>
     <string name="quick_access_mode_bottom_bar_desc">Modern flytande menyrad längst ned i huvudmenyn</string>
@@ -15806,373 +15946,373 @@ Tap Manage Tiles to add shortcuts.
 
     <!-- Direct Remote Media & Media Operation Worker -->
     <string name="settings_network_media_process_title">
-Network Media Processing
+Nätverksmediabearbetning
 </string>
     <string name="settings_network_media_process_subtitle_off">
-Direct stream processing (zero local copy of video)
+Direktströmningsbearbetning (noll lokal kopia av video)
 </string>
     <string name="settings_network_media_process_subtitle_on">
-Copy full video to local storage before processing
+Kopiera hela videon till lokal lagring innan bearbetning
 </string>
     <string name="backup_pref_network_media_process">
-Network Media Processing
+Nätverksmediabearbetning
 </string>
     <string name="dialog_copy_before_process_title">
-Copy to Local Storage?
+Kopiera till lokal lagring?
 </string>
     <string name="dialog_copy_before_process_msg">
-This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+Den här åtgärden kopierar \"%1$s\" (%2$s) från nätverkslagring till enhetens lokala lagring först.\n
 \n
-Depending on file size and connection speed, this may take some time.\n
+Beroende på filstorlek och anslutningshastighet kan detta ta lite tid.\n
 \n
-Do you want to proceed?
+Vill du fortsätta?
 </string>
     <string name="action_copy_and_proceed">
-Copy &amp; Proceed
+Kopiera och fortsätt
 </string>
     <string name="media_operation_channel_name">
-Media Operations
+Medieverksamhet
 </string>
     <string name="media_operation_channel_desc">
-Background video conversion and track extraction
+Bakgrundsvideokonvertering och spårextraktion
 </string>
     <string name="media_op_converting_video">
-Converting Video to MP4…
+Konverterar video till MP4...
 </string>
     <string name="media_op_extracting_audio">
-Extracting Audio Track…
+Extraherar ljudspår...
 </string>
     <string name="media_op_extracting_subtitles">
-Extracting Subtitles…
+Extraherar undertexter...
 </string>
     <string name="media_op_completed_title">
-Media Operation Completed
+Mediaoperation slutförd
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+Medieoperationen misslyckades
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+Laddar ned fjärrvideo till lokal cache...
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+Laddar upp resultat till fjärrmapp...
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+Fortsätter i bakgrunden. Kontrollera aviseringar för framsteg.
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+Fjärrdelning är skrivskyddad
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+Den extraherade filen kunde inte sparas till \"%1$s\" eftersom delningen är skrivskyddad.\n
 \n
-Would you like to save it to your local device instead?
+Vill du spara den på din lokala enhet istället?
 </string>
     <string name="action_save_locally">
-Save to Device
+Spara till enhet
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+Skrivskyddad dela
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+Delningen \"%1$s\" är skrivskyddad.\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+Den extraherade eller konverterade filen kan inte sparas tillbaka till fjärrresursen, så den sparas i din lokala nedladdningsmapp istället.\n
 \n
-Do you want to proceed?
+Vill du fortsätta?
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+Annan förvaring
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+Installerade moln- och dokumentleverantörer
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+Få åtkomst till tredjepartsdokumentleverantörer installerade på din enhet
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+%1$d dokumentleverantörer tillgängliga
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+1 dokumentleverantör tillgänglig
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+Inga tredjepartsdokumentleverantörer hittades
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+Bläddra bland filer (SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+Montera lagringsmapp
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+Anslut via UFM Native Engine
 </string>
     <string name="action_open_app">
-Open App
+Öppna App
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+Lägg till lagringsplats
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+Montera katalog/mapp
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+Välj en mapp från Termux, SD-kort eller USB-enhet
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+Installerade dokumentleverantörer
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+Få åtkomst till Proton Drive, Synology DS-fil, Google Drive och mer
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+Höghastighetsmoln och nätverk
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+Fullständig 2-vägssynkronisering via RClone (Proton/Google Drive) eller SMB/WebDAV
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+Öppna eller kopiera fil
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+Vad skulle du vilja göra med \"%1$s\"?
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+Öppna i UFM Viewer
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+Kopiera till lokal lagring
 </string>
     <string name="saf_file_action_remember">
-Remember my choice
+Kom ihåg mitt val
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+Fråga alltid
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+Kopierade %1$d fil(er) till nedladdningar
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+SAF valde filåtgärd
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+Fråga alltid om du ska öppna eller kopiera
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+Alltid öppet i UFM Viewer
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+Kopiera alltid till lokal lagring
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+Dokumentleverantör
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+Hantera %1$s
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+Bläddra och ladda ner filer
 </string>
     <string name="doc_provider_action_browse_subtitle">Öppna %1$s för att välja filer att visa eller kopiera lokalt</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+Ladda upp fil till %1$s
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+Välj en lokal fil i UFM att spara i %1$s
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+Vill du ta bort %1$s?
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+Vill du ta bort %1$s från lagringsutrymmet? Du kan lägga till den igen när som helst från Other Storage.
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+Ta bort från lagring
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+%1$s har tagits bort från lagringsutrymmet
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+%1$s har lagts till i lagringsutrymmet
 </string>
     <string name="other_storage_all_added">
-All available providers added
+Alla tillgängliga leverantörer har lagts till
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+Alla installerade dokumentleverantörer har redan lagts till i din huvudlagringsmeny.
 </string>
     <string name="saf_copy_destination_title">
 Destination: %1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+Byt mapp...
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+Välj målmapp
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+Ställ in kopieringsdestination
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+SAF valde filer destination
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+Filer som kopierats från dokumentleverantörer kommer att sparas till \"%1$s\".
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+Övriga lagrings- och SAF-överföringar
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+Kopiera målmapp
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+Återställ till standard (nedladdningar)
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+Välj ny mapp...
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+Kopiera destinationsåterställning till Nedladdningar
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+Exportera till dokumentleverantör
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+Spara direkt till en monterad moln- eller dokumentleverantör
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+Välj Destinationsleverantör
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+Exportera flera filer
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+Hur skulle du vilja exportera dessa %1$d filer till %2$s?
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+Exportera som ZIP-arkiv
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+Använd systemuppladdningsark
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+\"%1$s\" har sparats i %2$s
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+Mappmonterbar
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+Filer och moln
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+Native Sync tillgänglig
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+Ladda upp till annan lagring
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+Ladda upp valda filer eller mappar till externa dokumentleverantörer
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+Ladda upp till annan lagring
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+Ingen lagringsleverantör har lagts till. Välj en leverantör att lägga till.
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+Kopierade %1$d fil(er) till %2$s
 </string>
     <string name="share_export_folder_title">
-Export Folder
+Exportera mapp
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+Mappar kan inte laddas upp direkt via dokumentleverantörer. Vill du komprimera \"%1$s\" till ett ZIP-arkiv för att ladda upp till %2$s?
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+Komprimera till ett enda ZIP-arkiv och ladda upp
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+Skicka objekt med hjälp av uppladdningsarket för Android-systemet
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+Välj en monterad leverantör eller öppna Annan lagring
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+Zipper för %1$s...
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+Blixtlås för annan förvaring...
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+Ladda upp via %1$s
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+Skicka filer direkt till %1$s
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+Komprimera till ett ZIP-arkiv och välj målmapp i %1$s
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+Bevarar mappstrukturen och den ursprungliga katalogen i ett ZIP-arkiv i %1$s
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+Laddar upp enskilda filer direkt till %1$s (externa uppladdningsskärmar kan inte skapa kataloger)
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+Meddelande om mappuppladdning
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+Externa uppladdningsskärmar (som %2$s) kan inte skapa kataloger.\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+Endast filerna i \"%1$s\" kommer att laddas upp, inte själva originalmappen.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+För att bevara hela katalogstrukturen, välj \"Exportera som ZIP-arkiv\" istället.
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+Externa uppladdningsskärmar (som %1$s) kan inte skapa kataloger.\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+Endast filerna i valda mappar kommer att laddas upp, inte själva originalmapparna.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+För att bevara hela katalogstrukturen, välj \"Exportera som ZIP-arkiv\" istället.
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+Ladda endast upp filer
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+Hemskärmsalternativ
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+Lägg till på startskärmen
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+Ta bort från startskärmen
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+Ta bort favorit
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+Genväg begärd – kontrollera din startskärm
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+Genväg inaktiverad. Ta bort den manuellt från startskärmen.
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+UFM-favoriter
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+Kanalen är inte godkänd. Du kan aktivera det senare i TV-inställningar → Kanaler.
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+Objektet är inte tillgängligt
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+Filen eller mappen kunde inte hittas. Den kan ha flyttats, raderats eller finns på otillgänglig lagring.
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -16192,95 +16332,95 @@ Inga enheter eller favoriter tillgängliga
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+Öppna med
 </string>
     <string name="open_with_search_hint">
-Search apps…
+Sök appar...
 </string>
     <string name="open_with_just_once">
-Just once
+Bara en gång
 </string>
     <string name="open_with_always">
-Always
+Alltid
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+Använd alltid den valda appen för .%1$s-filer
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+Använd alltid vald app
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+Kom ihåg standard för .%1$s filer
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+Inga installerade program hittades för att öppna den här filen
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+Sök i Google Play Butik
 </string>
     <string name="open_with_app_info">
 App info
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+Visa programinformation och systeminställningar
 </string>
     <string name="open_with_set_default">
-Always use this app
+Använd alltid denna app
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+Det gick inte att starta %1$s. Faller tillbaka till systemväljaren...
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+Tryck på OK för att öppna • Långt tryck på OK för standardappalternativ
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+Välj som destination
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+Tittarmål
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+Bekräfta målmapp
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+Vald mapp kommer att användas för snabba kopiera och flytta åtgärder i UFM Viewer och bildspel.
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+Filåtgärder
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+Destinationsmapp
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+Ingen destination vald — tryck för att välja
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+Ändra
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+Kopiera till %1$s
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+Flytta till %1$s
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+Kopiera till destination
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+Flytta till destinationen
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+Kopierade till %1$s
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+Flyttade till %1$s
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+Källa och destination är samma mapp
 </string>
     <string name="backup_pref_viewer_transfer">
 Viewer Transfer Destination
@@ -16288,22 +16428,22 @@ Viewer Transfer Destination
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+Lägg till på startskärmen
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+Genvägsnamn
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+Lagringsgenväg
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+\"%1$s\" är redan fäst på din startskärm.
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+Lägg till på startskärmen
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+Genvägens namn får inte vara tomt
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
@@ -16311,37 +16451,37 @@ Shortcut name cannot be empty
 Download Manager
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+Torrent-, magnet- och HTTP-nedladdningar
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+Höghastighets inbyggd direkt- och peer-to-peer-nedladdningshanterare med noll-seed integritetsskydd.
 </string>
     <string name="download_no_transfers">
-No active downloads
+Inga aktiva nedladdningar
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+Välj som nedladdningsmapp
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+Ladda ner mapp
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+Bekräfta nedladdningsplats
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+Nedladdningar kommer att sparas direkt i denna katalog.
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+Direktnedladdningar
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+Torrent nedladdningar
 </string>
     <string name="download_location_label">
-Download location
+Ladda ner plats
 </string>
     <string name="download_change_location">
-Change
+Ändra
 </string>
     <string name="download_action_start">
 Start
@@ -16353,221 +16493,221 @@ Pause
 Resume
 </string>
     <string name="download_action_cancel">
-Cancel
+Avboka
 </string>
     <string name="download_action_delete">
-Delete
+Radera
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+URL för direkt nedladdning
 </string>
     <string name="download_enter_url_hint">
 https://example.com/file.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+Ladda ner
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+Torrent eller magnetlänk
 </string>
     <string name="download_enter_magnet_hint">
 magnet:?xt=urn:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+Öppna .torrent-fil
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+Nedladdningshanteraren och P2P-meddelande
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+Acceptabel användning och sekretessinformation
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+Jag förstår att peer-to-peer-nedladdningar delar min IP-adress inom svärmen, och jag samtycker till att använda detta verktyg strikt för lagligt, icke-kränkande innehåll.
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+Lagringsgränsen har överskridits
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+Målfilstorleken (%1$s) överskrider gränsen på 4 GB som stöds av FAT32-filsystemet på den här enheten.\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+Välj en annan nedladdningsplats formaterad i exFAT, NTFS eller internminne.
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+Otillräckligt lagringsutrymme
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+Det finns inte tillräckligt med ledigt utrymme på den valda lagringsenheten.\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+Obligatoriskt: %1$s\n
+Tillgängligt: ​​%2$s\n
 \n
-Please select another drive or free up space.
+Välj en annan enhet eller frigör utrymme.
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+Välj Plats
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+Mobil dataanslutning
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+Du är för närvarande ansluten till ett mobilnätverk och endast Wi-Fi-läget är aktiverat.\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+Vill du ställa den här överföringen i kö tills Wi-Fi ansluter eller tillåta mobildata för nedladdning?
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+Kö för Wi-Fi
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+Tillåt mobildata
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+Nätverkspolicy
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+Välj regler för nätverksanslutning för nedladdningar
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+Endast Wi-Fi (rekommenderas)
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+Överför bara nedladdningar när du är ansluten till obegränsat Wi-Fi
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+Alla nätverk (Wi-Fi och mobil)
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+Tillåt överföringar över mobildata och Wi-Fi-nätverk
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+Läs villkoren för icke-piratkopiering
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+Se P2P-svärmavslöjande, integritet och nollsådd villkor
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+P2P-svärm och IP-synlighet
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+BitTorrent överför utbytesbitar direkt med andra peer-enheter i svärmen. Din offentliga IP-adress är synlig för aktiva kamrater under överföring.
 </string>
     <string name="download_legal_zero_seeding_title">
 Zero-Seeding Privacy
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+UFM tillämpar strikt nollsådd. I samma ögonblick som en nedladdning är klar (100%) avbryts alla svärmanslutningar och spårningsmeddelanden upphör omedelbart.
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+Endast lagligt innehåll
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+Du samtycker till att använda detta verktyg strikt för lagliga, öppen källkod, offentliga eller auktoriserade filer. Det är förbjudet att ladda ner eller distribuera upphovsrättsskyddat material utan tillstånd.
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+Håll med &amp; fortsätt
 </string>
     <string name="download_legal_understood">
-Understood
+Förstått
 </string>
     <string name="download_state_downloading">
-Downloading
+Laddar ner
 </string>
     <string name="download_state_paused">
-Paused
+Pausad
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+Kö för Wi-Fi
 </string>
     <string name="download_state_completed">
-Completed
+Avslutad
 </string>
     <string name="download_state_error">
-Error
+Fel
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+Ladda ner Manager Transfers
 </string>
     <string name="download_notif_channel_desc">
-Ongoing download progress and status updates
+Pågående nedladdningsförlopp och statusuppdateringar
 </string>
     <string name="download_timeout_stopped">
-Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+Nedladdningar pausade: Android 6-timmars körningsgräns har nåtts. Tryck för att återuppta.
 </string>
 
     <!-- Torrent & Magnet Selective File Download & Content Inspector -->
     <string name="torrent_select_all">
-Select All
+Välj Alla
 </string>
     <string name="torrent_deselect_all">
-Deselect All
+Avmarkera alla
 </string>
     <string name="torrent_selected_summary">
-Selected: %1$d of %2$d files (%3$s of %4$s)
+Valda: %1$d av %2$d filer (%3$s av %4$s)
 </string>
     <string name="torrent_files_count">
-%1$d files
+%1$d filer
 </string>
     <string name="torrent_file_selection_title">
-Torrent Content
+Torrent innehåll
 </string>
     <string name="torrent_file_selection_subtitle">
-Select files and folders to download
+Välj filer och mappar att ladda ner
 </string>
     <string name="torrent_fetching_metadata">
-Fetching torrent metadata from swarm…
+Hämtar torrent-metadata från svärm...
 </string>
     <string name="torrent_fetching_metadata_desc">
-Contacting DHT nodes and peers to retrieve file list…
+Kontakta DHT-noder och peers för att hämta fillistan...
 </string>
     <string name="torrent_metadata_timeout_title">
-Metadata Fetch Timeout
+Timeout för hämtning av metadata
 </string>
     <string name="torrent_metadata_timeout_msg">
-Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+Att hämta fillistan från peers tar längre tid än vanligt. Vill du fortsätta söka eller ladda ner alla filer direkt?
 </string>
     <string name="torrent_keep_waiting">
-Keep Waiting
+Fortsätt vänta
 </string>
     <string name="torrent_download_all_direct">
-Download All Directly
+Ladda ner allt direkt
 </string>
     <string name="torrent_zero_selected_error">
-Please select at least one file to download
+Välj minst en fil att ladda ner
 </string>
     <string name="torrent_search_hint">
-Search files…
+Sök efter filer...
 </string>
 
     <!-- Transfer Action Dialog -->
     <string name="transfer_action_title">
-Transfer Actions
+Överföringsåtgärder
 </string>
     <string name="transfer_action_pause">
-Pause Transfer
+Pausa överföring
 </string>
     <string name="transfer_action_resume">
-Resume Transfer
+Återuppta överföring
 </string>
     <string name="transfer_action_open_folder">
-Open Download Folder
+Öppna nedladdningsmappen
 </string>
     <string name="transfer_action_delete_title">
-Remove Transfer
+Ta bort överföring
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+Välj hur du tar bort denna överföring från Download Manager:
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+Ta endast bort överföring
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+Behåll nedladdade filer på din enhet
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+Ta bort och ta bort filer
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+Ta bort nedladdade filer permanent från disken
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16628,79 +16768,79 @@ Det gick inte att uppdatera platsen för TV-nedladdning: %1$s
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+Smarta bokmärken
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+Organisera sparade länkar, media och delningar
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%1$d objekt i %2$d grupper
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+Inga bokmärken sparade ännu
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+Bokmärk med UFM
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+Spara bokmärke
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+Delas från %1$s
 </string>
     <string name="bookmark_field_title_hint">
-Title
+Titel
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+Samling / Grupp
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+Lägg till personlig anteckning (valfritt)
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+Spara bokmärke
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+Redan bokmärkt — anteckningar och tid uppdaterad
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+Bokmärket har sparats i %1$s
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+Grupper
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+Visa alla ›
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+Samlingar och källor
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+Hantera samlingar, filtrera och skydda valv
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+Sök i samlingar...
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+Alla bokmärken
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+Visa alla olåsta bokmärken i alla källor
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+Mina samlingar
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+Användarskapade samlingar • Valv låsbart
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+App källor
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+Automatiskt genererad från delade applikationer
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16709,193 +16849,193 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+Enhetssäkerhet (PIN, mönster eller fingeravtryck) har inte ställts in på den här enheten.
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+Valv låst
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+Autentisera för att ta bort Vault-låset
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+Samling låst med Vault
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+Samlingen upplåst
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+Ny bokmärkesgrupp
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+Gruppnamn
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+Skapa grupp
 </string>
     <string name="bookmark_filter_all">
-All
+Alla
 </string>
     <string name="bookmark_filter_links">
-Links
+Länkar
 </string>
     <string name="bookmark_filter_media">
 Media
 </string>
     <string name="bookmark_filter_docs">
-Documents
+Dokument
 </string>
     <string name="bookmark_filter_notes">
-Notes
+Anteckningar
 </string>
     <string name="bookmark_filter_starred">
-Starred
+Stjärnmärkt
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+Sök efter bokmärken, anteckningar eller domäner...
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+Sortera bokmärken
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+Nyast till Äldst
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+Äldst till Nyast
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+Titel (A–Z)
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+Titel (Z–A)
 </string>
     <string name="bookmark_sort_size">
-File Size
+Fil-storlek
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+Gruppera efter samling
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+Samling: A till Ö
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+Samling: Z till A
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+Ta bort samling
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+Är du säker på att du vill ta bort samlingen \"%1$s\"?
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+Läs artikeln
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+Öppna i webbläsare
 </string>
     <string name="bookmark_action_open_file">
-Open File
+Öppna fil
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+Kopiera länk
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+Kopiera text
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+Spara till lagring
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+Flytta till grupp
 </string>
     <string name="bookmark_action_delete">
-Delete
+Radera
 </string>
     <string name="bookmark_view_note">
-View Note
+Visa notering
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+Låssamling (valv)
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+Kräv fingeravtryck eller PIN-kod för att se
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+Insamlingsalternativ
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+Låssamling
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+Lås upp samling
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+Bokmärket har tagits bort
 </string>
     <string name="bookmark_undo">
-Undo
+Ångra
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+Valde %1$d objekt
 </string>
     <string name="bookmark_batch_move">
-Move
+Flytta
 </string>
     <string name="bookmark_batch_delete">
-Delete
+Radera
 </string>
     <string name="bookmark_batch_export">
-Export
+Exportera
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+Exportera bokmärken
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+Webbläsares HTML-bokmärken (.html)
 </string>
     <string name="bookmark_export_markdown">
 Markdown Document (.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+Exporterade %1$d bokmärken till %2$s
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+Läsarläge
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+Textstorlek
 </string>
     <string name="bookmark_reader_theme">
-Theme
+Tema
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+Ljus
 </string>
     <string name="bookmark_reader_theme_sepia">
 Sepia
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+Mörk
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+Lyssna högt
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+Pausa läsning
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+Sluta läsa
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+Hastighet %1$sx
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+Initierar röstmotor...
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+Text-till-tal stöds inte eller är inte installerat på den här enheten
 </string>
     <string name="bookmark_group_whatsapp">
 WhatsApp
@@ -16910,40 +17050,40 @@ YouTube
 Twitter / X
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+Webb &amp; artiklar
 </string>
     <string name="bookmark_group_telegram">
 Telegram
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+Filer och dokument
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+Lås grupp med valv
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+Lås upp grupp
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+Autentisera för att komma åt låsta bokmärken
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+Inga bokmärken än
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+Dela länkar, artiklar, media eller filer från WhatsApp, Reddit eller din webbläsare och välj \"Bokmärk med UFM\".
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+Inga resultat hittades
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+Inga bokmärken matchar \"%1$s\". Försök att söka efter olika sökord.
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+Inga bokmärken hittades
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+Inga bokmärken hittades som matchar det valda filtret eller samlingen.
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -16951,67 +17091,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+Platt utsikt
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+Rekursiv indexerad webbläsare
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+Öppna mapp
 </string>
     <string name="flat_view_expand_all">
-Expand All
+Expandera alla
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+Dölj alla
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+Inkludera systemmappar
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+Visa Android/data, Android/obb och systemkataloger i platt vy
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+Standard för alla utökade
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+Öppna Flat View med alla mappar expanderade som standard
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+Inga indexerade filer hittades i den här volymen
 </string>
     <string name="flat_view_settings_title">
-Flat View
+Platt utsikt
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+Konfigurera rekursiv indexerad surfning och systemmappar
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+Lagring ej indexerat
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+Flat View kräver att denna lagringsvolym är helt indexerad. Kör indexering först.
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%1$d filer i %2$d mappar
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+%1$d har valts
 </string>
     <string name="flat_view_folder_files_count">
-%1$d files
+%1$d filer
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+Ta bort filer
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+Är du säker på att du vill ta bort %1$d valda filer?
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+Raderade %1$d filer
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+Flat View-inställningar
 </string>
 </resources>
 

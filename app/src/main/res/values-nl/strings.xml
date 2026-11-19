@@ -421,55 +421,55 @@ Onbeperkt aantal regels
 Verdeelt de volledige naam over zoveel regels als nodig
 </string>
     <string name="settings_file_name_display_truncate">
-Single line (Truncated end)
+Enkele lijn (afgeknot uiteinde)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Truncates with ellipsis at end (abc…) without scrolling
+Wordt afgekapt met een weglatingsteken aan het einde (abc...) zonder te scrollen
 </string>
     <string name="settings_file_name_display_truncate_middle">
-Single line (Truncate middle)
+Enkele lijn (midden afkappen)
 </string>
     <string name="settings_file_name_display_truncate_middle_desc">
-Truncates in middle (abc…xyz.ext) to preserve the end suffix
+Wordt in het midden afgekapt (abc…xyz.ext) om het eindachtervoegsel te behouden
 </string>
     <string name="settings_marquee_speed_title">
-Scroll Speed
+Scrollsnelheid
 </string>
     <string name="settings_marquee_speed_slow">
-Slow
+Langzaam
 </string>
     <string name="settings_marquee_speed_normal">
 Normal
 </string>
     <string name="settings_marquee_speed_fast">
-Fast
+Snel
 </string>
     <string name="settings_marquee_loop_title">
-Loop Mode
+Loop-modus
 </string>
     <string name="settings_marquee_loop_one_shot">
-One-Shot
+Eén schot
 </string>
     <string name="settings_marquee_loop_one_shot_desc">
-Scrolls once and stops to save battery
+Bladert één keer en stopt om de batterij te sparen
 </string>
     <string name="settings_marquee_loop_continuous">
-Continuous
+Continu
 </string>
     <string name="settings_marquee_loop_continuous_desc">
-Repeats back and forth continuously
+Herhaalt voortdurend heen en weer
 </string>
     <string name="settings_marquee_scope_title">
-Scroll Scope
+Scrollbereik
 </string>
     <string name="settings_marquee_scope_all">
-All Visible Files
+Alle zichtbare bestanden
 </string>
     <string name="settings_marquee_scope_focused">
-Focused / Selected Only
+Alleen gefocust/geselecteerd
 </string>
     <string name="settings_file_name_preview_title">
-Live Preview
+Live voorbeeld
 </string>
     <string name="settings_file_name_preview_sample">
 VeryLongFileName_ProjectReport_2026_Final_v2.docx
@@ -1142,7 +1142,7 @@ Grote bestanden
 Duplicaten
 </string>
     <string name="analyzer_tab_incomplete">
-Incomplete
+Onvolledig
 </string>
     <string name="analyzer_tab_junk">
 Rommel &amp; oud
@@ -1169,10 +1169,10 @@ Suggesties
 bespaart %1$s
 </string>
     <string name="analyzer_no_incomplete_files">
-No incomplete or sparse downloads found
+Geen onvolledige of schaarse downloads gevonden
 </string>
     <string name="analyzer_incomplete_file_allocated">
-Size on disk: %1$s (%2$.1f%%)
+Grootte op schijf: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1257,97 +1257,97 @@ Verwijderen
 
     <!-- Bulk duplicate deletion & retention strategy -->
     <string name="analyzer_select_all_duplicates">
-Select All Duplicates
+Selecteer Alle duplicaten
 </string>
     <string name="analyzer_clear_selection">
-Clear
+Duidelijk
 </string>
     <string name="analyzer_delete_all_duplicates">
-Delete All Duplicates
+Verwijder alle duplicaten
 </string>
     <string name="analyzer_delete_selected_count">
-Delete Selected (%1$d)
+Geselecteerde verwijderen (%1$d)
 </string>
     <string name="analyzer_badge_original">
-Original
+Origineel
 </string>
     <string name="analyzer_strategy_title">
-Duplicate Retention Strategy
+Dubbele retentiestrategie
 </string>
     <string name="analyzer_strategy_oldest">
-Keep Oldest (Original)
+Houd de oudste (origineel)
 </string>
     <string name="analyzer_strategy_oldest_desc">
-Preserves the oldest file by modification date and deletes newer copies.
+Behoudt het oudste bestand op wijzigingsdatum en verwijdert nieuwere exemplaren.
 </string>
     <string name="analyzer_strategy_newest">
-Keep Newest
+Nieuwste behouden
 </string>
     <string name="analyzer_strategy_newest_desc">
-Preserves the most recently modified file and deletes older copies.
+Behoudt het meest recent gewijzigde bestand en verwijdert oudere kopieën.
 </string>
     <string name="analyzer_strategy_remember">
-Remember my choice
+Onthoud mijn keuze
 </string>
     <string name="analyzer_strategy_most_complete">
-Keep Most Complete
+Houd het meest compleet
 </string>
     <string name="analyzer_strategy_most_complete_desc">
-Preserves fully downloaded or most allocated files and deletes incomplete copies.
+Behoudt volledig gedownloade of meest toegewezen bestanden en verwijdert onvolledige kopieën.
 </string>
     <string name="analyzer_badge_partial">
-Partial (%1$.0f%%)
+Gedeeltelijk (%1$.0f%%)
 </string>
     <string name="analyzer_badge_sparse">
-Sparse
+Schaars
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+%1$d dubbele bestanden verwijderen?
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+Van elk bestand wordt één origineel exemplaar bewaard. %1$d dubbele kopieën worden definitief verwijderd om %2$s vrij te maken.
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+Opruimen voltooid
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+Er zijn %1$d dubbele bestanden verwijderd en er is %2$s opslagruimte vrijgemaakt.
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+%1$d bestanden kunnen niet worden verwijderd vanwege machtigingen.
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+%1$d van %2$d bestanden verwijderen…
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d dubbele groepen · slaat %2$s op
 </string>
     <string name="settings_duplicate_retention_title">
-Duplicate Retention Strategy
+Dubbele retentiestrategie
 </string>
     <string name="settings_duplicate_retention_dialog_subtitle">
-Choose which copy to preserve when selecting duplicate files for cleanup.
+Kies welke kopie u wilt behouden wanneer u dubbele bestanden selecteert om op te ruimen.
 </string>
     <string name="settings_duplicate_retention_summary_oldest">
-Keep oldest file (Original)
+Oudste bestand behouden (origineel)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
-Keep newest file
+Bewaar het nieuwste bestand
 </string>
     <string name="settings_duplicate_retention_summary_most_complete">
-Keep most complete file
+Bewaar het meest volledige bestand
 </string>
     <string name="settings_duplicate_retention_summary_ask">
-Always ask
+Vraag het altijd
 </string>
     <string name="settings_duplicate_retention_desc_ask">
-Prompt to choose retention strategy each time duplicate files are selected.
+Elke keer dat dubbele bestanden worden geselecteerd, wordt u gevraagd om de bewaarstrategie te kiezen.
 </string>
     <string name="settings_duplicate_retention_toast">
-Duplicate retention strategy set to: %s
+Dubbele bewaarstrategie ingesteld op: %s
 </string>
     <string name="backup_pref_duplicate_retention">
-Duplicate Retention Strategy
+Dubbele retentiestrategie
 </string>
 
     <!-- Theme -->
@@ -1441,7 +1441,7 @@ Voer de herstelcode in
 Voer uw herstelcode van 16 tekens in om uw pincode opnieuw in te stellen
 </string>
     <string name="vault_recovery_entry_hint">
-XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXX
 </string>
     <string name="vault_recovery_invalid">
 Onjuiste herstelcode
@@ -1847,13 +1847,13 @@ Standaard startscherm
 Kies welk scherm wordt geopend bij het opstarten
 </string>
     <string name="start_screen_last_opened">
-Last Opened Location
+Laatst geopende locatie
 </string>
     <string name="start_screen_last_opened_desc">
-Reopen where you left off upon app launch
+Open opnieuw waar u was gebleven bij het starten van de app
 </string>
     <string name="storage_unavailable_redirect">
-Previous storage location is unavailable. Returned to Storage screen.
+Vorige opslaglocatie is niet beschikbaar. Teruggekeerd naar het scherm Opslag.
 </string>
     <string name="start_screen_storage_browser">
 Hoofdmenu (standaard)
@@ -1954,19 +1954,19 @@ Uitgeschakeld: directe stream (standaard)
 
     <!-- Network Transfer Multi-Threading Settings -->
     <string name="settings_network_transfer_threads_title">
-FTP, SFTP &amp; SMB Multi-threading
+FTP, SFTP en SMB Multithreading
 </string>
     <string name="settings_network_transfer_threads_dialog_title">
 Overdrachts-threads
 </string>
     <string name="settings_network_transfer_threads_dialog_subtitle">
-Select the number of simultaneous connections for faster network file transfers
+Selecteer het aantal gelijktijdige verbindingen voor snellere netwerkbestandsoverdrachten
 </string>
     <string name="settings_network_transfer_threads_subtitle">
 %1$d threads — gelijktijdige verbindingen voor snellere overdrachten
 </string>
     <string name="settings_network_transfer_threads_single">
-1 thread (single-threaded)
+1 draad (enkele draad)
 </string>
     <string name="settings_network_transfer_threads_option">
 %1$d threads
@@ -1975,40 +1975,40 @@ Select the number of simultaneous connections for faster network file transfers
 %1$d threads (aanbevolen)
 </string>
     <string name="settings_network_transfer_threads_maximum">
-%1$d threads (Maximum)
+%1$d discussies (maximaal)
 </string>
     <string name="settings_network_transfer_threads_2">
 2 threads
 </string>
     <string name="settings_network_transfer_threads_4">
-4 threads (Recommended)
+4 draden (aanbevolen)
 </string>
     <string name="settings_network_transfer_threads_6">
 6 threads
 </string>
     <string name="settings_network_transfer_threads_8">
-8 threads (Maximum)
+8 draden (maximaal)
 </string>
     <string name="settings_network_transfer_threads_desc_1">
-Single connection, transfers files sequentially
+Enkele verbinding, brengt bestanden opeenvolgend over
 </string>
     <string name="settings_network_transfer_threads_desc_2">
-Light parallelism, ideal for slower connections
+Licht parallellisme, ideaal voor langzamere verbindingen
 </string>
     <string name="settings_network_transfer_threads_desc_4">
-Optimal balance of speed and stability for Wi-Fi and LAN
+Optimale balans tussen snelheid en stabiliteit voor Wi-Fi en LAN
 </string>
     <string name="settings_network_transfer_threads_desc_6">
-High throughput for Gigabit networks and fast Wi-Fi
+Hoge doorvoersnelheid voor Gigabit-netwerken en snelle Wi-Fi
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+Maximale doorvoer voor multi-gigabit LAN en Wi-Fi 7
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+Overdrachtthreads ingesteld op %1$d
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+FTP-, SFTP- en SMB Multi-threading-instellingen
 </string>
     <string name="network_field_threads">
 Overdrachts-threads
@@ -2019,10 +2019,10 @@ Standaard (%1$d threads)
 
     <!-- Transfer Multi-Threading Telemetry -->
     <string name="transfer_threads_header">
-Threads (%1$d active)
+Discussies (%1$d actief)
 </string>
     <string name="transfer_threads_header_single">
-Thread (1 active)
+Onderwerp (1 actief)
 </string>
     <string name="transfer_per_thread_placeholder">
 -- MB/s
@@ -2031,16 +2031,16 @@ Thread (1 active)
 Per thread: %1$.1f MB/s
 </string>
     <string name="transfer_per_thread_single_format">
-Single thread: %1$.1f MB/s
+Enkele thread: %1$.1f MB/s
 </string>
     <string name="transfer_thread_initial">
 Thread %1$d: --
 </string>
     <string name="transfer_thread_speed_item">
-Thread %1$d: %2$.1f MB/s
+Discussie %1$d: %2$,1f MB/s
 </string>
     <string name="transfer_thread_speed_single">
-Thread %1$d: %2$.1f MB/s (Single-threaded)
+Discussie %1$d: %2$,1f MB/s (enkele thread)
 </string>
 
     <!-- Open Source Licenses -->
@@ -5395,13 +5395,27 @@ Aanpassen aan scherm
 Afspelen / pauzeren
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+Interactieve modus
+</string>
+    <string name="svg_transport_mode">
+Spelerbediening
+</string>
+    <string name="svg_restart">
+Start de animatie opnieuw
+</string>
+    <string name="svg_playback_speed">
+Afspeelsnelheid
+</string>
+    <string name="svg_next_panel">
+Volgende paneel
+</string>
+    <string name="svg_prev_panel">
+Vorig paneel
+</string>
+    <string name="svg_tv_interactive_hint">
+Interactieve modus — Druk op Terug of Menu voor spelerbediening
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 Audiotrack
@@ -5710,10 +5724,10 @@ BEWAAR HIER
 Opslaan in UFM
 </string>
     <string name="share_target_save_to">
-Save to…
+Opslaan naar…
 </string>
     <string name="share_target_open_in">
-Open in…
+Openen over…
 </string>
     <string name="share_receive_from">
 Bestand ontvangen van %s
@@ -5868,7 +5882,7 @@ Instellingen voor Prullenbak openen
 
     <!-- Remote Manager Web Interface -->
     <string name="remote_title">
-Ultimate File Manager Pro Remote
+Ultieme Bestandsbeheer Pro Remote
 </string>
     <string name="remote_subtitle_login">
 Veilige toegang — Voer de pincode van 4 cijfers in
@@ -6012,7 +6026,9 @@ Open
     <string name="remote_item">
 item
 </string>
-    <string name="remote_items">items</string>
+    <string name="remote_items">
+artikelen
+</string>
     <string name="remote_reencrypt">
 Sluiten/opnieuw coderen
 </string>
@@ -6459,8 +6475,12 @@ Geen apps gevonden
     <string name="remote_msg_apps_plural">
 %d apps
 </string>
-    <string name="remote_msg_item_singular">%d item</string>
-    <string name="remote_msg_items_plural">%d items</string>
+    <string name="remote_msg_item_singular">
+%d artikel
+</string>
+    <string name="remote_msg_items_plural">
+%d artikelen
+</string>
     <string name="remote_msg_items_uploaded">
 %d items geüpload
 </string>
@@ -7186,10 +7206,10 @@ Bekijk grote bestanden
 Er zijn %1$d bestanden gevonden die groter zijn dan 512 MB.
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+Onvolledige / schaarse downloads
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+Er zijn %1$d onvolledige of schaarse bestanden gevonden die schijfruimte in beslag nemen.
 </string>
     <string name="old_unused_files">
 Oude ongebruikte bestanden
@@ -7695,8 +7715,12 @@ Bestanden verplaatsen…
     <string name="copying_files_1">
 Bestanden kopiëren…
 </string>
-    <string name="item_0_totalfiles">Item 0 / %1$d</string>
-    <string name="item_index_totalcount">Item %1$d / %2$d</string>
+    <string name="item_0_totalfiles">
+Artikel 0 / %1$d
+</string>
+    <string name="item_index_totalcount">
+Artikel %1$d / %2$d
+</string>
     <string name="copiedmb_mb_totalmb_mb_percent">
 %1$s MB / %2$s MB (%3$d%%)
 </string>
@@ -7778,10 +7802,18 @@ Synchronisatie ingeschakeld
     <string name="sync_disabled">
 Synchronisatie uitgeschakeld
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+Profiel inschakelen
+</string>
+    <string name="sync_action_disable">
+Profiel uitschakelen
+</string>
+    <string name="sync_status_enabled">
+Actief
+</string>
+    <string name="sync_status_disabled">
+Gepauzeerd
+</string>
     <string name="sync_delete_profile_confirm_msg">
 Weet u zeker dat u \'%1$s\' wilt verwijderen? Dit kan niet ongedaan worden gemaakt.
 </string>
@@ -8414,16 +8446,16 @@ Succesvol verbonden met Dropbox
 Authenticatie mislukt: %1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+Authenticatie mislukt
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+Verbindings- of verificatiefout
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+Kan de autorisatiecode niet verifiëren met Dropbox. Controleer of de code correct is ingevoerd, niet is verlopen en de datum/tijd van uw apparaat correct is.
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+Fout met datum en tijd van apparaat gedetecteerd. De datum/tijd van je tv-systeem lijkt in het verleden te liggen, waardoor een veilige verbinding met Dropbox onmogelijk is. Stel de juiste datum en tijd in in de Android TV-instellingen.
 </string>
     <string name="dropbox_auth_verifying">
 Code verifiëren…
@@ -8536,7 +8568,7 @@ De autorisatie is geweigerd of geannuleerd.
 Verhoogde toegang
 </string>
     <string name="shizuku_subtitle">
-Porter / Shizuku / Shevery
+Portier / Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
@@ -8681,7 +8713,7 @@ Shevery
 Lichtgewicht snel alternatief
 </string>
     <string name="shizuku_manager_porter_title">
-Porter
+Portier
 </string>
     <string name="shizuku_manager_porter_desc">
 Actief onderhouden voortzetting van Shizuku
@@ -8711,16 +8743,16 @@ Status niet beschikbaar
 Controleren op verhoogde toegang…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+Haal Porter
 </string>
     <string name="elevated_prerelease_badge">
 Pre-release
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+Koop Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+Koop Shevery
 </string>
     <string name="shizuku_open_manager">
 Open %1$s Beheer
@@ -8729,7 +8761,7 @@ Open %1$s Beheer
 Installatiehandleiding in 3 stappen
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1. Installeer Manager
 </string>
     <string name="shizuku_step_2">
 2. Start de service
@@ -8768,17 +8800,23 @@ Download %1$s: v%2$s
 Downloaden en installeren (%1$s)
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+Verhoogde toegang ontkoppelen?
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+Hierdoor wordt de verhoogde toegang tot %1$s in UFM verbroken. U kunt dit op elk gewenst moment opnieuw inschakelen.
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+Verbreek de verbinding
 </string>
-    <string name="shizuku_allow_app_access">Allow app access</string>
-    <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
-    <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
+    <string name="shizuku_allow_app_access">
+App-toegang toestaan
+</string>
+    <string name="shizuku_app_access_granted_toast">
+Verhoogde toegang ingeschakeld voor %1$s
+</string>
+    <string name="shizuku_app_access_revoked">
+Verhoogde toegang uitgeschakeld voor %1$s
+</string>
     <string name="elevated_fetching_toast">
 Controleren op de nieuwste %1$s-release…
 </string>
@@ -9075,7 +9113,7 @@ Stop
 Tik om te beheren
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+Bestandsserver gestopt: Android-uitvoeringslimiet van 6 uur bereikt
 </string>
     <string name="opening_file_server">
 Bestandsserver openen…
@@ -9383,34 +9421,34 @@ Annuleren
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+Niet-vertrouwd/zelfondertekend certificaat toestaan
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+Accepteer zelfondertekende of privé CA SSL-certificaten (gebruikelijk op lokale NAS-apparaten)
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+Wachtwoord (laat dit leeg om actueel te blijven)
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+Niet-vertrouwd SSL-certificaat
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+De server op %1$s heeft een niet-vertrouwd of zelfondertekend SSL-certificaat gepresenteerd. Controleer de onderstaande certificaatgegevens voordat u deze verbinding vertrouwt.
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+Onderwerp
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+Uitgever
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+Geldigheid
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+SHA-256 Vingerafdruk
 </string>
     <string name="webdav_cert_dialog_trust">
-Trust &amp; Connect
+Vertrouwen en verbinden
 </string>
 
     <!-- About Section -->
@@ -10244,7 +10282,7 @@ Scannen
 Camera
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+Geen camera-app gevonden op dit apparaat
 </string>
     <string name="scanner_capture_gallery">
 Kies uit Galerij
@@ -11495,7 +11533,7 @@ PRO
 
     <!-- RClone Cloud Storage Support -->
     <string name="add_online_storage_rclone">
-RClone
+RClonen
 </string>
     <string name="add_online_storage_auth_rclone">
 Opslag instellen
@@ -11661,8 +11699,12 @@ Kies hoe ver u vooruit of achteruit wilt springen tijdens het zoeken tijdens het
     <string name="skip_length_option_10s">
 10s
 </string>
-    <string name="skip_length_option_20s">20s</string>
-    <string name="skip_length_option_30s">30s</string>
+    <string name="skip_length_option_20s">
+jaren 20
+</string>
+    <string name="skip_length_option_30s">
+Jaren \'30
+</string>
     <string name="skip_length_option_disable">Uitschakelen</string>
     <string name="skip_length_desc_3s">Overslaan met 3 seconden</string>
     <string name="skip_length_desc_5s">Overslaan met 5 seconden</string>
@@ -11680,100 +11722,100 @@ Lengte van overslaan ingesteld op %1$s
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+Stijl van ondertiteling
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+Configureer de weergave van ondertitels in de app, de lettergrootte en de synchronisatie van systeembijschriften.
 </string>
     <string name="subtitle_style_summary_system">
-System caption style
+Stijl van systeembijschrift
 </string>
     <string name="subtitle_style_summary_custom">
-UFM custom style (%1$s)
+Aangepaste UFM-stijl (%1$s)
 </string>
     <string name="subtitle_style_dialog_title">
-Subtitle Style
+Ondertitelingstijl
 </string>
     <string name="subtitle_style_mode_system">
-System Caption Style
+Stijl van systeembijschrift
 </string>
     <string name="subtitle_style_mode_system_desc">
-Follows device Accessibility caption settings even when system captions are disabled.
+Volgt de instellingen voor ondertiteling op het apparaat, zelfs als de systeemondertiteling is uitgeschakeld.
 </string>
     <string name="subtitle_style_mode_custom">
-UFM Custom Style
+UFM-aangepaste stijl
 </string>
     <string name="subtitle_style_mode_custom_desc">
-Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+Aangepaste in-app-stijl met aanpasbaar formaat, kleuren, randeffecten en positionering.
 </string>
     <string name="subtitle_style_open_system">
-Open Device Caption Settings
+Open Instellingen voor ondertiteling van apparaat
 </string>
     <string name="subtitle_style_system_unavailable">
-System caption settings not available on this device; using UFM style.
+Systeemondertitelingsinstellingen zijn niet beschikbaar op dit apparaat; met behulp van UFM-stijl.
 </string>
     <string name="subtitle_style_preview_title">
-Preview
+Voorbeeld
 </string>
     <string name="subtitle_style_preview_line1">
 Ultimate File Manager Pro
 </string>
     <string name="subtitle_style_preview_line2">
-Live subtitle preview • Crisp text styling
+Live ondertitelvoorbeeld • Scherpe tekststijl
 </string>
     <string name="subtitle_style_text_size">
-Text size
+Tekstgrootte
 </string>
     <string name="subtitle_style_text_color">
-Text color
+Tekstkleur
 </string>
     <string name="subtitle_style_bg_color">
-Background opacity
+Achtergronddekking
 </string>
     <string name="subtitle_style_edge_type">
-Edge effect
+Randeffect
 </string>
     <string name="subtitle_style_edge_none">
 None
 </string>
     <string name="subtitle_style_edge_outline">
-Outline
+Overzicht
 </string>
     <string name="subtitle_style_edge_drop_shadow">
-Drop shadow
+Slagschaduw
 </string>
     <string name="subtitle_style_edge_raised">
-Raised
+Opgeheven
 </string>
     <string name="subtitle_style_edge_depressed">
-Depressed
+Depressief
 </string>
     <string name="subtitle_style_bottom_margin">
-Bottom margin
+Onderste marge
 </string>
     <string name="subtitle_style_apply_embedded">
-Apply embedded styles (ASS/SSA/TTML)
+Ingebedde stijlen toepassen (ASS/SSA/TTML)
 </string>
     <string name="subtitle_style_apply_embedded_desc">
-When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+Indien uitgeschakeld, overschrijft de UFM-ondertitelstijl het ingebouwde lettertype en de kleurtags voor optimale leesbaarheid.
 </string>
     <string name="subtitle_style_color_yellow">
-Yellow
+Geel
 </string>
     <string name="subtitle_style_color_white">
-White
+Wit
 </string>
     <string name="subtitle_style_color_cyan">
-Cyan
+Cyaan
 </string>
     <string name="subtitle_style_color_green">
-Green
+Groente
 </string>
     <string name="subtitle_style_color_magenta">
 Magenta
 </string>
     <string name="subtitle_style_color_orange">
-Orange
+Oranje
 </string>
     <string name="subtitle_style_bg_transparent">
 None
@@ -11788,13 +11830,13 @@ None
 75%
 </string>
     <string name="subtitle_style_bg_100">
-Solid
+Stevig
 </string>
     <string name="player_track_sheet_subtitle_style">
-Subtitle Style…
+Ondertitelingstijl…
 </string>
     <string name="player_track_sheet_subtitle_style_desc">
-Customize colors, size &amp; appearance
+Pas kleuren, grootte en uiterlijk aan
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -11835,10 +11877,10 @@ Herhaal aan
 Herhaal uit
 </string>
     <string name="player_toast_repeat_all">
-Repeat all
+Herhaal alles
 </string>
     <string name="player_toast_repeat_one">
-Repeat current track
+Huidig ​​nummer herhalen
 </string>
     <string name="player_toast_audio_track">
 Audiospoor
@@ -11995,13 +12037,13 @@ Locatie:
 Maat:
 </string>
     <string name="properties_label_size_on_disk">
-Size on disk:
+Grootte op schijf:
 </string>
     <string name="properties_sparse_badge">
-Partial Download (Sparse)
+Gedeeltelijke download (sparse)
 </string>
     <string name="properties_sparse_allocated_pct">
-%1$.1f%% allocated
+%1$.1f%% toegewezen
 </string>
     <string name="properties_label_contains">
 Bevat:
@@ -12647,7 +12689,7 @@ Details van audiobestand
 Formaat
 </string>
     <string name="music_tag_tech_bitrate">
-Bitrate
+Bitsnelheid
 </string>
     <string name="music_tag_tech_sample_rate">
 Samplefrequentie
@@ -12704,61 +12746,61 @@ Technische specificaties
 </string>
     <!-- Music Tag Online Sync & High-Res Cover Picker -->
     <string name="music_tag_btn_search_online_cover">
-Search Online Art
+Zoek online kunst
 </string>
     <string name="music_tag_btn_musicbrainz_sync">
-Identify Online (MusicBrainz)
+Online identificeren (MusicBrainz)
 </string>
     <string name="music_tag_cover_picker_title">
-Search Online Artwork
+Zoek online kunstwerken
 </string>
     <string name="music_tag_search_covers_hint">
-Artist and Album name…
+Naam van artiest en album…
 </string>
     <string name="music_tag_searching_artwork">
-Searching Apple Music, Deezer &amp; Cover Art Archive…
+Zoeken in Apple Music, Deezer en Cover Art-archief…
 </string>
     <string name="music_tag_no_artwork_found">
-No artwork found for this query
+Er is geen kunstwerk gevonden voor deze zoekopdracht
 </string>
     <string name="music_tag_cover_applied">
-Applied online album artwork
+Toegepaste online albumhoezen
 </string>
     <string name="music_tag_cover_download_error">
-Failed to download artwork
+Kan kunstwerk niet downloaden
 </string>
     <string name="music_tag_musicbrainz_search_title">
-MusicBrainz Tag Search
+MusicBrainz-tag zoeken
 </string>
     <string name="music_tag_search_query_hint">
-Track title or Album name…
+Tracktitel of albumnaam…
 </string>
     <string name="music_tag_searching_musicbrainz">
-Searching MusicBrainz…
+Muziek zoekenBrainz…
 </string>
     <string name="music_tag_no_musicbrainz_results">
-No matching recordings or releases found
+Geen overeenkomende opnames of releases gevonden
 </string>
     <string name="music_tag_diff_title">
-Review Online Tags
+Onlinetags bekijken
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+Selecteer velden die u op track wilt toepassen
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+Pas geselecteerde tags toe
 </string>
     <string name="music_tag_select_all">
-Select All
+Selecteer Alles
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+Opnames
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+Albums / Uitgaven
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d nummers
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -13431,7 +13473,7 @@ E-mail het ontwikkelingsteam rechtstreeks
 Ondersteunings-e-mail gekopieerd naar klembord
 </string>
     <string name="support_section_community">
-Community
+Gemeenschap
 </string>
     <string name="support_translation_hub_title">
 Community Vertaalhub
@@ -13521,8 +13563,12 @@ Klassieke lijst
     <string name="main_menu_layout_classic_list_desc">
 Platte lijst met één kolom (groot, gemiddeld, klein)
 </string>
-    <string name="main_menu_section_items_count">%1$d items</string>
-    <string name="main_menu_section_item_count_single">1 item</string>
+    <string name="main_menu_section_items_count">
+%1$d artikelen
+</string>
+    <string name="main_menu_section_item_count_single">
+1 artikel
+</string>
 
     <!-- Reset Category Layout -->
     <string name="reset_categorized_layout_section">
@@ -13957,7 +14003,7 @@ Map verwijderen
 Verwijder de toegang tot gekoppelde mappen uit deze opslag
 </string>
     <string name="dialog_remove_folders_title">
-Remove Mounted Folders
+Verwijder gekoppelde mappen
 </string>
     <string name="dialog_remove_folders_desc">
 Selecteer een map om de toegang tot deze opslag te verwijderen. Uw bestanden worden niet verwijderd.
@@ -14328,7 +14374,7 @@ Architectuur
 Map Video\'s
 </string>
     <string name="tv_player_playlist_empty">
-No other videos in this folder
+Geen andere video\'s in deze map
 </string>
     <string name="tv_player_playlist_count">
 %1$d video\'s
@@ -14337,7 +14383,7 @@ No other videos in this folder
 Nu aan het spelen
 </string>
     <string name="tv_player_button_playlist">
-Playlist
+Afspeellijst
 </string>
 
     <!-- Checksum & Hash Verification Tools -->
@@ -14405,10 +14451,10 @@ Vergelijk bestanden
 ✗ Bestanden verschillen (verschillende formaten: %1$s versus %2$s)
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ Overeenkomende header en gegevens: onvolledige download (%1$.1f%% versus %2$.1f%% toegewezen)
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
-Size on disk: %1$s (%2$.1f%%)
+Grootte op schijf: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 Identiek formaat (%1$s). Hashing om de inhoud te verifiëren...
@@ -14691,7 +14737,9 @@ Veld mag niet leeg zijn
     <string name="close_all_tabs">Alle tabbladen sluiten</string>
     <string name="tab_rename">Tabblad hernoemen</string>
     <string name="storage_network">Netwerk</string>
-    <string name="storage_cloud">Cloud</string>
+    <string name="storage_cloud">
+Wolk
+</string>
     
     <!-- SAF & External File Pickers Exposure -->
     <string name="expose_to_saf_title">Toegankelijk maken voor SAF &amp; Pickers</string>
@@ -14838,7 +14886,7 @@ Audiosporen
 Ondertitels
 </string>
     <string name="video_info_container">
-Container
+Houder
 </string>
     <string name="video_info_filename">
 Bestandsnaam
@@ -14865,7 +14913,7 @@ Resolutie
 Framerate
 </string>
     <string name="video_info_bitrate">
-Bitrate
+Bitsnelheid
 </string>
     <string name="video_info_hdr">
 Dynamisch bereik
@@ -15261,240 +15309,358 @@ Schijf koppelen
 </string>
 
     <!-- Grid Text Placement Settings -->
-    <string name="settings_grid_text_position_title">Grid Text Placement</string>
-    <string name="settings_grid_text_position_subtitle">Position file names below or overlaid on grid items</string>
-    <string name="settings_grid_text_position_below">Below Block (Default)</string>
-    <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
-    <string name="backup_pref_grid_text_position">Grid text placement settings</string>
-    <string name="backup_pref_view_styles">View density &amp; preset styles</string>
+    <string name="settings_grid_text_position_title">
+Plaatsing van rastertekst
+</string>
+    <string name="settings_grid_text_position_subtitle">
+Plaats bestandsnamen onder of over rasteritems heen
+</string>
+    <string name="settings_grid_text_position_below">
+Onder blok (standaard)
+</string>
+    <string name="settings_grid_text_position_overlay">
+Overlay op blok
+</string>
+    <string name="backup_pref_grid_text_position">
+Instellingen voor plaatsing van rastertekst
+</string>
+    <string name="backup_pref_view_styles">
+Bekijk dichtheid en vooraf ingestelde stijlen
+</string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
-    <string name="open_as">Open As…</string>
-    <string name="open_as_desc">Choose a viewer or player to open this file</string>
-    <string name="presentation_viewer">Presentation Viewer</string>
-    <string name="slide_counter">Slide %1$d of %2$d</string>
-    <string name="open_in_powerpoint">Open in Presentation App</string>
-    <string name="open_as_text">Text / Code Viewer</string>
-    <string name="open_as_text_desc">Built-in code &amp; text editor with syntax highlighting</string>
-    <string name="open_as_hex">Hex / Binary Viewer</string>
-    <string name="open_as_hex_desc">Raw byte hex dump and binary inspector</string>
-    <string name="open_as_presentation">Presentation / Slide Deck</string>
-    <string name="open_as_presentation_desc">Built-in slide deck viewer with speaker notes</string>
-    <string name="open_as_spreadsheet">Spreadsheet / Table</string>
-    <string name="open_as_spreadsheet_desc">Built-in spreadsheet table viewer</string>
-    <string name="open_as_image">Image Viewer</string>
-    <string name="open_as_image_desc">High-resolution photo viewer with zoom &amp; pan</string>
-    <string name="open_as_audio">Audio Player</string>
-    <string name="open_as_audio_desc">Media3 audio player with background playback</string>
-    <string name="open_as_video">Video Player</string>
-    <string name="open_as_video_desc">Media3 hardware-accelerated video player</string>
-    <string name="open_as_archive">Archive Browser</string>
-    <string name="open_as_archive_desc">Explore ZIP, 7Z, TAR, RAR, and compressed files</string>
-    <string name="open_as_other">Choose External App…</string>
-    <string name="open_as_other_desc">Open with an installed third-party app</string>
-    <string name="speaker_notes">Speaker Notes</string>
-    <string name="no_slides_found">No slides found in this presentation</string>
-    <string name="next_slide">Next Slide</string>
-    <string name="prev_slide">Previous Slide</string>
-    <string name="view_raw_text">View as Raw Text</string>
-    <string name="ufm_slide_deck_viewer">UFM Slide Deck</string>
-    <string name="open_with_presentation_app">Presentation App (PowerPoint / Slides)</string>
-    <string name="open_with_presentation_app_desc">Open in Microsoft PowerPoint, Google Slides, or office suite</string>
-    <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
+    <string name="open_as">
+Openen als…
+</string>
+    <string name="open_as_desc">
+Kies een viewer of speler om dit bestand te openen
+</string>
+    <string name="presentation_viewer">
+Presentatieviewer
+</string>
+    <string name="slide_counter">
+Dia %1$d van %2$d
+</string>
+    <string name="open_in_powerpoint">
+Openen in Presentatie-app
+</string>
+    <string name="open_as_text">
+Tekst-/codeviewer
+</string>
+    <string name="open_as_text_desc">
+Ingebouwde code- en teksteditor met syntaxisaccentuering
+</string>
+    <string name="open_as_hex">
+Hex/Binaire Viewer
+</string>
+    <string name="open_as_hex_desc">
+Raw byte hex dump en binaire inspecteur
+</string>
+    <string name="open_as_presentation">
+Presentatie / diadeck
+</string>
+    <string name="open_as_presentation_desc">
+Ingebouwde diadeckviewer met sprekernotities
+</string>
+    <string name="open_as_spreadsheet">
+Spreadsheet / Tabel
+</string>
+    <string name="open_as_spreadsheet_desc">
+Ingebouwde spreadsheet-tabelviewer
+</string>
+    <string name="open_as_image">
+Afbeeldingsviewer
+</string>
+    <string name="open_as_image_desc">
+Fotoviewer met hoge resolutie met zoom en pan
+</string>
+    <string name="open_as_audio">
+Audiospeler
+</string>
+    <string name="open_as_audio_desc">
+Media3-audiospeler met achtergrondweergave
+</string>
+    <string name="open_as_video">
+Videospeler
+</string>
+    <string name="open_as_video_desc">
+Media3 hardwareversnelde videospeler
+</string>
+    <string name="open_as_archive">
+Archiefbrowser
+</string>
+    <string name="open_as_archive_desc">
+Ontdek ZIP-, 7Z-, TAR-, RAR- en gecomprimeerde bestanden
+</string>
+    <string name="open_as_other">
+Kies Externe app…
+</string>
+    <string name="open_as_other_desc">
+Open met een geïnstalleerde app van derden
+</string>
+    <string name="speaker_notes">
+Sprekernotities
+</string>
+    <string name="no_slides_found">
+Er zijn geen dia\'s gevonden in deze presentatie
+</string>
+    <string name="next_slide">
+Volgende dia
+</string>
+    <string name="prev_slide">
+Vorige dia
+</string>
+    <string name="view_raw_text">
+Bekijk als onbewerkte tekst
+</string>
+    <string name="ufm_slide_deck_viewer">
+UFM-schuifdek
+</string>
+    <string name="open_with_presentation_app">
+Presentatie-app (PowerPoint / Slides)
+</string>
+    <string name="open_with_presentation_app_desc">
+Openen in Microsoft PowerPoint, Google Presentaties of kantoorsuite
+</string>
+    <string name="ufm_slide_viewer_desc">
+Bekijk dia\'s, omslagminiaturen en notities in UFM
+</string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
-    <string name="action_open_with">Open With…</string>
-    <string name="action_open_as">Open As…</string>
-    <string name="toolbar_open_with">Open With</string>
-    <string name="toolbar_open_as">Open As</string>
-    <string name="action_extract_subtitles">Extract Subtitles</string>
-    <string name="action_extract_audio">Extract Audio</string>
+    <string name="action_open_with">
+Openen met…
+</string>
+    <string name="action_open_as">
+Openen als…
+</string>
+    <string name="toolbar_open_with">
+Openen met
+</string>
+    <string name="toolbar_open_as">
+Openen als
+</string>
+    <string name="action_extract_subtitles">
+Ondertitels extraheren
+</string>
+    <string name="action_extract_audio">
+Audio extraheren
+</string>
     <string name="action_convert_to_mp4">
-Convert to MP4
+Converteren naar MP4
 </string>
-    <string name="toolbar_extract_subtitles">Extract Subtitles</string>
-    <string name="toolbar_extract_audio">Extract Audio</string>
+    <string name="toolbar_extract_subtitles">
+Ondertitels extraheren
+</string>
+    <string name="toolbar_extract_audio">
+Audio extraheren
+</string>
     <string name="toolbar_convert_to_mp4">
-Convert to MP4
+Converteren naar MP4
 </string>
-    <string name="extracting_subtitles">Extracting subtitle track…</string>
-    <string name="extracting_audio">Extracting audio track…</string>
+    <string name="extracting_subtitles">
+Ondertiteltrack extraheren…
+</string>
+    <string name="extracting_audio">
+Audiotrack extraheren…
+</string>
     <string name="convert_to_mp4_progress">
-Converting video to MP4…
+Video converteren naar MP4…
 </string>
     <string name="convert_to_mp4_success">
-Video converted to %1$s
+Video geconverteerd naar %1$s
 </string>
     <string name="convert_to_mp4_failed">
-Failed to convert video
+Kan video niet converteren
 </string>
     <string name="convert_to_mp4_title">
-Convert to MP4
+Converteren naar MP4
 </string>
     <string name="convert_to_mp4_confirm">
-Convert \"%1$s\" to universal MP4 format?
+\"%1$s\" converteren naar universeel MP4-formaat?
 </string>
-    <string name="subtitles_extracted_success">Subtitles extracted successfully.</string>
-    <string name="audio_extracted_success">Audio extracted successfully.</string>
+    <string name="subtitles_extracted_success">
+Ondertitels zijn succesvol geëxtraheerd.
+</string>
+    <string name="audio_extracted_success">
+Audio succesvol geëxtraheerd.
+</string>
     <string name="audio_format_universal">
-Universal M4A
+Universele M4A
 </string>
     <string name="audio_format_original">
-Original Stream
+Originele stroom
 </string>
     <string name="audio_format_universal_desc">
-High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+AAC van hoge kwaliteit (.m4a) — speelt overal af op telefoons, auto\'s en muziekapps
 </string>
     <string name="audio_format_original_desc">
-Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+Directe streamkopie zonder verlies (.eac3, .dts, .ac3, .flac)
 </string>
     <string name="codec_unsupported_title">
-Audio Codec Not Supported
+Audiocodec niet ondersteund
 </string>
     <string name="codec_unsupported_message">
-This device lacks a native hardware decoder for %1$s audio.\n
+Dit apparaat heeft geen eigen hardwaredecoder voor %1$s-audio.\n
 \n
-Would you like to convert it to Universal M4A (AAC) for seamless playback?
+Wilt u het converteren naar Universal M4A (AAC) voor naadloos afspelen?
 </string>
     <string name="convert_and_play">
-Convert &amp; Play
+Converteren en afspelen
 </string>
     <string name="converting_audio">
-Converting audio to M4A…
+Audio converteren naar M4A…
 </string>
     <string name="convert_to_m4a">
-Convert to M4A
+Converteren naar M4A
 </string>
-    <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
-    <string name="media_technical_details">Media Stream Details</string>
-    <string name="media_format">Container</string>
-    <string name="media_bitrate">Overall Bitrate</string>
-    <string name="error_generic">An error occurred</string>
-    <string name="failed_to_open_file">Failed to open file</string>
-    <string name="slide_badge_format">Slide %1$d</string>
-    <string name="slide_counter_format">Slide %1$d of %2$d</string>
-    <string name="no_app_to_open_file">No app found to open this file</string>
+    <string name="no_subtitles_found_in_video">
+Er zijn geen ingesloten ondertiteltracks gevonden in deze video
+</string>
+    <string name="media_technical_details">
+Details mediastream
+</string>
+    <string name="media_format">
+Houder
+</string>
+    <string name="media_bitrate">
+Algemene bitsnelheid
+</string>
+    <string name="error_generic">
+Er is een fout opgetreden
+</string>
+    <string name="failed_to_open_file">
+Kan bestand niet openen
+</string>
+    <string name="slide_badge_format">
+Dia %1$d
+</string>
+    <string name="slide_counter_format">
+Dia %1$d van %2$d
+</string>
+    <string name="no_app_to_open_file">
+Er is geen app gevonden om dit bestand te openen
+</string>
     <string name="select_subtitle_track">
-Select Subtitle Track
+Selecteer Ondertiteltrack
 </string>
     <string name="extract_all_subtitles">
-Extract All Tracks
+Pak alle nummers uit
 </string>
     <string name="extract_all_subtitles_desc">
-Extract all %1$d subtitle tracks into separate files
+Pak alle %1$d ondertiteltracks uit in afzonderlijke bestanden
 </string>
     <string name="subtitles_extracted_multiple_success">
-Successfully extracted %1$d subtitle files.
+%1$d ondertitelbestanden zijn geëxtraheerd.
 </string>
     <string name="select_audio_track">
-Select Audio Track
+Selecteer Audiotrack
 </string>
     <string name="extract_all_audio">
-Extract All Tracks
+Pak alle nummers uit
 </string>
     <string name="extract_all_audio_desc">
-Extract all %1$d audio tracks into separate files
+Pak alle %1$d audiotracks uit in afzonderlijke bestanden
 </string>
     <string name="audio_extracted_multiple_success">
-Successfully extracted %1$d audio files.
+%1$d audiobestanden zijn geëxtraheerd.
 </string>
     <string name="no_audio_found_in_video">
-No audio tracks found in this video
+Er zijn geen audiotracks gevonden in deze video
 </string>
 
     <!-- Floating Bottom Bar Dock -->
     <string name="floating_bar_settings_title">
-Floating Bottom Bar
+Zwevende onderste balk
 </string>
     <string name="floating_bar_settings_subtitle">
-Show a modern floating dock at the bottom of the main menu for quick access
+Toon een modern drijvend dok onderaan het hoofdmenu voor snelle toegang
 </string>
     <string name="floating_bar_manage_title">
-Manage Floating Bar
+Beheer zwevende balk
 </string>
     <string name="floating_bar_manage_subtitle">
-Add, remove, and reorder quick-access shortcuts
+Snelkoppelingen toevoegen, verwijderen en opnieuw rangschikken
 </string>
     <string name="floating_bar_enable_switch">
-Enable Floating Bar
+Schakel zwevende balk in
 </string>
     <string name="floating_bar_enable_desc">
-Docked tiles appear in the bottom floating bar and are hidden from the main menu
+Gedockte tegels verschijnen in de onderste zwevende balk en zijn verborgen in het hoofdmenu
 </string>
     <string name="floating_bar_docked_section">
-Docked Items
+Gedockte items
 </string>
     <string name="floating_bar_docked_hint">
-Drag handle to reorder. Tap Remove to return item to main menu.
+Versleep de handgreep om de volgorde te wijzigen. Tik op Verwijderen om het item terug te brengen naar het hoofdmenu.
 </string>
     <string name="floating_bar_available_section">
-Available Tiles
+Beschikbare tegels
 </string>
     <string name="floating_bar_available_hint">
-Tap + to add a tile to the floating bottom bar
+Tik op + om een ​​tegel toe te voegen aan de zwevende balk onderaan
 </string>
     <string name="floating_bar_empty_docked">
-No items docked yet. Add tiles from the list below.
+Er zijn nog geen items gedockt. Voeg tegels toe uit de onderstaande lijst.
 </string>
     <string name="floating_bar_empty_available">
-All available tiles have been added to the floating bar.
+Alle beschikbare tegels zijn toegevoegd aan de zwevende balk.
 </string>
     <string name="floating_bar_add">
-Add
+Toevoegen
 </string>
     <string name="floating_bar_remove">
-Remove
+Verwijderen
 </string>
     <string name="backup_pref_floating_bar">
-Floating Bottom Bar
+Zwevende onderste balk
 </string>
 
     <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
     <string name="quick_access_title">
-Quick Access
+Snelle toegang
 </string>
     <string name="quick_access_mode_title">
-Quick Access Style
+Stijl voor snelle toegang
 </string>
     <string name="quick_access_mode_subtitle">
-Choose how quick-access shortcuts are presented
+Kies hoe snelkoppelingen worden weergegeven
 </string>
     <string name="quick_access_mode_disabled">
-Disabled
+Gehandicapt
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+Onderste zwevende balk
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+Rand-veegmenu
 </string>
     <string name="quick_access_edge_title">
-Swipe Edge
+Veeg over de rand
 </string>
     <string name="quick_access_edge_left">
-Left Edge
+Linkerrand
 </string>
     <string name="quick_access_edge_right">
-Right Edge
+Rechterrand
 </string>
     <string name="quick_access_edge_handle_title">
-Edge Handle Indicator
+Indicator voor randhandgreep
 </string>
     <string name="quick_access_edge_handle_desc">
-Show a subtle indicator on the screen edge for easy opening
+Toon een subtiele indicator op de schermrand voor eenvoudig openen
 </string>
     <string name="quick_access_hide_tiles_title">
-Hide Docked Tiles on Main Menu
+Verberg gedockte tegels in het hoofdmenu
 </string>
     <string name="quick_access_hide_tiles_desc">
-Keep the main dashboard clean by hiding tiles docked in Quick Access
+Houd het hoofddashboard schoon door tegels te verbergen die zijn gekoppeld aan Snelle toegang
 </string>
     <string name="quick_access_manage_tiles">
-Manage Tiles
+Beheer tegels
 </string>
     <string name="quick_access_empty_hint">
-No tiles docked yet.\n
-Tap Manage Tiles to add shortcuts.
+Er zijn nog geen tegels gedockt.\n
+Tik op Tegels beheren om snelkoppelingen toe te voegen.
 </string>
     <string name="quick_access_mode_disabled_desc">Snelle toegang snelkoppelingen uitschakelen</string>
     <string name="quick_access_mode_bottom_bar_desc">Moderne zwevende balk onderaan het hoofdmenu</string>
@@ -15505,373 +15671,373 @@ Tap Manage Tiles to add shortcuts.
 
     <!-- Direct Remote Media & Media Operation Worker -->
     <string name="settings_network_media_process_title">
-Network Media Processing
+Netwerkmediaverwerking
 </string>
     <string name="settings_network_media_process_subtitle_off">
-Direct stream processing (zero local copy of video)
+Directe streamverwerking (geen lokale kopie van video)
 </string>
     <string name="settings_network_media_process_subtitle_on">
-Copy full video to local storage before processing
+Kopieer de volledige video naar de lokale opslag voordat u deze verwerkt
 </string>
     <string name="backup_pref_network_media_process">
-Network Media Processing
+Netwerkmediaverwerking
 </string>
     <string name="dialog_copy_before_process_title">
-Copy to Local Storage?
+Kopiëren naar lokale opslag?
 </string>
     <string name="dialog_copy_before_process_msg">
-This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+Met deze bewerking wordt \'%1$s\' (%2$s) eerst gekopieerd van de netwerkopslag naar de lokale opslag van uw apparaat.\n
 \n
-Depending on file size and connection speed, this may take some time.\n
+Afhankelijk van de bestandsgrootte en verbindingssnelheid kan dit enige tijd duren.\n
 \n
-Do you want to proceed?
+Wilt u doorgaan?
 </string>
     <string name="action_copy_and_proceed">
-Copy &amp; Proceed
+Kopiëren en doorgaan
 </string>
     <string name="media_operation_channel_name">
-Media Operations
+Media-operaties
 </string>
     <string name="media_operation_channel_desc">
-Background video conversion and track extraction
+Achtergrondvideoconversie en trackextractie
 </string>
     <string name="media_op_converting_video">
-Converting Video to MP4…
+Video converteren naar MP4…
 </string>
     <string name="media_op_extracting_audio">
-Extracting Audio Track…
+Audiotrack extraheren…
 </string>
     <string name="media_op_extracting_subtitles">
-Extracting Subtitles…
+Ondertitels extraheren…
 </string>
     <string name="media_op_completed_title">
-Media Operation Completed
+Mediabewerking voltooid
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+Mediabewerking mislukt
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+Externe video downloaden naar lokale cache…
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+Resultaat uploaden naar externe map…
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+Verder op de achtergrond. Controleer meldingen op voortgang.
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+Op afstand delen is alleen-lezen
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+Het uitgepakte bestand kon niet worden opgeslagen op \"%1$s\" omdat de share alleen-lezen is.\n
 \n
-Would you like to save it to your local device instead?
+Wilt u het in plaats daarvan op uw lokale apparaat opslaan?
 </string>
     <string name="action_save_locally">
-Save to Device
+Opslaan op apparaat
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+Alleen-lezen delen
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+De share \"%1$s\" is alleen-lezen.\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+Het uitgepakte of geconverteerde bestand kan niet worden opgeslagen op de externe share, dus wordt het in plaats daarvan opgeslagen in uw lokale map Downloads.\n
 \n
-Do you want to proceed?
+Wilt u doorgaan?
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+Andere opslag
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+Geïnstalleerde cloud- en documentproviders
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+Krijg toegang tot documentproviders van derden die op uw apparaat zijn geïnstalleerd
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+%1$d documentproviders beschikbaar
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+1 documentprovider beschikbaar
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+Er zijn geen externe documentproviders gevonden
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+Blader door bestanden (SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+Mount opslagmap
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+Maak verbinding via UFM Native Engine
 </string>
     <string name="action_open_app">
-Open App
+Applicatie openen
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+Voeg opslaglocatie toe
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+Mount map/map
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+Selecteer een map uit Termux, SD-kaart of USB-station
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+Geïnstalleerde documentproviders
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+Toegang tot Proton Drive, Synology DS-bestand, Google Drive en meer
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+Snelle cloud en netwerk
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+Volledige 2-wegsynchronisatie via RClone (Proton/Google Drive) of SMB/WebDAV
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+Bestand openen of kopiëren
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+Wat zou je willen doen met \'%1$s\'?
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+Openen in UFM-viewer
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+Kopiëren naar lokale opslag
 </string>
     <string name="saf_file_action_remember">
-Remember my choice
+Onthoud mijn keuze
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+Vraag altijd
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+%1$d bestand(en) gekopieerd naar Downloads
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+SAF-actie voor gekozen bestand
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+Vraag altijd of u wilt openen of kopiëren
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+Altijd openen in UFM Viewer
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+Kopieer altijd naar lokale opslag
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+Documentaanbieder
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+Beheer %1$s
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+Bladeren en downloaden van bestanden
 </string>
     <string name="doc_provider_action_browse_subtitle">Open %1$s om bestanden te kiezen om te bekijken of lokaal te kopiëren</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+Bestand uploaden naar %1$s
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+Selecteer een lokaal bestand in UFM om op te slaan in %1$s
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+%1$s verwijderen?
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+%1$s uit de opslag verwijderen? Je kunt het op elk gewenst moment opnieuw toevoegen vanuit Andere opslag.
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+Verwijderen uit opslag
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+%1$s verwijderd uit opslag
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+%1$s toegevoegd aan opslagruimte
 </string>
     <string name="other_storage_all_added">
-All available providers added
+Alle beschikbare providers toegevoegd
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+Alle geïnstalleerde documentproviders zijn al toegevoegd aan uw hoofdopslagmenu.
 </string>
     <string name="saf_copy_destination_title">
-Destination: %1$s
+Bestemming: %1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+Map wijzigen…
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+Selecteer de doelmap
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+Stel de kopieerbestemming in
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+SAF-bestemming voor geselecteerde bestanden
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+Bestanden die zijn gekopieerd van documentproviders worden opgeslagen in \'%1$s\'.
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+Andere opslag- en SAF-overdrachten
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+Kopieer de doelmap
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+Terugzetten naar standaard (downloads)
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+Selecteer Nieuwe map…
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+Kopieer het opnieuw instellen van de bestemming naar Downloads
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+Exporteren naar documentprovider
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+Sla rechtstreeks op in een gekoppelde cloud of documentprovider
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+Selecteer Bestemmingsaanbieder
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+Meerdere bestanden exporteren
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+Hoe wilt u deze %1$d bestanden exporteren naar %2$s?
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+Exporteren als ZIP-archief
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+Gebruik het systeemuploadblad
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+\'%1$s\' opgeslagen in %2$s
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+Map monteerbaar
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+Bestanden en cloud
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+Native synchronisatie beschikbaar
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+Uploaden naar andere opslag
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+Upload geselecteerde bestanden of mappen naar externe documentproviders
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+Uploaden naar andere opslag
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+Geen opslagprovider toegevoegd. Selecteer een aanbieder om toe te voegen.
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+%1$d bestand(en) gekopieerd naar %2$s
 </string>
     <string name="share_export_folder_title">
-Export Folder
+Map exporteren
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+Mappen kunnen niet rechtstreeks via Document Providers worden geüpload. Wilt u \'%1$s\' comprimeren in een ZIP-archief om te uploaden naar %2$s?
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+Comprimeer het in één ZIP-archief en upload het
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+Verzend items via het uploadblad van het Android-systeem
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+Selecteer een gekoppelde provider of open Andere opslag
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+Zippen voor %1$s…
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+Ritsen voor andere opslag...
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+Uploaden via %1$s
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+Bestanden rechtstreeks naar %1$s verzenden
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+Comprimeer het in een ZIP-archief en kies de doelmap in %1$s
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+Behoudt de mapstructuur en de originele map in een ZIP-archief in %1$s
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+Uploadt individuele bestanden rechtstreeks naar %1$s (externe uploadschermen kunnen geen mappen maken)
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+Melding mapupload
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+Externe uploadschermen (zoals %2$s) kunnen geen mappen maken.\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+Alleen de bestanden in \"%1$s\" worden geüpload, niet de originele map zelf.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Om de volledige mapstructuur te behouden, kiest u in plaats daarvan \"Exporteren als ZIP-archief\".
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+Externe uploadschermen (zoals %1$s) kunnen geen mappen maken.\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+Alleen de bestanden in geselecteerde mappen worden geüpload, niet de originele mappen zelf.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Om de volledige mapstructuur te behouden, kiest u in plaats daarvan \"Exporteren als ZIP-archief\".
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+Alleen bestanden uploaden
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+Opties op het startscherm
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+Toevoegen aan startscherm
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+Verwijderen van startscherm
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+Favoriet verwijderen
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+Snelkoppeling aangevraagd: controleer uw startscherm
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+Snelkoppeling uitgeschakeld. Verwijder het handmatig van uw startscherm.
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+UFM-favorieten
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+Kanaal niet goedgekeurd. U kunt dit later inschakelen via TV-instellingen → Kanalen.
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+Artikel niet beschikbaar
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+Het bestand of de map kan niet worden gevonden. Het is mogelijk verplaatst, verwijderd of bevindt zich in een niet-beschikbare opslag.
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -15891,382 +16057,382 @@ Geen schijven of favorieten beschikbaar
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+Openen met
 </string>
     <string name="open_with_search_hint">
-Search apps…
+Apps zoeken…
 </string>
     <string name="open_with_just_once">
-Just once
+Slechts één keer
 </string>
     <string name="open_with_always">
-Always
+Altijd
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+Gebruik altijd de geselecteerde app voor .%1$s bestanden
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+Gebruik altijd de geselecteerde app
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+Onthoud de standaardwaarde voor .%1$s-bestanden
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+Er zijn geen geïnstalleerde applicaties gevonden om dit bestand te openen
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+Zoek in Google Play Store
 </string>
     <string name="open_with_app_info">
-App info
+App-info
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+Bekijk applicatiedetails en systeeminstellingen
 </string>
     <string name="open_with_set_default">
-Always use this app
+Gebruik altijd deze app
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+Kan %1$s niet starten. Terugvallen op de systeemkiezer…
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+Druk op OK om te openen. • Druk lang op OK voor standaard app-opties
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+Selecteer als Bestemming
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+Bestemming van kijker
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+Bevestig de doelmap
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+De geselecteerde map wordt gebruikt voor snelle kopieer- en verplaatsingsacties in UFM Viewer en Slide Show.
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+Bestandsacties
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+Bestemmingsmap
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+Geen bestemming geselecteerd: tik om te kiezen
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+Wijziging
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+Kopiëren naar %1$s
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+Verplaatsen naar %1$s
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+Kopiëren naar bestemming
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+Verplaats naar bestemming
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+Gekopieerd naar %1$s
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+Verplaatst naar %1$s
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+Bron en bestemming zijn dezelfde map
 </string>
     <string name="backup_pref_viewer_transfer">
-Viewer Transfer Destination
+Overdrachtbestemming kijker
 </string>
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+Toevoegen aan startscherm
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+Naam snelkoppeling
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+Opslagsnelkoppeling
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+\'%1$s\' is al vastgezet op je startscherm.
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+Toevoegen aan startscherm
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+Naam van de snelkoppeling mag niet leeg zijn
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
     <string name="download_manager_title">
-Download Manager
+Beheerder downloaden
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+Torrent-, Magnet- en HTTP-downloads
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+Snelle native directe en peer-to-peer downloadmanager met zero-seeding privacybescherming.
 </string>
     <string name="download_no_transfers">
-No active downloads
+Geen actieve downloads
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+Selecteer als downloadmap
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+Map downloaden
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+Bevestig de downloadlocatie
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+Downloads worden rechtstreeks in deze map opgeslagen.
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+Directe downloads
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+Torrent-downloads
 </string>
     <string name="download_location_label">
-Download location
+Locatie downloaden
 </string>
     <string name="download_change_location">
-Change
+Wijziging
 </string>
     <string name="download_action_start">
-Start
+Begin
 </string>
     <string name="download_action_pause">
 Pause
 </string>
     <string name="download_action_resume">
-Resume
+Cv
 </string>
     <string name="download_action_cancel">
-Cancel
+Annuleren
 </string>
     <string name="download_action_delete">
-Delete
+Verwijderen
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+Directe download-URL
 </string>
     <string name="download_enter_url_hint">
-https://example.com/file.iso
+https://voorbeeld.com/bestand.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+Downloaden
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+Torrent- of magneetlink
 </string>
     <string name="download_enter_magnet_hint">
-magnet:?xt=urn:btih:...
+magneet:?xt=urn:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+Open .torrent-bestand
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+Download Manager &amp; P2P-kennisgeving
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+Aanvaardbaar gebruik en privacy-informatie
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+Ik begrijp dat peer-to-peer downloads mijn IP-adres delen binnen de zwerm, en ik ga ermee akkoord deze tool uitsluitend te gebruiken voor wettige, niet-inbreukmakende inhoud.
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+Opslaglimiet overschreden
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+De doelbestandsgrootte (%1$s) overschrijdt de limiet van 4 GB die wordt ondersteund door het FAT32-bestandssysteem op deze schijf.\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+Kies een andere downloadlocatie, geformatteerd in exFAT, NTFS of interne opslag.
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+Onvoldoende opslagruimte
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+Er is niet genoeg vrije ruimte op het geselecteerde opslagstation.\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+Vereist: %1$s\n
+Beschikbaar: %2$s\n
 \n
-Please select another drive or free up space.
+Selecteer een ander station of maak ruimte vrij.
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+Kies Locatie
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+Mobiele dataverbinding
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+Je bent momenteel verbonden met een mobiel netwerk en de modus Alleen wifi is ingeschakeld.\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+Wil je deze overdracht in de wachtrij plaatsen totdat wifi verbinding maakt of mobiele data toestaan ​​voor downloads?
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+Wachtrij voor wifi
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+Mobiele data toestaan
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+Netwerkbeleid
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+Kies netwerkverbindingsregels voor downloads
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+Alleen wifi (aanbevolen)
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+Breng downloads alleen over als u verbonden bent met onbeperkte wifi
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+Alle netwerken (wifi en mobiel)
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+Sta overdrachten via mobiele data en Wi-Fi-netwerken toe
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+Bekijk de voorwaarden voor niet-piraterij
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+Bekijk P2P-zwermvrijgave, privacy en zero-seeding-voorwaarden
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+P2P-zwerm- en IP-zichtbaarheid
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+BitTorrent-overdrachten wisselen stukjes rechtstreeks uit met andere peer-apparaten in de zwerm. Uw openbare IP-adres is tijdens de overdracht zichtbaar voor actieve collega\'s.
 </string>
     <string name="download_legal_zero_seeding_title">
-Zero-Seeding Privacy
+Zero Seeding-privacy
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+UFM handhaaft strikte zero-seeding. Op het moment dat een download is voltooid (100%), worden alle zwermverbindingen verbroken en stoppen de trackeraankondigingen onmiddellijk.
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+Alleen legale inhoud
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+U stemt ermee in deze tool uitsluitend te gebruiken voor wettige, open source-, publieke domein- of geautoriseerde bestanden. Het zonder toestemming downloaden of verspreiden van auteursrechtelijk beschermd materiaal is verboden.
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+Akkoord en doorgaan
 </string>
     <string name="download_legal_understood">
-Understood
+Begrepen
 </string>
     <string name="download_state_downloading">
-Downloading
+Downloaden
 </string>
     <string name="download_state_paused">
-Paused
+Gepauzeerd
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+In de rij voor wifi
 </string>
     <string name="download_state_completed">
-Completed
+Voltooid
 </string>
     <string name="download_state_error">
-Error
+Fout
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+Manageroverdrachten downloaden
 </string>
     <string name="download_notif_channel_desc">
-Ongoing download progress and status updates
+Voortdurende downloadvoortgang en statusupdates
 </string>
     <string name="download_timeout_stopped">
-Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+Downloads onderbroken: Android-uitvoeringslimiet van 6 uur bereikt. Tik om te hervatten.
 </string>
 
     <!-- Torrent & Magnet Selective File Download & Content Inspector -->
     <string name="torrent_select_all">
-Select All
+Selecteer Alles
 </string>
     <string name="torrent_deselect_all">
-Deselect All
+Deselecteer Alles
 </string>
     <string name="torrent_selected_summary">
-Selected: %1$d of %2$d files (%3$s of %4$s)
+Geselecteerd: %1$d van %2$d bestanden (%3$s van %4$s)
 </string>
     <string name="torrent_files_count">
-%1$d files
+%1$d bestanden
 </string>
     <string name="torrent_file_selection_title">
-Torrent Content
+Torrent-inhoud
 </string>
     <string name="torrent_file_selection_subtitle">
-Select files and folders to download
+Selecteer bestanden en mappen om te downloaden
 </string>
     <string name="torrent_fetching_metadata">
-Fetching torrent metadata from swarm…
+Torrent-metagegevens ophalen van zwerm…
 </string>
     <string name="torrent_fetching_metadata_desc">
-Contacting DHT nodes and peers to retrieve file list…
+Contact opnemen met DHT-knooppunten en peers om de bestandslijst op te halen...
 </string>
     <string name="torrent_metadata_timeout_title">
-Metadata Fetch Timeout
+Time-out voor het ophalen van metagegevens
 </string>
     <string name="torrent_metadata_timeout_msg">
-Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+Het ophalen van de bestandslijst van peers duurt langer dan normaal. Wilt u verder zoeken of alle bestanden direct downloaden?
 </string>
     <string name="torrent_keep_waiting">
-Keep Waiting
+Blijf wachten
 </string>
     <string name="torrent_download_all_direct">
-Download All Directly
+Alles direct downloaden
 </string>
     <string name="torrent_zero_selected_error">
-Please select at least one file to download
+Selecteer ten minste één bestand om te downloaden
 </string>
     <string name="torrent_search_hint">
-Search files…
+Bestanden zoeken…
 </string>
 
     <!-- Transfer Action Dialog -->
     <string name="transfer_action_title">
-Transfer Actions
+Overdrachtsacties
 </string>
     <string name="transfer_action_pause">
-Pause Transfer
+Pauzeer overdracht
 </string>
     <string name="transfer_action_resume">
-Resume Transfer
+Hervat overdracht
 </string>
     <string name="transfer_action_open_folder">
-Open Download Folder
+Open de downloadmap
 </string>
     <string name="transfer_action_delete_title">
-Remove Transfer
+Overdracht verwijderen
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+Kies hoe u deze overdracht uit Downloadbeheer wilt verwijderen:
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+Alleen overdracht verwijderen
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+Bewaar gedownloade bestanden op uw apparaat
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+Bestanden verwijderen en verwijderen
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+Verwijder gedownloade bestanden permanent van schijf
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16327,79 +16493,79 @@ Kan de downloadlocatie van de tv niet bijwerken: %1$s
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+Slimme bladwijzers
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+Organiseer opgeslagen links, media en shares
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%1$d items in %2$d groepen
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+Er zijn nog geen bladwijzers opgeslagen
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+Bookmark met UFM
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+Bladwijzer opslaan
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+Gedeeld vanaf %1$s
 </string>
     <string name="bookmark_field_title_hint">
-Title
+Titel
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+Collectie / Groep
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+Persoonlijke notitie toevoegen (optioneel)
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+Bladwijzer opslaan
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+Al gebookmarkt – notities en tijd bijgewerkt
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+Bladwijzer opgeslagen op %1$s
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+Groepen
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+Bekijk alles ›
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+Collecties &amp; Bronnen
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+Beheer collecties, filter en kluisbeveiliging
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+Collecties zoeken…
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+Alle bladwijzers
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+Toon alle ontgrendelde bladwijzers voor alle bronnen
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+Mijn collecties
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+Door gebruikers gemaakte collecties • Kluis afsluitbaar
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+App-bronnen
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+Automatisch gegenereerd vanuit gedeelde applicaties
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16408,196 +16574,196 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+Apparaatbeveiliging (pincode, patroon of vingerafdruk) is niet ingesteld op dit apparaat.
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+Kluis vergrendeld
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+Authenticeer om de kluisvergrendeling te verwijderen
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+Collectie vergrendeld met Vault
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+Collectie ontgrendeld
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+Nieuwe bladwijzergroep
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+Groepsnaam
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+Groep aanmaken
 </string>
     <string name="bookmark_filter_all">
-All
+Alle
 </string>
     <string name="bookmark_filter_links">
-Links
+Koppelingen
 </string>
     <string name="bookmark_filter_media">
 Media
 </string>
     <string name="bookmark_filter_docs">
-Documents
+Documenten
 </string>
     <string name="bookmark_filter_notes">
-Notes
+Opmerkingen
 </string>
     <string name="bookmark_filter_starred">
-Starred
+Met ster
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+Zoek naar bladwijzers, notities of domeinen...
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+Sorteer bladwijzers
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+Nieuwste naar oudste
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+Oudste naar nieuwste
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+Titel (A-Z)
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+Titel (Z-A)
 </string>
     <string name="bookmark_sort_size">
-File Size
+Bestandsgrootte
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+Groeperen op collectie
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+Collectie: A tot Z
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+Collectie: Z tot A
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+Verzameling verwijderen
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+Weet u zeker dat u de verzameling \'%1$s\' wilt verwijderen?
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+Lees artikel
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+Openen in browser
 </string>
     <string name="bookmark_action_open_file">
-Open File
+Bestand openen
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+Kopieer link
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+Kopieer tekst
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+Opslaan in opslag
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+Verplaats naar Groep
 </string>
     <string name="bookmark_action_delete">
-Delete
+Verwijderen
 </string>
     <string name="bookmark_view_note">
-View Note
+Bekijk notitie
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+Slotverzameling (kluis)
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+Vingerafdruk of pincode vereisen om te bekijken
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+Verzamelopties
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+Vergrendel collectie
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+Ontgrendel collectie
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+Bladwijzer verwijderd
 </string>
     <string name="bookmark_undo">
-Undo
+Ongedaan maken
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+Geselecteerde %1$d artikelen
 </string>
     <string name="bookmark_batch_move">
-Move
+Beweging
 </string>
     <string name="bookmark_batch_delete">
-Delete
+Verwijderen
 </string>
     <string name="bookmark_batch_export">
-Export
+Exporteren
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+Bladwijzers exporteren
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+Browser HTML-bladwijzers (.html)
 </string>
     <string name="bookmark_export_markdown">
-Markdown Document (.md)
+Markdown-document (.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+%1$d bladwijzers geëxporteerd naar %2$s
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+Lezermodus
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+Tekstgrootte
 </string>
     <string name="bookmark_reader_theme">
-Theme
+Thema
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+Licht
 </string>
     <string name="bookmark_reader_theme_sepia">
 Sepia
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+Donker
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+Luister hardop
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+Pauzeer het lezen
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+Stop met lezen
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+Snelheid %1$sx
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+Spraakengine initialiseren…
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+Tekst-naar-spraak wordt niet ondersteund of is niet geïnstalleerd op dit apparaat
 </string>
     <string name="bookmark_group_whatsapp">
-WhatsApp
+WhatsAppen
 </string>
     <string name="bookmark_group_reddit">
 Reddit
@@ -16609,40 +16775,40 @@ YouTube
 Twitter / X
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+Web &amp; Artikelen
 </string>
     <string name="bookmark_group_telegram">
 Telegram
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+Bestanden en documenten
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+Groep vergrendelen met kluis
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+Ontgrendel groep
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+Verifieer om toegang te krijgen tot vergrendelde bladwijzers
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+Nog geen bladwijzers
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+Deel links, artikelen, media of bestanden van WhatsApp, Reddit of uw browser en kies \"Bookmark with UFM\".
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+Geen resultaten gevonden
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+Er zijn geen bladwijzers die overeenkomen met \'%1$s\'. Probeer te zoeken op verschillende trefwoorden.
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+Geen bladwijzers gevonden
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+Er zijn geen bladwijzers gevonden die overeenkomen met het geselecteerde filter of de geselecteerde collectie.
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -16650,67 +16816,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+Vlakke weergave
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+Recursieve geïndexeerde browser
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+Map openen
 </string>
     <string name="flat_view_expand_all">
-Expand All
+Alles uitvouwen
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+Alles samenvouwen
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+Voeg systeemmappen toe
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+Toon Android/data, Android/obb en systeemmappen in Flat View
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+Standaard ingesteld op Alles uitgevouwen
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+Open Flat View waarbij alle mappen standaard zijn uitgevouwen
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+Er zijn geen geïndexeerde bestanden gevonden in dit volume
 </string>
     <string name="flat_view_settings_title">
-Flat View
+Vlakke weergave
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+Configureer recursief geïndexeerd browsen en systeemmappen
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+Opslag niet geïndexeerd
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+Flat View vereist dat dit opslagvolume volledig wordt geïndexeerd. Voer eerst de indexering uit.
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%1$d bestanden in %2$d mappen
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+%1$d geselecteerd
 </string>
     <string name="flat_view_folder_files_count">
-%1$d files
+%1$d bestanden
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+Bestanden verwijderen
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+Weet u zeker dat u %1$d geselecteerde bestanden wilt verwijderen?
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+%1$d bestanden verwijderd
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+Flat View-instellingen
 </string>
 </resources>
 

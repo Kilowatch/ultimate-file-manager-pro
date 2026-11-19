@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-Last Updated: November 2026
+Останнє оновлення: листопад 2026 р
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -180,82 +180,82 @@ Ultimate File Manager Pro — це безкоштовний додаток дл�
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-File Browser — browse, copy, move, rename, and delete files anywhere on your device.
+Файловий браузер — переглядайте, копіюйте, переміщуйте, перейменовуйте та видаляйте файли будь-де на своєму пристрої.
 </item>
         <item>
-Encrypted Vault — lock sensitive files behind AES-256-GCM encryption with your own PIN.
+Зашифроване сховище — заблокуйте конфіденційні файли за допомогою шифрування AES-256-GCM за допомогою власного PIN-коду.
 </item>
         <item>
-File Server — host an FTP or secure SFTP server directly on your device to share files across your local network.
+Файловий сервер — розмістіть FTP або захищений SFTP-сервер безпосередньо на своєму пристрої, щоб обмінюватися файлами в локальній мережі.
 </item>
         <item>
-Remote Management — manage files over your local Wi-Fi via a built-in HTTP server that supports uploading, downloading, and installing APKs remotely.
+Віддалене керування — керуйте файлами через локальну мережу Wi-Fi за допомогою вбудованого HTTP-сервера, який підтримує віддалене завантаження, завантаження та встановлення APK.
 </item>
         <item>
-Network Shares — connect to SMB, FTP, and NFS servers on your local network to browse, download, and manage remote files.
+Спільні мережеві ресурси — підключайтеся до серверів SMB, FTP і NFS у локальній мережі, щоб переглядати, завантажувати та керувати віддаленими файлами.
 </item>
         <item>
-Folder Sync — automatically back up local phone folders to an SMB or FTP network share on a schedule you choose (interval or specific time daily, weekly, or monthly).
+Синхронізація папок — автоматично створюйте резервні копії локальних папок телефону в спільній мережі SMB або FTP за розкладом, який ви вибираєте (інтервал або певний час щодня, щотижня чи щомісяця).
 </item>
         <item>
-Device Pairing — pair your mobile phone and Android TV over local Wi-Fi to transfer and install files.
+Сполучення пристрою — об’єднайте свій мобільний телефон і Android TV через локальну мережу Wi-Fi для передачі та встановлення файлів.
 </item>
         <item>
-ADB Terminal — connect to Android devices in Developer Mode over your local Wi-Fi using ADB (Android Debug Bridge) for direct shell access and advanced troubleshooting.
+Термінал ADB — підключайтеся до пристроїв Android у режимі розробника через локальну Wi-Fi за допомогою ADB (Android Debug Bridge) для прямого доступу до оболонки та розширеного усунення несправностей.
 </item>
         <item>
-Built-in Viewers — view text files, PDFs, animated images (APNG, GIF, animated WebP, AVIF, SVG and more), archives, and other formats directly within the app.
+Вбудовані засоби перегляду — переглядайте текстові файли, PDF-файли, анімовані зображення (APNG, GIF, анімовані WebP, AVIF, SVG тощо), архіви та інші формати безпосередньо в програмі.
 </item>
         <item>
-Advanced ZIP Support — create and extract password-protected and AES-encrypted ZIP archives.
+Розширена підтримка ZIP — створюйте та розпакуйте ZIP-архіви, захищені паролем і зашифровані AES.
 </item>
         <item>
-Remote Screenshots — capture the screen of your paired Android TV over local Wi-Fi via ADB and save it directly to your phone\'s storage.
+Віддалені знімки екрана — знімайте екран свого підключеного Android TV через локальну мережу Wi-Fi через ADB і зберігайте його безпосередньо в пам’яті телефону.
 </item>
         <item>
-7Z Archive Support — extract 7Z archives with LZMA/LZMA2 compression.
+Підтримка архіву 7Z — розпакуйте архіви 7Z зі стисненням LZMA/LZMA2.
 </item>
         <item>
-File Search — quickly find files and folders across your device storage.
+Пошук файлів — швидко знайдіть файли та папки в пам’яті пристрою.
 </item>
         <item>
-Storage Analyser — see a visual breakdown of what\'s using your storage space.
+Storage Analyzer — дивіться візуальний аналіз того, що використовує ваше місце для зберігання.
 </item>
         <item>
-App Manager — view and manage all apps installed on your device, with debloat recommendations for pre-installed apps.
+Менеджер додатків — переглядайте та керуйте всіма додатками, встановленими на вашому пристрої, із рекомендаціями щодо видалення попередньо встановлених додатків.
 </item>
         <item>
-APK Installer — install Android apps and split APKs (XAPK) directly from files saved locally.
+Інсталятор APK — встановлюйте програми Android і розділяйте APK (XAPK) безпосередньо з файлів, збережених локально.
 </item>
         <item>
-Elevated Access (Porter, Shizuku, Shevery &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.
+Розширений доступ (Porter, Shizuku, Shevery &amp; ADB) — отримуйте root-доступ для керування системними файлами та каталогами з обмеженим доступом без фактичного рутування вашого пристрою.
 </item>
         <item>
-Root Access (Mobile) — elevated Superuser access for rooted devices to browse, manage, and inspect system-level partitions and protected directories.
+Кореневий доступ (мобільний) — розширений доступ суперкористувача для рутованих пристроїв для перегляду, керування та перевірки розділів системного рівня та захищених каталогів.
 </item>
         <item>
-Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.
+Storage Indexer — створіть локальний індекс метаданих файлів для миттєвого пошуку та блискавично швидкого перегляду.
 </item>
         <item>
-Storage Access Framework — other apps can access your files through UFM\'s document provider.
+Storage Access Framework — інші програми можуть отримати доступ до ваших файлів через постачальника документів UFM.
 </item>
         <item>
-Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.
+Tip Jar — додаткові одноразові покупки для підтримки розробника; додаток завжди безкоштовний без чайових.
 </item>
         <item>
-UFM Media Player — play audio, video, and SMIL animated SVG/SVGZ vector files with background playback, notification controls, Picture-in-Picture mode, and playlist management.
+UFM Media Player — відтворюйте аудіо, відео та анімовані векторні файли SMIL SVG/SVGZ із фоновим відтворенням, елементами керування сповіщеннями, режимом «Картинка в картинці» та керуванням списками відтворення.
 </item>
         <item>
-GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.
+GIF Creator — створюйте анімовані GIF-файли з вибраних зображень із власною частотою кадрів, параметрами зміни розміру та зміною порядку кадрів за допомогою перетягування.
 </item>
         <item>
-Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.
+Інструменти Photo EXIF ​​— перевіряйте метадані фотографій EXIF ​​і GPS, видаляйте приватні геотеги та інформацію про пристрій, а також пакетно перейменовуйте фотографії за допомогою позначок часу зйомки та метаданих камери.
 </item>
         <item>
-Music Tag Editor (Mobile) — inspect, edit, clean, and batch-update audio metadata descriptions (title, artist, album, year, genre, lyrics) and embedded album art directly inside audio files.
+Редактор музичних тегів (для мобільних пристроїв) — перевіряйте, редагуйте, очищайте та пакетно оновлюйте опис метаданих аудіо (назва, виконавець, альбом, рік, жанр, слова) і вбудовані обкладинки альбомів безпосередньо в аудіофайлах.
 </item>
         <item>
-Download Manager — download files via direct HTTP/HTTPS URLs and peer-to-peer Magnet links or .torrent files for open-source distributions, public domain media, and authorized content.
+Менеджер завантажень — завантажуйте файли через прямі URL-адреси HTTP/HTTPS і однорангові магнітні посилання або файли .torrent для дистрибутивів із відкритим вихідним кодом, медіа-файлів загального користування та авторизованого вмісту.
 </item>
     </string-array>
 
@@ -352,52 +352,52 @@ Porter, Shizuku, Shevery та підвищений доступ
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
         <item>
-Keep regular backups of important files before performing bulk operations.
+Зберігайте регулярні резервні копії важливих файлів перед виконанням масових операцій.
 </item>
         <item>
-Store your Vault PIN and Recovery Code somewhere safe — we cannot retrieve them for you.
+Зберігайте свій PIN-код сховища та код відновлення в безпечному місці — ми не можемо отримати їх замість вас.
 </item>
         <item>
-Keep your PIN private. Anyone who knows it can access your Vault.
+Тримайте свій PIN-код в таємниці. Кожен, хто його знає, може отримати доступ до вашого сховища.
 </item>
         <item>
-Keep your network share credentials safe — they are stored locally on your device.
+Зберігайте облікові дані спільного доступу до мережі в безпеці — вони зберігаються локально на вашому пристрої.
 </item>
         <item>
-Review your Folder Sync remote paths carefully — syncing to an incorrect network folder may overwrite existing files.
+Уважно перевірте віддалені шляхи синхронізації папок — синхронізація з неправильною мережевою папкою може перезаписати існуючі файли.
 </item>
         <item>
-Exercise caution when removing system apps based on debloat recommendations.
+Будьте обережні, видаляючи системні програми на основі рекомендацій щодо видалення.
 </item>
         <item>
-Only connect via ADB Terminal to devices you own or have explicit permission to access. Do not use ADB Terminal to gain unauthorized access to any device.
+Підключайтеся через термінал ADB лише до пристроїв, якими володієте або маєте явний дозвіл на доступ. Не використовуйте термінал ADB для отримання несанкціонованого доступу до будь-якого пристрою.
 </item>
         <item>
-Keep any ADB, Porter, Shizuku, or Shevery pairing PINs private — share these only with people you trust to have access to your device.
+Зберігайте всі PIN-коди підключення ADB, Porter, Shizuku або Shevery в секреті — діліться ними лише з людьми, яким ви довіряєте, щоб мати доступ до вашого пристрою.
 </item>
         <item>
-Secure your Porter, Shizuku or Shevery Manager — granting UFM elevated access via any of these managers gives it power over restricted files. Only grant this access if you trust the app.
+Захистіть свій Porter, Shizuku або Shevery Manager — надання розширеного доступу UFM через будь-який із цих менеджерів дає йому владу над обмеженими файлами. Надайте цей доступ, лише якщо ви довіряєте програмі.
 </item>
         <item>
-Exercise extreme caution when Root Access is active — never delete or modify system files unless you understand the consequences to your device OS.
+Будьте дуже обережні, коли активовано кореневий доступ — ніколи не видаляйте та не змінюйте системні файли, якщо ви не розумієте наслідків для ОС вашого пристрою.
 </item>
         <item>
-Only use the app for lawful purposes. Don\'t store, share, or distribute illegal content.
+Використовуйте програму лише в законних цілях. Не зберігайте, не діліться та не поширюйте незаконний вміст.
 </item>
         <item>
-Don\'t use Remote Management to access another person\'s device without their permission.
+Не використовуйте віддалене керування для доступу до пристрою іншої особи без її дозволу.
 </item>
         <item>
-Don\'t attempt to reverse-engineer, decompile, or tamper with the app.
+Не намагайтеся реконструювати, декомпілювати або змінювати програму.
 </item>
         <item>
-Manage your indexed records responsibly — you can delete records or ignore specific drives at any time via Settings -> Storage Indexer.
+Керуйте своїми проіндексованими записами відповідально — ви можете будь-коли видаляти записи або ігнорувати певні диски за допомогою «Налаштування» -&gt; «Індексатор сховища».
 </item>
         <item>
-Verify the authenticity and safety of any APK files before installing them.
+Перевірте автентичність і безпеку будь-яких файлів APK перед їх встановленням.
 </item>
         <item>
-Don\'t use the Download Manager, BitTorrent engine, or HTTP streamer to download, share, transmit, or facilitate infringement of copyrighted material without authorization from the copyright holder. You assume sole liability for downloaded content.
+Не використовуйте менеджер завантажень, механізм BitTorrent або HTTP-стример для завантаження, обміну, передачі чи сприяння порушенню захищеного авторським правом матеріалу без дозволу власника авторського права. Ви несете повну відповідальність за завантажений вміст.
 </item>
     </string-array>
 
@@ -524,142 +524,142 @@ Bluetooth
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD — lightweight HTTP server that powers Remote Management. (BSD-3-Clause)
+NanoHTTPD — легкий HTTP-сервер, який підтримує віддалене керування. (BSD-3-Clause)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3 client library for network share browsing and Folder Sync. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — клієнтська бібліотека SMB2/SMB3 для перегляду спільного доступу до мережі та синхронізації папок. (LGPL-2.1)
 </item>
         <item>
-smbj (hierynomus/smbj) — SMB2/SMB3 Java implementation used for network share access. (Apache-2.0)
+smbj (hierynomus/smbj) — реалізація Java SMB2/SMB3, яка використовується для доступу до спільного доступу до мережі. (Apache-2.0)
 </item>
         <item>
-EMC ECS NFS Client (com.emc.ecs:nfs-client) — NFS v3 client library for network share access. (Apache-2.0)
+EMC ECS NFS Client (com.emc.ecs:nfs-client) — клієнтська бібліотека NFS v3 для доступу до спільного мережевого ресурсу. (Apache-2.0)
 </item>
         <item>
-libnfs (sahlberg/libnfs) — native NFS client library supporting NFSv2, NFSv3, and NFSv4. (LGPL-2.1 / BSD-2-Clause)
+libnfs (sahlberg/libnfs) — власна клієнтська бібліотека NFS, що підтримує NFSv2, NFSv3 і NFSv4. (LGPL-2.1 / BSD-2-Clause)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access and hosting. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — комплексна клієнтська бібліотека ядра SSHD, SFTP і SCP для безпечного спільного доступу до мережі та розміщення. (Apache-2.0)
 </item>
         <item>
-Apache FtpServer (org.apache.ftpserver) — 100% pure Java FTP server. (Apache-2.0)
+Apache FtpServer (org.apache.ftpserver) — 100% чистий FTP-сервер Java. (Apache-2.0)
 </item>
         <item>
-Apache POI — document processing library for viewing office files. (Apache-2.0)
+Apache POI — бібліотека обробки документів для перегляду офісних файлів. (Apache-2.0)
 </item>
         <item>
-Firebase Analytics — Google\'s analytics platform that helps us understand app usage. (Apache-2.0)
+Firebase Analytics — аналітична платформа Google, яка допомагає нам зрозуміти використання програми. (Apache-2.0)
 </item>
         <item>
-AndroidX Libraries (incl. Leanback for Android TV) — Google\'s Jetpack components for modern Android development. (Apache-2.0)
+Бібліотеки AndroidX (включно з Leanback для Android TV) — компоненти Google Jetpack для сучасної розробки Android. (Apache-2.0)
 </item>
         <item>
-Material Design Components — Google\'s UI library for a clean, consistent interface. (Apache-2.0)
+Компоненти матеріального дизайну — бібліотека інтерфейсу Google для чіткого, узгодженого інтерфейсу. (Apache-2.0)
 </item>
         <item>
-Room Persistence Library — SQLite abstraction layer for local metadata indexing. (Apache-2.0)
+Room Persistence Library — рівень абстракції SQLite для локального індексування метаданих. (Apache-2.0)
 </item>
         <item>
-zip4j (net.lingala.zip4j) — advanced ZIP library for password-protected and AES-encrypted archives. (Apache-2.0)
+zip4j (net.lingala.zip4j) — вдосконалена бібліотека ZIP для архівів, захищених паролем і зашифрованих AES. (Apache-2.0)
 </item>
         <item>
-Apache Commons Compress — library for reading and writing various archive formats (7z, zip, tar, etc). (Apache-2.0)
+Apache Commons Compress — бібліотека для читання та запису різних форматів архівів (7z, zip, tar тощо). (Apache-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) — implementation of XZ and LZMA compression. (Public Domain)
+XZ для Java (org.tukaani.xz) — реалізація стиснення XZ і LZMA. (Суспільне надбання)
 </item>
         <item>
-zstd-jni (com.github.luben:zstd-jni) — JNI bindings for Zstandard compression and extraction library. (BSD-2-Clause)
+zstd-jni (com.github.luben:zstd-jni) — прив’язки JNI для бібліотеки стиснення та вилучення Zstandard. (BSD-2-Clause)
 </item>
         <item>
-Junrar (com.github.junrar:junrar) — Java RAR extraction library. (BSD-3-Clause)
+Junrar (com.github.junrar:junrar) — бібліотека Java для видобування RAR. (BSD-3-Clause)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) — Android Debug Bridge library enabling secure connections to ADB-enabled devices for remote shell access and certificate-based pairing. (Apache-2.0)
+libadb-android (com.github.MuntashirAkon) — бібліотека Android Debug Bridge, що забезпечує безпечні з’єднання з пристроями з підтримкою ADB для віддаленого доступу до оболонки та з’єднання на основі сертифікатів. (Apache-2.0)
 </item>
         <item>
-libsu (com.github.topjohnwu.libsu) — complete Android su shell and root service solution. (Apache-2.0)
+libsu (com.github.topjohnwu.libsu) — повне рішення оболонки Android su та кореневої служби. (Apache-2.0)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — комплексна клієнтська бібліотека ядра SSHD, SFTP і SCP для безпечного спільного доступу до мережі. (Apache-2.0)
 </item>
         <item>
-EdDSA for Java (net.i2p.crypto:eddsa) — implementation of EdDSA (Edwards-curve Digital Signature Algorithm) for Ed25519 SSH keys. (CC0-1.0)
+EdDSA для Java (net.i2p.crypto:eddsa) — реалізація EdDSA (Algorithm Digital Signature Curve Edwards) для ключів SSH Ed25519. (CC0-1.0)
 </item>
         <item>
-SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding for Android used by the SSHD library. (MIT)
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — прив’язка журналу для Android, яка використовується бібліотекою SSHD. (MIT)
 </item>
         <item>
-BouncyCastle (org.bouncycastle) — cryptography library for RSA/EdDSA keypair generation and X.509 certificate creation; version 1.83. (MIT-style License)
+BouncyCastle (org.bouncycastle) — криптографічна бібліотека для генерації пар ключів RSA/EdDSA та створення сертифікатів X.509; версія 1.83. (Ліцензія в стилі MIT)
 </item>
         <item>
-Google Play Billing Library — processes optional in-app tip purchases; governed by Google Play\'s Privacy Policy. (Apache-2.0)
+Бібліотека платежів Google Play — обробляє додаткові покупки в додатку; регулюється Політикою конфіденційності Google Play. (Apache-2.0)
 </item>
         <item>
-Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)
+Бібліотека оглядів Google Play — забезпечує функцію оцінювання та перегляду в програмі. (Apache-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, JXL, SVG) in the built-in image viewer. (Apache-2.0)
+Coil (io.coil-kt.coil3) — бібліотека для завантаження зображень, яка підтримує рендеринг анімованих зображень (APNG, GIF, анімований WebP, AVIF, JXL, SVG) у вбудованому засобі перегляду зображень. (Apache-2.0)
 </item>
         <item>
-avif-coder (io.github.awxkee) — AVIF image decoding library providing native AVIF support on Android API 24–30; API 31+ uses the built-in ImageDecoder. (Apache-2.0)
+avif-coder (io.github.awxkee) — бібліотека декодування зображень AVIF, що забезпечує власну підтримку AVIF на Android API 24–30; API 31+ використовує вбудований ImageDecoder. (Apache-2.0)
 </item>
         <item>
-jxl-coder (io.github.awxkee) — JPEG XL image decoding and encoding library providing native JXL support on Android API 21+. (Apache-2.0 / BSD-3-Clause)
+jxl-coder (io.github.awxkee) — бібліотека декодування та кодування зображень JPEG XL, що забезпечує підтримку JXL на Android API 21+. (Apache-2.0 / BSD-3-Clause)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)
+APNG4Android (com.github.penfeizhou.android.animation) — основна бібліотека для декодування та відтворення анімованих файлів PNG на Android. (Apache-2.0)
 </item>
         <item>
-Porter SDK (com.github.d4rken-org.porter-api) — Android SDK enabling elevated file system access via the Porter, Shizuku or Shevery Manager apps. It embeds the Shizuku API (rikka.shizuku), licensed under MIT. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) — Android SDK, що забезпечує доступ до файлової системи з підвищеними правами через програми Porter, Shizuku або Shevery Manager. У ньому вбудований API Shizuku (rikka.shizuku), ліцензований MIT. (Apache-2.0)
 </item>
         <item>
-ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)
+ViewPager2 — бібліотека Android для ковзання між фрагментами та макетами. (Apache-2.0)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — animation library for rendering Adobe After Effects animations natively on Android, used for smooth UI animations throughout the app. (Apache-2.0)
+Lottie (com.airbnb.android:lottie) v6.3.0 — бібліотека анімації для рендерингу анімації Adobe After Effects на Android, яка використовується для плавної анімації інтерфейсу користувача в усій програмі. (Apache-2.0)
 </item>
         <item>
-Ktor (io.ktor) — lightweight web framework used to power the local File Server. (Apache-2.0)
+Ktor (io.ktor) — легкий веб-фреймворк, який використовується для роботи локального файлового сервера. (Apache-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) — library for rendering and viewing PDF documents natively. (Apache-2.0)
+PDFBox-Android (com.tom-roush:pdfbox-android) — бібліотека для відтворення та перегляду PDF-документів у нативному вигляді. (Apache-2.0)
 </item>
         <item>
-ExoPlayer / Media3 (androidx.media3) — advanced media player for robust video and audio playback. (Apache-2.0)
+ExoPlayer / Media3 (androidx.media3) — розширений медіаплеєр для надійного відтворення відео та аудіо. (Apache-2.0)
 </item>
         <item>
-Microsoft Authentication Library (MSAL) — handles OneDrive API authentication natively. (MIT)
+Бібліотека автентифікації Microsoft (MSAL) — нативно обробляє автентифікацію API OneDrive. (MIT)
 </item>
         <item>
-OkHttp (com.squareup.okhttp3) — robust HTTP &amp; HTTP/2 client for cloud storage network requests. (Apache-2.0)
+OkHttp (com.squareup.okhttp3) — надійний клієнт HTTP та HTTP/2 для мережевих запитів хмарного сховища. (Apache-2.0)
 </item>
         <item>
-Gson (com.google.code.gson) — JSON processing library used for cloud storage integration. (Apache-2.0)
+Gson (com.google.code.gson) — бібліотека обробки JSON, яка використовується для інтеграції хмарного сховища. (Apache-2.0)
 </item>
         <item>
-AndroidX Browser (androidx.browser) — Chrome Custom Tabs support for Google Drive API authentication. (Apache-2.0)
+Браузер AndroidX (androidx.browser) — підтримка спеціальних вкладок Chrome для автентифікації Google Drive API. (Apache-2.0)
 </item>
         <item>
-ZXing (com.google.zxing:core) — barcode image processing library. (Apache-2.0)
+ZXing (com.google.zxing:core) — бібліотека обробки зображень штрих-кодів. (Apache-2.0)
 </item>
         <item>
-gifencoder (com.squareup:gifencoder) — pure Java GIF encoding library for creating animated GIF files from selected images. (Apache-2.0)
+gifencoder (com.squareup:gifencoder) — чиста бібліотека кодування GIF Java для створення анімованих файлів GIF із вибраних зображень. (Apache-2.0)
 </item>
         <item>
-AndroidX ExifInterface (androidx.exifinterface:exifinterface) — library for reading, writing, and stripping EXIF and GPS metadata across JPEG, PNG, WebP, HEIF, and DNG image formats. (Apache-2.0)
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) — бібліотека для читання, запису та видалення метаданих EXIF ​​і GPS у форматах зображень JPEG, PNG, WebP, HEIF і DNG. (Apache-2.0)
 </item>
         <item>
-Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+Amazon Appstore SDK — обробляє додаткові покупки підказок у програмі на пристроях Amazon. (Власність)
 </item>
         <item>
-jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — бібліотека аудіотегів для читання та редагування метаданих і обкладинок у форматах MP3, FLAC, M4A, OGG, OPUS, WAV і WMA. (LGPL-3.0 / LGPL-2.1)
 </item>
         <item>
-AndroidX WebKit (androidx.webkit) — library providing WebViewAssetLoader for secure, local-only rendering of SMIL animated SVG/SVGZ files in UFM Media Player without external network access or file-scheme vulnerabilities. (Apache-2.0)
+AndroidX WebKit (androidx.webkit) — бібліотека, яка надає WebViewAssetLoader для безпечного локального рендерингу анімованих SVG/SVGZ-файлів SMIL у медіапрогравачі UFM без доступу до зовнішньої мережі чи уразливостей файлової схеми. (Apache-2.0)
 </item>
         <item>
-libtorrent4j (org.libtorrent4j) — Java and Kotlin JNI wrapper around Rasterbar libtorrent for zero-seeding peer-to-peer BitTorrent downloading. (BSD-3-Clause / MIT)
+libtorrent4j (org.libtorrent4j) — обгортка Java і Kotlin JNI навколо Rasterbar libtorrent для однорангового завантаження BitTorrent з нульовим заповненням. (BSD-3-Clause / MIT)
 </item>
     </string-array>
 
@@ -797,7 +797,11 @@ UFM може збирати діагностичну інформацію, ко�
 \n
 Нічого не надсилається автоматично: після збою або зависання з’являється запит, чи бажаєте ви надіслати звіт до KiloWatch (kilowatch.co.za). Якщо вибрати «Ні, дякую», звіт буде видалено локально. Ви можете будь-коли вимкнути виявлення збоїв і зависань у розділі Налаштування → Звіти про збої та ANR; вимкнення також видаляє всі відкладені звіти.
 </string>
-    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+    <string name="pp_s2_crash_body">
+UFM може фіксувати діагностичну інформацію, коли він виходить з ладу або зависає, щоб ми могли вирішити проблему. Це включає версію програми, версію Android, модель пристрою та виробника, тип винятку та повідомлення, а також трасування стека. Він ніколи не включає ваші файли, імена, адреси електронної пошти чи інформацію про обліковий запис.\n
+\n
+Нічого не надсилається автоматично: після збою чи зависання з’являється запит із запитом, чи хочете ви надіслати звіт до KiloWatch (kilowatch.co.za). Якщо вибрати «Ні, дякую», його буде видалено локально. Ви можете в будь-який час вимкнути виявлення збоїв і зависань за допомогою Налаштувань → Звіт про збої та помилки ANR; вимкнення також видаляє всі звіти, що очікують на розгляд.
+</string>
 
     <string name="pp_s2_nocollect_heading">
 Що ми ніколи не збираємо
@@ -1255,7 +1259,7 @@ API 30+ · Повне керування файлами у всьому схов
     <!-- Network permissions (Section 4) -->
     <string-array name="pp_network_perm_labels">
         <item>
-INTERNET
+ІНТЕРНЕТ
 </item>
         <item>
 ACCESS_WIFI_STATE
@@ -1285,7 +1289,7 @@ CHANGE_WIFI_MULTICAST_STATE
     <!-- Other permissions (Section 4) -->
     <string-array name="pp_other_perm_labels">
         <item>
-POST_NOTIFICATIONS
+ПОСТ_ПОВІДОМЛЕННЯ
 </item>
         <item>
 moe.shizuku.manager.permission.API_V23 / eu.darken.porter.permission.API
@@ -1353,7 +1357,7 @@ WAKE_LOCK
     </string-array>
     <string-array name="pp_encryption_details">
         <item>
-AES-256-GCM (Advanced Encryption Standard with Galois/Counter Mode)
+AES-256-GCM (розширений стандарт шифрування з режимом Galois/Counter)
 </item>
         <item>
 Android Keystore — апаратне захищене сховище
@@ -1495,10 +1499,10 @@ PIN, визначений користувачем
 Firebase Analytics
 </item>
         <item>
-Google Play Services
+Сервіси Google Play
 </item>
         <item>
-Google Play Billing
+Платежі Google Play
 </item>
         <item>
 Microsoft OneDrive API
@@ -1524,7 +1528,7 @@ Google LLC
 Google LLC
 </item>
         <item>
-Microsoft Corporation
+Корпорація Microsoft
 </item>
         <item>
 Google LLC

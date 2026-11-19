@@ -8,10 +8,10 @@
 Ultimate File Manager Pro
 </string>
     <string name="policy_company">
-KiloWatch
+Kiloİzle
 </string>
     <string name="policy_last_updated">
-Last Updated: November 2026
+Son Güncelleme: Kasım 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -180,82 +180,82 @@ Ultimate File Manager Pro\'yu kullanarak bu Şartlar ve Koşulları okuduğunuzu
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-File Browser — browse, copy, move, rename, and delete files anywhere on your device.
+Dosya Tarayıcı — Cihazınızın herhangi bir yerindeki dosyalara göz atın, kopyalayın, taşıyın, yeniden adlandırın ve silin.
 </item>
         <item>
-Encrypted Vault — lock sensitive files behind AES-256-GCM encryption with your own PIN.
+Şifreli Kasa — hassas dosyaları kendi PIN\'inizle AES-256-GCM şifrelemesinin arkasına kilitleyin.
 </item>
         <item>
-File Server — host an FTP or secure SFTP server directly on your device to share files across your local network.
+Dosya Sunucusu — Dosyaları yerel ağınız üzerinden paylaşmak için doğrudan cihazınızda bir FTP veya güvenli SFTP sunucusu barındırın.
 </item>
         <item>
-Remote Management — manage files over your local Wi-Fi via a built-in HTTP server that supports uploading, downloading, and installing APKs remotely.
+Uzaktan Yönetim — APK\'ların uzaktan yüklenmesini, indirilmesini ve kurulmasını destekleyen yerleşik bir HTTP sunucusu aracılığıyla dosyaları yerel Wi-Fi\'niz üzerinden yönetin.
 </item>
         <item>
-Network Shares — connect to SMB, FTP, and NFS servers on your local network to browse, download, and manage remote files.
+Ağ Paylaşımları — uzak dosyalara göz atmak, indirmek ve yönetmek için yerel ağınızdaki SMB, FTP ve NFS sunucularına bağlanın.
 </item>
         <item>
-Folder Sync — automatically back up local phone folders to an SMB or FTP network share on a schedule you choose (interval or specific time daily, weekly, or monthly).
+Klasör Senkronizasyonu — yerel telefon klasörlerini seçtiğiniz bir programa göre (aralık veya belirli bir zaman, günlük, haftalık veya aylık) bir SMB veya FTP ağ paylaşımına otomatik olarak yedekleyin.
 </item>
         <item>
-Device Pairing — pair your mobile phone and Android TV over local Wi-Fi to transfer and install files.
+Cihaz Eşleştirme — Dosyaları aktarmak ve yüklemek için cep telefonunuzu ve Android TV\'nizi yerel Wi-Fi üzerinden eşleştirin.
 </item>
         <item>
-ADB Terminal — connect to Android devices in Developer Mode over your local Wi-Fi using ADB (Android Debug Bridge) for direct shell access and advanced troubleshooting.
+ADB Terminali — doğrudan kabuk erişimi ve gelişmiş sorun giderme için ADB\'yi (Android Hata Ayıklama Köprüsü) kullanarak yerel Wi-Fi\'niz üzerinden Geliştirici Modunda Android cihazlara bağlanın.
 </item>
         <item>
-Built-in Viewers — view text files, PDFs, animated images (APNG, GIF, animated WebP, AVIF, SVG and more), archives, and other formats directly within the app.
+Yerleşik Görüntüleyiciler — metin dosyalarını, PDF\'leri, animasyonlu görüntüleri (APNG, GIF, animasyonlu WebP, AVIF, SVG ve daha fazlası), arşivleri ve diğer formatları doğrudan uygulamanın içinden görüntüleyin.
 </item>
         <item>
-Advanced ZIP Support — create and extract password-protected and AES-encrypted ZIP archives.
+Gelişmiş ZIP ​​Desteği — parola korumalı ve AES şifreli ZIP arşivleri oluşturun ve çıkarın.
 </item>
         <item>
-Remote Screenshots — capture the screen of your paired Android TV over local Wi-Fi via ADB and save it directly to your phone\'s storage.
+Uzak Ekran Görüntüleri — eşleştirilmiş Android TV\'nizin ekranını ADB aracılığıyla yerel Wi-Fi üzerinden yakalayın ve doğrudan telefonunuzun depolama alanına kaydedin.
 </item>
         <item>
-7Z Archive Support — extract 7Z archives with LZMA/LZMA2 compression.
+7Z Arşiv Desteği — LZMA/LZMA2 sıkıştırmasıyla 7Z arşivlerini çıkarın.
 </item>
         <item>
-File Search — quickly find files and folders across your device storage.
+Dosya Arama — cihazınızın depolama alanındaki dosyaları ve klasörleri hızlı bir şekilde bulun.
 </item>
         <item>
-Storage Analyser — see a visual breakdown of what\'s using your storage space.
+Depolama Analizörü — depolama alanınızı nelerin kullandığının görsel bir dökümünü görün.
 </item>
         <item>
-App Manager — view and manage all apps installed on your device, with debloat recommendations for pre-installed apps.
+Uygulama Yöneticisi — önceden yüklenmiş uygulamalar için blokaj kaldırma önerileriyle birlikte cihazınızda yüklü tüm uygulamaları görüntüleyin ve yönetin.
 </item>
         <item>
-APK Installer — install Android apps and split APKs (XAPK) directly from files saved locally.
+APK Yükleyici — Android uygulamalarını yükleyin ve APK\'ları (XAPK) doğrudan yerel olarak kaydedilen dosyalardan bölün.
 </item>
         <item>
-Elevated Access (Porter, Shizuku, Shevery &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.
+Yükseltilmiş Erişim (Porter, Shizuku, Shevery ve ADB) — cihazınızı rootlamadan sistem dosyalarını ve kısıtlı dizinleri yönetmek için root benzeri erişim elde edin.
 </item>
         <item>
-Root Access (Mobile) — elevated Superuser access for rooted devices to browse, manage, and inspect system-level partitions and protected directories.
+Kök Erişimi (Mobil) — Kök erişimli cihazların sistem düzeyindeki bölümlere ve korumalı dizinlere göz atması, yönetmesi ve incelemesi için yükseltilmiş Süper Kullanıcı erişimi.
 </item>
         <item>
-Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.
+Depolama Dizini Oluşturucu — anında arama ve olağanüstü hızlı tarama için yerel bir dosya meta veri dizini oluşturun.
 </item>
         <item>
-Storage Access Framework — other apps can access your files through UFM\'s document provider.
+Depolama Erişim Çerçevesi — diğer uygulamalar dosyalarınıza UFM\'nin belge sağlayıcısı aracılığıyla erişebilir.
 </item>
         <item>
-Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.
+İpucu Kavanozu — geliştiriciyi desteklemek için isteğe bağlı tek seferlik satın alımlar; Uygulama bahşiş vermeden her zaman ücretsizdir.
 </item>
         <item>
-UFM Media Player — play audio, video, and SMIL animated SVG/SVGZ vector files with background playback, notification controls, Picture-in-Picture mode, and playlist management.
+UFM Medya Oynatıcı — arka planda oynatma, bildirim kontrolleri, Resim İçinde Resim modu ve çalma listesi yönetimi ile ses, video ve SMIL animasyonlu SVG/SVGZ vektör dosyalarını oynatın.
 </item>
         <item>
-GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.
+GIF Oluşturucu — özel kare hızı, yeniden boyutlandırma seçenekleri ve sürükleyip bırakarak çerçeve yeniden sıralaması ile seçilen görüntülerden animasyonlu GIF dosyaları oluşturun.
 </item>
         <item>
-Photo EXIF Tools — inspect photo EXIF and GPS metadata, scrub private geotags and device information, and batch rename photos using capture timestamps and camera metadata.
+Fotoğraf EXIF ​​Araçları — fotoğraf EXIF ​​ve GPS meta verilerini inceleyin, özel coğrafi etiketleri ve cihaz bilgilerini temizleyin ve yakalama zaman damgalarını ve kamera meta verilerini kullanarak fotoğrafları toplu olarak yeniden adlandırın.
 </item>
         <item>
-Music Tag Editor (Mobile) — inspect, edit, clean, and batch-update audio metadata descriptions (title, artist, album, year, genre, lyrics) and embedded album art directly inside audio files.
+Müzik Etiketi Düzenleyicisi (Mobil) — ses meta verisi açıklamalarını (başlık, sanatçı, albüm, yıl, tür, şarkı sözleri) ve doğrudan ses dosyalarının içine yerleştirilmiş albüm resmini inceleyin, düzenleyin, temizleyin ve toplu olarak güncelleyin.
 </item>
         <item>
-Download Manager — download files via direct HTTP/HTTPS URLs and peer-to-peer Magnet links or .torrent files for open-source distributions, public domain media, and authorized content.
+İndirme Yöneticisi — dosyaları doğrudan HTTP/HTTPS URL\'leri ve eşler arası Mıknatıs bağlantıları veya açık kaynak dağıtımları, kamuya açık medya ve yetkili içerik için .torrent dosyaları aracılığıyla indirin.
 </item>
     </string-array>
 
@@ -352,52 +352,52 @@ Toplam sorumluluğumuz, herhangi bir talepten önceki 30 gün içinde uygulama i
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
         <item>
-Keep regular backups of important files before performing bulk operations.
+Toplu işlemleri gerçekleştirmeden önce önemli dosyaların düzenli yedeklerini alın.
 </item>
         <item>
-Store your Vault PIN and Recovery Code somewhere safe — we cannot retrieve them for you.
+Kasa PIN\'inizi ve Kurtarma Kodunuzu güvenli bir yerde saklayın; bunları sizin için alamayız.
 </item>
         <item>
-Keep your PIN private. Anyone who knows it can access your Vault.
+PIN\'inizi gizli tutun. Bunu bilen herkes Kasanıza erişebilir.
 </item>
         <item>
-Keep your network share credentials safe — they are stored locally on your device.
+Ağ paylaşımı kimlik bilgilerinizi güvende tutun; bunlar cihazınızda yerel olarak depolanır.
 </item>
         <item>
-Review your Folder Sync remote paths carefully — syncing to an incorrect network folder may overwrite existing files.
+Klasör Senkronizasyonu uzak yollarınızı dikkatlice inceleyin; yanlış bir ağ klasörüne senkronizasyon mevcut dosyaların üzerine yazılabilir.
 </item>
         <item>
-Exercise caution when removing system apps based on debloat recommendations.
+Debloat önerilerine göre sistem uygulamalarını kaldırırken dikkatli olun.
 </item>
         <item>
-Only connect via ADB Terminal to devices you own or have explicit permission to access. Do not use ADB Terminal to gain unauthorized access to any device.
+Yalnızca sahip olduğunuz veya erişim için açık izne sahip olduğunuz cihazlara ADB Terminali aracılığıyla bağlanın. ADB Terminalini herhangi bir cihaza yetkisiz erişim sağlamak için kullanmayın.
 </item>
         <item>
-Keep any ADB, Porter, Shizuku, or Shevery pairing PINs private — share these only with people you trust to have access to your device.
+Tüm ADB, Porter, Shizuku veya Shevery eşleştirme PIN\'lerini gizli tutun; bunları yalnızca cihazınıza erişmesine güvendiğiniz kişilerle paylaşın.
 </item>
         <item>
-Secure your Porter, Shizuku or Shevery Manager — granting UFM elevated access via any of these managers gives it power over restricted files. Only grant this access if you trust the app.
+Porter, Shizuku veya Shevery Manager\'ınızı güvence altına alın; bu yöneticilerin herhangi biri aracılığıyla UFM\'ye yükseltilmiş erişim vermek, ona kısıtlı dosyalar üzerinde güç sağlar. Bu erişimi yalnızca uygulamaya güveniyorsanız verin.
 </item>
         <item>
-Exercise extreme caution when Root Access is active — never delete or modify system files unless you understand the consequences to your device OS.
+Kök Erişimi etkinken son derece dikkatli olun; cihazınızın işletim sistemi üzerindeki sonuçlarını anlamadığınız sürece sistem dosyalarını asla silmeyin veya değiştirmeyin.
 </item>
         <item>
-Only use the app for lawful purposes. Don\'t store, share, or distribute illegal content.
+Uygulamayı yalnızca yasal amaçlarla kullanın. Yasa dışı içeriği saklamayın, paylaşmayın veya dağıtmayın.
 </item>
         <item>
-Don\'t use Remote Management to access another person\'s device without their permission.
+Başka bir kişinin cihazına onun izni olmadan erişmek için Uzaktan Yönetim\'i kullanmayın.
 </item>
         <item>
-Don\'t attempt to reverse-engineer, decompile, or tamper with the app.
+Uygulamada tersine mühendislik yapmaya, kaynak koda dönüştürmeye veya uygulamaya müdahale etmeye çalışmayın.
 </item>
         <item>
-Manage your indexed records responsibly — you can delete records or ignore specific drives at any time via Settings -> Storage Indexer.
+Dizine alınmış kayıtlarınızı sorumlu bir şekilde yönetin; Ayarlar -&gt; Depolama Dizini Oluşturucu aracılığıyla istediğiniz zaman kayıtları silebilir veya belirli sürücüleri yok sayabilirsiniz.
 </item>
         <item>
-Verify the authenticity and safety of any APK files before installing them.
+Herhangi bir APK dosyasını yüklemeden önce orijinalliğini ve güvenliğini doğrulayın.
 </item>
         <item>
-Don\'t use the Download Manager, BitTorrent engine, or HTTP streamer to download, share, transmit, or facilitate infringement of copyrighted material without authorization from the copyright holder. You assume sole liability for downloaded content.
+Telif hakkı sahibinin izni olmadan telif hakkıyla korunan materyali indirmek, paylaşmak, iletmek veya ihlalini kolaylaştırmak için İndirme Yöneticisini, BitTorrent motorunu veya HTTP aktarıcıyı kullanmayın. İndirilen içeriğin yegane sorumluluğunu üstlenirsiniz.
 </item>
     </string-array>
 
@@ -524,142 +524,142 @@ TV Uzaktan Kumandasındaki düğmelere basıldığında dokunsal geri bildirim s
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD — lightweight HTTP server that powers Remote Management. (BSD-3-Clause)
+NanoHTTPD — Uzaktan Yönetime güç veren hafif HTTP sunucusu. (BSD-3-Madde)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — SMB2/SMB3 client library for network share browsing and Folder Sync. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — Ağ paylaşımında gezinme ve Klasör Senkronizasyonu için SMB2/SMB3 istemci kitaplığı. (LGPL-2.1)
 </item>
         <item>
-smbj (hierynomus/smbj) — SMB2/SMB3 Java implementation used for network share access. (Apache-2.0)
+smbj (hierynomus/smbj) — Ağ paylaşımı erişimi için kullanılan SMB2/SMB3 Java uygulaması. (Apache-2.0)
 </item>
         <item>
-EMC ECS NFS Client (com.emc.ecs:nfs-client) — NFS v3 client library for network share access. (Apache-2.0)
+EMC ECS NFS İstemcisi (com.emc.ecs:nfs-client) — Ağ paylaşım erişimi için NFS v3 istemci kitaplığı. (Apache-2.0)
 </item>
         <item>
-libnfs (sahlberg/libnfs) — native NFS client library supporting NFSv2, NFSv3, and NFSv4. (LGPL-2.1 / BSD-2-Clause)
+libnfs (sahlberg/libnfs) — NFSv2, NFSv3 ve NFSv4\'ü destekleyen yerel NFS istemci kitaplığı. (LGPL-2.1 / BSD-2-Maddesi)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access and hosting. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — güvenli ağ paylaşımı erişimi ve barındırma için kapsamlı SSHD çekirdeği, SFTP ve SCP istemci kitaplığı. (Apache-2.0)
 </item>
         <item>
-Apache FtpServer (org.apache.ftpserver) — 100% pure Java FTP server. (Apache-2.0)
+Apache FtpServer (org.apache.ftpserver) — %100 saf Java FTP sunucusu. (Apache-2.0)
 </item>
         <item>
-Apache POI — document processing library for viewing office files. (Apache-2.0)
+Apache POI — ofis dosyalarını görüntülemek için belge işleme kitaplığı. (Apache-2.0)
 </item>
         <item>
-Firebase Analytics — Google\'s analytics platform that helps us understand app usage. (Apache-2.0)
+Firebase Analytics — Google\'ın uygulama kullanımını anlamamıza yardımcı olan analiz platformu. (Apache-2.0)
 </item>
         <item>
-AndroidX Libraries (incl. Leanback for Android TV) — Google\'s Jetpack components for modern Android development. (Apache-2.0)
+AndroidX Kitaplıkları (Android TV için Leanback dahil) — Google\'ın modern Android geliştirmeye yönelik Jetpack bileşenleri. (Apache-2.0)
 </item>
         <item>
-Material Design Components — Google\'s UI library for a clean, consistent interface. (Apache-2.0)
+Materyal Tasarımı Bileşenleri — Temiz, tutarlı bir arayüz için Google\'ın kullanıcı arayüzü kitaplığı. (Apache-2.0)
 </item>
         <item>
-Room Persistence Library — SQLite abstraction layer for local metadata indexing. (Apache-2.0)
+Room Persistence Library — Yerel meta veri indeksleme için SQLite soyutlama katmanı. (Apache-2.0)
 </item>
         <item>
-zip4j (net.lingala.zip4j) — advanced ZIP library for password-protected and AES-encrypted archives. (Apache-2.0)
+zip4j (net.lingala.zip4j) — parola korumalı ve AES şifreli arşivler için gelişmiş ZIP ​​kitaplığı. (Apache-2.0)
 </item>
         <item>
-Apache Commons Compress — library for reading and writing various archive formats (7z, zip, tar, etc). (Apache-2.0)
+Apache Commons Compress — çeşitli arşiv formatlarını (7z, zip, tar vb.) okumak ve yazmak için kütüphane. (Apache-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) — implementation of XZ and LZMA compression. (Public Domain)
+Java için XZ (org.tukaani.xz) — XZ ve LZMA sıkıştırmasının uygulanması. (Kamu malı)
 </item>
         <item>
-zstd-jni (com.github.luben:zstd-jni) — JNI bindings for Zstandard compression and extraction library. (BSD-2-Clause)
+zstd-jni (com.github.luben:zstd-jni) — Zstandard sıkıştırma ve çıkarma kitaplığı için JNI bağlamaları. (BSD-2-Madde)
 </item>
         <item>
-Junrar (com.github.junrar:junrar) — Java RAR extraction library. (BSD-3-Clause)
+Junrar (com.github.junrar:junrar) — Java RAR çıkarma kitaplığı. (BSD-3-Madde)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) — Android Debug Bridge library enabling secure connections to ADB-enabled devices for remote shell access and certificate-based pairing. (Apache-2.0)
+libadb-android (com.github.MuntashirAkon) — Uzaktan kabuk erişimi ve sertifika tabanlı eşleştirme için ADB özellikli cihazlara güvenli bağlantılar sağlayan Android Hata Ayıklama Köprüsü kitaplığı. (Apache-2.0)
 </item>
         <item>
-libsu (com.github.topjohnwu.libsu) — complete Android su shell and root service solution. (Apache-2.0)
+libsu (com.github.topjohnwu.libsu) — eksiksiz Android su kabuğu ve kök hizmet çözümü. (Apache-2.0)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — güvenli ağ paylaşımı erişimi için kapsamlı SSHD çekirdeği, SFTP ve SCP istemci kitaplığı. (Apache-2.0)
 </item>
         <item>
-EdDSA for Java (net.i2p.crypto:eddsa) — implementation of EdDSA (Edwards-curve Digital Signature Algorithm) for Ed25519 SSH keys. (CC0-1.0)
+Java için EdDSA (net.i2p.crypto:eddsa) — Ed25519 SSH anahtarları için EdDSA\'nın (Edwards eğrisi Dijital İmza Algoritması) uygulanması. (CC0-1.0)
 </item>
         <item>
-SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding for Android used by the SSHD library. (MIT)
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — SSHD kitaplığı tarafından kullanılan Android için günlük bağlama. (MİT)
 </item>
         <item>
-BouncyCastle (org.bouncycastle) — cryptography library for RSA/EdDSA keypair generation and X.509 certificate creation; version 1.83. (MIT-style License)
+BouncyCastle (org.bouncycastle) — RSA/EdDSA anahtar çifti üretimi ve X.509 sertifikası oluşturmaya yönelik şifreleme kitaplığı; sürüm 1.83. (MIT tarzı Lisans)
 </item>
         <item>
-Google Play Billing Library — processes optional in-app tip purchases; governed by Google Play\'s Privacy Policy. (Apache-2.0)
+Google Play Faturalandırma Kitaplığı — isteğe bağlı uygulama içi ipucu satın alımlarını işler; Google Play\'in Gizlilik Politikası\'na tabidir. (Apache-2.0)
 </item>
         <item>
-Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)
+Google Play İnceleme Kitaplığı — uygulamanın uygulama içi derecelendirme ve inceleme işlevselliğini destekler. (Apache-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, JXL, SVG) in the built-in image viewer. (Apache-2.0)
+Bobin (io.coil-kt.coil3) — yerleşik resim görüntüleyicide animasyonlu resim oluşturmaya (APNG, GIF, animasyonlu WebP, AVIF, JXL, SVG) güç veren resim yükleme kitaplığı. (Apache-2.0)
 </item>
         <item>
-avif-coder (io.github.awxkee) — AVIF image decoding library providing native AVIF support on Android API 24–30; API 31+ uses the built-in ImageDecoder. (Apache-2.0)
+avif-coder (io.github.awxkee) — Android API 24–30\'da yerel AVIF desteği sağlayan AVIF görüntü kod çözme kitaplığı; API 31+ yerleşik ImageDecoder\'ı kullanır. (Apache-2.0)
 </item>
         <item>
-jxl-coder (io.github.awxkee) — JPEG XL image decoding and encoding library providing native JXL support on Android API 21+. (Apache-2.0 / BSD-3-Clause)
+jxl-coder (io.github.awxkee) — Android API 21+ üzerinde yerel JXL desteği sağlayan JPEG XL görüntü kod çözme ve kodlama kitaplığı. (Apache-2.0 / BSD-3-Cümle)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)
+APNG4Android (com.github.penfeizhou.android.animation) — Android\'de animasyonlu PNG dosyalarının kodunu çözmek ve oluşturmak için temel kitaplık. (Apache-2.0)
 </item>
         <item>
-Porter SDK (com.github.d4rken-org.porter-api) — Android SDK enabling elevated file system access via the Porter, Shizuku or Shevery Manager apps. It embeds the Shizuku API (rikka.shizuku), licensed under MIT. (Apache-2.0)
+Porter SDK (com.github.d4rken-org.porter-api) — Porter, Shizuku veya Shevery Manager uygulamaları aracılığıyla yükseltilmiş dosya sistemi erişimine olanak tanıyan Android SDK. MIT kapsamında lisanslanan Shizuku API\'sini (rikka.shizuku) içerir. (Apache-2.0)
 </item>
         <item>
-ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)
+ViewPager2 — Parçalar ve düzenler arasında geçiş yapmak için Android kitaplığı. (Apache-2.0)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — animation library for rendering Adobe After Effects animations natively on Android, used for smooth UI animations throughout the app. (Apache-2.0)
+Lottie (com.airbnb.android:lottie) v6.3.0 — Adobe After Effects animasyonlarını Android\'de yerel olarak oluşturmaya yönelik animasyon kitaplığı, uygulama genelinde sorunsuz kullanıcı arayüzü animasyonları için kullanılır. (Apache-2.0)
 </item>
         <item>
-Ktor (io.ktor) — lightweight web framework used to power the local File Server. (Apache-2.0)
+Ktor (io.ktor) — yerel Dosya Sunucusuna güç sağlamak için kullanılan hafif web çerçevesi. (Apache-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) — library for rendering and viewing PDF documents natively. (Apache-2.0)
+PDFBox-Android (com.tom-roush:pdfbox-android) — PDF belgelerini yerel olarak oluşturmak ve görüntülemek için kitaplık. (Apache-2.0)
 </item>
         <item>
-ExoPlayer / Media3 (androidx.media3) — advanced media player for robust video and audio playback. (Apache-2.0)
+ExoPlayer / Media3 (androidx.media3) — güçlü video ve ses oynatımı için gelişmiş medya oynatıcı. (Apache-2.0)
 </item>
         <item>
-Microsoft Authentication Library (MSAL) — handles OneDrive API authentication natively. (MIT)
+Microsoft Kimlik Doğrulama Kitaplığı (MSAL) — OneDrive API kimlik doğrulamasını yerel olarak yönetir. (MİT)
 </item>
         <item>
-OkHttp (com.squareup.okhttp3) — robust HTTP &amp; HTTP/2 client for cloud storage network requests. (Apache-2.0)
+OkHttp (com.squareup.okhttp3) — bulut depolama ağı istekleri için güçlü HTTP ve HTTP/2 istemcisi. (Apache-2.0)
 </item>
         <item>
-Gson (com.google.code.gson) — JSON processing library used for cloud storage integration. (Apache-2.0)
+Gson (com.google.code.gson) — Bulut depolama entegrasyonu için kullanılan JSON işleme kitaplığı. (Apache-2.0)
 </item>
         <item>
-AndroidX Browser (androidx.browser) — Chrome Custom Tabs support for Google Drive API authentication. (Apache-2.0)
+AndroidX Tarayıcı (androidx.browser) — Google Drive API kimlik doğrulaması için Chrome Özel Sekmeler desteği. (Apache-2.0)
 </item>
         <item>
-ZXing (com.google.zxing:core) — barcode image processing library. (Apache-2.0)
+ZXing (com.google.zxing:core) — barkod görüntü işleme kitaplığı. (Apache-2.0)
 </item>
         <item>
-gifencoder (com.squareup:gifencoder) — pure Java GIF encoding library for creating animated GIF files from selected images. (Apache-2.0)
+gifencoder (com.squareup:gifencoder) — seçilen görüntülerden animasyonlu GIF dosyaları oluşturmak için saf Java GIF kodlama kitaplığı. (Apache-2.0)
 </item>
         <item>
-AndroidX ExifInterface (androidx.exifinterface:exifinterface) — library for reading, writing, and stripping EXIF and GPS metadata across JPEG, PNG, WebP, HEIF, and DNG image formats. (Apache-2.0)
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) — JPEG, PNG, WebP, HEIF ve DNG görüntü formatlarında EXIF ​​ve GPS meta verilerini okumak, yazmak ve çıkarmak için kitaplık. (Apache-2.0)
 </item>
         <item>
-Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)
+Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi ipucu satın alımlarını işler. (Tescilli)
 </item>
         <item>
-jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — audio tagging library for reading and editing metadata and cover art across MP3, FLAC, M4A, OGG, OPUS, WAV, and WMA formats. (LGPL-3.0 / LGPL-2.1)
+jaudiotagger (com.github.AdrienPoupa:jaudiotagger) — MP3, FLAC, M4A, OGG, OPUS, WAV ve WMA formatlarında meta verileri ve kapak resmini okumak ve düzenlemek için ses etiketleme kitaplığı. (LGPL-3.0 / LGPL-2.1)
 </item>
         <item>
-AndroidX WebKit (androidx.webkit) — library providing WebViewAssetLoader for secure, local-only rendering of SMIL animated SVG/SVGZ files in UFM Media Player without external network access or file-scheme vulnerabilities. (Apache-2.0)
+AndroidX WebKit (androidx.webkit) — SMIL animasyonlu SVG/SVGZ dosyalarının harici ağ erişimi veya dosya şeması güvenlik açıkları olmadan UFM Media Player\'da güvenli, yalnızca yerel olarak oluşturulması için WebViewAssetLoader sağlayan kitaplık. (Apache-2.0)
 </item>
         <item>
-libtorrent4j (org.libtorrent4j) — Java and Kotlin JNI wrapper around Rasterbar libtorrent for zero-seeding peer-to-peer BitTorrent downloading. (BSD-3-Clause / MIT)
+libtorrent4j (org.libtorrent4j) — Sıfır tohumlamalı eşler arası BitTorrent indirmesi için Rasterbar libtorrent\'in etrafındaki Java ve Kotlin JNI sarmalayıcısı. (BSD-3-Madde / MİT)
 </item>
     </string-array>
 
@@ -799,7 +799,11 @@ UFM, çöktüğünde veya donduğunda teşhis bilgilerini yakalayabilir, böylec
 \n
 Hiçbir şey otomatik olarak gönderilmez: bir çökme veya donma sonrasında, raporu KiloWatch\\\'a (kilowatch.co.za) göndermek isteyip istemediğinizi soran bir iletişim kutusu belirir. \\\'Hayır, teşekkürler\\\' seçeneği raporu yerel olarak siler. Çökme ve donma algılamayı istediğiniz zaman Ayarlar → Çökme ve ANR Raporlama üzerinden devre dışı bırakabilirsiniz; devre dışı bırakmak bekleyen raporları da siler.
 </string>
-    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+    <string name="pp_s2_crash_body">
+UFM, çöktüğünde veya donduğunda teşhis bilgilerini yakalayabilir, böylece sorunu çözebiliriz. Buna uygulama sürümü, Android sürümü, cihaz modeli ve üreticisi, istisna türü ve mesajı ile yığın izleme dahildir. Hiçbir zaman dosyalarınızı, adlarınızı, e-posta adreslerinizi veya hesap bilgilerinizi içermez.\n
+\n
+Hiçbir şey otomatik olarak gönderilmez: Bir kilitlenme veya donma sonrasında, raporu KiloWatch\'a (kilowatch.co.za) göndermek isteyip istemediğiniz sorulur. \'Hayır, Teşekkürler\'i seçtiğinizde yerel olarak silinir. Kilitlenme ve donma algılamasını istediğiniz zaman Ayarlar → Kilitlenme ve ANR Raporlaması aracılığıyla devre dışı bırakabilirsiniz; devre dışı bırakılması, bekleyen raporları da siler.
+</string>
 
     <string name="pp_s2_nocollect_heading">
 Asla Toplamadığımız Bilgiler
@@ -1257,7 +1261,7 @@ API 29 altı · Eski cihazlarda eski dosya değişikliği
     <!-- Network permissions (Section 4) -->
     <string-array name="pp_network_perm_labels">
         <item>
-INTERNET
+İNTERNET
 </item>
         <item>
 ACCESS_WIFI_STATE
@@ -1361,7 +1365,7 @@ AES-256-GCM (Galois/Sayaç Modlu Gelişmiş Şifreleme Standardı)
 Android Keystore — donanım destekli güvenli depolama
 </item>
         <item>
-256-bit
+256 bit
 </item>
         <item>
 Kullanıcı tanımlı PIN
@@ -1494,22 +1498,22 @@ Google kullanıcı verilerini, uygulamanın dosya yönetimi özelliklerini sağl
     <!-- Third parties (Section 7) -->
     <string-array name="pp_third_party_names">
         <item>
-Firebase Analytics
+Firebase Analizi
 </item>
         <item>
-Google Play Services
+Google Play Hizmetleri
 </item>
         <item>
-Google Play Billing
+Google Play Faturalandırma
 </item>
         <item>
-Microsoft OneDrive API
+Microsoft OneDrive API\'si
 </item>
         <item>
-Google Drive API
+Google Drive API\'sı
 </item>
         <item>
-Dropbox API
+Dropbox API\'si
 </item>
         <item>
 AWS S3 / S3 Uyumlu API\'lar (örn. AWS S3, MinIO, IDrive E2)
@@ -1526,7 +1530,7 @@ Google LLC
 Google LLC
 </item>
         <item>
-Microsoft Corporation
+Microsoft Şirketi
 </item>
         <item>
 Google LLC
@@ -1654,7 +1658,7 @@ Ağ İzinleri
 Ağ Durumu
 </item>
         <item>
-Multicast
+Çok noktaya yayın
 </item>
         <item>
 Bildirimler

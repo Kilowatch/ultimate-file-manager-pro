@@ -347,10 +347,10 @@ Gestione dei file a doppio riquadro
 Finestra doppia
 </string>
     <string name="copy_folder_path">
-Copy Folder Path
+Copia percorso cartella
 </string>
     <string name="folder_path_copied">
-Folder path copied to clipboard
+Percorso della cartella copiato negli appunti
 </string>
     <string name="close_twin_window">
 Chiudi la finestra doppia
@@ -449,55 +449,55 @@ Righe illimitate
 Manda a capo il nome completo sul numero di righe necessario
 </string>
     <string name="settings_file_name_display_truncate">
-Single line (Truncated end)
+Linea singola (estremità troncata)
 </string>
     <string name="settings_file_name_display_truncate_desc">
-Truncates with ellipsis at end (abc…) without scrolling
+Tronca con i puntini di sospensione alla fine (abc…) senza scorrere
 </string>
     <string name="settings_file_name_display_truncate_middle">
-Single line (Truncate middle)
+Riga singola (troncata al centro)
 </string>
     <string name="settings_file_name_display_truncate_middle_desc">
-Truncates in middle (abc…xyz.ext) to preserve the end suffix
+Tronca al centro (abc…xyz.ext) per preservare il suffisso finale
 </string>
     <string name="settings_marquee_speed_title">
-Scroll Speed
+Velocità di scorrimento
 </string>
     <string name="settings_marquee_speed_slow">
-Slow
+Lento
 </string>
     <string name="settings_marquee_speed_normal">
 Normal
 </string>
     <string name="settings_marquee_speed_fast">
-Fast
+Veloce
 </string>
     <string name="settings_marquee_loop_title">
-Loop Mode
+Modalità ciclo
 </string>
     <string name="settings_marquee_loop_one_shot">
-One-Shot
+Un colpo
 </string>
     <string name="settings_marquee_loop_one_shot_desc">
-Scrolls once and stops to save battery
+Scorre una volta e si ferma per risparmiare batteria
 </string>
     <string name="settings_marquee_loop_continuous">
-Continuous
+Continuo
 </string>
     <string name="settings_marquee_loop_continuous_desc">
-Repeats back and forth continuously
+Si ripete avanti e indietro continuamente
 </string>
     <string name="settings_marquee_scope_title">
-Scroll Scope
+Ambito di scorrimento
 </string>
     <string name="settings_marquee_scope_all">
-All Visible Files
+Tutti i file visibili
 </string>
     <string name="settings_marquee_scope_focused">
-Focused / Selected Only
+Solo focalizzato/selezionato
 </string>
     <string name="settings_file_name_preview_title">
-Live Preview
+Anteprima dal vivo
 </string>
     <string name="settings_file_name_preview_sample">
 VeryLongFileName_ProjectReport_2026_Final_v2.docx
@@ -1204,7 +1204,7 @@ File di grandi dimensioni
 Duplicati
 </string>
     <string name="analyzer_tab_incomplete">
-Incomplete
+Incompleto
 </string>
     <string name="analyzer_tab_junk">
 Spazzatura e Vecchio
@@ -1231,10 +1231,10 @@ Suggerimenti
 salva %1$s
 </string>
     <string name="analyzer_no_incomplete_files">
-No incomplete or sparse downloads found
+Nessun download incompleto o sparsi trovato
 </string>
     <string name="analyzer_incomplete_file_allocated">
-Size on disk: %1$s (%2$.1f%%)
+Dimensioni su disco: %1$s (%2$.1f%%)
 </string>
     <!-- Section headers inside Overview -->
     <string name="analyzer_info_notice">
@@ -1319,97 +1319,97 @@ Eliminare
 
     <!-- Bulk duplicate deletion & retention strategy -->
     <string name="analyzer_select_all_duplicates">
-Select All Duplicates
+Seleziona Tutti i duplicati
 </string>
     <string name="analyzer_clear_selection">
-Clear
+Chiaro
 </string>
     <string name="analyzer_delete_all_duplicates">
-Delete All Duplicates
+Elimina tutti i duplicati
 </string>
     <string name="analyzer_delete_selected_count">
-Delete Selected (%1$d)
+Elimina selezionati (%1$d)
 </string>
     <string name="analyzer_badge_original">
-Original
+Originale
 </string>
     <string name="analyzer_strategy_title">
-Duplicate Retention Strategy
+Strategia di conservazione duplicata
 </string>
     <string name="analyzer_strategy_oldest">
-Keep Oldest (Original)
+Mantieni il più vecchio (originale)
 </string>
     <string name="analyzer_strategy_oldest_desc">
-Preserves the oldest file by modification date and deletes newer copies.
+Conserva il file più vecchio per data di modifica ed elimina le copie più recenti.
 </string>
     <string name="analyzer_strategy_newest">
-Keep Newest
+Mantieni più recente
 </string>
     <string name="analyzer_strategy_newest_desc">
-Preserves the most recently modified file and deletes older copies.
+Conserva il file modificato più recentemente ed elimina le copie più vecchie.
 </string>
     <string name="analyzer_strategy_remember">
-Remember my choice
+Ricorda la mia scelta
 </string>
     <string name="analyzer_strategy_most_complete">
-Keep Most Complete
+Mantieni il più completo
 </string>
     <string name="analyzer_strategy_most_complete_desc">
-Preserves fully downloaded or most allocated files and deletes incomplete copies.
+Conserva i file completamente scaricati o la maggior parte allocati ed elimina le copie incomplete.
 </string>
     <string name="analyzer_badge_partial">
-Partial (%1$.0f%%)
+Parziale (%1$.0f%%)
 </string>
     <string name="analyzer_badge_sparse">
-Sparse
+Scarso
 </string>
     <string name="analyzer_bulk_delete_confirm_title">
-Delete %1$d Duplicate Files?
+Eliminare %1$d file duplicati?
 </string>
     <string name="analyzer_bulk_delete_confirm_msg">
-One original copy of each file will be kept. %1$d duplicate copies will be permanently deleted to free up %2$s.
+Verrà conservata una copia originale di ciascun file. %1$d copie duplicate verranno eliminate definitivamente per liberare %2$s.
 </string>
     <string name="analyzer_delete_completion_title">
-Cleanup Complete
+Pulizia completata
 </string>
     <string name="analyzer_delete_completion_msg">
-Successfully deleted %1$d duplicate files and reclaimed %2$s of storage space.
+Eliminazione di %1$d file duplicati riuscita e recupero di %2$s di spazio di archiviazione riusciti.
 </string>
     <string name="analyzer_delete_completion_failed">
-%1$d files could not be deleted due to permissions.
+Impossibile eliminare %1$d file a causa delle autorizzazioni.
 </string>
     <string name="analyzer_delete_progress">
-Deleting %1$d of %2$d files…
+Eliminazione di %1$d di %2$d file…
 </string>
     <string name="analyzer_duplicate_summary">
-%1$d duplicate groups · saves %2$s
+%1$d gruppi duplicati · salva %2$s
 </string>
     <string name="settings_duplicate_retention_title">
-Duplicate Retention Strategy
+Strategia di conservazione duplicata
 </string>
     <string name="settings_duplicate_retention_dialog_subtitle">
-Choose which copy to preserve when selecting duplicate files for cleanup.
+Scegli quale copia conservare quando selezioni i file duplicati per la pulizia.
 </string>
     <string name="settings_duplicate_retention_summary_oldest">
-Keep oldest file (Original)
+Conserva il file più vecchio (originale)
 </string>
     <string name="settings_duplicate_retention_summary_newest">
-Keep newest file
+Conserva il file più recente
 </string>
     <string name="settings_duplicate_retention_summary_most_complete">
-Keep most complete file
+Conserva il file più completo
 </string>
     <string name="settings_duplicate_retention_summary_ask">
-Always ask
+Chiedi sempre
 </string>
     <string name="settings_duplicate_retention_desc_ask">
-Prompt to choose retention strategy each time duplicate files are selected.
+Richiedi di scegliere la strategia di conservazione ogni volta che vengono selezionati file duplicati.
 </string>
     <string name="settings_duplicate_retention_toast">
-Duplicate retention strategy set to: %s
+Strategia di conservazione duplicata impostata su: %s
 </string>
     <string name="backup_pref_duplicate_retention">
-Duplicate Retention Strategy
+Strategia di conservazione duplicata
 </string>
 
     <!-- Theme -->
@@ -1911,10 +1911,10 @@ Schermata iniziale predefinita
 Scegli quale schermata si apre all\'avvio
 </string>
     <string name="start_screen_last_opened">
-Last Opened Location
+Ultima posizione aperta
 </string>
     <string name="start_screen_last_opened_desc">
-Reopen where you left off upon app launch
+Riapri da dove avevi interrotto all\'avvio dell\'app
 </string>
     <string name="storage_unavailable_redirect">La posizione di archiviazione precedente non è disponibile. Tornato alla schermata Archiviazione.</string>
     <string name="start_screen_storage_browser">
@@ -2014,13 +2014,13 @@ Disabilitato: streaming diretto (impostazione predefinita)
 
     <!-- Network Transfer Multi-Threading Settings -->
     <string name="settings_network_transfer_threads_title">
-FTP, SFTP &amp; SMB Multi-threading
+Multithreading FTP, SFTP e SMB
 </string>
     <string name="settings_network_transfer_threads_dialog_title">
 Thread di trasferimento
 </string>
     <string name="settings_network_transfer_threads_dialog_subtitle">
-Select the number of simultaneous connections for faster network file transfers
+Seleziona il numero di connessioni simultanee per trasferimenti di file in rete più rapidi
 </string>
     <string name="settings_network_transfer_threads_subtitle">
 %1$d thread — connessioni simultanee per trasferimenti più veloci
@@ -2035,40 +2035,40 @@ Select the number of simultaneous connections for faster network file transfers
 %1$d thread (consigliato)
 </string>
     <string name="settings_network_transfer_threads_maximum">
-%1$d threads (Maximum)
+%1$d thread (massimo)
 </string>
     <string name="settings_network_transfer_threads_2">
 2 threads
 </string>
     <string name="settings_network_transfer_threads_4">
-4 threads (Recommended)
+4 fili (consigliato)
 </string>
     <string name="settings_network_transfer_threads_6">
 6 threads
 </string>
     <string name="settings_network_transfer_threads_8">
-8 threads (Maximum)
+8 thread (massimo)
 </string>
     <string name="settings_network_transfer_threads_desc_1">
-Single connection, transfers files sequentially
+Connessione singola, trasferisce i file in sequenza
 </string>
     <string name="settings_network_transfer_threads_desc_2">
-Light parallelism, ideal for slower connections
+Parallelismo leggero, ideale per connessioni più lente
 </string>
     <string name="settings_network_transfer_threads_desc_4">
-Optimal balance of speed and stability for Wi-Fi and LAN
+Equilibrio ottimale tra velocità e stabilità per Wi-Fi e LAN
 </string>
     <string name="settings_network_transfer_threads_desc_6">
-High throughput for Gigabit networks and fast Wi-Fi
+Throughput elevato per reti Gigabit e Wi-Fi veloce
 </string>
     <string name="settings_network_transfer_threads_desc_8">
-Maximum throughput for multi-gigabit LAN and Wi-Fi 7
+Massima velocità di trasmissione per LAN multi-gigabit e Wi-Fi 7
 </string>
     <string name="settings_network_transfer_threads_toast">
-Transfer threads set to %1$d
+Trasferisci thread impostati su %1$d
 </string>
     <string name="backup_pref_network_transfer_threads">
-FTP, SFTP &amp; SMB Multi-threading Settings
+Impostazioni multi-threading FTP, SFTP e SMB
 </string>
     <string name="network_field_threads">
 Thread di trasferimento
@@ -2079,28 +2079,28 @@ Predefinito (%1$d thread)
 
     <!-- Transfer Multi-Threading Telemetry -->
     <string name="transfer_threads_header">
-Threads (%1$d active)
+Discussioni (%1$d attive)
 </string>
     <string name="transfer_threads_header_single">
-Thread (1 active)
+Discussione (1 attiva)
 </string>
     <string name="transfer_per_thread_placeholder">
--- MB/s
+--MB/s
 </string>
     <string name="transfer_per_thread_format">
 Per thread: %1$.1f MB/s
 </string>
     <string name="transfer_per_thread_single_format">
-Single thread: %1$.1f MB/s
+Thread singolo: %1$.1f MB/s
 </string>
     <string name="transfer_thread_initial">
 Thread %1$d: --
 </string>
     <string name="transfer_thread_speed_item">
-Thread %1$d: %2$.1f MB/s
+Discussione %1$d: %2$.1f MB/s
 </string>
     <string name="transfer_thread_speed_single">
-Thread %1$d: %2$.1f MB/s (Single-threaded)
+Thread %1$d: %2$.1f MB/s (thread singolo)
 </string>
 
     <!-- Open Source Licenses -->
@@ -5536,13 +5536,27 @@ Adatta allo schermo
 Riproduci/Pausa
 </string>
     <!-- SVG Interactive Player Controls -->
-    <string name="svg_interactive_mode">Interactive Mode</string>
-    <string name="svg_transport_mode">Player Controls</string>
-    <string name="svg_restart">Restart Animation</string>
-    <string name="svg_playback_speed">Playback Speed</string>
-    <string name="svg_next_panel">Next Panel</string>
-    <string name="svg_prev_panel">Previous Panel</string>
-    <string name="svg_tv_interactive_hint">Interactive Mode — Press Back or Menu for Player Controls</string>
+    <string name="svg_interactive_mode">
+Modalità interattiva
+</string>
+    <string name="svg_transport_mode">
+Controlli del giocatore
+</string>
+    <string name="svg_restart">
+Riavvia l\'animazione
+</string>
+    <string name="svg_playback_speed">
+Velocità di riproduzione
+</string>
+    <string name="svg_next_panel">
+Pannello successivo
+</string>
+    <string name="svg_prev_panel">
+Pannello precedente
+</string>
+    <string name="svg_tv_interactive_hint">
+Modalità interattiva: premi Indietro o Menu per i controlli del lettore
+</string>
     <!-- Audio & Subtitle Track Selection -->
     <string name="audio_track">
 Traccia audio
@@ -5851,10 +5865,10 @@ SALVA QUI
 Salva in UFM
 </string>
     <string name="share_target_save_to">
-Save to…
+Salva in…
 </string>
     <string name="share_target_open_in">
-Open in…
+Aperto tra…
 </string>
     <string name="share_receive_from">
 Ricezione file da %s
@@ -7355,10 +7369,10 @@ Revisione di file di grandi dimensioni
 Trovati %1$d file più grandi di 512 MB.
 </string>
     <string name="analyzer_incomplete_downloads_title">
-Incomplete / Sparse Downloads
+Download incompleti/sparsi
 </string>
     <string name="analyzer_incomplete_downloads_desc">
-Found %1$d incomplete or sparse files consuming disk space.
+Trovati %1$d file incompleti o sparsi che consumano spazio su disco.
 </string>
     <string name="old_unused_files">
 Vecchi file inutilizzati
@@ -7951,10 +7965,18 @@ Sincronizzazione abilitata
     <string name="sync_disabled">
 Sincronizzazione disabilitata
 </string>
-    <string name="sync_action_enable">Enable Profile</string>
-    <string name="sync_action_disable">Disable Profile</string>
-    <string name="sync_status_enabled">Active</string>
-    <string name="sync_status_disabled">Paused</string>
+    <string name="sync_action_enable">
+Abilita profilo
+</string>
+    <string name="sync_action_disable">
+Disabilita profilo
+</string>
+    <string name="sync_status_enabled">
+Attivo
+</string>
+    <string name="sync_status_disabled">
+In pausa
+</string>
     <string name="sync_delete_profile_confirm_msg">
 Vuoi eliminare \"%1$s\"? Questa operazione non può essere annullata.
 </string>
@@ -8591,16 +8613,16 @@ Connesso con successo a Dropbox
 Impossibile autenticare: %1$s
 </string>
     <string name="dropbox_auth_failed_title">
-Authentication Failed
+Autenticazione non riuscita
 </string>
     <string name="dropbox_auth_failed_subtitle">
-Connection or verification error
+Errore di connessione o verifica
 </string>
     <string name="dropbox_auth_failed_help">
-Unable to verify the authorization code with Dropbox. Please check that the code was entered correctly, has not expired, and your device date/time is correct.
+Impossibile verificare il codice di autorizzazione con Dropbox. Controlla che il codice sia stato inserito correttamente, non sia scaduto e che la data/ora del tuo dispositivo siano corrette.
 </string>
     <string name="dropbox_auth_clock_warning">
-Device date &amp; time error detected. Your TV system date/time appears to be in the past, which prevents secure connection to Dropbox. Please set the correct date and time in Android TV Settings.
+Rilevato errore di data e ora del dispositivo. La data/ora del tuo sistema TV sembra essere nel passato, il che impedisce la connessione sicura a Dropbox. Imposta la data e l\'ora corrette nelle Impostazioni Android TV.
 </string>
     <string name="dropbox_auth_verifying">
 Verifica del codice…
@@ -8752,7 +8774,7 @@ L\'autorizzazione è stata negata o annullata.
 Accesso elevato
 </string>
     <string name="shizuku_subtitle">
-Porter / Shizuku / Shevery
+Porter/Shizuku/Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
@@ -8897,7 +8919,7 @@ Shevery
 Alternativa leggera e veloce
 </string>
     <string name="shizuku_manager_porter_title">
-Porter
+Portiere
 </string>
     <string name="shizuku_manager_porter_desc">
 Continuazione di Shizuku mantenuta attivamente
@@ -8927,16 +8949,16 @@ Stato non disponibile
 Verifica dell\'accesso elevato…
 </string>
     <string name="shizuku_download_porter_apk">
-Get Porter
+Prendi Portiere
 </string>
     <string name="elevated_prerelease_badge">
 Versione preliminare
 </string>
     <string name="shizuku_download_shizuku_apk">
-Get Shizuku
+Prendi Shizuku
 </string>
     <string name="shizuku_download_shevery_apk">
-Get Shevery
+Prendi Shevery
 </string>
     <string name="shizuku_open_manager">
 Apri %1$s Gestione
@@ -8945,7 +8967,7 @@ Apri %1$s Gestione
 Guida alla configurazione in 3 passaggi
 </string>
     <string name="shizuku_step_1">
-1. Install Manager
+1. Installa Gestore
 </string>
     <string name="shizuku_step_2">
 2. Avvia il servizio
@@ -8984,17 +9006,23 @@ Scarica %1$s: v%2$s
 Scarica e installa (%1$s)
 </string>
     <string name="elevated_disconnect_confirm_title">
-Disconnect Elevated Access?
+Disconnettere l\'accesso elevato?
 </string>
     <string name="elevated_disconnect_confirm_desc">
-This will disconnect %1$s elevated access in UFM. You can re-enable it at any time.
+Questa operazione disconnetterà l\'%1$s accesso con privilegi elevati in UFM. Puoi riattivarlo in qualsiasi momento.
 </string>
     <string name="elevated_btn_disconnect">
-Disconnect
+Disconnetti
 </string>
-    <string name="shizuku_allow_app_access">Allow app access</string>
-    <string name="shizuku_app_access_granted_toast">Elevated access enabled for %1$s</string>
-    <string name="shizuku_app_access_revoked">Elevated access disabled for %1$s</string>
+    <string name="shizuku_allow_app_access">
+Consenti l\'accesso all\'app
+</string>
+    <string name="shizuku_app_access_granted_toast">
+Accesso elevato abilitato per %1$s
+</string>
+    <string name="shizuku_app_access_revoked">
+Accesso elevato disabilitato per %1$s
+</string>
     <string name="elevated_fetching_toast">
 Controllo della versione più recente di %1$s…
 </string>
@@ -9291,7 +9319,7 @@ Fermare
 Tocca per gestire
 </string>
     <string name="file_server_timeout_stopped">
-File server stopped: Android 6-hour execution limit reached
+File server arrestato: è stato raggiunto il limite di esecuzione di 6 ore di Android
 </string>
     <string name="opening_file_server">
 Apertura del fileserver…
@@ -9599,34 +9627,34 @@ Cancellare
 
     <!-- WebDAV Setup Activity — Insecure / Self-Signed TLS toggle & dialog -->
     <string name="webdav_setup_allow_insecure_tls">
-Allow untrusted / self-signed certificate
+Consenti certificato non attendibile/autofirmato
 </string>
     <string name="webdav_setup_allow_insecure_tls_sub">
-Accept self-signed or private CA SSL certificates (common on local NAS devices)
+Accetta certificati SSL CA autofirmati o privati ​​(comuni sui dispositivi NAS locali)
 </string>
     <string name="webdav_setup_password_keep_hint">
-Password (leave blank to keep current)
+Password (lascia vuoto per restare aggiornato)
 </string>
     <string name="webdav_cert_dialog_title">
-Untrusted SSL Certificate
+Certificato SSL non attendibile
 </string>
     <string name="webdav_cert_dialog_msg">
-The server at %1$s presented an untrusted or self-signed SSL certificate. Verify the certificate details below before trusting this connection.
+Il server su %1$s ha presentato un certificato SSL non attendibile o autofirmato. Verifica i dettagli del certificato di seguito prima di considerare attendibile questa connessione.
 </string>
     <string name="webdav_cert_dialog_subject">
-Subject
+Soggetto
 </string>
     <string name="webdav_cert_dialog_issuer">
-Issuer
+Emittente
 </string>
     <string name="webdav_cert_dialog_valid">
-Validity
+Validità
 </string>
     <string name="webdav_cert_dialog_fingerprint">
-SHA-256 Fingerprint
+Impronta digitale SHA-256
 </string>
     <string name="webdav_cert_dialog_trust">
-Trust &amp; Connect
+Fidati e connettiti
 </string>
 
     <!-- About Section -->
@@ -10468,7 +10496,7 @@ Scansione
 Telecamera
 </string>
     <string name="scanner_camera_not_found">
-No camera app found on this device
+Nessuna app fotocamera trovata su questo dispositivo
 </string>
     <string name="scanner_capture_gallery">
 Scegli dalla Galleria
@@ -11924,100 +11952,100 @@ Lunghezza del salto impostata su %1$s
 
     <!-- Subtitle Style & Accessibility Customization -->
     <string name="settings_subtitle_style_title">
-Subtitle style
+Stile dei sottotitoli
 </string>
     <string name="settings_subtitle_style_desc">
-Configure in-app subtitle appearance, font size, and system caption synchronization.
+Configura l\'aspetto dei sottotitoli in-app, la dimensione del carattere e la sincronizzazione dei sottotitoli di sistema.
 </string>
     <string name="subtitle_style_summary_system">
-System caption style
+Stile didascalia del sistema
 </string>
     <string name="subtitle_style_summary_custom">
-UFM custom style (%1$s)
+Stile personalizzato UFM (%1$s)
 </string>
     <string name="subtitle_style_dialog_title">
-Subtitle Style
+Stile sottotitoli
 </string>
     <string name="subtitle_style_mode_system">
-System Caption Style
+Stile didascalia di sistema
 </string>
     <string name="subtitle_style_mode_system_desc">
-Follows device Accessibility caption settings even when system captions are disabled.
+Segue le impostazioni dei sottotitoli di accessibilità del dispositivo anche quando i sottotitoli di sistema sono disabilitati.
 </string>
     <string name="subtitle_style_mode_custom">
-UFM Custom Style
+Stile personalizzato UFM
 </string>
     <string name="subtitle_style_mode_custom_desc">
-Custom in-app styling with adjustable size, colors, edge effects, and positioning.
+Stile in-app personalizzato con dimensioni, colori, effetti bordo e posizionamento regolabili.
 </string>
     <string name="subtitle_style_open_system">
-Open Device Caption Settings
+Apri Impostazioni didascalia dispositivo
 </string>
     <string name="subtitle_style_system_unavailable">
-System caption settings not available on this device; using UFM style.
+Impostazioni dei sottotitoli di sistema non disponibili su questo dispositivo; utilizzando lo stile UFM.
 </string>
     <string name="subtitle_style_preview_title">
-Preview
+Anteprima
 </string>
     <string name="subtitle_style_preview_line1">
 Ultimate File Manager Pro
 </string>
     <string name="subtitle_style_preview_line2">
-Live subtitle preview • Crisp text styling
+Anteprima dei sottotitoli dal vivo • Stile del testo nitido
 </string>
     <string name="subtitle_style_text_size">
-Text size
+Dimensione del testo
 </string>
     <string name="subtitle_style_text_color">
-Text color
+Colore del testo
 </string>
     <string name="subtitle_style_bg_color">
-Background opacity
+Opacità dello sfondo
 </string>
     <string name="subtitle_style_edge_type">
-Edge effect
+Effetto bordo
 </string>
     <string name="subtitle_style_edge_none">
 None
 </string>
     <string name="subtitle_style_edge_outline">
-Outline
+Contorno
 </string>
     <string name="subtitle_style_edge_drop_shadow">
-Drop shadow
+Lascia cadere l\'ombra
 </string>
     <string name="subtitle_style_edge_raised">
-Raised
+Sollevato
 </string>
     <string name="subtitle_style_edge_depressed">
-Depressed
+Depresso
 </string>
     <string name="subtitle_style_bottom_margin">
-Bottom margin
+Margine inferiore
 </string>
     <string name="subtitle_style_apply_embedded">
-Apply embedded styles (ASS/SSA/TTML)
+Applicare stili incorporati (ASS/SSA/TTML)
 </string>
     <string name="subtitle_style_apply_embedded_desc">
-When disabled, UFM subtitle styling overrides embedded font and color tags for optimal readability.
+Quando disabilitato, lo stile dei sottotitoli UFM sovrascrive i caratteri incorporati e i tag colore per una leggibilità ottimale.
 </string>
     <string name="subtitle_style_color_yellow">
-Yellow
+Giallo
 </string>
     <string name="subtitle_style_color_white">
-White
+Bianco
 </string>
     <string name="subtitle_style_color_cyan">
-Cyan
+Ciano
 </string>
     <string name="subtitle_style_color_green">
-Green
+Verde
 </string>
     <string name="subtitle_style_color_magenta">
 Magenta
 </string>
     <string name="subtitle_style_color_orange">
-Orange
+Arancia
 </string>
     <string name="subtitle_style_bg_transparent">
 None
@@ -12032,13 +12060,13 @@ None
 75%
 </string>
     <string name="subtitle_style_bg_100">
-Solid
+Solido
 </string>
     <string name="player_track_sheet_subtitle_style">
-Subtitle Style…
+Stile sottotitoli...
 </string>
     <string name="player_track_sheet_subtitle_style_desc">
-Customize colors, size &amp; appearance
+Personalizza colori, dimensioni e aspetto
 </string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
@@ -12079,10 +12107,10 @@ Ripeti
 Ripeti
 </string>
     <string name="player_toast_repeat_all">
-Repeat all
+Ripeti tutto
 </string>
     <string name="player_toast_repeat_one">
-Repeat current track
+Ripete la traccia corrente
 </string>
     <string name="player_toast_audio_track">
 Traccia audio
@@ -12241,13 +12269,13 @@ Posizione:
 Misurare:
 </string>
     <string name="properties_label_size_on_disk">
-Size on disk:
+Dimensioni su disco:
 </string>
     <string name="properties_sparse_badge">
-Partial Download (Sparse)
+Download parziale (sparso)
 </string>
     <string name="properties_sparse_allocated_pct">
-%1$.1f%% allocated
+%1$.1f%% assegnato
 </string>
     <string name="properties_label_contains">
 Contiene:
@@ -12903,7 +12931,7 @@ Dettagli file audio
 Formato
 </string>
     <string name="music_tag_tech_bitrate">
-Bitrate
+Velocità in bit
 </string>
     <string name="music_tag_tech_sample_rate">
 Frequenza di campionamento
@@ -12960,61 +12988,61 @@ Specifiche tecniche
 </string>
     <!-- Music Tag Online Sync & High-Res Cover Picker -->
     <string name="music_tag_btn_search_online_cover">
-Search Online Art
+Cerca arte online
 </string>
     <string name="music_tag_btn_musicbrainz_sync">
-Identify Online (MusicBrainz)
+Identificare in linea (MusicBrainz)
 </string>
     <string name="music_tag_cover_picker_title">
-Search Online Artwork
+Cerca opere d\'arte online
 </string>
     <string name="music_tag_search_covers_hint">
-Artist and Album name…
+Nome dell\'artista e dell\'album...
 </string>
     <string name="music_tag_searching_artwork">
-Searching Apple Music, Deezer &amp; Cover Art Archive…
+Ricerca nell\'archivio di Apple Music, Deezer e cover art…
 </string>
     <string name="music_tag_no_artwork_found">
-No artwork found for this query
+Nessuna opera d\'arte trovata per questa query
 </string>
     <string name="music_tag_cover_applied">
-Applied online album artwork
+Copertina dell\'album online applicata
 </string>
     <string name="music_tag_cover_download_error">
-Failed to download artwork
+Impossibile scaricare la grafica
 </string>
     <string name="music_tag_musicbrainz_search_title">
-MusicBrainz Tag Search
+Ricerca tag MusicBrainz
 </string>
     <string name="music_tag_search_query_hint">
-Track title or Album name…
+Titolo del brano o nome dell\'album...
 </string>
     <string name="music_tag_searching_musicbrainz">
-Searching MusicBrainz…
+Ricerca su MusicBrainz…
 </string>
     <string name="music_tag_no_musicbrainz_results">
-No matching recordings or releases found
+Nessuna registrazione o pubblicazione corrispondente trovata
 </string>
     <string name="music_tag_diff_title">
-Review Online Tags
+Rivedi i tag online
 </string>
     <string name="music_tag_diff_subtitle">
-Select fields to apply to track
+Seleziona i campi da applicare al monitoraggio
 </string>
     <string name="music_tag_diff_apply">
-Apply Selected Tags
+Applica i tag selezionati
 </string>
     <string name="music_tag_select_all">
-Select All
+Seleziona tutto
 </string>
     <string name="music_tag_tab_recordings">
-Recordings
+Registrazioni
 </string>
     <string name="music_tag_tab_releases">
-Albums / Releases
+Album/Uscite
 </string>
     <string name="music_tag_tracks_count">
-%d tracks
+%d tracce
 </string>
     <!-- Icon Tap Edit Mode -->
     <string name="settings_icon_tap_edit_mode_title">
@@ -14210,20 +14238,20 @@ Concedi l\'accesso a una cartella in questo spazio di archiviazione
 </string>
     <string name="action_remove_folder_from_storage">Elimina Cartella</string>
     <string name="action_remove_folder_from_storage_desc">
-Remove mounted folder access from this storage
+Rimuovi l\'accesso alla cartella montata da questo archivio
 </string>
     <string name="dialog_remove_folders_title">
-Remove Mounted Folders
+Rimuovi le cartelle montate
 </string>
     <string name="dialog_remove_folders_desc">
-Select a folder to remove access from this storage. Your files will not be deleted.
+Seleziona una cartella per rimuovere l\'accesso da questo spazio di archiviazione. I tuoi file non verranno eliminati.
 </string>
     <string name="no_mounted_folders_hint">
-No mounted folders remaining for this storage.
+Nessuna cartella montata rimasta per questo spazio di archiviazione.
 </string>
     <string name="restricted_storage_empty_title">Accesso a tutti i file richiesto</string>
     <string name="restricted_storage_empty_desc">
-To access and manage files in this storage, please enable All Files Access in Android Settings.
+Per accedere e gestire i file in questo spazio di archiviazione, abilita Accesso a tutti i file nelle Impostazioni Android.
 </string>
     <string name="restricted_storage_grant_all_files">
 Abilita l\'accesso a tutti i file nelle Impostazioni
@@ -14372,16 +14400,16 @@ Impostazioni di accesso root
 </string>
     <!-- Phase 3: Root Filesystem Browsing & I/O Engine -->
     <string name="root_permission_required_desc">
-Superuser access is required to access protected root directories.
+Per accedere alle directory root protette è necessario l\'accesso come superutente.
 </string>
     <string name="root_remount_failed">
 Impossibile rimontare la partizione in lettura-scrittura.
 </string>
     <string name="root_file_saved">
-Saved with superuser permissions
+Salvato con permessi di superutente
 </string>
     <string name="root_posix_permissions">
-Permissions
+Autorizzazioni
 </string>
     <string name="root_selinux_context">
 Contesto SELinux
@@ -14390,7 +14418,7 @@ Contesto SELinux
 Proprietario/Gruppo
 </string>
     <string name="root_symlink_target">
-Link Target
+Obiettivo del collegamento
 </string>
 
     <!-- FOSS GitHub Release Update Checker -->
@@ -14661,10 +14689,10 @@ Confronta file
 ✗ I file differiscono (dimensioni diverse: %1$s vs %2$s)
 </string>
     <string name="checksum_compare_partial_match">
-⚠ Matching Header &amp; Data — Incomplete Download (%1$.1f%% vs %2$.1f%% allocated)
+⚠ Intestazione e dati corrispondenti: download incompleto (%1$.1f%% rispetto a %2$.1f%% assegnato)
 </string>
     <string name="checksum_compare_sparse_size_subtitle">
-Size on disk: %1$s (%2$.1f%%)
+Dimensioni su disco: %1$s (%2$.1f%%)
 </string>
     <string name="checksum_compare_same_size">
 Dimensione identica (%1$s). Hashing per verificare il contenuto...
@@ -14913,7 +14941,7 @@ Utilizza PIN/sequenza dispositivo
 PIN errato. %1$d tentativi rimanenti
 </string>
     <string name="security_unlock_invalid_password">
-Incorrect password. %1$d attempts remaining
+Password errata. %1$d tentativi rimanenti
 </string>
     <string name="security_unlock_invalid_password_short">
 Password errata
@@ -14978,7 +15006,7 @@ Rinomina scheda
 Rete
 </string>
     <string name="storage_cloud">
-Cloud
+Nuvola
 </string>
     
     <!-- SAF & External File Pickers Exposure -->
@@ -15152,10 +15180,10 @@ Codec
 Risoluzione
 </string>
     <string name="video_info_framerate">
-Frame rate
+Frequenza fotogrammi
 </string>
     <string name="video_info_bitrate">
-Bitrate
+Velocità in bit
 </string>
     <string name="video_info_hdr">
 Gamma dinamica
@@ -15402,7 +15430,7 @@ Salva
 ANTEPRIMA DAL VIVO
 </string>
     <string name="live_preview_sample_filename">
-Quarterly_Financial_Report_2026_Final.pdf
+Relazione_Finanziaria_Trimestrale_2026_Finale.pdf
 </string>
     <string name="live_preview_sample_info">
 3.8 MB · Modificato oggi, 13:45
@@ -15551,240 +15579,352 @@ Monta unità
 </string>
 
     <!-- Grid Text Placement Settings -->
-    <string name="settings_grid_text_position_title">Grid Text Placement</string>
-    <string name="settings_grid_text_position_subtitle">Position file names below or overlaid on grid items</string>
-    <string name="settings_grid_text_position_below">Below Block (Default)</string>
-    <string name="settings_grid_text_position_overlay">Overlaid on Block</string>
-    <string name="backup_pref_grid_text_position">Grid text placement settings</string>
-    <string name="backup_pref_view_styles">View density &amp; preset styles</string>
+    <string name="settings_grid_text_position_title">
+Posizionamento del testo sulla griglia
+</string>
+    <string name="settings_grid_text_position_subtitle">
+Posiziona i nomi dei file sotto o sovrapposti agli elementi della griglia
+</string>
+    <string name="settings_grid_text_position_below">
+Sotto il blocco (impostazione predefinita)
+</string>
+    <string name="settings_grid_text_position_overlay">
+Sovrapposto al blocco
+</string>
+    <string name="backup_pref_grid_text_position">
+Impostazioni di posizionamento del testo sulla griglia
+</string>
+    <string name="backup_pref_view_styles">
+Visualizza densità e stili preimpostati
+</string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
     <string name="open_as">Apri Come...</string>
-    <string name="open_as_desc">Choose a viewer or player to open this file</string>
-    <string name="presentation_viewer">Presentation Viewer</string>
-    <string name="slide_counter">Slide %1$d of %2$d</string>
-    <string name="open_in_powerpoint">Open in Presentation App</string>
-    <string name="open_as_text">Text / Code Viewer</string>
-    <string name="open_as_text_desc">Built-in code &amp; text editor with syntax highlighting</string>
-    <string name="open_as_hex">Hex / Binary Viewer</string>
-    <string name="open_as_hex_desc">Raw byte hex dump and binary inspector</string>
-    <string name="open_as_presentation">Presentation / Slide Deck</string>
-    <string name="open_as_presentation_desc">Built-in slide deck viewer with speaker notes</string>
-    <string name="open_as_spreadsheet">Spreadsheet / Table</string>
-    <string name="open_as_spreadsheet_desc">Built-in spreadsheet table viewer</string>
-    <string name="open_as_image">Image Viewer</string>
-    <string name="open_as_image_desc">High-resolution photo viewer with zoom &amp; pan</string>
-    <string name="open_as_audio">Audio Player</string>
-    <string name="open_as_audio_desc">Media3 audio player with background playback</string>
-    <string name="open_as_video">Video Player</string>
-    <string name="open_as_video_desc">Media3 hardware-accelerated video player</string>
-    <string name="open_as_archive">Archive Browser</string>
-    <string name="open_as_archive_desc">Explore ZIP, 7Z, TAR, RAR, and compressed files</string>
-    <string name="open_as_other">Choose External App…</string>
-    <string name="open_as_other_desc">Open with an installed third-party app</string>
-    <string name="speaker_notes">Speaker Notes</string>
-    <string name="no_slides_found">No slides found in this presentation</string>
-    <string name="next_slide">Next Slide</string>
-    <string name="prev_slide">Previous Slide</string>
-    <string name="view_raw_text">View as Raw Text</string>
-    <string name="ufm_slide_deck_viewer">UFM Slide Deck</string>
-    <string name="open_with_presentation_app">Presentation App (PowerPoint / Slides)</string>
-    <string name="open_with_presentation_app_desc">Open in Microsoft PowerPoint, Google Slides, or office suite</string>
-    <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
+    <string name="open_as_desc">
+Scegli un visualizzatore o un lettore per aprire questo file
+</string>
+    <string name="presentation_viewer">
+Visualizzatore di presentazioni
+</string>
+    <string name="slide_counter">
+Diapositiva %1$d di %2$d
+</string>
+    <string name="open_in_powerpoint">
+Apri nell\'app Presentazione
+</string>
+    <string name="open_as_text">
+Visualizzatore di testo/codice
+</string>
+    <string name="open_as_text_desc">
+Editor di codice e testo integrato con evidenziazione della sintassi
+</string>
+    <string name="open_as_hex">
+Visualizzatore esadecimale/binario
+</string>
+    <string name="open_as_hex_desc">
+Dump esadecimale di byte non elaborati e ispettore binario
+</string>
+    <string name="open_as_presentation">
+Presentazione/piatto di diapositive
+</string>
+    <string name="open_as_presentation_desc">
+Visualizzatore di diapositive integrato con note del relatore
+</string>
+    <string name="open_as_spreadsheet">
+Foglio di calcolo/tabella
+</string>
+    <string name="open_as_spreadsheet_desc">
+Visualizzatore di tabelle di fogli di calcolo integrato
+</string>
+    <string name="open_as_image">
+Visualizzatore di immagini
+</string>
+    <string name="open_as_image_desc">
+Visualizzatore di foto ad alta risoluzione con zoom e panoramica
+</string>
+    <string name="open_as_audio">
+Lettore audio
+</string>
+    <string name="open_as_audio_desc">
+Lettore audio Media3 con riproduzione in background
+</string>
+    <string name="open_as_video">
+Lettore video
+</string>
+    <string name="open_as_video_desc">
+Lettore video con accelerazione hardware Media3
+</string>
+    <string name="open_as_archive">
+Browser dell\'archivio
+</string>
+    <string name="open_as_archive_desc">
+Esplora file ZIP, 7Z, TAR, RAR e compressi
+</string>
+    <string name="open_as_other">
+Scegli App esterna...
+</string>
+    <string name="open_as_other_desc">
+Apri con un\'app di terze parti installata
+</string>
+    <string name="speaker_notes">
+Note del relatore
+</string>
+    <string name="no_slides_found">
+Nessuna diapositiva trovata in questa presentazione
+</string>
+    <string name="next_slide">
+Diapositiva successiva
+</string>
+    <string name="prev_slide">
+Diapositiva precedente
+</string>
+    <string name="view_raw_text">
+Visualizza come testo non elaborato
+</string>
+    <string name="ufm_slide_deck_viewer">
+Piattaforma per diapositive UFM
+</string>
+    <string name="open_with_presentation_app">
+App di presentazione (PowerPoint / Presentazioni)
+</string>
+    <string name="open_with_presentation_app_desc">
+Apri in Microsoft PowerPoint, Presentazioni Google o suite per ufficio
+</string>
+    <string name="ufm_slide_viewer_desc">
+Visualizza diapositive, miniature di copertina e note in UFM
+</string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
     <string name="action_open_with">Apri Con…</string>
     <string name="action_open_as">Apri Come...</string>
-    <string name="toolbar_open_with">Open With</string>
-    <string name="toolbar_open_as">Open As</string>
-    <string name="action_extract_subtitles">Extract Subtitles</string>
-    <string name="action_extract_audio">Extract Audio</string>
+    <string name="toolbar_open_with">
+Apri con
+</string>
+    <string name="toolbar_open_as">
+Apri come
+</string>
+    <string name="action_extract_subtitles">
+Estrai sottotitoli
+</string>
+    <string name="action_extract_audio">
+Estrai l\'audio
+</string>
     <string name="action_convert_to_mp4">
-Convert to MP4
+Converti in MP4
 </string>
-    <string name="toolbar_extract_subtitles">Extract Subtitles</string>
-    <string name="toolbar_extract_audio">Extract Audio</string>
+    <string name="toolbar_extract_subtitles">
+Estrai sottotitoli
+</string>
+    <string name="toolbar_extract_audio">
+Estrai l\'audio
+</string>
     <string name="toolbar_convert_to_mp4">
-Convert to MP4
+Converti in MP4
 </string>
-    <string name="extracting_subtitles">Extracting subtitle track…</string>
-    <string name="extracting_audio">Extracting audio track…</string>
+    <string name="extracting_subtitles">
+Estrazione della traccia dei sottotitoli…
+</string>
+    <string name="extracting_audio">
+Estrazione della traccia audio…
+</string>
     <string name="convert_to_mp4_progress">
-Converting video to MP4…
+Conversione di video in MP4…
 </string>
     <string name="convert_to_mp4_success">
-Video converted to %1$s
+Video convertito in %1$s
 </string>
     <string name="convert_to_mp4_failed">
-Failed to convert video
+Impossibile convertire il video
 </string>
     <string name="convert_to_mp4_title">
-Convert to MP4
+Converti in MP4
 </string>
     <string name="convert_to_mp4_confirm">
-Convert \"%1$s\" to universal MP4 format?
+Convertire \"%1$s\" nel formato universale MP4?
 </string>
-    <string name="subtitles_extracted_success">Subtitles extracted successfully.</string>
-    <string name="audio_extracted_success">Audio extracted successfully.</string>
+    <string name="subtitles_extracted_success">
+Sottotitoli estratti con successo.
+</string>
+    <string name="audio_extracted_success">
+Audio estratto con successo.
+</string>
     <string name="audio_format_universal">
-Universal M4A
+M4A universale
 </string>
     <string name="audio_format_original">
-Original Stream
+Flusso originale
 </string>
     <string name="audio_format_universal_desc">
-High-quality AAC (.m4a) — plays everywhere on phones, cars &amp; music apps
+AAC di alta qualità (.m4a): riproducibile ovunque su telefoni, automobili e app musicali
 </string>
     <string name="audio_format_original_desc">
-Lossless direct stream copy (.eac3, .dts, .ac3, .flac)
+Copia diretta senza perdita di dati (.eac3, .dts, .ac3, .flac)
 </string>
     <string name="codec_unsupported_title">
-Audio Codec Not Supported
+Codec audio non supportato
 </string>
     <string name="codec_unsupported_message">
-This device lacks a native hardware decoder for %1$s audio.\n
+Questo dispositivo non dispone di un decoder hardware nativo per l\'audio %1$s.\n
 \n
-Would you like to convert it to Universal M4A (AAC) for seamless playback?
+Vuoi convertirlo in Universal M4A (AAC) per una riproduzione senza interruzioni?
 </string>
     <string name="convert_and_play">
-Convert &amp; Play
+Converti e riproduci
 </string>
     <string name="converting_audio">
-Converting audio to M4A…
+Conversione dell\'audio in M4A…
 </string>
     <string name="convert_to_m4a">
-Convert to M4A
+Converti in M4A
 </string>
-    <string name="no_subtitles_found_in_video">No embedded subtitle tracks found in this video</string>
-    <string name="media_technical_details">Media Stream Details</string>
-    <string name="media_format">Container</string>
-    <string name="media_bitrate">Overall Bitrate</string>
-    <string name="error_generic">An error occurred</string>
-    <string name="failed_to_open_file">Failed to open file</string>
-    <string name="slide_badge_format">Slide %1$d</string>
-    <string name="slide_counter_format">Slide %1$d of %2$d</string>
-    <string name="no_app_to_open_file">No app found to open this file</string>
+    <string name="no_subtitles_found_in_video">
+Nessuna traccia di sottotitoli incorporata trovata in questo video
+</string>
+    <string name="media_technical_details">
+Dettagli del flusso multimediale
+</string>
+    <string name="media_format">
+Contenitore
+</string>
+    <string name="media_bitrate">
+Bitrate complessivo
+</string>
+    <string name="error_generic">
+Si è verificato un errore
+</string>
+    <string name="failed_to_open_file">
+Impossibile aprire il file
+</string>
+    <string name="slide_badge_format">
+Diapositiva %1$d
+</string>
+    <string name="slide_counter_format">
+Diapositiva %1$d di %2$d
+</string>
+    <string name="no_app_to_open_file">
+Nessuna app trovata per aprire questo file
+</string>
     <string name="select_subtitle_track">
-Select Subtitle Track
+Seleziona Traccia sottotitoli
 </string>
     <string name="extract_all_subtitles">
-Extract All Tracks
+Estrai tutte le tracce
 </string>
     <string name="extract_all_subtitles_desc">
-Extract all %1$d subtitle tracks into separate files
+Estrai tutte le %1$d tracce dei sottotitoli in file separati
 </string>
     <string name="subtitles_extracted_multiple_success">
-Successfully extracted %1$d subtitle files.
+File dei sottotitoli %1$d estratti correttamente.
 </string>
     <string name="select_audio_track">
-Select Audio Track
+Seleziona Traccia audio
 </string>
     <string name="extract_all_audio">
-Extract All Tracks
+Estrai tutte le tracce
 </string>
     <string name="extract_all_audio_desc">
-Extract all %1$d audio tracks into separate files
+Estrai tutte le %1$d tracce audio in file separati
 </string>
     <string name="audio_extracted_multiple_success">
-Successfully extracted %1$d audio files.
+File audio %1$d estratti correttamente.
 </string>
     <string name="no_audio_found_in_video">
-No audio tracks found in this video
+Nessuna traccia audio trovata in questo video
 </string>
 
     <!-- Floating Bottom Bar Dock -->
     <string name="floating_bar_settings_title">
-Floating Bottom Bar
+Barra inferiore mobile
 </string>
     <string name="floating_bar_settings_subtitle">
-Show a modern floating dock at the bottom of the main menu for quick access
+Mostra un moderno bacino galleggiante nella parte inferiore del menu principale per un accesso rapido
 </string>
     <string name="floating_bar_manage_title">
-Manage Floating Bar
+Gestisci la barra mobile
 </string>
     <string name="floating_bar_manage_subtitle">
-Add, remove, and reorder quick-access shortcuts
+Aggiungi, rimuovi e riordina le scorciatoie ad accesso rapido
 </string>
     <string name="floating_bar_enable_switch">
-Enable Floating Bar
+Abilita barra mobile
 </string>
     <string name="floating_bar_enable_desc">
-Docked tiles appear in the bottom floating bar and are hidden from the main menu
+I riquadri ancorati vengono visualizzati nella barra mobile inferiore e sono nascosti dal menu principale
 </string>
     <string name="floating_bar_docked_section">
-Docked Items
+Elementi ancorati
 </string>
     <string name="floating_bar_docked_hint">
-Drag handle to reorder. Tap Remove to return item to main menu.
+Trascina la maniglia per riordinare. Tocca Rimuovi per riportare l\'elemento al menu principale.
 </string>
     <string name="floating_bar_available_section">
-Available Tiles
+Piastrelle disponibili
 </string>
     <string name="floating_bar_available_hint">
-Tap + to add a tile to the floating bottom bar
+Tocca + per aggiungere un riquadro alla barra inferiore mobile
 </string>
     <string name="floating_bar_empty_docked">
-No items docked yet. Add tiles from the list below.
+Nessun elemento ancora agganciato. Aggiungi tessere dall\'elenco seguente.
 </string>
     <string name="floating_bar_empty_available">
-All available tiles have been added to the floating bar.
+Tutte le tessere disponibili sono state aggiunte alla barra mobile.
 </string>
     <string name="floating_bar_add">
-Add
+Aggiungere
 </string>
     <string name="floating_bar_remove">
-Remove
+Rimuovere
 </string>
     <string name="backup_pref_floating_bar">
-Floating Bottom Bar
+Barra inferiore mobile
 </string>
 
     <!-- Quick Access (Floating Bar & Edge Swipe Menu) -->
     <string name="quick_access_title">
-Quick Access
+Accesso rapido
 </string>
     <string name="quick_access_mode_title">
-Quick Access Style
+Stile di accesso rapido
 </string>
     <string name="quick_access_mode_subtitle">
-Choose how quick-access shortcuts are presented
+Scegli come vengono presentate le scorciatoie di accesso rapido
 </string>
     <string name="quick_access_mode_disabled">
-Disabled
+Disabilitato
 </string>
     <string name="quick_access_mode_bottom_bar">
-Bottom Floating Bar
+Barra mobile inferiore
 </string>
     <string name="quick_access_mode_edge_menu">
-Edge Swipe Menu
+Menu di scorrimento dal bordo
 </string>
     <string name="quick_access_edge_title">
-Swipe Edge
+Scorri bordo
 </string>
     <string name="quick_access_edge_left">
-Left Edge
+Bordo sinistro
 </string>
     <string name="quick_access_edge_right">
-Right Edge
+Bordo destro
 </string>
     <string name="quick_access_edge_handle_title">
-Edge Handle Indicator
+Indicatore della maniglia del bordo
 </string>
     <string name="quick_access_edge_handle_desc">
-Show a subtle indicator on the screen edge for easy opening
+Mostra un indicatore sottile sul bordo dello schermo per una facile apertura
 </string>
     <string name="quick_access_hide_tiles_title">
-Hide Docked Tiles on Main Menu
+Nascondi i riquadri ancorati nel menu principale
 </string>
     <string name="quick_access_hide_tiles_desc">
-Keep the main dashboard clean by hiding tiles docked in Quick Access
+Mantieni pulita la dashboard principale nascondendo i riquadri ancorati in Accesso rapido
 </string>
     <string name="quick_access_manage_tiles">
-Manage Tiles
+Gestisci riquadri
 </string>
     <string name="quick_access_empty_hint">
-No tiles docked yet.\n
-Tap Manage Tiles to add shortcuts.
+Nessun riquadro ancora agganciato.\n
+Tocca Gestisci riquadri per aggiungere scorciatoie.
 </string>
     <string name="quick_access_mode_disabled_desc">Disattiva scorciatoie di accesso rapido</string>
     <string name="quick_access_mode_bottom_bar_desc">Barra mobile moderna nella parte inferiore del menu principale</string>
@@ -15795,373 +15935,373 @@ Tap Manage Tiles to add shortcuts.
 
     <!-- Direct Remote Media & Media Operation Worker -->
     <string name="settings_network_media_process_title">
-Network Media Processing
+Elaborazione multimediale in rete
 </string>
     <string name="settings_network_media_process_subtitle_off">
-Direct stream processing (zero local copy of video)
+Elaborazione diretta del flusso (zero copie locali del video)
 </string>
     <string name="settings_network_media_process_subtitle_on">
-Copy full video to local storage before processing
+Copia il video completo nella memoria locale prima dell\'elaborazione
 </string>
     <string name="backup_pref_network_media_process">
-Network Media Processing
+Elaborazione multimediale in rete
 </string>
     <string name="dialog_copy_before_process_title">
-Copy to Local Storage?
+Copiare nell\'archivio locale?
 </string>
     <string name="dialog_copy_before_process_msg">
-This operation will copy \"%1$s\" (%2$s) from network storage to your device\'s local storage first.\n
+Questa operazione copierà prima \"%1$s\" (%2$s) dall\'archivio di rete all\'archivio locale del dispositivo.\n
 \n
-Depending on file size and connection speed, this may take some time.\n
+A seconda delle dimensioni del file e della velocità di connessione, l\'operazione potrebbe richiedere del tempo.\n
 \n
-Do you want to proceed?
+Vuoi procedere?
 </string>
     <string name="action_copy_and_proceed">
-Copy &amp; Proceed
+Copia e procedi
 </string>
     <string name="media_operation_channel_name">
-Media Operations
+Operazioni sui media
 </string>
     <string name="media_operation_channel_desc">
-Background video conversion and track extraction
+Conversione di video in background ed estrazione di tracce
 </string>
     <string name="media_op_converting_video">
-Converting Video to MP4…
+Conversione di video in MP4…
 </string>
     <string name="media_op_extracting_audio">
-Extracting Audio Track…
+Estrazione della traccia audio…
 </string>
     <string name="media_op_extracting_subtitles">
-Extracting Subtitles…
+Estrazione dei sottotitoli…
 </string>
     <string name="media_op_completed_title">
-Media Operation Completed
+Operazione multimediale completata
 </string>
     <string name="media_op_failed_title">
-Media Operation Failed
+Operazione multimediale non riuscita
 </string>
     <string name="media_op_downloading_source">
-Downloading remote video to local cache…
+Download del video remoto nella cache locale…
 </string>
     <string name="media_op_uploading_result">
-Uploading result to remote folder…
+Caricamento del risultato nella cartella remota…
 </string>
     <string name="media_op_running_background">
-Continuing in background. Check notifications for progress.
+Continuando in sottofondo. Controlla le notifiche per i progressi.
 </string>
     <string name="media_op_readonly_share_title">
-Remote Share is Read-Only
+La condivisione remota è di sola lettura
 </string>
     <string name="media_op_readonly_share_msg">
-The extracted file could not be saved to \"%1$s\" because the share is read-only.\n
+Impossibile salvare il file estratto in \"%1$s\" perché la condivisione è di sola lettura.\n
 \n
-Would you like to save it to your local device instead?
+Vuoi invece salvarlo sul tuo dispositivo locale?
 </string>
     <string name="action_save_locally">
-Save to Device
+Salva sul dispositivo
 </string>
     <string name="dialog_media_op_readonly_title">
-Read-Only Share
+Condivisione di sola lettura
 </string>
     <string name="dialog_media_op_readonly_msg">
-The share \"%1$s\" is read-only.\n
+La condivisione \"%1$s\" è di sola lettura.\n
 \n
-The extracted or converted file cannot be saved back to the remote share, so it will be saved to your local Downloads folder instead.\n
+Il file estratto o convertito non può essere salvato nuovamente nella condivisione remota, quindi verrà salvato nella cartella Download locale.\n
 \n
-Do you want to proceed?
+Vuoi procedere?
 </string>
 
     <!-- Document Providers & Other Storage (SAF) -->
     <string name="other_storage_title">
-Other Storage
+Altro spazio di archiviazione
 </string>
     <string name="other_storage_subtitle">
-Installed cloud &amp; document providers
+Fornitori di cloud e documenti installati
 </string>
     <string name="other_storage_desc">
-Access third-party document providers installed on your device
+Accedi ai fornitori di documenti di terze parti installati sul tuo dispositivo
 </string>
     <string name="other_storage_provider_count">
-%1$d document providers available
+%1$d fornitori di documenti disponibili
 </string>
     <string name="other_storage_provider_count_single">
-1 document provider available
+1 fornitore di documenti disponibile
 </string>
     <string name="other_storage_empty">
-No third-party document providers found
+Nessun fornitore di documenti di terze parti trovato
 </string>
     <string name="action_browse_files_saf">
-Browse Files (SAF)
+Sfoglia file (SAF)
 </string>
     <string name="action_mount_folder_tree">
-Mount Storage Folder
+Monta la cartella di archiviazione
 </string>
     <string name="action_connect_native_sync">
-Connect via UFM Native Engine
+Connettiti tramite UFM Native Engine
 </string>
     <string name="action_open_app">
-Open App
+Apri l\'app
 </string>
     <string name="dialog_add_storage_choice_title">
-Add Storage Location
+Aggiungi posizione di archiviazione
 </string>
     <string name="dialog_add_storage_choice_tree">
-Mount Directory / Folder
+Monta directory/cartella
 </string>
     <string name="dialog_add_storage_choice_tree_desc">
-Select a folder from Termux, SD card, or USB drive
+Seleziona una cartella da Termux, scheda SD o unità USB
 </string>
     <string name="dialog_add_storage_choice_other">
-Installed Document Providers
+Provider di documenti installati
 </string>
     <string name="dialog_add_storage_choice_other_desc">
-Access Proton Drive, Synology DS file, Google Drive &amp; more
+Accedi a Proton Drive, file Synology DS, Google Drive e altro
 </string>
     <string name="dialog_add_storage_choice_native">
-High-Speed Cloud &amp; Network
+Cloud e rete ad alta velocità
 </string>
     <string name="dialog_add_storage_choice_native_desc">
-Full 2-way sync via RClone (Proton/Google Drive) or SMB/WebDAV
+Sincronizzazione bidirezionale completa tramite RClone (Proton/Google Drive) o SMB/WebDAV
 </string>
     <string name="saf_file_action_dialog_title">
-Open or Copy File
+Apri o copia file
 </string>
     <string name="saf_file_action_dialog_msg">
-What would you like to do with \"%1$s\"?
+Cosa ti piacerebbe fare con \"%1$s\"?
 </string>
     <string name="saf_file_action_open_viewer">
-Open in UFM Viewer
+Apri nel visualizzatore UFM
 </string>
     <string name="saf_file_action_copy_local">
-Copy to Local Storage
+Copia nell\'archivio locale
 </string>
     <string name="saf_file_action_remember">
-Remember my choice
+Ricorda la mia scelta
 </string>
     <string name="saf_file_action_always_ask">
-Always Ask
+Chiedi sempre
 </string>
     <string name="saf_files_copied_to_downloads">
-Copied %1$d file(s) to Downloads
+%1$d file copiati in Download
 </string>
     <string name="settings_saf_file_action_title">
-SAF Picked File Action
+Azione file selezionato SAF
 </string>
     <string name="settings_saf_file_action_subtitle_always_ask">
-Always ask whether to open or copy
+Chiedi sempre se aprire o copiare
 </string>
     <string name="settings_saf_file_action_subtitle_open_viewer">
-Always open in UFM Viewer
+Apri sempre in UFM Viewer
 </string>
     <string name="settings_saf_file_action_subtitle_copy_local">
-Always copy to local storage
+Copia sempre nell\'archivio locale
 </string>
     <!-- Document Provider Tiles & Actions (Phase 2) -->
     <string name="document_provider_tile_subtitle">
-Document Provider
+Fornitore di documenti
 </string>
     <string name="doc_provider_action_title">
-Manage %1$s
+Gestisci %1$s
 </string>
     <string name="doc_provider_action_browse_title">
-Browse &amp; Download Files
+Sfoglia e scarica file
 </string>
     <string name="doc_provider_action_browse_subtitle">Apri %1$s per scegliere i file da visualizzare o copiare in locale</string>
     <string name="doc_provider_action_upload_title">
-Upload File to %1$s
+Carica file su %1$s
 </string>
     <string name="doc_provider_action_upload_subtitle">
-Select a local file in UFM to save into %1$s
+Seleziona un file locale in UFM da salvare in %1$s
 </string>
     <string name="doc_provider_remove_title">
-Remove %1$s?
+Rimuovere %1$s?
 </string>
     <string name="doc_provider_remove_msg">
-Remove %1$s from storage? You can re-add it anytime from Other Storage.
+Rimuovere %1$s dallo spazio di archiviazione? Puoi aggiungerlo nuovamente in qualsiasi momento da Altro spazio di archiviazione.
 </string>
     <string name="doc_provider_remove_confirm">
-Remove from Storage
+Rimuovi dall\'archivio
 </string>
     <string name="doc_provider_removed_toast">
-%1$s removed from storage
+%1$s rimosso dallo spazio di archiviazione
 </string>
     <string name="doc_provider_added_toast">
-%1$s added to storage
+%1$s aggiunto allo spazio di archiviazione
 </string>
     <string name="other_storage_all_added">
-All available providers added
+Sono stati aggiunti tutti i fornitori disponibili
 </string>
     <string name="other_storage_empty_all_added">
-All installed document providers are already added to your Main Storage Menu.
+Tutti i fornitori di documenti installati sono già aggiunti al menu di archiviazione principale.
 </string>
     <string name="saf_copy_destination_title">
-Destination: %1$s
+Destinazione: %1$s
 </string>
     <string name="saf_copy_destination_change">
-Change Folder…
+Cambia cartella…
 </string>
     <string name="saf_select_destination_folder">
-Select destination folder
+Seleziona la cartella di destinazione
 </string>
     <string name="saf_copy_destination_confirm_title">
-Set Copy Destination
+Imposta la destinazione della copia
 </string>
     <string name="saf_copy_destination_confirm_subtitle">
-SAF Picked Files Destination
+Destinazione dei file selezionati da SAF
 </string>
     <string name="saf_copy_destination_confirm_message">
-Files copied from document providers will be saved to \"%1$s\".
+I file copiati dai fornitori di documenti verranno salvati in \"%1$s\".
 </string>
     <string name="settings_section_saf_transfers">
-Other Storage &amp; SAF Transfers
+Altri trasferimenti di archiviazione e SAF
 </string>
     <string name="settings_saf_copy_destination_title">
-Copy Destination Folder
+Copia cartella di destinazione
 </string>
     <string name="settings_saf_copy_destination_reset">
-Reset to Default (Downloads)
+Ripristina impostazioni predefinite (Download)
 </string>
     <string name="settings_saf_copy_destination_select_new">
-Select New Folder…
+Seleziona Nuova cartella…
 </string>
     <string name="settings_saf_copy_destination_reset_toast">
-Copy destination reset to Downloads
+La destinazione della copia viene reimpostata su Download
 </string>
     <string name="share_export_to_cloud_provider">
-Export to Document Provider
+Esporta nel fornitore di documenti
 </string>
     <string name="share_export_to_cloud_provider_subtitle">
-Save directly to a mounted cloud or document provider
+Salva direttamente su un cloud montato o su un provider di documenti
 </string>
     <string name="share_export_select_provider_title">
-Select Destination Provider
+Seleziona Fornitore di destinazione
 </string>
     <string name="share_export_multi_zip_title">
-Export Multiple Files
+Esporta più file
 </string>
     <string name="share_export_multi_zip_msg">
-How would you like to export these %1$d files to %2$s?
+Come vorresti esportare questi %1$d file in %2$s?
 </string>
     <string name="share_export_as_zip">
-Export as ZIP Archive
+Esporta come archivio ZIP
 </string>
     <string name="share_export_via_share_sheet">
-Use System Upload Sheet
+Utilizza il foglio di caricamento del sistema
 </string>
     <string name="saf_upload_success">
-\"%1$s\" saved to %2$s
+\"%1$s\" salvato in %2$s
 </string>
     <string name="capability_folder_mount">
-Folder Mountable
+Cartella montabile
 </string>
     <string name="capability_files_only">
-Files &amp; Cloud
+File e cloud
 </string>
     <string name="capability_native_sync">
-Native Sync Available
+Sincronizzazione nativa disponibile
 </string>
     <string name="action_upload_other_storage">
-Upload to Other Storage
+Carica su altro spazio di archiviazione
 </string>
     <string name="toolbar_desc_upload_other_storage">
-Upload selected files or folders to external document providers
+Carica file o cartelle selezionati su fornitori di documenti esterni
 </string>
     <string name="toolbar_upload_other_storage">
-Upload to Other Storage
+Carica su altro spazio di archiviazione
 </string>
     <string name="no_mounted_doc_providers_toast">
-No storage provider added. Select a provider to add.
+Nessun provider di archiviazione aggiunto. Seleziona un fornitore da aggiungere.
 </string>
     <string name="saf_files_copied_to_destination">
-Copied %1$d file(s) to %2$s
+Copiato/i %1$d file in %2$s
 </string>
     <string name="share_export_folder_title">
-Export Folder
+Cartella Esporta
 </string>
     <string name="share_export_folder_msg">
-Folders cannot be uploaded directly via Document Providers. Would you like to compress \"%1$s\" into a ZIP archive to upload to %2$s?
+Le cartelle non possono essere caricate direttamente tramite i fornitori di documenti. Desideri comprimere \"%1$s\" in un archivio ZIP da caricare su %2$s?
 </string>
     <string name="share_export_zip_desc">
-Compress into a single ZIP archive and upload
+Comprimi in un unico archivio ZIP e carica
 </string>
     <string name="share_export_share_sheet_desc">
-Send items using the Android system upload sheet
+Invia elementi utilizzando il foglio di caricamento del sistema Android
 </string>
     <string name="share_export_select_provider_subtitle">
-Select a mounted provider or open Other Storage
+Seleziona un provider montato o apri Altro spazio di archiviazione
 </string>
     <string name="archive_progress_zipping_other_storage">
-Zipping for %1$s…
+Compressione per %1$s...
 </string>
     <string name="archive_progress_zipping_for_other_storage">
-Zipping for Other Storage…
+Zippare per altri archivi...
 </string>
     <string name="share_export_via_app">
-Upload via %1$s
+Carica tramite %1$s
 </string>
     <string name="share_export_via_app_desc">
-Send files directly into %1$s
+Invia file direttamente a %1$s
 </string>
     <string name="share_export_as_zip_desc">
-Compress into a ZIP archive and choose destination folder in %1$s
+Comprimi in un archivio ZIP e scegli la cartella di destinazione in %1$s
 </string>
     <string name="share_export_as_zip_folder_desc">
-Preserves the folder structure and original directory inside a ZIP archive in %1$s
+Conserva la struttura delle cartelle e la directory originale all\'interno di un archivio ZIP in %1$s
 </string>
     <string name="share_export_via_app_folder_desc">
-Uploads individual files directly into %1$s (external upload screens cannot create directories)
+Carica singoli file direttamente in %1$s (le schermate di caricamento esterne non possono creare directory)
 </string>
     <string name="folder_upload_notice_title">
-Folder Upload Notice
+Avviso di caricamento della cartella
 </string>
     <string name="folder_upload_notice_single_msg">
-External upload screens (such as %2$s) cannot create directories.\n
+Le schermate di caricamento esterne (come %2$s) non possono creare directory.\n
 \n
-Only the files inside \"%1$s\" will be uploaded, not the original folder itself.\n
+Verranno caricati solo i file all\'interno di \"%1$s\", non la cartella originale stessa.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Per preservare la struttura completa della directory, scegli invece \"Esporta come archivio ZIP\".
 </string>
     <string name="folder_upload_notice_multi_msg">
-External upload screens (such as %1$s) cannot create directories.\n
+Le schermate di caricamento esterne (come %1$s) non possono creare directory.\n
 \n
-Only the files inside selected folders will be uploaded, not the original folders themselves.\n
+Verranno caricati solo i file all\'interno delle cartelle selezionate, non le cartelle originali stesse.\n
 \n
-To preserve the full directory structure, choose \"Export as ZIP Archive\" instead.
+Per preservare la struttura completa delle directory, scegli invece \"Esporta come archivio ZIP\".
 </string>
     <string name="btn_upload_files_only">
-Upload Files Only
+Carica solo file
 </string>
 
     <!-- Favorites Home Screen Presence -->
     <string name="fav_home_options_title">
-Home Screen Options
+Opzioni della schermata iniziale
 </string>
     <string name="fav_home_add_shortcut">
-Add to home screen
+Aggiungi alla schermata iniziale
 </string>
     <string name="fav_home_remove_shortcut">
-Remove from home screen
+Rimuovi dalla schermata iniziale
 </string>
     <string name="fav_home_delete_favorite">
-Delete favorite
+Elimina preferito
 </string>
     <string name="fav_shortcut_requested_toast">
-Shortcut requested — check your home screen
+Scorciatoia richiesta: controlla la schermata iniziale
 </string>
     <string name="fav_shortcut_disabled_toast">
-Shortcut disabled. Remove it manually from your home screen.
+Collegamento disabilitato. Rimuovilo manualmente dalla schermata iniziale.
 </string>
     <string name="fav_tv_channel_name">
-UFM Favorites
+Preferiti dell\'UFM
 </string>
     <string name="fav_tv_channel_declined_msg">
-Channel not approved. You can enable it later in TV Settings → Channels.
+Canale non approvato. Puoi abilitarlo in seguito in Impostazioni TV → Canali.
 </string>
     <string name="fav_shortcut_error_title">
-Item unavailable
+Articolo non disponibile
 </string>
     <string name="fav_shortcut_error_body">
-The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.
+Impossibile trovare il file o la cartella. Potrebbe essere stato spostato, eliminato o si trova in uno spazio di archiviazione non disponibile.
 </string>
     <string name="fav_shortcut_error_ok">
 OK
@@ -16181,382 +16321,382 @@ Nessuna unità o preferito disponibile
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">
-Open with
+Apri con
 </string>
     <string name="open_with_search_hint">
-Search apps…
+Cerca app...
 </string>
     <string name="open_with_just_once">
-Just once
+Solo una volta
 </string>
     <string name="open_with_always">
-Always
+Sempre
 </string>
     <string name="open_with_always_use_for_ext">
-Always use selected app for .%1$s files
+Utilizza sempre l\'app selezionata per i file .%1$s.
 </string>
     <string name="open_with_system_chooser">
 More options (System chooser)
 </string>
     <string name="open_with_always_title">
-Always use selected app
+Utilizza sempre l\'app selezionata
 </string>
     <string name="open_with_always_desc">
-Remember default for .%1$s files
+Ricorda l\'impostazione predefinita per i file .%1$s.
 </string>
     <string name="open_with_no_apps">
-No installed applications found to open this file
+Nessuna applicazione installata trovata per aprire questo file
 </string>
     <string name="open_with_search_store">
-Search Google Play Store
+Cerca nel Google Play Store
 </string>
     <string name="open_with_app_info">
-App info
+Informazioni sull\'app
 </string>
     <string name="open_with_app_info_desc">
-View application details and system settings
+Visualizza i dettagli dell\'applicazione e le impostazioni di sistema
 </string>
     <string name="open_with_set_default">
-Always use this app
+Usa sempre questa app
 </string>
     <string name="open_with_launch_failed">
-Unable to launch %1$s. Falling back to system chooser…
+Impossibile avviare %1$s. Tornando al selettore di sistema...
 </string>
     <string name="open_with_tv_instructions">
-Press OK to open • Long-press OK for default app options
+Premere OK per aprire • Premere a lungo OK per le opzioni predefinite dell\'app
 </string>
     <!-- Viewer & Slide Show Long-Press Transfer -->
     <string name="viewer_picker_fab_text">
-Select as Destination
+Seleziona come destinazione
 </string>
     <string name="viewer_picker_confirm_title">
-Viewer Destination
+Destinazione del visualizzatore
 </string>
     <string name="viewer_picker_confirm_subtitle">
-Confirm Destination Folder
+Conferma la cartella di destinazione
 </string>
     <string name="viewer_picker_confirm_desc">
-Selected folder will be used for rapid Copy and Move actions in UFM Viewer and Slide Show.
+La cartella selezionata verrà utilizzata per azioni rapide di copia e spostamento nel visualizzatore UFM e nella presentazione.
 </string>
     <string name="viewer_transfer_dialog_title">
-File Actions
+Azioni sui file
 </string>
     <string name="viewer_transfer_dest_label">
-Destination Folder
+Cartella di destinazione
 </string>
     <string name="viewer_transfer_no_dest_prompt">
-No destination selected — tap to choose
+Nessuna destinazione selezionata: tocca per scegliere
 </string>
     <string name="viewer_transfer_change_dest">
-Change
+Modifica
 </string>
     <string name="viewer_transfer_copy_to">
-Copy to %1$s
+Copia in %1$s
 </string>
     <string name="viewer_transfer_move_to">
-Move to %1$s
+Sposta in %1$s
 </string>
     <string name="viewer_transfer_copy_generic">
-Copy to destination
+Copia a destinazione
 </string>
     <string name="viewer_transfer_move_generic">
-Move to destination
+Spostarsi a destinazione
 </string>
     <string name="viewer_transfer_copied_success">
-Copied to %1$s
+Copiato in %1$s
 </string>
     <string name="viewer_transfer_moved_success">
-Moved to %1$s
+Spostato in %1$s
 </string>
     <string name="viewer_transfer_same_folder">
-Source and destination are the same folder
+Origine e destinazione sono la stessa cartella
 </string>
     <string name="backup_pref_viewer_transfer">
-Viewer Transfer Destination
+Destinazione di trasferimento del visualizzatore
 </string>
 
     <!-- Main Menu Storage Tile Home Screen Favorites -->
     <string name="storage_fav_dialog_title">
-Add to Home Screen
+Aggiungi alla schermata principale
 </string>
     <string name="storage_fav_dialog_hint">
-Shortcut Name
+Nome della scorciatoia
 </string>
     <string name="storage_fav_already_pinned_title">
-Storage Shortcut
+Scorciatoia di archiviazione
 </string>
     <string name="storage_fav_already_pinned_msg">
-\"%1$s\" is already pinned to your home screen.
+\"%1$s\" è già bloccato nella schermata iniziale.
 </string>
     <string name="storage_fav_add_btn">
-Add to Home Screen
+Aggiungi alla schermata principale
 </string>
     <string name="storage_fav_name_empty">
-Shortcut name cannot be empty
+Il nome della scorciatoia non può essere vuoto
 </string>
 
     <!-- Download Manager (Torrent, Magnet & HTTP/HTTPS) -->
     <string name="download_manager_title">
-Download Manager
+Scarica Gestore
 </string>
     <string name="download_manager_subtitle">
-Torrent, Magnet &amp; HTTP downloads
+Download Torrent, Magnet e HTTP
 </string>
     <string name="download_manager_desc">
-High-speed native direct and peer-to-peer download manager with zero-seeding privacy protection.
+Gestore di download diretto e peer-to-peer nativo ad alta velocità con protezione della privacy senza seeding.
 </string>
     <string name="download_no_transfers">
-No active downloads
+Nessun download attivo
 </string>
     <string name="torrent_location_picker_fab_text">
-Select as Download Folder
+Seleziona come cartella di download
 </string>
     <string name="torrent_location_confirm_title">
-Download Folder
+Scarica la cartella
 </string>
     <string name="torrent_location_confirm_subtitle">
-Confirm Download Location
+Conferma la posizione di download
 </string>
     <string name="torrent_location_confirm_desc">
-Downloads will be saved directly into this directory.
+I download verranno salvati direttamente in questa directory.
 </string>
     <string name="download_direct_downloads">
-Direct Downloads
+Download diretti
 </string>
     <string name="download_torrent_downloads">
-Torrent Downloads
+Download di torrent
 </string>
     <string name="download_location_label">
-Download location
+Scarica posizione
 </string>
     <string name="download_change_location">
-Change
+Modifica
 </string>
     <string name="download_action_start">
-Start
+Inizio
 </string>
     <string name="download_action_pause">
 Pause
 </string>
     <string name="download_action_resume">
-Resume
+Riprendere
 </string>
     <string name="download_action_cancel">
-Cancel
+Cancellare
 </string>
     <string name="download_action_delete">
-Delete
+Eliminare
 </string>
     <string name="download_enter_url_title">
-Direct Download URL
+URL per il download diretto
 </string>
     <string name="download_enter_url_hint">
-https://example.com/file.iso
+https://esempio.com/file.iso
 </string>
     <string name="download_enter_url_btn">
-Download
+Scaricamento
 </string>
     <string name="download_enter_magnet_title">
-Torrent or Magnet Link
+Torrente o Magnet Link
 </string>
     <string name="download_enter_magnet_hint">
-magnet:?xt=urn:btih:...
+magnete:?xt=urna:btih:...
 </string>
     <string name="download_pick_torrent_file">
-Open .torrent File
+Apri il file .torrent
 </string>
     <string name="download_legal_gate_title">
-Download Manager &amp; P2P Notice
+Download Manager e avviso P2P
 </string>
     <string name="download_legal_gate_subtitle">
-Acceptable Use &amp; Privacy Information
+Utilizzo accettabile e informazioni sulla privacy
 </string>
     <string name="download_legal_gate_agree_check">
-I understand that peer-to-peer downloads share my IP address within the swarm, and I agree to use this tool strictly for lawful, non-infringing content.
+Comprendo che i download peer-to-peer condividono il mio indirizzo IP all\'interno dello sciame e accetto di utilizzare questo strumento esclusivamente per contenuti legali e non in violazione.
 </string>
     <string name="download_storage_fat32_error_title">
-Storage Limit Exceeded
+Limite di archiviazione superato
 </string>
     <string name="download_storage_fat32_error_msg">
-The target file size (%1$s) exceeds the 4 GB limit supported by the FAT32 filesystem on this drive.\n
+La dimensione del file di destinazione (%1$s) supera il limite di 4 GB supportato dal file system FAT32 su questa unità.\n
 \n
-Please choose a different download location formatted in exFAT, NTFS, or internal storage.
+Scegli un percorso di download diverso formattato in exFAT, NTFS o memoria interna.
 </string>
     <string name="download_storage_insufficient_title">
-Insufficient Storage Space
+Spazio di archiviazione insufficiente
 </string>
     <string name="download_storage_insufficient_msg">
-There is not enough free space on the selected storage drive.\n
+Spazio libero insufficiente sull\'unità di archiviazione selezionata.\n
 \n
-Required: %1$s\n
-Available: %2$s\n
+Obbligatorio: %1$s\n
+Disponibile: %2$s\n
 \n
-Please select another drive or free up space.
+Seleziona un\'altra unità o libera spazio.
 </string>
     <string name="download_storage_choose_new_location">
-Choose Location
+Scegli la posizione
 </string>
     <string name="download_network_cellular_warning_title">
-Mobile Data Connection
+Connessione dati mobile
 </string>
     <string name="download_network_cellular_warning_msg">
-You are currently connected to a cellular network and Wi-Fi only mode is enabled.\n
+Attualmente sei connesso a una rete cellulare e la modalità solo Wi-Fi è abilitata.\n
 \n
-Would you like to queue this transfer until Wi-Fi connects or allow mobile data for downloads?
+Vuoi mettere in coda questo trasferimento fino alla connessione Wi-Fi o consentire i download dei dati mobili?
 </string>
     <string name="download_network_queue_wifi">
-Queue for Wi-Fi
+Coda per il Wi-Fi
 </string>
     <string name="download_network_enable_mobile">
-Allow Mobile Data
+Consenti dati mobili
 </string>
     <string name="download_pref_network_policy_title">
-Network Policy
+Politica di rete
 </string>
     <string name="download_pref_network_policy_subtitle">
-Choose network connection rules for downloads
+Scegli le regole di connessione di rete per i download
 </string>
     <string name="download_pref_network_policy_wifi_only">
-Wi-Fi Only (Recommended)
+Solo Wi-Fi (consigliato)
 </string>
     <string name="download_pref_network_policy_wifi_only_desc">
-Only transfer downloads when connected to unmetered Wi-Fi
+Trasferisci i download solo quando sei connesso a una rete Wi-Fi illimitata
 </string>
     <string name="download_pref_network_policy_all">
-All Networks (Wi-Fi &amp; Cellular)
+Tutte le reti (Wi-Fi e cellulare)
 </string>
     <string name="download_pref_network_policy_all_desc">
-Allow transfers over cellular mobile data and Wi-Fi networks
+Consenti trasferimenti su dati mobili cellulari e reti Wi-Fi
 </string>
     <string name="download_pref_review_legal">
-Review Non-Piracy Terms
+Consulta i termini relativi alla non pirateria
 </string>
     <string name="download_pref_review_legal_desc">
-View P2P swarm disclosure, privacy, and zero-seeding terms
+Visualizza l\'informativa sullo sciame P2P, la privacy e i termini di zero seeding
 </string>
     <string name="download_legal_p2p_swarm_title">
-P2P Swarm &amp; IP Visibility
+Sciame P2P e visibilità IP
 </string>
     <string name="download_legal_p2p_swarm_desc">
-BitTorrent transfers exchange piece chunks directly with other peer devices in the swarm. Your public IP address is visible to active peers while transferring.
+I trasferimenti BitTorrent scambiano pezzi direttamente con altri dispositivi peer nello sciame. Il tuo indirizzo IP pubblico è visibile ai peer attivi durante il trasferimento.
 </string>
     <string name="download_legal_zero_seeding_title">
-Zero-Seeding Privacy
+Privacy a zero seed
 </string>
     <string name="download_legal_zero_seeding_desc">
-UFM enforces strict zero-seeding. The moment a download completes (100%), all swarm connections are severed and tracker announcements cease immediately.
+L\'UFM applica un rigoroso zero seeding. Nel momento in cui il download viene completato (100%), tutte le connessioni swarm vengono interrotte e gli annunci del tracker cessano immediatamente.
 </string>
     <string name="download_legal_lawful_use_title">
-Lawful Content Only
+Solo contenuti legali
 </string>
     <string name="download_legal_lawful_use_desc">
-You agree to use this tool strictly for lawful, open-source, public domain, or authorized files. Downloading or distributing copyrighted material without permission is prohibited.
+Accetti di utilizzare questo strumento esclusivamente per file legali, open source, di pubblico dominio o autorizzati. È vietato scaricare o distribuire materiale protetto da copyright senza autorizzazione.
 </string>
     <string name="download_legal_continue">
-Agree &amp; Continue
+Accetta e continua
 </string>
     <string name="download_legal_understood">
-Understood
+Inteso
 </string>
     <string name="download_state_downloading">
-Downloading
+Download in corso
 </string>
     <string name="download_state_paused">
-Paused
+In pausa
 </string>
     <string name="download_state_queued">
-Queued for Wi-Fi
+In coda per il Wi-Fi
 </string>
     <string name="download_state_completed">
-Completed
+Completato
 </string>
     <string name="download_state_error">
-Error
+Errore
 </string>
     <string name="download_notif_channel_name">
-Download Manager Transfers
+Scarica Trasferimenti Manager
 </string>
     <string name="download_notif_channel_desc">
-Ongoing download progress and status updates
+Avanzamento del download continuo e aggiornamenti di stato
 </string>
     <string name="download_timeout_stopped">
-Downloads paused: Android 6-hour execution limit reached. Tap to resume.
+Download in pausa: è stato raggiunto il limite di esecuzione di 6 ore per Android. Tocca per riprendere.
 </string>
 
     <!-- Torrent & Magnet Selective File Download & Content Inspector -->
     <string name="torrent_select_all">
-Select All
+Seleziona tutto
 </string>
     <string name="torrent_deselect_all">
-Deselect All
+Deseleziona tutto
 </string>
     <string name="torrent_selected_summary">
-Selected: %1$d of %2$d files (%3$s of %4$s)
+Selezionato: %1$d di %2$d file (%3$s di %4$s)
 </string>
     <string name="torrent_files_count">
-%1$d files
+%1$d file
 </string>
     <string name="torrent_file_selection_title">
-Torrent Content
+Contenuto torrent
 </string>
     <string name="torrent_file_selection_subtitle">
-Select files and folders to download
+Seleziona file e cartelle da scaricare
 </string>
     <string name="torrent_fetching_metadata">
-Fetching torrent metadata from swarm…
+Recupero dei metadati torrent da swarm…
 </string>
     <string name="torrent_fetching_metadata_desc">
-Contacting DHT nodes and peers to retrieve file list…
+Contatto con nodi e peer DHT per recuperare l\'elenco dei file…
 </string>
     <string name="torrent_metadata_timeout_title">
-Metadata Fetch Timeout
+Timeout recupero metadati
 </string>
     <string name="torrent_metadata_timeout_msg">
-Retrieving the file list from peers is taking longer than usual. Would you like to keep searching, or download all files directly?
+Il recupero dell\'elenco dei file dai peer richiede più tempo del solito. Desideri continuare a cercare o scaricare direttamente tutti i file?
 </string>
     <string name="torrent_keep_waiting">
-Keep Waiting
+Continua ad aspettare
 </string>
     <string name="torrent_download_all_direct">
-Download All Directly
+Scarica tutto direttamente
 </string>
     <string name="torrent_zero_selected_error">
-Please select at least one file to download
+Seleziona almeno un file da scaricare
 </string>
     <string name="torrent_search_hint">
-Search files…
+Cerca file...
 </string>
 
     <!-- Transfer Action Dialog -->
     <string name="transfer_action_title">
-Transfer Actions
+Azioni di trasferimento
 </string>
     <string name="transfer_action_pause">
-Pause Transfer
+Metti in pausa il trasferimento
 </string>
     <string name="transfer_action_resume">
-Resume Transfer
+Riprendi il trasferimento
 </string>
     <string name="transfer_action_open_folder">
-Open Download Folder
+Apri la cartella di download
 </string>
     <string name="transfer_action_delete_title">
-Remove Transfer
+Rimuovi trasferimento
 </string>
     <string name="transfer_action_delete_msg">
-Choose how to remove this transfer from Download Manager:
+Scegli come rimuovere questo trasferimento da Download Manager:
 </string>
     <string name="transfer_delete_keep_files">
-Remove Transfer Only
+Rimuovi solo trasferimento
 </string>
     <string name="transfer_delete_keep_files_desc">
-Keep downloaded files on your device
+Conserva i file scaricati sul tuo dispositivo
 </string>
     <string name="transfer_delete_remove_files">
-Remove &amp; Delete Files
+Rimuovi ed elimina file
 </string>
     <string name="transfer_delete_remove_files_desc">
-Permanently delete downloaded files from disk
+Elimina permanentemente i file scaricati dal disco
 </string>
 
     <!-- Remote TV Download Manager -->
@@ -16617,79 +16757,79 @@ Impossibile aggiornare la posizione di download della TV: %1$s
 
     <!-- Smart Bookmark Hub (Mobile Only) -->
     <string name="bookmark_hub_title">
-Smart Bookmarks
+Segnalibri intelligenti
 </string>
     <string name="bookmark_hub_subtitle">
-Organize saved links, media &amp; shares
+Organizza collegamenti, contenuti multimediali e condivisioni salvati
 </string>
     <string name="bookmark_hub_subtitle_count">
-%1$d items across %2$d groups
+%1$d elementi in %2$d gruppi
 </string>
     <string name="bookmark_hub_subtitle_empty">
-No bookmarks saved yet
+Nessun segnalibro ancora salvato
 </string>
     <string name="share_target_bookmark">
-Bookmark with UFM
+Aggiungi ai segnalibri con UFM
 </string>
     <string name="bookmark_quick_save_title">
-Save Bookmark
+Salva segnalibro
 </string>
     <string name="bookmark_shared_from">
-Shared from %1$s
+Condiviso da %1$s
 </string>
     <string name="bookmark_field_title_hint">
-Title
+Titolo
 </string>
     <string name="bookmark_field_group_hint">
-Collection / Group
+Collezione/Gruppo
 </string>
     <string name="bookmark_field_notes_hint">
-Add personal note (optional)
+Aggiungi nota personale (facoltativo)
 </string>
     <string name="bookmark_btn_save">
-Save Bookmark
+Salva segnalibro
 </string>
     <string name="bookmark_duplicate_notice">
-Already bookmarked — notes &amp; time updated
+Già aggiunto ai segnalibri: note e ora aggiornati
 </string>
     <string name="bookmark_saved_success">
-Bookmark saved to %1$s
+Segnalibro salvato in %1$s
 </string>
     <string name="bookmark_new_group">
 + Create New Group
 </string>
     <string name="bookmark_groups_header">
-Groups
+Gruppi
 </string>
     <string name="bookmark_view_all_groups">
-View all &#8250;
+Visualizza tutto ›
 </string>
     <string name="bookmark_collections_hub_title">
-Collections &amp; Sources
+Collezioni e fonti
 </string>
     <string name="bookmark_collections_hub_subtitle">
-Manage collections, filter, and vault protect
+Gestisci raccolte, filtri e proteggi il vault
 </string>
     <string name="bookmark_search_collections_hint">
-Search collections…
+Cerca raccolte…
 </string>
     <string name="bookmark_all_bookmarks_hub">
-All Bookmarks
+Tutti i segnalibri
 </string>
     <string name="bookmark_all_bookmarks_hub_desc">
-Show all unlocked bookmarks across all sources
+Mostra tutti i segnalibri sbloccati in tutte le fonti
 </string>
     <string name="bookmark_section_manual_collections">
-My Collections
+Le mie collezioni
 </string>
     <string name="bookmark_section_manual_desc">
-User-created collections • Vault lockable
+Collezioni create dall\'utente • Cassaforte bloccabile
 </string>
     <string name="bookmark_section_auto_collections">
-App Sources
+Sorgenti dell\'app
 </string>
     <string name="bookmark_section_auto_desc">
-Auto-generated from shared applications
+Generato automaticamente da applicazioni condivise
 </string>
     <string name="bookmark_group_manual_badge">
 MANUAL
@@ -16698,193 +16838,193 @@ MANUAL
 AUTO
 </string>
     <string name="bookmark_vault_no_credentials">
-Device security (PIN, pattern, or fingerprint) not set up on this device.
+La sicurezza del dispositivo (PIN, sequenza o impronta digitale) non è configurata su questo dispositivo.
 </string>
     <string name="bookmark_locked_badge">
-Vault Locked
+Deposito bloccato
 </string>
     <string name="bookmark_unlock_group_desc">
-Authenticate to remove Vault lock
+Autenticarsi per rimuovere il blocco del Vault
 </string>
     <string name="bookmark_locked_toast">
-Collection locked with Vault
+Collezione bloccata con Vault
 </string>
     <string name="bookmark_unlocked_toast">
-Collection unlocked
+Collezione sbloccata
 </string>
     <string name="bookmark_more_groups_format">
 + %1$d
 </string>
     <string name="bookmark_dialog_new_group_title">
-New Bookmark Group
+Nuovo gruppo di segnalibri
 </string>
     <string name="bookmark_dialog_group_name_hint">
-Group Name
+Nome del gruppo
 </string>
     <string name="bookmark_dialog_btn_create">
-Create Group
+Crea gruppo
 </string>
     <string name="bookmark_filter_all">
-All
+Tutto
 </string>
     <string name="bookmark_filter_links">
-Links
+Collegamenti
 </string>
     <string name="bookmark_filter_media">
 Media
 </string>
     <string name="bookmark_filter_docs">
-Documents
+Documenti
 </string>
     <string name="bookmark_filter_notes">
-Notes
+Note
 </string>
     <string name="bookmark_filter_starred">
-Starred
+Stellato
 </string>
     <string name="bookmark_search_hint">
-Search bookmarks, notes, or domains…
+Cerca segnalibri, note o domini...
 </string>
     <string name="bookmark_sort_title">
-Sort Bookmarks
+Ordina i segnalibri
 </string>
     <string name="bookmark_sort_newest">
-Newest to Oldest
+Dal più recente al più vecchio
 </string>
     <string name="bookmark_sort_oldest">
-Oldest to Newest
+Dal più vecchio al più recente
 </string>
     <string name="bookmark_sort_title_az">
-Title (A–Z)
+Titolo (A–Z)
 </string>
     <string name="bookmark_sort_title_za">
-Title (Z–A)
+Titolo (Z–A)
 </string>
     <string name="bookmark_sort_size">
-File Size
+Dimensioni del file
 </string>
     <string name="bookmark_sort_by_group">
-Group by Collection
+Raggruppa per raccolta
 </string>
     <string name="bookmark_sort_group_az">
-Collection: A to Z
+Collezione: dalla A alla Z
 </string>
     <string name="bookmark_sort_group_za">
-Collection: Z to A
+Collezione: dalla Z alla A
 </string>
     <string name="bookmark_delete_collection">
-Delete Collection
+Elimina raccolta
 </string>
     <string name="bookmark_delete_collection_msg">
-Are you sure you want to delete the collection \"%1$s\"?
+Vuoi eliminare la raccolta \"%1$s\"?
 </string>
     <string name="bookmark_action_open_reader">
-Read Article
+Leggi l\'articolo
 </string>
     <string name="bookmark_action_open_browser">
-Open in Browser
+Apri nel browser
 </string>
     <string name="bookmark_action_open_file">
-Open File
+Apri file
 </string>
     <string name="bookmark_action_copy_link">
-Copy Link
+Copia collegamento
 </string>
     <string name="bookmark_action_copy_text">
-Copy Text
+Copia testo
 </string>
     <string name="bookmark_action_save_to_storage">
-Save to Storage
+Salva in memoria
 </string>
     <string name="bookmark_action_move_group">
-Move to Group
+Passa al gruppo
 </string>
     <string name="bookmark_action_delete">
-Delete
+Eliminare
 </string>
     <string name="bookmark_view_note">
-View Note
+Visualizza nota
 </string>
     <string name="bookmark_lock_group_title">
-Lock Collection (Vault)
+Collezione di blocchi (Vault)
 </string>
     <string name="bookmark_lock_group_desc">
-Require fingerprint or PIN to view
+Richiedi l\'impronta digitale o il PIN per visualizzare
 </string>
     <string name="bookmark_collection_options">
-Collection Options
+Opzioni di raccolta
 </string>
     <string name="bookmark_lock_collection">
-Lock Collection
+Raccolta di blocchi
 </string>
     <string name="bookmark_unlock_collection">
-Unlock Collection
+Sblocca la raccolta
 </string>
     <string name="bookmark_deleted_undo">
-Bookmark deleted
+Segnalibro eliminato
 </string>
     <string name="bookmark_undo">
-Undo
+Disfare
 </string>
     <string name="bookmark_batch_actions">
-Selected %1$d items
+%1$d elementi selezionati
 </string>
     <string name="bookmark_batch_move">
-Move
+Mossa
 </string>
     <string name="bookmark_batch_delete">
-Delete
+Eliminare
 </string>
     <string name="bookmark_batch_export">
-Export
+Esportare
 </string>
     <string name="bookmark_export_title">
-Export Bookmarks
+Esporta segnalibri
 </string>
     <string name="bookmark_export_html">
-Browser HTML Bookmarks (.html)
+Segnalibri HTML del browser (.html)
 </string>
     <string name="bookmark_export_markdown">
-Markdown Document (.md)
+Documento di ribasso (.md)
 </string>
     <string name="bookmark_export_success">
-Exported %1$d bookmarks to %2$s
+Preferiti %1$d esportati in %2$s
 </string>
     <string name="bookmark_reader_title">
-Reader Mode
+Modalità lettore
 </string>
     <string name="bookmark_reader_font_size">
-Text Size
+Dimensione del testo
 </string>
     <string name="bookmark_reader_theme">
-Theme
+Tema
 </string>
     <string name="bookmark_reader_theme_light">
-Light
+Leggero
 </string>
     <string name="bookmark_reader_theme_sepia">
-Sepia
+Seppia
 </string>
     <string name="bookmark_reader_theme_dark">
-Dark
+Buio
 </string>
     <string name="bookmark_tts_play">
-Listen Aloud
+Ascolta ad alta voce
 </string>
     <string name="bookmark_tts_pause">
-Pause Reading
+Metti in pausa la lettura
 </string>
     <string name="bookmark_tts_stop">
-Stop Reading
+Smetti di leggere
 </string>
     <string name="bookmark_tts_speed">
-Speed %1$sx
+Velocità %1$sx
 </string>
     <string name="bookmark_tts_initializing">
-Initializing voice engine…
+Inizializzazione del motore vocale…
 </string>
     <string name="bookmark_tts_unsupported">
-Text-to-speech is not supported or not installed on this device
+La sintesi vocale non è supportata o non è installata su questo dispositivo
 </string>
     <string name="bookmark_group_whatsapp">
 WhatsApp
@@ -16896,43 +17036,43 @@ Reddit
 YouTube
 </string>
     <string name="bookmark_group_twitter">
-Twitter / X
+Twitter/X
 </string>
     <string name="bookmark_group_web">
-Web &amp; Articles
+Web e articoli
 </string>
     <string name="bookmark_group_telegram">
-Telegram
+Telegramma
 </string>
     <string name="bookmark_group_files">
-Files &amp; Documents
+File e documenti
 </string>
     <string name="bookmark_vault_lock_group">
-Lock Group with Vault
+Blocca gruppo con Vault
 </string>
     <string name="bookmark_vault_unlock_group">
-Unlock Group
+Sblocca gruppo
 </string>
     <string name="bookmark_vault_prompt">
-Authenticate to access locked bookmarks
+Autenticarsi per accedere ai segnalibri bloccati
 </string>
     <string name="bookmark_empty_title">
-No Bookmarks Yet
+Nessun segnalibro ancora
 </string>
     <string name="bookmark_empty_desc">
-Share links, articles, media, or files from WhatsApp, Reddit, or your browser and choose \"Bookmark with UFM\".
+Condividi collegamenti, articoli, contenuti multimediali o file da WhatsApp, Reddit o dal tuo browser e scegli \"Aggiungi ai segnalibri con UFM\".
 </string>
     <string name="bookmark_empty_search_title">
-No Results Found
+Nessun risultato trovato
 </string>
     <string name="bookmark_empty_search_desc">
-No bookmarks match \"%1$s\". Try searching for different keywords.
+Nessun segnalibro corrisponde a \"%1$s\". Prova a cercare parole chiave diverse.
 </string>
     <string name="bookmark_empty_filter_title">
-No Bookmarks Found
+Nessun segnalibro trovato
 </string>
     <string name="bookmark_empty_filter_desc">
-No bookmarks found matching the selected filter or collection.
+Nessun segnalibro trovato corrispondente al filtro o alla raccolta selezionata.
 </string>
     <string name="icon_feature_bookmark_hub">
 Bookmark Hub
@@ -16940,67 +17080,67 @@ Bookmark Hub
 
     <!-- Flat View (Indexed Root Browser Mode) -->
     <string name="flat_view">
-Flat View
+Vista piatta
 </string>
     <string name="flat_view_subtitle">
-Recursive Indexed Browser
+Browser indicizzato ricorsivo
 </string>
     <string name="flat_view_open_folder">
-Open Folder
+Apri cartella
 </string>
     <string name="flat_view_expand_all">
-Expand All
+Espandi tutto
 </string>
     <string name="flat_view_collapse_all">
-Collapse All
+Comprimi tutto
 </string>
     <string name="flat_view_include_system_folders">
-Include System Folders
+Includi cartelle di sistema
 </string>
     <string name="flat_view_include_system_folders_desc">
-Show Android/data, Android/obb, and system directories in Flat View
+Mostra Android/data, Android/obb e le directory di sistema in Flat View
 </string>
     <string name="flat_view_default_expanded">
-Default to All Expanded
+L\'impostazione predefinita è Tutti espansi
 </string>
     <string name="flat_view_default_expanded_desc">
-Open Flat View with all folders expanded by default
+Apri la visualizzazione piatta con tutte le cartelle espanse per impostazione predefinita
 </string>
     <string name="flat_view_empty_notice">
-No indexed files found in this volume
+Nessun file indicizzato trovato in questo volume
 </string>
     <string name="flat_view_settings_title">
-Flat View
+Vista piatta
 </string>
     <string name="flat_view_settings_desc">
-Configure recursive indexed browsing and system folders
+Configura la navigazione indicizzata ricorsiva e le cartelle di sistema
 </string>
     <string name="flat_view_not_indexed_title">
-Storage Not Indexed
+Archiviazione non indicizzata
 </string>
     <string name="flat_view_not_indexed_msg">
-Flat View requires this storage volume to be fully indexed. Please run indexing first.
+Flat View richiede che questo volume di archiviazione sia completamente indicizzato. Esegui prima l\'indicizzazione.
 </string>
     <string name="flat_view_files_count">
-%1$d files across %2$d folders
+%1$d file in %2$d cartelle
 </string>
     <string name="flat_view_selected_count">
-%1$d selected
+%1$d selezionato
 </string>
     <string name="flat_view_folder_files_count">
-%1$d files
+%1$d file
 </string>
     <string name="flat_view_delete_title">
-Delete Files
+Elimina file
 </string>
     <string name="flat_view_delete_message">
-Are you sure you want to delete %1$d selected files?
+Vuoi eliminare i %1$d file selezionati?
 </string>
     <string name="flat_view_deleted_count">
-Deleted %1$d files
+File %1$d eliminati
 </string>
     <string name="backup_pref_flat_view">
-Flat View settings
+Impostazioni vista piatta
 </string>
 </resources>
 

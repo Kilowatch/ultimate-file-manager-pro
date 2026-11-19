@@ -1,37 +1,42 @@
-# Clarifications: Remote TV Download Manager (Mobile, Windows & Linux Companions)
+# Clarifications: Translation English String Inspection, Re-translation & Verification Engine
 
 ## Status
-Answers received and approved — ready for /plan and /tasks
+Answers received and confirmed — ready for /plan and /tasks
 
 ---
 
 ## Questions and Answers
 
-### 1. Remote TV Storage Directory Picker
-**Q:** How should the TV download storage location picker behave when changing the target folder from Mobile?  
-**A:** **Interactive TV Storage Explorer dialog**: Browses TV Internal & USB storage drives dynamically, allows traversing folders, and supports creating new folders on the TV via `TvShareClient.listFiles` and `TvShareClient.mkdir`.
+### 1. English String Detection & Matching Rule
+**Q:** How should the audit engine determine if a string in a non-English file is "in English"?  
+**A:** **Exact text match against English source (normalized whitespace) with an allowlist**: Compare localized strings against the English source in `values/strings.xml` (normalized whitespace, case-insensitive). Exclude strings on an allowlist of brand names, proper nouns, protocols, and technical symbols (e.g. "Ultimate File Manager Pro", "Google Drive", "Dropbox", "SMB", "FTP", "WebDAV", "OK", "%s").
 
-### 2. Torrent Sub-File Selection
-**Q:** When adding a .torrent file to the TV, how should torrent sub-file selection be handled?  
-**A:** **Client-Side Inspection & Selection**: Inspect torrent files locally (mobile or PC) and present a sub-file selection checklist dialog before dispatching to the TV. Only the user-selected file indices will be set for active downloading on the TV BitTorrent engine.
+### 2. Command-Line Syntax in `translate_strings.py`
+**Q:** What CLI command keyword should trigger the audit and re-translation pass?  
+**A:** **`audit`**: Triggered via `python -u translate_strings.py audit`.
 
-### 3. TV Background Service & Standby Resilience
-**Q:** How should downloads proceed on the TV when the TV screen turns off or enters standby?  
-**A:** **Persistent Foreground Service with Partial Wake Lock**: Keep TV `DownloadService` in the foreground with a partial wake lock so downloads finish even if the TV screen dims, sleeps, or turns off display output.
+### 3. `build.bat` Integration Workflow
+**Q:** How should `build.bat` support this new command?  
+**A:** **Dual support (CLI argument + GUI button)**:
+- CLI argument: Running `build.bat audit` (or `build.bat --audit-translations`) executes the Python audit directly in the console with live `from -> to` logs.
+- GUI: Running `build.bat` without arguments launches `APKScripts/build_tool.py`, which features a dedicated **"🔄 Audit & Fix English Strings"** button on the Translations tab.
 
-### 4. Desktop Companion Presentation (`UFM-Windows` & `UFM-Linux`)
-**Q:** In the Windows and Linux companion apps, how should the Download Manager view be presented?  
-**A:** **Top Navigation Modal / Slide-Over Dashboard**: A modal/slide-over dashboard opened via a top navigation 'Download Manager' button (`DownloadManagerModal.tsx`), consistent with the Sideload APK modal.
+### 4. Standard Verify Post-Translation Behavior
+**Q:** In standard verify mode (`python -u translate_strings.py verify`), what should the post-translation check do if lingering English strings are found?  
+**A:** **Auto-retranslate then report**: During standard `verify`, immediately run an automatic re-translation pass for any detected lingering English strings. If any still remain unresolved (e.g. translation provider API timeout/failure), list them as warnings with their language and key in the final summary.
+
+### 5. Translation Engine Scope
+**Q:** Which translation engines should support this audit/re-translation command and verify check?  
+**A:** **`translate_strings.py` only**: Scope is specifically focused on the primary `translate_strings.py` (Google/MyMemory/Pons) engine.
 
 ---
 
 ## Spec & Plan Impact
-- **Mobile UI**: Implement an interactive TV folder picker bottom sheet / dialog in `RemoteDownloadManagerActivity` utilizing `TvShareClient`.
-- **Desktop Companion UI**: Create `DownloadManagerModal.tsx` in `UFM-Windows/src/components/` and `UFM-Linux/src/components/`, add a `DownloadCloud` button in `App.tsx`, and wire polling to `ufm_api_request`.
-- **Torrent Engine**: Integrate local parsing via `TorrentInfo` on Mobile and `bencode` / metadata inspection on Desktop to send `selectedIndices` array with `add-torrent` and `add-magnet` endpoints.
-- **TV Background Service**: Ensure `DownloadService.kt` on TV holds a `WakeLock` (`PARTIAL_WAKE_LOCK`) while active transfers are downloading, allowing uninterrupted background downloading when the TV enters screen-off sleep.
+- **Engine Scope**: Confirmed that implementation is strictly targeted to `translate_strings.py`.
+- **Command Keyword**: Confirmed keyword `audit` for CLI execution in `translate_strings.py` and `build.bat`.
+- **Verify Workflow**: Standard verify mode (`translate_strings.py verify`) will execute an active auto-retranslation pass on lingering English strings before generating its final report.
 
 ---
 
 ## Confirmed — Ready for Next Phase
-All questions confirmed. Proceed to `/plan` to detail the architecture and file modifications.
+All questions confirmed. The next step is to run `/plan` to define the architecture, file modifications, and design details.
