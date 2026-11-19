@@ -13782,9 +13782,7 @@ Elenco piatto a colonna singola (grande, medio, piccolo)
     <string name="main_menu_section_items_count">
 %1$d elementi
 </string>
-    <string name="main_menu_section_item_count_single">
-1 articolo
-</string>
+    <string name="main_menu_section_item_count_single">1 Elemento</string>
 
     <!-- Reset Category Layout -->
     <string name="reset_categorized_layout_section">
