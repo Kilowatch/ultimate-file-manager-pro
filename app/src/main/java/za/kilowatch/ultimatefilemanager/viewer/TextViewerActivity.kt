@@ -196,6 +196,8 @@ class TextViewerActivity : AppCompatActivity() {
         hScrollView = findViewById(R.id.hScrollView)
         txtContent = findViewById(R.id.txtContent)
         txtLineNumbers = findViewById(R.id.txtLineNumbers)
+        txtContent.isSaveEnabled = false
+        txtLineNumbers.isSaveEnabled = false
         progressBar = findViewById(R.id.progressBar)
         txtTitle = findViewById(R.id.txtTitle)
         paginationBar = findViewById(R.id.paginationBar)

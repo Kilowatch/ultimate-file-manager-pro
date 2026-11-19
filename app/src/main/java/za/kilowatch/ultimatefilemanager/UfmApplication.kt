@@ -101,6 +101,77 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             za.kilowatch.ultimatefilemanager.viewer.MusicTaggerActivity::class.java,
             za.kilowatch.ultimatefilemanager.viewer.PresentationViewerActivity::class.java
         )
+
+        private const val MAX_SAFE_SAVED_STATE_BYTES = 350_000 // 350 KB safe Binder threshold
+        private const val MAX_SAFE_SINGLE_VIEW_BYTES = 50_000 // 50 KB max per individual view
+
+        /**
+         * Inspects and sanitizes an Activity's saved instance state Bundle to prevent
+         * TransactionTooLargeException crashes during Activity stop and backgrounding
+         * (e.g. `ActivityClient.activityStopped` / `PendingTransactionActions$StopInfo.run`).
+         */
+        fun sanitizeSavedInstanceState(activity: android.app.Activity, outState: android.os.Bundle) {
+            val parcel = android.os.Parcel.obtain()
+            val totalSize = try {
+                parcel.writeBundle(outState)
+                parcel.dataSize()
+            } catch (t: Throwable) {
+                android.util.Log.w("UfmApplication", "Failed to measure outState bundle size: ${t.message}")
+                return
+            } finally {
+                parcel.recycle()
+            }
+
+            if (totalSize <= MAX_SAFE_SAVED_STATE_BYTES) return
+
+            android.util.Log.w("UfmApplication", "Activity ${activity.javaClass.simpleName} saved state exceeds safe threshold ($totalSize bytes > $MAX_SAFE_SAVED_STATE_BYTES bytes), sanitizing...")
+
+            // 1. Inspect and prune oversized items from android:viewHierarchyState -> android:views
+            val vhBundle = outState.getBundle("android:viewHierarchyState")
+            if (vhBundle != null) {
+                val views = vhBundle.getSparseParcelableArray<android.os.Parcelable>("android:views")
+                if (views != null && views.size() > 0) {
+                    val viewParcel = android.os.Parcel.obtain()
+                    try {
+                        for (i in views.size() - 1 downTo 0) {
+                            viewParcel.setDataPosition(0)
+                            viewParcel.setDataSize(0)
+                            val item = views.valueAt(i)
+                            try {
+                                item.writeToParcel(viewParcel, 0)
+                                val itemSize = viewParcel.dataSize()
+                                if (itemSize > MAX_SAFE_SINGLE_VIEW_BYTES) {
+                                    val viewIdHex = "0x" + Integer.toHexString(views.keyAt(i))
+                                    android.util.Log.w("UfmApplication", "Pruned oversized view hierarchy state: viewId=$viewIdHex size=$itemSize bytes in ${activity.javaClass.simpleName}")
+                                    views.removeAt(i)
+                                }
+                            } catch (e: Throwable) {
+                                android.util.Log.w("UfmApplication", "Failed to serialize view state at index $i, removing: ${e.message}")
+                                views.removeAt(i)
+                            }
+                        }
+                    } finally {
+                        viewParcel.recycle()
+                    }
+                }
+            }
+
+            // 2. Re-measure to check if still over threshold
+            val checkParcel = android.os.Parcel.obtain()
+            val remainingSize = try {
+                checkParcel.writeBundle(outState)
+                checkParcel.dataSize()
+            } catch (t: Throwable) {
+                totalSize
+            } finally {
+                checkParcel.recycle()
+            }
+
+            if (remainingSize > MAX_SAFE_SAVED_STATE_BYTES) {
+                android.util.Log.w("UfmApplication", "Activity ${activity.javaClass.simpleName} saved state remains over threshold after view pruning ($remainingSize bytes), clearing viewHierarchyState")
+                outState.remove("android:viewHierarchyState")
+            }
+        }
     }
 
     private val TAG = "UfmApplication"
@@ -407,7 +478,20 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
                     Log.w(TAG, "Error in onActivityStopped lifecycle callback", e)
                 }
             }
-            override fun onActivitySaveInstanceState(activity: android.app.Activity, outState: android.os.Bundle) {}
+            override fun onActivitySaveInstanceState(activity: android.app.Activity, outState: android.os.Bundle) {
+                try {
+                    sanitizeSavedInstanceState(activity, outState)
+                } catch (e: Throwable) {
+                    Log.w(TAG, "Error in onActivitySaveInstanceState lifecycle callback", e)
+                }
+            }
+            override fun onActivityPostSaveInstanceState(activity: android.app.Activity, outState: android.os.Bundle) {
+                try {
+                    sanitizeSavedInstanceState(activity, outState)
+                } catch (e: Throwable) {
+                    Log.w(TAG, "Error in onActivityPostSaveInstanceState lifecycle callback", e)
+                }
+            }
             override fun onActivityDestroyed(activity: android.app.Activity) {
                 try {
                     aliveActivities.remove(activity)

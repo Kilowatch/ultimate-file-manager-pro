@@ -264,6 +264,7 @@
                     android:textColor="#66FFFFFF"
                     android:gravity="end"
                     android:background="#0AFFFFFF"
+                    android:saveEnabled="false"
                     android:visibility="gone" />
 
                 <!-- File content (EditText for editing) -->
@@ -278,6 +279,7 @@
                     android:background="@null"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:textIsSelectable="true"
+                    android:saveEnabled="false"
                     android:visibility="gone" />
 
             </LinearLayout>
