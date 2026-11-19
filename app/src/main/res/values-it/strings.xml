@@ -6154,9 +6154,7 @@ Nessuna cartella crittografata ancora
     <string name="remote_status_open">
 Aprire
 </string>
-    <string name="remote_item">
-articolo
-</string>
+    <string name="remote_item">Elemento</string>
     <string name="remote_items">
 elementi
 </string>
