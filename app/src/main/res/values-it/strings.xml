@@ -5110,9 +5110,7 @@ Utilizzi l\'app ormai da un po\' e questo significa molto per noi. Se ti piace, 
     <string name="copying_files">
 Copia dei file…
 </string>
-    <string name="item_00">
-Articolo 0/0
-</string>
+    <string name="item_00">Elemento 0/0</string>
     <string name="filenameext">
 Nome file.ext
 </string>
