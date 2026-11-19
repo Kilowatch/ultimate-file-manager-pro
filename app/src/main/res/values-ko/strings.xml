@@ -17182,6 +17182,26 @@ Flat View에서는 이 스토리지 볼륨이 완전히 인덱싱되어야 합�
     <string name="backup_pref_flat_view">
 평면 보기 설정
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+홈 바로가기 제거
+</string>
+    <string name="remove_home_shortcut_message">
+Android 보안 제한으로 인해 앱은 홈 화면에서 아이콘을 직접 제거할 수 없습니다. 바로가기가 비활성화됩니다. 완전히 제거하려면 아이콘을 런처의 제거 또는 제거로 드래그하세요.
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+바로가기 비활성화
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+현지의
+</string>
+    <string name="file">
+파일
+</string>
 </resources>
 
 

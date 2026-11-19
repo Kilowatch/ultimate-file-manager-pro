@@ -17182,6 +17182,26 @@ Flat View вимагає, щоб цей обсяг пам’яті був пов
     <string name="backup_pref_flat_view">
 Налаштування Flat View
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+Видалити ярлик «Додому».
+</string>
+    <string name="remove_home_shortcut_message">
+Через обмеження безпеки Android програми не можуть безпосередньо видаляти піктограми з головного екрана. Ярлик буде вимкнено. Щоб видалити його повністю, перетягніть піктограму до пункту Видалити або Видалити на панелі запуску.
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+Вимкнути ярлик
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+Місцевий
+</string>
+    <string name="file">
+Файл
+</string>
 </resources>
 
 

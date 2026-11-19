@@ -560,6 +560,14 @@ class StorageBrowserActivity : AppCompatActivity() {
                     }
                 } else null
 
+                val favSubtitle = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavoriteSubtitle(
+                    context,
+                    fav.isNetwork,
+                    fav.isFolder,
+                    fav.shareId,
+                    netShare
+                )
+
                 items.add(
                     StorageItem(
                         id = fav.id,
@@ -568,6 +576,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                         totalBytes = 0,
                         usedBytes = 0,
                         mountPath = "",
+                        subtitle = favSubtitle,
                         isFavoriteTile = true,
                         favoritePath = fav.path,
                         favoriteIsFolder = fav.isFolder,
@@ -2593,7 +2602,13 @@ class StorageBrowserActivity : AppCompatActivity() {
             item.isSyncTile                     -> getString(R.string.sync_subtitle)
             item.isAdvancedSyncTile              -> getString(R.string.advanced_sync_subtitle)
             item.isExtractsTile                 -> getString(R.string.browse_extracted_apps)
-            item.isFavoriteTile                 -> if (item.favoriteIsFolder) getString(R.string.favorite_folder) else getString(R.string.favorite_file)
+            item.isFavoriteTile                 -> item.subtitle ?: za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavoriteSubtitle(
+                this,
+                item.favoriteIsNetwork,
+                item.favoriteIsFolder,
+                item.networkShare?.id,
+                item.networkShare
+            )
             item.isFileServerTile               -> getString(R.string.file_server_tile_subtitle)
             item.isNetworkRoot                  -> {
                 val share = item.networkShare
@@ -3418,8 +3433,10 @@ class StorageBrowserActivity : AppCompatActivity() {
                             if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
                                 putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare.id)
                             } else {
-                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
-                                if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE || item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE) {
+                                val shareId = item.networkShare?.id
+                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
+                                val isOnline = shareId != null && za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this@StorageBrowserActivity).getById(shareId) != null
+                                if (isOnline) {
                                     putExtra("isOnlineStorage", true)
                                 }
                             }
@@ -3454,8 +3471,10 @@ class StorageBrowserActivity : AppCompatActivity() {
                             if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
                                 putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare.id)
                             } else {
-                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
-                                if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE || item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE) {
+                                val shareId = item.networkShare?.id
+                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
+                                val isOnline = shareId != null && za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this@StorageBrowserActivity).getById(shareId) != null
+                                if (isOnline) {
                                     putExtra("isOnlineStorage", true)
                                 }
                             }
@@ -4811,10 +4830,10 @@ class StorageBrowserActivity : AppCompatActivity() {
             dialog.dismiss()
             if (isOnTv) {
                 FavoriteHomeScreenManager.removeProgram(this, favorite)
+                showPremiumSnackbar(getString(R.string.fav_shortcut_disabled_toast))
             } else {
-                FavoriteHomeScreenManager.disableShortcut(this, favorite)
+                showRemoveHomeShortcutDialog(favorite)
             }
-            showPremiumSnackbar(getString(R.string.fav_shortcut_disabled_toast))
         }
 
         btnDeleteFavorite?.setOnClickListener {
@@ -4830,6 +4849,36 @@ class StorageBrowserActivity : AppCompatActivity() {
             dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             if (isOnTv) {
                 btnRemoveFromHome?.requestFocus()
+            }
+        }
+    }
+
+    private fun showRemoveHomeShortcutDialog(favorite: FavoritesManager.FavoriteItem) {
+        val isOnTv = isTv || DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isOnTv) R.layout.dialog_remove_home_shortcut_tv else R.layout.dialog_remove_home_shortcut
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        val btnDisable = dialogView.findViewById<View>(R.id.btnDisableShortcut)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        btnDisable?.setOnClickListener {
+            dialog.dismiss()
+            FavoriteHomeScreenManager.disableShortcut(this, favorite)
+            showPremiumSnackbar(getString(R.string.fav_shortcut_disabled_toast))
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.safeShow()
+        if (dialog.isShowing) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            if (isOnTv) {
+                btnCancel?.requestFocus()
             }
         }
     }
@@ -5507,6 +5556,38 @@ class StorageBrowserActivity : AppCompatActivity() {
                         }
                     }
                 }
+                val netShare: za.kilowatch.ultimatefilemanager.network.NetworkShare? = if (fav.isNetwork && fav.shareId != null) {
+                    if (fav.shareId.startsWith("tv_")) {
+                        val deviceId = fav.shareId.removePrefix("tv_")
+                        val device = pairedDeviceRepo.getAllPairedDevices().find { it.deviceId == deviceId }
+                        if (device != null) {
+                            za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                                id = device.deviceId,
+                                name = device.name,
+                                type = za.kilowatch.ultimatefilemanager.network.ShareType.TV,
+                                host = device.lastIp,
+                                port = device.lastPort,
+                                readOnly = false
+                            )
+                        } else null
+                    } else {
+                        val netShare = networkShareRepo.getById(fav.shareId)
+                        if (netShare != null) {
+                            netShare
+                        } else {
+                            onlineRepo.getById(fav.shareId)?.toNetworkShare()
+                        }
+                    }
+                } else null
+
+                val favSubtitle = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavoriteSubtitle(
+                    this@StorageBrowserActivity,
+                    fav.isNetwork,
+                    fav.isFolder,
+                    fav.shareId,
+                    netShare
+                )
+
                 storageItems.add(StorageItem(
                     id = fav.id,
                     label = fav.label,
@@ -5514,33 +5595,12 @@ class StorageBrowserActivity : AppCompatActivity() {
                     totalBytes = 0,
                     usedBytes = 0,
                     mountPath = "",
+                    subtitle = favSubtitle,
                     isFavoriteTile = true,
                     favoritePath = fav.path,
                     favoriteIsFolder = fav.isFolder,
                     favoriteIsNetwork = fav.isNetwork,
-                    networkShare = if (fav.isNetwork && fav.shareId != null) {
-                        if (fav.shareId.startsWith("tv_")) {
-                            val deviceId = fav.shareId.removePrefix("tv_")
-                            val device = pairedDeviceRepo.getAllPairedDevices().find { it.deviceId == deviceId }
-                            if (device != null) {
-                                za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                                    id = device.deviceId,
-                                    name = device.name,
-                                    type = za.kilowatch.ultimatefilemanager.network.ShareType.TV,
-                                    host = device.lastIp,
-                                    port = device.lastPort,
-                                    readOnly = false
-                                )
-                            } else null
-                        } else {
-                            val netShare = networkShareRepo.getById(fav.shareId)
-                            if (netShare != null) {
-                                netShare
-                            } else {
-                                onlineRepo.getById(fav.shareId)?.toNetworkShare()
-                            }
-                        }
-                    } else null
+                    networkShare = netShare
                 ))
             }
 

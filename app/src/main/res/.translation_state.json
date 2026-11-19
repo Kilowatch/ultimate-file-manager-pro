@@ -5490,7 +5490,13 @@
       "flat_view_delete_title": "93617a8503951c38871d9a8a3152d84ff1671eb5dfe9c240595b24ec55c4492e",
       "flat_view_delete_message": "e77ce8fdfaa86bf1153b707de925beecc48df5b20967f7b286b1080e3f1a1ccf",
       "flat_view_deleted_count": "1a2fd1278039b8693a719a530b9592b12a184e9df2697a7db19df5cb6adc5351",
-      "backup_pref_flat_view": "da67170e55a92650674990002729c3bb8ba2a538bed24c8f9bef24a1e24f5110"
+      "backup_pref_flat_view": "da67170e55a92650674990002729c3bb8ba2a538bed24c8f9bef24a1e24f5110",
+      "remove_home_shortcut_title": "0046de87ca3fe476b551d8bc69775007746389945eb92e6359a0b9242ebb1485",
+      "remove_home_shortcut_message": "140b3527c48cc7c4f9ea972d4c620dae30ef627d246b10ecfd8e57f05bc0523c",
+      "remove_home_shortcut_disable_btn": "c9170a01c3e6d76dbf9db1aa86a567752be6b4793d514ce891556b8e706d0a4f",
+      "fav_protocol_type_format": "0e16b75bd7dde30026809124b1d285710213a6866cc34f94e954cceebd0d2740",
+      "fav_protocol_local": "8c31e6e7223097e2e4847773c47a4efab6aaf79deeecc92a7759891c74976dde",
+      "file": "50009ce1da4d15e1c4a04024df691eed5f0d598e2c4c67092f205366d0adf99e"
     },
     "strings_policy.xml": {
       "policy_app_name": "d5812d4b4f8c66684050d9c3b2ad411c2f2e4dfb4645af8ac6c6deadb65724b9",

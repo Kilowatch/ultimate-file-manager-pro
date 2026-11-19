@@ -141,6 +141,10 @@ class FavoriteShortcutActivity : AppCompatActivity() {
                 } else {
                     putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, shareId)
                 }
+                if (onlineShare != null) {
+                    putExtra("isOnlineStorage", true)
+                }
+                putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
                 putExtra(NetworkBrowserActivity.EXTRA_INITIAL_PATH, parentPath)
                 putExtra(NetworkBrowserActivity.EXTRA_OPEN_FILE_PATH, item.path)
                 putExtra(NetworkBrowserActivity.EXTRA_OPEN_FILE_NAME, item.path.substringAfterLast('/'))

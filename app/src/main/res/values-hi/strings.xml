@@ -17160,6 +17160,26 @@ Bookmark Hub
     <string name="backup_pref_flat_view">
 फ़्लैट व्यू सेटिंग्स
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+होम शॉर्टकट हटाएँ
+</string>
+    <string name="remove_home_shortcut_message">
+एंड्रॉइड सुरक्षा प्रतिबंधों के कारण, ऐप्स सीधे आपके होम स्क्रीन से आइकन नहीं हटा सकते हैं। शॉर्टकट अक्षम कर दिया जाएगा. इसे पूरी तरह से हटाने के लिए, कृपया आइकन को अपने लॉन्चर पर निकालें या अनइंस्टॉल करने के लिए खींचें।
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+शॉर्टकट अक्षम करें
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+स्थानीय
+</string>
+    <string name="file">
+फ़ाइल
+</string>
 </resources>
 
 

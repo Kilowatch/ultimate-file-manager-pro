@@ -17183,6 +17183,26 @@ Flat View では、このストレージ ボリュームに完全にインデッ
     <string name="backup_pref_flat_view">
 フラットビュー設定
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+ホームショートカットを削除
+</string>
+    <string name="remove_home_shortcut_message">
+Android のセキュリティ制限により、アプリはホーム画面からアイコンを直接削除できません。ショートカットは無効になります。完全に削除するには、ランチャーのアイコンを [削除] または [アンインストール] にドラッグします。
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+ショートカットを無効にする
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+地元
+</string>
+    <string name="file">
+ファイル
+</string>
 </resources>
 
 

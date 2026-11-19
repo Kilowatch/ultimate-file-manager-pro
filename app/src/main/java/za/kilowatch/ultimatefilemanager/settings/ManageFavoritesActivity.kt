@@ -155,15 +155,48 @@ class ManageFavoritesActivity : AppCompatActivity() {
             dialog.dismiss()
             if (isTv) {
                 FavoriteHomeScreenManager.removeProgram(this, favorite)
+                loadFavorites()
             } else {
-                FavoriteHomeScreenManager.disableShortcut(this, favorite)
+                showRemoveHomeShortcutDialog(favorite)
             }
-            loadFavorites()
         }
 
         btnDeleteFavorite?.setOnClickListener {
             dialog.dismiss()
             showSingleDeleteConfirmDialog(favorite)
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            btnCancel?.requestFocus()
+        }
+    }
+
+    private fun showRemoveHomeShortcutDialog(favorite: FavoritesManager.FavoriteItem) {
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_remove_home_shortcut_tv
+            else R.layout.dialog_remove_home_shortcut,
+            null
+        )
+
+        val btnDisable = dialogView.findViewById<View>(R.id.btnDisableShortcut)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnDisable?.setOnClickListener {
+            dialog.dismiss()
+            FavoriteHomeScreenManager.disableShortcut(this, favorite)
+            loadFavorites()
         }
 
         btnCancel?.setOnClickListener {

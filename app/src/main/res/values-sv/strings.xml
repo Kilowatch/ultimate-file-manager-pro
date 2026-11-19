@@ -17153,6 +17153,26 @@ Raderade %1$d filer
     <string name="backup_pref_flat_view">
 Flat View-inställningar
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+Ta bort genväg till hemmet
+</string>
+    <string name="remove_home_shortcut_message">
+På grund av Android-säkerhetsbegränsningar kan appar inte ta bort ikoner direkt från din startskärm. Genvägen kommer att inaktiveras. För att ta bort det helt, vänligen dra ikonen till Ta bort eller Avinstallera på startprogrammet.
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+Inaktivera genväg
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+Lokal
+</string>
+    <string name="file">
+Fil
+</string>
 </resources>
 
 

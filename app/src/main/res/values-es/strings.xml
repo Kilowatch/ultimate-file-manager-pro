@@ -17194,6 +17194,26 @@ Archivos %1$d eliminados
     <string name="backup_pref_flat_view">
 Configuración de vista plana
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+Eliminar acceso directo a Inicio
+</string>
+    <string name="remove_home_shortcut_message">
+Debido a las restricciones de seguridad de Android, las aplicaciones no pueden eliminar iconos directamente de la pantalla de inicio. El acceso directo quedará deshabilitado. Para eliminarlo por completo, arrastre el icono hasta Eliminar o Desinstalar en su iniciador.
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+Deshabilitar acceso directo
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+Local
+</string>
+    <string name="file">
+Archivo
+</string>
 </resources>
 
 

@@ -17181,6 +17181,26 @@ Flat View 要求此存储卷完全建立索引。请先运行索引。
     <string name="backup_pref_flat_view">
 平面视图设置
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+删除主页快捷方式
+</string>
+    <string name="remove_home_shortcut_message">
+由于 Android 安全限制，应用程序无法直接从主屏幕删除图标。该快捷方式将被禁用。要完全删除它，请将图标拖动到启动器上的“删除”或“卸载”。
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+禁用快捷方式
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+当地的
+</string>
+    <string name="file">
+文件
+</string>
 </resources>
 
 

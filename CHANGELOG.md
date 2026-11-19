@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.7] — 2026-11-17
 
 ### Added
+- **Connection Protocol Badging (`FavoritesManager`, `StorageAdapter`, `ManageFavoritesAdapter`, `FavoriteIconComposer`)**:
+  1. **Storage & Manage Favorites Badging**: Subtitles for favorites across the main Storage screen and Manage Favorites list now display `{Protocol} • {Type}` (e.g., `WebDAV • Folder`, `WebDAV • File`, `SMB • Folder`, `Local • Folder`), clearly distinguishing identically named folders across different network servers or cloud storage providers.
+  2. **Launcher Icon Protocol Pill**: Pinned home screen shortcut icons now render a compact, high-contrast protocol badge (`WDAV`, `SMB`, `NFS`, `FTP`, `GDRV`, `1DRV`, etc.) on the bottom quadrant of the icon.
+- **UFMStandard Home Screen Shortcut Removal Dialog (`ManageFavoritesActivity`, `StorageBrowserActivity`)**:
+  - Added mobile glass dialog (`dialog_remove_home_shortcut.xml`) and TV dialog (`dialog_remove_home_shortcut_tv.xml`) informing users that due to Android OS platform security restrictions, pinned shortcuts can only be disabled by the application and must be dragged to "Remove" on the home screen launcher grid.
 - **Remote TV Download Manager (Mobile, Windows & Linux Companions)**: Full remote control and monitoring of Download Manager on paired Android TVs from Android Mobile, Windows Companion, and Linux Companion over secure LAN HTTPS:
   1. **TV Root Action & Dedicated Activity**: Added "Download Manager" to the paired TV root screen in `NetworkBrowserActivity`, launching `RemoteDownloadManagerActivity` with live transfer %, download speeds, ETAs, and peer/seed metrics.
   2. **Remote Storage Directory Picker**: Added interactive TV storage drive and folder explorer allowing users to inspect TV mounts and select any internal or external USB folder as the TV download location.
@@ -21,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   4. **Zero-Latency Auto-Reindexing & Live UI Refresh**: Instantly removes/updates items in the list, synchronizes the index database, runs background folder reindexing, and refreshes analyzer metrics in real time.
 
 ### Fixed
+- **Remote WebDAV & Online Storage Favorite Resolution (`NetworkBrowserActivity`, `StorageBrowserActivity`, `FavoriteShortcutActivity`)**:
+  1. **Bidirectional Fallback**: Fixed an issue where opening in-app favorites or pinned home screen shortcuts to WebDAV folders or files (such as those hosted via rclone, Nextcloud, or ownCloud) hung on "Opening..." or redirected to the main Storage screen with a *"Previous storage location is unavailable"* error.
+  2. **Repository Fallback Engine**: Implemented bidirectional repository fallback between `NetworkShareRepository` and `OnlineStorageRepository` in `NetworkBrowserActivity.initNetworkClient()` to prevent false negative storage lookups.
+  3. **Provider Metadata Preservation**: Ensured `isOnlineStorage = true` and `EXTRA_STORAGE_LABEL` are consistently attached for all cloud and WebDAV providers when launching remote file and folder favorites.
 - **Universal TV Home Screen Shortcuts across Custom Launchers (`FavoriteHomeScreenManager`, `TvPreviewManager`, `DeviceUtils`)**: Fixed an issue where home screen shortcuts created on Android TV for drives, storage volumes, and favorite folders did not appear on third-party custom TV launchers (such as ATV Launcher Pro, Projectivy Launcher, Monet TV Launcher, Wolf Launcher, and FLauncher):
   1. **Active Launcher Detection**: Added `DeviceUtils.getActiveLauncherPackage` and `DeviceUtils.isStockTvLauncher` to detect whether the active launcher is the stock Android TV / Google TV home screen (`com.google.android.tvlauncher`, `com.google.android.apps.tv.launcherx`, `com.android.tv`).
   2. **Tier 1 (Stock Launcher)**: Continues publishing preview channel program cards via `TvPreviewManager` and `androidx.tvprovider` for native Google TV / Android TV home channel rows.

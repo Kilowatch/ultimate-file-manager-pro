@@ -172,4 +172,76 @@ object FavoritesManager {
             Log.w("FavoritesManager", "Widget notify skipped: ${e.message}")
         }
     }
+
+    fun getFavoriteProtocolLabel(
+        context: Context,
+        isNetwork: Boolean,
+        shareId: String?,
+        netShare: za.kilowatch.ultimatefilemanager.network.NetworkShare? = null
+    ): String {
+        if (!isNetwork) {
+            return try {
+                context.getString(R.string.fav_protocol_local)
+            } catch (_: Exception) {
+                "Local"
+            }
+        }
+        val effShare = netShare ?: if (!shareId.isNullOrEmpty()) {
+            if (shareId.startsWith("tv_")) null else {
+                za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(context).getById(shareId)
+                    ?: za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(context).getById(shareId)?.toNetworkShare()
+            }
+        } else null
+
+        if (shareId?.startsWith("tv_") == true || effShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+            return "TV"
+        }
+
+        if (effShare != null) {
+            return when (effShare.type) {
+                za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> "WebDAV"
+                za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> "SMB"
+                za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> "NFS"
+                za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> "FTP"
+                za.kilowatch.ultimatefilemanager.network.ShareType.SFTP -> "SFTP"
+                za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> "SCP"
+                za.kilowatch.ultimatefilemanager.network.ShareType.TV -> "TV"
+                za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> "DLNA"
+                za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> "OneDrive"
+                za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> "Google Drive"
+                za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> "Dropbox"
+                za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3 -> "Amazon S3"
+                za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> "IDrive e2"
+            }
+        }
+        return "Network"
+    }
+
+    fun getFavoriteProtocolLabel(context: Context, item: FavoriteItem): String {
+        return getFavoriteProtocolLabel(context, item.isNetwork, item.shareId)
+    }
+
+    fun getFavoriteSubtitle(context: Context, item: FavoriteItem): String {
+        return getFavoriteSubtitle(context, item.isNetwork, item.isFolder, item.shareId)
+    }
+
+    fun getFavoriteSubtitle(
+        context: Context,
+        isNetwork: Boolean,
+        isFolder: Boolean,
+        shareId: String?,
+        netShare: za.kilowatch.ultimatefilemanager.network.NetworkShare? = null
+    ): String {
+        val proto = getFavoriteProtocolLabel(context, isNetwork, shareId, netShare)
+        val type = if (isFolder) {
+            try { context.getString(R.string.folder) } catch (_: Exception) { "Folder" }
+        } else {
+            try { context.getString(R.string.file) } catch (_: Exception) { "File" }
+        }
+        return try {
+            context.getString(R.string.fav_protocol_type_format, proto, type)
+        } catch (_: Exception) {
+            "$proto \u2022 $type"
+        }
+    }
 }

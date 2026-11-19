@@ -17182,6 +17182,26 @@ Arquivos %1$d excluídos
     <string name="backup_pref_flat_view">
 Configurações de visualização plana
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+Remover atalho inicial
+</string>
+    <string name="remove_home_shortcut_message">
+Devido às restrições de segurança do Android, os aplicativos não podem remover ícones diretamente da tela inicial. O atalho será desativado. Para removê-lo completamente, arraste o ícone para Remover ou Desinstalar no seu inicializador.
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+Desativar atalho
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+Local
+</string>
+    <string name="file">
+Arquivo
+</string>
 </resources>
 
 

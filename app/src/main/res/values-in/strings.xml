@@ -17182,6 +17182,26 @@ File %1$d dihapus
     <string name="backup_pref_flat_view">
 Pengaturan Tampilan Datar
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+Hapus Pintasan Beranda
+</string>
+    <string name="remove_home_shortcut_message">
+Karena pembatasan keamanan Android, aplikasi tidak dapat langsung menghapus ikon dari layar beranda Anda. Pintasan akan dinonaktifkan. Untuk menghapusnya sepenuhnya, silakan tarik ikon Hapus atau Hapus Instalasi pada peluncur Anda.
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+Nonaktifkan Pintasan
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+Lokal
+</string>
+    <string name="file">
+Mengajukan
+</string>
 </resources>
 
 

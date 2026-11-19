@@ -17182,6 +17182,26 @@ Flat View требует, чтобы этот том хранилища был �
     <string name="backup_pref_flat_view">
 Настройки плоского просмотра
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+Удалить ярлык «Домой»
+</string>
+    <string name="remove_home_shortcut_message">
+Из-за ограничений безопасности Android приложения не могут напрямую удалять значки с главного экрана. Ярлык будет отключен. Чтобы полностью удалить его, перетащите значок «Удалить» или «Удалить» на панели запуска.
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+Отключить ярлык
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+Местный
+</string>
+    <string name="file">
+Файл
+</string>
 </resources>
 
 

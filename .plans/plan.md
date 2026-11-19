@@ -1,143 +1,120 @@
-# Implementation Plan: Translation English String Inspection, Re-translation & Verification Engine
+# Implementation Plan: Network & WebDAV Favorites Resolution, Connection Badging, and Shortcut UX
 
-## Goals
-Enable automated detection, re-translation, and post-sync verification of untranslated English strings across all non-English Android localization files (`res/values-*/strings.xml`, `strings_policy.xml`), with full `from -> to` logging, `build.bat` support, and build tool GUI integration. Satisfies all functional requirements in [spec.md](file:///F:/Share/UFM/.plans/spec.md) and confirmed decisions in [clarifications.md](file:///F:/Share/UFM/.plans/clarifications.md).
+_Adhering to [UFMStandard](file:///F:/Share/UFM/.claude/memory/ufm_standard.md), [spec.md](file:///F:/Share/UFM/.plans/spec.md), and [clarifications.md](file:///F:/Share/UFM/.plans/clarifications.md)_
 
 ---
 
-## Architecture Overview
+## 1. Overview & Architecture
+
+This plan resolves the failures in in-app and home screen favorite shortcut handling for WebDAV and online cloud storages, adds connection protocol badging across all favorite surfaces, and implements a UFMStandard-compliant explanatory dialog for home screen shortcut removal.
 
 ```mermaid
 flowchart TD
-    subgraph Trigger["Execution Triggers"]
-        CLI["CLI: python -u translate_strings.py audit"]
-        BAT["Batch: build.bat audit"]
-        GUI["GUI: APKScripts/build_tool.py (Audit Button)"]
-        VERIFY["Standard Verify: translate_strings.py verify"]
+    subgraph UI["Favorites UI Surfaces"]
+        StorageGrid["Storage Browser Grid (isFavoriteTile)"]
+        ManageFav["Manage Favorites Activity"]
+        HomeShortcut["Android Launcher Pinned Shortcut"]
     end
 
-    subgraph InspectionEngine["Inspection & Allowlist Engine"]
-        LoadEN["Load English Source (values/strings.xml & strings_policy.xml)"]
-        ScanLocales["Scan All Non-English values-* Folders"]
-        Compare["Compare Localized Text == English Text (Normalized)"]
-        AllowlistFilter["Filter Out Allowlist (Brands, Protocols, Symbols)"]
-        Queue["Build Re-translation Queue"]
+    subgraph Trampoline["Dispatch & Trampoline"]
+        FavShortcutAct["FavoriteShortcutActivity"]
+        HomeManager["FavoriteHomeScreenManager"]
     end
 
-    subgraph TranslationEngine["Translation & Reconstruction Engine"]
-        Translate["Provider Chain: Google -> MyMemory -> Pons\nRate-Limited & Multi-Threaded"]
-        Log["Log from -> to: Key, Source Text, Translated Text"]
-        Reconstruct["Single-Pass XML Substitution (build_target_xml)"]
-        Write["Write Updated UTF-8 XML File"]
+    subgraph Browsers["Destination Browsers"]
+        NetBrowser["NetworkBrowserActivity (Remote / Cloud)"]
+        FileBrowser["FileBrowserActivity (Local / SAF)"]
+        ViewerRouter["FileViewerRouter / UFMPlayerActivity"]
     end
 
-    subgraph VerifyGate["Verify Quality Gate"]
-        CheckAudit["Post-Sync Audit Pass Across All Locales"]
-        AutoRetry["Active Re-translate Retry for Lingering English"]
-        WarnReport["Log Unresolved Lingering Strings as Warnings in Summary"]
-    end
+    StorageGrid -->|"Taps WebDAV Folder / File"| StorageBrowserAct["StorageBrowserActivity"]
+    StorageBrowserAct -->|"Universal isOnline Check + isOnlineStorage=true"| NetBrowser
 
-    CLI --> LoadEN
-    BAT --> LoadEN
-    GUI --> LoadEN
-    VERIFY --> LoadEN
+    HomeShortcut -->|"Taps File Shortcut (Trampoline)"| FavShortcutAct
+    FavShortcutAct -->|"Universal isOnline Check + EXTRA_OPEN_FILE_PATH"| NetBrowser
 
-    LoadEN --> ScanLocales --> Compare --> AllowlistFilter --> Queue
-    Queue --> Translate --> Log --> Reconstruct --> Write
+    HomeShortcut -->|"Taps Folder Shortcut"| NetBrowser
 
-    VERIFY -.->|After Normal Sync| CheckAudit
-    CheckAudit --> AutoRetry --> WarnReport
+    NetBrowser -->|"Resolves share via fallback: NetShareRepo <-> OnlineRepo"| LoadFolder["Load Remote Directory"]
+    LoadFolder -->|"EXTRA_OPEN_FILE_PATH set"| ViewerRouter
 ```
 
 ---
 
-## Files to Modify
+## 2. Technical Decisions & Design Details
 
-### `translate_strings.py` — Core Translation & Verification Script
-- **What:** Add allowlist, English detection heuristics, audit mode (`run_audit_mode()`), post-translation verify gate (`run_verify_mode()`), and `from -> to` transformation logging.
-- **Key details:**
-  - Define `ALLOWLIST_EXEMPT_STRINGS` set (brands, cloud backends, protocols, symbols, proper nouns).
-  - Add `is_string_exempt(raw_text, name=None) -> bool`.
-  - Add `detect_english_strings_in_file(english_text, localized_text) -> (strings_to_fix, arrays_to_fix)`.
-  - Implement `run_audit_mode()`:
-    - Iterates over all 18+ `values-*` directories.
-    - Inspects `strings.xml` and `strings_policy.xml`.
-    - Batches detected English strings and re-translates them via the fallback chain.
-    - Prints `[{lang}] [{file}:{key}] from -> to: "{en_text}" -> "{translated_text}"`.
-    - Replaces only verified non-English results using single-pass XML substitution.
-    - Prints statistical summary report.
-  - Enhance `run_verify_mode()`:
-    - After standard synchronization completes, runs a verification audit across all non-English files.
-    - Automatically executes an active re-translation retry pass for any lingering English strings.
-    - Reports any remaining unresolved entries as warnings in the final summary.
-  - Update `main()` to route `sys.argv[1] == 'audit'` to `run_audit_mode()`, and add choice in interactive mode.
-
-### `build.bat` — Windows Build Script
-- **What:** Add CLI parameter handling for `audit`.
-- **Key details:**
-  - Check `%1` for `audit`, `--audit-translations`, or `-audit`.
-  - If present, jump to `:run_audit` to execute `python -u translate_strings.py audit` and exit.
-  - If omitted, proceed to launch `python APKScripts\build_tool.py` as normal.
-
-### `APKScripts/build_tool.py` — Desktop Build Tool GUI
-- **What:** Add **"🔄 Audit & Fix English Strings"** button to Translations tab.
-- **Key details:**
-  - In `_build_translations_tab()`, add `self.trans_audit_btn` in the actions row.
-  - In `_run_translation_cmd()`, disable `self.trans_audit_btn` during active tasks.
-  - In `_on_translation_finished()`, re-enable `self.trans_audit_btn`.
-  - Implement `_on_trans_audit_clicked()` dispatching `translate_strings.py` with `["audit"]`.
-
----
-
-## Data Model
-In-memory audit data structure:
-```python
-{
-    "locales_inspected": int,
-    "files_scanned": int,
-    "total_english_detected": int,
-    "total_retranslated": int,
-    "total_exempt_skipped": int,
-    "unresolved_failures": {
-        "es": ["key_1", "key_2"],
-        "de": [...]
-    }
+### 2.1 Universal Online Storage Identification Helper
+Instead of hardcoding checks against `ShareType.ONEDRIVE` or `ShareType.GOOGLE_DRIVE`, create a single centralized resolution helper in a utility or repository:
+```kotlin
+fun isOnlineStorageShare(context: Context, shareId: String?, shareType: ShareType?): Boolean {
+    if (shareId.isNullOrEmpty()) return false
+    if (shareId.startsWith("tv_")) return false
+    if (shareType?.isOnlineProvider == true) return true
+    return OnlineStorageRepository.getInstance(context).getById(shareId) != null
 }
 ```
-No database migrations, Room schemas, or SharedPreferences changes are required.
+This guarantees that WebDAV, Dropbox, Box, Mega, Nextcloud, pCloud, Yandex, S3, IDrive e2, OneDrive, and Google Drive are consistently recognized as online storage targets across all components.
+
+### 2.2 Resilient Share Lookup in `NetworkBrowserActivity`
+In `NetworkBrowserActivity.kt` lines 657–693:
+- If `isOnlineStorage == true`, first query `OnlineStorageRepository.getById(shareId)`. If not found, fall back to `NetworkShareRepository.getById(shareId)`.
+- If `isOnlineStorage == false`, first query `NetworkShareRepository.getById(shareId)`. If not found, fall back to `OnlineStorageRepository.getById(shareId)`.
+- Only trigger `EXTRA_STORAGE_UNAVAILABLE_REDIRECT` if the share ID is absent from **both** repositories and is not a paired TV device.
+
+### 2.3 File Launch from Network Favorites (`EXTRA_OPEN_FILE_PATH`)
+In `NetworkBrowserActivity`:
+- When launched with `EXTRA_OPEN_FILE_PATH` (e.g. from `FavoriteShortcutActivity` or in-app file favorite), load the directory listing, locate the target file, and trigger media/file opening via `FileViewerRouter` or streaming player.
+
+### 2.4 In-App Subtitle Badging (`{Protocol} • {Folder/File}`)
+In `StorageBrowserActivity.kt` (`buildAllKnownTiles`, `loadStorageVolumes`), `StorageAdapter.kt`, and `ManageFavoritesActivity.kt`:
+- Resolve the protocol string dynamically:
+  - If `item.favoriteIsNetwork`:
+    - If `item.networkShare != null`: derive display label (`"WebDAV"`, `"SMB"`, `"NFS"`, `"FTP"`, `"SFTP"`, `"Google Drive"`, `"OneDrive"`, etc.).
+    - Fallback: lookup by `fav.shareId` in `NetworkShareRepository` or `OnlineStorageRepository`.
+  - If not network: `"Local"`.
+- Format subtitle as: `"{Protocol} • {Type}"` (e.g. `"WebDAV • Folder"`, `"WebDAV • File"`, `"SMB • Folder"`, `"Local • Folder"`).
+
+### 2.5 Home Screen Shortcut Icon Badging (`FavoriteIconComposer`)
+- In `FavoriteIconComposer.kt`, render a small, high-contrast protocol pill badge (`WDAV`, `SMB`, `NFS`, `FTP`, `CLOUD`) onto the shortcut icon canvas in the corner.
+
+### 2.6 UFMStandard Home Shortcut Removal Confirmation Dialog
+- Layout: `dialog_remove_home_shortcut.xml` using `@drawable/bg_dialog_glass` and `R.style.UFM_Dialog`.
+- Typography: Sans-serif-black title, 14sp secondary body.
+- Buttons (Vertical Hierarchy per UFMStandard):
+  - Mobile: Primary `MaterialButton` (`@style/Widget.Material3Expressive.Button`) "Disable Shortcut", Secondary `MaterialButton` (`@style/Widget.Material3Expressive.Button.TextButton`) "Cancel".
+  - TV: Primary yellow selector (`@drawable/selector_tv_button_yellow`) "Disable Shortcut", Secondary selector (`@drawable/selector_tv_button`) "Cancel".
+- Explanation text clearly explains that Android's OS API prevents apps from removing pinned icons directly from the launcher, requiring manual drag-to-delete.
 
 ---
 
-## Dependencies
-- Standard Python libraries: `os`, `sys`, `xml.etree.ElementTree`, `re`, `json`, `hashlib`, `threading`, `concurrent.futures`, `time`.
-- Third-party packages (already installed): `deep_translator` (`GoogleTranslator`, `MyMemoryTranslator`, `PonsTranslator`), `customtkinter`, `questionary`.
+## 3. Files Impacted
+
+| File Path | Description of Changes |
+| :--- | :--- |
+| `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageBrowserActivity.kt` | Use universal online check when launching favorite folders/files with `NetworkBrowserActivity`. Update favorite tile subtitle to `"{Protocol} • {Folder/File}"`. |
+| `app/src/main/java/za/kilowatch/ultimatefilemanager/network/NetworkBrowserActivity.kt` | Add cross-repository fallback in `initNetworkClient()` to prevent false redirect. Ensure `EXTRA_OPEN_FILE_PATH` auto-opens the remote file. |
+| `app/src/main/java/za/kilowatch/ultimatefilemanager/shortcuts/FavoriteShortcutActivity.kt` | Populate `putExtra("isOnlineStorage", true)` and `EXTRA_STORAGE_LABEL` for remote file favorites. |
+| `app/src/main/java/za/kilowatch/ultimatefilemanager/shortcuts/FavoriteHomeScreenManager.kt` | Enhance file intent generation and support protocol metadata. |
+| `app/src/main/java/za/kilowatch/ultimatefilemanager/shortcuts/FavoriteIconComposer.kt` | Draw compact protocol badge pill (`WDAV`, `SMB`, `NFS`, `FTP`, `CLOUD`) on generated launcher icons. |
+| `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAdapter.kt` | Update `isFavoriteTile` subtitle formatting to display `"{Protocol} • {Type}"`. |
+| `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/ManageFavoritesActivity.kt` | Show protocol badge next to items and integrate the UFMStandard shortcut removal confirmation dialog. |
+| `app/src/main/res/layout/dialog_remove_home_shortcut.xml` | UFMStandard glass confirmation dialog for shortcut disabling explanation. |
+| `app/src/main/res/values/strings.xml` | String resources for protocol subtitle formats and shortcut removal dialog copy. |
 
 ---
 
-## Test Plan
-1. **Exemption Logic Test**:
-   - Verify allowlist returns `True` for `"Ultimate File Manager Pro"`, `"Google Drive"`, `"SMB"`, `"%s"`, `"OK"`.
-   - Verify allowlist returns `False` for `"Select all items in folder"`, `"Storage Settings"`.
-2. **Audit & Re-translate Execution**:
-   - Run `python -u translate_strings.py audit`.
-   - Verify `from -> to` logs appear for every re-translated string.
-   - Verify XML files in `values-*/strings.xml` are updated cleanly without breaking XML tags or escaping.
-3. **Verify Quality Gate**:
-   - Run `python -u translate_strings.py verify`.
-   - Verify post-translation audit executes and reports remaining English strings.
-4. **Batch Script Test**:
-   - Run `build.bat audit` from terminal and verify direct CLI console execution.
-5. **Build Tool GUI Test**:
-   - Launch `build.bat` without arguments, verify the new button is present, enabled, and functions correctly.
-6. **Gradle Build Verification**:
-   - Run `./gradlew assembleMobileGoogleDebug` to confirm no XML or AAPT errors exist.
+## 4. Verification Plan
 
----
-
-## Risks & Mitigations
-- **Risk:** Translation APIs (Google/MyMemory/Pons) rate limiting or returning HTTP 429 during large batch audit.  
-  **Mitigation:** Built-in rate limiter (`_rate_limited_call`) with exponential backoff and retry mechanism, plus in-memory session cache.
-- **Risk:** Legitimate identical words (e.g., "Menu", "Audio" in Spanish) falsely re-translated endlessly.  
-  **Mitigation:** Allowlist for known technical/brand words, check against normalized English, and skip if re-translation produces identical text.
-- **Risk:** Accidental malformed XML or unescaped quotes in translated output.  
-  **Mitigation:** Retain existing `escape_text_nodes()` and `build_target_xml()` single-pass substitution engine that preserves XML formatting.
+1. **In-App WebDAV Navigation**:
+   - Create favorite WebDAV folder and file.
+   - Tap folder on main storage grid -> verifies opens cleanly in `NetworkBrowserActivity` without redirect.
+   - Tap file on main storage grid -> verifies file opens in viewer/player.
+2. **Home Screen Shortcut Launching**:
+   - Pin WebDAV file shortcut to Android home screen.
+   - Tap home screen shortcut -> verifies opens `NetworkBrowserActivity` into parent folder and launches file viewer, with no redirect error.
+3. **Protocol Badges**:
+   - Verify storage tiles display `"WebDAV • Folder"`, `"WebDAV • File"`, `"SMB • Folder"`, etc.
+   - Verify `ManageFavoritesActivity` displays protocol pills.
+   - Verify home screen shortcut icon has protocol overlay.
+4. **Shortcut Removal Dialog**:
+   - Remove shortcut from Manage Favorites -> verifies UFMStandard dialog appears with clear OS limitation explanation and working cancel/disable actions.

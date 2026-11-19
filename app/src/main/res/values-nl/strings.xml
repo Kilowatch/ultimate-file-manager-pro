@@ -16878,6 +16878,26 @@ Weet u zeker dat u %1$d geselecteerde bestanden wilt verwijderen?
     <string name="backup_pref_flat_view">
 Flat View-instellingen
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+Verwijder de thuissnelkoppeling
+</string>
+    <string name="remove_home_shortcut_message">
+Vanwege Android-beveiligingsbeperkingen kunnen apps pictogrammen niet rechtstreeks van uw startscherm verwijderen. De snelkoppeling wordt uitgeschakeld. Om het volledig te verwijderen, sleept u het pictogram naar Verwijderen of Verwijderen in uw opstartprogramma.
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+Schakel snelkoppeling uit
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+Lokaal
+</string>
+    <string name="file">
+Bestand
+</string>
 </resources>
 
 

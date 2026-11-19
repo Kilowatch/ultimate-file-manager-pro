@@ -17168,6 +17168,26 @@ Sind Sie sicher, dass Sie %1$d ausgewählte Dateien löschen möchten?
     <string name="backup_pref_flat_view">
 Einstellungen für die flache Ansicht
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+Home-Verknüpfung entfernen
+</string>
+    <string name="remove_home_shortcut_message">
+Aufgrund von Android-Sicherheitseinschränkungen können Apps Symbole nicht direkt von Ihrem Startbildschirm entfernen. Die Verknüpfung wird deaktiviert. Um es vollständig zu entfernen, ziehen Sie bitte das Symbol auf Ihrem Launcher auf „Entfernen“ oder „Deinstallieren“.
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+Verknüpfung deaktivieren
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+Lokal
+</string>
+    <string name="file">
+Datei
+</string>
 </resources>
 
 

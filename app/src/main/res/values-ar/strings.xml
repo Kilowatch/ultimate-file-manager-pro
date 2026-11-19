@@ -17184,6 +17184,26 @@ Bookmark Hub
     <string name="backup_pref_flat_view">
 إعدادات العرض المسطح
 </string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">
+إزالة اختصار الصفحة الرئيسية
+</string>
+    <string name="remove_home_shortcut_message">
+نظرًا للقيود الأمنية لنظام Android، لا يمكن للتطبيقات إزالة الرموز مباشرة من شاشتك الرئيسية. سيتم تعطيل الاختصار. لإزالته بالكامل، يرجى سحب الرمز لإزالة أو إلغاء التثبيت على المشغل الخاص بك.
+</string>
+    <string name="remove_home_shortcut_disable_btn">
+تعطيل الاختصار
+</string>
+    <string name="fav_protocol_type_format">
+%1$s \\u2022 %2$s
+</string>
+    <string name="fav_protocol_local">
+محلي
+</string>
+    <string name="file">
+ملف
+</string>
 </resources>
 
 

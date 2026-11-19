@@ -72,7 +72,8 @@ class ManageFavoritesAdapter(
             } else {
                 item.path
             }
-            txtPath.text = displayPath
+            val proto = FavoritesManager.getFavoriteProtocolLabel(ctx, item)
+            txtPath.text = "$proto \u2022 $displayPath"
             val iconTint = if (isTv) ctx.getColor(R.color.tv_accent) else ThemeColors.primary(ctx)
             if (item.isFolder) {
                 val isNetwork = !item.path.startsWith("/") && !item.path.startsWith("content://")

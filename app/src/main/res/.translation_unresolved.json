@@ -400,7 +400,8 @@
         "language_hindi": "6d6d1adcfe531ef6c3384f1c4421834c83df8ef64ff300c92542e4d71299c826",
         "sort_order_a_to_z": "2d8f7bc890ed7c7c1d3372fa7525681ae9b11f26453e763c8156b25ae8af337b",
         "sort_order_z_to_a": "2d4cf32407574cf40a923ed7878b6a530535ec9de714d0df0a59b3d472a45d5a",
-        "exif_has_gps_badge": "d8c3cc94f3797da38138a97b6bf07e15c05759a9b674373fae119888c4f4e041"
+        "exif_has_gps_badge": "d8c3cc94f3797da38138a97b6bf07e15c05759a9b674373fae119888c4f4e041",
+        "fav_protocol_local": "8c31e6e7223097e2e4847773c47a4efab6aaf79deeecc92a7759891c74976dde"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -984,7 +985,8 @@
         "bookmark_group_youtube": "fb7accfff8c6f8ea9b03c91ee5576d0d08080e9ba35918d801aaeb6020dbc88c",
         "bookmark_filter_media": "d357175cfe8978d39b0f86552dcd9404973493e2816101d9ff6c05ee248ef6bd",
         "bookmark_group_reddit": "eb0050f72303bcdbbdc071e2a3bf810c903be8d05cdf09f7c3106f2b6f9878bf",
-        "language_hindi": "6d6d1adcfe531ef6c3384f1c4421834c83df8ef64ff300c92542e4d71299c826"
+        "language_hindi": "6d6d1adcfe531ef6c3384f1c4421834c83df8ef64ff300c92542e4d71299c826",
+        "file": "50009ce1da4d15e1c4a04024df691eed5f0d598e2c4c67092f205366d0adf99e"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -1424,7 +1426,8 @@
         "bookmark_group_reddit": "eb0050f72303bcdbbdc071e2a3bf810c903be8d05cdf09f7c3106f2b6f9878bf",
         "language_hindi": "6d6d1adcfe531ef6c3384f1c4421834c83df8ef64ff300c92542e4d71299c826",
         "sort_order_a_to_z": "2d8f7bc890ed7c7c1d3372fa7525681ae9b11f26453e763c8156b25ae8af337b",
-        "slide_idx_1": "9293900b63b8fdec7349df815cd1481cc4fb1c2ca3077edd1424ca1654108275"
+        "slide_idx_1": "9293900b63b8fdec7349df815cd1481cc4fb1c2ca3077edd1424ca1654108275",
+        "fav_protocol_local": "8c31e6e7223097e2e4847773c47a4efab6aaf79deeecc92a7759891c74976dde"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",

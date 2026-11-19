@@ -667,28 +667,40 @@ class NetworkBrowserActivity : AppCompatActivity() {
             val isOnlineStorage = intent.getBooleanExtra("isOnlineStorage", false)
             if (isOnlineStorage) {
                 val foundShare = OnlineStorageRepository.getInstance(this).getById(shareId)
-                if (foundShare == null) {
-                    if (isTaskRoot) {
-                        startActivity(Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
-                            putExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT, true)
-                        })
+                if (foundShare != null) {
+                    share = foundShare.toNetworkShare()
+                } else {
+                    val fallbackShare = NetworkShareRepository.getInstance(this).getById(shareId)
+                    if (fallbackShare != null) {
+                        share = fallbackShare
+                    } else {
+                        if (isTaskRoot) {
+                            startActivity(Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
+                                putExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT, true)
+                            })
+                        }
+                        finish()
+                        return
                     }
-                    finish()
-                    return
                 }
-                share = foundShare.toNetworkShare()
             } else {
                 val foundShare = NetworkShareRepository.getInstance(this).getById(shareId)
-                if (foundShare == null) {
-                    if (isTaskRoot) {
-                        startActivity(Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
-                            putExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT, true)
-                        })
+                if (foundShare != null) {
+                    share = foundShare
+                } else {
+                    val fallbackShare = OnlineStorageRepository.getInstance(this).getById(shareId)
+                    if (fallbackShare != null) {
+                        share = fallbackShare.toNetworkShare()
+                    } else {
+                        if (isTaskRoot) {
+                            startActivity(Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
+                                putExtra(za.kilowatch.ultimatefilemanager.storage.LastLocationManager.EXTRA_STORAGE_UNAVAILABLE_REDIRECT, true)
+                            })
+                        }
+                        finish()
+                        return
                     }
-                    finish()
-                    return
                 }
-                share = foundShare
             }
         }
         originalRemotePath = share.remotePath

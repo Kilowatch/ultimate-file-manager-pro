@@ -63,9 +63,13 @@ object FavoriteIconComposer {
             FileTypeIconProvider.iconForExtension(ext)
         }
 
-        val baseDrawable = ContextCompat.getDrawable(context, iconRes)?.mutate()
+        val baseDrawable = try {
+            ContextCompat.getDrawable(context, iconRes)?.mutate()
+        } catch (_: Exception) {
+            null
+        }
         if (baseDrawable != null) {
-            val iconTint = ThemeColors.primary(context)
+            val iconTint = try { ThemeColors.primary(context) } catch (_: Exception) { Color.WHITE }
             baseDrawable.setTint(iconTint)
             val iconPadding = 44
             baseDrawable.setBounds(
@@ -78,13 +82,71 @@ object FavoriteIconComposer {
         }
 
         // 3. Draw gold star badge at top-right
-        val starBadge = ContextCompat.getDrawable(context, R.drawable.ic_star_badge)?.mutate()
+        val starBadge = try {
+            ContextCompat.getDrawable(context, R.drawable.ic_star_badge)?.mutate()
+        } catch (_: Exception) {
+            null
+        }
         if (starBadge != null) {
             val badgeSize = 54
             val badgeRight = BITMAP_SIZE - 10
             val badgeTop = 10
             starBadge.setBounds(badgeRight - badgeSize, badgeTop, badgeRight, badgeTop + badgeSize)
             starBadge.draw(canvas)
+        }
+
+        // 4. If network favorite, draw protocol pill badge at bottom
+        if (item.isNetwork) {
+            val protoLabel = FavoritesManager.getFavoriteProtocolLabel(context, item)
+            val badgeText = when (protoLabel.uppercase()) {
+                "WEBDAV" -> "WDAV"
+                "SMB" -> "SMB"
+                "NFS" -> "NFS"
+                "FTP" -> "FTP"
+                "SFTP" -> "SFTP"
+                "SCP" -> "SCP"
+                "TV" -> "TV"
+                "DLNA" -> "DLNA"
+                "GOOGLE DRIVE" -> "GDRV"
+                "ONEDRIVE" -> "1DRV"
+                "DROPBOX" -> "DROP"
+                "MEGA" -> "MEGA"
+                "AMAZON S3" -> "S3"
+                "IDRIVE E2" -> "E2"
+                else -> protoLabel.take(4).uppercase()
+            }
+
+            val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.WHITE
+                textSize = 19f
+                isFakeBoldText = true
+                typeface = android.graphics.Typeface.DEFAULT_BOLD
+                textAlign = Paint.Align.CENTER
+            }
+
+            val textWidth = textPaint.measureText(badgeText)
+            val pillPaddingH = 12f
+            val pillWidth = textWidth + (pillPaddingH * 2)
+            val pillHeight = 30f
+            val pillLeft = (BITMAP_SIZE - pillWidth) / 2f
+            val pillTop = BITMAP_SIZE - pillHeight - 14f
+            val pillRect = RectF(pillLeft, pillTop, pillLeft + pillWidth, pillTop + pillHeight)
+
+            val pillBgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.parseColor("#1B2129")
+                style = Paint.Style.FILL
+            }
+            val pillStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.parseColor("#4B5563")
+                style = Paint.Style.STROKE
+                strokeWidth = 2.5f
+            }
+
+            canvas.drawRoundRect(pillRect, 10f, 10f, pillBgPaint)
+            canvas.drawRoundRect(pillRect, 10f, 10f, pillStrokePaint)
+
+            val textY = pillTop + (pillHeight / 2f) - ((textPaint.descent() + textPaint.ascent()) / 2f)
+            canvas.drawText(badgeText, pillRect.centerX(), textY, textPaint)
         }
 
         return bitmap

@@ -1841,7 +1841,13 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 item.isSyncTile -> context.getString(R.string.sync_subtitle)
                 item.isAdvancedSyncTile -> context.getString(R.string.advanced_sync_subtitle)
                 item.isExtractsTile -> item.subtitle ?: context.getString(R.string.browse_extracted_apps)
-                item.isFavoriteTile -> if (item.favoriteIsFolder) context.getString(R.string.favorite_folder) else context.getString(R.string.favorite_file)
+                item.isFavoriteTile -> item.subtitle ?: za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavoriteSubtitle(
+                    context,
+                    item.favoriteIsNetwork,
+                    item.favoriteIsFolder,
+                    item.networkShare?.id,
+                    item.networkShare
+                )
                 item.isRecycleBinTile -> item.subtitle ?: context.getString(R.string.recycle_bin_title)
                 item.isCustomTile -> item.subtitle ?: ""
                 item.isNetworkRoot -> {

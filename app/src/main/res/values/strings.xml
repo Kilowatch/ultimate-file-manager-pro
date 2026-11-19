@@ -6035,6 +6035,14 @@
     <string name="flat_view_delete_message">Are you sure you want to delete %1$d selected files?</string>
     <string name="flat_view_deleted_count">Deleted %1$d files</string>
     <string name="backup_pref_flat_view">Flat View settings</string>
+
+    <!-- Favorites Protocol Badging & Shortcut Removal UX -->
+    <string name="remove_home_shortcut_title">Remove Home Shortcut</string>
+    <string name="remove_home_shortcut_message">Due to Android security restrictions, apps cannot directly remove icons from your home screen. The shortcut will be disabled. To remove it completely, please drag the icon to Remove or Uninstall on your launcher.</string>
+    <string name="remove_home_shortcut_disable_btn">Disable Shortcut</string>
+    <string name="fav_protocol_type_format">%1$s \u2022 %2$s</string>
+    <string name="fav_protocol_local">Local</string>
+    <string name="file">File</string>
 </resources>
 
 
