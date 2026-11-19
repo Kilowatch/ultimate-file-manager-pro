@@ -6176,9 +6176,7 @@ file saltati
     <string name="remote_btn_done">
 Fatto
 </string>
-    <string name="remote_delete_title">
-Eliminare l\'articolo?
-</string>
+    <string name="remote_delete_title">Eliminare l\'elemento?</string>
     <string name="remote_delete_msg">
 Sei sicuro di voler eliminare questo?
 </string>
