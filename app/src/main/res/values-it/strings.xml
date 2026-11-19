@@ -15603,7 +15603,7 @@ Monta unità
     <string name="ufm_slide_viewer_desc">View slides, cover thumbnail, and notes in UFM</string>
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
-    <string name="action_open_with">Open With…</string>
+    <string name="action_open_with">Apri Con…</string>
     <string name="action_open_as">Open As…</string>
     <string name="toolbar_open_with">Open With</string>
     <string name="toolbar_open_as">Open As</string>
