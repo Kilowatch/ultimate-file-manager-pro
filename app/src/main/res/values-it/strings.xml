@@ -12411,9 +12411,7 @@ File e cartelle protetti
 </string>
 
     <!-- File Pinning -->
-    <string name="pin">
-Spillo
-</string>
+    <string name="pin">Fissa in alto</string>
     <string name="unpin">
 Sblocca
 </string>
