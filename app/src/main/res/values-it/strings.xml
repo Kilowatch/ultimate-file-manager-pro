@@ -15569,7 +15569,7 @@ Monta unità
     <string name="backup_pref_view_styles">View density &amp; preset styles</string>
     
     <!-- Universal File Opening, Presentation Viewer & Open As -->
-    <string name="open_as">Open As…</string>
+    <string name="open_as">Apri Come...</string>
     <string name="open_as_desc">Choose a viewer or player to open this file</string>
     <string name="presentation_viewer">Presentation Viewer</string>
     <string name="slide_counter">Slide %1$d of %2$d</string>
