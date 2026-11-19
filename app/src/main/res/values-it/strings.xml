@@ -15604,7 +15604,7 @@ Monta unità
 
     <!-- Toolbar Icons: Open With, Open As, FFmpeg Extraction -->
     <string name="action_open_with">Apri Con…</string>
-    <string name="action_open_as">Open As…</string>
+    <string name="action_open_as">Apri Come...</string>
     <string name="toolbar_open_with">Open With</string>
     <string name="toolbar_open_as">Open As</string>
     <string name="action_extract_subtitles">Extract Subtitles</string>
