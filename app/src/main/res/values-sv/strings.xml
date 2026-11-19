@@ -16177,6 +16177,9 @@ The file or folder could not be found. It may have been moved, deleted, or is on
     <string name="fav_shortcut_error_ok">
 OK
 </string>
+    <string name="fav_tv_custom_launcher_unsupported_toast">
+Din startapp stöder inte genvägar på hemskärmen. Prova att trycka länge på startskärmen eller kontrollera inställningarna för din startskärm.
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

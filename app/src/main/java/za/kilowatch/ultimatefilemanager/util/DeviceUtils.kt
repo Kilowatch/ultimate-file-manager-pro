@@ -2,6 +2,8 @@ package za.kilowatch.ultimatefilemanager.util
 
 import android.app.UiModeManager
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Build
 import za.kilowatch.ultimatefilemanager.R
@@ -43,6 +45,48 @@ object DeviceUtils {
         if (context == null) return false
         return Build.MANUFACTURER.equals("Amazon", ignoreCase = true) ||
                (context.packageManager?.hasSystemFeature("amazon.hardware.fire_tv") == true)
+    }
+
+    /**
+     * Known stock Android TV / Google TV launcher packages that support the
+     * androidx.tvprovider Preview Channels API.
+     */
+    private val STOCK_TV_LAUNCHER_PACKAGES = setOf(
+        "com.google.android.tvlauncher",         // Android TV stock launcher
+        "com.google.android.apps.tv.launcherx",  // Google TV launcher
+        "com.android.tv",                         // AOSP TV reference launcher
+        "com.android.providers.tv",               // TV provider (some OEM builds)
+    )
+
+    /**
+     * Returns the package name of the currently active home/leanback launcher,
+     * or null if it cannot be resolved.
+     */
+    fun getActiveLauncherPackage(context: Context): String? {
+        val pm = context.packageManager ?: return null
+        // Try LEANBACK_LAUNCHER first (TV-specific), then fall back to standard HOME
+        val leanbackIntent = Intent(Intent.ACTION_MAIN)
+            .addCategory("android.intent.category.LEANBACK_LAUNCHER")
+        val homeIntent = Intent(Intent.ACTION_MAIN)
+            .addCategory(Intent.CATEGORY_HOME)
+        return try {
+            pm.resolveActivity(leanbackIntent, PackageManager.MATCH_DEFAULT_ONLY)
+                ?.activityInfo?.packageName
+                ?: pm.resolveActivity(homeIntent, PackageManager.MATCH_DEFAULT_ONLY)
+                    ?.activityInfo?.packageName
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    /**
+     * Returns true if the active home launcher is the stock Android TV / Google TV
+     * launcher that supports the androidx.tvprovider Preview Channels API.
+     * Returns false for custom launchers (ATV Pro, Projectivy, Monet, FLauncher, Wolf, etc.).
+     */
+    fun isStockTvLauncher(context: Context): Boolean {
+        val activePkg = getActiveLauncherPackage(context) ?: return false
+        return activePkg in STOCK_TV_LAUNCHER_PACKAGES
     }
 
     /**

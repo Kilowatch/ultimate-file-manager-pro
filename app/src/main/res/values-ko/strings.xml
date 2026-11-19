@@ -16200,6 +16200,9 @@ The file or folder could not be found. It may have been moved, deleted, or is on
     <string name="fav_shortcut_error_ok">
 OK
 </string>
+    <string name="fav_tv_custom_launcher_unsupported_toast">
+귀하의 런처는 홈 화면 바로 가기를 지원하지 않습니다. 홈 화면을 길게 누르거나 런처 설정을 확인해 보세요.
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

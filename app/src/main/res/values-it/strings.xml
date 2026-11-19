@@ -16166,6 +16166,9 @@ The file or folder could not be found. It may have been moved, deleted, or is on
     <string name="fav_shortcut_error_ok">
 OK
 </string>
+    <string name="fav_tv_custom_launcher_unsupported_toast">
+Il tuo launcher non supporta i collegamenti della schermata Home. Prova a tenere premuta la schermata Home o controlla le impostazioni del launcher.
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

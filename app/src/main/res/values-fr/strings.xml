@@ -16200,6 +16200,9 @@ The file or folder could not be found. It may have been moved, deleted, or is on
     <string name="fav_shortcut_error_ok">
 OK
 </string>
+    <string name="fav_tv_custom_launcher_unsupported_toast">
+Votre lanceur d\'applications ne prend pas en charge les raccourcis de l\'écran d\'accueil. Essayez d\'appuyer longuement sur l\'écran d\'accueil ou vérifiez les paramètres de votre lanceur d\'applications.
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

@@ -16200,6 +16200,9 @@ The file or folder could not be found. It may have been moved, deleted, or is on
     <string name="fav_shortcut_error_ok">
 OK
 </string>
+    <string name="fav_tv_custom_launcher_unsupported_toast">
+お使いのランチャーはホーム画面のショートカットに対応していません。ホーム画面を長押しするか、ランチャーの設定を確認してください。
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

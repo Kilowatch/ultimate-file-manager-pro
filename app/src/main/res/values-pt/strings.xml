@@ -16200,6 +16200,9 @@ The file or folder could not be found. It may have been moved, deleted, or is on
     <string name="fav_shortcut_error_ok">
 OK
 </string>
+    <string name="fav_tv_custom_launcher_unsupported_toast">
+O seu iniciador não suporta atalhos no ecrã inicial. Tente premir longamente o ecrã inicial ou verifique as definições do seu iniciador.
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

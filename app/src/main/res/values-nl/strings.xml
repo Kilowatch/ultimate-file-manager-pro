@@ -15876,6 +15876,9 @@ The file or folder could not be found. It may have been moved, deleted, or is on
     <string name="fav_shortcut_error_ok">
 OK
 </string>
+    <string name="fav_tv_custom_launcher_unsupported_toast">
+Je launcher ondersteunt geen snelkoppelingen op het startscherm. Probeer lang op het startscherm te drukken of controleer de instellingen van je launcher.
+</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">

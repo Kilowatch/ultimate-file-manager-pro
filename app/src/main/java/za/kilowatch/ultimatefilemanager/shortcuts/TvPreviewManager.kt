@@ -19,6 +19,7 @@ import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.FavoritesManager
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
  * Manages Android TV Preview Channels & Programs for UFM Favorites.
@@ -168,15 +169,30 @@ class TvPreviewManager : TvHomeDelegate {
                     builder.setPosterArtUri(posterUri)
                         .setPosterArtAspectRatio(TvContractCompat.PreviewPrograms.ASPECT_RATIO_16_9)
 
-                    // Grant read permission to TV launchers so home cards render cleanly
+                    // Grant read permission to TV launchers so home cards render cleanly.
+                    // Always include the known stock launcher packages AND the currently active
+                    // launcher so custom launchers that do read Preview Channels can render art.
                     try {
-                        val launcherPackages = listOf(
+                        val knownLauncherPackages = listOf(
                             "com.google.android.tvlauncher",
                             "com.android.tv",
                             "com.google.android.apps.tv.launcherx",
-                            "com.android.providers.tv"
+                            "com.android.providers.tv",
+                            // Known custom launchers with Preview Channel support
+                            "ca.dstudio.atvlauncher.pro",    // ATV Launcher Pro
+                            "com.spocky.projengmenu",         // Projectivy
+                            "com.klevico.monet",              // Monet TV Launcher
+                            "com.wolf.firelauncher",          // Wolf Launcher
+                            "me.efesser.flauncher",           // FLauncher
                         )
-                        for (pkg in launcherPackages) {
+                        // Also grant to whichever launcher is currently active (future-proof)
+                        val activeLauncherPkg = DeviceUtils.getActiveLauncherPackage(context)
+                        val allTargets = if (activeLauncherPkg != null && activeLauncherPkg !in knownLauncherPackages) {
+                            knownLauncherPackages + activeLauncherPkg
+                        } else {
+                            knownLauncherPackages
+                        }
+                        for (pkg in allTargets) {
                             context.grantUriPermission(pkg, posterUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                         }
                     } catch (e: Exception) {
@@ -318,6 +334,13 @@ class TvPreviewManager : TvHomeDelegate {
 
         var changed = false
         val reconciled = favorites.map { item ->
+            // Items pinned via the shortcut fallback path (custom launchers) have
+            // isPinnedTv=true but tvProgramUri=null. They are not in the TV provider DB,
+            // so do not touch them here — ShortcutManagerCompat reconciles them separately.
+            if (item.isPinnedTv && item.tvProgramUri == null) {
+                return@map item
+            }
+
             val actuallyPinned = existingProgramIds.contains(item.id)
             if (item.isPinnedTv != actuallyPinned) {
                 changed = true

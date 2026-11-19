@@ -222,24 +222,108 @@ object FavoriteHomeScreenManager {
     /**
      * Pins shortcut or publishes preview card depending on active device platform.
      * Called when the "Add to home screen" toggle is checked in the Save Favorite dialog.
+     *
+     * On TV, uses a three-tier strategy to support all launchers:
+     *  1. Stock launcher (com.google.android.tvlauncher etc.) → Preview Channels API
+     *  2. Custom launcher that supports pinned shortcuts → ShortcutManagerCompat pin
+     *  3. Neither supported → informative toast
      */
     fun pinOrSchedule(context: Context, item: FavoritesManager.FavoriteItem, activity: Activity? = null) {
         if (DeviceUtils.isTvDevice(context)) {
-            addProgram(context, item, activity)
+            pinOrScheduleTv(context, item, activity)
         } else {
             pinShortcut(context, item)
         }
     }
 
     /**
+     * TV-specific routing that falls back gracefully across all launcher types.
+     *
+     * Tier 1 — Stock Android TV / Google TV launcher:
+     *   Uses [TvPreviewManager] to publish a Preview Channel program card. This is the
+     *   canonical TV deep-link surface supported by the stock launcher.
+     *
+     * Tier 2 — Custom launcher with pinned-shortcut support (ATV Launcher Pro, Projectivy,
+     *   Monet, FLauncher, Wolf Launcher, etc.):
+     *   Falls back to [ShortcutManagerCompat.requestPinShortcut], same path used on Mobile.
+     *   Uses TV-optimised (16:9 poster) icon via [FavoriteIconComposer] so the tile looks
+     *   good on TV grid home screens.
+     *
+     * Tier 3 — Custom launcher with no shortcut support:
+     *   Shows a toast explaining the launcher doesn't support home-screen shortcuts.
+     */
+    private fun pinOrScheduleTv(context: Context, item: FavoritesManager.FavoriteItem, activity: Activity? = null) {
+        if (DeviceUtils.isStockTvLauncher(context)) {
+            Log.d(TAG, "Stock TV launcher detected — using Preview Channels for ${item.label}")
+            addProgram(context, item, activity)
+            return
+        }
+
+        // Custom launcher: try ShortcutManagerCompat pin (Tier 2)
+        if (isMobilePinSupported(context)) {
+            Log.d(TAG, "Custom TV launcher detected — using pinned shortcut for ${item.label}")
+            pinShortcutOnTv(context, item)
+            return
+        }
+
+        // Tier 3: launcher supports neither API
+        Log.w(TAG, "Launcher supports neither Preview Channels nor pinned shortcuts for ${item.label}")
+        android.os.Handler(android.os.Looper.getMainLooper()).post {
+            Toast.makeText(context, R.string.fav_tv_custom_launcher_unsupported_toast, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /**
+     * Pins a shortcut for TV custom launchers using the same [ShortcutManagerCompat] path
+     * as mobile, but marks the item as [FavoritesManager.FavoriteItem.isPinnedTv] so the
+     * manage-favorites screen shows the correct state on TV.
+     * [FavoritePosterRenderer] supplies a 16:9 bitmap used by [FavoriteIconComposer] so the
+     * tile looks appropriate on TV grid/banner home screens.
+     */
+    private fun pinShortcutOnTv(context: Context, item: FavoritesManager.FavoriteItem) {
+        try {
+            val launchIntent = createLaunchIntent(context, item)
+            val icon = FavoriteIconComposer.createShortcutIcon(context, item)
+            val shortcut = androidx.core.content.pm.ShortcutInfoCompat.Builder(context, item.id)
+                .setShortLabel(item.label.take(12))
+                .setLongLabel(item.label)
+                .setIcon(icon)
+                .setIntent(launchIntent)
+                .build()
+
+            val pinned = ShortcutManagerCompat.requestPinShortcut(context, shortcut, null)
+            if (pinned) {
+                // Use isPinnedTv=true (not isPinnedMobile) so the TV manage-favorites UI
+                // reflects the correct pinned state; tvProgramUri stays null to indicate
+                // this used the pinned-shortcut path rather than Preview Channels.
+                val updated = item.copy(isPinnedTv = true, tvProgramUri = null)
+                FavoritesManager.updateItem(context, updated)
+                Toast.makeText(context, R.string.fav_shortcut_requested_toast, Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to pin TV shortcut for ${item.label}", e)
+        }
+    }
+
+    /**
      * Called by [FavoritesManager.removeFavorite] to clean up home-screen presence.
+     * Handles all three pin states:
+     * - Mobile pinned shortcut → disable via ShortcutManagerCompat
+     * - TV Preview Channel program → remove via TvPreviewManager
+     * - TV custom-launcher pinned shortcut (isPinnedTv=true, tvProgramUri=null) → disable via ShortcutManagerCompat
      */
     fun onFavoriteRemoved(context: Context, item: FavoritesManager.FavoriteItem) {
         if (item.isPinnedMobile) {
             disableShortcut(context, item)
         }
         if (item.isPinnedTv) {
-            removeProgram(context, item)
+            if (item.tvProgramUri != null) {
+                // Was added via Preview Channels (stock launcher)
+                removeProgram(context, item)
+            } else {
+                // Was added via pinned shortcut on a custom TV launcher
+                disableShortcut(context, item)
+            }
         }
     }
 }

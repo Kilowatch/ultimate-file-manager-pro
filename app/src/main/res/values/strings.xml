@@ -5748,6 +5748,7 @@
     <string name="fav_shortcut_error_title">Item unavailable</string>
     <string name="fav_shortcut_error_body">The file or folder could not be found. It may have been moved, deleted, or is on unavailable storage.</string>
     <string name="fav_shortcut_error_ok">OK</string>
+    <string name="fav_tv_custom_launcher_unsupported_toast">Your launcher doesn\'t support home screen shortcuts. Try long-pressing the home screen or check your launcher\'s settings.</string>
 
     <!-- Custom Open With Resolver & Chooser -->
     <string name="open_with_title">Open with</string>
