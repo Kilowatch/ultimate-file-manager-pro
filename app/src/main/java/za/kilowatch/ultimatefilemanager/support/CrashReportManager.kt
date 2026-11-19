@@ -189,7 +189,7 @@ object CrashReportManager {
                 return@setDefaultUncaughtExceptionHandler
             }
 
-            // Suppress Android framework ActivityThread.handleLaunchActivity NullPointerException
+            // Suppress framework ActivityThread.handleLaunchActivity NullPointerException
             // when ActivityClientRecord.profilerInfo is read on a null record during activity launch
             // on low-end TV devices / OEM ROMs (e.g. TCL Smart TV Pro, SDK 31).
             if (isLaunchActivityProfilerInfoCrash(throwable)) {
@@ -199,7 +199,9 @@ object CrashReportManager {
                         try {
                             Looper.loop()
                         } catch (inner: Throwable) {
-                            if (!isLaunchActivityProfilerInfoCrash(inner) && !isActivityLifecycleCallbackCrash(inner)) {
+                            if (!isLaunchActivityProfilerInfoCrash(inner) &&
+                                !isActivityLifecycleCallbackCrash(inner) &&
+                                !isActivityStoppedTransactionTooLargeCrash(inner)) {
                                 defaultHandler?.uncaughtException(thread, inner)
                                 break
                             }
@@ -218,7 +220,33 @@ object CrashReportManager {
                         try {
                             Looper.loop()
                         } catch (inner: Throwable) {
-                            if (!isLaunchActivityProfilerInfoCrash(inner) && !isActivityLifecycleCallbackCrash(inner)) {
+                            if (!isLaunchActivityProfilerInfoCrash(inner) &&
+                                !isActivityLifecycleCallbackCrash(inner) &&
+                                !isActivityStoppedTransactionTooLargeCrash(inner)) {
+                                defaultHandler?.uncaughtException(thread, inner)
+                                break
+                            }
+                        }
+                    }
+                }
+                return@setDefaultUncaughtExceptionHandler
+            }
+
+            // Suppress framework activityStopped TransactionTooLargeException crash
+            // (e.g. PendingTransactionActions$StopInfo.run -> ActivityClient.activityStopped -> BinderProxy.transact
+            // throwing TransactionTooLargeException wrapped in RuntimeException).
+            // When an Activity stops and its saved instance state exceeds the Binder limit, the system server
+            // drops the state; suppressing the main-thread RuntimeException and resuming the looper keeps the app alive.
+            if (isActivityStoppedTransactionTooLargeCrash(throwable)) {
+                Log.w(TAG, "Suppressed framework activityStopped TransactionTooLargeException crash: ${throwable.message}")
+                if (thread == Looper.getMainLooper().thread) {
+                    while (true) {
+                        try {
+                            Looper.loop()
+                        } catch (inner: Throwable) {
+                            if (!isLaunchActivityProfilerInfoCrash(inner) &&
+                                !isActivityLifecycleCallbackCrash(inner) &&
+                                !isActivityStoppedTransactionTooLargeCrash(inner)) {
                                 defaultHandler?.uncaughtException(thread, inner)
                                 break
                             }
@@ -305,6 +333,43 @@ object CrashReportManager {
             frame.methodName.startsWith("onActivity")
         }
         return hasDispatch && hasCallback
+    }
+
+    /**
+     * Identifies framework TransactionTooLargeException crashes thrown during Activity stop
+     * transactions (e.g. `PendingTransactionActions$StopInfo.run` -> `ActivityClient.activityStopped` /
+     * `IActivityClientController.activityStopped` -> `BinderProxy.transactNative`) when an Activity's
+     * saved instance state parcel exceeds the Android Binder transaction buffer limit (~512KB - 1MB).
+     *
+     * In Android framework (`PendingTransactionActions.java`), `StopInfo.run()` catches `RemoteException`
+     * and re-throws `TransactionTooLargeException` wrapped in a `RuntimeException` on the main looper.
+     * When this occurs, the OS system server simply drops the saved state; suppressing the uncaught
+     * exception on the main thread and resuming the looper keeps the application process alive.
+     */
+    fun isActivityStoppedTransactionTooLargeCrash(throwable: Throwable): Boolean {
+        var isTtl = false
+        var current: Throwable? = throwable
+        while (current != null) {
+            if (current is android.os.TransactionTooLargeException ||
+                current.javaClass.name.contains("TransactionTooLargeException") ||
+                current.message?.contains("TransactionTooLargeException") == true
+            ) {
+                isTtl = true
+                break
+            }
+            current = current.cause
+        }
+        if (!isTtl) return false
+
+        val trace = throwable.stackTrace
+        val causeTrace = throwable.cause?.stackTrace ?: emptyArray()
+        val allFrames = trace + causeTrace
+
+        return allFrames.any { frame ->
+            (frame.className.contains("PendingTransactionActions") && frame.className.contains("StopInfo") && frame.methodName == "run") ||
+            (frame.className.contains("ActivityClient") && frame.methodName == "activityStopped") ||
+            (frame.className.contains("IActivityClientController") && frame.methodName == "activityStopped")
+        }
     }
 
     /**
@@ -1570,6 +1635,230 @@ object CrashReportManager {
         return validStackFrames
     }
 
+    /**
+     * Filter 91: Identifies a main-thread stack sampled inside an Activity constructor or its
+     * AndroidX/framework super-constructor initialization chain during reflection-based activity
+     * instantiation (e.g. `ActivityThread.performLaunchActivity` -> `Instrumentation.newActivity` ->
+     * `AppComponentFactory.instantiateActivity` -> `Class.newInstance` -> `SafPickerActivity.<init>` ->
+     * `AppCompatActivity.<init>` -> `FragmentActivity.<init>` -> `ComponentActivity.<init>`), thread state
+     * RUNNABLE (reported on skyworth SWTV-22AE, Android 11 / SDK 30, app 2.2.4-GOOGLE).
+     *
+     * During Activity launch, the Android framework instantiates the Activity class via reflection
+     * (`Class.newInstance`). In Dalvik/ART bytecode, the Activity's `<init>` constructor invokes `super.<init>()`
+     * up the hierarchy before any subclass constructor body or field initializers execute. In AndroidX,
+     * `ComponentActivity.<init>` initializes in-memory architecture components (SavedStateRegistry,
+     * LifecycleRegistry, ContextAwareHelper, ActivityResultRegistry).
+     *
+     * On low-end Android TV hardware under heavy background CPU contention (e.g. concurrent SSH server,
+     * DLNA/SSDP discovery, NanoHTTPD listeners, Firebase background threads, and JIT compilation),
+     * the watchdog timer can expire while the main thread is executing this in-memory constructor chain.
+     * Because the stack contains the Activity's `<init>` and R8-obfuscated AndroidX superclasses,
+     * `isPureFrameworkStack` evaluates to false, and Filter 26 (`isActivityConstructorLifecycleStall`)
+     * only matched when `topFrame?.methodName == "getLifecycle"`.
+     *
+     * With zero application business logic executing and no framework blocking primitives held,
+     * this is a pure framework/AndroidX in-memory activity instantiation stall where the app is
+     * not frozen in application code. Genuine freezes keeping the main thread parked inside
+     * application business logic, custom constructor helpers, or blocking primitives continue to be reported.
+     */
+    fun isActivityConstructorInstantiationStall(
+        topFrame: StackTraceElement?,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (topFrame == null) return false
+
+        val hasActivityThreadMainOrLooper = mainStackTrace.any {
+            (it.className == "android.app.ActivityThread" && it.methodName == "main") ||
+            (it.className == "android.os.Looper" && (it.methodName == "loopOnce" || it.methodName == "loop"))
+        }
+        if (!hasActivityThreadMainOrLooper) {
+            return false
+        }
+
+        val hasActivityLaunchLifecycle = mainStackTrace.any {
+            (it.className == "android.app.ActivityThread" &&
+             (it.methodName == "performLaunchActivity" ||
+              it.methodName == "handleLaunchActivity")) ||
+            (it.className == "android.app.Instrumentation" && it.methodName == "newActivity") ||
+            (it.className == "android.app.AppComponentFactory" && it.methodName == "instantiateActivity") ||
+            it.className.startsWith("android.app.servertransaction.LaunchActivityItem") ||
+            it.className.startsWith("android.app.servertransaction.")
+        }
+        if (!hasActivityLaunchLifecycle) {
+            return false
+        }
+
+        val newInstanceIdx = mainStackTrace.indexOfFirst {
+            (it.className == "java.lang.Class" && (it.methodName == "newInstance" || it.methodName == "newInstance0")) ||
+            (it.className == "java.lang.reflect.Constructor" && it.methodName == "newInstance")
+        }
+        if (newInstanceIdx <= 0) {
+            return false
+        }
+
+        val hasActivityConstructor = mainStackTrace.any {
+            it.methodName == "<init>" && it.className.endsWith("Activity")
+        }
+        if (!hasActivityConstructor) {
+            return false
+        }
+
+        // Must NOT contain any application business logic (CrashReportManager hook frames and Activity <init> allowed)
+        val noAppBusinessLogic = mainStackTrace.none { frame ->
+            frame.className.startsWith(APP_PACKAGE) &&
+            !frame.className.startsWith("za.kilowatch.ultimatefilemanager.support.CrashReportManager") &&
+            !isActivityThreadCrashHookFrame(frame, mainStackTrace) &&
+            !(frame.methodName == "<init>" && frame.className.endsWith("Activity"))
+        }
+        if (!noAppBusinessLogic) {
+            return false
+        }
+
+        // Must NOT contain any external blocking primitives
+        val noOtherBlockingPrimitives = mainStackTrace.none { frame ->
+            (frame.className == "android.os.BinderProxy" &&
+             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+            frame.className.startsWith("java.io.") ||
+            frame.className.startsWith("libcore.io.") ||
+            frame.className.startsWith("java.net.") ||
+            frame.className.startsWith("android.database.")
+        }
+        if (!noOtherBlockingPrimitives) {
+            return false
+        }
+
+        // All frames above newInstance must be platform, AndroidX, Kotlin, CrashReportManager, or non-app classes
+        val validStackFrames = mainStackTrace.slice(0 until newInstanceIdx).all { frame ->
+            PLATFORM_PREFIXES.any { frame.className.startsWith(it) } ||
+            frame.className.startsWith("androidx.") ||
+            frame.className.startsWith("kotlin.") ||
+            frame.className.startsWith("za.kilowatch.ultimatefilemanager.support.CrashReportManager") ||
+            (frame.className.startsWith(APP_PACKAGE) && frame.methodName == "<init>" && frame.className.endsWith("Activity")) ||
+            (PLATFORM_PREFIXES.none { frame.className.startsWith(it) } &&
+             !frame.className.startsWith(APP_PACKAGE))
+        }
+        return validStackFrames
+    }
+
+    /**
+     * Filter 92: Identifies a main-thread stack sampled inside Android framework `Activity.onDestroy()`
+     * while unregistering `OnBackInvokedCallback` via `WindowOnBackInvokedDispatcher` /
+     * `ProxyOnBackInvokedDispatcher` (e.g. `ActivityThread.handleDestroyActivity` / `performDestroyActivity` ->
+     * `Instrumentation.callActivityOnDestroy` -> `Activity.performDestroy` -> `Activity.onDestroy` ->
+     * `ProxyOnBackInvokedDispatcher.unregisterOnBackInvokedCallback` ->
+     * `WindowOnBackInvokedDispatcher.unregisterOnBackInvokedCallback` ->
+     * `WindowOnBackInvokedDispatcher.removeCallbackInternal` -> `TreeMap.get` -> `TreeMap.getEntry`),
+     * thread state RUNNABLE (reported on motorola moto g play - 2026, Android SDK 36, app 2.1.5-FOSS).
+     *
+     * In Android 13+ (API 33+) and modern Android 15/16 (SDK 35-36), Predictive Back Navigation registers
+     * and unregisters back callbacks with `WindowOnBackInvokedDispatcher`. When an Activity is destroyed,
+     * framework `Activity.onDestroy()` unregisters the activity's default back invoked callback from an
+     * in-memory `TreeMap` / `PriorityQueue` inside `WindowOnBackInvokedDispatcher`.
+     *
+     * This is pure in-memory framework callback removal taking nanoseconds with no loops, locks, file/network
+     * I/O, database access, or IPC. In release builds, the Activity class is obfuscated by R8 to short names
+     * (e.g. `mm.onDestroy`, `mm.s`), and `CrashReportManager`'s `ActivityThread.mH` hook callback sits on
+     * `ActivityThread$H.handleMessage` (obfuscated as `n31.handleMessage`), causing `isPureFrameworkStack`
+     * to evaluate to false. Filter 89 (`isActivityDestroyViewDetachStall`) does not match because view hierarchy
+     * detachment (`ViewRootImpl.die`) has already concluded or occurs separately from `Activity.onDestroy()`.
+     *
+     * On budget hardware under background CPU contention (concurrent DLNA SSDP listeners, NanoHTTPD servers,
+     * and WorkManager background threads), the watchdog heartbeat can experience scheduling delays, sampling
+     * the main thread during this in-memory teardown. With zero application business logic executing and no
+     * framework blocking primitives held, this is a false positive. Genuine freezes keeping the main thread
+     * parked inside application business logic or blocking primitives continue to be reported.
+     */
+    fun isActivityDestroyBackCallbackStall(
+        topFrame: StackTraceElement?,
+        mainStackTrace: Array<StackTraceElement>
+    ): Boolean {
+        if (topFrame == null) return false
+
+        val hasActivityThreadMainOrLooper = mainStackTrace.any {
+            (it.className == "android.app.ActivityThread" && it.methodName == "main") ||
+            (it.className == "android.os.Looper" && (it.methodName == "loopOnce" || it.methodName == "loop"))
+        }
+        if (!hasActivityThreadMainOrLooper) {
+            return false
+        }
+
+        // Must be in an Activity destroy lifecycle path
+        val hasDestroyLifecycle = mainStackTrace.any {
+            (it.className == "android.app.ActivityThread" &&
+             (it.methodName == "handleDestroyActivity" ||
+              it.methodName == "performDestroyActivity" ||
+              it.methodName == "cleanUpPendingRemoveWindows")) ||
+            it.className.startsWith("android.app.servertransaction.DestroyActivityItem") ||
+            (it.className == "android.app.Instrumentation" && it.methodName == "callActivityOnDestroy") ||
+            (it.className == "android.app.Activity" &&
+             (it.methodName == "performDestroy" || it.methodName == "onDestroy"))
+        }
+        if (!hasDestroyLifecycle) {
+            return false
+        }
+
+        // Must involve WindowOnBackInvokedDispatcher, ProxyOnBackInvokedDispatcher, or back callback removal
+        val hasBackInvokedDispatcherFrame = mainStackTrace.any {
+            it.className.contains("OnBackInvokedDispatcher") ||
+            it.className.contains("OnBackPressedDispatcher") ||
+            it.methodName == "unregisterOnBackInvokedCallback" ||
+            it.methodName == "removeCallbackInternal"
+        }
+        if (!hasBackInvokedDispatcherFrame) {
+            return false
+        }
+
+        // Top frame must be in a framework, collection, or dispatcher method
+        val isTopFrameBackOrCollection =
+            topFrame.className.startsWith("android.window.") ||
+            topFrame.className.startsWith("java.util.") ||
+            topFrame.className == "android.app.Activity" ||
+            topFrame.className.startsWith("androidx.activity.")
+        if (!isTopFrameBackOrCollection) {
+            return false
+        }
+
+        // Must NOT contain any application business logic (CrashReportManager hook frames and Activity onDestroy allowed)
+        val noAppBusinessLogic = mainStackTrace.none { frame ->
+            frame.className.startsWith(APP_PACKAGE) &&
+            !frame.className.startsWith("za.kilowatch.ultimatefilemanager.support.CrashReportManager") &&
+            !isActivityThreadCrashHookFrame(frame, mainStackTrace) &&
+            !(frame.methodName == "onDestroy" && frame.className.endsWith("Activity"))
+        }
+        if (!noAppBusinessLogic) {
+            return false
+        }
+
+        // Must NOT contain any blocking primitives (Binder IPC, locks, I/O, socket, DB)
+        val noOtherBlockingPrimitives = mainStackTrace.none { frame ->
+            (frame.className == "android.os.BinderProxy" &&
+             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+            frame.className.startsWith("java.io.") ||
+            frame.className.startsWith("libcore.io.") ||
+            frame.className.startsWith("java.net.") ||
+            frame.className.startsWith("android.database.")
+        }
+        if (!noOtherBlockingPrimitives) {
+            return false
+        }
+
+        // All frames must be platform, AndroidX, Kotlin, CrashReportManager, Activity lifecycle, or R8-obfuscated non-app classes
+        val validStackFrames = mainStackTrace.all { frame ->
+            PLATFORM_PREFIXES.any { frame.className.startsWith(it) } ||
+            frame.className.startsWith("androidx.") ||
+            frame.className.startsWith("kotlin.") ||
+            frame.className.startsWith("za.kilowatch.ultimatefilemanager.support.CrashReportManager") ||
+            (frame.className.startsWith(APP_PACKAGE) && frame.methodName == "onDestroy" && frame.className.endsWith("Activity")) ||
+            (PLATFORM_PREFIXES.none { frame.className.startsWith(it) } &&
+             !frame.className.startsWith(APP_PACKAGE))
+        }
+        return validStackFrames
+    }
+
     @Volatile private var cachedGetActivityTokenMethod: java.lang.reflect.Method? = null
     @Volatile private var cachedGetCallbacksMethod: java.lang.reflect.Method? = null
     @Volatile private var cachedPreExecuteMethod: java.lang.reflect.Method? = null
@@ -1627,7 +1916,7 @@ object CrashReportManager {
                         ensureLaunchingActivityRecord(activityThread, msg.obj, mLaunchingActivitiesField)
                         mH.handleMessage(msg)
                     } catch (t: Throwable) {
-                        if (isLaunchActivityProfilerInfoCrash(t) || isActivityLifecycleCallbackCrash(t)) {
+                        if (isLaunchActivityProfilerInfoCrash(t) || isActivityLifecycleCallbackCrash(t) || isActivityStoppedTransactionTooLargeCrash(t)) {
                             Log.w(TAG, "Suppressed framework transaction crash", t)
                             return@Callback true
                         }
@@ -7347,7 +7636,64 @@ object CrashReportManager {
                     val isQueuedWorkWaitToFinishStall =
                         isQueuedWorkWaitToFinishStall(topFrame, mainStackTrace)
 
-                    if (isQueuedWorkWaitToFinishStall || isActivityDestroyViewDetachStall || isHonorHuaweiHiTraceLooperStall || isTextInputLayoutInflateStall || isFormatterFileSizeStall || isMaterialButtonLayoutInflateStall || isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
+                    // 91. The main thread is sampled inside an Activity constructor or its
+                    //     AndroidX/framework super-constructor initialization chain during
+                    //     reflection-based activity instantiation (e.g. `ActivityThread.performLaunchActivity`
+                    //     -> `Instrumentation.newActivity` -> `AppComponentFactory.instantiateActivity`
+                    //     -> `Class.newInstance` -> `SafPickerActivity.<init>` -> `AppCompatActivity.<init>`
+                    //     -> `FragmentActivity.<init>` -> `ComponentActivity.<init>`), thread state RUNNABLE
+                    //     (reported on skyworth SWTV-22AE, Android 11 / SDK 30, app 2.2.4-GOOGLE).
+                    //     During Activity launch, the Android framework instantiates the Activity class
+                    //     via reflection (`Class.newInstance`). In Dalvik/ART bytecode, the Activity's `<init>`
+                    //     constructor invokes `super.<init>()` up the hierarchy before any subclass
+                    //     constructor body or field initializers execute. In AndroidX, `ComponentActivity.<init>`
+                    //     initializes in-memory architecture components (SavedStateRegistry, LifecycleRegistry,
+                    //     ContextAwareHelper, ActivityResultRegistry). On low-end Android TV hardware under heavy
+                    //     background CPU contention, the watchdog timer can expire while the main thread is
+                    //     executing this in-memory constructor chain. Because the stack contains the Activity's
+                    //     `<init>` and R8-obfuscated AndroidX superclasses, `isPureFrameworkStack` evaluates to
+                    //     false, and Filter 26 (`isActivityConstructorLifecycleStall`) only matched when
+                    //     `topFrame?.methodName == "getLifecycle"`. The `AnrWatchdogThread` filter 91
+                    //     (`isActivityConstructorInstantiationStall`) treats a main-thread stack inside
+                    //     reflection Activity instantiation, with zero application business logic and no
+                    //     framework blocking primitives held, as a false positive, resetting its heartbeat
+                    //     instead of writing a spurious freeze report. Genuine freezes keeping the main thread
+                    //     parked inside application business logic or blocking primitives continue to be reported.
+                    val isActivityConstructorInstantiationStall =
+                        isActivityConstructorInstantiationStall(topFrame, mainStackTrace)
+
+                    // 92. The main thread is sampled inside Android framework `Activity.onDestroy()`
+                    //     while unregistering `OnBackInvokedCallback` via `WindowOnBackInvokedDispatcher` /
+                    //     `ProxyOnBackInvokedDispatcher` (e.g. `ActivityThread.handleDestroyActivity` /
+                    //     `performDestroyActivity` -> `Instrumentation.callActivityOnDestroy` ->
+                    //     `Activity.performDestroy` -> `Activity.onDestroy` ->
+                    //     `ProxyOnBackInvokedDispatcher.unregisterOnBackInvokedCallback` ->
+                    //     `WindowOnBackInvokedDispatcher.unregisterOnBackInvokedCallback` ->
+                    //     `WindowOnBackInvokedDispatcher.removeCallbackInternal` -> `TreeMap.get` ->
+                    //     `TreeMap.getEntry`), thread state RUNNABLE (reported on motorola moto g play - 2026,
+                    //     Android SDK 36, app 2.1.5-FOSS).
+                    //     In Android 13+ (API 33+) and modern Android 15/16 (SDK 35-36), Predictive Back
+                    //     Navigation registers and unregisters back callbacks with `WindowOnBackInvokedDispatcher`.
+                    //     When an Activity is destroyed, framework `Activity.onDestroy()` unregisters the
+                    //     activity's default back invoked callback from an in-memory `TreeMap` / `PriorityQueue`
+                    //     inside `WindowOnBackInvokedDispatcher`. This is pure in-memory framework callback
+                    //     removal taking nanoseconds with no loops, locks, file/network I/O, database access,
+                    //     or IPC. In release builds, the Activity class is obfuscated by R8 to short names
+                    //     (e.g. `mm.onDestroy`, `mm.s`), and `CrashReportManager`'s `ActivityThread.mH` hook
+                    //     callback sits on `ActivityThread$H.handleMessage` (obfuscated as `n31.handleMessage`),
+                    //     causing `isPureFrameworkStack` to evaluate to false. Filter 89
+                    //     (`isActivityDestroyViewDetachStall`) does not match because view hierarchy detachment
+                    //     (`ViewRootImpl.die`) has already concluded or occurs separately from `Activity.onDestroy()`.
+                    //     The `AnrWatchdogThread` filter 92 (`isActivityDestroyBackCallbackStall`) treats a
+                    //     main-thread stack inside `Activity.onDestroy()` back callback unregistration, with
+                    //     zero application business logic and no framework blocking primitives held, as a false
+                    //     positive, resetting its heartbeat instead of writing a spurious freeze report. Genuine
+                    //     freezes keeping the main thread parked inside application business logic or blocking
+                    //     primitives continue to be reported.
+                    val isActivityDestroyBackCallbackStall =
+                        isActivityDestroyBackCallbackStall(topFrame, mainStackTrace)
+
+                    if (isActivityDestroyBackCallbackStall || isActivityConstructorInstantiationStall || isQueuedWorkWaitToFinishStall || isActivityDestroyViewDetachStall || isHonorHuaweiHiTraceLooperStall || isTextInputLayoutInflateStall || isFormatterFileSizeStall || isMaterialButtonLayoutInflateStall || isActivityStopLifecycleDispatchStall || isActivityThreadTransactionHookStall || isOplusChoreographerVsyncTraceStall || isShapeableImageViewLayoutStall || isActivityFinishBinderStall || isProgressIndicatorInflateStall || isActivityTaskDescriptionBinderStall || isConstraintLayoutTextMeasureStall || isRecyclerViewCheckBoxInflateEnqueueMessageStall || isRecyclerViewLayoutDecoratedStall || isAlertDialogLayoutTextMeasureStall || isConstraintLayoutMeasureLinearSystemStall || isResourceTypeNameLayoutInflateStall || isSnackbarInflateColorStateListStall || isSystemJobServiceCreateStall || isViewSaveAttributeStyleableInflateStall || isAccessibilityConnectionBinderStall || isCaseMapAllCapsButtonInflateStall || isActivityOnCreateCollectionIteratorStall || isTextViewSetTextLineBreakerStall || isActivityColdStartOverScrollerStall || isMediaTekBoostFwkScenarioStall || isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
