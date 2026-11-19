@@ -42,6 +42,7 @@ import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.recycle.RecycleBinManager
 import za.kilowatch.ultimatefilemanager.storage.FileTagsManager
+import za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -394,17 +395,9 @@ class SlideShowActivity : AppCompatActivity() {
             else -> ArrayList()
         }
 
-        // Fallback: scan parent dir if playlist is still empty (e.g. process was restarted)
+        // Fallback: populate with initial item without blocking the main looper on filesystem scans
         if (playlist.isEmpty() && initialPath.isNotEmpty()) {
-            val parentDir = java.io.File(initialPath).parentFile
-            val scanned = parentDir?.listFiles { f ->
-                val e = f.extension.lowercase()
-                f.isFile && !f.name.startsWith(".") &&
-                (e in FileViewerRouter.IMAGE_EXTENSIONS || e in FileViewerRouter.VIDEO_EXTENSIONS) &&
-                e != "svg" && e != "svgz"
-            }?.sortedWith(NaturalSort.byName { it.name }) ?: emptyList()
-            playlist = ArrayList(scanned.map { it.absolutePath })
-            if (playlist.isEmpty()) playlist.add(initialPath)
+            playlist.add(initialPath)
         }
 
         initViews()
@@ -415,6 +408,11 @@ class SlideShowActivity : AppCompatActivity() {
         val startIndex = playlist.indexOf(initialPath).coerceAtLeast(0)
         viewPager.setCurrentItem(startIndex, false)
         updatePageState(startIndex)
+
+        // Asynchronously discover sibling images/videos on background IO if started from a single file
+        if (playlist.size <= 1 && initialPath.isNotEmpty()) {
+            discoverSiblingMedia(initialPath)
+        }
 
         // On TV, hide toolbar and system bars initially (controls start hidden so
         // D-pad left/right navigates immediately)
@@ -1645,6 +1643,63 @@ class SlideShowActivity : AppCompatActivity() {
         // Clean up slideshow temp cache images
         val cacheFiles = cacheDir.listFiles { f -> f.name.startsWith("ufm_slideshow_") }
         cacheFiles?.forEach { it.delete() }
+    }
+
+    private fun discoverSiblingMedia(initialPath: String) {
+        val ext = initialPath.substringAfterLast('.', "").lowercase()
+        val isImageOrVideo = (ext in FileViewerRouter.IMAGE_EXTENSIONS || ext in FileViewerRouter.VIDEO_EXTENSIONS) && ext != "svg" && ext != "svgz"
+        if (!isImageOrVideo) return
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@SlideShowActivity, File(initialPath))
+                val isLocal = shareId.isEmpty() && shareHost.isEmpty() && provider.isEmpty()
+                val discoveredPaths = if (isSaf) {
+                    val currentFile = File(initialPath)
+                    val parentPath = currentFile.parent ?: ""
+                    if (parentPath.isNotEmpty()) {
+                        val sortState = SortFilterPreferenceManager.loadForLocalPath(this@SlideShowActivity, parentPath)
+                            ?: SortFilterPreferenceManager.loadGlobal(this@SlideShowActivity)
+                        val comparator = SortFilterPreferenceManager.getFileComparator(sortState, this@SlideShowActivity)
+                        val files = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(this@SlideShowActivity, parentPath).filter { f ->
+                            val e = f.extension.lowercase()
+                            !f.isDirectory && !f.name.startsWith(".") &&
+                            (e in FileViewerRouter.IMAGE_EXTENSIONS || e in FileViewerRouter.VIDEO_EXTENSIONS) &&
+                            e != "svg" && e != "svgz"
+                        }.sortedWith(comparator)
+                        files.map { it.absolutePath }
+                    } else null
+                } else if (isLocal) {
+                    val currentFile = File(initialPath)
+                    val parentDir = currentFile.parentFile
+                    if (parentDir != null && parentDir.isDirectory) {
+                        val sortState = SortFilterPreferenceManager.loadForLocalPath(this@SlideShowActivity, parentDir.absolutePath)
+                            ?: SortFilterPreferenceManager.loadGlobal(this@SlideShowActivity)
+                        val comparator = SortFilterPreferenceManager.getFileComparator(sortState, this@SlideShowActivity)
+                        val files = parentDir.listFiles { f ->
+                            val e = f.extension.lowercase()
+                            f.isFile && !f.name.startsWith(".") &&
+                            (e in FileViewerRouter.IMAGE_EXTENSIONS || e in FileViewerRouter.VIDEO_EXTENSIONS) &&
+                            e != "svg" && e != "svgz"
+                        }?.sortedWith(comparator)
+                        files?.map { it.absolutePath }
+                    } else null
+                } else null
+
+                if (!discoveredPaths.isNullOrEmpty() && discoveredPaths.size > 1) {
+                    withContext(Dispatchers.Main) {
+                        if (isDestroyed || isFinishing) return@withContext
+                        val currentItemPath = playlist.getOrNull(viewPager.currentItem) ?: initialPath
+                        playlist.clear()
+                        playlist.addAll(discoveredPaths)
+                        viewPager.adapter?.notifyDataSetChanged()
+                        val newIndex = playlist.indexOf(currentItemPath).coerceAtLeast(0)
+                        viewPager.setCurrentItem(newIndex, false)
+                        updatePageState(newIndex)
+                    }
+                }
+            } catch (_: Exception) {}
+        }
     }
 }
 

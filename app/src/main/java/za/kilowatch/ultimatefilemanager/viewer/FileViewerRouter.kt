@@ -265,14 +265,7 @@ object FileViewerRouter {
                     return true
                 }
                 DefaultOpenManager.Action.SLIDESHOW -> {
-                    val parentDir = file.parentFile
-                    val files = parentDir?.listFiles() ?: emptyArray()
-                    val filesToConsider = files.filter { it.isFile && !it.name.startsWith(".") }
-                        .filter { f ->
-                            val e = f.extension.lowercase()
-                            (e in IMAGE_EXTENSIONS || e in VIDEO_EXTENSIONS) && e != "svg" && e != "svgz"
-                        }
-                    openInSlideShow(context, file, filesToConsider)
+                    openInSlideShow(context, file)
                     return true
                 }
                 else -> {} // ASK is excluded by the outer check; other actions are no-ops
@@ -370,8 +363,9 @@ object FileViewerRouter {
         Intent(context, TextViewerActivity::class.java)
 
     /**
-     * Opens the file in UFMPlayerActivity (ExoPlayer) with a playlist built from the
-     * parent directory's media files. Supports both local and network files.
+     * Opens the file in UFMPlayerActivity (ExoPlayer). The initial media file launches
+     * immediately without blocking the main looper on filesystem scans; sibling tracks
+     * are discovered asynchronously on Dispatchers.IO in the background.
      */
     fun openInPlayer(
         context: Context,
@@ -384,33 +378,7 @@ object FileViewerRouter {
         val isSvg = ext == "svg" || ext == "svgz"
         if (!forceOpen && ext !in AUDIO_EXTENSIONS && ext !in VIDEO_EXTENSIONS && !isSvg) return
 
-        val parentDir = file.parentFile
-        val sortState = if (parentDir != null) {
-            SortFilterPreferenceManager.loadForLocalPath(context, parentDir.absolutePath)
-                ?: SortFilterPreferenceManager.loadGlobal(context)
-        } else {
-            SortFilterPreferenceManager.loadGlobal(context)
-        }
-        val comparator = SortFilterPreferenceManager.getFileComparator(sortState, context)
-
-        val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, file)
-        val parentPath = file.parent ?: ""
-        val mediaFiles = if (isSaf && parentPath.isNotEmpty()) {
-            za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(context, parentPath).filter { f ->
-                val e = f.extension.lowercase()
-                e in AUDIO_EXTENSIONS || e in VIDEO_EXTENSIONS || e == "svg" || e == "svgz"
-            }.sortedWith(comparator)
-        } else {
-            parentDir?.listFiles { f ->
-                val e = f.extension.lowercase()
-                e in AUDIO_EXTENSIONS || e in VIDEO_EXTENSIONS || e == "svg" || e == "svgz"
-            }?.sortedWith(comparator)
-        }
-
-        val paths: List<String> = mediaFiles?.map { it.absolutePath }
-            ?: listOf(file.absolutePath)
-
-        // Store in-memory to avoid TransactionTooLargeException for large folders
+        val paths = listOf(file.absolutePath)
         val cacheKey = PlaylistCache.put(paths)
         val intent = Intent(context, UFMPlayerActivity::class.java).apply {
             putExtra(EXTRA_FILE_PATH, file.absolutePath)
@@ -424,20 +392,14 @@ object FileViewerRouter {
         context.startActivity(intent)
     }
 
-    private fun openInSlideShow(context: Context, file: File, filesToConsider: List<File>) {
-        val parentDir = file.parentFile
-        val sortState = if (parentDir != null) {
-            SortFilterPreferenceManager.loadForLocalPath(context, parentDir.absolutePath)
-                ?: SortFilterPreferenceManager.loadGlobal(context)
-        } else {
-            SortFilterPreferenceManager.loadGlobal(context)
-        }
-        val comparator = SortFilterPreferenceManager.getFileComparator(sortState, context)
-
-        val sortedFiles = filesToConsider.sortedWith(comparator)
-        val paths = sortedFiles.map { it.absolutePath }
-
-        // Store in-memory to avoid TransactionTooLargeException for large folders
+    /**
+     * Opens the file in SlideShowActivity. If [filesToConsider] is provided (e.g. from an
+     * existing in-memory directory list), it is used as the initial playlist; otherwise,
+     * the activity starts immediately with the tapped image and discovers siblings
+     * asynchronously on Dispatchers.IO to prevent main thread ANRs.
+     */
+    fun openInSlideShow(context: Context, file: File, filesToConsider: List<File>? = null) {
+        val paths = filesToConsider?.map { it.absolutePath } ?: listOf(file.absolutePath)
         val cacheKey = PlaylistCache.put(paths)
         val intent = Intent(context, SlideShowActivity::class.java).apply {
             putExtra(EXTRA_FILE_PATH, file.absolutePath)
@@ -588,42 +550,26 @@ object FileViewerRouter {
 
         // ── UFM Slide Show (shown for non-SVG Images on local and SAF storage) ──
         if (isImage && !isNetwork) {
-            val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(context, file)
-            val parentPath = file.parent ?: ""
-            val filesToConsider: List<File> = if (isSaf) {
-                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(context, parentPath)
-                    .filter { !it.name.startsWith(".") }
-            } else {
-                val parentDir = file.parentFile
-                parentDir?.listFiles()?.filter { it.isFile && !it.name.startsWith(".") } ?: emptyList()
-            }
-            val imageOrVideoFiles = filesToConsider.filter { f ->
-                val e = f.extension.lowercase()
-                (e in IMAGE_EXTENSIONS || e in VIDEO_EXTENSIONS) && e != "svg" && e != "svgz"
-            }
-
-            if (imageOrVideoFiles.isNotEmpty()) {
-                val slideShowBtn = createChoiceButton(
-                    context, dp,
-                    icon = "🖼️",
-                    label = context.getString(R.string.ufm_slideshow),
-                    description = context.getString(R.string.ufm_slideshow_desc),
-                    gradientColors = intArrayOf(
-                        Color.parseColor("#8B5CF6"),
-                        Color.parseColor("#6D28D9")
-                    )
-                ) {
-                    if (checkbox.isChecked) {
-                        DefaultOpenManager.setDefaultAction(context, ext, isNetwork = isNetwork, DefaultOpenManager.Action.SLIDESHOW)
-                    }
-                    dialog.dismiss()
-                    openInSlideShow(context, file, imageOrVideoFiles)
+            val slideShowBtn = createChoiceButton(
+                context, dp,
+                icon = "🖼️",
+                label = context.getString(R.string.ufm_slideshow),
+                description = context.getString(R.string.ufm_slideshow_desc),
+                gradientColors = intArrayOf(
+                    Color.parseColor("#8B5CF6"),
+                    Color.parseColor("#6D28D9")
+                )
+            ) {
+                if (checkbox.isChecked) {
+                    DefaultOpenManager.setDefaultAction(context, ext, isNetwork = isNetwork, DefaultOpenManager.Action.SLIDESHOW)
                 }
-                root.addView(slideShowBtn, LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply { bottomMargin = dp(12) })
+                dialog.dismiss()
+                openInSlideShow(context, file)
             }
+            root.addView(slideShowBtn, LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { bottomMargin = dp(12) })
         }
 
         // ── UFM Media Player (shown for audio, video, and animated SVG/SVGZ) ──

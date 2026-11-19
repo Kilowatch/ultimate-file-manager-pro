@@ -2818,8 +2818,24 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                val isSaf = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.isSaf(this@UFMPlayerActivity, File(initialPath))
                 val isLocal = shareId.isEmpty() && shareHost.isEmpty() && provider.isEmpty()
-                val discoveredPaths = if (isLocal) {
+                val discoveredPaths = if (isSaf) {
+                    val currentFile = File(initialPath)
+                    val parentPath = currentFile.parent ?: ""
+                    if (parentPath.isNotEmpty()) {
+                        val sortState = SortFilterPreferenceManager.loadForLocalPath(this@UFMPlayerActivity, parentPath)
+                            ?: SortFilterPreferenceManager.loadGlobal(this@UFMPlayerActivity)
+                        val comparator = SortFilterPreferenceManager.getFileComparator(sortState, this@UFMPlayerActivity)
+                        val files = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(this@UFMPlayerActivity, parentPath).filter { f ->
+                            val e = f.extension.lowercase()
+                            if (isSvg) e == "svg" || e == "svgz" || FileViewerRouter.isVideo(e)
+                            else if (isVideo) FileViewerRouter.isVideo(e) || e == "svg" || e == "svgz"
+                            else FileViewerRouter.isAudio(e) || FileViewerRouter.isVideo(e) || e == "svg" || e == "svgz"
+                        }.sortedWith(comparator)
+                        files.map { it.absolutePath }
+                    } else null
+                } else if (isLocal) {
                     val currentFile = File(initialPath)
                     val parentDir = currentFile.parentFile
                     if (parentDir != null && parentDir.isDirectory) {
