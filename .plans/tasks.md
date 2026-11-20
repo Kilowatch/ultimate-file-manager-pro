@@ -1,18 +1,16 @@
-# Task List: Tip Jar Progress Popup Visual Redesign (Mobile)
+# Task List: Modern Categorized View Expanded Category Redesign (Mobile)
 
 ## Setup
-- [x] [T001] [P] Bump `appVersionName` to `"2.2.8"` and `appVersionCode` to `318` in `app/build.gradle.kts`.
-- [x] [T002] [P] Update `CHANGELOG.md` with the user-approved `[2.2.8] — 2026-11-20` entry.
+- [x] [T001] Verify layout dependencies and drawable assets for category headers and child list rows.
 
 ## Foundation
-- [x] [T003] Update color tokens (`tile_tip_jar_accent`, `tile_tip_jar_stroke`, `tile_tip_jar_icon_bg`) in `app/src/main/res/values/colors.xml` and `app/src/main/res/values-night/colors.xml` to electric cyan/blue.
-- [x] [T004] Update card top banner gradient in `app/src/main/res/drawable/bg_tip_jar_card_banner.xml` to dark cyan/blue translucent aura.
-- [x] [T005] Update progress bar gradient in `app/src/main/res/drawable/bg_tip_jar_progress.xml` to pure cyan-blue neon gradient.
+- [x] [T002] Refactor child tile layout in `app/src/main/res/layout/item_storage_nested_card.xml`: convert into seamless, borderless list row container (`cardStorage`) with inset hairline divider (`dividerRow`) and trailing chevron (`imgChevron`).
+- [x] [T003] Refactor category group layout in `app/src/main/res/layout/item_storage_category_group.xml`: remove old count pill badge, add inline count text view (`txtCategoryInlineCount`), add collapsed storage summary progress bar (`progressCategoryStorage`), and zero out child container margins/padding while preserving `layoutCategoryItems` drag-and-drop drop-target capabilities.
 
 ## Feature Implementation
-- [x] [T006] Create ambient aura drawable `app/src/main/res/drawable/bg_jar_glow_aura.xml` for glowing halo behind the tip jar icon.
-- [x] [T007] Create frosted glass button background drawable `app/src/main/res/drawable/bg_btn_fuel_it.xml` with subtle cyan stroke and translucent dark glass fill.
-- [x] [T008] Update `cardTipJarProgress` layout in `app/src/main/res/layout/activity_storage_browser.xml` with ambient jar glow halo and frosted glass "Fuel it!" button styling.
+- [x] [T004] [P] Update `CategoryGroupViewHolder` in `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAdapter.kt`: bind inline count, compute aggregate storage capacity metrics (free vs. total) and percentage for collapsed Storage category, and manage expanded/collapsed header state.
+- [x] [T005] [P] Update `createChildTileView` and child population logic in `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAdapter.kt`: configure inset divider visibility (hidden for first row, visible between consecutive rows), bind trailing chevron, and ensure drag-and-drop long-press listeners, cross-category drop hover, and real-time live reordering remain fully active and fluid.
 
 ## Polish & Testing
-- [x] [T009] [P] Verify compilation via `./gradlew assembleMobileGoogleDebug` and ensure zero errors or warnings.
+- [x] [T006] [P] Verify clean build via `./gradlew assembleMobileGoogleDebug` and ensure zero errors or layout inflation warnings.
+- [x] [T007] Verify inter-category and intra-category drag-and-drop reordering functionality.

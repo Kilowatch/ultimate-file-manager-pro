@@ -1,58 +1,69 @@
-# Specification: Tip Jar Progress Popup Visual Redesign (Mobile)
+# Specification: Modern Categorized View Expanded Category Redesign (Mobile)
 
 ## Overview
-Redesign the Tip Jar progress popup card on the main storage screen to match the modern neon-cyan glass aesthetic showcased in `tipjar.jpg`. This replaces the previous purple styling with an electric cyan-to-blue glow, frosted glass "Fuel it!" action pill, harmonized typography, and gradient progress tracking that seamlessly integrates with UFM Pro's dark glass design language.
+Redesign the expanded category view within the Modern Categorized main menu on mobile to match the unified card aesthetic in `expanded.jpg`. When a category is expanded, its child tiles shall render as seamless, inset-divider-separated list rows inside a single cohesive container card, eliminating separate nested sub-cards, disjointed margins, and redundant inner borders. Additionally, when the Storage category is collapsed, it displays a summary storage usage progress bar with total capacity metrics (e.g., "52.97 GB free of 145 GB").
 
 ## User Stories
-- **As a UFM Pro user**, I want the tip jar progress card to have a sleek, modern neon-cyan glass appearance so that the support banner looks visually premium, cohesive with the rest of the dark interface, and non-intrusive.
-- **As a supporter**, I want to clearly see the current month's tip progress percentage, progress bar, and a distinct "Fuel it!" button so that I can easily gauge community goal completion and contribute if I choose to.
+- **As a UFM Pro mobile user**, I want expanded categories to display child tiles as clean, integrated rows inside a unified card so that navigating my storage, connect, sync, and feature tiles feels cohesive, fluid, and uncluttered.
+- **As a power user**, I want to see an overall storage capacity summary and progress bar when the Storage category is collapsed, and detailed individual drive metrics when expanded.
+- **As a power user**, I want each child item row to clearly present its icon, primary title, descriptive subtitle, and trailing action chevron so that I can quickly identify and access features without visual noise.
+- **As a user organizing tiles**, I want drag-and-drop reordering, edit mode actions, and tap interactions to continue operating seamlessly within the unified card structure.
 
 ## Functional Requirements
-- **FR-01: Visual Layout & Card Structure**
-  - The card shall display in the upper region of the main storage screen below the top app bar and above the storage list when enabled.
-  - The card must feature a rounded corner container with an electric cyan border glow / stroke.
-  - The upper banner section shall feature a soft cyan/blue radial/linear dark glass gradient aura accentuating the jar icon on the left.
-- **FR-02: Jar Icon & Aura**
-  - The glowing jar icon with floating heart and sparkles shall be displayed on the left with a subtle cyan ambient aura matching the reference image.
-- **FR-03: Header & Month Formatting**
-  - The header shall display "Tip jar progress • <Month>" where "Tip jar progress • " is styled in primary crisp text, and the month abbreviation (e.g., "Nov") is highlighted in vibrant cyan.
-  - The subtitle shall state "Every tip helps keep UFM Pro free for everyone." spanning up to two lines in muted secondary text.
-  - When offline or uninitialized, appropriate offline fallback status shall remain supported without breaking layout dimensions.
-- **FR-04: Percentage Display**
-  - The current progress percentage (e.g., "8%") shall be rendered in bold, large, high-contrast cyan text aligned to the right of the title section.
-- **FR-05: Progress Bar Styling**
-  - The progress bar track shall have a dark translucent background.
-  - The progress fill shall render with a smooth cyan-to-blue gradient and rounded pill caps.
-- **FR-06: "Fuel it!" Action Button**
-  - The "Fuel it!" button shall be styled as a frosted glass pill button:
-    - Dark translucent background (glass effect).
-    - Subtle cyan/blue outline border.
-    - White coffee cup icon with steam.
-    - White bold "Fuel it!" label.
-  - Tapping "Fuel it!" navigates to the Supporter Loyalty / Tip Jar screen.
-- **FR-07: Dismiss Interaction**
-  - A subtle frosted circular button with an "✕" icon shall be anchored at the top right of the card.
-  - Tapping the dismiss button or letting the 10-second auto-timer elapse dismisses the card with a smooth exit transition.
+- **FR-01: Unified Outer Card Container**
+  - An expanded category shall render as a single continuous glass card with standard corner radius (24dp) and subtle border stroke.
+  - Individual child tiles shall NOT render as standalone nested cards with separate outlines and card elevations.
+- **FR-02: Category Header Styling**
+  - **Expanded State:**
+    - Left: Category squircle icon container with primary icon tint.
+    - Center: Category title in bold primary text, with item count (e.g., "6 items") displayed directly beneath as a secondary subtitle.
+    - Right: Trailing chevron pointing upward (`^`) indicating the expanded state.
+    - Background: A subtle header background highlight with rounded top corners visually separating the category header from child rows.
+  - **Collapsed State:**
+    - Category title on the left with item count formatted cleanly inline/subtitle (e.g., "Storage 7 items").
+    - The old pill badge (`bg_category_count_pill`) is removed.
+    - Right: Trailing chevron pointing right (`>`).
+- **FR-03: Collapsed Storage Summary Progress & Capacity**
+  - When the Storage category is collapsed, it shall display an aggregate storage capacity metric (sum of internal + primary mounted drives, e.g., "52.97 GB free of 145 GB") alongside a horizontal progress bar matching `expanded.jpg`.
+  - When expanded, individual storage drives (*Internal Storage*, *SD Card*, etc.) display their own respective usage metrics and progress bars.
+- **FR-04: Integrated Child Item Rows**
+  - Each child tile shall render as an edge-to-edge list row within the card body.
+  - Left: A rounded rectangle/squircle icon container with translucent backdrop and themed icon tint.
+  - Center: Primary title (e.g., "Paired TVs", "Remote", "Network Shares") in bold text; secondary subtitle description (e.g., "Manage links with other devices", "SMB, FTP and more") directly below.
+  - Right: Navigation chevron `>` (and context-dependent action buttons such as USB eject icon or storage usage progress where applicable).
+  - Tap target: The entire row shall be touch-responsive with ripple feedback triggering tile navigation.
+- **FR-05: Inset Row Dividers**
+  - Hairline dividers (0.5dp–1dp) shall separate consecutive child rows within the card, inset from the left to align with the text column (indented past the icon badge) and extending to the right edge.
+  - The final child row shall cleanly integrate with the card's rounded bottom padding without a trailing divider line.
+- **FR-06: Storage Volume Progress & Action Integration**
+  - For storage volumes with capacity metrics (e.g., Internal Storage, SD Card), child rows display individual progress bars beneath the subtitle.
+  - Removable storage items continue to display their dedicated eject button.
+- **FR-07: Drag-and-Drop & Reordering Compatibility**
+  - Reordering tiles within an expanded category via drag-and-drop and moving tiles across categories in edit mode must remain fully supported.
 
 ## Non-Functional Requirements
-- **NFR-01: Visual Consistency**: The styling, corner radii, stroke weights, and typography must match the provided reference (`tipjar.jpg`) and feel native to the modern glass theme.
-- **NFR-02: Contrast & Legibility**: All text elements (title, month highlight, subtitle, percentage, and button label) must maintain strong readability against the dark glass background.
-- **NFR-03: Responsiveness & Touch Targets**: Touch targets for "Fuel it!" and the dismiss button must meet minimum accessible sizing (at least 36–48dp touch areas).
-- **NFR-04: Performance**: All glows, gradients, and shapes must render smoothly without frame drops during list scrolling or card dismiss animations.
+- **NFR-01: Visual Fidelity**: Card hierarchy, typography, divider lines, and spacing strictly reflect `expanded.jpg`.
+- **NFR-02: Animation Performance**: Expanding and collapsing categories must animate smoothly at 60fps+ without UI lag, frame drops, or layout glitches.
+- **NFR-03: Touch Accessibility**: Every child row must maintain a minimum touch target height of at least 48dp.
+- **NFR-04: Theme & Dynamic Density**: Dividers, text, and row backgrounds must respect dark theme tokens and scale crisply across different screen densities.
 
 ## Edge Cases & Error States
-- **Offline / No Cache**: Card displays "0%" with the offline notice without distorting the layout or button alignment.
-- **100%+ Goal Reached**: Progress bar caps at 100% fill cleanly without visual overflow; percentage displays full value (e.g., "100%", "105%").
-- **Long Month Names in Localized Languages**: Header gracefully elides or wraps without overlapping the percentage text or dismiss button.
-- **Device Rotation & Small Screens**: Layout remains properly spaced and elements do not clip on narrow screens (e.g., 320dp width).
+- **Single Item Categories**: Categories containing only 1 item render a single clean row with no divider lines.
+- **Empty Custom Categories**: Categories with 0 items display an appropriate placeholder or clean collapsed state.
+- **Long Titles and Subtitles**: Labels and subtitles must ellipsize gracefully without pushing the trailing chevron off-screen.
+- **Removable Media Ejecting**: When an SD card or USB drive is unmounted/ejected, the row updates its status/eject icon immediately.
+- **Fast Expand/Collapse Tapping**: Rapid tapping on category headers must not cause view duplication or layout stutter.
 
 ## Out of Scope
-- Changes to Google Play Billing or Amazon Appstore IAP logic or product SKUs.
-- Redesigning the full Supporter Loyalty screen (`SupporterLoyaltyActivity`).
-- Modifying the Android TV layout (`activity_storage_browser_tv.xml`), unless specifically aligned for accent color consistency.
+- Android TV main menu layout (`item_storage_category_header.xml` / `item_storage_grid_tv.xml`).
+- Bottom navigation or main activity header/search layout refactoring.
+- Grid view mode (`VIEW_TYPE_GRID`).
 
 ## Success Criteria
-- [ ] The mobile tip jar popup card matches the aesthetic, colors, typography, and layout of `tipjar.jpg`.
-- [ ] The "Fuel it!" button renders as a frosted glass pill with cyan outline rather than an opaque purple button.
-- [ ] The glowing border, cyan-highlighted month, cyan percentage, and gradient progress bar render faithfully.
-- [ ] Card dismiss, auto-dismiss, and navigation to the Tip Jar continue to function smoothly without regressions.
+- [ ] Expanded category cards on mobile render child items as integrated divider-separated rows inside a single card container, matching `expanded.jpg`.
+- [ ] Inset dividers cleanly separate child rows without extending beneath the icon badge.
+- [ ] The count pill badge is removed, replaced by clean inline/subtitle text.
+- [ ] Collapsed Storage category shows summary progress bar and aggregate free/total storage capacity.
+- [ ] Category header displays subtle contrasting glass highlight with rounded top corners when expanded.
+- [ ] Child rows display squircle icon, bold label, descriptive subtitle, and chevron `>`.
+- [ ] Expanding, collapsing, tapping, and dragging tiles operate cleanly without regressions.

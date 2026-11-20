@@ -1,17 +1,11 @@
-# Security Audit: Tip Jar Progress Popup Visual Redesign (v2.2.8)
+# Security Audit: Modern Categorized View Expanded Category Redesign
 
 ## Audit Scope
-- Pipeline mode audit following `/review` for the Tip Jar progress popup redesign and v2.2.8 increment.
-- Files audited:
-  - `app/build.gradle.kts`
+- Pipeline mode security audit covering all files modified for the Modern Categorized View expanded category redesign:
+  - `app/src/main/res/layout/item_storage_nested_card.xml`
+  - `app/src/main/res/layout/item_storage_category_group.xml`
+  - `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAdapter.kt`
   - `CHANGELOG.md`
-  - `app/src/main/res/values/colors.xml`
-  - `app/src/main/res/values-night/colors.xml`
-  - `app/src/main/res/drawable/bg_tip_jar_card_banner.xml`
-  - `app/src/main/res/drawable/bg_tip_jar_progress.xml`
-  - `app/src/main/res/drawable/bg_jar_glow_aura.xml`
-  - `app/src/main/res/drawable/bg_btn_fuel_it.xml`
-  - `app/src/main/res/layout/activity_storage_browser.xml`
 
 ## Findings
 
@@ -31,11 +25,10 @@
 *None.*
 
 ## Checklist Coverage
-- **Credentials & Secrets**: Clean. No secrets, credentials, or keys added or exposed.
-- **Data Storage**: Clean. No persistence modifications or sensitive data storage touched.
-- **Network Security**: Clean. No network endpoints, protocols, or permissions altered.
-- **Android Component Security**: Clean. No exported activities, receivers, or providers modified.
-- **Injection & Input Validation**: Clean. Layout XML uses safe static string and drawable resources.
+- **Credentials & Secrets**: Clean. No keys, passwords, or tokens in layouts, drawables, or Kotlin code.
+- **Data Exposure & PII**: Clean. File paths and labels remain within internal memory and local adapters; no sensitive data broadcast or logged.
+- **Android Component Security**: Clean. No exported components, intent filters, or permissions modified.
+- **Input Validation & Injection**: Clean. Formatting uses standard `Formatter.formatFileSize` and safe string resources.
 
 ## Verdict
 **PASS** — Zero vulnerabilities identified. Ready for `/verify`.

@@ -1,20 +1,28 @@
-# Clarifications: Tip Jar Progress Popup Visual Redesign (Mobile)
+# Clarifications: Modern Categorized View Expanded Category Redesign (Mobile)
 
 ## Status
-Answers received & verified — ready for /tasks and /implement.
+Answers received — ready for /plan and /tasks.
 
 ## Questions and Answers
 
 ### UI and Layout
-**Q1.** Should the new electric cyan glow and stroke styling replace the purple accents across all tip jar accent references, or only mobile?
-**A:** Scoped to the mobile card and its corresponding accent tokens (`tile_tip_jar_accent`, `tile_tip_jar_stroke`, banner, progress bar, and button) to achieve full visual harmony with `tipjar.jpg`.
+**Q1. How should the hairline dividers between child items be aligned?**  
+**A:** Inset dividers — indented past the icon badge (~68dp from the left edge of the card) to align with the text column, extending to the right edge, matching `expanded.jpg`.
 
-### Versioning & Release Documentation
-**Q2.** What are the exact version name, version code, and changelog description?
-**A:** `appVersionName = "2.2.8"`, `appVersionCode = 318` (+2 from 316), with the changelog entry approved by the user.
+**Q2. How should the item count be displayed in the category header?**  
+**A:** Remove the count pill badge. Use clean inline/subtitle item count text:
+- When collapsed: category title and item count rendered inline/subtitle without a background pill.
+- When expanded: item count rendered cleanly as a subtitle directly under the category title.
+
+**Q3. Should the collapsed 'Storage' category display a summary progress bar?**  
+**A:** Yes. When collapsed, display an overall storage progress bar and aggregate capacity text showing the sum of total free vs. available (e.g., "52.97 GB free of 145 GB"). When expanded, display individual progress bars and capacities on each individual drive tile as it currently functions.
+
+**Q4. Should expanded category headers have a subtle contrasting glass background highlight?**  
+**A:** Yes. Apply a subtle contrasting glass highlight on expanded headers with rounded top corners matching the outer card container (24dp), creating a clear visual header band.
 
 ## Spec / Plan Impact
-None. Spec and plan are fully aligned with the requirements and image reference.
+- `spec.md` updated with FR-03 for collapsed Storage summary capacity and progress bar.
+- Architecture plan will update `item_storage_category_group.xml` and `StorageAdapter.kt` to handle collapsed storage summary calculation and inset child row rendering without standalone nested cards.
 
-## Confirmed — Ready for /tasks
-All requirements and design decisions are confirmed. Proceeding to task execution.
+## Confirmed — Ready for /plan
+All clarification questions answered. Proceeding to design the implementation plan.

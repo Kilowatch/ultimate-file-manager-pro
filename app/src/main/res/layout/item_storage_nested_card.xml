@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Nested Card for Child Storage Tiles inside Category Groups on Mobile.
-    Matches images/mainmenu.jpeg:
-    - 20dp corner radius, elevated surface (#1B304D), 1dp outline (#344B68).
-    - Squircle icon container, primary/secondary text, horizontal cyan progress bar,
-      eject button, edit hide/settings button, and trailing chevron.
+    Integrated List Row for Child Storage Tiles inside Category Groups on Mobile.
+    Matches images/expanded.jpg:
+    - Borderless, transparent row container inside outer category card.
+    - Inset hairline divider between consecutive child rows.
+    - Squircle icon container, primary/secondary text, optional progress bar,
+      eject button, and trailing chevron.
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,26 +14,36 @@
     android:id="@+id/cardStorage"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="4dp"
+    android:layout_marginVertical="0dp"
     android:clickable="true"
     android:focusable="true"
-    app:cardBackgroundColor="@color/quick_bar_bg"
-    app:cardCornerRadius="20dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="0dp"
     app:cardElevation="0dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/mobile_glass_stroke"
+    app:strokeWidth="0dp"
+    app:strokeColor="@android:color/transparent"
     app:rippleColor="@color/mobile_glass_ripple">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Inset Hairline Divider (indented past icon badge) -->
+        <View
+            android:id="@+id/dividerRow"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="72dp"
+            android:background="@color/mobile_glass_stroke"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:padding="12dp">
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="13dp">
 
             <!-- Squircle Icon Badge -->
             <FrameLayout

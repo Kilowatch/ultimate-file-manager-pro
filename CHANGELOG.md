@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.8] — 2026-11-20
 
 ### Changed
+- **Modern Categorized View Expanded Category Redesign (`StorageAdapter`, `item_storage_category_group.xml`, `item_storage_nested_card.xml`)**:
+  - Redesigned expanded category cards on mobile to integrate child tiles as seamless, borderless list rows inside a single unified 24dp glass card container matching `expanded.jpg`.
+  - Added inset hairline dividers (~72dp start margin) separating consecutive child rows, along with trailing navigation chevrons.
+  - Replaced the collapsed count pill badge with clean inline/subtitle item count text and applied a subtle top glass header highlight when expanded.
+  - Added collapsed Storage summary capacity metrics (total free vs. available) and horizontal usage progress bar.
+  - Preserved full drag-and-drop reordering within categories and across target category containers.
 - **Tip Jar Progress Popup Redesign (`StorageBrowserActivity`, `activity_storage_browser.xml`)**:
   - Redesigned the mobile Tip Jar progress card to match the modern neon-cyan cyber-glass aesthetic.
   - Replaced purple accents with electric cyan glow highlights, cyan-accented month title, and gradient progress indicator.

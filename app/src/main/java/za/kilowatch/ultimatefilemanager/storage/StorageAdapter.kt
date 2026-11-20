@@ -661,8 +661,10 @@ private fun ImageView.safeSetIcon(resId: Int) {
         private val iconContainerCategory: FrameLayout = itemView.findViewById(R.id.iconContainerCategory)
         private val imgCategoryIcon: ImageView = itemView.findViewById(R.id.imgCategoryIcon)
         private val txtCategoryTitle: TextView = itemView.findViewById(R.id.txtCategoryTitle)
+        private val txtCategoryInlineCount: TextView? = itemView.findViewById(R.id.txtCategoryInlineCount)
         private val txtCategorySubtitle: TextView = itemView.findViewById(R.id.txtCategorySubtitle)
-        private val txtCategoryCountPill: TextView = itemView.findViewById(R.id.txtCategoryCountPill)
+        private val txtCategoryCountPill: TextView? = itemView.findViewById(R.id.txtCategoryCountPill)
+        private val progressCategoryStorage: ProgressBar? = itemView.findViewById(R.id.progressCategoryStorage)
         private val btnDeleteCategoryHeader: ImageView? = itemView.findViewById(R.id.btnDeleteCategoryHeader)
         private val imgCategoryChevron: ImageView = itemView.findViewById(R.id.imgCategoryChevron)
         private val layoutCategoryItems: LinearLayout = itemView.findViewById(R.id.layoutCategoryItems)
@@ -707,21 +709,50 @@ private fun ImageView.safeSetIcon(resId: Int) {
             if (isExpanded) {
                 // Header highlighted when expanded
                 layoutCategoryHeader.setBackgroundResource(R.drawable.bg_category_header_highlight)
+                txtCategoryInlineCount?.visibility = View.GONE
                 txtCategorySubtitle.visibility = View.VISIBLE
                 txtCategorySubtitle.text = countText
-                txtCategoryCountPill.visibility = View.GONE
+                txtCategoryCountPill?.visibility = View.GONE
+                progressCategoryStorage?.visibility = View.GONE
                 imgCategoryChevron.setImageResource(R.drawable.ic_expand_less)
                 layoutCategoryItems.visibility = View.VISIBLE
                 populateChildItems(context, groupItems, catId)
             } else {
                 // Header NOT highlighted when collapsed
                 layoutCategoryHeader.background = null
-                txtCategorySubtitle.visibility = View.GONE
-                txtCategoryCountPill.visibility = View.VISIBLE
-                txtCategoryCountPill.text = countText
+                txtCategoryCountPill?.visibility = View.GONE
                 imgCategoryChevron.setImageResource(R.drawable.ic_chevron_right)
                 layoutCategoryItems.visibility = View.GONE
                 layoutCategoryItems.removeAllViews()
+
+                if (catId == MainMenuViewModeManager.CATEGORY_STORAGE) {
+                    val storageDrives = groupItems.filter { !it.isUnmounted && it.totalBytes > 0L }
+                    val totalTotalBytes = storageDrives.sumOf { it.totalBytes }
+                    val totalUsedBytes = storageDrives.sumOf { it.usedBytes }
+                    val totalFreeBytes = (totalTotalBytes - totalUsedBytes).coerceAtLeast(0L)
+                    val totalPercent = if (totalTotalBytes > 0L) ((totalUsedBytes * 100L) / totalTotalBytes).toInt().coerceIn(0, 100) else 0
+
+                    txtCategoryInlineCount?.visibility = View.VISIBLE
+                    txtCategoryInlineCount?.text = countText
+
+                    if (totalTotalBytes > 0L) {
+                        val freeStr = android.text.format.Formatter.formatFileSize(context, totalFreeBytes)
+                        val totalStr = android.text.format.Formatter.formatFileSize(context, totalTotalBytes)
+                        txtCategorySubtitle.visibility = View.VISIBLE
+                        txtCategorySubtitle.text = context.getString(R.string.storage_free_format, freeStr, totalStr)
+                        progressCategoryStorage?.visibility = View.VISIBLE
+                        progressCategoryStorage?.max = 100
+                        progressCategoryStorage?.progress = totalPercent
+                    } else {
+                        txtCategorySubtitle.visibility = View.GONE
+                        progressCategoryStorage?.visibility = View.GONE
+                    }
+                } else {
+                    txtCategoryInlineCount?.visibility = View.VISIBLE
+                    txtCategoryInlineCount?.text = countText
+                    txtCategorySubtitle.visibility = View.GONE
+                    progressCategoryStorage?.visibility = View.GONE
+                }
             }
 
             val isCustomCategory = !isTv && catId.isNotBlank() && MainMenuViewModeManager.loadCustomCategories(context).containsKey(catId)
@@ -916,10 +947,13 @@ private fun ImageView.safeSetIcon(resId: Int) {
             }
         }
 
-        private fun createChildTileView(context: Context, childItem: StorageItem): View {
+        private fun createChildTileView(context: Context, childItem: StorageItem, isFirstChild: Boolean = false): View {
             val inflater = LayoutInflater.from(context)
             val childView = inflater.inflate(R.layout.item_storage_nested_card, layoutCategoryItems, false)
             childView.tag = childItem.id
+
+            val dividerRow = childView.findViewById<View>(R.id.dividerRow)
+            dividerRow?.visibility = if (isFirstChild) View.GONE else View.VISIBLE
 
             val cardStorage = childView.findViewById<MaterialCardView>(R.id.cardStorage)
             val iconContainer = childView.findViewById<FrameLayout>(R.id.iconContainer)
@@ -930,6 +964,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
             val txtNewBadge = childView.findViewById<TextView>(R.id.txtNewBadge)
             val btnEjectTile = childView.findViewById<ImageView>(R.id.btnEjectTile)
             val btnHideTile = childView.findViewById<ImageView>(R.id.btnHideTile)
+            val imgStorageChevron = childView.findViewById<ImageView>(R.id.imgStorageChevron)
 
             imgIcon.safeSetIcon(childItem.iconRes)
             applyCustomIcon(childItem, imgIcon)
@@ -966,6 +1001,7 @@ private fun ImageView.safeSetIcon(resId: Int) {
                 val isCustom = childItem.isCustomTile
                 val showBtn = (childItem.isHideable || isCustom) && !isColorPickMode
                 btnHideTile.visibility = if (showBtn) View.VISIBLE else View.GONE
+                imgStorageChevron?.visibility = View.GONE
                 if (isCustom) {
                     btnHideTile.setImageResource(R.drawable.ic_settings)
                     btnHideTile.setOnClickListener { onEditModeClick?.invoke(childItem) }
@@ -976,10 +1012,18 @@ private fun ImageView.safeSetIcon(resId: Int) {
             } else {
                 btnHideTile.visibility = View.GONE
                 btnHideTile.setOnClickListener(null)
+                imgStorageChevron?.visibility = View.VISIBLE
             }
 
             val colorConfig = tileColors[childItem.id] ?: TileColorConfig()
-            applyCustomColors(context, cardStorage, iconContainer, imgIcon, txtLabel, txtCapacity, colorConfig, R.color.quick_bar_bg)
+            applyCustomColors(context, cardStorage, iconContainer, imgIcon, txtLabel, txtCapacity, colorConfig, android.R.color.transparent)
+            if (colorConfig.ringColor == Color.TRANSPARENT) {
+                cardStorage.strokeWidth = 0
+                cardStorage.setStrokeColor(Color.TRANSPARENT)
+            }
+            if (colorConfig.tileBgColor == Color.TRANSPARENT) {
+                cardStorage.setCardBackgroundColor(Color.TRANSPARENT)
+            }
 
             cardStorage.setOnClickListener {
                 if (isEditMode) {
@@ -1060,8 +1104,8 @@ private fun ImageView.safeSetIcon(resId: Int) {
 
         private fun populateChildItems(context: Context, groupItems: List<StorageItem>, currentCatId: String) {
             layoutCategoryItems.removeAllViews()
-            for (childItem in groupItems) {
-                layoutCategoryItems.addView(createChildTileView(context, childItem))
+            for ((index, childItem) in groupItems.withIndex()) {
+                layoutCategoryItems.addView(createChildTileView(context, childItem, isFirstChild = (index == 0)))
             }
         }
     }

@@ -1,75 +1,93 @@
-# Implementation Plan: Tip Jar Progress Popup Visual Redesign (Mobile)
+# Implementation Plan: Modern Categorized View Expanded Category Redesign (Mobile)
 
 ## Goals
-Transform the visual appearance of the mobile Tip Jar progress popup card (`cardTipJarProgress`) in `StorageBrowserActivity` to match the exact aesthetic presented in `tipjar.jpg`:
-- Electric cyan glowing container stroke (`#5900B0FF` / `#8038BDF8`) replacing deep purple.
-- Soft ambient cyan gradient aura behind the jar icon and along the top banner.
-- High-contrast electric cyan month text span (`Tip jar progress • Nov`) and percentage indicator (`8%`).
-- Sleek cyan/blue neon gradient progress fill (`#FF00E5FF` to `#FF00B0FF`).
-- Frosted glass capsule "Fuel it!" button with subtle cyan stroke and translucent dark fill.
-- Increment app version to `2.2.8` and `versionCode` to `318` in `app/build.gradle.kts`.
-- Update `CHANGELOG.md` with the user-approved entry.
+Redesign the expanded category view in Modern Categorized view mode on mobile to match `expanded.jpg`:
+1. **Unified Card Structure**: Eliminate isolated, bordered nested sub-cards. Child tiles render as seamless, edge-to-edge rows inside the single outer category card container.
+2. **Inset Dividers**: Add hairline dividers between consecutive child rows inset ~68dp to align with the text column.
+3. **Category Header Modernization**:
+   - Expanded state: subtle top-corner glass highlight (`bg_category_header_highlight`), category title, item count subtitle below it, upward chevron (`^`).
+   - Collapsed state: category title with inline item count text (old pill badge removed), right chevron (`>`).
+4. **Collapsed Storage Capacity & Progress Summary**:
+   - When the Storage category is collapsed, compute and display the sum of total free vs. total capacity (e.g., "52.97 GB free of 145 GB") and display a summary progress bar matching `expanded.jpg`.
+   - When expanded, individual storage drive tiles display their respective progress bars and capacity subtitles.
 
 ## Architecture Overview
-The redesign is purely visual and presentation-layer focused, preserving all existing runtime business logic (network fetching, cache persistence in `LoyaltyPrefs`, dismiss animations, auto-dismiss timers, and Supporter Loyalty intent routing):
-1. **Color Tokens**:
-   Update `tile_tip_jar_accent` and `tile_tip_jar_stroke` in both `res/values/colors.xml` and `res/values-night/colors.xml` from purple to electric cyan/blue neon tokens (`#FF00B0FF` / `#FF38BDF8`).
-2. **Gradient Banner**:
-   Update `bg_tip_jar_card_banner.xml` from deep violet/purple to a dark translucent electric blue/cyan gradient aura (`#3300B0FF` -> `#121E35` -> `#00000000`).
-3. **Jar Icon Ambient Aura**:
-   Add a soft circular cyan aura drawable `bg_jar_glow_aura.xml` positioned behind `ic_tip_jar_glow` to reproduce the luminous glow from `tipjar.jpg`.
-4. **Progress Bar Fill**:
-   Update `bg_tip_jar_progress.xml` to replace the purple gradient end-color (`#FF8B2FC9`) with electric bright blue (`#FF00B0FF`).
-5. **Action Button Styling**:
-   Update `btnFuelIt` in `activity_storage_browser.xml` from solid purple to a frosted glass capsule button:
-   - Semi-transparent dark glass background (`#2638BDF8` or `@drawable/bg_btn_fuel_it`).
-   - 1dp electric cyan border stroke (`#6638BDF8`).
-   - Rounded pill corners (18dp).
-   - White text and white coffee icon (`ic_coffee`).
-6. **Version & Documentation**:
-   Update `appVersionName` to `2.2.8` and `appVersionCode` to `318` in `app/build.gradle.kts`.
-   Prepend the user-approved `2.2.8` section to `CHANGELOG.md`.
+The changes touch the presentation layer for `VIEW_TYPE_CATEGORY_HEADER` in `StorageAdapter.kt`, its outer card group layout (`item_storage_category_group.xml`), and the child item layout (`item_storage_nested_card.xml`).
+
+```
+┌────────────────────────────────────────────────────────┐
+│ Outer MaterialCardView (cardCategoryGroup, r=24dp)     │
+│ ┌────────────────────────────────────────────────────┐ │
+│ │ Header Row (highlighted when expanded, r_top=24dp) │ │
+│ │ [Icon]  Connect                           [^]      │ │
+│ │         6 items                                    │ │
+│ └────────────────────────────────────────────────────┘ │
+│ ┌────────────────────────────────────────────────────┐ │
+│ │ Child Row 0 (Paired TVs)                  [>]      │ │
+│ ├────────────────────────────────────────────────────┤ │
+│ │ ────── inset divider (marginStart=68dp) ─────────  │ │
+│ │ Child Row 1 (Remote)                      [>]      │ │
+│ ├────────────────────────────────────────────────────┤ │
+│ │ ────── inset divider (marginStart=68dp) ─────────  │ │
+│ │ Child Row 2 (Remote Manage)               [>]      │ │
+│ └────────────────────────────────────────────────────┘ │
+└────────────────────────────────────────────────────────┘
+```
+
+1. **`item_storage_category_group.xml`**:
+   - Remove `txtCategoryCountPill`.
+   - Add `txtCategoryInlineCount` next to `txtCategoryTitle`.
+   - Add `progressCategoryStorage` below the title/subtitle for the collapsed Storage category summary.
+   - Set `layoutCategoryItems` padding to `0dp` horizontal/top so child rows integrate seamlessly.
+2. **`item_storage_nested_card.xml`**:
+   - Convert outer `cardStorage` to borderless (`strokeWidth="0dp"`), transparent (`cardBackgroundColor="@android:color/transparent"`), zero-margin (`marginVertical="0dp"`), flat (`elevation="0dp"`) container with ripple.
+   - Add top inset hairline divider (`dividerRow`) with `layout_marginStart="68dp"`.
+   - Add trailing chevron `imgChevron` (`ic_chevron_right`).
+3. **`StorageAdapter.kt`**:
+   - In `CategoryGroupViewHolder.bind()`:
+     - When collapsed:
+       - Show `txtCategoryInlineCount`.
+       - If category is `CATEGORY_STORAGE`, calculate aggregate free and total bytes from `groupItems` (storage drives), format subtitle (e.g., "28.02 GB free of 113 GB"), and show `progressCategoryStorage`.
+       - For non-storage categories, hide subtitle and progress bar.
+     - When expanded:
+       - Hide inline count and progress bar.
+       - Show `txtCategorySubtitle` with count text.
+       - Show top highlight background on header.
+   - In `createChildTileView()`:
+     - Set `dividerRow.visibility` based on child index (hidden for first child, visible for subsequent children).
+     - Bind `imgChevron` visibility and trailing actions (eject button for removable media).
 
 ## Files to Create
-### `app/src/main/res/drawable/bg_jar_glow_aura.xml` — Soft ambient aura behind glowing jar icon
-- **What:** Radial/shape gradient providing the subtle luminous cyan halo surrounding the tip jar icon.
-- **Key details:** Center color `#4000B0FF`, outer color `#00000000`.
-
-### `app/src/main/res/drawable/bg_btn_fuel_it.xml` — Frosted glass pill background for "Fuel it!"
-- **What:** Capsule shape drawable with semi-transparent dark blue/cyan background, subtle cyan stroke, and ripple.
+*None required. All necessary drawables (`bg_category_header_highlight.xml`, `bg_storage_progress_cyan.xml`, `bg_squircle_nested_icon.xml`, `ic_chevron_right.xml`) already exist in the project.*
 
 ## Files to Modify
-### `app/build.gradle.kts` — Version increment
-- **What:** Bump `appVersionName` from `"2.2.7"` to `"2.2.8"`, bump `appVersionCode` from `316` to `318`.
+### `app/src/main/res/layout/item_storage_category_group.xml`
+- **What:** Modernize header structure (inline count, storage summary progress bar) and remove horizontal/top padding on `layoutCategoryItems`.
+- **Key details:** Remove `txtCategoryCountPill`, add `txtCategoryInlineCount` and `progressCategoryStorage`.
 
-### `CHANGELOG.md` — Release notes
-- **What:** Add `## [2.2.8] — 2026-11-20` entry with approved description.
+### `app/src/main/res/layout/item_storage_nested_card.xml`
+- **What:** Refactor child tile into seamless divider-separated row without outer card borders or vertical margins.
+- **Key details:** `strokeWidth="0dp"`, `elevation="0dp"`, `cardBackgroundColor="@android:color/transparent"`, add inset `dividerRow` and trailing `imgChevron`.
 
-### `app/src/main/res/values/colors.xml` & `app/src/main/res/values-night/colors.xml` — Color tokens
-- **What:** Update `tile_tip_jar_accent`, `tile_tip_jar_stroke`, and `tile_tip_jar_icon_bg` to electric cyan/blue tokens.
-
-### `app/src/main/res/drawable/bg_tip_jar_card_banner.xml` — Card banner gradient
-- **What:** Update gradient from purple to dark cyan/blue translucent glass aura.
-
-### `app/src/main/res/drawable/bg_tip_jar_progress.xml` — Progress bar fill
-- **What:** Update progress gradient from cyan-purple to cyan-electric blue (`#FF00E5FF` -> `#FF00B0FF`).
-
-### `app/src/main/res/layout/activity_storage_browser.xml` — Tip jar card layout
-- **What:** Wrap jar icon with ambient glow aura; configure `btnFuelIt` with frosted glass styling and subtle cyan stroke.
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAdapter.kt`
+- **What:** Update `CategoryGroupViewHolder.bind()` to support inline count, collapsed storage aggregate calculation, and child item inset divider management.
+- **Key details:** Calculate `sumOf { totalBytes }` and `sumOf { usedBytes }` for collapsed Storage, manage child divider visibility.
 
 ## Data Model
-No changes to database models, preferences keys, or data models. `LoyaltyPrefs` continues to handle caching and preferences.
+No changes to database entities or persistent storage schemas. Calculations are performed at runtime from existing `StorageItem` objects in memory.
 
 ## Dependencies
-None. All components use standard Android SDK and Material Components already in the project.
+None. Uses standard Android SDK and existing Material Components.
 
 ## Test Plan
-- Compile with `./gradlew assembleMobileGoogleDebug` to guarantee clean zero-warning build.
-- Verify visual layout in preview/rendering.
-- Ensure all dismiss and click actions retain original behavior.
+- Compile with `./gradlew assembleMobileGoogleDebug` to guarantee zero errors.
+- Verify collapsed categories show inline count without pills.
+- Verify collapsed Storage category displays aggregate storage capacity and usage progress bar.
+- Verify expanded category displays unified card, inset dividers between rows, trailing chevrons, and smooth expand/collapse transitions.
+- Verify child tile clicks, drag-and-drop reordering, and USB eject buttons function identically.
 
 ## Risks & Mitigations
-- **Risk:** Contrast issues on light backgrounds.
-  - **Mitigation:** The card sits inside UFM's dark theme container (`@color/mobile_glass_card`); high-contrast cyan text (`#FF38BDF8` / `#FF00E5FF`) exceeds WCAG AA contrast against dark backgrounds.
-- **Risk:** Button touch target shrinking.
-  - **Mitigation:** Retain 36dp height and 18dp corner radius with adequate horizontal padding ensuring standard touch responsiveness.
+- **Risk:** Drag-and-drop reordering visuals could look disjointed if row dimensions change during drag.
+  - **Mitigation:** Retain `cardStorage` ID on the row container and preserve existing drag listeners and alpha dimming in `StorageAdapter`.
+- **Risk:** Calculation of total bytes on empty or unmounted drives.
+  - **Mitigation:** Filter for `!it.isUnmounted && it.totalBytes > 0L` before summing to prevent skewing metrics with offline network shares or empty slots.

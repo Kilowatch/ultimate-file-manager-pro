@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Modern Categorized Outer Card Group for Mobile Main Menu.
-    - 24dp corner radius, #142640 card background, 1dp #344B68 stroke.
-    - Category header with squircle icon badge, title, subtitle / count pill, and chevron.
-    - Highlighted header when expanded, unhighlighted when collapsed.
-    - Nested items container for child tiles with balanced top/bottom padding.
+    Matches images/expanded.jpg:
+    - 24dp corner radius, mobile_glass_card background, 1dp mobile_glass_stroke.
+    - Category header with squircle icon badge, title with inline count (collapsed)
+      or subtitle count (expanded), and chevron.
+    - Summary capacity metrics and progress bar on Storage when collapsed.
+    - Highlighted header when expanded (with rounded top corners).
+    - Seamless nested items container for child tiles (paddingHorizontal=0dp).
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -66,15 +69,33 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="8dp">
 
-                <TextView
-                    android:id="@+id/txtCategoryTitle"
+                <!-- Title Row: category title + inline item count (when collapsed) -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/mobile_card_text_primary"
-                    android:textSize="17sp"
-                    android:fontFamily="sans-serif-black"
-                    android:letterSpacing="0.01"
-                    tools:text="Storage" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/txtCategoryTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/mobile_card_text_primary"
+                        android:textSize="17sp"
+                        android:fontFamily="sans-serif-black"
+                        android:letterSpacing="0.01"
+                        tools:text="Storage" />
+
+                    <TextView
+                        android:id="@+id/txtCategoryInlineCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textColor="@color/mobile_card_text_secondary"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-medium"
+                        tools:text="7 items" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/txtCategorySubtitle"
@@ -86,21 +107,20 @@
                     android:fontFamily="sans-serif-medium"
                     android:visibility="gone"
                     tools:text="4 items" />
-            </LinearLayout>
 
-            <!-- Collapsed item count pill badge -->
-            <TextView
-                android:id="@+id/txtCategoryCountPill"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="4dp"
-                android:textColor="@color/mobile_card_text_secondary"
-                android:textSize="12sp"
-                android:fontFamily="sans-serif-bold"
-                android:background="@drawable/bg_category_count_pill"
-                android:layout_marginEnd="10dp"
-                tools:text="6 items" />
+                <!-- Summary progress bar for collapsed Storage category -->
+                <ProgressBar
+                    android:id="@+id/progressCategoryStorage"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="6dp"
+                    android:progressDrawable="@drawable/bg_storage_progress_cyan"
+                    android:visibility="gone"
+                    tools:progress="55"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
 
             <!-- Edit Mode Delete Button (for custom categories) -->
             <ImageView
@@ -126,15 +146,15 @@
 
         </LinearLayout>
 
-        <!-- Nested Items Container -->
+        <!-- Seamless Nested Items Container -->
         <LinearLayout
             android:id="@+id/layoutCategoryItems"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="12dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="12dp"
+            android:paddingHorizontal="0dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="4dp"
             android:visibility="gone" />
 
     </LinearLayout>
