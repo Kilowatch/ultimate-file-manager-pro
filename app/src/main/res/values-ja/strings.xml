@@ -1762,8 +1762,26 @@ USBおよびローカルストレージドライブの名前を変更
     <string name="settings_section_appearance">
 外観とカスタマイズ
 </string>
+    <string name="settings_section_theme_display">
+テーマとディスプレイ
+</string>
+    <string name="settings_section_interface_animations">
+インターフェースの詳細とアニメーション
+</string>
     <string name="settings_section_file_management">
 ファイルの閲覧と管理
+</string>
+    <string name="settings_section_permissions_storage">
+権限とストレージへのアクセス
+</string>
+    <string name="settings_section_browsing_display">
+閲覧と表示
+</string>
+    <string name="settings_section_file_safety">
+ファイル操作と安全性
+</string>
+    <string name="settings_section_organization_tools">
+整理とファイルツール
 </string>
     <string name="settings_section_controls">
 操作とジェスチャー
@@ -1774,11 +1792,26 @@ USBおよびローカルストレージドライブの名前を変更
     <string name="settings_section_media_player">
 メディアプレーヤーと再生
 </string>
+    <string name="settings_section_media_playback">
+メディアの再生
+</string>
+    <string name="settings_section_player_controls">
+プレーヤーのコントロールとジェスチャー
+</string>
     <string name="settings_section_thumbnails">
 サムネイルとキャッシュ
 </string>
     <string name="settings_section_network_performance">
 ネットワークとパフォーマンス
+</string>
+    <string name="settings_section_transfers_downloads">
+転送とダウンロード
+</string>
+    <string name="settings_section_network_caching">
+ネットワークキャッシュとストリーミング
+</string>
+    <string name="settings_section_servers_indexing">
+サーバーとインデックス作成
 </string>
     <string name="settings_section_backup">
 バックアップと復元
@@ -1788,6 +1821,9 @@ USBおよびローカルストレージドライブの名前を変更
 </string>
     <string name="settings_section_accessibility">
 アクセシビリティ
+</string>
+    <string name="settings_section_security_app_lock">
+セキュリティとアプリロック
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

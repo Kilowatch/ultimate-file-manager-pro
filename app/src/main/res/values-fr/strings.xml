@@ -1762,8 +1762,26 @@ Général et interface
     <string name="settings_section_appearance">
 Apparence et personnalisation
 </string>
+    <string name="settings_section_theme_display">
+Thème et affichage
+</string>
+    <string name="settings_section_interface_animations">
+Détails de l\'interface et animations
+</string>
     <string name="settings_section_file_management">
 Navigation et gestion des fichiers
+</string>
+    <string name="settings_section_permissions_storage">
+Autorisations et accès au stockage
+</string>
+    <string name="settings_section_browsing_display">
+Navigation et affichage
+</string>
+    <string name="settings_section_file_safety">
+Opérations et sécurité des fichiers
+</string>
+    <string name="settings_section_organization_tools">
+Outils d\'organisation et de fichiers
 </string>
     <string name="settings_section_controls">
 Commandes et gestes
@@ -1774,11 +1792,26 @@ Double volet (double fenêtre)
     <string name="settings_section_media_player">
 Lecteur multimédia et lecture
 </string>
+    <string name="settings_section_media_playback">
+Lecture multimédia
+</string>
+    <string name="settings_section_player_controls">
+Commandes et gestes du joueur
+</string>
     <string name="settings_section_thumbnails">
 Vignettes et cache
 </string>
     <string name="settings_section_network_performance">
 Réseau et performances
+</string>
+    <string name="settings_section_transfers_downloads">
+Transferts et téléchargements
+</string>
+    <string name="settings_section_network_caching">
+Mise en cache réseau et streaming
+</string>
+    <string name="settings_section_servers_indexing">
+Serveurs et indexation
 </string>
     <string name="settings_section_backup">
 Sauvegarde et restauration
@@ -1788,6 +1821,9 @@ Confidentialité et diagnostics
 </string>
     <string name="settings_section_accessibility">
 Accessibilité
+</string>
+    <string name="settings_section_security_app_lock">
+Sécurité et verrouillage des applications
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

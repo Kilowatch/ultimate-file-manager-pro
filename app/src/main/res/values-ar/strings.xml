@@ -1762,8 +1762,26 @@ Ultimate File Manager Pro
     <string name="settings_section_appearance">
 المظهر والتخصيص
 </string>
+    <string name="settings_section_theme_display">
+الموضوع والعرض
+</string>
+    <string name="settings_section_interface_animations">
+تفاصيل الواجهة والرسوم المتحركة
+</string>
     <string name="settings_section_file_management">
 تصفح الملفات وإدارتها
+</string>
+    <string name="settings_section_permissions_storage">
+الأذونات والوصول إلى التخزين
+</string>
+    <string name="settings_section_browsing_display">
+التصفح والعرض
+</string>
+    <string name="settings_section_file_safety">
+عمليات الملفات والسلامة
+</string>
+    <string name="settings_section_organization_tools">
+أدوات التنظيم والملفات
 </string>
     <string name="settings_section_controls">
 عناصر التحكم والإيماءات
@@ -1774,11 +1792,26 @@ Ultimate File Manager Pro
     <string name="settings_section_media_player">
 مشغل الوسائط والتشغيل
 </string>
+    <string name="settings_section_media_playback">
+تشغيل الوسائط
+</string>
+    <string name="settings_section_player_controls">
+ضوابط اللاعب والإيماءات
+</string>
     <string name="settings_section_thumbnails">
 الصور المصغرة والتخزين المؤقت
 </string>
     <string name="settings_section_network_performance">
 الشبكة والأداء
+</string>
+    <string name="settings_section_transfers_downloads">
+التحويلات والتنزيلات
+</string>
+    <string name="settings_section_network_caching">
+التخزين المؤقت للشبكة والتدفق
+</string>
+    <string name="settings_section_servers_indexing">
+الخوادم والفهرسة
 </string>
     <string name="settings_section_backup">
 النسخ الاحتياطي والاستعادة
@@ -1788,6 +1821,9 @@ Ultimate File Manager Pro
 </string>
     <string name="settings_section_accessibility">
 إمكانية الوصول
+</string>
+    <string name="settings_section_security_app_lock">
+الأمن وقفل التطبيقات
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

@@ -1762,8 +1762,26 @@ Genel ve Arayüz
     <string name="settings_section_appearance">
 Görünüm ve Kişiselleştirme
 </string>
+    <string name="settings_section_theme_display">
+Tema ve Gösterim
+</string>
+    <string name="settings_section_interface_animations">
+Arayüz Detayları ve Animasyonlar
+</string>
     <string name="settings_section_file_management">
 Dosya Tarama ve Yönetimi
+</string>
+    <string name="settings_section_permissions_storage">
+İzinler ve Depolama Erişimi
+</string>
+    <string name="settings_section_browsing_display">
+Tarama ve Görüntüleme
+</string>
+    <string name="settings_section_file_safety">
+Dosya İşlemleri ve Güvenliği
+</string>
+    <string name="settings_section_organization_tools">
+Organizasyon ve Dosya Araçları
 </string>
     <string name="settings_section_controls">
 Kontroller ve Hareketler
@@ -1774,11 +1792,26 @@ Kontroller ve Hareketler
     <string name="settings_section_media_player">
 Medya Oynatıcı ve Oynatma
 </string>
+    <string name="settings_section_media_playback">
+Medya Oynatma
+</string>
+    <string name="settings_section_player_controls">
+Oyuncu Kontrolleri ve Hareketleri
+</string>
     <string name="settings_section_thumbnails">
 Küçük Resimler ve Önbellek
 </string>
     <string name="settings_section_network_performance">
 Ağ ve Performans
+</string>
+    <string name="settings_section_transfers_downloads">
+Aktarımlar ve İndirmeler
+</string>
+    <string name="settings_section_network_caching">
+Ağ Önbelleğe Alma ve Akış
+</string>
+    <string name="settings_section_servers_indexing">
+Sunucular ve Dizin Oluşturma
 </string>
     <string name="settings_section_backup">
 Yedekleme ve Geri Yükleme
@@ -1788,6 +1821,9 @@ Gizlilik ve Tanılama
 </string>
     <string name="settings_section_accessibility">
 Erişilebilirlik
+</string>
+    <string name="settings_section_security_app_lock">
+Güvenlik ve Uygulama Kilidi
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

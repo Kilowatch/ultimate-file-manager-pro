@@ -1762,8 +1762,26 @@ Ultimate File Manager Pro
     <string name="settings_section_appearance">
 Внешний вид и настройка
 </string>
+    <string name="settings_section_theme_display">
+Тема и отображение
+</string>
+    <string name="settings_section_interface_animations">
+Детали интерфейса и анимация
+</string>
     <string name="settings_section_file_management">
 Просмотр файлов и управление
+</string>
+    <string name="settings_section_permissions_storage">
+Разрешения и доступ к хранилищу
+</string>
+    <string name="settings_section_browsing_display">
+Просмотр и отображение
+</string>
+    <string name="settings_section_file_safety">
+Операции с файлами и безопасность
+</string>
+    <string name="settings_section_organization_tools">
+Инструменты организации и файлов
 </string>
     <string name="settings_section_controls">
 Управление и жесты
@@ -1774,11 +1792,26 @@ Ultimate File Manager Pro
     <string name="settings_section_media_player">
 Медиаплеер и воспроизведение
 </string>
+    <string name="settings_section_media_playback">
+Воспроизведение мультимедиа
+</string>
+    <string name="settings_section_player_controls">
+Управление игроком и жесты
+</string>
     <string name="settings_section_thumbnails">
 Миниатюры и кэширование
 </string>
     <string name="settings_section_network_performance">
 Сеть и производительность
+</string>
+    <string name="settings_section_transfers_downloads">
+Переносы и загрузки
+</string>
+    <string name="settings_section_network_caching">
+Сетевое кэширование и потоковая передача
+</string>
+    <string name="settings_section_servers_indexing">
+Серверы и индексирование
 </string>
     <string name="settings_section_backup">
 Резервное копирование и восстановление
@@ -1788,6 +1821,9 @@ Ultimate File Manager Pro
 </string>
     <string name="settings_section_accessibility">
 Специальные возможности
+</string>
+    <string name="settings_section_security_app_lock">
+Безопасность и блокировка приложений
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

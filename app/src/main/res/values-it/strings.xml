@@ -1758,8 +1758,26 @@ Generale e Interfaccia
     <string name="settings_section_appearance">
 Aspetto e aspetto Personalizzazione
 </string>
+    <string name="settings_section_theme_display">
+Tema e visualizzazione
+</string>
+    <string name="settings_section_interface_animations">
+Dettagli e animazioni dell\'interfaccia
+</string>
     <string name="settings_section_file_management">
 Esplorazione e gestione file
+</string>
+    <string name="settings_section_permissions_storage">
+Autorizzazioni e accesso allo spazio di archiviazione
+</string>
+    <string name="settings_section_browsing_display">
+Navigazione e visualizzazione
+</string>
+    <string name="settings_section_file_safety">
+Operazioni sui file e sicurezza
+</string>
+    <string name="settings_section_organization_tools">
+Strumenti di organizzazione e file
 </string>
     <string name="settings_section_controls">
 Controlli e funzionalità Gesti
@@ -1770,11 +1788,26 @@ Doppio riquadro (finestra doppia)
     <string name="settings_section_media_player">
 Lettore multimediale e Riproduzione
 </string>
+    <string name="settings_section_media_playback">
+Riproduzione multimediale
+</string>
+    <string name="settings_section_player_controls">
+Controlli e gesti del giocatore
+</string>
     <string name="settings_section_thumbnails">
 Miniature e cache
 </string>
     <string name="settings_section_network_performance">
 Rete e Prestazione
+</string>
+    <string name="settings_section_transfers_downloads">
+Trasferimenti e download
+</string>
+    <string name="settings_section_network_caching">
+Caching e streaming di rete
+</string>
+    <string name="settings_section_servers_indexing">
+Server e indicizzazione
 </string>
     <string name="settings_section_backup">Backup e Ripristino</string>
     <string name="settings_section_privacy_diagnostics">
@@ -1782,6 +1815,9 @@ Privacy e privacy Diagnostica
 </string>
     <string name="settings_section_accessibility">
 Accessibilità
+</string>
+    <string name="settings_section_security_app_lock">
+Sicurezza e blocco app
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

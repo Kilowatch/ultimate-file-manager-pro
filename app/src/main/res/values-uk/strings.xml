@@ -1762,8 +1762,26 @@ Ultimate File Manager Pro
     <string name="settings_section_appearance">
 Зовнішній вигляд та налаштування
 </string>
+    <string name="settings_section_theme_display">
+Тема та дисплей
+</string>
+    <string name="settings_section_interface_animations">
+Деталі інтерфейсу та анімація
+</string>
     <string name="settings_section_file_management">
 Перегляд та керування файлами
+</string>
+    <string name="settings_section_permissions_storage">
+Дозволи та доступ до сховища
+</string>
+    <string name="settings_section_browsing_display">
+Перегляд і відображення
+</string>
+    <string name="settings_section_file_safety">
+Файлові операції та безпека
+</string>
+    <string name="settings_section_organization_tools">
+Інструменти організації та файлів
 </string>
     <string name="settings_section_controls">
 Керування та жести
@@ -1774,11 +1792,26 @@ Ultimate File Manager Pro
     <string name="settings_section_media_player">
 Медіаплеєр та відтворення
 </string>
+    <string name="settings_section_media_playback">
+Відтворення медіа
+</string>
+    <string name="settings_section_player_controls">
+Елементи керування та жести гравця
+</string>
     <string name="settings_section_thumbnails">
 Мініатюри та кешування
 </string>
     <string name="settings_section_network_performance">
 Мережа та продуктивність
+</string>
+    <string name="settings_section_transfers_downloads">
+Передачі та завантаження
+</string>
+    <string name="settings_section_network_caching">
+Мережне кешування та потокове передавання
+</string>
+    <string name="settings_section_servers_indexing">
+Сервери та індексація
 </string>
     <string name="settings_section_backup">
 Резервне копіювання та відновлення
@@ -1788,6 +1821,9 @@ Ultimate File Manager Pro
 </string>
     <string name="settings_section_accessibility">
 Доступність
+</string>
+    <string name="settings_section_security_app_lock">
+Безпека та блокування програм
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

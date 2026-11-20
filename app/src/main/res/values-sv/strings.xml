@@ -1749,8 +1749,26 @@ Allmänt &amp; gränssnitt
     <string name="settings_section_appearance">
 Utseende &amp; anpassning
 </string>
+    <string name="settings_section_theme_display">
+Tema &amp; Display
+</string>
+    <string name="settings_section_interface_animations">
+Gränssnittsdetaljer &amp; animationer
+</string>
     <string name="settings_section_file_management">
 Filbläddring och hantering
+</string>
+    <string name="settings_section_permissions_storage">
+Behörigheter och lagringsåtkomst
+</string>
+    <string name="settings_section_browsing_display">
+Surfa och visa
+</string>
+    <string name="settings_section_file_safety">
+Fildrift och säkerhet
+</string>
+    <string name="settings_section_organization_tools">
+Organisations- och filverktyg
 </string>
     <string name="settings_section_controls">
 Kontroller och gester
@@ -1761,11 +1779,26 @@ Dubbla fönster (två fönster)
     <string name="settings_section_media_player">
 Mediaspelare och uppspelning
 </string>
+    <string name="settings_section_media_playback">
+Mediauppspelning
+</string>
+    <string name="settings_section_player_controls">
+Spelarkontroller och gester
+</string>
     <string name="settings_section_thumbnails">
 Miniatyrer och cachelagring
 </string>
     <string name="settings_section_network_performance">
 Nätverk och prestanda
+</string>
+    <string name="settings_section_transfers_downloads">
+Överföringar och nedladdningar
+</string>
+    <string name="settings_section_network_caching">
+Nätverkscache och streaming
+</string>
+    <string name="settings_section_servers_indexing">
+Servrar och indexering
 </string>
     <string name="settings_section_backup">
 Säkerhetskopiera och återställa
@@ -1775,6 +1808,9 @@ Sekretess och diagnostik
 </string>
     <string name="settings_section_accessibility">
 Tillgänglighet
+</string>
+    <string name="settings_section_security_app_lock">
+Säkerhet och applås
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

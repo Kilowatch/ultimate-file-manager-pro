@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.8] — 2026-11-20
 
 ### Changed
+- **Settings Hierarchy, Granular Groupings & Logical Sequencing (`activity_settings.xml`, `activity_settings_tv.xml`, `strings.xml`)**:
+  - Restructured monolithic settings sections into intuitive, bite-sized categories of 2 to 5 items each (e.g. splitting File Browsing into Permissions & Storage Access, Browsing & Display, File Operations & Safety, and Organization & File Tools; splitting Media Player into Media Playback and Player Controls & Gestures; splitting Network into Transfers & Downloads, Network Caching & Streaming, and Servers & Indexing).
+  - Re-sequenced settings top-to-bottom in a natural progression from visual/interaction setup, through core file operations and media, down to security, maintenance, and diagnostics.
+  - Symmetrically updated both Mobile and Android TV layouts while preserving in-page search filtering, card icons, and dynamic divider toggling.
 - **Modern Categorized View Expanded Category Redesign (`StorageAdapter`, `item_storage_category_group.xml`, `item_storage_nested_card.xml`)**:
   - Redesigned expanded category cards on mobile to integrate child tiles as seamless, borderless list rows inside a single unified 24dp glass card container matching `expanded.jpg`.
   - Added inset hairline dividers (~72dp start margin) separating consecutive child rows, along with trailing navigation chevrons.

@@ -175,6 +175,7 @@
             android:clipToPadding="false">
 
             <!-- layoutSectionGeneral -->
+                        <!-- layoutSectionGeneral -->
             <LinearLayout
                 android:id="@+id/layoutSectionGeneral"
                 android:layout_width="match_parent"
@@ -210,7 +211,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <LinearLayout
+
+<LinearLayout
                             android:id="@+id/cardSettingsSearch"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -266,7 +268,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardDefaultStartScreen"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -322,7 +324,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardLanguage"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -378,7 +380,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardDefaultApps"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -434,7 +436,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardMainMenuViewMode"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -489,19 +491,19 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- layoutSectionAppearance -->
+            <!-- layoutSectionThemeDisplay -->
             <LinearLayout
-                android:id="@+id/layoutSectionAppearance"
+                android:id="@+id/layoutSectionThemeDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginBottom="24dp">
 
                 <TextView
-                    android:id="@+id/headerAppearance"
+                    android:id="@+id/headerThemeDisplay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_section_appearance"
+                    android:text="@string/settings_section_theme_display"
                     android:textColor="@color/tv_accent"
                     android:textSize="14sp"
                     android:fontFamily="sans-serif-bold"
@@ -511,7 +513,7 @@
                     android:layout_marginBottom="10dp" />
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardGroupAppearance"
+                    android:id="@+id/cardGroupThemeDisplay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
@@ -525,7 +527,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <LinearLayout
+
+<LinearLayout
                             android:id="@+id/cardAppearance"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -581,7 +584,97 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
+                            android:id="@+id/cardFontSize"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_font_size"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    android:contentDescription="@string/font_size_title" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/font_size_title_row"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:id="@+id/txtFontSizeSubtitle"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/font_size_normal"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <ImageView
+                                                    android:layout_width="24dp"
+                                                    android:layout_height="24dp"
+                                                    android:src="@drawable/ic_arrow_down"
+                                                    android:rotation="-90"
+                                                    android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- layoutSectionInterfaceAnimations -->
+            <LinearLayout
+                android:id="@+id/layoutSectionInterfaceAnimations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/headerInterfaceAnimations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_interface_animations"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="10dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGroupInterfaceAnimations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:cardCornerRadius="@dimen/card_radius_lg"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+<LinearLayout
                             android:id="@+id/cardIcons"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -637,7 +730,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardDefaultIconColors"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -693,61 +786,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardFontSize"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_font_size"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    android:contentDescription="@string/font_size_title" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/font_size_title_row"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:id="@+id/txtFontSizeSubtitle"
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/font_size_normal"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <ImageView
-                                                    android:layout_width="24dp"
-                                                    android:layout_height="24dp"
-                                                    android:src="@drawable/ic_arrow_down"
-                                                    android:rotation="-90"
-                                                    android:contentDescription="@null" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardScrollingText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -803,7 +842,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardGridIndicators"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -859,7 +898,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardGridTextPosition"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -914,686 +953,6 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- layoutSectionFileManagement -->
-            <LinearLayout
-                android:id="@+id/layoutSectionFileManagement"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="24dp">
-
-                <TextView
-                    android:id="@+id/headerFileManagement"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_section_file_management"
-                    android:textColor="@color/tv_accent"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif-bold"
-                    android:letterSpacing="0.08"
-                    android:textAllCaps="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginBottom="10dp" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardGroupFileManagement"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    app:cardBackgroundColor="@color/tv_glass_white_10"
-                    app:cardCornerRadius="@dimen/card_radius_lg"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="2dp"
-                    app:strokeColor="@color/tv_glass_border">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <LinearLayout
-                            android:id="@+id/cardHiddenFiles"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_eye"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    android:contentDescription="@string/show_hidden_files_1" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/show_hidden_files"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:id="@+id/txtHiddenFilesSubtitle"
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/hidden_files_are_not_visible"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <com.google.android.material.switchmaterial.SwitchMaterial
-                                                    android:id="@+id/switchHiddenFiles"
-                                                    android:layout_width="wrap_content"
-                                                    android:layout_height="wrap_content"
-                                                    android:checked="false"
-                                                    android:clickable="false"
-                                                    android:focusable="false" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-
-                        <!-- Flat View Settings Card -->
-                        <LinearLayout
-                            android:id="@+id/cardFlatView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:src="@drawable/ic_flat_view"
-                                android:layout_marginEnd="@dimen/margin_lg"
-                                app:tint="@color/tv_accent"
-                                android:contentDescription="@null" />
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/flat_view_settings_title"
-                                    android:textColor="@color/tv_text_primary"
-                                    android:textSize="22sp"
-                                    android:fontFamily="sans-serif-medium" />
-                                <TextView
-                                    android:id="@+id/txtFlatViewSubtitle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/flat_view_settings_desc"
-                                    android:textColor="@color/tv_text_secondary"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_chevron_right"
-                                app:tint="@color/tv_text_secondary"
-                                android:contentDescription="@null" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardRecycleBin"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_delete"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    android:contentDescription="@string/settings_recycle_bin" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_recycle_bin"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:id="@+id/txtRecycleBinSubtitle"
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_recycle_bin_summary"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <com.google.android.material.switchmaterial.SwitchMaterial
-                                                    android:id="@+id/switchRecycleBin"
-                                                    android:layout_width="wrap_content"
-                                                    android:layout_height="wrap_content"
-                                                    android:checked="false"
-                                                    android:clickable="false"
-                                                    android:focusable="false" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardFavorites"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_star"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    android:contentDescription="@string/settings_favorites_title" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_favorites_title"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_favorites_subtitle"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <ImageView
-                                                    android:layout_width="24dp"
-                                                    android:layout_height="24dp"
-                                                    android:src="@drawable/ic_arrow_down"
-                                                    android:rotation="-90"
-                                                    android:contentDescription="@null" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardFolderSort"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_sort"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    android:contentDescription="@string/settings_folder_sort_title" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_folder_sort_title"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_folder_sort_subtitle"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <ImageView
-                                                    android:layout_width="24dp"
-                                                    android:layout_height="24dp"
-                                                    android:src="@drawable/ic_arrow_down"
-                                                    android:rotation="-90"
-                                                    android:contentDescription="@null" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardStorageRename"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_edit"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    app:tint="@color/tv_icon_tint"
-                                                    android:contentDescription="@string/settings_storage_rename_title" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_storage_rename_title"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_storage_rename_subtitle"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <ImageView
-                                                    android:layout_width="24dp"
-                                                    android:layout_height="24dp"
-                                                    android:src="@drawable/ic_arrow_down"
-                                                    android:rotation="-90"
-                                                    app:tint="@color/tv_text_secondary"
-                                                    android:contentDescription="@null" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardDuplicateRetention"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_duplicate"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    android:contentDescription="@string/settings_duplicate_retention_title" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_duplicate_retention_title"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:id="@+id/txtDuplicateRetentionSubtitle"
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_duplicate_retention_summary_oldest"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <ImageView
-                                                    android:layout_width="24dp"
-                                                    android:layout_height="24dp"
-                                                    android:src="@drawable/ic_arrow_down"
-                                                    android:rotation="-90"
-                                                    android:contentDescription="@null" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardApkExtract"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_file_apk"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    app:tint="@color/tv_icon_tint"
-                                                    android:contentDescription="@string/settings_apk_extract_title" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_apk_extract_title"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:id="@+id/txtApkExtractSubtitle"
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_apk_extract_subtitle_off"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <ImageView
-                                                    android:layout_width="24dp"
-                                                    android:layout_height="24dp"
-                                                    android:src="@drawable/ic_arrow_down"
-                                                    android:rotation="-90"
-                                                    app:tint="@color/tv_text_secondary"
-                                                    android:contentDescription="@null" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardSearchResultsLimit"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:src="@drawable/ic_search"
-                                android:layout_marginEnd="@dimen/margin_lg"
-                                app:tint="@color/tv_icon_tint"
-                                android:contentDescription="@string/settings_search_limit_title" />
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/settings_search_limit_title"
-                                    android:textColor="@color/tv_text_primary"
-                                    android:textSize="22sp"
-                                    android:fontFamily="sans-serif-medium" />
-
-                                <TextView
-                                    android:id="@+id/txtSearchResultsLimitSubtitle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/settings_search_limit_500"
-                                    android:textColor="@color/tv_text_secondary"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
-
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_arrow_down"
-                                android:rotation="-90"
-                                app:tint="@color/tv_text_secondary"
-                                android:contentDescription="@null" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
-
-            <!-- layoutSectionSafTransfers -->
-            <LinearLayout
-                android:id="@+id/layoutSectionSafTransfers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="24dp">
-
-                <TextView
-                    android:id="@+id/headerSafTransfers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_section_saf_transfers"
-                    android:textColor="@color/tv_accent"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif-bold"
-                    android:letterSpacing="0.08"
-                    android:textAllCaps="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginBottom="10dp" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardGroupSafTransfers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="@dimen/card_radius_lg"
-                    app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/tv_glass_white_10"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/tv_glass_border">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <!-- Item 1: SAF Picked File Action -->
-                        <LinearLayout
-                            android:id="@+id/cardSafFileAction"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-
-                            <ImageView
-                                android:id="@+id/iconSafFileAction"
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:src="@drawable/ic_cloud"
-                                android:layout_marginEnd="@dimen/margin_lg"
-                                app:tint="@color/tv_icon_tint"
-                                android:contentDescription="@string/settings_saf_file_action_title" />
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/settings_saf_file_action_title"
-                                    android:textColor="@color/tv_text_primary"
-                                    android:textSize="18sp"
-                                    android:fontFamily="sans-serif-medium" />
-
-                                <TextView
-                                    android:id="@+id/txtSafFileActionSubtitle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/settings_saf_file_action_subtitle_always_ask"
-                                    android:textColor="@color/tv_text_secondary"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
-
-                            <ImageView
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
-                                android:src="@drawable/ic_chevron_right"
-                                app:tint="@color/tv_text_secondary"
-                                android:contentDescription="@null" />
-                        </LinearLayout>
-
-                        <!-- Divider -->
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="76dp"
-                            android:background="@color/tv_glass_border" />
-
-                        <!-- Item 2: Copy Destination Folder -->
-                        <LinearLayout
-                            android:id="@+id/cardSafCopyDestination"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-
-                            <ImageView
-                                android:id="@+id/iconSafCopyDestination"
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:src="@drawable/ic_download"
-                                android:layout_marginEnd="@dimen/margin_lg"
-                                app:tint="@color/tv_icon_tint"
-                                android:contentDescription="@string/settings_saf_copy_destination_title" />
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/settings_saf_copy_destination_title"
-                                    android:textColor="@color/tv_text_primary"
-                                    android:textSize="18sp"
-                                    android:fontFamily="sans-serif-medium" />
-
-                                <TextView
-                                    android:id="@+id/txtSafCopyDestinationSubtitle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/saf_copy_destination_title"
-                                    android:textColor="@color/tv_text_secondary"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
-
-                            <ImageView
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
-                                android:src="@drawable/ic_chevron_right"
-                                app:tint="@color/tv_text_secondary"
-                                android:contentDescription="@null" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
-
             <!-- layoutSectionControls -->
             <LinearLayout
                 android:id="@+id/layoutSectionControls"
@@ -1630,7 +989,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <LinearLayout
+
+<LinearLayout
                             android:id="@+id/cardLongPressDuration"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -1686,7 +1046,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardToolbarIcons"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -1733,7 +1093,6 @@
                                                     android:src="@drawable/ic_arrow_down"
                                                     app:tint="@color/tv_icon_tint" />
                         </LinearLayout>
-
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -1774,7 +1133,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <LinearLayout
+
+<LinearLayout
                             android:id="@+id/cardTwinWindowLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -1830,7 +1190,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardTwinWindowStartup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -1885,19 +1245,19 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- layoutSectionMediaPlayer -->
+            <!-- layoutSectionBrowsingDisplay -->
             <LinearLayout
-                android:id="@+id/layoutSectionMediaPlayer"
+                android:id="@+id/layoutSectionBrowsingDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginBottom="24dp">
 
                 <TextView
-                    android:id="@+id/headerMediaPlayer"
+                    android:id="@+id/headerBrowsingDisplay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_section_media_player"
+                    android:text="@string/settings_section_browsing_display"
                     android:textColor="@color/tv_accent"
                     android:textSize="14sp"
                     android:fontFamily="sans-serif-bold"
@@ -1907,7 +1267,7 @@
                     android:layout_marginBottom="10dp" />
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardGroupMediaPlayer"
+                    android:id="@+id/cardGroupBrowsingDisplay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
@@ -1921,8 +1281,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <LinearLayout
-                            android:id="@+id/cardSideBySideVideo"
+
+<LinearLayout
+                            android:id="@+id/cardHiddenFiles"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
@@ -1936,10 +1297,9 @@
                             <ImageView
                                                     android:layout_width="36dp"
                                                     android:layout_height="36dp"
-                                                    android:src="@drawable/ic_play"
+                                                    android:src="@drawable/ic_eye"
                                                     android:layout_marginEnd="@dimen/margin_lg"
-                                                    app:tint="@color/tv_icon_tint"
-                                                    android:contentDescription="@string/settings_side_by_side_video_title" />
+                                                    android:contentDescription="@string/show_hidden_files_1" />
 
                                                 <LinearLayout
                                                     android:layout_width="0dp"
@@ -1950,22 +1310,22 @@
                                                     <TextView
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
-                                                        android:text="@string/settings_side_by_side_video_title"
+                                                        android:text="@string/show_hidden_files"
                                                         android:textColor="@color/tv_text_primary"
                                                         android:textSize="22sp"
                                                         android:fontFamily="sans-serif-medium" />
 
                                                     <TextView
-                                                        android:id="@+id/txtSideBySideVideoSubtitle"
+                                                        android:id="@+id/txtHiddenFilesSubtitle"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
-                                                        android:text="@string/settings_side_by_side_video_subtitle_off"
+                                                        android:text="@string/hidden_files_are_not_visible"
                                                         android:textColor="@color/tv_text_secondary"
                                                         android:textSize="14sp" />
                                                 </LinearLayout>
 
                                                 <com.google.android.material.switchmaterial.SwitchMaterial
-                                                    android:id="@+id/switchSideBySideVideo"
+                                                    android:id="@+id/switchHiddenFiles"
                                                     android:layout_width="wrap_content"
                                                     android:layout_height="wrap_content"
                                                     android:checked="false"
@@ -1977,120 +1337,8 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardSideBySideVideoShowControlsOnRepeat"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_repeat"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    app:tint="@color/tv_icon_tint"
-                                                    android:contentDescription="@string/settings_side_by_side_video_show_controls_on_repeat_title" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_side_by_side_video_show_controls_on_repeat_title"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:id="@+id/txtSideBySideVideoShowControlsOnRepeatSubtitle"
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_side_by_side_video_show_controls_on_repeat_subtitle_off"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <com.google.android.material.switchmaterial.SwitchMaterial
-                                                    android:id="@+id/switchSideBySideVideoShowControlsOnRepeat"
-                                                    android:layout_width="wrap_content"
-                                                    android:layout_height="wrap_content"
-                                                    android:checked="false"
-                                                    android:clickable="false"
-                                                    android:focusable="false" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardAutoplayNext"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_play"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    app:tint="@color/tv_icon_tint"
-                                                    android:contentDescription="@string/settings_autoplay_next_title" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_autoplay_next_title"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:id="@+id/txtAutoplayNextSubtitle"
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_autoplay_next_subtitle_on"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <com.google.android.material.switchmaterial.SwitchMaterial
-                                                    android:id="@+id/switchAutoplayNext"
-                                                    android:layout_width="wrap_content"
-                                                    android:layout_height="wrap_content"
-                                                    android:checked="true"
-                                                    android:clickable="false"
-                                                    android:focusable="false" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardPlayerButtonToasts"
+<LinearLayout
+                            android:id="@+id/cardFlatView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
@@ -2104,49 +1352,44 @@
                             <ImageView
                                 android:layout_width="36dp"
                                 android:layout_height="36dp"
-                                android:src="@drawable/ic_notifications"
+                                android:src="@drawable/ic_flat_view"
                                 android:layout_marginEnd="@dimen/margin_lg"
-                                app:tint="@color/tv_icon_tint"
-                                android:contentDescription="@string/pref_player_button_toasts_title" />
-
+                                app:tint="@color/tv_accent"
+                                android:contentDescription="@null" />
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
-
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/pref_player_button_toasts_title"
+                                    android:text="@string/flat_view_settings_title"
                                     android:textColor="@color/tv_text_primary"
                                     android:textSize="22sp"
                                     android:fontFamily="sans-serif-medium" />
-
                                 <TextView
-                                    android:id="@+id/txtPlayerButtonToastsSubtitle"
+                                    android:id="@+id/txtFlatViewSubtitle"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/settings_player_toasts_subtitle_off"
+                                    android:text="@string/flat_view_settings_desc"
                                     android:textColor="@color/tv_text_secondary"
                                     android:textSize="14sp" />
                             </LinearLayout>
-
-                            <com.google.android.material.switchmaterial.SwitchMaterial
-                                android:id="@+id/switchPlayerButtonToasts"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:checked="false"
-                                android:clickable="false"
-                                android:focusable="false" />
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/tv_text_secondary"
+                                android:contentDescription="@null" />
                         </LinearLayout>
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardSkipLength"
+<LinearLayout
+                            android:id="@+id/cardFolderSort"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
@@ -2160,10 +1403,9 @@
                             <ImageView
                                                     android:layout_width="36dp"
                                                     android:layout_height="36dp"
-                                                    android:src="@drawable/ic_skip_forward"
+                                                    android:src="@drawable/ic_sort"
                                                     android:layout_marginEnd="@dimen/margin_lg"
-                                                    app:tint="@color/tv_icon_tint"
-                                                    android:contentDescription="@string/settings_skip_length_title" />
+                                                    android:contentDescription="@string/settings_folder_sort_title" />
 
                                                 <LinearLayout
                                                     android:layout_width="0dp"
@@ -2174,16 +1416,15 @@
                                                     <TextView
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
-                                                        android:text="@string/settings_skip_length_title"
+                                                        android:text="@string/settings_folder_sort_title"
                                                         android:textColor="@color/tv_text_primary"
                                                         android:textSize="22sp"
                                                         android:fontFamily="sans-serif-medium" />
 
                                                     <TextView
-                                                        android:id="@+id/txtSkipLengthSubtitle"
                                                         android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
-                                                        android:text="@string/skip_length_option_10s"
+                                                        android:text="@string/settings_folder_sort_subtitle"
                                                         android:textColor="@color/tv_text_secondary"
                                                         android:textSize="14sp" />
                                                 </LinearLayout>
@@ -2193,7 +1434,6 @@
                                                     android:layout_height="24dp"
                                                     android:src="@drawable/ic_arrow_down"
                                                     android:rotation="-90"
-                                                    app:tint="@color/tv_text_secondary"
                                                     android:contentDescription="@null" />
                         </LinearLayout>
                         <View
@@ -2201,64 +1441,8 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardControlsTimeout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_controls_timeout"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    app:tint="@color/tv_icon_tint"
-                                                    android:contentDescription="@string/settings_controls_timeout_title" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/settings_controls_timeout_title"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:id="@+id/txtControlsTimeoutSubtitle"
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="3.0 s"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <ImageView
-                                                    android:layout_width="24dp"
-                                                    android:layout_height="24dp"
-                                                    android:src="@drawable/ic_arrow_down"
-                                                    android:rotation="-90"
-                                                    app:tint="@color/tv_text_secondary"
-                                                    android:contentDescription="@null" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardSubtitleStyle"
+<LinearLayout
+                            android:id="@+id/cardSearchResultsLimit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
@@ -2272,10 +1456,10 @@
                             <ImageView
                                 android:layout_width="36dp"
                                 android:layout_height="36dp"
-                                android:src="@drawable/ic_subtitles"
+                                android:src="@drawable/ic_search"
                                 android:layout_marginEnd="@dimen/margin_lg"
                                 app:tint="@color/tv_icon_tint"
-                                android:contentDescription="@string/settings_subtitle_style_title" />
+                                android:contentDescription="@string/settings_search_limit_title" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -2286,16 +1470,16 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/settings_subtitle_style_title"
+                                    android:text="@string/settings_search_limit_title"
                                     android:textColor="@color/tv_text_primary"
                                     android:textSize="22sp"
                                     android:fontFamily="sans-serif-medium" />
 
                                 <TextView
-                                    android:id="@+id/txtSubtitleStyleSubtitle"
+                                    android:id="@+id/txtSearchResultsLimitSubtitle"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/subtitle_style_summary_system"
+                                    android:text="@string/settings_search_limit_500"
                                     android:textColor="@color/tv_text_secondary"
                                     android:textSize="14sp" />
                             </LinearLayout>
@@ -2305,6 +1489,501 @@
                                 android:layout_height="24dp"
                                 android:src="@drawable/ic_arrow_down"
                                 android:rotation="-90"
+                                app:tint="@color/tv_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- layoutSectionFileSafety -->
+            <LinearLayout
+                android:id="@+id/layoutSectionFileSafety"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/headerFileSafety"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_file_safety"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="10dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGroupFileSafety"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:cardCornerRadius="@dimen/card_radius_lg"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+<LinearLayout
+                            android:id="@+id/cardRecycleBin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_delete"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    android:contentDescription="@string/settings_recycle_bin" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_recycle_bin"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:id="@+id/txtRecycleBinSubtitle"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_recycle_bin_summary"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <com.google.android.material.switchmaterial.SwitchMaterial
+                                                    android:id="@+id/switchRecycleBin"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:checked="false"
+                                                    android:clickable="false"
+                                                    android:focusable="false" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/tv_glass_border" />
+<LinearLayout
+                            android:id="@+id/cardDuplicateRetention"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_duplicate"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    android:contentDescription="@string/settings_duplicate_retention_title" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_duplicate_retention_title"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:id="@+id/txtDuplicateRetentionSubtitle"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_duplicate_retention_summary_oldest"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <ImageView
+                                                    android:layout_width="24dp"
+                                                    android:layout_height="24dp"
+                                                    android:src="@drawable/ic_arrow_down"
+                                                    android:rotation="-90"
+                                                    android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- layoutSectionOrganizationTools -->
+            <LinearLayout
+                android:id="@+id/layoutSectionOrganizationTools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/headerOrganizationTools"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_organization_tools"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="10dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGroupOrganizationTools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:cardCornerRadius="@dimen/card_radius_lg"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+<LinearLayout
+                            android:id="@+id/cardFavorites"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_star"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    android:contentDescription="@string/settings_favorites_title" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_favorites_title"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_favorites_subtitle"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <ImageView
+                                                    android:layout_width="24dp"
+                                                    android:layout_height="24dp"
+                                                    android:src="@drawable/ic_arrow_down"
+                                                    android:rotation="-90"
+                                                    android:contentDescription="@null" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/tv_glass_border" />
+<LinearLayout
+                            android:id="@+id/cardStorageRename"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_edit"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    app:tint="@color/tv_icon_tint"
+                                                    android:contentDescription="@string/settings_storage_rename_title" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_storage_rename_title"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_storage_rename_subtitle"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <ImageView
+                                                    android:layout_width="24dp"
+                                                    android:layout_height="24dp"
+                                                    android:src="@drawable/ic_arrow_down"
+                                                    android:rotation="-90"
+                                                    app:tint="@color/tv_text_secondary"
+                                                    android:contentDescription="@null" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/tv_glass_border" />
+<LinearLayout
+                            android:id="@+id/cardApkExtract"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_file_apk"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    app:tint="@color/tv_icon_tint"
+                                                    android:contentDescription="@string/settings_apk_extract_title" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_apk_extract_title"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:id="@+id/txtApkExtractSubtitle"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_apk_extract_subtitle_off"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <ImageView
+                                                    android:layout_width="24dp"
+                                                    android:layout_height="24dp"
+                                                    android:src="@drawable/ic_arrow_down"
+                                                    android:rotation="-90"
+                                                    app:tint="@color/tv_text_secondary"
+                                                    android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- layoutSectionSafTransfers -->
+            <LinearLayout
+                android:id="@+id/layoutSectionSafTransfers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/headerSafTransfers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_saf_transfers"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="10dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGroupSafTransfers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:cardCornerRadius="@dimen/card_radius_lg"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+<LinearLayout
+                            android:id="@+id/cardSafFileAction"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+
+                            <ImageView
+                                android:id="@+id/iconSafFileAction"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:src="@drawable/ic_cloud"
+                                android:layout_marginEnd="@dimen/margin_lg"
+                                app:tint="@color/tv_icon_tint"
+                                android:contentDescription="@string/settings_saf_file_action_title" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_saf_file_action_title"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="18sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtSafFileActionSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_saf_file_action_subtitle_always_ask"
+                                    android:textColor="@color/tv_text_secondary"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/tv_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/tv_glass_border" />
+<LinearLayout
+                            android:id="@+id/cardSafCopyDestination"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+
+                            <ImageView
+                                android:id="@+id/iconSafCopyDestination"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:src="@drawable/ic_download"
+                                android:layout_marginEnd="@dimen/margin_lg"
+                                app:tint="@color/tv_icon_tint"
+                                android:contentDescription="@string/settings_saf_copy_destination_title" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_saf_copy_destination_title"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="18sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtSafCopyDestinationSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/saf_copy_destination_title"
+                                    android:textColor="@color/tv_text_secondary"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_chevron_right"
                                 app:tint="@color/tv_text_secondary"
                                 android:contentDescription="@null" />
                         </LinearLayout>
@@ -2348,7 +2027,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <LinearLayout
+
+<LinearLayout
                             android:id="@+id/cardMediaThumbnails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -2404,7 +2084,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardVideoThumbnailTime"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -2460,7 +2140,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardNetworkThumbnails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -2515,19 +2195,19 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- layoutSectionNetworkPerformance -->
+            <!-- layoutSectionMediaPlayback -->
             <LinearLayout
-                android:id="@+id/layoutSectionNetworkPerformance"
+                android:id="@+id/layoutSectionMediaPlayback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginBottom="24dp">
 
                 <TextView
-                    android:id="@+id/headerNetworkPerformance"
+                    android:id="@+id/headerMediaPlayback"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_section_network_performance"
+                    android:text="@string/settings_section_media_playback"
                     android:textColor="@color/tv_accent"
                     android:textSize="14sp"
                     android:fontFamily="sans-serif-bold"
@@ -2537,7 +2217,7 @@
                     android:layout_marginBottom="10dp" />
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardGroupNetworkPerformance"
+                    android:id="@+id/cardGroupMediaPlayback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="false"
@@ -2551,7 +2231,472 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <LinearLayout
+
+<LinearLayout
+                            android:id="@+id/cardSideBySideVideo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_play"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    app:tint="@color/tv_icon_tint"
+                                                    android:contentDescription="@string/settings_side_by_side_video_title" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_side_by_side_video_title"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:id="@+id/txtSideBySideVideoSubtitle"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_side_by_side_video_subtitle_off"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <com.google.android.material.switchmaterial.SwitchMaterial
+                                                    android:id="@+id/switchSideBySideVideo"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:checked="false"
+                                                    android:clickable="false"
+                                                    android:focusable="false" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/tv_glass_border" />
+<LinearLayout
+                            android:id="@+id/cardSideBySideVideoShowControlsOnRepeat"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_repeat"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    app:tint="@color/tv_icon_tint"
+                                                    android:contentDescription="@string/settings_side_by_side_video_show_controls_on_repeat_title" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_side_by_side_video_show_controls_on_repeat_title"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:id="@+id/txtSideBySideVideoShowControlsOnRepeatSubtitle"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_side_by_side_video_show_controls_on_repeat_subtitle_off"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <com.google.android.material.switchmaterial.SwitchMaterial
+                                                    android:id="@+id/switchSideBySideVideoShowControlsOnRepeat"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:checked="false"
+                                                    android:clickable="false"
+                                                    android:focusable="false" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/tv_glass_border" />
+<LinearLayout
+                            android:id="@+id/cardAutoplayNext"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_play"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    app:tint="@color/tv_icon_tint"
+                                                    android:contentDescription="@string/settings_autoplay_next_title" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_autoplay_next_title"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:id="@+id/txtAutoplayNextSubtitle"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_autoplay_next_subtitle_on"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <com.google.android.material.switchmaterial.SwitchMaterial
+                                                    android:id="@+id/switchAutoplayNext"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:checked="true"
+                                                    android:clickable="false"
+                                                    android:focusable="false" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- layoutSectionPlayerControls -->
+            <LinearLayout
+                android:id="@+id/layoutSectionPlayerControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/headerPlayerControls"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_player_controls"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="10dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGroupPlayerControls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:cardCornerRadius="@dimen/card_radius_lg"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+<LinearLayout
+                            android:id="@+id/cardPlayerButtonToasts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:src="@drawable/ic_notifications"
+                                android:layout_marginEnd="@dimen/margin_lg"
+                                app:tint="@color/tv_icon_tint"
+                                android:contentDescription="@string/pref_player_button_toasts_title" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/pref_player_button_toasts_title"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="22sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtPlayerButtonToastsSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_player_toasts_subtitle_off"
+                                    android:textColor="@color/tv_text_secondary"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchPlayerButtonToasts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:clickable="false"
+                                android:focusable="false" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/tv_glass_border" />
+<LinearLayout
+                            android:id="@+id/cardSkipLength"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_skip_forward"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    app:tint="@color/tv_icon_tint"
+                                                    android:contentDescription="@string/settings_skip_length_title" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_skip_length_title"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:id="@+id/txtSkipLengthSubtitle"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/skip_length_option_10s"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <ImageView
+                                                    android:layout_width="24dp"
+                                                    android:layout_height="24dp"
+                                                    android:src="@drawable/ic_arrow_down"
+                                                    android:rotation="-90"
+                                                    app:tint="@color/tv_text_secondary"
+                                                    android:contentDescription="@null" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/tv_glass_border" />
+<LinearLayout
+                            android:id="@+id/cardControlsTimeout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_controls_timeout"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    app:tint="@color/tv_icon_tint"
+                                                    android:contentDescription="@string/settings_controls_timeout_title" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/settings_controls_timeout_title"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:id="@+id/txtControlsTimeoutSubtitle"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="3.0 s"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <ImageView
+                                                    android:layout_width="24dp"
+                                                    android:layout_height="24dp"
+                                                    android:src="@drawable/ic_arrow_down"
+                                                    android:rotation="-90"
+                                                    app:tint="@color/tv_text_secondary"
+                                                    android:contentDescription="@null" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
+                            android:background="@color/tv_glass_border" />
+<LinearLayout
+                            android:id="@+id/cardSubtitleStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:src="@drawable/ic_subtitles"
+                                android:layout_marginEnd="@dimen/margin_lg"
+                                app:tint="@color/tv_icon_tint"
+                                android:contentDescription="@string/settings_subtitle_style_title" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_subtitle_style_title"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="22sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtSubtitleStyleSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/subtitle_style_summary_system"
+                                    android:textColor="@color/tv_text_secondary"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_arrow_down"
+                                android:rotation="-90"
+                                app:tint="@color/tv_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- layoutSectionTransfersDownloads -->
+            <LinearLayout
+                android:id="@+id/layoutSectionTransfersDownloads"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/headerTransfersDownloads"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_transfers_downloads"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="10dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGroupTransfersDownloads"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:cardCornerRadius="@dimen/card_radius_lg"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+<LinearLayout
                             android:id="@+id/cardQuickTransfer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -2623,7 +2768,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardDownloadManager"
                             android:layout_width="match_parent"
                             android:layout_height="88dp"
@@ -2679,7 +2824,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardCacheCopy"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -2751,7 +2896,98 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
+                            android:id="@+id/cardNetworkTransferThreads"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@drawable/selector_tv_card">
+
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:src="@drawable/ic_lightning"
+                                android:layout_marginEnd="@dimen/margin_lg"
+                                app:tint="@color/tv_icon_tint"
+                                android:contentDescription="@string/settings_network_transfer_threads_title" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_network_transfer_threads_title"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="22sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtNetworkTransferThreadsSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/tv_text_secondary"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_chevron_right"
+                                app:tint="@color/tv_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- layoutSectionNetworkCaching -->
+            <LinearLayout
+                android:id="@+id/layoutSectionNetworkCaching"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/headerNetworkCaching"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_network_caching"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="10dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGroupNetworkCaching"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:cardCornerRadius="@dimen/card_radius_lg"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+<LinearLayout
                             android:id="@+id/cardNetworkOpenCache"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -2807,7 +3043,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardNetworkMediaProcessCache"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -2858,67 +3094,48 @@
                                 android:clickable="false"
                                 android:focusable="false" />
                         </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
-                            android:id="@+id/cardNetworkTransferThreads"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@drawable/selector_tv_card">
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
-                            <ImageView
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:src="@drawable/ic_lightning"
-                                android:layout_marginEnd="@dimen/margin_lg"
-                                app:tint="@color/tv_icon_tint"
-                                android:contentDescription="@string/settings_network_transfer_threads_title" />
+            <!-- layoutSectionServersIndexing -->
+            <LinearLayout
+                android:id="@+id/layoutSectionServersIndexing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
 
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/headerServersIndexing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_servers_indexing"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="10dp" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/settings_network_transfer_threads_title"
-                                    android:textColor="@color/tv_text_primary"
-                                    android:textSize="22sp"
-                                    android:fontFamily="sans-serif-medium" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGroupServersIndexing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:cardCornerRadius="@dimen/card_radius_lg"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/tv_glass_border">
 
-                                <TextView
-                                    android:id="@+id/txtNetworkTransferThreadsSubtitle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/tv_text_secondary"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                            <ImageView
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
-                                android:src="@drawable/ic_chevron_right"
-                                app:tint="@color/tv_text_secondary"
-                                android:contentDescription="@null" />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginStart="72dp"
-                            android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardTvBackgroundServer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -2975,7 +3192,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardDbViewer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -3023,7 +3240,97 @@
                                                     android:rotation="-90"
                                                     android:contentDescription="@null" />
                         </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
+            <!-- layoutSectionAccessibility -->
+            <LinearLayout
+                android:id="@+id/layoutSectionAccessibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:id="@+id/headerAccessibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_accessibility"
+                    android:textColor="@color/tv_accent"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginBottom="10dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGroupAccessibility"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:cardCornerRadius="@dimen/card_radius_lg"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+<LinearLayout
+                            android:id="@+id/cardColorblind"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="@android:color/transparent">
+                            <ImageView
+                                                    android:layout_width="36dp"
+                                                    android:layout_height="36dp"
+                                                    android:src="@drawable/ic_colorblind"
+                                                    android:layout_marginEnd="@dimen/margin_lg"
+                                                    app:tint="@color/tv_icon_tint"
+                                                    android:contentDescription="@string/colorblind_title" />
+
+                                                <LinearLayout
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_weight="1"
+                                                    android:orientation="vertical">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/colorblind_title"
+                                                        android:textColor="@color/tv_text_primary"
+                                                        android:textSize="22sp"
+                                                        android:fontFamily="sans-serif-medium" />
+
+                                                    <TextView
+                                                        android:id="@+id/txtColorblindSubtitle"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/colorblind_subtitle_off"
+                                                        android:textColor="@color/tv_text_secondary"
+                                                        android:textSize="14sp" />
+                                                </LinearLayout>
+
+                                                <ImageView
+                                                    android:layout_width="24dp"
+                                                    android:layout_height="24dp"
+                                                    android:src="@drawable/ic_arrow_down"
+                                                    android:rotation="-90"
+                                                    android:contentDescription="@null" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -3064,7 +3371,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <LinearLayout
+
+<LinearLayout
                             android:id="@+id/cardBackupRestore"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -3120,7 +3428,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardAutoBackup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -3210,7 +3518,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <LinearLayout
+
+<LinearLayout
                             android:id="@+id/cardTipJarPopup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -3265,7 +3574,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardAnalytics"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -3320,7 +3629,7 @@
                             android:layout_height="1dp"
                             android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardCrashReport"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -3374,9 +3683,10 @@
                             android:id="@+id/dividerFossUpdateCheck"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
+                            android:layout_marginStart="72dp"
                             android:background="@color/tv_glass_border"
                             android:visibility="gone" />
-                        <LinearLayout
+<LinearLayout
                             android:id="@+id/cardFossUpdateCheck"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -3431,97 +3741,7 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- layoutSectionAccessibility -->
-            <LinearLayout
-                android:id="@+id/layoutSectionAccessibility"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="24dp">
-
-                <TextView
-                    android:id="@+id/headerAccessibility"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_section_accessibility"
-                    android:textColor="@color/tv_accent"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif-bold"
-                    android:letterSpacing="0.08"
-                    android:textAllCaps="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginBottom="10dp" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardGroupAccessibility"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    app:cardBackgroundColor="@color/tv_glass_white_10"
-                    app:cardCornerRadius="@dimen/card_radius_lg"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="2dp"
-                    app:strokeColor="@color/tv_glass_border">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <LinearLayout
-                            android:id="@+id/cardColorblind"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="@dimen/margin_xl"
-                            android:paddingVertical="@dimen/margin_md"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:focusableInTouchMode="false"
-                            android:background="@android:color/transparent">
-                            <ImageView
-                                                    android:layout_width="36dp"
-                                                    android:layout_height="36dp"
-                                                    android:src="@drawable/ic_colorblind"
-                                                    android:layout_marginEnd="@dimen/margin_lg"
-                                                    app:tint="@color/tv_icon_tint"
-                                                    android:contentDescription="@string/colorblind_title" />
-
-                                                <LinearLayout
-                                                    android:layout_width="0dp"
-                                                    android:layout_height="wrap_content"
-                                                    android:layout_weight="1"
-                                                    android:orientation="vertical">
-
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/colorblind_title"
-                                                        android:textColor="@color/tv_text_primary"
-                                                        android:textSize="22sp"
-                                                        android:fontFamily="sans-serif-medium" />
-
-                                                    <TextView
-                                                        android:id="@+id/txtColorblindSubtitle"
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:text="@string/colorblind_subtitle_off"
-                                                        android:textColor="@color/tv_text_secondary"
-                                                        android:textSize="14sp" />
-                                                </LinearLayout>
-
-                                                <ImageView
-                                                    android:layout_width="24dp"
-                                                    android:layout_height="24dp"
-                                                    android:src="@drawable/ic_arrow_down"
-                                                    android:rotation="-90"
-                                                    android:contentDescription="@null" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
-
-            <!-- No results view -->
+<!-- No results view -->
             <LinearLayout
                 android:id="@+id/layoutNoResults"
                 android:layout_width="match_parent"

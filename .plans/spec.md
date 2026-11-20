@@ -1,69 +1,113 @@
-# Specification: Modern Categorized View Expanded Category Redesign (Mobile)
+# Specification: Settings Hierarchy, Granular Groupings & Logical Sequencing
 
 ## Overview
-Redesign the expanded category view within the Modern Categorized main menu on mobile to match the unified card aesthetic in `expanded.jpg`. When a category is expanded, its child tiles shall render as seamless, inset-divider-separated list rows inside a single cohesive container card, eliminating separate nested sub-cards, disjointed margins, and redundant inner borders. Additionally, when the Storage category is collapsed, it displays a summary storage usage progress bar with total capacity metrics (e.g., "52.97 GB free of 145 GB").
+Reorganize the settings in Ultimate File Manager Pro by breaking down oversized, confusing categories (e.g., File Browsing & Management with 14 items, Media Player with 11 items, and Network & Performance with 9 items) into intuitive, focused groupings of 2 to 5 related settings each. In addition, establish a natural, top-to-bottom sequence of settings categories that guides the user logically from general setup and visual appearance, through core file browsing, media, and networking, down to security, maintenance, and diagnostics.
 
 ## User Stories
-- **As a UFM Pro mobile user**, I want expanded categories to display child tiles as clean, integrated rows inside a unified card so that navigating my storage, connect, sync, and feature tiles feels cohesive, fluid, and uncluttered.
-- **As a power user**, I want to see an overall storage capacity summary and progress bar when the Storage category is collapsed, and detailed individual drive metrics when expanded.
-- **As a power user**, I want each child item row to clearly present its icon, primary title, descriptive subtitle, and trailing action chevron so that I can quickly identify and access features without visual noise.
-- **As a user organizing tiles**, I want drag-and-drop reordering, edit mode actions, and tap interactions to continue operating seamlessly within the unified card structure.
+- **As a UFM Pro mobile user**, I want settings to flow in a logical sequence (General -> Appearance -> Navigation/Controls -> File Management -> Media -> Network -> Security -> System) so that configuration feels intuitive and progressive rather than scattered.
+- **As a user looking for a specific option**, I want related settings to be clustered into focused, cohesive groups (such as "Permissions & Storage Access", "File Operations & Safety", "Playback & Streaming", and "Player Controls") so that I can quickly spot and adjust options without scrolling through massive, unfocused lists.
+- **As an Android TV user**, I want the TV settings screen to follow the exact same logical sequence with clear section headers so that navigating via D-pad is structured and effortless.
+- **As a power user searching settings**, I want in-page search filtering to reveal matching items beneath clear, contextual sub-headers that preserve their natural categorized place in the hierarchy.
 
 ## Functional Requirements
-- **FR-01: Unified Outer Card Container**
-  - An expanded category shall render as a single continuous glass card with standard corner radius (24dp) and subtle border stroke.
-  - Individual child tiles shall NOT render as standalone nested cards with separate outlines and card elevations.
-- **FR-02: Category Header Styling**
-  - **Expanded State:**
-    - Left: Category squircle icon container with primary icon tint.
-    - Center: Category title in bold primary text, with item count (e.g., "6 items") displayed directly beneath as a secondary subtitle.
-    - Right: Trailing chevron pointing upward (`^`) indicating the expanded state.
-    - Background: A subtle header background highlight with rounded top corners visually separating the category header from child rows.
-  - **Collapsed State:**
-    - Category title on the left with item count formatted cleanly inline/subtitle (e.g., "Storage 7 items").
-    - The old pill badge (`bg_category_count_pill`) is removed.
-    - Right: Trailing chevron pointing right (`>`).
-- **FR-03: Collapsed Storage Summary Progress & Capacity**
-  - When the Storage category is collapsed, it shall display an aggregate storage capacity metric (sum of internal + primary mounted drives, e.g., "52.97 GB free of 145 GB") alongside a horizontal progress bar matching `expanded.jpg`.
-  - When expanded, individual storage drives (*Internal Storage*, *SD Card*, etc.) display their own respective usage metrics and progress bars.
-- **FR-04: Integrated Child Item Rows**
-  - Each child tile shall render as an edge-to-edge list row within the card body.
-  - Left: A rounded rectangle/squircle icon container with translucent backdrop and themed icon tint.
-  - Center: Primary title (e.g., "Paired TVs", "Remote", "Network Shares") in bold text; secondary subtitle description (e.g., "Manage links with other devices", "SMB, FTP and more") directly below.
-  - Right: Navigation chevron `>` (and context-dependent action buttons such as USB eject icon or storage usage progress where applicable).
-  - Tap target: The entire row shall be touch-responsive with ripple feedback triggering tile navigation.
-- **FR-05: Inset Row Dividers**
-  - Hairline dividers (0.5dp–1dp) shall separate consecutive child rows within the card, inset from the left to align with the text column (indented past the icon badge) and extending to the right edge.
-  - The final child row shall cleanly integrate with the card's rounded bottom padding without a trailing divider line.
-- **FR-06: Storage Volume Progress & Action Integration**
-  - For storage volumes with capacity metrics (e.g., Internal Storage, SD Card), child rows display individual progress bars beneath the subtitle.
-  - Removable storage items continue to display their dedicated eject button.
-- **FR-07: Drag-and-Drop & Reordering Compatibility**
-  - Reordering tiles within an expanded category via drag-and-drop and moving tiles across categories in edit mode must remain fully supported.
+
+- **FR-01: Break Down Oversized "File Browsing & Management" Section**
+  - Replace the monolithic 14-item section with focused, specialized groups:
+    - **Permissions & Storage Access**: Elevated/system access and virtual drives (*All Files Access*, *Root Access*, *Simulate USB OTG Drive*).
+    - **Browsing & Display**: File discovery and listing behavior (*Show Hidden Files*, *Flat View*, *Folder Sort Overrides*, *Search Results Limit*).
+    - **File Operations & Safety**: Data protection and cleanup (*Recycle Bin*, *Duplicate Retention Strategy*).
+    - **Organization & File Tools**: Metadata and management tools (*Manage Favorites*, *Custom Drive Names*, *File Tags*, *APK / XAPK Extract*).
+
+- **FR-02: Break Down Oversized "Media Player & Playback" Section**
+  - Replace the 11-item section with two focused groups:
+    - **Media Playback**: Playback logic and video automation (*Side-by-Side Video*, *Controls on Repeat*, *Auto-play Next*, *Background Video Mode*, *Resume After Interruption*).
+    - **Player Controls & Gestures**: Player UI, touch interaction, and timing (*Show Mini-Player*, *Player Gestures*, *Button Feedback Toasts*, *Skip Length*, *Controls Auto-Hide Duration*, *Subtitle Style*).
+
+- **FR-03: Break Down Oversized "Network & Performance" Section**
+  - Replace the 9-item section with distinct categories:
+    - **Transfers & Downloads**: Active transfers and connection handling (*QuickTransfer*, *Download Manager*, *Cache Copy*, *Multi-threading*).
+    - **Network Caching & Streaming**: Caching engine and stream processing (*Network File Caching*, *Network Media Processing*).
+    - **Servers & Indexing**: Host server and indexer utilities (*Background TV Sharing*, *File Server System Tiles*, *Storage Indexer*).
+
+- **FR-04: Streamline "Appearance & Customization" Section**
+  - Group visual options logically:
+    - **Theme & Display**: High-level visual styles (*Theme/Appearance*, *View Appearance Presets*, *Font Size*).
+    - **Interface Details & Animations**: UI micro-customizations (*Icons*, *Default Icon Colors*, *Folder Transitions*, *Path Breadcrumbs*, *Scrolling Text*, *Grid Item Indicators*, *Grid Text Position on TV*).
+
+- **FR-05: Preserved Focused Groups**
+  - Maintain well-scoped groups without unnecessary fragmentation:
+    - **General & Interface** (*Search Bar*, *Default Start Screen*, *Language*, *Default Apps*, *Main Menu Layout*).
+    - **Quick Access** (*Style*, *Swipe Edge*, *Edge Handle*, *Hide Docked Tiles*, *Manage Tiles* - mobile).
+    - **Other Storage & Transfers** (*SAF Picked File Action*, *Copy Destination Folder*).
+    - **Controls & Gestures** (*Edit Mode Hold Duration*, *Toolbar Icons*, *Keyboard Shortcuts*, *Tap Icon to Edit*, *Selection Checkboxes*, *Left-Handed FAB*).
+    - **Dual-Pane (Twin Window)** (*Layout*, *Start in Twin Panel*).
+    - **Thumbnails & Caching** (*Media Thumbnails*, *Video Thumbnail Time*, *Network Thumbnails*).
+    - **Security** (*App Lock*, *Auth Method*, *Change PIN*, *Lock Frequency*).
+    - **Backup & Restore** (*Backup & Restore*, *Auto Backup*).
+    - **Privacy & Diagnostics** (*Tip Jar Popup*, *Usage Analytics*, *Crash Reporting*, *Check for Updates*).
+    - **Accessibility** (*Colorblind Mode*).
+
+- **FR-06: Natural Top-to-Bottom Settings Flow & Sequencing**
+  - The overall page shall be ordered in an intuitive sequence from general preferences to system maintenance:
+    1. **General & Interface**
+    2. **Appearance & Display**
+       - 2.1 *Theme & Display*
+       - 2.2 *Interface Details & Animations*
+    3. **Navigation & Controls**
+       - 3.1 *Quick Access* (mobile)
+       - 3.2 *Controls & Gestures*
+       - 3.3 *Dual-Pane (Twin Window)*
+    4. **File Management & Storage**
+       - 4.1 *Permissions & Storage Access*
+       - 4.2 *Browsing & Display*
+       - 4.3 *File Operations & Safety*
+       - 4.4 *Organization & File Tools*
+       - 4.5 *Other Storage & Transfers (SAF)*
+    5. **Thumbnails & Media**
+       - 5.1 *Thumbnails & Previews*
+       - 5.2 *Media Playback*
+       - 5.3 *Player Controls & Gestures*
+    6. **Network & Connectivity**
+       - 6.1 *Transfers & Downloads*
+       - 6.2 *Network Caching & Streaming*
+       - 6.3 *Servers & Indexing*
+    7. **Security & Access**
+       - 7.1 *Security & App Lock*
+    8. **System, Maintenance & About**
+       - 8.1 *Accessibility*
+       - 8.2 *Backup & Restore*
+       - 8.3 *Privacy & Diagnostics*
+
+- **FR-07: Unified Mobile and Android TV Structure**
+  - Mirror the new section hierarchy and ordering symmetrically across both Mobile and Android TV layouts, respecting platform-specific item inclusions/exclusions.
+  - Maintain TV D-pad focus traversal order and header styling.
+
+- **FR-08: In-Page Search Filtering Compatibility**
+  - Ensure the dynamic search filter in settings seamlessly handles the new section order, section headers, and group cards, properly showing matching rows with their respective section header and hiding empty sections with no matching rows.
+
+- **FR-09: Card Icon & Preference Continuity**
+  - Retain all existing settings keys, SharedPreferences bindings, click handlers, dialog triggers, and card icon customizations without regression.
 
 ## Non-Functional Requirements
-- **NFR-01: Visual Fidelity**: Card hierarchy, typography, divider lines, and spacing strictly reflect `expanded.jpg`.
-- **NFR-02: Animation Performance**: Expanding and collapsing categories must animate smoothly at 60fps+ without UI lag, frame drops, or layout glitches.
-- **NFR-03: Touch Accessibility**: Every child row must maintain a minimum touch target height of at least 48dp.
-- **NFR-04: Theme & Dynamic Density**: Dividers, text, and row backgrounds must respect dark theme tokens and scale crisply across different screen densities.
+- **NFR-01: Visual Consistency**: Section headers, card backgrounds, corner radii, and divider margins must match the app's established dark glassmorphism design system.
+- **NFR-02: Localization**: Every new section header string must use standard Android string resources (`@string/...`) and be ready for translation.
+- **NFR-03: Performance**: Scrolling through the newly sequenced settings list must remain smooth (60fps+) with zero stutter.
+- **NFR-04: Accessibility**: All cards and switches must maintain appropriate touch targets (minimum 48dp on mobile) and clear focus outlines on TV.
 
 ## Edge Cases & Error States
-- **Single Item Categories**: Categories containing only 1 item render a single clean row with no divider lines.
-- **Empty Custom Categories**: Categories with 0 items display an appropriate placeholder or clean collapsed state.
-- **Long Titles and Subtitles**: Labels and subtitles must ellipsize gracefully without pushing the trailing chevron off-screen.
-- **Removable Media Ejecting**: When an SD card or USB drive is unmounted/ejected, the row updates its status/eject icon immediately.
-- **Fast Expand/Collapse Tapping**: Rapid tapping on category headers must not cause view duplication or layout stutter.
+- **Empty Search Query**: When clearing search, all sections and cards restore their original visibility states instantly in the correct sequence.
+- **Search Query With No Matches**: All sections hide and the "No settings found" empty state appears correctly.
+- **TV D-pad Navigation Across New Section Boundaries**: Focus must move smoothly between the last item of one section and the first item of the next section without getting trapped.
+- **Dynamically Hidden Items**: Conditional rows (e.g. Root Access, TV Background Sharing) maintain clean spacing and divider visibility if hidden at runtime.
 
 ## Out of Scope
-- Android TV main menu layout (`item_storage_category_header.xml` / `item_storage_grid_tv.xml`).
-- Bottom navigation or main activity header/search layout refactoring.
-- Grid view mode (`VIEW_TYPE_GRID`).
+- Adding new functional settings or modifying how any specific setting works (e.g. changing how Backup & Restore or PIN encryption operates).
+- Changing settings into multi-level nested activities or tabbed views (retaining the familiar, fast single-page hub layout).
+- Altering the Main Menu tiles or Quick Access bar logic.
 
 ## Success Criteria
-- [ ] Expanded category cards on mobile render child items as integrated divider-separated rows inside a single card container, matching `expanded.jpg`.
-- [ ] Inset dividers cleanly separate child rows without extending beneath the icon badge.
-- [ ] The count pill badge is removed, replaced by clean inline/subtitle text.
-- [ ] Collapsed Storage category shows summary progress bar and aggregate free/total storage capacity.
-- [ ] Category header displays subtle contrasting glass highlight with rounded top corners when expanded.
-- [ ] Child rows display squircle icon, bold label, descriptive subtitle, and chevron `>`.
-- [ ] Expanding, collapsing, tapping, and dragging tiles operate cleanly without regressions.
+- [ ] No section in Settings contains more than 5-6 items.
+- [ ] Settings follow a natural, logical sequence from general appearance through file management and media down to system maintenance.
+- [ ] Both Mobile and Android TV layouts share the synchronized grouping hierarchy and sequence.
+- [ ] In-page settings search accurately filters cards and dynamically hides/shows new section headers.
+- [ ] All existing settings functionality, dialogs, toggles, and icon bindings function without regression.

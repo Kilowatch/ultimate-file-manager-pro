@@ -1762,8 +1762,26 @@ USB 및 로컬 저장소 드라이브 이름 바꾸기
     <string name="settings_section_appearance">
 모양 및 사용자 지정
 </string>
+    <string name="settings_section_theme_display">
+테마 및 디스플레이
+</string>
+    <string name="settings_section_interface_animations">
+인터페이스 세부정보 및 애니메이션
+</string>
     <string name="settings_section_file_management">
 파일 탐색 및 관리
+</string>
+    <string name="settings_section_permissions_storage">
+권한 및 저장소 액세스
+</string>
+    <string name="settings_section_browsing_display">
+탐색 및 표시
+</string>
+    <string name="settings_section_file_safety">
+파일 운영 및 안전
+</string>
+    <string name="settings_section_organization_tools">
+정리 및 파일 도구
 </string>
     <string name="settings_section_controls">
 컨트롤 및 제스처
@@ -1774,11 +1792,26 @@ USB 및 로컬 저장소 드라이브 이름 바꾸기
     <string name="settings_section_media_player">
 미디어 플레이어 및 재생
 </string>
+    <string name="settings_section_media_playback">
+미디어 재생
+</string>
+    <string name="settings_section_player_controls">
+플레이어 컨트롤 및 제스처
+</string>
     <string name="settings_section_thumbnails">
 썸네일 및 캐싱
 </string>
     <string name="settings_section_network_performance">
 네트워크 및 성능
+</string>
+    <string name="settings_section_transfers_downloads">
+전송 및 다운로드
+</string>
+    <string name="settings_section_network_caching">
+네트워크 캐싱 및 스트리밍
+</string>
+    <string name="settings_section_servers_indexing">
+서버 및 인덱싱
 </string>
     <string name="settings_section_backup">
 백업 및 복원
@@ -1788,6 +1821,9 @@ USB 및 로컬 저장소 드라이브 이름 바꾸기
 </string>
     <string name="settings_section_accessibility">
 접근성
+</string>
+    <string name="settings_section_security_app_lock">
+보안 및 앱 잠금
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

@@ -1762,8 +1762,26 @@ USB और स्थानीय स्टोरेज ड्राइव का
     <string name="settings_section_appearance">
 उपस्थिति और अनुकूलन
 </string>
+    <string name="settings_section_theme_display">
+थीम और प्रदर्शन
+</string>
+    <string name="settings_section_interface_animations">
+इंटरफ़ेस विवरण और एनिमेशन
+</string>
     <string name="settings_section_file_management">
 फ़ाइल ब्राउज़िंग और प्रबंधन
+</string>
+    <string name="settings_section_permissions_storage">
+अनुमतियाँ एवं भंडारण पहुँच
+</string>
+    <string name="settings_section_browsing_display">
+ब्राउज़िंग एवं प्रदर्शन
+</string>
+    <string name="settings_section_file_safety">
+फ़ाइल संचालन एवं सुरक्षा
+</string>
+    <string name="settings_section_organization_tools">
+संगठन एवं फ़ाइल उपकरण
 </string>
     <string name="settings_section_controls">
 नियंत्रण और जेस्चर
@@ -1774,11 +1792,26 @@ USB और स्थानीय स्टोरेज ड्राइव का
     <string name="settings_section_media_player">
 मीडिया प्लेयर और प्लेबैक
 </string>
+    <string name="settings_section_media_playback">
+मीडिया प्लेबैक
+</string>
+    <string name="settings_section_player_controls">
+खिलाड़ी नियंत्रण और इशारे
+</string>
     <string name="settings_section_thumbnails">
 थंबनेल और कैशिंग
 </string>
     <string name="settings_section_network_performance">
 नेटवर्क और प्रदर्शन
+</string>
+    <string name="settings_section_transfers_downloads">
+स्थानान्तरण एवं डाउनलोड
+</string>
+    <string name="settings_section_network_caching">
+नेटवर्क कैशिंग और स्ट्रीमिंग
+</string>
+    <string name="settings_section_servers_indexing">
+सर्वर एवं अनुक्रमणिका
 </string>
     <string name="settings_section_backup">
 बैकअप और पुनर्स्थापना
@@ -1788,6 +1821,9 @@ USB और स्थानीय स्टोरेज ड्राइव का
 </string>
     <string name="settings_section_accessibility">
 सुगम्यता
+</string>
+    <string name="settings_section_security_app_lock">
+सुरक्षा और ऐप लॉक
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

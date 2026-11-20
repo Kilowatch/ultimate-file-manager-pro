@@ -615,15 +615,27 @@
     <!-- Settings Sections -->
     <string name="settings_section_general">General &amp; Interface</string>
     <string name="settings_section_appearance">Appearance &amp; Customization</string>
+    <string name="settings_section_theme_display">Theme &amp; Display</string>
+    <string name="settings_section_interface_animations">Interface Details &amp; Animations</string>
     <string name="settings_section_file_management">File Browsing &amp; Management</string>
+    <string name="settings_section_permissions_storage">Permissions &amp; Storage Access</string>
+    <string name="settings_section_browsing_display">Browsing &amp; Display</string>
+    <string name="settings_section_file_safety">File Operations &amp; Safety</string>
+    <string name="settings_section_organization_tools">Organization &amp; File Tools</string>
     <string name="settings_section_controls">Controls &amp; Gestures</string>
     <string name="settings_section_twin_window">Dual-Pane (Twin Window)</string>
     <string name="settings_section_media_player">Media Player &amp; Playback</string>
+    <string name="settings_section_media_playback">Media Playback</string>
+    <string name="settings_section_player_controls">Player Controls &amp; Gestures</string>
     <string name="settings_section_thumbnails">Thumbnails &amp; Caching</string>
     <string name="settings_section_network_performance">Network &amp; Performance</string>
+    <string name="settings_section_transfers_downloads">Transfers &amp; Downloads</string>
+    <string name="settings_section_network_caching">Network Caching &amp; Streaming</string>
+    <string name="settings_section_servers_indexing">Servers &amp; Indexing</string>
     <string name="settings_section_backup">Backup &amp; Restore</string>
     <string name="settings_section_privacy_diagnostics">Privacy &amp; Diagnostics</string>
     <string name="settings_section_accessibility">Accessibility</string>
+    <string name="settings_section_security_app_lock">Security &amp; App Lock</string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->
     <string name="colorblind_title">Colorblind Mode</string>

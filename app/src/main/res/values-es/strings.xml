@@ -1762,8 +1762,26 @@ General e interfaz
     <string name="settings_section_appearance">
 Apariencia y personalización
 </string>
+    <string name="settings_section_theme_display">
+Tema y visualización
+</string>
+    <string name="settings_section_interface_animations">
+Detalles de la interfaz y animaciones
+</string>
     <string name="settings_section_file_management">
 Exploración y gestión de archivos
+</string>
+    <string name="settings_section_permissions_storage">
+Permisos y acceso al almacenamiento
+</string>
+    <string name="settings_section_browsing_display">
+Navegación y visualización
+</string>
+    <string name="settings_section_file_safety">
+Operaciones y seguridad de archivos
+</string>
+    <string name="settings_section_organization_tools">
+Herramientas de organización y archivos
 </string>
     <string name="settings_section_controls">
 Controles y gestos
@@ -1774,11 +1792,26 @@ Doble panel (ventana dual)
     <string name="settings_section_media_player">
 Reproductor multimedia y reproducción
 </string>
+    <string name="settings_section_media_playback">
+Reproducción multimedia
+</string>
+    <string name="settings_section_player_controls">
+Controles y gestos del jugador
+</string>
     <string name="settings_section_thumbnails">
 Miniaturas y caché
 </string>
     <string name="settings_section_network_performance">
 Red y rendimiento
+</string>
+    <string name="settings_section_transfers_downloads">
+Transferencias y descargas
+</string>
+    <string name="settings_section_network_caching">
+Almacenamiento en caché y transmisión en red
+</string>
+    <string name="settings_section_servers_indexing">
+Servidores e indexación
 </string>
     <string name="settings_section_backup">
 Copia de seguridad y restauración
@@ -1788,6 +1821,9 @@ Privacidad y diagnóstico
 </string>
     <string name="settings_section_accessibility">
 Accesibilidad
+</string>
+    <string name="settings_section_security_app_lock">
+Seguridad y bloqueo de aplicaciones
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

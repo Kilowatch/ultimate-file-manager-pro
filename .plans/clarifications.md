@@ -1,28 +1,38 @@
-# Clarifications: Modern Categorized View Expanded Category Redesign (Mobile)
+# Clarifications: Settings Hierarchy, Granular Groupings & Logical Sequencing
 
 ## Status
-Answers received — ready for /plan and /tasks.
+Answers received — ready for /plan
 
 ## Questions and Answers
 
 ### UI and Layout
-**Q1. How should the hairline dividers between child items be aligned?**  
-**A:** Inset dividers — indented past the icon badge (~68dp from the left edge of the card) to align with the text column, extending to the right edge, matching `expanded.jpg`.
+**Q1.** Which section header titles and breakdown do you prefer for the split categories?
+**A:** Approved all proposed group titles:
+- *Permissions & Storage Access* (All Files Access, Root Access, Simulate USB Drive)
+- *Browsing & Display* (Show Hidden Files, Flat View, Folder Sort Overrides, Search Results Limit)
+- *File Operations & Safety* (Recycle Bin, Duplicate Retention Strategy)
+- *Organization & File Tools* (Manage Favorites, Custom Drive Names, File Tags, APK / XAPK Extract)
+- *Theme & Display* (Theme/Appearance, View Appearance Presets, Font Size)
+- *Interface Details & Animations* (Icons, Default Icon Colors, Folder Transitions, Breadcrumbs, Scrolling Text, Grid Indicators)
+- *Media Playback* (Side-by-Side Video, Repeat Controls, Auto-play Next, Background Video Mode, Resume After Interruption)
+- *Player Controls & Gestures* (Mini-Player, Gestures, Button Feedback Toasts, Skip Length, Controls Timeout, Subtitle Style)
+- *Transfers & Downloads* (QuickTransfer, Download Manager, Cache Copy, Multi-threading)
+- *Network Caching & Streaming* (Network File Caching, Network Media Processing)
+- *Servers & Indexing* (Background TV Sharing, File Server System Tiles, Storage Indexer)
 
-**Q2. How should the item count be displayed in the category header?**  
-**A:** Remove the count pill badge. Use clean inline/subtitle item count text:
-- When collapsed: category title and item count rendered inline/subtitle without a background pill.
-- When expanded: item count rendered cleanly as a subtitle directly under the category title.
+### Placement & Categorization
+**Q2.** Where should the 2 'Other Storage & SAF Transfers' items be placed?
+**A:** Keep as a distinct section titled 'Storage Transfers & SAF' placed directly after 'Organization & File Tools'.
 
-**Q3. Should the collapsed 'Storage' category display a summary progress bar?**  
-**A:** Yes. When collapsed, display an overall storage progress bar and aggregate capacity text showing the sum of total free vs. available (e.g., "52.97 GB free of 145 GB"). When expanded, display individual progress bars and capacities on each individual drive tile as it currently functions.
+**Q3.** Where should the Accessibility section (Colorblind Mode) be sequenced?
+**A:** Place Accessibility near the bottom under System & Maintenance, directly before Backup & Restore and Privacy & Diagnostics.
 
-**Q4. Should expanded category headers have a subtle contrasting glass background highlight?**  
-**A:** Yes. Apply a subtle contrasting glass highlight on expanded headers with rounded top corners matching the outer card container (24dp), creating a clear visual header band.
+### Android-Specific & TV Parity
+**Q4.** How should the Android TV settings layout be updated?
+**A:** Full parity: apply the exact same section hierarchy and sequence to Android TV (`activity_settings_tv.xml`), omitting only mobile-specific items, preserving 100% design and mental model parity.
 
 ## Spec / Plan Impact
-- `spec.md` updated with FR-03 for collapsed Storage summary capacity and progress bar.
-- Architecture plan will update `item_storage_category_group.xml` and `StorageAdapter.kt` to handle collapsed storage summary calculation and inset child row rendering without standalone nested cards.
+All answers confirm the specifications set forth in `.plans/spec.md`. No changes required to `spec.md`.
 
 ## Confirmed — Ready for /plan
-All clarification questions answered. Proceeding to design the implementation plan.
+All questions have been clarified and approved. Proceed to `/plan` to design the architecture and implementation steps.

@@ -1762,8 +1762,26 @@ Allgemein &amp; Oberfläche
     <string name="settings_section_appearance">
 Darstellung &amp; Anpassung
 </string>
+    <string name="settings_section_theme_display">
+Thema und Anzeige
+</string>
+    <string name="settings_section_interface_animations">
+Schnittstellendetails und Animationen
+</string>
     <string name="settings_section_file_management">
 Dateinavigation &amp; Dateiverwaltung
+</string>
+    <string name="settings_section_permissions_storage">
+Berechtigungen und Speicherzugriff
+</string>
+    <string name="settings_section_browsing_display">
+Durchsuchen und Anzeigen
+</string>
+    <string name="settings_section_file_safety">
+Dateibetrieb und Sicherheit
+</string>
+    <string name="settings_section_organization_tools">
+Organisations- und Dateitools
 </string>
     <string name="settings_section_controls">
 Steuerung &amp; Gesten
@@ -1774,11 +1792,26 @@ Doppelfenster (Twin Window)
     <string name="settings_section_media_player">
 Mediaplayer &amp; Wiedergabe
 </string>
+    <string name="settings_section_media_playback">
+Medienwiedergabe
+</string>
+    <string name="settings_section_player_controls">
+Spielersteuerung und Gesten
+</string>
     <string name="settings_section_thumbnails">
 Miniaturansichten &amp; Cache
 </string>
     <string name="settings_section_network_performance">
 Netzwerk &amp; Leistung
+</string>
+    <string name="settings_section_transfers_downloads">
+Übertragungen und Downloads
+</string>
+    <string name="settings_section_network_caching">
+Netzwerk-Caching und Streaming
+</string>
+    <string name="settings_section_servers_indexing">
+Server und Indizierung
 </string>
     <string name="settings_section_backup">
 Sicherung &amp; Wiederherstellung
@@ -1788,6 +1821,9 @@ Datenschutz &amp; Diagnose
 </string>
     <string name="settings_section_accessibility">
 Barrierefreiheit
+</string>
+    <string name="settings_section_security_app_lock">
+Sicherheit und App-Sperre
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

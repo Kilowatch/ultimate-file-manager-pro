@@ -1,93 +1,83 @@
-# Implementation Plan: Modern Categorized View Expanded Category Redesign (Mobile)
+# Implementation Plan: Settings Hierarchy, Granular Groupings & Logical Sequencing
 
 ## Goals
-Redesign the expanded category view in Modern Categorized view mode on mobile to match `expanded.jpg`:
-1. **Unified Card Structure**: Eliminate isolated, bordered nested sub-cards. Child tiles render as seamless, edge-to-edge rows inside the single outer category card container.
-2. **Inset Dividers**: Add hairline dividers between consecutive child rows inset ~68dp to align with the text column.
-3. **Category Header Modernization**:
-   - Expanded state: subtle top-corner glass highlight (`bg_category_header_highlight`), category title, item count subtitle below it, upward chevron (`^`).
-   - Collapsed state: category title with inline item count text (old pill badge removed), right chevron (`>`).
-4. **Collapsed Storage Capacity & Progress Summary**:
-   - When the Storage category is collapsed, compute and display the sum of total free vs. total capacity (e.g., "52.97 GB free of 145 GB") and display a summary progress bar matching `expanded.jpg`.
-   - When expanded, individual storage drive tiles display their respective progress bars and capacity subtitles.
+- Break down monolithic settings groups (File Browsing 14 items, Media Player 11 items, Network & Performance 9 items, Appearance 9 items) into intuitive, bite-sized groupings of 2 to 5 items each.
+- Re-sequence the settings screen top-to-bottom so it flows logically from visual/interaction setup, through core file operations, to media, connectivity, and system maintenance.
+- Maintain complete symmetry between Mobile (`activity_settings.xml`) and Android TV (`activity_settings_tv.xml`).
+- Ensure 100% compatibility with real-time settings search filtering, TV D-pad focus traversal, and card icon customizations.
 
 ## Architecture Overview
-The changes touch the presentation layer for `VIEW_TYPE_CATEGORY_HEADER` in `StorageAdapter.kt`, its outer card group layout (`item_storage_category_group.xml`), and the child item layout (`item_storage_nested_card.xml`).
+The settings screen uses a vertical `layoutSettingsList` inside a ScrollView. Each section is a `LinearLayout` containing:
+1. A small all-caps bold section header `TextView` (e.g. `headerGeneral`, `headerThemeDisplay`).
+2. A single `MaterialCardView` (`cardGroup...`) with rounded corners and border stroke.
+3. An inner vertical `LinearLayout` containing the setting rows (`card...`) separated by hairline `View` dividers.
+
+`SettingsActivity.kt` dynamically inspects every child of `layoutSettingsList`, traverses inner group cards, and performs real-time search filtering. By retaining this exact architectural contract for each new section, search filtering and focus management will work out-of-the-box without touching the core search traversal logic.
 
 ```
-┌────────────────────────────────────────────────────────┐
-│ Outer MaterialCardView (cardCategoryGroup, r=24dp)     │
-│ ┌────────────────────────────────────────────────────┐ │
-│ │ Header Row (highlighted when expanded, r_top=24dp) │ │
-│ │ [Icon]  Connect                           [^]      │ │
-│ │         6 items                                    │ │
-│ └────────────────────────────────────────────────────┘ │
-│ ┌────────────────────────────────────────────────────┐ │
-│ │ Child Row 0 (Paired TVs)                  [>]      │ │
-│ ├────────────────────────────────────────────────────┤ │
-│ │ ────── inset divider (marginStart=68dp) ─────────  │ │
-│ │ Child Row 1 (Remote)                      [>]      │ │
-│ ├────────────────────────────────────────────────────┤ │
-│ │ ────── inset divider (marginStart=68dp) ─────────  │ │
-│ │ Child Row 2 (Remote Manage)               [>]      │ │
-│ └────────────────────────────────────────────────────┘ │
-└────────────────────────────────────────────────────────┘
+Settings Flow:
+1. General & Interface
+2. Appearance & Display (Theme & Display -> Interface Details & Animations)
+3. Navigation & Controls (Quick Access [Mobile] -> Controls & Gestures -> Dual-Pane)
+4. File Management & Storage (Permissions -> Browsing & Display -> File Safety -> Tools -> SAF)
+5. Thumbnails & Media (Thumbnails & Previews -> Media Playback -> Player Controls & Gestures)
+6. Network & Connectivity (Transfers & Downloads -> Network Caching & Streaming -> Servers & Indexing)
+7. Security & Access (Security & App Lock)
+8. System, Maintenance & About (Accessibility -> Backup & Restore -> Privacy & Diagnostics)
 ```
-
-1. **`item_storage_category_group.xml`**:
-   - Remove `txtCategoryCountPill`.
-   - Add `txtCategoryInlineCount` next to `txtCategoryTitle`.
-   - Add `progressCategoryStorage` below the title/subtitle for the collapsed Storage category summary.
-   - Set `layoutCategoryItems` padding to `0dp` horizontal/top so child rows integrate seamlessly.
-2. **`item_storage_nested_card.xml`**:
-   - Convert outer `cardStorage` to borderless (`strokeWidth="0dp"`), transparent (`cardBackgroundColor="@android:color/transparent"`), zero-margin (`marginVertical="0dp"`), flat (`elevation="0dp"`) container with ripple.
-   - Add top inset hairline divider (`dividerRow`) with `layout_marginStart="68dp"`.
-   - Add trailing chevron `imgChevron` (`ic_chevron_right`).
-3. **`StorageAdapter.kt`**:
-   - In `CategoryGroupViewHolder.bind()`:
-     - When collapsed:
-       - Show `txtCategoryInlineCount`.
-       - If category is `CATEGORY_STORAGE`, calculate aggregate free and total bytes from `groupItems` (storage drives), format subtitle (e.g., "28.02 GB free of 113 GB"), and show `progressCategoryStorage`.
-       - For non-storage categories, hide subtitle and progress bar.
-     - When expanded:
-       - Hide inline count and progress bar.
-       - Show `txtCategorySubtitle` with count text.
-       - Show top highlight background on header.
-   - In `createChildTileView()`:
-     - Set `dividerRow.visibility` based on child index (hidden for first child, visible for subsequent children).
-     - Bind `imgChevron` visibility and trailing actions (eject button for removable media).
-
-## Files to Create
-*None required. All necessary drawables (`bg_category_header_highlight.xml`, `bg_storage_progress_cyan.xml`, `bg_squircle_nested_icon.xml`, `ic_chevron_right.xml`) already exist in the project.*
 
 ## Files to Modify
-### `app/src/main/res/layout/item_storage_category_group.xml`
-- **What:** Modernize header structure (inline count, storage summary progress bar) and remove horizontal/top padding on `layoutCategoryItems`.
-- **Key details:** Remove `txtCategoryCountPill`, add `txtCategoryInlineCount` and `progressCategoryStorage`.
 
-### `app/src/main/res/layout/item_storage_nested_card.xml`
-- **What:** Refactor child tile into seamless divider-separated row without outer card borders or vertical margins.
-- **Key details:** `strokeWidth="0dp"`, `elevation="0dp"`, `cardBackgroundColor="@android:color/transparent"`, add inset `dividerRow` and trailing `imgChevron`.
+### `app/src/main/res/values/strings.xml`
+- **What:** Add localized section title string resources:
+  - `settings_section_theme_display` ("Theme & Display")
+  - `settings_section_interface_animations` ("Interface Details & Animations")
+  - `settings_section_permissions_storage` ("Permissions & Storage Access")
+  - `settings_section_browsing_display` ("Browsing & Display")
+  - `settings_section_file_safety` ("File Operations & Safety")
+  - `settings_section_organization_tools` ("Organization & File Tools")
+  - `settings_section_saf_transfers` ("Storage Transfers & SAF")
+  - `settings_section_thumbnails` ("Thumbnails & Previews")
+  - `settings_section_media_playback` ("Media Playback")
+  - `settings_section_player_controls` ("Player Controls & Gestures")
+  - `settings_section_transfers_downloads` ("Transfers & Downloads")
+  - `settings_section_network_caching` ("Network Caching & Streaming")
+  - `settings_section_servers_indexing` ("Servers & Indexing")
+  - `settings_section_security` ("Security & App Lock")
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/storage/StorageAdapter.kt`
-- **What:** Update `CategoryGroupViewHolder.bind()` to support inline count, collapsed storage aggregate calculation, and child item inset divider management.
-- **Key details:** Calculate `sumOf { totalBytes }` and `sumOf { usedBytes }` for collapsed Storage, manage child divider visibility.
+### `app/src/main/res/layout/activity_settings.xml`
+- **What:** Reorganize the settings container into the newly defined 21 granular sections and sequence them in the approved top-to-bottom order.
+- **Key details:**
+  - Wrap each group of 2-5 cards inside its own `layoutSection*` and `cardGroup*`.
+  - Maintain consistent divider insets (`56dp`) and card elevation / stroke styling.
+  - Preserve all existing card IDs (`cardSettingsSearch`, `cardFontSize`, `cardDuplicateRetention`, etc.).
+
+### `app/src/main/res/layout/activity_settings_tv.xml`
+- **What:** Reorganize the TV settings layout symmetrically into matching granular sections and order.
+- **Key details:**
+  - Maintain TV-specific dimensions (`20dp` corner radius, `1.5dp` stroke width, `14sp` header font, `64dp` divider margin).
+  - Include all TV cards in their corresponding new sections while excluding mobile-only cards.
+
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/SettingsActivity.kt`
+- **What:** Verify section view bindings and TV focus listener mappings.
+- **Key details:**
+  - `layoutSectionSecurity` and `layoutSectionQuickAccess` maintain their exact IDs and behavior.
+  - Validate TV focus helper and search visibility recursion.
 
 ## Data Model
-No changes to database entities or persistent storage schemas. Calculations are performed at runtime from existing `StorageItem` objects in memory.
+No data model or SharedPreferences schema changes required. All settings keys remain unchanged.
 
 ## Dependencies
-None. Uses standard Android SDK and existing Material Components.
+None. Uses existing Android Jetpack and Material components.
 
 ## Test Plan
-- Compile with `./gradlew assembleMobileGoogleDebug` to guarantee zero errors.
-- Verify collapsed categories show inline count without pills.
-- Verify collapsed Storage category displays aggregate storage capacity and usage progress bar.
-- Verify expanded category displays unified card, inset dividers between rows, trailing chevrons, and smooth expand/collapse transitions.
-- Verify child tile clicks, drag-and-drop reordering, and USB eject buttons function identically.
+- Compile and build debug APK with `./gradlew assembleMobileGoogleDebug`.
+- Verify settings page rendering on mobile layout: visually confirm headers, card groupings, and divider lines.
+- Verify settings search: test partial queries for items in different sections; confirm empty state displays when query doesn't match; confirm full list restores on clear.
+- Verify TV layout inflation and D-pad navigation.
 
 ## Risks & Mitigations
-- **Risk:** Drag-and-drop reordering visuals could look disjointed if row dimensions change during drag.
-  - **Mitigation:** Retain `cardStorage` ID on the row container and preserve existing drag listeners and alpha dimming in `StorageAdapter`.
-- **Risk:** Calculation of total bytes on empty or unmounted drives.
-  - **Mitigation:** Filter for `!it.isUnmounted && it.totalBytes > 0L` before summing to prevent skewing metrics with offline network shares or empty slots.
+- **Risk:** Search filter hides a section header when some cards match.
+  - **Mitigation:** The existing `filterSettings()` function checks `sectionHasVisibleRow`; if any child card matches, the entire section remains visible, which will automatically keep the new granular section headers visible.
+- **Risk:** Divider visibility glitch at the bottom of a card group when some cards are hidden.
+  - **Mitigation:** `filterSettings()` dynamically scans visible rows and hides trailing/leading dividers within `container`.

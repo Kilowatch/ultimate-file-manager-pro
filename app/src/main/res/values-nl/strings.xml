@@ -1692,8 +1692,26 @@ Algemeen en interface
     <string name="settings_section_appearance">
 Uiterlijk en maatwerk
 </string>
+    <string name="settings_section_theme_display">
+Thema en weergave
+</string>
+    <string name="settings_section_interface_animations">
+Interfacedetails en animaties
+</string>
     <string name="settings_section_file_management">
 Bestanden bladeren en beheren
+</string>
+    <string name="settings_section_permissions_storage">
+Machtigingen en opslagtoegang
+</string>
+    <string name="settings_section_browsing_display">
+Bladeren en weergeven
+</string>
+    <string name="settings_section_file_safety">
+Bestandsbewerkingen en veiligheid
+</string>
+    <string name="settings_section_organization_tools">
+Organisatie- en bestandshulpmiddelen
 </string>
     <string name="settings_section_controls">
 Bediening en gebaren
@@ -1704,11 +1722,26 @@ Dubbel venster (dubbel venster)
     <string name="settings_section_media_player">
 Mediaspeler en afspelen
 </string>
+    <string name="settings_section_media_playback">
+Media afspelen
+</string>
+    <string name="settings_section_player_controls">
+Spelerbediening en gebaren
+</string>
     <string name="settings_section_thumbnails">
 Miniaturen en caching
 </string>
     <string name="settings_section_network_performance">
 Netwerk en prestaties
+</string>
+    <string name="settings_section_transfers_downloads">
+Overdrachten en downloads
+</string>
+    <string name="settings_section_network_caching">
+Netwerkcaching en streaming
+</string>
+    <string name="settings_section_servers_indexing">
+Servers en indexering
 </string>
     <string name="settings_section_backup">
 Back-up en herstel
@@ -1718,6 +1751,9 @@ Privacy en diagnostiek
 </string>
     <string name="settings_section_accessibility">
 Toegankelijkheid
+</string>
+    <string name="settings_section_security_app_lock">
+Beveiliging en app-vergrendeling
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

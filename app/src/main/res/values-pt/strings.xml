@@ -1762,8 +1762,26 @@ Geral e Interface
     <string name="settings_section_appearance">
 Aparência e Personalização
 </string>
+    <string name="settings_section_theme_display">
+Tema e exibição
+</string>
+    <string name="settings_section_interface_animations">
+Detalhes e animações da interface
+</string>
     <string name="settings_section_file_management">
 Navegação e Gerenciamento de Arquivos
+</string>
+    <string name="settings_section_permissions_storage">
+Permissões e acesso ao armazenamento
+</string>
+    <string name="settings_section_browsing_display">
+Navegação e exibição
+</string>
+    <string name="settings_section_file_safety">
+Operações e segurança de arquivos
+</string>
+    <string name="settings_section_organization_tools">
+Ferramentas de organização e arquivo
 </string>
     <string name="settings_section_controls">
 Controles e Gestos
@@ -1774,11 +1792,26 @@ Painel Duplo (Janela Dupla)
     <string name="settings_section_media_player">
 Player de Mídia e Reprodução
 </string>
+    <string name="settings_section_media_playback">
+Reprodução de mídia
+</string>
+    <string name="settings_section_player_controls">
+Controles e gestos do jogador
+</string>
     <string name="settings_section_thumbnails">
 Miniaturas e Cache
 </string>
     <string name="settings_section_network_performance">
 Rede e Desempenho
+</string>
+    <string name="settings_section_transfers_downloads">
+Transferências e downloads
+</string>
+    <string name="settings_section_network_caching">
+Cache e streaming de rede
+</string>
+    <string name="settings_section_servers_indexing">
+Servidores e Indexação
 </string>
     <string name="settings_section_backup">
 Backup e Restauração
@@ -1788,6 +1821,9 @@ Privacidade e Diagnósticos
 </string>
     <string name="settings_section_accessibility">
 Acessibilidade
+</string>
+    <string name="settings_section_security_app_lock">
+Segurança e bloqueio de aplicativos
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

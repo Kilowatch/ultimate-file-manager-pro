@@ -1762,8 +1762,26 @@ Umum &amp; Antarmuka
     <string name="settings_section_appearance">
 Tampilan &amp; Kustomisasi
 </string>
+    <string name="settings_section_theme_display">
+Tema &amp; Tampilan
+</string>
+    <string name="settings_section_interface_animations">
+Detail &amp; Animasi Antarmuka
+</string>
     <string name="settings_section_file_management">
 Penjelajahan &amp; Manajemen File
+</string>
+    <string name="settings_section_permissions_storage">
+Izin &amp; Akses Penyimpanan
+</string>
+    <string name="settings_section_browsing_display">
+Penjelajahan &amp; Tampilan
+</string>
+    <string name="settings_section_file_safety">
+Pengoperasian &amp; Keamanan File
+</string>
+    <string name="settings_section_organization_tools">
+Alat Organisasi &amp; File
 </string>
     <string name="settings_section_controls">
 Kontrol &amp; Gestur
@@ -1774,11 +1792,26 @@ Panel Ganda (Jendela Kembar)
     <string name="settings_section_media_player">
 Pemutar Media &amp; Pemutaran
 </string>
+    <string name="settings_section_media_playback">
+Pemutaran Media
+</string>
+    <string name="settings_section_player_controls">
+Kontrol &amp; Gerakan Pemain
+</string>
     <string name="settings_section_thumbnails">
 Thumbnail &amp; Cache
 </string>
     <string name="settings_section_network_performance">
 Jaringan &amp; Performa
+</string>
+    <string name="settings_section_transfers_downloads">
+Transfer &amp; Unduhan
+</string>
+    <string name="settings_section_network_caching">
+Caching &amp; Streaming Jaringan
+</string>
+    <string name="settings_section_servers_indexing">
+Server &amp; Pengindeksan
 </string>
     <string name="settings_section_backup">
 Cadangan &amp; Pulihkan
@@ -1788,6 +1821,9 @@ Privasi &amp; Diagnostik
 </string>
     <string name="settings_section_accessibility">
 Aksesibilitas
+</string>
+    <string name="settings_section_security_app_lock">
+Keamanan &amp; Kunci Aplikasi
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->

@@ -1762,8 +1762,26 @@ Ultimate File Manager Pro
     <string name="settings_section_appearance">
 外观与自定义
 </string>
+    <string name="settings_section_theme_display">
+主题与展示
+</string>
+    <string name="settings_section_interface_animations">
+界面细节和动画
+</string>
     <string name="settings_section_file_management">
 文件浏览与管理
+</string>
+    <string name="settings_section_permissions_storage">
+权限和存储访问
+</string>
+    <string name="settings_section_browsing_display">
+浏览与显示
+</string>
+    <string name="settings_section_file_safety">
+文件操作与安全
+</string>
+    <string name="settings_section_organization_tools">
+组织和文件工具
 </string>
     <string name="settings_section_controls">
 控制与手势
@@ -1774,11 +1792,26 @@ Ultimate File Manager Pro
     <string name="settings_section_media_player">
 媒体播放器与播放
 </string>
+    <string name="settings_section_media_playback">
+媒体播放
+</string>
+    <string name="settings_section_player_controls">
+玩家控制和手势
+</string>
     <string name="settings_section_thumbnails">
 缩略图与缓存
 </string>
     <string name="settings_section_network_performance">
 网络与性能
+</string>
+    <string name="settings_section_transfers_downloads">
+传输和下载
+</string>
+    <string name="settings_section_network_caching">
+网络缓存和流媒体
+</string>
+    <string name="settings_section_servers_indexing">
+服务器和索引
 </string>
     <string name="settings_section_backup">
 备份与恢复
@@ -1788,6 +1821,9 @@ Ultimate File Manager Pro
 </string>
     <string name="settings_section_accessibility">
 无障碍
+</string>
+    <string name="settings_section_security_app_lock">
+安全和应用程序锁定
 </string>
 
     <!-- Colorblind Accessibility Mode (FR-20) -->
