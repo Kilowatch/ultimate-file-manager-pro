@@ -166,7 +166,7 @@
         app:cardBackgroundColor="@color/mobile_glass_card"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
-        app:strokeWidth="1dp"
+        app:strokeWidth="1.5dp"
         app:strokeColor="@color/tile_tip_jar_stroke"
         app:rippleColor="@color/mobile_glass_ripple"
         app:layout_constraintTop_toBottomOf="@id/layoutHeader"
@@ -183,7 +183,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- ── Purple gradient banner (top section) ── -->
+                <!-- ── Cyan/blue gradient banner (top section) ── -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -193,13 +193,24 @@
                     android:padding="16dp"
                     android:paddingEnd="52dp">
 
-                    <!-- Glowing jar icon -->
-                    <ImageView
+                    <!-- Glowing jar icon with ambient aura halo -->
+                    <FrameLayout
                         android:layout_width="52dp"
                         android:layout_height="52dp"
-                        android:src="@drawable/ic_tip_jar_glow"
-                        android:contentDescription="@null"
-                        android:layout_marginEnd="14dp" />
+                        android:layout_marginEnd="14dp">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_jar_glow_aura" />
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_tip_jar_glow"
+                            android:contentDescription="@null" />
+
+                    </FrameLayout>
 
                     <!-- Title + subtitle -->
                     <LinearLayout
@@ -278,7 +289,10 @@
                         android:textSize="12sp"
                         android:fontFamily="sans-serif-bold"
                         android:textAllCaps="false"
-                        app:backgroundTint="@color/tile_tip_jar_accent"
+                        app:backgroundTint="#261E3858"
+                        app:strokeColor="#6638BDF8"
+                        app:strokeWidth="1dp"
+                        app:rippleColor="#4038BDF8"
                         app:cornerRadius="18dp"
                         app:icon="@drawable/ic_coffee"
                         app:iconGravity="textStart"

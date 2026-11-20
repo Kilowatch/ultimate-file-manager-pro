@@ -143,10 +143,10 @@
     <color name="tile_rate_us_icon_bg">#80FFCC02</color>
     <color name="tile_rate_us_stroke">#66FFCC02</color>
 
-    <!-- Fuel the Developer tile — Lavender for dark bg -->
-    <color name="tile_tip_jar_accent">#FFBE85F5</color>
-    <color name="tile_tip_jar_icon_bg">#80BE85F5</color>
-    <color name="tile_tip_jar_stroke">#668B2FC9</color>
+    <!-- Fuel the Developer tile — Electric Cyan / Blue for dark bg -->
+    <color name="tile_tip_jar_accent">#FF38BDF8</color>
+    <color name="tile_tip_jar_icon_bg">#4038BDF8</color>
+    <color name="tile_tip_jar_stroke">#6638BDF8</color>
 
     <!-- Policy Screen Colors (Dark Theme Overrides) -->
     <color name="policy_bg">#FF121212</color>

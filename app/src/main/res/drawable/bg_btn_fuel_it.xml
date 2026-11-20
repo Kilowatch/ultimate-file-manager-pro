@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Frosted glass pill button with cyan border for "Fuel it!" -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#4038BDF8">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#261E3858" />
+            <stroke android:width="1dp" android:color="#6638BDF8" />
+            <corners android:radius="18dp" />
+        </shape>
+    </item>
+</ripple>

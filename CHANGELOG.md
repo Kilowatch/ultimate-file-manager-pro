@@ -5,6 +5,14 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.8] — 2026-11-20
+
+### Changed
+- **Tip Jar Progress Popup Redesign (`StorageBrowserActivity`, `activity_storage_browser.xml`)**:
+  - Redesigned the mobile Tip Jar progress card to match the modern neon-cyan cyber-glass aesthetic.
+  - Replaced purple accents with electric cyan glow highlights, cyan-accented month title, and gradient progress indicator.
+  - Updated the "Fuel it!" action button to a frosted glass pill with subtle cyan outline border.
+
 ## [2.2.7] — 2026-11-17
 
 ### Added

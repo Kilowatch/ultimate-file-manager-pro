@@ -212,10 +212,10 @@
     <color name="tile_rate_us_icon_bg">#FFF9C234</color>
     <color name="tile_rate_us_stroke">#4DFFC300</color>
 
-    <!-- Fuel the Developer tile — Violet / Purple (light theme) -->
-    <color name="tile_tip_jar_accent">#FF8B2FC9</color>
-    <color name="tile_tip_jar_icon_bg">#FFB95CE8</color>
-    <color name="tile_tip_jar_stroke">#4D8B2FC9</color>
+    <!-- Fuel the Developer tile — Electric Cyan / Blue (light theme) -->
+    <color name="tile_tip_jar_accent">#FF00B0FF</color>
+    <color name="tile_tip_jar_icon_bg">#4000B0FF</color>
+    <color name="tile_tip_jar_stroke">#4D00B0FF</color>
 
     <!-- Disabled button states (light theme) -->
     <color name="btn_disabled_bg">#FFB0BEC5</color>   <!-- blue-grey 200, clearly muted on light bg -->

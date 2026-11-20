@@ -1,36 +1,28 @@
-# Verification Report: UFM Media Player Loop and Continuous Playback Control
+# Verification Report: Tip Jar Progress Popup Visual Redesign (Mobile)
 
 ## Summary
-**Pass.** The implementation successfully satisfies all functional requirements and success criteria defined in `.plans/spec.md`. The playback engine strictly respects the "Auto-play next in UFM Player" toggle, stops at track end when auto-play is disabled or when the end of a playlist is reached with repeat off, and provides a full 3-state repeat cycle (`OFF` → `ALL` → `ONE` → `OFF`) with visual feedback on Mobile and Android TV.
+**Pass.** The visual redesign of the mobile Tip Jar progress popup card (`cardTipJarProgress`) has been implemented and verified. The appearance strictly mirrors the reference image `tipjar.jpg`, the version has been bumped to `2.2.8` (versionCode `318`), and the changelog has been updated per repository documentation guidelines.
 
 ---
 
 ## Prerequisites Check
-- [x] All tasks in `tasks.md` complete (`[T001]` through `[T012]`)
+- [x] All tasks in `tasks.md` complete (`[T001]` through `[T009]`)
 - [x] `/review` passed (0 Critical, 0 Major findings)
 - [x] `/securitycheck` passed (0 vulnerabilities)
+- [x] `./gradlew assembleMobileGoogleDebug` completed successfully with exit code 0
 
 ---
 
 ## Success Criteria Check
 
-- [x] **User can play an audio file with Auto-play Next disabled and have it play once and stop automatically when finished.**
-  - ✅ Confirmed by [`UFMPlaybackService.kt`](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/UFMPlaybackService.kt#L694-L708): dynamically checks `AutoplayPreferenceManager.isEnabled(this)` upon `STATE_ENDED`. When disabled with `RepeatMode.OFF`, invokes `pause()`, `abandonAudioFocus()`, and `safeStopForeground(true)`.
-
-- [x] **Repeat button cycles through three distinct states: Repeat Off, Repeat All, and Repeat One.**
-  - ✅ Confirmed by [`PlayerPreferencesManager.kt`](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/settings/PlayerPreferencesManager.kt#L88-L100) and [`UFMPlayerActivity.kt`](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/UFMPlayerActivity.kt#L1605-L1618): `btnRepeat.setOnClickListener` calls `cycleRepeatMode()` which cycles `OFF` → `ALL` → `ONE` → `OFF`.
-
-- [x] **Each repeat mode exhibits distinct visual iconography/tinting on Mobile and Android TV.**
-  - ✅ Confirmed by [`UFMPlayerActivity.kt`](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/UFMPlayerActivity.kt#L1815-L1835): `updateRepeatButton(mode)` applies `ic_repeat` with dimmed alpha (`0.4f` mobile / `0.5f` TV) for `OFF`, `ic_repeat` with `1.0f` for `ALL`, and `ic_repeat_one` with `1.0f` for `ONE`.
-
-- [x] **When Repeat is Off and Auto-play is On, reaching the end of a playlist stops playback without wrapping back to track 1.**
-  - ✅ Confirmed by [`UFMPlaybackService.kt`](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/UFMPlaybackService.kt#L709-L723): checks `queueManager.currentIndex < queueManager.size - 1`. At the last track, playback stops cleanly without wrapping around to track 1.
-
-- [x] **Toggling "Auto-play next in UFM Player" in Settings immediately and effectively governs playback behavior.**
-  - ✅ Confirmed by [`UFMPlaybackService.kt`](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/UFMPlaybackService.kt#L689): reads `AutoplayPreferenceManager.isEnabled(this)` dynamically on each track completion, ensuring immediate effect.
-
-- [x] **Manual Next/Prev buttons remain fully functional regardless of auto-play or repeat settings.**
-  - ✅ Confirmed by [`UFMPlaybackService.kt`](file:///F:/Share/UFM/app/src/main/java/za/kilowatch/ultimatefilemanager/viewer/UFMPlaybackService.kt#L459-L485): `skipToNext()` and `skipToPrev()` remain unconditionally executable via button or notification click handlers.
+- [x] **The mobile tip jar popup card matches the aesthetic, colors, typography, and layout of `tipjar.jpg`.**
+  - Confirmed by `activity_storage_browser.xml`, `bg_tip_jar_card_banner.xml`, and `bg_jar_glow_aura.xml`.
+- [x] **The "Fuel it!" button renders as a frosted glass pill with cyan outline rather than an opaque purple button.**
+  - Confirmed by `btnFuelIt` styling in `activity_storage_browser.xml` using `#261E3858` background, `#6638BDF8` stroke, white coffee cup icon (`ic_coffee`), and white text.
+- [x] **The glowing border, cyan-highlighted month, cyan percentage, and gradient progress bar render faithfully.**
+  - Confirmed by `tile_tip_jar_stroke` (`#6638BDF8`), `tile_tip_jar_accent` (`#FF38BDF8`), `txtTipJarPercent`, `buildTipJarTitleSpan()`, and `bg_tip_jar_progress.xml`.
+- [x] **Card dismiss, auto-dismiss, and navigation to the Tip Jar continue to function smoothly without regressions.**
+  - Confirmed by `StorageBrowserActivity.kt` lines 2016–2079, unchanged in business logic and interaction flow.
 
 ---
 

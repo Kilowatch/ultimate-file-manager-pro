@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ambient cyan halo glow behind the tip jar icon -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:gradientRadius="34dp"
+        android:startColor="#4438BDF8"
+        android:centerColor="#1A00B0FF"
+        android:endColor="#00000000" />
+</shape>

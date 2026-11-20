@@ -1,9 +1,7 @@
-# Code Review: Root Storage Global Mount Namespace Access
+# Code Review: Tip Jar Progress Popup Visual Redesign (v2.2.8)
 
 ## Summary
-The changes implement master/global mount namespace integration for elevated root sessions using `libsu` (`Shell.FLAG_MOUNT_MASTER`), resolving the per-app mount namespace isolation issue on Android 14+ and Android 16 (e.g. Nothing Phone 2a) where `/data/data` was previously restricted to only two directories. All review items—including modern flag modernization without deprecated flags, immediate process exit checks, and graceful fallbacks—have been implemented and verified.
-
----
+The visual redesign of the mobile Tip Jar progress popup card has been implemented cleanly and precisely to match `tipjar.jpg`. All modified XML resources, color tokens, and layout declarations follow Android and UFM standards without introducing layout inflation overhead, memory leaks, or breaking lifecycle interactions. The project compiled cleanly via `./gradlew assembleMobileGoogleDebug`.
 
 ## Findings
 
@@ -14,23 +12,16 @@ The changes implement master/global mount namespace integration for elevated roo
 *None.*
 
 ### 🟡 Minor
-*All resolved:*
-- Deprecated `FLAG_REDIRECT_STDERR` removed from `UfmApplication.kt` and `RootShellWrapper.kt`. Builder configuration now uses modern `libsu` standard defaults and `Shell.FLAG_MOUNT_MASTER`.
+*None.*
 
 ### 🔵 Suggestions
-*All resolved:*
-- In `openInputStream` and `openOutputStream`, added immediate process exit status verification (`!p.isAlive && p.exitValue() != 0`) to dynamically detect unsupported `--mount-master` flags on custom binaries and instantly fall back to standard `su -c`.
-
----
+- **[activity_storage_browser.xml:204]** The ambient jar halo view is rendered via a lightweight 52dp `FrameLayout` containing the halo `<View>` and `<ImageView>`. This is very efficient; hardware acceleration flattens and renders it with zero noticeable overhead.
 
 ## Checklist Coverage
-- **Kotlin Correctness**: Clean. No unnecessary `!!`, `@Volatile` used appropriately on `isMountMasterActive`, nullable types handled safely.
-- **Coroutines & Concurrency**: Clean. Main thread non-blocking guarantee preserved in `isAuthorized()`.
-- **Android Lifecycle & Architecture**: Clean. Proper separation of concerns; no leaked contexts or activities.
-- **Performance**: Clean. Minimal overhead, cached shell re-use, and fast directory traversal.
-- **Tests**: Clean. Expanded Robolectric test coverage in `RootShellWrapperTest` passing successfully.
-
----
+- **Kotlin Correctness**: Clean. Version constants cleanly updated in `build.gradle.kts`.
+- **Android Lifecycle & Architecture**: Clean. No changes to business logic or listeners in `StorageBrowserActivity`.
+- **UI & Layout**: Clean. All elements match `tipjar.jpg`, contrast is verified against dark glass background.
+- **Resource Conventions**: Clean. Color tokens updated symmetrically in both `values` and `values-night`.
 
 ## Verdict
-**Approve** — Implementation is completely clean, modern, and ready to proceed to security audit.
+**Approve** — Clean implementation ready for security audit and verification.
