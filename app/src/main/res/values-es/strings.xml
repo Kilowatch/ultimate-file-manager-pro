@@ -796,14 +796,14 @@ Cancelar
 ADB requerido
 </string>
     <string name="adb_required_to_take_screenshots">
-\\\"La depuración USB debe estar habilitada en el televisor para capturar capturas de pantalla.\n
+\"La depuración USB debe estar habilitada en el televisor para capturar capturas de pantalla.\n
 \n
 Para habilitarla:\n
 1. Abre Ajustes en tu televisor\n
 2. Ve a Preferencias del dispositivo > Opciones de desarrollador\n
-3. Habilita \\\"Depuración USB\\\"\n
+3. Habilita \"Depuración USB\"\n
 \n
-Si no ves Opciones de desarrollador, ve a Acerca de y toca \\\"Número de compilación\\\" 7 veces primero.\\\"
+Si no ves Opciones de desarrollador, ve a Acerca de y toca \"Número de compilación\" 7 veces primero.\"
 </string>
     <string name="adb_enable_desc">
 La depuración USB debe estar habilitada en el TV para tomar capturas de pantalla.
@@ -860,10 +860,10 @@ Eliminando…
 Limpiando índice…
 </string>
     <string name="deleting_folder_progress">
-Eliminando \\\"%1$s\\\"… Limpiando base de datos del índice, espera por favor.
+Eliminando \"%1$s\"… Limpiando base de datos del índice, espera por favor.
 </string>
     <string name="deleting_folder_only_progress">
-Eliminando \\\"%1$s\\\"… Espera por favor.
+Eliminando \"%1$s\"… Espera por favor.
 </string>
     <string name="deleting_items_progress">
 Eliminando elementos… Espera por favor.
@@ -1031,14 +1031,14 @@ Acceso restringido
 Política corporativa detectada
 </string>
     <string name="policy_blocked_message">
-\\\"Parece que tu dispositivo u organización ha restringido el acceso a este proveedor de almacenamiento.\n
+\"Parece que tu dispositivo u organización ha restringido el acceso a este proveedor de almacenamiento.\n
 \n
 Las razones comunes incluyen:\n
 • Políticas de Intune/MDM\n
 • Reglas de acceso condicional\n
 • Bloqueos a nivel de red\n
 \n
-Por favor, contacta a tu administrador de TI para permitir que \\\"Ultimate File Manager Pro\\\" acceda al almacenamiento en la nube.\\\"
+Por favor, contacta a tu administrador de TI para permitir que \"Ultimate File Manager Pro\" acceda al almacenamiento en la nube.\"
 </string>
     <string name="policy_blocked_details">
 Detalles técnicos
@@ -8396,7 +8396,7 @@ Abriendo %1$s…
 Teléfono
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 Teléfonos emparejados
@@ -9230,7 +9230,7 @@ Editar perfil
 Eliminar perfil
 </string>
     <string name="delete_profile_confirm">
-¿Eliminar el perfil \\\"%1$s\\\"? Esta acción no se puede deshacer.
+¿Eliminar el perfil \"%1$s\"? Esta acción no se puede deshacer.
 </string>
     <string name="profile_saved">
 Perfil guardado
@@ -9304,10 +9304,10 @@ FTP no admite autenticación con clave SSH. Crea primero un perfil con nombre de
 Archivo de clave no válido
 </string>
     <string name="authorized_keys_is_private">
-Este es un archivo de CLAVE PRIVADA. Los archivos de clave pública contienen líneas que comienzan con \\\"ssh-rsa\\\", \\\"ssh-ed25519\\\", etc. Selecciona el archivo .pub en su lugar.
+Este es un archivo de CLAVE PRIVADA. Los archivos de clave pública contienen líneas que comienzan con \"ssh-rsa\", \"ssh-ed25519\", etc. Selecciona el archivo .pub en su lugar.
 </string>
     <string name="authorized_keys_bad_format" formatted="false">
-Formato de clave pública SSH no válido en la línea %d: \\\"%s\\\"
+Formato de clave pública SSH no válido en la línea %d: \"%s\"
 </string>
     <string name="authorized_keys_invalid_key">
 Este archivo no contiene claves públicas SSH válidas.
@@ -12266,7 +12266,7 @@ Propiedades
 Propiedades
 </string>
     <string name="properties_calculating_size">
-Calculando tamaño\\u2026
+Calculando tamaño…
 </string>
     <string name="properties_multiple_items_title">
 %1$d elementos seleccionados
@@ -13681,7 +13681,7 @@ Autenticación y acceso
 Aloja servidores FTP y SFTP locales o transmite medios a través de DLNA. Los dispositivos en tu red Wi-Fi local pueden conectarse para explorar, transmitir y transferir archivos.
 </string>
     <string name="file_server_empty_profiles_desc">
-Toca \\\'Añadir perfil\\\' para configurar credenciales de acceso, permisos de acceso y directorios compartidos.
+Toca \'Añadir perfil\' para configurar credenciales de acceso, permisos de acceso y directorios compartidos.
 </string>
 
     <!-- DLNA Modernization -->
@@ -13704,7 +13704,7 @@ Transmite fotos, música y videos a Smart TVs y reproductores DLNA en tu red Wi-
 Configura cómo aparece tu dispositivo en la red local y elige los directorios para compartir. Los recursos compartidos DLNA son estrictamente de solo lectura.
 </string>
     <string name="dlna_empty_shared_folders_desc">
-Toca \\\'Añadir carpeta\\\' para seleccionar carpetas de almacenamiento interno, tarjeta SD o USB para exponer a través de DLNA.
+Toca \'Añadir carpeta\' para seleccionar carpetas de almacenamiento interno, tarjeta SD o USB para exponer a través de DLNA.
 </string>
 
     <!-- Smart Sort Modernization -->
@@ -15034,7 +15034,7 @@ Explorar almacenamiento interno, tarjeta SD, red o nube
 Pestaña %d
 </string>
     <string name="tab_storage_unavailable_closed">
-Pestaña cerrada \\\'%s\\\' (almacenamiento desconectado)
+Pestaña cerrada \'%s\' (almacenamiento desconectado)
 </string>
     <string name="backup_pref_tabs">
 Pestañas y sesiones del explorador
@@ -17206,7 +17206,7 @@ Debido a las restricciones de seguridad de Android, las aplicaciones no pueden e
 Deshabilitar acceso directo
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 Local

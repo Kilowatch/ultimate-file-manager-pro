@@ -806,10 +806,10 @@ Etkinleştirmek için:\n
 Geliştirici Seçeneklerini görmüyorsanız, önce Hakkında\'ya gidin ve \"Yapı Numarası\"na 7 kez dokunun.\"
 </string>
     <string name="adb_enable_desc">
-Ekran görüntüsü almak için TV\\\'de USB Hata Ayıklama etkinleştirilmiş olmalıdır.
+Ekran görüntüsü almak için TV\'de USB Hata Ayıklama etkinleştirilmiş olmalıdır.
 </string>
     <string name="adb_step_1">
-1. Android TV\\\'nizde Ayarlar\\\'ı açın
+1. Android TV\'nizde Ayarlar\'ı açın
 </string>
     <string name="adb_step_2">
 2. Cihaz Tercihleri → Geliştirici Seçeneklerine gidin
@@ -2304,7 +2304,7 @@ Bazı öğeler yapıştırılamadı
 Zaten mevcut
 </string>
     <string name="conflict_message_file">
-\\\"%1$s\\\" hedefte zaten mevcut.
+\"%1$s\" hedefte zaten mevcut.
 </string>
     <string name="conflict_message_folder">
 Hedefte \"%1$s\" klasörü zaten mevcut.
@@ -2863,7 +2863,7 @@ Google Play\'de bir inceleme bırakmak için bir dakikanızı ayırır mısını
     <string name="rate_us_screen_body_amazon">
 Geri bildirimleriniz uygulamayı geliştirmemize yardımcı olur ve uygulamanın geliştirilmesini doğrudan destekler.\n
 \n
-Amazon Appstore\\\'da bir değerlendirme bırakmak için bir dakikanızı ayırır mısınız?
+Amazon Appstore\'da bir değerlendirme bırakmak için bir dakikanızı ayırır mısınız?
 </string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
@@ -3168,7 +3168,7 @@ Espressonuzu seçin
 Fiyatlar yükleniyor…
 </string>
     <string name="tip_jar_loading_play">
-Google Play\\\'den fiyatlar yükleniyor…
+Google Play\'den fiyatlar yükleniyor…
 </string>
     <string name="tip_jar_transparency">
 UFM tamamen ücretsiz ve reklamsız olarak yapıldı ve her zaman böyle kalacak. Bahşiş tamamen isteğe bağlıdır — sadece kahvenin taze kalmasına ve yeni özelliklerin gelmesine yardımcı olur! ☕
@@ -4655,7 +4655,7 @@ Android cihaza bağlan
 ADB Shell Hazır
 </string>
     <string name="adb_terminal_empty_subtitle">
-Bir Android cihazına veya TV\\\'ye bağlanarak kabuk komutları çalıştırın, paketleri inceleyin ve sistem süreçlerini izleyin.
+Bir Android cihazına veya TV\'ye bağlanarak kabuk komutları çalıştırın, paketleri inceleyin ve sistem süreçlerini izleyin.
 </string>
     <string name="adb_terminal_clear">
 Konsolu Temizle
@@ -4731,13 +4731,13 @@ Telefonunuzu UFM çalıştıran Android TV ile bağlayarak kablosuz dosya aktar�
 3 Adımlı Hızlı Rehber
 </string>
     <string name="tv_pairing_guide_step1">
-Android TV\\\'nizde UFM\\\'yi açın
+Android TV\'nizde UFM\'yi açın
 </string>
     <string name="tv_pairing_guide_step2">
 TV ana menüsünde \"Eşleştirilmiş Telefonlar\"ı seçin
 </string>
     <string name="tv_pairing_guide_step3">
-4 haneli PIN\\\'i almak için TV\\\'de \"Mobil Uygulamayı Bağla\"yı seçin
+4 haneli PIN\'i almak için TV\'de \"Mobil Uygulamayı Bağla\"yı seçin
 </string>
     <string name="paired_status_connected">
 Bağlandı
@@ -5224,7 +5224,7 @@ Yerel medya ve depolama için kalıcı önbellekleme
 Medya Küçük Resimlerini Etkinleştir
 </string>
     <string name="lt_enable_desc">
-Yerel videolar, ses kapakları, APK\\\'lar ve kamera görüntüleri için küçük resim oluşturun ve önbelleğe alın.
+Yerel videolar, ses kapakları, APK\'lar ve kamera görüntüleri için küçük resim oluşturun ve önbelleğe alın.
 </string>
     <string name="lt_cache_limit_title">
 Önbellek Boyutu Sınırı
@@ -5476,7 +5476,7 @@ PIN oluşturuluyor…
 TV, %1$s olarak yeniden adlandırıldı
 </string>
     <string name="no_tvs_found_make_sure">
-TV bulunamadı. Uygulamanın TV\\\'de açık olduğundan emin olun.
+TV bulunamadı. Uygulamanın TV\'de açık olduğundan emin olun.
 </string>
     <string name="please_enter_all_4_digits">
 Lütfen 4 hanenin tamamını girin
@@ -5491,7 +5491,7 @@ Eşleme başarısız. Yanlış PIN mi?
 Tüm çıktı panoya kopyalandı
 </string>
     <string name="connect_to_adb_first">
-Önce ADB\\\'ye bağlanın
+Önce ADB\'ye bağlanın
 </string>
     <string name="no_adb_devices_found_on">
 Ağda ADB cihazı bulunamadı
@@ -5762,13 +5762,13 @@ Uzaktan Kumanda
 TV Uzaktan Kumandası
 </string>
     <string name="tv_remote_subtitle">
-TV\\\'yi Bluetooth veya WiFi ile kontrol edin
+TV\'yi Bluetooth veya WiFi ile kontrol edin
 </string>
     <string name="tv_remote_connected_to">
-%1$s\\\'a bağlandı
+%1$s\'a bağlandı
 </string>
     <string name="tv_remote_connecting">
-%1$s\\\'a bağlanıyor…
+%1$s\'a bağlanıyor…
 </string>
     <string name="tv_remote_failed">
 TV uzaktan kumandasına bağlanılamadı
@@ -5777,9 +5777,9 @@ TV uzaktan kumandasına bağlanılamadı
 ADB (USB Hata Ayıklama) etkinleştirilmelidir.\n
 \n
 Etkinleştirmek için:\n
-1. TV\\\'nizde Ayarlar\\\'ı açın\n
-2. Cihaz Tercihleri › Geliştirici Seçenekleri\\\'ne gidin\n
-3. \\\"USB Hata Ayıklama\\\"yı etkinleştirin
+1. TV\'nizde Ayarlar\'ı açın\n
+2. Cihaz Tercihleri › Geliştirici Seçenekleri\'ne gidin\n
+3. \"USB Hata Ayıklama\"yı etkinleştirin
 </string>
     <string name="tv_remote_not_paired">
 Bu TV henüz ADB için eşleştirilmedi. Lütfen önce ana ekrandan eşleştirin.
@@ -5864,23 +5864,23 @@ Cihazı Yeniden Adlandır
 Cihazı Kaldır
 </string>
     <string name="searching_for_tvs">
-TV\\\'ler aranıyor…
+TV\'ler aranıyor…
 </string>
     <string name="select_tv_to_link">
-Bağlanacak TV\\\'yi Seç
+Bağlanacak TV\'yi Seç
 </string>
     <string name="enter_pin">
 PIN Girin
 </string>
     <string name="looking_for_tvs_on_local">
-Yerel ağda TV\\\'ler aranıyor…
+Yerel ağda TV\'ler aranıyor…
 </string>
     <string name="save_here">
 BURAYA KAYDET
 </string>
     <!-- Share Receiver -->
     <string name="share_receive_title">
-UFM\\\'ye Kaydet
+UFM\'ye Kaydet
 </string>
     <string name="share_target_save_to">
 Şuraya kaydet:
@@ -5889,7 +5889,7 @@ UFM\\\'ye Kaydet
 Şu tarihte aç:
 </string>
     <string name="share_receive_from">
-%s\\\'dan dosya alınıyor
+%s\'dan dosya alınıyor
 </string>
     <string name="share_receive_select_destination">
 Hedef Seç
@@ -5907,7 +5907,7 @@ Dosya başarıyla kaydedildi
 Dosya kaydedilemedi
 </string>
     <string name="share_receive_confirm">
-Dosya %s\\\'a kaydedilsin mi?
+Dosya %s\'a kaydedilsin mi?
 </string>
     <string name="share_receive_browse">
 Göz At ve Klasör Seç
@@ -5916,7 +5916,7 @@ Göz At ve Klasör Seç
 Hedef: %s
 </string>
     <string name="share_receive_save_to_path">
-%s\\\'a Kaydet
+%s\'a Kaydet
 </string>
     <string name="share_receive_multiple_files">
 %d dosyaları
@@ -5972,16 +5972,16 @@ Kalıcı Olarak Silinsin mi?
 Dosya artık çöp kutusunda mevcut değil
 </string>
     <string name="recycle_bin_network_restore_hint">
-Dosyayı orijinal konumuna geri döndürmek için Geri Yükle\\\'yi kullanın
+Dosyayı orijinal konumuna geri döndürmek için Geri Yükle\'yi kullanın
 </string>
     <string name="recycle_bin_share_offline">
 Depolama çevrimdışı. Geri yüklenemez veya silinemez
 </string>
     <string name="recycle_bin_move_confirm">
-%d dosya(lar) Geri Dönüşüm Kutusu\\\'na taşınsın mı?
+%d dosya(lar) Geri Dönüşüm Kutusu\'na taşınsın mı?
 </string>
     <string name="recycle_bin_move_success">
-%d dosya(lar) Geri Dönüşüm Kutusu\\\'na taşındı
+%d dosya(lar) Geri Dönüşüm Kutusu\'na taşındı
 </string>
     <string name="move_to_bin">
 Çöp Kutusuna Taşı
@@ -5990,7 +5990,7 @@ Depolama çevrimdışı. Geri yüklenemez veya silinemez
 Geri Dönüşüm Kutusu
 </string>
     <string name="settings_recycle_bin_summary">
-Silinen dosyaları kalıcı silme yerine Geri Dönüşüm Kutusu\\\'na taşı
+Silinen dosyaları kalıcı silme yerine Geri Dönüşüm Kutusu\'na taşı
 </string>
     <string name="opening_recycle_bin">
 Geri Dönüşüm Kutusu açılıyor
@@ -6020,7 +6020,7 @@ Devre Dışı
 Bundan daha eski dosyalar kalıcı olarak silinecek
 </string>
     <string name="recycle_bin_auto_delete_hint">
-Otomatik silmeyi devre dışı bırakmak için 0\\\'a ayarlayın. Varsayılan 30 gündür.
+Otomatik silmeyi devre dışı bırakmak için 0\'a ayarlayın. Varsayılan 30 gündür.
 </string>
     <string name="recycle_bin_auto_delete_fewer">
 Daha az gün
@@ -6891,19 +6891,19 @@ Dizin yüklenirken hata: %1$s
 APK Yandan Yükleme
 </string>
     <string name="sideload_apk_subtitle">
-TV\\\'ye tek APK paketi kurun
+TV\'ye tek APK paketi kurun
 </string>
     <string name="sideload_xapk">
 XAPK Yandan Yükleme
 </string>
     <string name="sideload_xapk_subtitle">
-TV\\\'ye paketli XAPK / APKM uygulamalarını kurun
+TV\'ye paketli XAPK / APKM uygulamalarını kurun
 </string>
     <string name="sideload_dialog_desc_apk">
-Cihazınızdan eşleştirilmiş TV\\\'nize bir Android uygulama paketi (.apk) kurun.
+Cihazınızdan eşleştirilmiş TV\'nize bir Android uygulama paketi (.apk) kurun.
 </string>
     <string name="sideload_dialog_desc_xapk">
-Cihazınızdan eşleştirilmiş TV\\\'nize paketli bir uygulama paketi (.xapk / .apkm) kurun.
+Cihazınızdan eşleştirilmiş TV\'nize paketli bir uygulama paketi (.xapk / .apkm) kurun.
 </string>
     <string name="sideload_step_1_apk">
 1. Cihaz depolamanızdan .apk dosyasını seçin
@@ -6912,7 +6912,7 @@ Cihazınızdan eşleştirilmiş TV\\\'nize paketli bir uygulama paketi (.xapk / 
 1. Cihaz depolamanızdan .xapk / .apkm paketini seçin
 </string>
     <string name="sideload_step_2">
-2. UFM paketi TV\\\'nize kablosuz olarak aktaracak
+2. UFM paketi TV\'nize kablosuz olarak aktaracak
 </string>
     <string name="sideload_step_3">
 3. Tamamlamak için TV ekranınızdaki kurulum istemini onaylayın
@@ -6926,7 +6926,7 @@ Dosya Seç
 Ayarları Aktar
 </string>
     <string name="transfer_settings_action_subtitle">
-Ayarları ve ağ paylaşımlarını TV\\\'ye aktarın
+Ayarları ve ağ paylaşımlarını TV\'ye aktarın
 </string>
     <string name="transfer_settings_select_all">
 Tümünü Seç
@@ -7001,7 +7001,7 @@ Dosya Sunucusu Bağlantı Noktası (%1$d)
 ⚠ Dosya Sunucusu PIN\'i aktarılmaz. TV\'de yeni bir PIN belirleyin.
 </string>
     <string name="transfer_to_tv">
-TV\\\'ye Aktar
+TV\'ye Aktar
 </string>
 
     <string name="preparing">
@@ -7017,7 +7017,7 @@ Klasör indiriliyor: %1$s
 Sıkıştırma tamamlandı: %1$s
 </string>
     <string name="uploading_to_destsharename">
-%1$s\\\'a yükleniyor…
+%1$s\'a yükleniyor…
 </string>
     <string name="compression_completed_archivename_destsharename">
 Sıkıştırma tamamlandı: %1$s → %2$s
@@ -7032,7 +7032,7 @@ Sıkıştırma iptal edildi
 Silme tamamlandı ancak hatalar oluştu (%1$d başarısız)
 </string>
     <string name="press_cancel_to_stop_the_transfer">
-Aktarımı durdurmak için İptal\\\'e basın
+Aktarımı durdurmak için İptal\'e basın
 </string>
     <string name="transfer_cancelled">
 Aktarım iptal edildi
@@ -7116,25 +7116,25 @@ Dosya açılamadı: %1$s
 Dosya indirilemedi: %1$s
 </string>
     <string name="uploading_localfilename_to_tv">
-%1$s TV\\\'ye yükleniyor…
+%1$s TV\'ye yükleniyor…
 </string>
     <string name="installing_localfilename_on_tv">
-%1$s TV\\\'ye yükleniyor…
+%1$s TV\'ye yükleniyor…
 </string>
     <string name="apk_install_triggered_on_tv">
-APK yüklemesi TV\\\'de başlatıldı
+APK yüklemesi TV\'de başlatıldı
 </string>
     <string name="failed_to_start_xapk_install_on_tv">
-TV\\\'de XAPK yüklemesi başlatılamadı
+TV\'de XAPK yüklemesi başlatılamadı
 </string>
     <string name="extracting_currentfile_currenttotal">
 %1$s ayıklanıyor (%2$s/%3$s)…
 </string>
     <string name="installing_split_apks_on_tv">
-TV\\\'ye bölünmüş APK\\\'lar yükleniyor…
+TV\'ye bölünmüş APK\'lar yükleniyor…
 </string>
     <string name="xapk_install_triggered_on_tv_check_the_tv_screen">
-TV\\\'de XAPK yüklemesi başlatıldı — TV ekranını kontrol edin
+TV\'de XAPK yüklemesi başlatıldı — TV ekranını kontrol edin
 </string>
     <string name="xapk_install_failed_error">
 XAPK yüklemesi başarısız: %1$s
@@ -7143,28 +7143,28 @@ XAPK yüklemesi başarısız: %1$s
 Sideload başarısız: %1$s
 </string>
     <string name="usb_debugging_must_be_enabled_on_the_tv_to_capture_screenshots">
-Ekran görüntüsü almak için TV\\\'de USB Hata Ayıklama etkinleştirilmelidir.
+Ekran görüntüsü almak için TV\'de USB Hata Ayıklama etkinleştirilmelidir.
 </string>
     <string name="to_enable">
 Etkinleştirmek için:
 </string>
     <string name="open_settings_on_your_tv">
-1. TV\\\'nizde Ayarlar\\\'ı açın
+1. TV\'nizde Ayarlar\'ı açın
 </string>
     <string name="go_to_device_preferences_developer_options">
-2. Cihaz Tercihleri > Geliştirici Seçenekleri\\\'ne gidin
+2. Cihaz Tercihleri > Geliştirici Seçenekleri\'ne gidin
 </string>
     <string name="enable_usb_debugging">
-3. \\\"USB Hata Ayıklama\\\"yı etkinleştirin
+3. \"USB Hata Ayıklama\"yı etkinleştirin
 </string>
     <string name="if_you_dont_see_developer_options_go_to_about_and_tap_build_number_7_times_first">
-Geliştirici Seçenekleri\\\'ni görmüyorsanız, önce Hakkında\\\'ya gidin ve \\\"Yapı Numarası\\\"na 7 kez dokunun.
+Geliştirici Seçenekleri\'ni görmüyorsanız, önce Hakkında\'ya gidin ve \"Yapı Numarası\"na 7 kez dokunun.
 </string>
     <string name="connecting_to_tv_the_screenshot_will_be_saved_to_your_phones_screenshots_folder">
-TV\\\'ye bağlanılıyor… Ekran görüntüsü telefonunuzun Ekran Görüntüleri klasörüne kaydedilecek.
+TV\'ye bağlanılıyor… Ekran görüntüsü telefonunuzun Ekran Görüntüleri klasörüne kaydedilecek.
 </string>
     <string name="connecting_to_tv_via_adb_please_approve_on_tv_if_prompted">
-ADB ile TV\\\'ye bağlanılıyor… İstenirse TV\\\'de onaylayın.
+ADB ile TV\'ye bağlanılıyor… İstenirse TV\'de onaylayın.
 </string>
     <string name="screenshot_saved_savedfilename">
 Ekran görüntüsü kaydedildi: %1$s
@@ -7179,7 +7179,7 @@ Ekran görüntüsü başarısız: %1$s
 Paylaşımlar listelenemedi: %1$s
 </string>
     <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">
-\\\"Geçersiz yol. SMB için bir paylaşım adı girin (ör. /ShareName veya &#92;&#92;host&#92;&#92;Paylaşım&#92;&#92;Klasör).\\\"
+\"Geçersiz yol. SMB için bir paylaşım adı girin (ör. /ShareName veya &#92;&#92;host&#92;&#92;Paylaşım&#92;&#92;Klasör).\"
 </string>
     <string name="testing">
 Test ediliyor…
@@ -7287,7 +7287,7 @@ Uygulama Bilgisi
 📂 UFM üzerinden erişilebilir · Uygulama Dosyaları / İndirilenler / UFM-Ayıklanan
 </string>
     <string name="a_new_tile_called_apk_xapk_extracts_will_appear_on_the">
-💡 \\\"APK / XAPK Ayıklamaları\\\" adlı yeni bir kutucuk ana ekranda görünecektir.
+💡 \"APK / XAPK Ayıklamaları\" adlı yeni bir kutucuk ana ekranda görünecektir.
 </string>
     <string name="home_screen_tap_it_to_browse_share_or_install_your_extracted_files">
 Ana ekranda. Ayıklanan dosyalarınıza göz atmak, paylaşmak veya yüklemek için ona dokunun.
@@ -7308,10 +7308,10 @@ Anladım
 Dosya açılamıyor: %1$s
 </string>
     <string name="access_to_androiddata_denied">
-Android/data\\\'ya erişim reddedildi.
+Android/data\'ya erişim reddedildi.
 </string>
     <string name="access_to_androidobb_denied">
-Android/obb\\\'ye erişim reddedildi.
+Android/obb\'ye erişim reddedildi.
 </string>
     <string name="grant_access_to_app_folder">
 Uygulama klasörüne erişime izin ver
@@ -7320,7 +7320,7 @@ Uygulama klasörüne erişime izin ver
 OBB klasörüne erişime izin ver
 </string>
     <string name="in_the_picker_navigate_to_android_data_shorttarget_and_select_use_this_folder_or_select_this_folder_if_you_see_a_different_folder_eg_dcimcamera_navigate_up_to_android_data_first_and_then_into_shorttarget">
-Seçicide: Android → data → %1$s yoluna gidin ve \'Bu klasörü kullan\'ı (veya \'Bu klasörü seç\'i) seçin. Farklı bir klasör (örn. DCIM/Camera) görüyorsanız, önce Android → data\\\'ya kadar gidin ve ardından %1$s\\\'e girin.
+Seçicide: Android → data → %1$s yoluna gidin ve \'Bu klasörü kullan\'ı (veya \'Bu klasörü seç\'i) seçin. Farklı bir klasör (örn. DCIM/Camera) görüyorsanız, önce Android → data\'ya kadar gidin ve ardından %1$s\'e girin.
 </string>
     <string name="in_the_picker_navigate_to_android_obb_shorttarget_and_select_use_this_folder">
 Seçicide: Android → obb → %1$s yoluna gidin ve \'Bu klasörü kullan\'ı seçin.
@@ -7388,7 +7388,7 @@ Alan israfına neden olan %1$d yinelenen grup bulundu.
 Büyük Dosyaları İncele
 </string>
     <string name="found_bigfilessize_files_larger_than_512_mb">
-512 MB\\\'tan büyük %1$d dosya bulundu.
+512 MB\'tan büyük %1$d dosya bulundu.
 </string>
     <string name="analyzer_incomplete_downloads_title">
 Eksik / Seyrek İndirmeler
@@ -8396,7 +8396,7 @@ Astar
 Telefon
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 Eşleştirilmiş Telefonlar
@@ -8817,7 +8817,7 @@ Hizmet Durumu
 Yükseltilmiş Yönetici kurulu değil
 </string>
     <string name="shizuku_description">
-Porter, Shizuku ve Shevery, uygulamaların sistem düzeyindeki API\\\'leri doğrudan kullanmasına olanak tanır; çoğu Android sürümünde root gerektirmeden arka planda dosya yönetimi ve sistem komutu yürütme gibi gelişmiş özellikleri etkinleştirir.
+Porter, Shizuku ve Shevery, uygulamaların sistem düzeyindeki API\'leri doğrudan kullanmasına olanak tanır; çoğu Android sürümünde root gerektirmeden arka planda dosya yönetimi ve sistem komutu yürütme gibi gelişmiş özellikleri etkinleştirir.
 </string>
     <string name="shizuku_service_status">
 Hizmet Durumu
@@ -8871,7 +8871,7 @@ Yükseltilmiş hizmet başlatılıyor...
 Yayın amacı ile Yükseltilmiş hizmet başlatılmaya çalışılıyor. Lütfen bekleyin…
 </string>
     <string name="shizuku_start_failed">
-Hizmet başlatılamadı. Lütfen Kablosuz Hata Ayıklama\\\'nın etkin olduğundan emin olun veya manuel olarak başlatın.
+Hizmet başlatılamadı. Lütfen Kablosuz Hata Ayıklama\'nın etkin olduğundan emin olun veya manuel olarak başlatın.
 </string>
     <string name="shizuku_enabled_and_active">
 Yükseltilmiş Erişim etkin ve aktif
@@ -8883,13 +8883,13 @@ ADB bağlı değil. Yükseltilmiş Erişimi otomatik olarak etkinleştirmek içi
 Porter, Shizuku ve Shevery Hizmetleri
 </string>
     <string name="shizuku_status_not_installed_desc">
-Korumalı Android/data klasörlerinin kilidini açmak ve root olmadan yükseltilmiş işlemleri gerçekleştirmek için Porter, Shizuku veya Shevery\\\'yi yükleyin.
+Korumalı Android/data klasörlerinin kilidini açmak ve root olmadan yükseltilmiş işlemleri gerçekleştirmek için Porter, Shizuku veya Shevery\'yi yükleyin.
 </string>
     <string name="shizuku_status_stopped_desc">
 Yükseltilmiş hizmet kurulu ancak şu anda çalışmıyor. Hizmeti Kablosuz Hata Ayıklama veya yönetici uygulamanız aracılığıyla başlatın.
 </string>
     <string name="shizuku_status_unauthorized_desc">
-Hizmet çalışıyor, ancak UFM\\\'nin sistem düzeyindeki API\\\'lere erişmek için yetkilendirme gerekiyor.
+Hizmet çalışıyor, ancak UFM\'nin sistem düzeyindeki API\'lere erişmek için yetkilendirme gerekiyor.
 </string>
     <string name="shizuku_status_active_desc">
 Yükseltilmiş hizmet, tam izinler verilerek etkin. Korumalı klasörler ve yükseltilmiş işlemler hazır.
@@ -8934,7 +8934,7 @@ Mevcut Yöneticiler
 Şizuku
 </string>
     <string name="shizuku_manager_shizuku_desc">
-GitHub\\\'dan standart yükseltilmiş hizmet
+GitHub\'dan standart yükseltilmiş hizmet
 </string>
     <string name="shizuku_manager_shevery_title">
 Shevery
@@ -8952,7 +8952,7 @@ Etkin olarak bakımı yapılan Shizuku devamı
 Önerilen
 </string>
     <string name="shizuku_porter_waiting_desc">
-Porter yüklü ancak hizmeti çalışmıyor. Bağlantı Porter\\\'ı bekliyor, bu nedenle Porter başlatılana veya kaldırılana kadar başka bir yönetici devralamaz.
+Porter yüklü ancak hizmeti çalışmıyor. Bağlantı Porter\'ı bekliyor, bu nedenle Porter başlatılana veya kaldırılana kadar başka bir yönetici devralamaz.
 </string>
     <string name="elevated_state_not_installed">
 Yüklü değil
@@ -8997,7 +8997,7 @@ Shevery\'yi alın
 2. Hizmeti Başlatın
 </string>
     <string name="shizuku_step_3">
-3. UFM\\\'yi Yetkilendirin
+3. UFM\'yi Yetkilendirin
 </string>
     <string name="shizuku_service_info_title">
 Hizmet Bilgisi
@@ -9021,7 +9021,7 @@ Verildi (API v23)
 Durumu Yeniden Kontrol Et
 </string>
     <string name="shizuku_manager_open_error">
-Yönetici açılamadı. Lütfen önce Porter, Shizuku veya Shevery\\\'yi yükleyin.
+Yönetici açılamadı. Lütfen önce Porter, Shizuku veya Shevery\'yi yükleyin.
 </string>
     <string name="elevated_download_title">
 %1$s İndir: v%2$s
@@ -10341,7 +10341,7 @@ Tüm APK ve XAPK çıkarma ayarlarını ve meta veri alanlarını varsayılana s
 Çıkarma ayarları varsayılanlara sıfırlandı
 </string>
     <string name="settings_apk_extract_metadata_header">
-JSON\\\'a Dahil Edilecek Meta Veri Alanları
+JSON\'a Dahil Edilecek Meta Veri Alanları
 </string>
     <string name="settings_apk_extract_section_general">
 Çıkarma Özellikleri
@@ -10431,7 +10431,7 @@ Yüklü uygulamanın bayt cinsinden toplam boyutu (app_size)
 Kaynak Dizini
 </string>
     <string name="field_source_dir_desc">
-Temel APK\\\'nın dosya sistemi dizin yolu (source_dir)
+Temel APK\'nın dosya sistemi dizin yolu (source_dir)
 </string>
     <string name="field_split_apks">
 Bölünmüş APK\'lar
@@ -10745,7 +10745,7 @@ Klasör Seç
 Varsayılana Sıfırla
 </string>
     <string name="auto_backup_location_not_set">
-Klasör seçilmedi — yedekleme konumu seçmek için Klasör Seç\\\'e dokunun
+Klasör seçilmedi — yedekleme konumu seçmek için Klasör Seç\'e dokunun
 </string>
     <string name="auto_backup_location_unavailable">
 Seçilen klasör artık mevcut değil — varsayılana dönülüyor
@@ -11622,7 +11622,7 @@ Standart Android uygulamalarını kullanarak dosya gönder (Bluetooth, E-posta, 
 UFM Premium Yerel Kopyalama
 </string>
     <string name="share_option_premium_desc">
-Wi-Fi gönderme ile TV\\\'lere veya Web Paylaşım Portalı ile PC\\\'lere/telefonlara doğrudan kopyala
+Wi-Fi gönderme ile TV\'lere veya Web Paylaşım Portalı ile PC\'lere/telefonlara doğrudan kopyala
 </string>
     <string name="premium_share_title">
 UFM Yerel Kopyalama Merkezi
@@ -11637,7 +11637,7 @@ Hedef cihaz türünü seçin:
 Android TV / Yangın TV
 </string>
     <string name="target_tv_desc">
-Kablosuz ADB gönderme kullanarak dosyaları doğrudan Android TV\\\'ye kopyala
+Kablosuz ADB gönderme kullanarak dosyaları doğrudan Android TV\'ye kopyala
 </string>
     <string name="target_mobile_pc">
 Telefon / Tablet / PC
@@ -11646,16 +11646,16 @@ Telefon / Tablet / PC
 Herhangi bir tarayıcıda dosya indirmek için güvenli bir yerel portal barındır
 </string>
     <string name="discovered_devices">
-Keşfedilen TV\\\'ler ve Cihazlar
+Keşfedilen TV\'ler ve Cihazlar
 </string>
     <string name="web_portal_card">
 Web Paylaşım Portalı
 </string>
     <string name="web_portal_desc">
-Tarayıcısı olan PC\\\'ler, tabletler veya mobil cihazlar için:
+Tarayıcısı olan PC\'ler, tabletler veya mobil cihazlar için:
 </string>
     <string name="web_portal_pin">
-Oturum PIN\\\'i
+Oturum PIN\'i
 </string>
     <string name="adb_device_badge">
 Android TV (ADB)
@@ -11667,7 +11667,7 @@ Android TV (ADB)
 Önemli: Taramadan önce hedef TV/cihazda Geliştirici Seçenekleri ve USB/Kablosuz Hata Ayıklama etkinleştirilmelidir.
 </string>
     <string name="adb_prompt_warning">
-Lütfen TV ekranınızda görünürse \\\"USB Hata Ayıklamaya İzin Ver\\\" istemini onaylayın.
+Lütfen TV ekranınızda görünürse \"USB Hata Ayıklamaya İzin Ver\" istemini onaylayın.
 </string>
     <string name="transferring_file">
 Gönderiliyor %1$s: %2$d%% (%3$.1f MB/s)
@@ -11696,10 +11696,10 @@ Dahili Depolama/İndirilenler
 APK Aktarım İşlemi
 </string>
     <string name="apk_action_message">
-%1$s\\\'ı hedef cihaza yüklemek mi, yoksa sadece kopyalamak mı istersiniz?
+%1$s\'ı hedef cihaza yüklemek mi, yoksa sadece kopyalamak mı istersiniz?
 </string>
     <string name="apk_action_install">
-APK\\\'yı Yükle
+APK\'yı Yükle
 </string>
     <string name="apk_action_copy">
 Sadece Kopyala
@@ -11725,7 +11725,7 @@ Ultimate File Manager Pro
 Dosyalar cihazınızın varsayılan İndirilenler klasörüne kaydedilecektir.
 </string>
     <string name="web_portal_html_enter_pin">
-Oturum PIN\\\'ini Girin
+Oturum PIN\'ini Girin
 </string>
     <string name="web_portal_html_verify">
 Doğrula
@@ -11757,10 +11757,10 @@ Tümünü İndir (ZIP)
 2. Cihazda herhangi bir tarayıcı (Chrome, Safari vb.) açın.
 </string>
     <string name="tv_share_step_url">
-3. Aşağıdaki URL\\\'yi girin:
+3. Aşağıdaki URL\'yi girin:
 </string>
     <string name="tv_share_step_pin">
-4. Oturum PIN\\\'ini girin:
+4. Oturum PIN\'ini girin:
 </string>
     <string name="tv_share_status_waiting">
 Web sunucusu çalışıyor. Bağlantı bekleniyor…
@@ -11870,7 +11870,7 @@ Kimlik doğrulama başarısız: %s
 Kaydetmeden önce lütfen kimlik doğrulayın
 </string>
     <string name="rclone_field_server_url">
-Sunucu URL\\\'si
+Sunucu URL\'si
 </string>
     <string name="rclone_field_koofr_password_hint">
 Oturum açma şifrenizi değil, Koofr hesap ayarlarınızda oluşturulan bir uygulama şifresi kullanın
@@ -12374,7 +12374,7 @@ Kullanım Analitiği
 Dosya Etiketleri
 </string>
     <string name="settings_file_tags_subtitle">
-Hashtag\\\'leri ve etiketleme seçeneklerini yönetin
+Hashtag\'leri ve etiketleme seçeneklerini yönetin
 </string>
     <string name="settings_file_tags_info_notice">
 Hızlı filtreleme, arama ve kategorizasyon için dosyalara ve klasörlere atanan özel etiketler. Herhangi bir etiketteki çöp kutusu simgesine dokunarak onu genel olarak kaldırın.
@@ -12495,7 +12495,7 @@ Klasör Sıralama Geçersiz Kılmaları
     <string name="folder_sort_manager_empty">
 Klasöre özel sıralama ayarı kaydedilmedi.\n
 \n
-Bir klasör açın, Sırala ve Filtrele\'ye dokunun ve geçersiz kılma oluşturmak için \\\"Bu Klasör\\\"ü seçin.
+Bir klasör açın, Sırala ve Filtrele\'ye dokunun ve geçersiz kılma oluşturmak için \"Bu Klasör\"ü seçin.
 </string>
     <string name="folder_sort_manager_empty_title">
 Yapılandırılmış Sıralama Geçersiz Kılma Yok
@@ -12903,7 +12903,7 @@ Etiketlerden Yeniden Adlandır
 Toplu İşlem Seçenekleri
 </string>
     <string name="music_tag_auto_number_tracks">
-Parçaları sırayla otomatik numaralandır (1\\\'den N\\\'e)
+Parçaları sırayla otomatik numaralandır (1\'den N\'e)
 </string>
     <string name="music_tag_core_tags_header">
 Ses Etiketleri
@@ -13215,10 +13215,10 @@ Klasör adı
 Çıkar ve Klasör Seç
 </string>
     <string name="extract_select_folder_desc">
-Dosyaları çıkar ve \\\'Buraya Çıkar\\\' düğmesini kullanarak hedefi seç.
+Dosyaları çıkar ve \'Buraya Çıkar\' düğmesini kullanarak hedefi seç.
 </string>
     <string name="extract_staged_snackbar">
-Dosyalar çıkarıldı. Hedef klasöre git ve \\\'Buraya Çıkar\\\' düğmesine dokun.
+Dosyalar çıkarıldı. Hedef klasöre git ve \'Buraya Çıkar\' düğmesine dokun.
 </string>
     <string name="extract_move_success">
 %1$d öğe başarıyla çıkarıldı.
@@ -13281,7 +13281,7 @@ Fotoğrafı Sil
 %1$s silindi
 </string>
     <string name="item_moved_to_recycle_bin">
-\"%1$s\" öğesi Geri Dönüşüm Kutusu\\\'na taşındı
+\"%1$s\" öğesi Geri Dönüşüm Kutusu\'na taşındı
 </string>
     <string name="menu_more_options">
 Daha fazla seçenek
@@ -13529,13 +13529,13 @@ Videonun ilk karesini yakala (00:00)
 Önerilen varsayılan — siyah veya açılış tanıtım karelerini atlar
 </string>
     <string name="vtt_percent_25_subtitle">
-Video süresinin %25\\\'inde kare yakala
+Video süresinin %25\'inde kare yakala
 </string>
     <string name="vtt_percent_50_subtitle">
 Videonun tam orta noktasında (%50) kare yakala
 </string>
     <string name="vtt_percent_75_subtitle">
-Video süresinin %75\\\'inde kare yakala
+Video süresinin %75\'inde kare yakala
 </string>
 
     <!-- Network Thumbnail Settings Modernization -->
@@ -13669,7 +13669,7 @@ Kimlik Doğrulama ve Erişim
 Yerel FTP ve SFTP dosya sunucuları barındırın veya DLNA üzerinden medya akışı yapın. Yerel Wi-Fi ağınızdaki cihazlar göz atmak, akış yapmak ve dosya aktarmak için bağlanabilir.
 </string>
     <string name="file_server_empty_profiles_desc">
-Giriş kimlik bilgilerini, erişim izinlerini ve paylaşılan dizinleri yapılandırmak için \\\'Profil Ekle\\\' öğesine dokunun.
+Giriş kimlik bilgilerini, erişim izinlerini ve paylaşılan dizinleri yapılandırmak için \'Profil Ekle\' öğesine dokunun.
 </string>
 
     <!-- DLNA Modernization -->
@@ -13686,13 +13686,13 @@ Kimlik
 Paylaşılan Dizinler
 </string>
     <string name="dlna_info_notice">
-Yerel Wi-Fi ağınızdaki akıllı TV\\\'lere ve DLNA medya oynatıcılarına fotoğraf, müzik ve video aktarın veya diğer cihazların bu cihaza medya yayınlamasına izin verin.
+Yerel Wi-Fi ağınızdaki akıllı TV\'lere ve DLNA medya oynatıcılarına fotoğraf, müzik ve video aktarın veya diğer cihazların bu cihaza medya yayınlamasına izin verin.
 </string>
     <string name="dlna_settings_info_notice">
 Cihazınızın yerel ağda nasıl görüneceğini yapılandırın ve paylaşılacak dizinleri seçin. DLNA medya paylaşımları kesinlikle salt okunurdur.
 </string>
     <string name="dlna_empty_shared_folders_desc">
-DLNA üzerinden sunmak için dahili depolama, SD kart veya USB klasörlerini seçmek üzere \\\'Klasör Ekle\\\' öğesine dokunun.
+DLNA üzerinden sunmak için dahili depolama, SD kart veya USB klasörlerini seçmek üzere \'Klasör Ekle\' öğesine dokunun.
 </string>
 
     <!-- Smart Sort Modernization -->
@@ -13781,7 +13781,7 @@ Gizlilik politikamızı, hizmet koşullarımızı ve lisanslarımızı inceleyin
 Puanla ve İncele
 </string>
     <string name="about_rate_subtitle">
-Google Play\\\'de deneyiminizi paylaşın
+Google Play\'de deneyiminizi paylaşın
 </string>
     <string name="about_support_title">
 Yardım ve Destek
@@ -14548,7 +14548,7 @@ Güncellemeyi Yükle
 Yükleme Hazırlanıyor…
 </string>
     <string name="update_install_permission_required">
-Devam etmek için UFM\\\'den yüklemeye izin verin
+Devam etmek için UFM\'den yüklemeye izin verin
 </string>
     <string name="update_download_cancelled">
 İndirme iptal edildi
@@ -15022,7 +15022,7 @@ Dahili, SD Kart, Ağ veya Bulut depolamalarına göz at
 Sekme %d
 </string>
     <string name="tab_storage_unavailable_closed">
-\\\'%s\\\' sekmesi kapatıldı (depolama bağlantısı kesildi)
+\'%s\' sekmesi kapatıldı (depolama bağlantısı kesildi)
 </string>
     <string name="backup_pref_tabs">
 Tarayıcı Sekmeleri ve Oturumlar
@@ -15505,19 +15505,19 @@ Yazma arabellekleri boşaltılıyor...
 \"%1$s\" güvenle çıkarıldı. Artık OTG kablosunu çıkarabilirsiniz.
 </string>
     <string name="safely_remove_mock_success">
-Sahte USB Sürücüsü güvenle çıkarıldı. Ayarlar\\\'dan yeniden bağlayabilirsiniz.
+Sahte USB Sürücüsü güvenle çıkarıldı. Ayarlar\'dan yeniden bağlayabilirsiniz.
 </string>
     <string name="safely_remove_unmounted_switched">
-USB Sürücüsü bağlantısı kesildi. Dahili Depolama\\\'ya geçildi.
+USB Sürücüsü bağlantısı kesildi. Dahili Depolama\'ya geçildi.
 </string>
     <string name="safely_remove_open_settings_title">
-Ayarlar\\\'da Çıkarmayı Tamamla
+Ayarlar\'da Çıkarmayı Tamamla
 </string>
     <string name="safely_remove_open_settings_desc">
-Tüm veri arabellekleri sürücüye güvenle boşaltıldı. Android Depolama Ayarları\\\'nı açmak için aşağıya dokunun ve Çıkar simgesine (⏏) dokunun.
+Tüm veri arabellekleri sürücüye güvenle boşaltıldı. Android Depolama Ayarları\'nı açmak için aşağıya dokunun ve Çıkar simgesine (⏏) dokunun.
 </string>
     <string name="safely_remove_open_settings_btn">
-Depolama Ayarları\\\'nı Aç
+Depolama Ayarları\'nı Aç
 </string>
     <string name="safely_remove_menu_item">
 Sürücüyü Güvenle Çıkar
@@ -15576,7 +15576,7 @@ OTG Flaş Sürücüsü (Sahte / Test)
 USB OTG Sürücüsünü Simüle Et
 </string>
     <string name="mock_usb_setting_desc">
-Güvenli çıkarma ve dosya işlemlerini test etmek için bağlı bir USB flaş sürücüsünü veya harici HDD\\\'yi simüle edin.
+Güvenli çıkarma ve dosya işlemlerini test etmek için bağlı bir USB flaş sürücüsünü veya harici HDD\'yi simüle edin.
 </string>
     <string name="mock_usb_remount_action">
 Sahte USB Sürücüsünü Yeniden Bağla
@@ -15606,7 +15606,7 @@ Depolama birimi bağlanıyor...
 \"%1$s\" öğesini yeniden bağlamak için Android işletim sistemi Depolama Ayarları açılacak. Listeden bu sürücüye dokunun ve \"Bağla\" seçeneğini seçin.
 </string>
     <string name="storage_mount_btn">
-Depolama Ayarları\\\'nı Aç
+Depolama Ayarları\'nı Aç
 </string>
     <string name="safely_remove_unmount_action">
 Sürücüyü Bağla
@@ -17194,7 +17194,7 @@ Android güvenlik kısıtlamaları nedeniyle uygulamalar, simgeleri ana ekranın
 Kısayolu Devre Dışı Bırak
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 Yerel

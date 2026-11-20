@@ -8396,7 +8396,7 @@ YouTube
 電話
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 ペアリング済みの電話
@@ -17195,7 +17195,7 @@ Android のセキュリティ制限により、アプリはホーム画面から
 ショートカットを無効にする
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 地元

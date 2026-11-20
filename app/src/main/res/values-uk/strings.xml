@@ -195,7 +195,7 @@ Ultimate File Manager Pro
 Встановити мову за замовчуванням
 </string>
     <string name="foss_legal_notice">
-Продовжуючи, ви погоджуєтеся з Умовами та положеннями та Політикою конфіденційності, які можна знайти в розділі \\\'Правова інформація\\\'.
+Продовжуючи, ви погоджуєтеся з Умовами та положеннями та Політикою конфіденційності, які можна знайти в розділі \'Правова інформація\'.
 </string>
 
     <string name="welcome_title">
@@ -430,7 +430,7 @@ USB-накопичувач
 Біжучий рядок (1 рядок)
 </string>
     <string name="settings_file_name_display_marquee_desc">
-Прокручується горизонтально, щоб показати повне ім\\\'я (за замовчуванням)
+Прокручується горизонтально, щоб показати повне ім\'я (за замовчуванням)
 </string>
     <string name="settings_file_name_display_2_lines">
 2 рядки
@@ -448,7 +448,7 @@ USB-накопичувач
 Необмежена кількість рядків
 </string>
     <string name="settings_file_name_display_unlimited_desc">
-Переносить повне ім\\\'я на стільки рядків, скільки потрібно
+Переносить повне ім\'я на стільки рядків, скільки потрібно
 </string>
     <string name="settings_file_name_display_truncate">
 Один рядок (усічений кінець)
@@ -2674,7 +2674,7 @@ APK
 Створити новий текстовий файл
 </string>
     <string name="new_file_dialog_desc">
-Введіть ім\\\'я файлу для нового текстового файлу:
+Введіть ім\'я файлу для нового текстового файлу:
 </string>
     <string name="new_file_hint">
 Ім\'я файлу
@@ -3066,7 +3066,7 @@ DLNA
 Видалити ресурс
 </string>
     <string name="network_delete_confirm_body">
-Видалити \\\"%1$s\\\" зі списку? Це також видалить його з вибірників файлів.
+Видалити \"%1$s\" зі списку? Це також видалить його з вибірників файлів.
 </string>
     <string name="network_delete_confirm_yes">
 Видалити
@@ -3275,7 +3275,7 @@ Amazon Tip Jar незабаром — дякуємо за терпіння! ☕
 Покупки ще недоступні. Спробуйте ще раз за мить.
 </string>
     <string name="tile_hidden_with_name">
-Плитку \\\"%1$s\\\" приховано
+Плитку \"%1$s\" приховано
 </string>
 
     <!-- Folder Sync -->
@@ -3490,7 +3490,7 @@ jpg, png, mp4
     <string name="sync_deletions_warning_upload">
 ⚠️ ДЕСТРУКТИВНА ОПЕРАЦІЯ\n
 \n
-При увімкненій \\\"Синхронізації видалень\\\":\n
+При увімкненій \"Синхронізації видалень\":\n
 • Файли, які ви видаляєте з вихідного джерела, НАЗАВЖДИ ВИДАЛЯЮТЬСЯ з призначення під час наступної синхронізації\n
 • Тільки файли, раніше завантажені цим профілем, зазнають впливу\n
 • Файли, розміщені вручну у призначенні, БЕЗПЕЧНІ (не відстежуються)\n
@@ -3502,7 +3502,7 @@ jpg, png, mp4
     <string name="sync_deletions_warning_download">
 ⚠️ ДЕСТРУКТИВНА ОПЕРАЦІЯ\n
 \n
-При увімкненій \\\"Синхронізації видалень\\\":\n
+При увімкненій \"Синхронізації видалень\":\n
 • Файли, видалені з призначення, НАЗАВЖДИ ВИДАЛЯЮТЬСЯ з вашого телефону під час наступної синхронізації\n
 • Тільки файли, раніше завантажені цим профілем, зазнають впливу\n
 • Інші файли на телефоні БЕЗПЕЧНІ (не відстежуються)\n
@@ -3608,7 +3608,7 @@ SMB-сервер досяг максимальної кількості з\'єд
 
     <!-- NFS Error Messages -->
     <string name="nfs_error_stale_handle">
-NFS-сервер відхилив з\'єднання (Stale File Handle). Зазвичай це означає, що сервер вимагає привілейовані порти. На вашому NFS-сервері увімкніть опцію \\\"insecure\\\" у конфігурації експорту, щоб дозволити з\'єднання з пристроїв Android.
+NFS-сервер відхилив з\'єднання (Stale File Handle). Зазвичай це означає, що сервер вимагає привілейовані порти. На вашому NFS-сервері увімкніть опцію \"insecure\" у конфігурації експорту, щоб дозволити з\'єднання з пристроїв Android.
 </string>
     <string name="nfs_error_portmapper_unreachable">
 Не вдається досягти Portmapper (порт 111) на NFS-сервері. Переконайтеся, що служба Portmapper/rpcbind працює, а порт 111 відкрито в брандмауері.
@@ -3904,7 +3904,7 @@ NFS-серверів у цій мережі не знайдено
 Тло плитки
 </string>
     <string name="tile_color_copy_to">
-Копіювати до\\u2026
+Копіювати до…
 </string>
     <string name="tile_copy_title">
 Застосувати колір до плиток
@@ -4800,25 +4800,25 @@ IP-адреса цільового пристрою
 Сервер UFM TV
 </string>
     <string name="tv_server_channel_desc">
-Забезпечує активний обмін файлами на ТБ для пов\\\'язаних мобільних пристроїв
+Забезпечує активний обмін файлами на ТБ для пов\'язаних мобільних пристроїв
 </string>
     <string name="tv_server_notification_title">
 UFM TV Server активний
 </string>
     <string name="tv_server_notification_desc">
-Готовий до з\\\'єднання з пов\\\'язаними пристроями
+Готовий до з\'єднання з пов\'язаними пристроями
 </string>
     <string name="settings_tv_background_server_title">
 Фоновий обмін на ТБ
 </string>
     <string name="settings_tv_background_server_subtitle_on">
-Активний у фоновому режимі, коли є пов\\\'язані пристрої
+Активний у фоновому режимі, коли є пов\'язані пристрої
 </string>
     <string name="settings_tv_background_server_subtitle_off">
 Активний лише коли UFM відкрито на ТБ
 </string>
     <string name="settings_tv_background_server_note">
-Дозволяє пов\\\'язаним мобільним пристроям переглядати сховище ТБ, навіть коли UFM закрито на ТБ. Автоматично запускається, коли є пов\\\'язані пристрої, і зупиняється, коли всі вони видалені.
+Дозволяє пов\'язаним мобільним пристроям переглядати сховище ТБ, навіть коли UFM закрито на ТБ. Автоматично запускається, коли є пов\'язані пристрої, і зупиняється, коли всі вони видалені.
 </string>
     <string name="backup_pref_tv_server">
 Фоновий обмін на ТБ
@@ -5168,13 +5168,13 @@ OK
 Ліміт розміру кешу
 </string>
     <string name="nt_cache_limit_desc">
-Максимальний об\\\'єм сховища для кешування мініатюр.
+Максимальний об\'єм сховища для кешування мініатюр.
 </string>
     <string name="nt_cache_folder_title">
 Каталог кешу
 </string>
     <string name="nt_cache_folder_desc">
-Виберіть, де зберігати файли кешу мініатюр (внутрішня пам\\\'ять або SD-карта).
+Виберіть, де зберігати файли кешу мініатюр (внутрішня пам\'ять або SD-карта).
 </string>
     <string name="nt_clear_cache_title">
 Очистити весь кеш
@@ -5263,7 +5263,7 @@ OK
 Папка локального кешу мініатюр
 </string>
     <string name="lt_cache_folder_guide_msg">
-Виберіть власний каталог у внутрішній пам\\\'яті або на зовнішній SD-карті, де зберігатимуться постійні локальні файли мініатюр (.webp).
+Виберіть власний каталог у внутрішній пам\'яті або на зовнішній SD-карті, де зберігатимуться постійні локальні файли мініатюр (.webp).
 </string>
     <string name="lt_use_this_folder_for_caching">
 Використовувати цю папку для локального кешу мініатюр
@@ -5281,10 +5281,10 @@ OK
     <string name="extracted_str">•</string>
     <string name="extracted_str_1">›</string>
     <string name="connect">
-Під\\\'єднатися
+Під\'єднатися
 </string>
     <string name="disconnect">
-Від\\\'єднатися
+Від\'єднатися
 </string>
     <string name="s_45_gb_128_gb">
 45 ГБ / 128 ГБ
@@ -5332,7 +5332,7 @@ Ultimate File Manager Pro
 Фільтр
 </string>
     <string name="please_fill_all_required_fields">
-Будь ласка, заповніть всі обов\\\'язкові поля
+Будь ласка, заповніть всі обов\'язкові поля
 </string>
     <string name="please_select_a_network_share">
 Спочатку виберіть мережевий ресурс
@@ -5464,10 +5464,10 @@ APK готовий до встановлення
 Будь ласка, введіть 6-значний PIN-код
 </string>
     <string name="linked_with_newdevice">
-Пов\\\'язано з %1$s
+Пов\'язано з %1$s
 </string>
     <string name="connection_failed_make_sure_the">
-Помилка з\\\'єднання. Переконайтеся, що інший пристрій онлайн.
+Помилка з\'єднання. Переконайтеся, що інший пристрій онлайн.
 </string>
     <string name="generating_pin">
 Генерація PIN-коду…
@@ -7086,7 +7086,7 @@ PIN-код сховища
 %1$s — %2$d файл(ів)
 </string>
     <string name="clipboard_combined_slot">
-Об\\\'єднано (%1$d елементів)
+Об\'єднано (%1$d елементів)
 </string>
     <string name="paste_this_slot">
 Вставити цей слот
@@ -7978,7 +7978,7 @@ Smart Sort для цієї папки
 Синхронізація папок вимагає попередньо налаштованого спільного ресурсу SMB або FTP.
 </string>
     <string name="please_add_a_share_connection_in_network_shares_then_come_back_to_create_a_sync_profile">
-Будь ласка, додайте з\\\'єднання в Мережевих ресурсах, а потім поверніться, щоб створити профіль синхронізації.
+Будь ласка, додайте з\'єднання в Мережевих ресурсах, а потім поверніться, щоб створити профіль синхронізації.
 </string>
     <string name="set_up_smb_ftp">
 Налаштувати SMB / FTP
@@ -8038,7 +8038,7 @@ Smart Sort для цієї папки
 Локальна синхронізація для %1$s не вдалася
 </string>
     <string name="connection_lost_sync_paused_for_profilename">
-З\\\'єднання втрачено. Синхронізацію для %1$s призупинено.
+З\'єднання втрачено. Синхронізацію для %1$s призупинено.
 </string>
     <string name="cannot_read_local_folder_for_profilename">
 Не вдається прочитати локальну папку для %1$s.
@@ -8077,10 +8077,10 @@ Smart Sort для цієї папки
 Ви впевнені, що хочете видалити \"%1$s\" зі списку парних пристроїв?
 </string>
     <string name="ensure_your_phone_is_on_the_same_wifi_network_open_ultimate_file_manager_pro_on_your_phone_click_link_to_tv_and_enter_this_pin_pincode">
-Переконайтеся, що ваш телефон знаходиться в тій самій мережі Wi-Fi. Відкрийте Ultimate File Manager Pro на телефоні, натисніть \"Пов\\\'язати з телевізором\" і введіть цей PIN-код: %1$s
+Переконайтеся, що ваш телефон знаходиться в тій самій мережі Wi-Fi. Відкрийте Ultimate File Manager Pro на телефоні, натисніть \"Пов\'язати з телевізором\" і введіть цей PIN-код: %1$s
 </string>
     <string name="link">
-Пов\\\'язати
+Пов\'язати
 </string>
     <string name="devicetypelabel_connected">
 %1$s · Підключено
@@ -8137,7 +8137,7 @@ URL-адреса ліцензії
 Політику конфіденційності прийнято %1$s
 </string>
     <string name="enter_a_file_name">
-Введіть ім\\\'я файлу
+Введіть ім\'я файлу
 </string>
     <string name="save_to">
 Зберегти в…
@@ -8146,13 +8146,13 @@ URL-адреса ліцензії
 Вивід термінала
 </string>
     <string name="adb_connection_established_from_pairing_activity">
-ADB-з\\\'єднання встановлено через процедуру парування.
+ADB-з\'єднання встановлено через процедуру парування.
 </string>
     <string name="pairing_activity_completed_but_connection_is_not_active">
-Процедуру парування завершено, але з\\\'єднання не активне.
+Процедуру парування завершено, але з\'єднання не активне.
 </string>
     <string name="disconnected_from_adb">
-Від\\\'єднано від ADB.
+Від\'єднано від ADB.
 </string>
     <string name="welcome_to_ufm_adb_shell">
 Ласкаво просимо до ADB Shell UFM.
@@ -8245,7 +8245,7 @@ ADB-з\\\'єднання встановлено через процедуру п
 Помилка відкриття 7z: %1$s
 </string>
     <string name="error_not_enough_memory">
-Недостатньо пам\\\'яті для відкриття цього архіву
+Недостатньо пам\'яті для відкриття цього архіву
 </string>
     <string name="invalid_password">
 Невірний пароль
@@ -8573,7 +8573,7 @@ OneDrive, Google Drive та інші
 Підключайтеся до хмарних постачальників сховищ, зокрема OneDrive, Google Drive, Dropbox, Box, AWS S3, WebDAV та RClone, щоб переглядати, передавати та синхронізувати файли.
 </string>
     <string name="online_storage_delete_confirm_body">
-Ви впевнені, що хочете видалити з\\\'єднання з «%1$s»?
+Ви впевнені, що хочете видалити з\'єднання з «%1$s»?
 </string>
     <string name="opening_online_storages">
 Відкриття хмарних сховищ…
@@ -8619,7 +8619,7 @@ Dropbox
 Підключіть телевізор за допомогою іншого пристрою
 </string>
     <string name="dropbox_device_code_step1">
-1. На телефоні або комп\\\'ютері перейдіть на сторінку:
+1. На телефоні або комп\'ютері перейдіть на сторінку:
 </string>
     <string name="dropbox_device_code_step2">
 2. Увійдіть, надайте доступ. Потім введіть код тут:
@@ -8680,11 +8680,11 @@ https://myaccount.google.com/permissions\n
 \n
 2. У розділі «Сторонні додатки та служби» знайдіть «Ultimate File Manager» (або «UFM»)\n
 \n
-3. Натисніть на нього та виберіть «Видалити доступ» або «Видалити всі з\\\'єднання»\n
+3. Натисніть на нього та виберіть «Видалити доступ» або «Видалити всі з\'єднання»\n
 \n
 4. Поверніться до UFM і натисніть знову на підключення Google Drive\n
 \n
-5. Коли з\\\'явиться екран входу Google, прийміть усі запитані дозволи\n
+5. Коли з\'явиться екран входу Google, прийміть усі запитані дозволи\n
 \n
 6. Ваші файли Drive тепер мають завантажуватися правильно
 </string>
@@ -8722,7 +8722,7 @@ Box — сеанс завершено
 Підключіть телевізор за допомогою іншого пристрою
 </string>
     <string name="onedrive_device_code_step1">
-1. На телефоні або комп\\\'ютері перейдіть на сторінку:
+1. На телефоні або комп\'ютері перейдіть на сторінку:
 </string>
     <string name="onedrive_device_code_step2">
 2. Введіть код, показаний нижче:
@@ -8763,7 +8763,7 @@ Box — сеанс завершено
 Підключіть телевізор за допомогою іншого пристрою
 </string>
     <string name="box_device_code_step1">
-1. На телефоні або комп\\\'ютері перейдіть на сторінку:
+1. На телефоні або комп\'ютері перейдіть на сторінку:
 </string>
     <string name="box_device_code_step2">
 2. Введіть код, показаний нижче:
@@ -8787,7 +8787,7 @@ Box — сеанс завершено
 Не вдалося розпочати автентифікацію: %1$s
 </string>
     <string name="box_auth_network_error">
-Мережева помилка. Перевірте з\\\'єднання та спробуйте знову.
+Мережева помилка. Перевірте з\'єднання та спробуйте знову.
 </string>
     <string name="box_auth_denied">
 Авторизацію відхилено або скасовано.
@@ -9006,7 +9006,7 @@ Porter установлено, але його служба не запущен�
 Постачальник служби
 </string>
     <string name="shizuku_service_mode_label">
-Режим з\\\'єднання
+Режим з\'єднання
 </string>
     <string name="shizuku_service_permission_label">
 Рівень дозволу
@@ -11763,10 +11763,10 @@ Ultimate File Manager Pro
 4. Введіть PIN-код сесії:
 </string>
     <string name="tv_share_status_waiting">
-Веб-сервер працює. Очікування з\\\'єднання…
+Веб-сервер працює. Очікування з\'єднання…
 </string>
     <string name="connect_manually">
-Під\\\'єднатися вручну
+Під\'єднатися вручну
 </string>
     <string name="sending_file">
 Надсилання файлу…
@@ -11792,16 +11792,16 @@ RClone
 Прокрутіть для інших провайдерів
 </string>
     <string name="rclone_btn_test">
-Перевірити з\\\'єднання
+Перевірити з\'єднання
 </string>
     <string name="rclone_btn_save">
 Зберегти
 </string>
     <string name="rclone_test_success">
-З\\\'єднання успішне
+З\'єднання успішне
 </string>
     <string name="rclone_test_failed">
-З\\\'єднання не вдалося: %s
+З\'єднання не вдалося: %s
 </string>
     <string name="rclone_save_success">
 Провайдер RClone збережено
@@ -11825,7 +11825,7 @@ Filen
 RClone не ініціалізовано
 </string>
     <string name="rclone_error_no_network">
-Немає з\\\'єднання з мережею
+Немає з\'єднання з мережею
 </string>
     <string name="rclone_saving">
 Збереження…
@@ -11879,22 +11879,22 @@ URL-адреса сервера
 Протонний драйв
 </string>
     <string name="rclone_field_username">
-Ім\\\'я користувача або електронна пошта
+Ім\'я користувача або електронна пошта
 </string>
     <string name="rclone_field_2fa">
-Код 2FA (необов\\\'язково)
+Код 2FA (необов\'язково)
 </string>
     <string name="rclone_field_2fa_hint">
 Код двофакторної автентифікації з вашого аутентифікатора
 </string>
     <string name="rclone_field_otp_secret_key">
-Секретний ключ 2FA (необов\\\'язково)
+Секретний ключ 2FA (необов\'язково)
 </string>
     <string name="rclone_field_otp_secret_key_hint">
 Секретний ключ Base32 з налаштування Proton 2FA для автоматичної генерації кодів
 </string>
     <string name="rclone_field_mailbox_password">
-Пароль поштової скриньки (необов\\\'язково)
+Пароль поштової скриньки (необов\'язково)
 </string>
     <string name="rclone_field_mailbox_password_hint">
 Тільки для застарілих облікових записів Proton із двома паролями
@@ -12501,7 +12501,7 @@ UFM PDF Viewer
 Не налаштовано жодних перевизначень сортування
 </string>
     <string name="folder_sort_manager_empty_desc">
-Коли ви змінюєте порядок сортування або фільтр для конкретної папки за допомогою «Ця папка», він з\\\'явиться тут, щоб ви могли керувати або скидати спеціальні правила сортування.
+Коли ви змінюєте порядок сортування або фільтр для конкретної папки за допомогою «Ця папка», він з\'явиться тут, щоб ви могли керувати або скидати спеціальні правила сортування.
 </string>
     <string name="folder_sort_manager_info_notice">
 Власні порядки сортування та фільтри, налаштовані для конкретних папок. Натисніть на значок кошика, щоб повернути папку до глобального сортування.
@@ -12630,7 +12630,7 @@ UFM PDF Viewer
 Довідка та підтримка
 </string>
     <string name="support_tile_subtitle">
-Зв\\\'язатися з розробником
+Зв\'язатися з розробником
 </string>
     <string name="support_report_bug">
 Повідомити про помилку
@@ -12666,7 +12666,7 @@ UFM PDF Viewer
 Повідомлення
 </string>
     <string name="support_email">
-Ваш Email (необов\\\'язково)
+Ваш Email (необов\'язково)
 </string>
     <string name="support_attach_file">
 Прикріпити файл
@@ -12699,7 +12699,7 @@ UFM PDF Viewer
 Спробувати знову
 </string>
     <string name="support_no_internet">
-Немає підключення до Інтернету. Перевірте з\\\'єднання та спробуйте знову.
+Немає підключення до Інтернету. Перевірте з\'єднання та спробуйте знову.
 </string>
     <string name="support_file_too_large">
 Файл завеликий. Максимальний розмір — 10 МБ.
@@ -12732,7 +12732,7 @@ UFM PDF Viewer
 Підтвердити вкладення
 </string>
     <string name="support_attachment_confirm_message">
-Файл \\\"%1$s\\\" (%2$s) буде надіслано з вашим повідомленням. Бажаєте продовжити?
+Файл \"%1$s\" (%2$s) буде надіслано з вашим повідомленням. Бажаєте продовжити?
 </string>
     <string name="support_proceed">
 Продовжити
@@ -12744,7 +12744,7 @@ UFM PDF Viewer
 Файл уже прикріплено
 </string>
     <string name="support_remember_email">
-Запам\\\'ятати мою електронну адресу
+Запам\'ятати мою електронну адресу
 </string>
 
     <!-- ── Crash / ANR Report ──────────────────────────────────── -->
@@ -13310,7 +13310,7 @@ Android 11+ обмежує доступ до папок Android/data та Androi
 Геолокація та геотеги
 </string>
     <string name="exif_card_camera">
-Камера та оптика об\\\'єктива
+Камера та оптика об\'єктива
 </string>
     <string name="exif_card_date">
 Дата та часові мітки
@@ -13334,7 +13334,7 @@ Android 11+ обмежує доступ до папок Android/data та Androi
 Модель камери
 </string>
     <string name="exif_label_lens">
-Модель об\\\'єктива
+Модель об\'єктива
 </string>
     <string name="exif_label_focal_length">
 Фокусна відстань
@@ -13406,7 +13406,7 @@ ISO-чутливість
 Видалити GPS-геотеги (широта, довгота, висота)
 </string>
     <string name="exif_clean_opt_device">
-Видалити інформацію про пристрій та обладнання (модель, об\\\'єктив, серійні номери)
+Видалити інформацію про пристрій та обладнання (модель, об\'єктив, серійні номери)
 </string>
     <string name="exif_clean_opt_author">
 Видалити автора, авторське право та особисті коментарі
@@ -14067,7 +14067,7 @@ support@kilowatch.co.za
 Активувати праву або нижню панель безпосередньо
 </string>
     <string name="keyboard_action_cheatsheet">
-Пам\\\'ятка гарячих клавіш
+Пам\'ятка гарячих клавіш
 </string>
     <string name="keyboard_action_cheatsheet_desc">
 Показати інтерактивний накладений довідник гарячих клавіш
@@ -15193,7 +15193,7 @@ SHA-256
 Контейнер
 </string>
     <string name="video_info_filename">
-Ім\\\'я файлу
+Ім\'я файлу
 </string>
     <string name="video_info_path">
 Розташування
@@ -15523,7 +15523,7 @@ USB-накопичувач від’єднано. Переключено на в
 Безпечно вилучити диск
 </string>
     <string name="safely_remove_in_progress">
-Від\\\'єднання вже виконується.
+Від\'єднання вже виконується.
 </string>
 
     <!-- FR-09: shown instead of unmounting when the volume is still in use.
@@ -15534,13 +15534,13 @@ USB-накопичувач від’єднано. Переключено на в
 Диск все ще використовується
 </string>
     <string name="volume_still_in_use_msg">
-Додаток все ще має відкритим %1$s. Від\\\'єднання зараз може залишити дані незаписаними або спричинити помилки.
+Додаток все ще має відкритим %1$s. Від\'єднання зараз може залишити дані незаписаними або спричинити помилки.
 </string>
     <string name="volume_still_in_use_fd">
 Відкриті файли: %1$d
 </string>
     <string name="volume_still_in_use_map">
-Файли, відображені в пам\\\'ять: %1$d
+Файли, відображені в пам\'ять: %1$d
 </string>
     <string name="volume_still_in_use_watcher">
 Відстежувані папки: %1$d
@@ -15549,7 +15549,7 @@ USB-накопичувач від’єднано. Переключено на в
 Кроки звільнення, які не вдалися: %1$d
 </string>
     <string name="volume_still_in_use_continue">
-Від\\\'єднати все одно
+Від\'єднати все одно
 </string>
     <string name="volume_still_in_use_keep">
 Залишити приєднаним
@@ -15558,10 +15558,10 @@ USB-накопичувач від’єднано. Переключено на в
     <!-- FR-08(c): a volume removed outside the app while a Twin Window pane is browsing it.
          No %s placeholder: unlike Tab mode there is no user-facing title for a pane to name. -->
     <string name="twin_window_storage_unavailable_closed">
-Панель закрито — її сховище від\\\'єднано.
+Панель закрито — її сховище від\'єднано.
 </string>
     <string name="twin_window_storage_unavailable_exit">
-Сховище від\\\'єднано. Повернення до Головного меню.
+Сховище від\'єднано. Повернення до Головного меню.
 </string>
     <string name="cd_safely_remove">
 Безпечно вилучити диск
@@ -17194,7 +17194,7 @@ Flat View вимагає, щоб цей обсяг пам’яті був пов
 Вимкнути ярлик
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 Місцевий

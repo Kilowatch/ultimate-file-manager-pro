@@ -241,7 +241,7 @@ object FavoritesManager {
         return try {
             context.getString(R.string.fav_protocol_type_format, proto, type)
         } catch (_: Exception) {
-            "$proto \u2022 $type"
+            "$proto • $type"
         }
     }
 }

@@ -3044,8 +3044,8 @@
         "removed": false
       },
       "tile_color_copy_to": {
-        "hash": "aa18231d756b0f88fb118d66d6de92f4ecb5b0c2e2875a71023dcecc37acc87e",
-        "text": "Copy to\\u2026",
+        "hash": "323b69dbb775484eaefd92b473bc0b2f5e7a61f64741533a9fcb464e1c21db3e",
+        "text": "Copy to…",
         "removed": false
       },
       "tile_copy_title": {
@@ -9079,8 +9079,8 @@
         "removed": false
       },
       "devicetypelabel_u2022_devicelastip": {
-        "hash": "0e16b75bd7dde30026809124b1d285710213a6866cc34f94e954cceebd0d2740",
-        "text": "%1$s \\u2022 %2$s",
+        "hash": "455fc334556001ea82fc0f72f40b09a83081d54fbc2ccc6cb9b963bfc90e5eb3",
+        "text": "%1$s • %2$s",
         "removed": false
       },
       "paired_phones_1": {

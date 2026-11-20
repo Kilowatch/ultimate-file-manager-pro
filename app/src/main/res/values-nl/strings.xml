@@ -3760,7 +3760,7 @@ Pictogramachtergrond
     <string name="tile_color_tile_bg">
 Tegel Achtergrond
 </string>
-    <string name="tile_color_copy_to">Kopiëren naar\u2026</string>
+    <string name="tile_color_copy_to">Kopiëren naar…</string>
     <string name="tile_copy_title">
 Kleur toepassen op tegels
 </string>
@@ -5067,7 +5067,7 @@ Permanente caching voor lokale media en opslag
 Media-miniaturen inschakelen
 </string>
     <string name="lt_enable_desc">
-Genereer en cache miniaturen voor lokale video\\\'s, audiocovers, APK\\\'s en camera-afbeeldingen.
+Genereer en cache miniaturen voor lokale video\'s, audiocovers, APK\'s en camera-afbeeldingen.
 </string>
     <string name="lt_cache_limit_title">
 Limiet voor cachegrootte
@@ -8207,7 +8207,7 @@ Lijn
 Telefoon
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 Gekoppelde telefoons
@@ -12000,7 +12000,7 @@ Eigenschappen
 Eigenschappen
 </string>
     <string name="properties_calculating_size">
-Grootte berekenen\\u2026
+Grootte berekenen…
 </string>
     <string name="properties_multiple_items_title">%1$d items geselecteerd</string>
     <string name="properties_selection_title">
@@ -16890,7 +16890,7 @@ Vanwege Android-beveiligingsbeperkingen kunnen apps pictogrammen niet rechtstree
 Schakel snelkoppeling uit
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 Lokaal

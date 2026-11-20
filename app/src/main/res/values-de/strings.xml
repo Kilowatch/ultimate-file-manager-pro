@@ -3904,7 +3904,7 @@ Symbolhintergrund
 Kachelhintergrund
 </string>
     <string name="tile_color_copy_to">
-Kopieren nach\\u2026
+Kopieren nach…
 </string>
     <string name="tile_copy_title">
 Farbe auf Kacheln anwenden
@@ -4312,13 +4312,13 @@ Aus Archiv löschen
 Aus Archiv löschen
 </string>
     <string name="confirm_delete_archive_entry_msg">
-Sind Sie sicher, dass Sie \\\"%1$s\\\" aus dem Archiv löschen möchten?
+Sind Sie sicher, dass Sie \"%1$s\" aus dem Archiv löschen möchten?
 </string>
     <string name="archive_move_success">
-\\\"%1$s\\\" nach %2$s verschoben
+\"%1$s\" nach %2$s verschoben
 </string>
     <string name="archive_delete_success">
-\\\"%1$s\\\" aus Archiv gelöscht
+\"%1$s\" aus Archiv gelöscht
 </string>
     <string name="archive_operation_failed">
 Archivoperation fehlgeschlagen: %1$s
@@ -8392,7 +8392,7 @@ Linie
 Telefon
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 Gekoppelte Telefone
@@ -9878,7 +9878,7 @@ Warte auf Verbindung des TVs…
 TV koppeln
 </string>
     <string name="bt_remote_card_no_tvs_subtitle">
-Öffnen Sie auf Ihrem TV die Bluetooth-Einstellungen und koppeln Sie \\\'UFM Remote\\\'
+Öffnen Sie auf Ihrem TV die Bluetooth-Einstellungen und koppeln Sie \'UFM Remote\'
 </string>
     <string name="bt_remote_card_disconnected_title">
 Nicht verbunden
@@ -9961,7 +9961,7 @@ Tab
 Unbekanntes Gerät
 </string>
     <string name="bt_remote_connecting_guidance">
-Wenn keine automatische Verbindung hergestellt wird, wählen Sie \\\'UFM Remote\\\' in den Bluetooth-Einstellungen Ihres TVs aus.
+Wenn keine automatische Verbindung hergestellt wird, wählen Sie \'UFM Remote\' in den Bluetooth-Einstellungen Ihres TVs aus.
 </string>
     <string name="bt_remote_use_phone_volume">
 Telefon-Lautstärketasten verwenden
@@ -10002,7 +10002,7 @@ Mit %1$s über WiFi verbinden
 Keine TVs für Fernbedienung aktiviert
 </string>
     <string name="remote_transport_no_wifi_tvs_message">
-Um die WiFi-Fernbedienung zu verwenden, öffnen Sie zuerst einen gekoppelten TV im Bildschirm \\\'Gekoppelte TVs\\\' und aktivieren Sie dann die Option \\\'Fernbedienung verwenden\\\'.\n
+Um die WiFi-Fernbedienung zu verwenden, öffnen Sie zuerst einen gekoppelten TV im Bildschirm \'Gekoppelte TVs\' und aktivieren Sie dann die Option \'Fernbedienung verwenden\'.\n
 \n
 Alternativ können Sie einen TV manuell per IP-Adresse hinzufügen, wenn ADB (USB-Debugging) auf dem TV aktiviert ist.
 </string>
@@ -10069,7 +10069,7 @@ Auf TV akzeptieren
     <string name="use_remote_auth_message">
 Um %1$s als Fernbedienung zu verwenden, müssen Sie die ADB-Verbindungsaufforderung auf Ihrem TV akzeptieren.\n
 \n
-Stellen Sie sicher, dass Ihr TV eingeschaltet ist und tippen Sie auf \\\'Zulassen\\\', wenn der Dialog erscheint. Wenn Sie es bereits zuvor akzeptiert haben, wird die Verbindung automatisch hergestellt.
+Stellen Sie sicher, dass Ihr TV eingeschaltet ist und tippen Sie auf \'Zulassen\', wenn der Dialog erscheint. Wenn Sie es bereits zuvor akzeptiert haben, wird die Verbindung automatisch hergestellt.
 </string>
     <string name="use_remote_failed_title">
 Verbindung fehlgeschlagen
@@ -13203,10 +13203,10 @@ Ordnername
 Extrahieren und Ordner auswählen
 </string>
     <string name="extract_select_folder_desc">
-Dateien extrahieren und das Ziel über die Schaltfläche \\\'Hier extrahieren\\\' auswählen
+Dateien extrahieren und das Ziel über die Schaltfläche \'Hier extrahieren\' auswählen
 </string>
     <string name="extract_staged_snackbar">
-Dateien extrahiert. Navigiere zum Ziel und tippe auf \\\'Hier extrahieren\\\'.
+Dateien extrahiert. Navigiere zum Ziel und tippe auf \'Hier extrahieren\'.
 </string>
     <string name="extract_move_success">
 %1$d Element(e) erfolgreich extrahiert
@@ -13260,7 +13260,7 @@ Diashow-Intervall
 %1$.1fs
 </string>
     <string name="delete_single_confirm">
-Möchten Sie \\\"%1$s\\\" wirklich löschen?
+Möchten Sie \"%1$s\" wirklich löschen?
 </string>
     <string name="delete_photo_title">
 Foto löschen
@@ -13269,7 +13269,7 @@ Foto löschen
 %1$s gelöscht
 </string>
     <string name="item_moved_to_recycle_bin">
-\\\"%1$s\\\" in den Papierkorb verschoben
+\"%1$s\" in den Papierkorb verschoben
 </string>
     <string name="menu_more_options">
 Weitere Optionen
@@ -15010,7 +15010,7 @@ Internen Speicher, SD-Karte, Netzwerk- oder Cloud-Speicher durchsuchen
 Tab %d
 </string>
     <string name="tab_storage_unavailable_closed">
-Tab \\\'%s\\\' geschlossen (Speicher getrennt)
+Tab \'%s\' geschlossen (Speicher getrennt)
 </string>
     <string name="backup_pref_tabs">
 Browser-Tabs und Sitzungen
@@ -17180,7 +17180,7 @@ Aufgrund von Android-Sicherheitseinschränkungen können Apps Symbole nicht dire
 Verknüpfung deaktivieren
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 Lokal

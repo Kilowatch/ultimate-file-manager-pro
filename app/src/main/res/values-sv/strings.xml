@@ -3888,7 +3888,7 @@ Ikon Bakgrund
 Brickbakgrund
 </string>
     <string name="tile_color_copy_to">
-Kopiera till\\u2026
+Kopiera till…
 </string>
     <string name="tile_copy_title">
 Applicera färg på plattor
@@ -8380,7 +8380,7 @@ Linje
 Telefon
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 Ihopkopplade telefoner
@@ -12231,7 +12231,7 @@ Egenskaper
 Egenskaper
 </string>
     <string name="properties_calculating_size">
-Beräknar storlek\\u2026
+Beräknar storlek…
 </string>
     <string name="properties_multiple_items_title">
 %1$d objekt har valts
@@ -14999,7 +14999,7 @@ Bläddra bland intern lagring, SD-kort, nätverks- eller molnlagring
 Flik %d
 </string>
     <string name="tab_storage_unavailable_closed">
-Stängd flik \\\'%s\\\' (lagringen frånkopplad)
+Stängd flik \'%s\' (lagringen frånkopplad)
 </string>
     <string name="backup_pref_tabs">
 Flikar och sessioner
@@ -17165,7 +17165,7 @@ På grund av Android-säkerhetsbegränsningar kan appar inte ta bort ikoner dire
 Inaktivera genväg
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 Lokal

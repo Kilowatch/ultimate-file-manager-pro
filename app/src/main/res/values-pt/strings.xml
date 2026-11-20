@@ -8396,7 +8396,7 @@ Abrindo %1$s…
 Telefone
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 Telefones pareados
@@ -13554,7 +13554,7 @@ Selecionar local do cache
     <string name="nt_cache_folder_guide_msg">
 Escolha um diretório no armazenamento interno ou cartão SD para armazenar os arquivos de cache de miniaturas de rede.\n
 \n
-No navegador de armazenamento, navegue até o diretório desejado e toque em \\\"SELECIONAR ESTA PASTA\\\" no topo.
+No navegador de armazenamento, navegue até o diretório desejado e toque em \"SELECIONAR ESTA PASTA\" no topo.
 </string>
     <string name="nt_cache_folder_btn_browse">
 Navegar pelo armazenamento
@@ -13669,7 +13669,7 @@ Autenticação e acesso
 Hospede servidores de arquivos FTP e SFTP locais ou transmita mídia via DLNA. Dispositivos na sua rede Wi-Fi local podem se conectar para navegar, transmitir e transferir arquivos.
 </string>
     <string name="file_server_empty_profiles_desc">
-Toque em \\\'Adicionar perfil\\\' para configurar credenciais de login, permissões de acesso e diretórios compartilhados.
+Toque em \'Adicionar perfil\' para configurar credenciais de login, permissões de acesso e diretórios compartilhados.
 </string>
 
     <!-- DLNA Modernization -->
@@ -13692,7 +13692,7 @@ Transmita fotos, músicas e vídeos para smart TVs e players de mídia DLNA na s
 Configure como seu dispositivo aparece na rede local e escolha diretórios para compartilhar. Os compartilhamentos de mídia DLNA são estritamente somente leitura.
 </string>
     <string name="dlna_empty_shared_folders_desc">
-Toque em \\\'Adicionar pasta\\\' para selecionar pastas do armazenamento interno, cartão SD ou USB para expor via DLNA.
+Toque em \'Adicionar pasta\' para selecionar pastas do armazenamento interno, cartão SD ou USB para expor via DLNA.
 </string>
 
     <!-- Smart Sort Modernization -->
@@ -15022,7 +15022,7 @@ Navegue por armazenamentos internos, cartão SD, rede ou nuvem.
 Aba %d
 </string>
     <string name="tab_storage_unavailable_closed">
-Aba \\\'%s\\\' fechada (armazenamento desconectado)
+Aba \'%s\' fechada (armazenamento desconectado)
 </string>
     <string name="backup_pref_tabs">
 Abas e Sessões do Navegador
@@ -17194,7 +17194,7 @@ Devido às restrições de segurança do Android, os aplicativos não podem remo
 Desativar atalho
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 Local

@@ -143,4 +143,60 @@ class FavoritesManagerProtocolTest {
         assertEquals(192, bitmap.width)
         assertEquals(192, bitmap.height)
     }
+
+    @Test
+    fun testNoDoubleEscapedUnicodeInStringResources() {
+        val resDir = java.io.File("src/main/res").takeIf { it.exists() }
+            ?: java.io.File("app/src/main/res").takeIf { it.exists() }
+            ?: java.io.File("F:/Share/UFM/app/src/main/res")
+        val xmlFiles = resDir.walkTopDown().filter { it.extension == "xml" && it.parentFile?.name?.startsWith("values") == true }
+        val violations = mutableListOf<String>()
+        for (file in xmlFiles) {
+            val content = file.readText()
+            if (content.contains("\\u") || content.contains("\\\\u")) {
+                violations.add("${file.path}: contains unrendered \\u escape")
+            }
+        }
+        org.junit.Assert.assertTrue("Double-escaped unicode sequences found in XML:\n${violations.joinToString("\n")}", violations.isEmpty())
+    }
+
+    @Test
+    fun testFavoriteAndDeviceSubtitleRendersBulletAcrossLocales() {
+        val resDir = java.io.File("src/main/res").takeIf { it.exists() }
+            ?: java.io.File("app/src/main/res").takeIf { it.exists() }
+            ?: java.io.File("F:/Share/UFM/app/src/main/res")
+        val valuesDirs = resDir.listFiles()?.filter { it.isDirectory && it.name.startsWith("values") } ?: emptyList()
+        org.junit.Assert.assertTrue("Values directories must be found", valuesDirs.isNotEmpty())
+
+        val bulletPattern = java.util.regex.Pattern.compile("""<string\s+name="(fav_protocol_type_format|devicetypelabel_u2022_devicelastip)"[^>]*>(.*?)</string>""", java.util.regex.Pattern.DOTALL)
+
+        for (dir in valuesDirs) {
+            val stringsFile = java.io.File(dir, "strings.xml")
+            if (!stringsFile.exists()) continue
+            val text = stringsFile.readText()
+            val matcher = bulletPattern.matcher(text)
+            var count = 0
+            while (matcher.find()) {
+                val key = matcher.group(1) ?: ""
+                val body = matcher.group(2) ?: ""
+                count++
+                org.junit.Assert.assertTrue("[${dir.name}:$key] must contain literal bullet '•': $body", body.contains("•"))
+                org.junit.Assert.assertFalse("[${dir.name}:$key] must not contain '\\u2022': $body", body.contains("\\u2022"))
+            }
+            if (dir.name == "values" || dir.name.startsWith("values-")) {
+                org.junit.Assert.assertTrue("[${dir.name}] must contain both bullet strings", count >= 2)
+            }
+        }
+
+        val item = FavoritesManager.FavoriteItem(
+            id = "fav_test",
+            path = "/test",
+            label = "test",
+            isFolder = true,
+            isNetwork = false
+        )
+        val subtitle = FavoritesManager.getFavoriteSubtitle(context, item)
+        org.junit.Assert.assertTrue("getFavoriteSubtitle must contain bullet: $subtitle", subtitle.contains("•"))
+        org.junit.Assert.assertFalse("getFavoriteSubtitle must not contain raw escape: $subtitle", subtitle.contains("\\u2022"))
+    }
 }

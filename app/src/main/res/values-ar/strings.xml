@@ -796,14 +796,14 @@ NAS المنزلي
 مطلوب ADB
 </string>
     <string name="adb_required_to_take_screenshots">
-\\\"يجب تمكين \\\"تصحيح أخطاء USB\\\" على التلفاز لالتقاط لقطات الشاشة.\n
+\"يجب تمكين \"تصحيح أخطاء USB\" على التلفاز لالتقاط لقطات الشاشة.\n
 \n
 لتمكين: \n
 1. افتح الإعدادات على التلفاز\n
 2. انتقل إلى تفضيلات الجهاز > خيارات المطورين\n
-3. قم بتمكين \\\"تصحيح أخطاء USB\\\"\n
+3. قم بتمكين \"تصحيح أخطاء USB\"\n
 \n
-إذا لم ترَ خيارات المطورين، فانتقل إلى \\\"حول\\\" وانقر على \\\"رقم البناء\\\" 7 مرات أولاً.\\\"
+إذا لم ترَ خيارات المطورين، فانتقل إلى \"حول\" وانقر على \"رقم البناء\" 7 مرات أولاً.\"
 </string>
     <string name="adb_enable_desc">
 يجب تمكين تصحيح أخطاء USB على التلفزيون لالتقاط لقطات الشاشة.
@@ -860,10 +860,10 @@ NAS المنزلي
 جاري تنظيف الفهرس...
 </string>
     <string name="deleting_folder_progress">
-جاري حذف \\\"%1$s\\\"… جاري مسح قاعدة بيانات الفهرس، يرجى الانتظار.
+جاري حذف \"%1$s\"… جاري مسح قاعدة بيانات الفهرس، يرجى الانتظار.
 </string>
     <string name="deleting_folder_only_progress">
-جاري حذف \\\"%1$s\\\"… يرجى الانتظار.
+جاري حذف \"%1$s\"… يرجى الانتظار.
 </string>
     <string name="deleting_items_progress">
 جاري حذف العناصر… يرجى الانتظار.
@@ -1031,14 +1031,14 @@ VPN نشط
 تم اكتشاف سياسة مؤسسية
 </string>
     <string name="policy_blocked_message">
-\\\"يبدو أن جهازك أو مؤسستك قد قيدت الوصول إلى موفر التخزين هذا.\n
+\"يبدو أن جهازك أو مؤسستك قد قيدت الوصول إلى موفر التخزين هذا.\n
 \n
 الأسباب الشائعة تشمل: \n
 • سياسات Intune/MDM\n
 • قواعد الوصول المشروط\n
 • حظر على مستوى الشبكة\n
 \n
-يرجى الاتصال بمسؤول تكنولوجيا المعلومات لديك للسماح لـ \\\"Ultimate File Manager Pro\\\" بالوصول إلى التخزين السحابي.\\\"
+يرجى الاتصال بمسؤول تكنولوجيا المعلومات لديك للسماح لـ \"Ultimate File Manager Pro\" بالوصول إلى التخزين السحابي.\"
 </string>
     <string name="policy_blocked_details">
 التفاصيل الفنية
@@ -3904,7 +3904,7 @@ NFSv4
 خلفية البلاطة
 </string>
     <string name="tile_color_copy_to">
-نسخ إلى\\u2026
+نسخ إلى…
 </string>
     <string name="tile_copy_title">
 تطبيق اللون على البلاطات
@@ -3964,7 +3964,7 @@ NFSv4
 اختر بلاطة لتلوينها
 </string>
     <string name="tile_color_message_select">
-اضغط على بلاطة بعد الضغط على \\\'تحديد\\\' لفتح منتقي الألوان.
+اضغط على بلاطة بعد الضغط على \'تحديد\' لفتح منتقي الألوان.
 </string>
     <string name="tile_color_tip_title">
 مخصص ألوان البلاطات
@@ -7617,16 +7617,16 @@ Debloater
 خطأ في التحقق
 </string>
     <string name="smart_sort_err_no_category">
-يرجى تحديد فئة واحدة على الأقل، أو تمكين \\\"تضمين غير المصنف\\\".
+يرجى تحديد فئة واحدة على الأقل، أو تمكين \"تضمين غير المصنف\".
 </string>
     <string name="smart_sort_err_scope">
-يرجى تحديد \\\"الجذر فقط\\\" أو \\\"تكراري\\\" لنطاق الفرز.
+يرجى تحديد \"الجذر فقط\" أو \"تكراري\" لنطاق الفرز.
 </string>
     <string name="smart_sort_err_subfolder">
-يرجى تحديد \\\"تسطيح\\\" أو \\\"الحفاظ على الهيكل\\\" لمعالجة المجلدات الفرعية.
+يرجى تحديد \"تسطيح\" أو \"الحفاظ على الهيكل\" لمعالجة المجلدات الفرعية.
 </string>
     <string name="smart_sort_err_mode">
-يرجى تحديد وضع الفرز: \\\"حسب النوع\\\" أو \\\"حسب الحجم\\\" أو \\\"حسب التاريخ\\\".
+يرجى تحديد وضع الفرز: \"حسب النوع\" أو \"حسب الحجم\" أو \"حسب التاريخ\".
 </string>
     <string name="smart_sort_err_duplicate">
 يرجى تحديد استراتيجية معالجة التكرار.
@@ -7707,7 +7707,7 @@ Debloater
 حذف هذه القاعدة؟
 </string>
     <string name="smart_sort_extension_already_used">
-الامتداد \\\"%1$s\\\" مستخدم بالفعل في \\\"%2$s\\\"
+الامتداد \"%1$s\" مستخدم بالفعل في \"%2$s\"
 </string>
     <string name="smart_sort_extension_empty">
 يرجى إدخال امتداد
@@ -7731,7 +7731,7 @@ Debloater
 تمت إزالة الامتداد
 </string>
     <string name="smart_sort_no_rules">
-لم تتم إضافة أي قواعد. اضغط على \\\"إضافة قاعدة\\\" لإنشاء واحدة.
+لم تتم إضافة أي قواعد. اضغط على \"إضافة قاعدة\" لإنشاء واحدة.
 </string>
     <string name="smart_sort_mode_custom">
 حسب القواعد المخصصة
@@ -7758,10 +7758,10 @@ Debloater
 إزالة هذا الإعداد المحفوظ
 </string>
     <string name="smart_sort_delete_saved_confirm_title">
-حذف \\\"%1$s\\\"؟
+حذف \"%1$s\"؟
 </string>
     <string name="smart_sort_delete_saved_confirm_msg">
-هل أنت متأكد من رغبتك في حذف التكوين المحفوظ \\\"%1$s\\\"؟
+هل أنت متأكد من رغبتك في حذف التكوين المحفوظ \"%1$s\"؟
 </string>
     <string name="smart_sort_enter_description">
 أدخل وصفًا
@@ -7854,7 +7854,7 @@ Debloater
 يتم تخطي هذه الفئة بالكامل إذا كان المجلد موجودًا بالفعل.
 </string>
     <string name="smart_sort_hint_existing_rename">
-يتم إنشاء مجلد جديد بلاحقة رقمية (مثل \\\"UFM Photos (1)\\\").
+يتم إنشاء مجلد جديد بلاحقة رقمية (مثل \"UFM Photos (1)\").
 </string>
     <string name="file_not_found">
 الملف غير موجود
@@ -7863,7 +7863,7 @@ Debloater
 ✓ تم حفظ ترتيب البلاطات
 </string>
     <string name="itemlabel_tile_hidden">
-بلاطة \\\"%1$s\\\" مخفية
+بلاطة \"%1$s\" مخفية
 </string>
     <string name="edit_mode_tap_x_to_hide_drag_to_reorder">
 وضع التعديل: اضغط على (X) للإخفاء، واسحب لإعادة الترتيب
@@ -8076,10 +8076,10 @@ Debloater
 إخفاء الرقم السري
 </string>
     <string name="are_you_sure_you_want_to_remove_devicename_from_paired_devices">
-هل أنت متأكد من رغبتك في إزالة \\\'%1$s\\\' من الأجهزة المقترنة؟
+هل أنت متأكد من رغبتك في إزالة \'%1$s\' من الأجهزة المقترنة؟
 </string>
     <string name="ensure_your_phone_is_on_the_same_wifi_network_open_ultimate_file_manager_pro_on_your_phone_click_link_to_tv_and_enter_this_pin_pincode">
-تأكد من أن هاتفك على نفس شبكة WiFi. افتح Ultimate File Manager Pro على هاتفك، وانقر على \\\'ربط بالتلفاز\\\'، وأدخل هذا الرقم السري: %1$s
+تأكد من أن هاتفك على نفس شبكة WiFi. افتح Ultimate File Manager Pro على هاتفك، وانقر على \'ربط بالتلفاز\'، وأدخل هذا الرقم السري: %1$s
 </string>
     <string name="link">
 ربط
@@ -8398,7 +8398,7 @@ Debloater
 هاتف
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 الهواتف المقترنة
@@ -13671,7 +13671,7 @@ Review Online Tags
 استضف خوادم ملفات FTP وSFTP محلية أو قم ببث الوسائط عبر DLNA. يمكن للأجهزة الموجودة على شبكة Wi-Fi المحلية الاتصال للتصفح والبث ونقل الملفات.
 </string>
     <string name="file_server_empty_profiles_desc">
-اضغط على \\\'Add Profile\\\' لتكوين بيانات اعتماد تسجيل الدخول وأذونات الوصول ومجلدات المشاركة.
+اضغط على \'Add Profile\' لتكوين بيانات اعتماد تسجيل الدخول وأذونات الوصول ومجلدات المشاركة.
 </string>
 
     <!-- DLNA Modernization -->
@@ -13694,7 +13694,7 @@ Review Online Tags
 قم بتكوين كيفية ظهور جهازك على الشبكة المحلية واختر المجلدات للمشاركة. مشاركات وسائط DLNA للقراءة فقط بشكل صارم.
 </string>
     <string name="dlna_empty_shared_folders_desc">
-اضغط على \\\'Add Folder\\\' لتحديد مجلدات التخزين الداخلي أو بطاقة SD أو USB لكشفها عبر DLNA.
+اضغط على \'Add Folder\' لتحديد مجلدات التخزين الداخلي أو بطاقة SD أو USB لكشفها عبر DLNA.
 </string>
 
     <!-- Smart Sort Modernization -->
@@ -15024,7 +15024,7 @@ MD5
 تبويب %d
 </string>
     <string name="tab_storage_unavailable_closed">
-تم إغلاق التبويب \\\'%s\\\' (تم فصل وحدة التخزين)
+تم إغلاق التبويب \'%s\' (تم فصل وحدة التخزين)
 </string>
     <string name="backup_pref_tabs">
 تبويبات المتصفح والجلسات
@@ -17196,7 +17196,7 @@ Bookmark Hub
 تعطيل الاختصار
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 محلي

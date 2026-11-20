@@ -1389,7 +1389,7 @@
     <string name="tile_color_ring">Outer Ring</string>
     <string name="tile_color_icon_bg">Icon Background</string>
     <string name="tile_color_tile_bg">Tile Background</string>
-    <string name="tile_color_copy_to">Copy to\u2026</string>
+    <string name="tile_color_copy_to">Copy to…</string>
     <string name="tile_copy_title">Apply Color to Tiles</string>
     <string name="tile_copy_apply_selected">Apply to Selected</string>
     <string name="tile_copy_apply_all">Apply to All</string>
@@ -2914,7 +2914,7 @@
     <string name="opening_itemlabel">📂 Opening %1$s</string>
     <string name="opening_itemlabel_1">Opening %1$s…</string>
     <string name="phone">Phone</string>
-    <string name="devicetypelabel_u2022_devicelastip">%1$s \u2022 %2$s</string>
+    <string name="devicetypelabel_u2022_devicelastip">%1$s • %2$s</string>
     <string name="paired_phones_1">Paired Phones</string>
     <string name="paired_tvs_1">Paired TVs</string>
     <string name="root">Root</string>
@@ -4294,7 +4294,7 @@
     <!-- File Properties & Tagging -->
     <string name="action_properties">Properties</string>
     <string name="properties_title">Properties</string>
-    <string name="properties_calculating_size">Calculating size\u2026</string>
+    <string name="properties_calculating_size">Calculating size…</string>
     <string name="properties_multiple_items_title">%1$d items selected</string>
     <string name="properties_selection_title">Selection Properties</string>
     <string name="properties_folder_title">Folder Properties</string>
@@ -6040,7 +6040,7 @@
     <string name="remove_home_shortcut_title">Remove Home Shortcut</string>
     <string name="remove_home_shortcut_message">Due to Android security restrictions, apps cannot directly remove icons from your home screen. The shortcut will be disabled. To remove it completely, please drag the icon to Remove or Uninstall on your launcher.</string>
     <string name="remove_home_shortcut_disable_btn">Disable Shortcut</string>
-    <string name="fav_protocol_type_format">%1$s \u2022 %2$s</string>
+    <string name="fav_protocol_type_format">%1$s • %2$s</string>
     <string name="fav_protocol_local">Local</string>
     <string name="file">File</string>
 </resources>

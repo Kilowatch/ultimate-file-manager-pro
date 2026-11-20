@@ -797,7 +797,7 @@ Informe de fallos y ANR (Diagnóstico)\n
 \n
 UFM puede capturar información de diagnóstico cuando falla o se congela para que podamos solucionar el problema. Esto incluye la versión de la aplicación, la versión de Android, el modelo y fabricante del dispositivo, el tipo y mensaje de excepción, y la traza de pila. Nunca incluye tus archivos, nombres, direcciones de correo electrónico ni información de la cuenta.\n
 \n
-No se envía nada automáticamente: después de un bloqueo o congelación, se muestra una ventana preguntando si deseas enviar el informe a KiloWatch (kilowatch.co.za). Al elegir \\\'No, gracias\\\' se elimina localmente. Puedes desactivar la detección de fallos y congelaciones en cualquier momento a través de Ajustes → Informe de fallos y ANR; al desactivarla también se eliminan los informes pendientes.
+No se envía nada automáticamente: después de un bloqueo o congelación, se muestra una ventana preguntando si deseas enviar el informe a KiloWatch (kilowatch.co.za). Al elegir \'No, gracias\' se elimina localmente. Puedes desactivar la detección de fallos y congelaciones en cualquier momento a través de Ajustes → Informe de fallos y ANR; al desactivarla también se eliminan los informes pendientes.
 </string>
     <string name="pp_s2_crash_body">
 UFM puede capturar información de diagnóstico cuando falla o se congela para que podamos solucionar el problema. Esto incluye la versión de la aplicación, la versión de Android, el modelo y fabricante del dispositivo, el tipo de excepción y el mensaje, y el seguimiento de la pila. Nunca incluye sus archivos, nombres, direcciones de correo electrónico o información de cuenta.\n

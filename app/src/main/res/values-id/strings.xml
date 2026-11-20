@@ -3904,7 +3904,7 @@ Latar Belakang Ikon
 Latar Belakang Ubin
 </string>
     <string name="tile_color_copy_to">
-Salin ke\\u2026
+Salin ke…
 </string>
     <string name="tile_copy_title">
 Terapkan Warna ke Ubin
@@ -8074,10 +8074,10 @@ Perangkat terdeteksi: %1$d %2$s
 Sembunyikan PIN
 </string>
     <string name="are_you_sure_you_want_to_remove_devicename_from_paired_devices">
-Apakah Anda yakin ingin menghapus \\\'%1$s\\\' dari perangkat yang dipasangkan?
+Apakah Anda yakin ingin menghapus \'%1$s\' dari perangkat yang dipasangkan?
 </string>
     <string name="ensure_your_phone_is_on_the_same_wifi_network_open_ultimate_file_manager_pro_on_your_phone_click_link_to_tv_and_enter_this_pin_pincode">
-Pastikan Ponsel Anda terhubung ke jaringan WiFi yang sama. Buka Ultimate File Manager Pro di ponsel Anda, klik \\\'Tautkan ke TV\\\', dan masukkan PIN ini: %1$s
+Pastikan Ponsel Anda terhubung ke jaringan WiFi yang sama. Buka Ultimate File Manager Pro di ponsel Anda, klik \'Tautkan ke TV\', dan masukkan PIN ini: %1$s
 </string>
     <string name="link">
 Tautkan
@@ -8396,7 +8396,7 @@ Membuka %1$s…
 Ponsel
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 Ponsel yang Dipasangkan
@@ -12254,7 +12254,7 @@ Properti
 Properti
 </string>
     <string name="properties_calculating_size">
-Menghitung ukuran\\u2026
+Menghitung ukuran…
 </string>
     <string name="properties_multiple_items_title">
 %1$d item terpilih
@@ -13226,7 +13226,7 @@ Berhasil mengekstrak %1$d item
 
     <!-- Universal Open With -->
     <string name="opening_file">
-Membuka file\\u2026
+Membuka file…
 </string>
     <string name="error_cannot_open_file">
 Tidak dapat membuka file
@@ -13669,7 +13669,7 @@ Autentikasi &amp; Akses
 Host server file FTP dan SFTP lokal atau streaming media melalui DLNA. Perangkat di jaringan Wi-Fi lokal Anda dapat terhubung untuk menjelajah, streaming, dan mentransfer file.
 </string>
     <string name="file_server_empty_profiles_desc">
-Ketuk \\\'Tambah Profil\\\' untuk mengonfigurasi kredensial masuk, izin akses, dan direktori bersama.
+Ketuk \'Tambah Profil\' untuk mengonfigurasi kredensial masuk, izin akses, dan direktori bersama.
 </string>
 
     <!-- DLNA Modernization -->
@@ -13692,7 +13692,7 @@ Streaming foto, musik, dan video ke TV pintar dan pemutar media DLNA di jaringan
 Konfigurasikan bagaimana perangkat Anda muncul di jaringan lokal dan pilih direktori untuk dibagikan. Berbagi media DLNA bersifat hanya-baca.
 </string>
     <string name="dlna_empty_shared_folders_desc">
-Ketuk \\\'Tambah Folder\\\' untuk memilih folder penyimpanan internal, kartu SD, atau USB untuk ditampilkan melalui DLNA.
+Ketuk \'Tambah Folder\' untuk memilih folder penyimpanan internal, kartu SD, atau USB untuk ditampilkan melalui DLNA.
 </string>
 
     <!-- Smart Sort Modernization -->
@@ -15022,7 +15022,7 @@ Jelajahi penyimpanan Internal, Kartu SD, Jaringan, atau Cloud
 Tab %d
 </string>
     <string name="tab_storage_unavailable_closed">
-Tab \\\'%s\\\' ditutup (penyimpanan terputus)
+Tab \'%s\' ditutup (penyimpanan terputus)
 </string>
     <string name="backup_pref_tabs">
 Tab &amp; Sesi Browser
@@ -17194,7 +17194,7 @@ Karena pembatasan keamanan Android, aplikasi tidak dapat langsung menghapus ikon
 Nonaktifkan Pintasan
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 Lokal

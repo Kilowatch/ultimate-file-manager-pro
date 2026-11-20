@@ -280,7 +280,7 @@ Identifiants de partage réseau
 Synchronisation de dossiers
 </item>
         <item>
-Suppression d\\\'applications système
+Suppression d\'applications système
 </item>
         <item>
 Appairage ADB
@@ -289,10 +289,10 @@ Appairage ADB
 Porter, Shizuku, Shevery et accès élevé
 </item>
         <item>
-Captures d\\\'écran TV
+Captures d\'écran TV
 </item>
         <item>
-Précision de l\\\'indexeur
+Précision de l\'indexeur
 </item>
         <item>
 Bugs et erreurs
@@ -312,34 +312,34 @@ Nous ne pouvons pas garantir une perte de données nulle. Gardez toujours des sa
 Si vous oubliez votre code PIN et votre code de récupération, vos fichiers cryptés ne peuvent pas être récupérés — par personne.
 </item>
         <item>
-L\\\'installation d\\\'APK provenant de sources inconnues comporte des risques de sécurité. Vous assumez l\\\'entière responsabilité des fichiers APK que vous installez.
+L\'installation d\'APK provenant de sources inconnues comporte des risques de sécurité. Vous assumez l\'entière responsabilité des fichiers APK que vous installez.
 </item>
         <item>
-Lors de l\\\'hébergement d\\\'un serveur de fichiers, les connexions FTP transmettent des données et des identifiants en texte clair. Utilisez toujours SFTP si vous avez besoin de transferts sécurisés et cryptés.
+Lors de l\'hébergement d\'un serveur de fichiers, les connexions FTP transmettent des données et des identifiants en texte clair. Utilisez toujours SFTP si vous avez besoin de transferts sécurisés et cryptés.
 </item>
         <item>
-Vos identifiants de partage réseau (hôte, nom d\\\'utilisateur, mot de passe) sont stockés localement sur votre appareil. Vous êtes responsable de la sécurité de votre appareil.
+Vos identifiants de partage réseau (hôte, nom d\'utilisateur, mot de passe) sont stockés localement sur votre appareil. Vous êtes responsable de la sécurité de votre appareil.
 </item>
         <item>
-Les opérations de synchronisation s\\\'exécutent en arrière-plan et peuvent consommer de la batterie et des données. Vérifiez toujours votre chemin distant avant d\\\'activer la synchronisation — la synchronisation vers un dossier incorrect peut écraser les fichiers de votre partage réseau.
+Les opérations de synchronisation s\'exécutent en arrière-plan et peuvent consommer de la batterie et des données. Vérifiez toujours votre chemin distant avant d\'activer la synchronisation — la synchronisation vers un dossier incorrect peut écraser les fichiers de votre partage réseau.
 </item>
         <item>
-La suppression d\\\'applications système basée sur des recommandations de désencombrement peut affecter la stabilité de l\\\'appareil. Procédez avec prudence.
+La suppression d\'applications système basée sur des recommandations de désencombrement peut affecter la stabilité de l\'appareil. Procédez avec prudence.
 </item>
         <item>
-L\\\'appairage ADB nécessite l\\\'échange de certificats entre votre appareil et l\\\'appareil cible via votre réseau Wi-Fi local. Connectez-vous uniquement à des appareils que vous possédez ou dont vous avez l\\\'autorisation d\\\'accès. Toute personne sur votre réseau qui capture votre code PIN d\\\'appairage peut accéder à votre appareil — gardez ce code privé.
+L\'appairage ADB nécessite l\'échange de certificats entre votre appareil et l\'appareil cible via votre réseau Wi-Fi local. Connectez-vous uniquement à des appareils que vous possédez ou dont vous avez l\'autorisation d\'accès. Toute personne sur votre réseau qui capture votre code PIN d\'appairage peut accéder à votre appareil — gardez ce code privé.
 </item>
         <item>
-L\\\'utilisation de Porter, Shizuku, Shevery ou ADB pour obtenir un accès élevé permet à l\\\'application de modifier des fichiers protégés par le système. Une mauvaise utilisation de ces fonctionnalités peut nuire à la stabilité ou à la sécurité de votre appareil. Utilisez-les avec prudence et n\\\'accordez cet accès qu\\\'à cette application.
+L\'utilisation de Porter, Shizuku, Shevery ou ADB pour obtenir un accès élevé permet à l\'application de modifier des fichiers protégés par le système. Une mauvaise utilisation de ces fonctionnalités peut nuire à la stabilité ou à la sécurité de votre appareil. Utilisez-les avec prudence et n\'accordez cet accès qu\'à cette application.
 </item>
         <item>
-Les captures d\\\'écran des TV appairées sont capturées via ADB sur votre réseau local et enregistrées directement dans le stockage de votre téléphone. Nous ne transmettons, ne consultons ni ne téléchargeons vos captures d\\\'écran. Assurez-vous de ne capturer que des écrans sur des appareils que vous possédez ou dont vous avez l\\\'autorisation d\\\'accès.
+Les captures d\'écran des TV appairées sont capturées via ADB sur votre réseau local et enregistrées directement dans le stockage de votre téléphone. Nous ne transmettons, ne consultons ni ne téléchargeons vos captures d\'écran. Assurez-vous de ne capturer que des écrans sur des appareils que vous possédez ou dont vous avez l\'autorisation d\'accès.
 </item>
         <item>
-L\\\'index reflète l\\\'état de votre stockage au moment de l\\\'analyse. Vous devrez peut-être actualiser l\\\'index si des fichiers sont modifiés par d\\\'autres applications.
+L\'index reflète l\'état de votre stockage au moment de l\'analyse. Vous devrez peut-être actualiser l\'index si des fichiers sont modifiés par d\'autres applications.
 </item>
         <item>
-Aucun logiciel n\\\'est parfait. Nous ne pouvons pas promettre que l\\\'application sera toujours exempte d\\\'erreurs ou ininterrompue.
+Aucun logiciel n\'est parfait. Nous ne pouvons pas promettre que l\'application sera toujours exempte d\'erreurs ou ininterrompue.
 </item>
         <item>
 Notre responsabilité totale est limitée au montant total que vous avez payé pour les achats intégrés dans les 30 jours précédant toute réclamation. Nous ne sommes pas responsables des pertes de données, des dommages matériels ou des pertes de profits découlant des fonctionnalités gratuites.
@@ -469,31 +469,31 @@ Essentiel pour parcourir, copier, déplacer et supprimer des fichiers sur tout v
 Nécessaire pour organiser et gérer vos photos, vidéos et fichiers audio.
 </item>
         <item>
-Utilisé pour vous alerter lorsque les opérations sur les fichiers sont terminées ou lorsque l\\\'espace de stockage est faible.
+Utilisé pour vous alerter lorsque les opérations sur les fichiers sont terminées ou lorsque l\'espace de stockage est faible.
 </item>
         <item>
-Alimente la gestion de fichiers à distance, l\\\'accès aux partages réseau (SMB/FTP/SFTP/SCP/NFS), la synchronisation de dossiers, l\\\'appairage d\\\'appareils et l\\\'accès au terminal ADB sur votre réseau local. La découverte réseau scanne les appareils de votre sous-réseau local (jusqu\\\'à 254 IP) sur les ports ADB 5555, 5037 et 5038 pour trouver les appareils compatibles ADB.
+Alimente la gestion de fichiers à distance, l\'accès aux partages réseau (SMB/FTP/SFTP/SCP/NFS), la synchronisation de dossiers, l\'appairage d\'appareils et l\'accès au terminal ADB sur votre réseau local. La découverte réseau scanne les appareils de votre sous-réseau local (jusqu\'à 254 IP) sur les ports ADB 5555, 5037 et 5038 pour trouver les appareils compatibles ADB.
 </item>
         <item>
-Utilisé pour la découverte d\\\'appareils sur le réseau local (NSD/mDNS) lors de l\\\'appairage.
+Utilisé pour la découverte d\'appareils sur le réseau local (NSD/mDNS) lors de l\'appairage.
 </item>
         <item>
-Détecte les connexions VPN lors de la gestion à distance et de l\\\'accès aux partages réseau.
+Détecte les connexions VPN lors de la gestion à distance et de l\'accès aux partages réseau.
 </item>
         <item>
-Permet au Gestionnaire d\\\'applications d\\\'énumérer toutes les applications installées sur votre appareil. Les données consultées incluent : nom de l\\\'application, ID du paquet, version, taille de l\\\'APK, horodatages d\\\'installation et de mise à jour, et si chaque application est une application système ou installée par l\\\'utilisateur. Ces informations sont utilisées exclusivement sur l\\\'appareil pour afficher le Gestionnaire d\\\'applications, calculer le stockage par application et recouper les noms de paquets avec une liste de référence de désencombrement publiquement disponible, téléchargée et mise en cache localement. Aucune donnée d\\\'application installée n\\\'est jamais transmise aux serveurs de KiloWatch ni à un tiers.
+Permet au Gestionnaire d\'applications d\'énumérer toutes les applications installées sur votre appareil. Les données consultées incluent : nom de l\'application, ID du paquet, version, taille de l\'APK, horodatages d\'installation et de mise à jour, et si chaque application est une application système ou installée par l\'utilisateur. Ces informations sont utilisées exclusivement sur l\'appareil pour afficher le Gestionnaire d\'applications, calculer le stockage par application et recouper les noms de paquets avec une liste de référence de désencombrement publiquement disponible, téléchargée et mise en cache localement. Aucune donnée d\'application installée n\'est jamais transmise aux serveurs de KiloWatch ni à un tiers.
 </item>
         <item>
-Requis pour installer les fichiers APK que vous choisissez d\\\'exécuter depuis le stockage local.
+Requis pour installer les fichiers APK que vous choisissez d\'exécuter depuis le stockage local.
 </item>
         <item>
 Traite les achats facultatifs de la boîte à pourboires via Google Play.
 </item>
         <item>
-Permet une connexion sécurisée à des appareils Android pour un accès avancé au shell. Génère un certificat RSA unique sur votre appareil pour l\\\'appairage ; aucun certificat n\\\'est transmis à des serveurs externes.
+Permet une connexion sécurisée à des appareils Android pour un accès avancé au shell. Génère un certificat RSA unique sur votre appareil pour l\'appairage ; aucun certificat n\'est transmis à des serveurs externes.
 </item>
         <item>
-Permet à l\\\'application d\\\'utiliser l\\\'API Porter / Shizuku / Shevery (y compris les paramètres sécurisés) pour gérer les fichiers dans les répertoires système restreints sans rooter l\\\'appareil.
+Permet à l\'application d\'utiliser l\'API Porter / Shizuku / Shevery (y compris les paramètres sécurisés) pour gérer les fichiers dans les répertoires système restreints sans rooter l\'appareil.
 </item>
         <item>
 Permet aux services Shizuku et Shevery de démarrer automatiquement au démarrage de votre appareil pour assurer une disponibilité immédiate.
@@ -502,10 +502,10 @@ Permet aux services Shizuku et Shevery de démarrer automatiquement au démarrag
 Permet aux services Porter, Shizuku et Shevery de démarrer automatiquement au démarrage de votre appareil afin de garantir leur disponibilité immédiate.
 </item>
         <item>
-Vous permet d\\\'activer le maintien des services Porter, Shizuku et Shevery en arrière-plan pour des performances fiables.
+Vous permet d\'activer le maintien des services Porter, Shizuku et Shevery en arrière-plan pour des performances fiables.
 </item>
         <item>
-Maintient le processeur et le Wi-Fi actifs lors des transferts de fichiers volumineux afin qu\\\'ils se terminent de manière fiable même lorsque l\\\'écran s\\\'éteint.
+Maintient le processeur et le Wi-Fi actifs lors des transferts de fichiers volumineux afin qu\'ils se terminent de manière fiable même lorsque l\'écran s\'éteint.
 </item>
         <item>
 Utilise les autorisations de stockage pour analyser et indexer les métadonnées des fichiers pour les performances — géré via Paramètres -> Indexeur de stockage.
@@ -514,7 +514,7 @@ Utilise les autorisations de stockage pour analyser et indexer les métadonnées
 Se connecte à votre Android TV appairé pour agir comme un clavier et une souris Bluetooth pour le contrôle à distance.
 </item>
         <item>
-Fournit un retour haptique lors de l\\\'appui sur les boutons de la télécommande TV.
+Fournit un retour haptique lors de l\'appui sur les boutons de la télécommande TV.
 </item>
         <item>
 Fournit un retour haptique lorsque vous appuyez sur les boutons de la télécommande du téléviseur.
@@ -683,7 +683,7 @@ support@kilowatch.co.za
 Politique de confidentialité
 </string>
     <string name="pp_summary">
-Vos fichiers restent sur votre appareil — nous ne les voyons jamais. Avec votre consentement, nous collectons des statistiques d\\\'utilisation anonymes via Firebase pour améliorer l\\\'application. Pas de publicités, pas de vente de données, pas de pratiques douteuses.
+Vos fichiers restent sur votre appareil — nous ne les voyons jamais. Avec votre consentement, nous collectons des statistiques d\'utilisation anonymes via Firebase pour améliorer l\'application. Pas de publicités, pas de vente de données, pas de pratiques douteuses.
 </string>
 
     <!-- Section titles -->
@@ -779,7 +779,7 @@ Nous n\'avons jamais accès à votre code PIN, code de récupération, clés de 
 Collecté via Firebase Analytics (anonyme)
 </string>
     <string name="pp_s2_analytics_body">
-Nous utilisons Google Firebase Analytics pour collecter des données d\\\'utilisation anonymes afin d\\\'améliorer l\\\'application. Les données d\\\'analyse ne sont jamais liées à votre identité personnelle. L\\\'interrupteur « Usage Analytics » dans les paramètres de l\\\'application (ou les paramètres de votre appareil Android) constitue le contrôle du consentement : il est activé par défaut, et le désactiver retire votre consentement et arrête la collecte à tout moment. Pour les utilisateurs de l\\\'Espace économique européen, du Royaume-Uni et de la Suisse, cela est conforme à la politique de consentement des utilisateurs de l\\\'UE et à la législation applicable en matière de protection des données.
+Nous utilisons Google Firebase Analytics pour collecter des données d\'utilisation anonymes afin d\'améliorer l\'application. Les données d\'analyse ne sont jamais liées à votre identité personnelle. L\'interrupteur « Usage Analytics » dans les paramètres de l\'application (ou les paramètres de votre appareil Android) constitue le contrôle du consentement : il est activé par défaut, et le désactiver retire votre consentement et arrête la collecte à tout moment. Pour les utilisateurs de l\'Espace économique européen, du Royaume-Uni et de la Suisse, cela est conforme à la politique de consentement des utilisateurs de l\'UE et à la législation applicable en matière de protection des données.
 </string>
 
     <string name="pp_s2_billing_heading">
@@ -795,9 +795,9 @@ Les jetons d\'achat anonymes de Google Play Billing sont temporairement traités
     <string name="pp_s2_crash_heading">
 Signalement des crashs et ANR (Diagnostics)\n
 \n
-UFM peut capturer des informations de diagnostic lorsqu\\\'il plante ou se fige afin que nous puissions résoudre le problème. Cela inclut la version de l\\\'application, la version d\\\'Android, le modèle et le fabricant de l\\\'appareil, le type et le message d\\\'exception, ainsi que la trace de pile. Cela n\\\'inclut jamais vos fichiers, noms, adresses e-mail ou informations de compte.\n
+UFM peut capturer des informations de diagnostic lorsqu\'il plante ou se fige afin que nous puissions résoudre le problème. Cela inclut la version de l\'application, la version d\'Android, le modèle et le fabricant de l\'appareil, le type et le message d\'exception, ainsi que la trace de pile. Cela n\'inclut jamais vos fichiers, noms, adresses e-mail ou informations de compte.\n
 \n
-Rien n\\\'est envoyé automatiquement : après un plantage ou un gel, une invite demande si vous souhaitez envoyer le rapport à KiloWatch (kilowatch.co.za). Choisir « Non merci » le supprime localement. Vous pouvez désactiver la détection des crashs et des gels à tout moment via Paramètres → Signalement des crashs et ANR ; la désactiver supprime également les rapports en attente.
+Rien n\'est envoyé automatiquement : après un plantage ou un gel, une invite demande si vous souhaitez envoyer le rapport à KiloWatch (kilowatch.co.za). Choisir « Non merci » le supprime localement. Vous pouvez désactiver la détection des crashs et des gels à tout moment via Paramètres → Signalement des crashs et ANR ; la désactiver supprime également les rapports en attente.
 </string>
     <string name="pp_s2_crash_body">
 UFM peut capturer des informations de diagnostic en cas de panne ou de blocage afin que nous puissions résoudre le problème. Cela inclut la version de l\'application, la version Android, le modèle et le fabricant de l\'appareil, le type et le message d\'exception, ainsi que la trace de la pile. Il n\'inclut jamais vos fichiers, noms, adresses e-mail ou informations de compte.\n
@@ -1038,7 +1038,7 @@ Métadonnées du coffre
 Clés de chiffrement
 </item>
         <item>
-Préférences de l\\\'application
+Préférences de l\'application
 </item>
         <item>
 Profils du serveur de fichiers
@@ -1047,16 +1047,16 @@ Profils du serveur de fichiers
 Identifiants de partage réseau
 </item>
         <item>
-Informations sur l\\\'appareil appairé
+Informations sur l\'appareil appairé
 </item>
         <item>
-Clés d\\\'authentification ADB
+Clés d\'authentification ADB
 </item>
         <item>
-État d\\\'autorisation de Porter / Shizuku / Shevery
+État d\'autorisation de Porter / Shizuku / Shevery
 </item>
         <item>
-Captures d\\\'écran TV
+Captures d\'écran TV
 </item>
         <item>
 Profils de synchronisation
@@ -1091,46 +1091,46 @@ Accès sécurisé aux fichiers chiffrés · Android SharedPreferences
 Récupération du compte si le code PIN est oublié · Android SharedPreferences
 </item>
         <item>
-Liste de vos dossiers et fichiers chiffrés · Stockage privé de l\\\'application
+Liste de vos dossiers et fichiers chiffrés · Stockage privé de l\'application
 </item>
         <item>
 Chiffrement AES-256-GCM pour le coffre · Android Keystore (matériel)
 </item>
         <item>
-Thème, paramètres de tri, préférences d\\\'affichage · Android SharedPreferences
+Thème, paramètres de tri, préférences d\'affichage · Android SharedPreferences
 </item>
         <item>
-Configurations (nom d\\\'utilisateur, répertoire, mot de passe haché) pour le serveur de fichiers hébergé · Stockage privé de l\\\'application
+Configurations (nom d\'utilisateur, répertoire, mot de passe haché) pour le serveur de fichiers hébergé · Stockage privé de l\'application
 </item>
         <item>
-Connexion à vos partages SMB/FTP (hôte, nom d\\\'utilisateur, mot de passe) · Stockage privé de l\\\'application
+Connexion à vos partages SMB/FTP (hôte, nom d\'utilisateur, mot de passe) · Stockage privé de l\'application
 </item>
         <item>
-Nom, identifiant et adresse IP de l\\\'appareil pour l\\\'appairage · Stockage privé de l\\\'application
+Nom, identifiant et adresse IP de l\'appareil pour l\'appairage · Stockage privé de l\'application
 </item>
         <item>
-Clés RSA et certificats générés pour les connexions ADB sécurisées · Stockage privé de l\\\'application
+Clés RSA et certificats générés pour les connexions ADB sécurisées · Stockage privé de l\'application
 </item>
         <item>
-État de l\\\'autorisation d\\\'accès élevé accordée par l\\\'application gestionnaire Porter, Shizuku ou Shevery · stockage privé de l\\\'application
+État de l\'autorisation d\'accès élevé accordée par l\'application gestionnaire Porter, Shizuku ou Shevery · stockage privé de l\'application
 </item>
         <item>
-Captures d\\\'écran prises depuis une TV appairée via ADB · Dossier local Pictures/Screenshots de votre téléphone
+Captures d\'écran prises depuis une TV appairée via ADB · Dossier local Pictures/Screenshots de votre téléphone
 </item>
         <item>
-URI du dossier local et chemin distant pour chaque profil de synchronisation · Stockage privé de l\\\'application
+URI du dossier local et chemin distant pour chaque profil de synchronisation · Stockage privé de l\'application
 </item>
         <item>
-Jetons OAuth pour accéder à Google Drive, OneDrive et Dropbox · Stockage privé de l\\\'application
+Jetons OAuth pour accéder à Google Drive, OneDrive et Dropbox · Stockage privé de l\'application
 </item>
         <item>
-Identifiant de clé d\\\'accès et clé d\\\'accès secrète pour la connexion aux compartiments S3 · Stockage privé de l\\\'application
+Identifiant de clé d\'accès et clé d\'accès secrète pour la connexion aux compartiments S3 · Stockage privé de l\'application
 </item>
         <item>
-Métadonnées des fichiers (noms, tailles, dates) pour une navigation et une recherche rapides, stockées dans une base de données SQLite/Room locale — gérable via Paramètres -> Indexeur de stockage · Stockage privé de l\\\'application
+Métadonnées des fichiers (noms, tailles, dates) pour une navigation et une recherche rapides, stockées dans une base de données SQLite/Room locale — gérable via Paramètres -> Indexeur de stockage · Stockage privé de l\'application
 </item>
         <item>
-File d\\\'attente actuelle, position de lecture et paramètres du lecteur pour reprendre là où vous vous êtes arrêté · Android SharedPreferences
+File d\'attente actuelle, position de lecture et paramètres du lecteur pour reprendre là où vous vous êtes arrêté · Android SharedPreferences
 </item>
         <item>
 Un cookie (ufm_lang) mémorise votre choix de langue pendant la session et après les redémarrages du navigateur · Stockage du navigateur web
@@ -1195,7 +1195,7 @@ Toute donnée de compte Google au-delà de ce que vous demandez explicitement da
     <!-- How we use data (Section 3) -->
     <string-array name="pp_use_local">
         <item>
-Authentifier l\\\'accès au coffre chiffré
+Authentifier l\'accès au coffre chiffré
 </item>
         <item>
 Chiffrer et déchiffrer vos fichiers privés
@@ -1204,13 +1204,13 @@ Chiffrer et déchiffrer vos fichiers privés
 Se souvenir de vos préférences et paramètres
 </item>
         <item>
-Utiliser l\\\'accès élevé (Porter/Shizuku/Shevery/ADB) pour gérer les fichiers protégés par le système dans les répertoires restreints
+Utiliser l\'accès élevé (Porter/Shizuku/Shevery/ADB) pour gérer les fichiers protégés par le système dans les répertoires restreints
 </item>
         <item>
 Créer et maintenir un index de fichiers pour une navigation et une recherche rapides (gérable via Paramètres -> Indexeur de stockage)
 </item>
         <item>
-Fournir les fonctionnalités principales de l\\\'application
+Fournir les fonctionnalités principales de l\'application
 </item>
         <item>
 Fournir les fonctionnalités de base de l\'application
@@ -1326,19 +1326,19 @@ Permet la communication avec le gestionnaire Porter, Shizuku ou Shevery pour un 
 Permet aux services Porter, Shizuku ou Shevery de démarrer automatiquement au démarrage pour une disponibilité immédiate
 </item>
         <item>
-Vous permet d\\\'activer le maintien de Porter, Shizuku ou Shevery en arrière-plan pour des performances fiables
+Vous permet d\'activer le maintien de Porter, Shizuku ou Shevery en arrière-plan pour des performances fiables
 </item>
         <item>
-Permet l\\\'installation des fichiers APK que vous choisissez
+Permet l\'installation des fichiers APK que vous choisissez
 </item>
         <item>
-Requis par les fonctionnalités Gestionnaire d\\\'applications et Débloateur. Lit : nom de l\\\'application, identifiant du paquet, version, taille de l\\\'APK, horodatages d\\\'installation et de mise à jour, et indicateur application système ou utilisateur — traité entièrement sur l\\\'appareil. L\\\'onglet Débloateur télécharge une liste de référence publique de débloatage et la croise localement avec les noms des paquets installés. Aucune donnée d\\\'application installée n\\\'est jamais transmise à l\\\'extérieur.
+Requis par les fonctionnalités Gestionnaire d\'applications et Débloateur. Lit : nom de l\'application, identifiant du paquet, version, taille de l\'APK, horodatages d\'installation et de mise à jour, et indicateur application système ou utilisateur — traité entièrement sur l\'appareil. L\'onglet Débloateur télécharge une liste de référence publique de débloatage et la croise localement avec les noms des paquets installés. Aucune donnée d\'application installée n\'est jamais transmise à l\'extérieur.
 </item>
         <item>
-Exécute la synchronisation de dossiers, les transferts de fichiers et la lecture de médias en tant que service au premier plan afin qu\\\'ils se terminent de manière fiable et continuent à jouer même lorsque l\\\'écran est éteint ou que vous utilisez d\\\'autres applications
+Exécute la synchronisation de dossiers, les transferts de fichiers et la lecture de médias en tant que service au premier plan afin qu\'ils se terminent de manière fiable et continuent à jouer même lorsque l\'écran est éteint ou que vous utilisez d\'autres applications
 </item>
         <item>
-Maintient le CPU et le Wi-Fi actifs lors des transferts de fichiers volumineux et de la lecture de médias afin qu\\\'ils se terminent de manière fiable même lorsque l\\\'écran s\\\'éteint
+Maintient le CPU et le Wi-Fi actifs lors des transferts de fichiers volumineux et de la lecture de médias afin qu\'ils se terminent de manière fiable même lorsque l\'écran s\'éteint
 </item>
     </string-array>
 
@@ -1584,24 +1584,24 @@ Jetons OAuth Google Drive / OneDrive / Dropbox
 Identifiants d\'accès S3 / compatibles S3
 </item>
         <item>
-Données d\\\'analyse Firebase
+Données d\'analyse Firebase
 </item>
     </string-array>
     <string-array name="pp_retention_details">
         <item>
-Jusqu\\\'à ce que vous désinstalliez l\\\'application
+Jusqu\'à ce que vous désinstalliez l\'application
 </item>
         <item>
-Jusqu\\\'à ce que vous désinstalliez l\\\'application
+Jusqu\'à ce que vous désinstalliez l\'application
 </item>
         <item>
-Jusqu\\\'à ce qu\\\'elles soient supprimées via Paramètres -> Indexeur de stockage, ou jusqu\\\'à la désinstallation de l\\\'application
+Jusqu\'à ce qu\'elles soient supprimées via Paramètres -> Indexeur de stockage, ou jusqu\'à la désinstallation de l\'application
 </item>
         <item>
-Jusqu\\\'à ce que vous déconnectiez le compte dans Paramètres, ou jusqu\\\'à la désinstallation de l\\\'application
+Jusqu\'à ce que vous déconnectiez le compte dans Paramètres, ou jusqu\'à la désinstallation de l\'application
 </item>
         <item>
-Jusqu\\\'à ce que vous supprimiez le profil S3 dans Paramètres, ou jusqu\\\'à la désinstallation de l\\\'application
+Jusqu\'à ce que vous supprimiez le profil S3 dans Paramètres, ou jusqu\'à la désinstallation de l\'application
 </item>
         <item>
 14 mois (période de conservation par défaut de Google)
@@ -1611,7 +1611,7 @@ Jusqu\\\'à ce que vous supprimiez le profil S3 dans Paramètres, ou jusqu\\\'à
     <!-- Your rights (Section 9) -->
     <string-array name="pp_rights">
         <item>
-Accédez directement à vos données stockées localement via l\\\'application.
+Accédez directement à vos données stockées localement via l\'application.
 </item>
         <item>
 Supprimez les données du coffre-fort en retirant des éléments du coffre-fort.
@@ -1620,16 +1620,16 @@ Supprimez les données du coffre-fort en retirant des éléments du coffre-fort.
 Gérez et supprimez les métadonnées de fichiers indexées via Paramètres -> Indexeur de stockage.
 </item>
         <item>
-Déconnectez votre compte Google Drive, OneDrive ou Dropbox à tout moment pour révoquer l\\\'accès et supprimer les jetons OAuth stockés.
+Déconnectez votre compte Google Drive, OneDrive ou Dropbox à tout moment pour révoquer l\'accès et supprimer les jetons OAuth stockés.
 </item>
         <item>
-Supprimez vos profils de stockage S3 / compatibles S3 à tout moment via Paramètres pour effacer les identifiants d\\\'accès stockés.
+Supprimez vos profils de stockage S3 / compatibles S3 à tout moment via Paramètres pour effacer les identifiants d\'accès stockés.
 </item>
         <item>
-Exportez vos fichiers à l\\\'aide des fonctionnalités de partage ou de copie.
+Exportez vos fichiers à l\'aide des fonctionnalités de partage ou de copie.
 </item>
         <item>
-Accordez ou retirez votre consentement à Firebase Analytics à tout moment via Paramètres → Analyse d\\\'utilisation dans l\\\'application ; vous pouvez également utiliser les paramètres de votre appareil Android.
+Accordez ou retirez votre consentement à Firebase Analytics à tout moment via Paramètres → Analyse d\'utilisation dans l\'application ; vous pouvez également utiliser les paramètres de votre appareil Android.
 </item>
     </string-array>
 
@@ -1642,7 +1642,7 @@ Ouvrez les paramètres Android et allez dans Applications.
 Trouvez et appuyez sur Ultimate File Manager Pro.
 </item>
         <item>
-Appuyez sur Stockage → Effacer les données, ou désinstallez simplement l\\\'application.
+Appuyez sur Stockage → Effacer les données, ou désinstallez simplement l\'application.
 </item>
     </string-array>
 
@@ -1676,7 +1676,7 @@ Indexeur de stockage
 Interroger les packages
 </item>
         <item>
-Avis dans l\\\'application
+Avis dans l\'application
 </item>
         <item>
 Prise en charge des images AVIF
@@ -1690,34 +1690,34 @@ Animations Lottie
 Navigation et gestion de fichiers
 </item>
         <item>
-Gestion de fichiers à distance, partages réseau SMB/FTP/SFTP/SCP/NFS et appairage d\\\'appareils via le Wi-Fi local
+Gestion de fichiers à distance, partages réseau SMB/FTP/SFTP/SCP/NFS et appairage d\'appareils via le Wi-Fi local
 </item>
         <item>
 Détection VPN pour la gestion à distance et la connectivité des partages réseau
 </item>
         <item>
-Découverte des appareils sur le réseau local (NSD/mDNS) pour l\\\'appairage d\\\'appareils
+Découverte des appareils sur le réseau local (NSD/mDNS) pour l\'appairage d\'appareils
 </item>
         <item>
-Alertes de fin d\\\'opération et avertissements de stockage
+Alertes de fin d\'opération et avertissements de stockage
 </item>
         <item>
-Installation d\\\'APK à partir du stockage local
+Installation d\'APK à partir du stockage local
 </item>
         <item>
-Gestion avancée des fichiers dans les répertoires système restreints via l\\\'API Porter / Shizuku
+Gestion avancée des fichiers dans les répertoires système restreints via l\'API Porter / Shizuku
 </item>
         <item>
 Indexe les métadonnées des fichiers localement pour une recherche rapide
 </item>
         <item>
-Fonctionnalités de gestionnaire d\\\'applications et de débloatage — lit les noms des packages installés, leurs versions, tailles et indicateurs système/utilisateur uniquement sur l\\\'appareil. Aucune donnée n\\\'est téléversée ni partagée. Le débloatage recoupe localement les noms de packages avec une liste de référence publique.
+Fonctionnalités de gestionnaire d\'applications et de débloatage — lit les noms des packages installés, leurs versions, tailles et indicateurs système/utilisateur uniquement sur l\'appareil. Aucune donnée n\'est téléversée ni partagée. Le débloatage recoupe localement les noms de packages avec une liste de référence publique.
 </item>
         <item>
 API Google Play In-App Review pour recueillir les avis des utilisateurs
 </item>
         <item>
-Rend des animations d\\\'interface fluides dans toute l\\\'application via la bibliothèque Lottie v6.3.0 (com.airbnb.android:lottie)
+Rend des animations d\'interface fluides dans toute l\'application via la bibliothèque Lottie v6.3.0 (com.airbnb.android:lottie)
 </item>
         <item>
 Rend des animations UI fluides dans toute l\'application via la bibliothèque Lottie v6.3.0 (com.airbnb.android:lottie)

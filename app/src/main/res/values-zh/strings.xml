@@ -3904,7 +3904,7 @@ NFSv4
 平铺背景
 </string>
     <string name="tile_color_copy_to">
-复制到\\u2026
+复制到…
 </string>
     <string name="tile_copy_title">
 将颜色应用于磁贴
@@ -8396,7 +8396,7 @@ YouTube
 电话
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 已配对的手机
@@ -12254,7 +12254,7 @@ UFM 播放器设置
 特性
 </string>
     <string name="properties_calculating_size">
-正在计算大小\\u2026
+正在计算大小…
 </string>
     <string name="properties_multiple_items_title">
 已选择 %1$d 个项目
@@ -17193,7 +17193,7 @@ Flat View 要求此存储卷完全建立索引。请先运行索引。
 禁用快捷方式
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 当地的

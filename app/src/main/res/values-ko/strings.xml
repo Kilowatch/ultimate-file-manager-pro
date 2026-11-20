@@ -7615,16 +7615,16 @@ USB 드라이브 (%1$s)
 유효성 검사 오류
 </string>
     <string name="smart_sort_err_no_category">
-카테고리를 하나 이상 선택하거나 \\\"분류되지 않은 파일 포함\\\"을 활성화하세요.
+카테고리를 하나 이상 선택하거나 \"분류되지 않은 파일 포함\"을 활성화하세요.
 </string>
     <string name="smart_sort_err_scope">
-정렬 범위로 \\\"루트만\\\" 또는 \\\"재귀\\\"를 선택하세요.
+정렬 범위로 \"루트만\" 또는 \"재귀\"를 선택하세요.
 </string>
     <string name="smart_sort_err_subfolder">
-하위 폴더 처리 방식으로 \\\"평탄화\\\" 또는 \\\"구조 유지\\\"를 선택하세요.
+하위 폴더 처리 방식으로 \"평탄화\" 또는 \"구조 유지\"를 선택하세요.
 </string>
     <string name="smart_sort_err_mode">
-정렬 모드를 선택하세요: \\\"유형별\\\", \\\"크기별\\\", 또는 \\\"날짜별\\\".
+정렬 모드를 선택하세요: \"유형별\", \"크기별\", 또는 \"날짜별\".
 </string>
     <string name="smart_sort_err_duplicate">
 중복 파일 처리 전략을 선택하세요.
@@ -7705,7 +7705,7 @@ USB 드라이브 (%1$s)
 이 규칙을 삭제하시겠습니까?
 </string>
     <string name="smart_sort_extension_already_used">
-확장자 \\\"%1$s\\\"이(가) \\\"%2$s\\\"에서 이미 사용 중입니다
+확장자 \"%1$s\"이(가) \"%2$s\"에서 이미 사용 중입니다
 </string>
     <string name="smart_sort_extension_empty">
 확장자를 입력하세요
@@ -7729,7 +7729,7 @@ USB 드라이브 (%1$s)
 확장자가 제거되었습니다
 </string>
     <string name="smart_sort_no_rules">
-추가된 규칙이 없습니다. \\\"규칙 추가\\\"를 눌러 생성하세요.
+추가된 규칙이 없습니다. \"규칙 추가\"를 눌러 생성하세요.
 </string>
     <string name="smart_sort_mode_custom">
 사용자 지정 규칙별
@@ -7756,10 +7756,10 @@ USB 드라이브 (%1$s)
 이 저장된 구성 제거
 </string>
     <string name="smart_sort_delete_saved_confirm_title">
-\\\"%1$s\\\"을(를) 삭제하시겠습니까?
+\"%1$s\"을(를) 삭제하시겠습니까?
 </string>
     <string name="smart_sort_delete_saved_confirm_msg">
-저장된 구성 \\\"%1$s\\\"을(를) 삭제하시겠습니까?
+저장된 구성 \"%1$s\"을(를) 삭제하시겠습니까?
 </string>
     <string name="smart_sort_enter_description">
 설명 입력
@@ -7852,7 +7852,7 @@ USB 드라이브 (%1$s)
 폴더가 이미 존재하면 이 카테고리는 완전히 건너뜁니다.
 </string>
     <string name="smart_sort_hint_existing_rename">
-숫자 접미사가 붙은 새 폴더가 생성됩니다(예: \\\"UFM Photos (1)\\\").
+숫자 접미사가 붙은 새 폴더가 생성됩니다(예: \"UFM Photos (1)\").
 </string>
     <string name="file_not_found">
 파일을 찾을 수 없음
@@ -7861,7 +7861,7 @@ USB 드라이브 (%1$s)
 ✓ 타일 순서가 저장되었습니다
 </string>
     <string name="itemlabel_tile_hidden">
-\\\"%1$s\\\" 타일이 숨겨졌습니다
+\"%1$s\" 타일이 숨겨졌습니다
 </string>
     <string name="edit_mode_tap_x_to_hide_drag_to_reorder">
 편집 모드: (X)를 눌러 숨기고 드래그하여 순서 변경
@@ -8396,7 +8396,7 @@ WhatsApp 비즈니스
 휴대폰
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 페어링된 휴대폰
@@ -12522,7 +12522,7 @@ UFM 스프레드시트 뷰어
 폴더 정렬 재정의를 초기화하시겠습니까?
 </string>
     <string name="folder_sort_manager_remove_confirm_message">
-\\\"%1$s\\\"에 대한 사용자 지정 정렬 재정의를 제거하시겠습니까? 이 폴더는 전역 정렬로 되돌아갑니다.
+\"%1$s\"에 대한 사용자 지정 정렬 재정의를 제거하시겠습니까? 이 폴더는 전역 정렬로 되돌아갑니다.
 </string>
     <string name="folder_sort_manager_remove_btn">
 재정의 초기화
@@ -13272,7 +13272,7 @@ Android 11+에서는 Android/data 및 Android/obb 폴더에 대한 접근이 제
 %1$.1fs
 </string>
     <string name="delete_single_confirm">
-정말로 \\\"%1$s\\\"을(를) 삭제하시겠습니까?
+정말로 \"%1$s\"을(를) 삭제하시겠습니까?
 </string>
     <string name="delete_photo_title">
 사진 삭제
@@ -13281,7 +13281,7 @@ Android 11+에서는 Android/data 및 Android/obb 폴더에 대한 접근이 제
 %1$s을(를) 삭제했습니다.
 </string>
     <string name="item_moved_to_recycle_bin">
-\\\"%1$s\\\"을(를) 휴지통으로 이동했습니다.
+\"%1$s\"을(를) 휴지통으로 이동했습니다.
 </string>
     <string name="menu_more_options">
 추가 옵션
@@ -13554,7 +13554,7 @@ GPS 없음
     <string name="nt_cache_folder_guide_msg">
 네트워크 썸네일 캐시 파일을 저장할 내부 저장소 또는 SD 카드 디렉터리를 선택하세요.\n
 \n
-저장소 브라우저에서 원하는 디렉터리로 이동한 다음 상단의 \\\"이 폴더 선택\\\"을 탭하세요.
+저장소 브라우저에서 원하는 디렉터리로 이동한 다음 상단의 \"이 폴더 선택\"을 탭하세요.
 </string>
     <string name="nt_cache_folder_btn_browse">
 저장소 찾아보기
@@ -13669,7 +13669,7 @@ MB 또는 GB 단위로 사용자 지정 크기 한도를 입력하세요.
 로컬 FTP 및 SFTP 파일 서버를 호스팅하거나 DLNA를 통해 미디어를 스트리밍하세요. 로컬 Wi-Fi 네트워크의 기기에서 연결하여 파일을 탐색, 스트리밍 및 전송할 수 있습니다.
 </string>
     <string name="file_server_empty_profiles_desc">
-\\\'프로필 추가\\\'를 탭하여 로그인 자격 증명, 액세스 권한 및 공유 디렉터리를 구성하세요.
+\'프로필 추가\'를 탭하여 로그인 자격 증명, 액세스 권한 및 공유 디렉터리를 구성하세요.
 </string>
 
     <!-- DLNA Modernization -->
@@ -13692,7 +13692,7 @@ DLNA 서비스
 로컬 네트워크에 기기가 표시되는 방식을 구성하고 공유할 디렉터리를 선택하세요. DLNA 미디어 공유는 엄격히 읽기 전용입니다.
 </string>
     <string name="dlna_empty_shared_folders_desc">
-\\\'폴더 추가\\\'를 탭하여 DLNA를 통해 노출할 내부 저장소, SD 카드 또는 USB 폴더를 선택하세요.
+\'폴더 추가\'를 탭하여 DLNA를 통해 노출할 내부 저장소, SD 카드 또는 USB 폴더를 선택하세요.
 </string>
 
     <!-- Smart Sort Modernization -->
@@ -17194,7 +17194,7 @@ Android 보안 제한으로 인해 앱은 홈 화면에서 아이콘을 직접 �
 바로가기 비활성화
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 현지의

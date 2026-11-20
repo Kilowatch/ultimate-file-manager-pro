@@ -720,7 +720,7 @@ Assicurati che il tuo dispositivo sia connesso alla rete o che la TV sia accesa 
     <string name="network_server_connection_failed">
 Connessione non riuscita\n
 \n
-Impossibile connettersi al server. Verifica che l\\\'host sia raggiungibile e che il tuo dispositivo sia connesso alla rete, quindi riprova.
+Impossibile connettersi al server. Verifica che l\'host sia raggiungibile e che il tuo dispositivo sia connesso alla rete, quindi riprova.
 </string>
 
     <!-- Storage Browser Section -->
@@ -1804,13 +1804,13 @@ Tipo
 Intensità contrasto
 </string>
     <string name="colorblind_group_strength_hint">
-Un\\\'intensità maggiore aumenta la separazione rispetto allo sfondo.
+Un\'intensità maggiore aumenta la separazione rispetto allo sfondo.
 </string>
     <string name="colorblind_type_off">
 Disattivato
 </string>
     <string name="colorblind_type_off_desc">
-Mantieni i colori standard dell\\\'app.
+Mantieni i colori standard dell\'app.
 </string>
     <string name="colorblind_type_red_green">
 Rosso-Verde
@@ -1967,7 +1967,7 @@ Abilitato — i caricamenti vengono inizialmente scritti con un nome temporaneo
 Disabilitato — i caricamenti scrivono direttamente (predefinito)
 </string>
     <string name="settings_cache_copy_note">
-Si applica ai caricamenti verso condivisioni remote. Il file viene caricato con un nome temporaneo e rinominato al termine del trasferimento, così un caricamento interrotto non può sostituire l\\\'originale. Ignorato da S3, iDrive, WebDAV e NFS.
+Si applica ai caricamenti verso condivisioni remote. Il file viene caricato con un nome temporaneo e rinominato al termine del trasferimento, così un caricamento interrotto non può sostituire l\'originale. Ignorato da S3, iDrive, WebDAV e NFS.
 </string>
 
     <!-- Quick Copy / Move (direct-destination transfer) -->
@@ -2432,7 +2432,7 @@ Mantienili
 Incompleto
 </string>
     <string name="preflight_detail_truncated">
-%1$s — esattamente il limite per file di %2$s, quindi il trasferimento che l\\\'ha scritto è stato interrotto qui
+%1$s — esattamente il limite per file di %2$s, quindi il trasferimento che l\'ha scritto è stato interrotto qui
 </string>
     <string name="preflight_skipped_summary">
 %1$d file ignorati: %2$s
@@ -3888,7 +3888,7 @@ Sfondo dell\'icona
 Sfondo dei riquadri
 </string>
     <string name="tile_color_copy_to">
-Copia in\\u2026
+Copia in…
 </string>
     <string name="tile_copy_title">
 Applica colore ai riquadri
@@ -4484,13 +4484,13 @@ Imposta l\'immagine selezionata come sfondo della schermata iniziale
 Imposta l\'immagine selezionata come sfondo della schermata di blocco
 </string>
     <string name="toolbar_desc_set_ringtone">
-Imposta l\\\'audio selezionato come suoneria del telefono
+Imposta l\'audio selezionato come suoneria del telefono
 </string>
     <string name="toolbar_desc_set_notification">
-Imposta l\\\'audio selezionato come suono di notifica
+Imposta l\'audio selezionato come suono di notifica
 </string>
     <string name="toolbar_desc_set_alarm">
-Imposta l\\\'audio selezionato come suono della sveglia
+Imposta l\'audio selezionato come suono della sveglia
 </string>
     <string name="toolbar_desc_music_tagger">
 Modifica tag audio, testi e copertine degli album
@@ -8372,7 +8372,7 @@ Apertura %1$s...
 Telefono
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 Telefoni accoppiati
@@ -12230,7 +12230,7 @@ Proprietà
 Proprietà
 </string>
     <string name="properties_calculating_size">
-Calcolo delle dimensioni\\u2026
+Calcolo delle dimensioni…
 </string>
     <string name="properties_multiple_items_title">
 %1$d elementi selezionati
@@ -12826,10 +12826,10 @@ Suono di notifica aggiornato
 Suono della sveglia aggiornato
 </string>
     <string name="toast_sound_set_failed">
-Impossibile impostare il suono. Controlla l\\\'autorizzazione di modifica delle impostazioni di sistema.
+Impossibile impostare il suono. Controlla l\'autorizzazione di modifica delle impostazioni di sistema.
 </string>
     <string name="toast_sound_permission_required">
-È necessaria l\\\'autorizzazione di modifica delle impostazioni di sistema per impostare i suoni di sistema
+È necessaria l\'autorizzazione di modifica delle impostazioni di sistema per impostare i suoni di sistema
 </string>
     <string name="icon_toolbar_set_ringtone">
 Imposta come suoneria
@@ -12856,7 +12856,7 @@ Editor tag musicali
 %d brani selezionati
 </string>
     <string name="music_tag_cover_art">
-Copertina dell\\\'album
+Copertina dell\'album
 </string>
     <string name="music_tag_btn_change_art">
 Cambia copertina
@@ -12961,7 +12961,7 @@ Tag aggiornati per %d brani
 Copertina salvata: %s
 </string>
     <string name="music_tag_art_extract_failed">
-Impossibile estrarre la copertina dell\\\'album
+Impossibile estrarre la copertina dell\'album
 </string>
     <string name="music_tag_rename_confirm_title">
 Rinomina file dai tag
@@ -13726,7 +13726,7 @@ Hub di traduzione della comunità
 Contribuisci a migliorare le traduzioni e suggerisci correzioni
 </string>
     <string name="support_translation_hub_copied">
-Link dell\\\'Hub di traduzione copiato negli appunti
+Link dell\'Hub di traduzione copiato negli appunti
 </string>
 
     <!-- About Modernization -->
@@ -14751,13 +14751,13 @@ Preferenze checksum
 
     <!-- Root Staging & Sync -->
     <string name="root_file_saved_success">
-Sincronizzati %1$d file modificati nell\\\'archivio di root
+Sincronizzati %1$d file modificati nell\'archivio di root
 </string>
     <string name="root_file_save_error">
-Impossibile salvare le modifiche nell\\\'archivio di root
+Impossibile salvare le modifiche nell\'archivio di root
 </string>
     <string name="root_staging_error">
-Impossibile preparare il file di root per l\\\'app esterna
+Impossibile preparare il file di root per l\'app esterna
 </string>
     
     <!-- Mobile Security & App Lock -->
@@ -14979,7 +14979,7 @@ Questa posizione
 Apri la cartella corrente in una nuova scheda
 </string>
     <string name="tab_option_other_storage">
-Seleziona un\\\'altra memoria…
+Seleziona un\'altra memoria…
 </string>
     <string name="tab_option_other_storage_sub">
 Sfoglia la memoria interna, la scheda SD, la rete o il cloud
@@ -14988,7 +14988,7 @@ Sfoglia la memoria interna, la scheda SD, la rete o il cloud
 Scheda %d
 </string>
     <string name="tab_storage_unavailable_closed">
-Scheda \\\'%s\\\' chiusa (memoria disconnessa)
+Scheda \'%s\' chiusa (memoria disconnessa)
 </string>
     <string name="backup_pref_tabs">
 Schede e sessioni del browser
@@ -15030,19 +15030,19 @@ Aggiungi a un archivio esistente…
 Aggiungi file
 </string>
     <string name="copy_to_archive_count">
-Copia nell\\\'archivio (%1$d)
+Copia nell\'archivio (%1$d)
 </string>
     <string name="move_to_archive_count">
-Sposta nell\\\'archivio (%1$d)
+Sposta nell\'archivio (%1$d)
 </string>
     <string name="paste_into_archive">
-Incolla nell\\\'archivio
+Incolla nell\'archivio
 </string>
     <string name="paste_into_archive_count">
-Incolla nell\\\'archivio (%1$d)
+Incolla nell\'archivio (%1$d)
 </string>
     <string name="confirm_add_to_archive_title">
-Aggiungi all\\\'archivio
+Aggiungi all\'archivio
 </string>
     <string name="confirm_add_to_archive_msg">
 Aggiungere %1$d elemento/i a %2$s?
@@ -15060,19 +15060,19 @@ Sfoglia per un altro archivio…
 Nessun archivio supportato trovato in questa cartella
 </string>
     <string name="archive_format_not_writable">
-Questo formato di archivio non supporta l\\\'aggiunta di file
+Questo formato di archivio non supporta l\'aggiunta di file
 </string>
     <string name="copy_to_archive">
-Copia nell\\\'archivio
+Copia nell\'archivio
 </string>
     <string name="move_to_archive">
-Sposta nell\\\'archivio
+Sposta nell\'archivio
 </string>
     <string name="adding_files_to_archive">
-Aggiunta di file all\\\'archivio…
+Aggiunta di file all\'archivio…
 </string>
     <string name="icon_toolbar_add_to_archive">
-Aggiungi all\\\'archivio
+Aggiungi all\'archivio
 </string>
     <!-- Archive Visual Progress & Telemetry Dialog -->
     <string name="archive_progress_extracting">
@@ -15082,13 +15082,13 @@ Decompressione archivio…
 Compressione file…
 </string>
     <string name="archive_progress_adding">
-Aggiunta all\\\'archivio…
+Aggiunta all\'archivio…
 </string>
     <string name="archive_progress_deleting">
-Rimozione dall\\\'archivio…
+Rimozione dall\'archivio…
 </string>
     <string name="archive_progress_moving">
-Spostamento dall\\\'archivio…
+Spostamento dall\'archivio…
 </string>
     <string name="archive_progress_files_count">
 %1$d / %2$d file
@@ -15109,13 +15109,13 @@ Invia in background
 Annulla operazione
 </string>
     <string name="archive_cancel_confirm_title">
-Annullare l\\\'operazione sull\\\'archivio?
+Annullare l\'operazione sull\'archivio?
 </string>
     <string name="archive_cancel_confirm_msg">
 Vuoi davvero annullare? I file parzialmente elaborati verranno rimossi.
 </string>
     <string name="archive_operation_cancelled">
-Operazione sull\\\'archivio annullata
+Operazione sull\'archivio annullata
 </string>
     <string name="archive_cancelled">
 Operazione di archiviazione annullata
@@ -15266,7 +15266,7 @@ I file modificati di recente nella memoria locale appariranno qui.
 Nessuna cartella autorizzata
 </string>
     <string name="recent_saf_empty_desc">
-Con l\\\'accesso limitato, autorizza l\\\'accesso alle cartelle per poter rilevare i file recenti.
+Con l\'accesso limitato, autorizza l\'accesso alle cartelle per poter rilevare i file recenti.
 </string>
     <string name="recent_saf_grant_btn">
 Autorizza accesso alle cartelle
@@ -15500,7 +15500,7 @@ Una rimozione è già in corso.
 Unità ancora in uso
 </string>
     <string name="volume_still_in_use_msg">
-L\\\'app ha ancora %1$s aperto. Smontare ora potrebbe lasciare dati non scritti o causare errori.
+L\'app ha ancora %1$s aperto. Smontare ora potrebbe lasciare dati non scritti o causare errori.
 </string>
     <string name="volume_still_in_use_fd">
 File aperti: %1$d
@@ -17154,7 +17154,7 @@ A causa delle restrizioni di sicurezza di Android, le app non possono rimuovere 
 Disabilita collegamento
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 Locale

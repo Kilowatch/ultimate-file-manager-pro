@@ -1038,7 +1038,7 @@ VPN सक्रिय
 • Conditional Access नियम\n
 • नेटवर्क-स्तरीय अवरोध\n
 \n
-कृपया क्लाउड स्टोरेज एक्सेस के लिए \\\"Ultimate File Manager Pro\\\" को अनुमति देने के लिए अपने IT व्यवस्थापक से संपर्क करें।\"
+कृपया क्लाउड स्टोरेज एक्सेस के लिए \"Ultimate File Manager Pro\" को अनुमति देने के लिए अपने IT व्यवस्थापक से संपर्क करें।\"
 </string>
     <string name="policy_blocked_details">
 तकनीकी विवरण
@@ -4312,13 +4312,13 @@ UFM रंग कोड
 आर्काइव से हटाएँ
 </string>
     <string name="confirm_delete_archive_entry_msg">
-क्या आप वाकई आर्काइव से \\\"%1$s\\\" हटाना चाहते हैं?
+क्या आप वाकई आर्काइव से \"%1$s\" हटाना चाहते हैं?
 </string>
     <string name="archive_move_success">
-\\\"%1$s\\\" को %2$s में ले जाया गया
+\"%1$s\" को %2$s में ले जाया गया
 </string>
     <string name="archive_delete_success">
-आर्काइव से \\\"%1$s\\\" हटा दिया गया
+आर्काइव से \"%1$s\" हटा दिया गया
 </string>
     <string name="archive_operation_failed">
 आर्काइव ऑपरेशन विफल: %1$s
@@ -8396,7 +8396,7 @@ Netflix
 फ़ोन
 </string>
     <string name="devicetypelabel_u2022_devicelastip">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="paired_phones_1">
 युग्मित फ़ोन
@@ -12254,7 +12254,7 @@ UFM प्लेयर सेटिंग्स
 गुण
 </string>
     <string name="properties_calculating_size">
-आकार की गणना की जा रही है\\u2026
+आकार की गणना की जा रही है…
 </string>
     <string name="properties_multiple_items_title">
 %1$d आइटम चयनित
@@ -15022,7 +15022,7 @@ UFM के लिए एक सुरक्षित पासवर्ड द�
 टैब %d
 </string>
     <string name="tab_storage_unavailable_closed">
-टैब \\\'%s\\\' बंद किया गया (स्टोरेज डिस्कनेक्ट हो गया)
+टैब \'%s\' बंद किया गया (स्टोरेज डिस्कनेक्ट हो गया)
 </string>
     <string name="backup_pref_tabs">
 ब्राउज़र टैब और सत्र
@@ -17172,7 +17172,7 @@ Bookmark Hub
 शॉर्टकट अक्षम करें
 </string>
     <string name="fav_protocol_type_format">
-%1$s \\u2022 %2$s
+%1$s • %2$s
 </string>
     <string name="fav_protocol_local">
 स्थानीय

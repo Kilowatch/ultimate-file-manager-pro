@@ -797,7 +797,7 @@ Pelaporan Crash &amp; ANR (Diagnostik)\n
 \n
 UFM dapat menangkap informasi diagnostik saat aplikasi crash atau membeku sehingga kami dapat memperbaiki masalahnya. Ini mencakup versi aplikasi, versi Android, model dan pabrikan perangkat, jenis dan pesan exception, serta stack trace. Ini tidak pernah menyertakan file, nama, alamat email, atau informasi akun Anda.\n
 \n
-Tidak ada yang dikirim secara otomatis: setelah crash atau membeku, sebuah prompt akan menanyakan apakah Anda ingin mengirim laporan ke KiloWatch (kilowatch.co.za). Memilih \\\'No Thanks\\\' akan menghapus laporan tersebut secara lokal. Anda dapat menonaktifkan deteksi crash dan membeku kapan saja melalui Setelan → Pelaporan Crash &amp; ANR; menonaktifkannya juga akan menghapus laporan yang tertunda.
+Tidak ada yang dikirim secara otomatis: setelah crash atau membeku, sebuah prompt akan menanyakan apakah Anda ingin mengirim laporan ke KiloWatch (kilowatch.co.za). Memilih \'No Thanks\' akan menghapus laporan tersebut secara lokal. Anda dapat menonaktifkan deteksi crash dan membeku kapan saja melalui Setelan → Pelaporan Crash &amp; ANR; menonaktifkannya juga akan menghapus laporan yang tertunda.
 </string>
     <string name="pp_s2_crash_body">
 UFM dapat menangkap informasi diagnostik ketika crash atau macet sehingga kami dapat memperbaiki masalahnya. Ini mencakup versi aplikasi, versi Android, model dan produsen perangkat, jenis dan pesan pengecualian, serta pelacakan tumpukan. Itu tidak pernah menyertakan file, nama, alamat email, atau informasi akun Anda.\n
