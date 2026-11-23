@@ -267,6 +267,12 @@ object WebShareServer {
     }
 
     fun start(context: Context, files: List<File>, cleanUp: Boolean = false): String {
+        if (!LocalNetworkPermissionManager.hasPermission(context)) {
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                android.widget.Toast.makeText(context, R.string.toast_local_network_permission_required, android.widget.Toast.LENGTH_LONG).show()
+            }
+            throw SecurityException("Local network permission required")
+        }
         appContext = context.applicationContext
         filesToShare = files
         cleanUpOnStop = cleanUp

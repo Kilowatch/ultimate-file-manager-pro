@@ -17582,6 +17582,50 @@ Flat View 要求此存储卷完全建立索引。请先运行索引。
     <string name="file">
 文件
 </string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">
+允许本地网络访问
+</string>
+    <string name="local_network_rationale_subtitle">
+本地设备发现和传输所需
+</string>
+    <string name="local_network_rationale_message">
+Ultimate File Manager Pro 仅使用您的本地网络来发现并连接到您在家庭网络上选择的设备（例如 SMB 和 NFS 共享、DLNA 电视和无线 ADB 调试）。本地网络数据不向外传输。
+</string>
+    <string name="local_network_btn_continue">
+继续
+</string>
+    <string name="local_network_btn_settings">
+打开设置
+</string>
+    <string name="local_network_btn_not_now">
+现在不要
+</string>
+    <string name="local_network_banner_text">
+需要本地网络访问才能浏览和发现本地共享、DLNA 设备和无线 ADB。
+</string>
+    <string name="local_network_banner_grant">
+授予访问权限
+</string>
+    <string name="settings_local_network_title">
+本地网络访问
+</string>
+    <string name="settings_local_network_subtitle">
+管理Android 17本地网络保护权限
+</string>
+    <string name="settings_local_network_status_granted">
+已授予许可
+</string>
+    <string name="settings_local_network_status_denied">
+需要许可
+</string>
+    <string name="settings_local_network_btn_manage">
+管理
+</string>
+    <string name="toast_local_network_permission_required">
+此操作需要本地网络权限
+</string>
 </resources>
 
 

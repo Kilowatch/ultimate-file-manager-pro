@@ -416,16 +416,19 @@ Notifications
 Réseau / Wi-Fi
 </item>
         <item>
+Accès au réseau local (Android 17+)
+</item>
+        <item>
 Multidiffusion
 </item>
         <item>
 État du réseau
 </item>
         <item>
-Requête de paquets
+Requête de package
 </item>
         <item>
-Installer des paquets
+Installer des packages
 </item>
         <item>
 Facturation
@@ -434,28 +437,28 @@ Facturation
 Pont de débogage ADB
 </item>
         <item>
-Accès élevé (Porter, Shizuku et Shevery)
+Accès surélevé (Porter, Shizuku et Shevery)
 </item>
         <item>
-Démarrage au boot
+Accès root/superutilisateur
+</item>
+        <item>
+Démarrage du démarrage
 </item>
         <item>
 Optimisation de la batterie
 </item>
         <item>
-Service au premier plan
+Service de premier plan
 </item>
         <item>
-Verrouillage de veille
+Verrouillage de réveil
 </item>
         <item>
 Indexeur de stockage
 </item>
         <item>
-Bluetooth
-</item>
-        <item>
-Vibration
+Vibrer
 </item>
         <item>
 Vibrer
@@ -475,46 +478,49 @@ Utilisé pour vous alerter lorsque les opérations sur les fichiers sont termin�
 Alimente la gestion de fichiers à distance, l\'accès aux partages réseau (SMB/FTP/SFTP/SCP/NFS), la synchronisation de dossiers, l\'appairage d\'appareils et l\'accès au terminal ADB sur votre réseau local. La découverte réseau scanne les appareils de votre sous-réseau local (jusqu\'à 254 IP) sur les ports ADB 5555, 5037 et 5038 pour trouver les appareils compatibles ADB.
 </item>
         <item>
-Utilisé pour la découverte d\'appareils sur le réseau local (NSD/mDNS) lors de l\'appairage.
+Requis sur Android 17 (API 37)+ pour découvrir et vous connecter aux appareils de votre réseau local (LAN) pour SMB, NFS, SFTP, FTP, WebDAV, diffusion DLNA, couplage d\'appareils et ADB sans fil.
 </item>
         <item>
-Détecte les connexions VPN lors de la gestion à distance et de l\'accès aux partages réseau.
+Utilisé pour la découverte de périphériques de réseau local (NSD/mDNS) lors du couplage de périphériques.
 </item>
         <item>
-Permet au Gestionnaire d\'applications d\'énumérer toutes les applications installées sur votre appareil. Les données consultées incluent : nom de l\'application, ID du paquet, version, taille de l\'APK, horodatages d\'installation et de mise à jour, et si chaque application est une application système ou installée par l\'utilisateur. Ces informations sont utilisées exclusivement sur l\'appareil pour afficher le Gestionnaire d\'applications, calculer le stockage par application et recouper les noms de paquets avec une liste de référence de désencombrement publiquement disponible, téléchargée et mise en cache localement. Aucune donnée d\'application installée n\'est jamais transmise aux serveurs de KiloWatch ni à un tiers.
+Détecte les connexions VPN lors de la gestion à distance et de l\'accès au partage réseau.
 </item>
         <item>
-Requis pour installer les fichiers APK que vous choisissez d\'exécuter depuis le stockage local.
+Permet au gestionnaire d\'applications d\'énumérer toutes les applications installées sur votre appareil. Les données consultées incluent : le nom de l\'application, l\'ID du package, la version, la taille de l\'APK, les horodatages d\'installation et de mise à jour, et si chaque application est une application système ou installée par l\'utilisateur. Ces informations sont utilisées exclusivement sur l\'appareil pour afficher App Manager, calculer le stockage par application et comparer les noms de packages avec une liste de références de déblocage accessible au public, téléchargée et mise en cache localement. Aucune donnée d\'application installée n\'est jamais transmise aux serveurs KiloWatch ou à un tiers.
 </item>
         <item>
-Traite les achats facultatifs de la boîte à pourboires via Google Play.
+Nécessaire pour installer les fichiers APK que vous choisissez d’exécuter à partir du stockage local.
 </item>
         <item>
-Permet une connexion sécurisée à des appareils Android pour un accès avancé au shell. Génère un certificat RSA unique sur votre appareil pour l\'appairage ; aucun certificat n\'est transmis à des serveurs externes.
+Traite les achats facultatifs de Tip Jar via Google Play.
 </item>
         <item>
-Permet à l\'application d\'utiliser l\'API Porter / Shizuku / Shevery (y compris les paramètres sécurisés) pour gérer les fichiers dans les répertoires système restreints sans rooter l\'appareil.
+Permet une connexion sécurisée aux appareils Android pour un accès avancé au shell. Génère un certificat RSA unique sur votre appareil pour le couplage ; aucun certificat n\'est transmis aux serveurs externes.
 </item>
         <item>
-Permet aux services Shizuku et Shevery de démarrer automatiquement au démarrage de votre appareil pour assurer une disponibilité immédiate.
+Permet à l\'application d\'utiliser l\'API Porter / Shizuku / Shevery (y compris les paramètres sécurisés) pour gérer les fichiers dans des répertoires système restreints sans root.
 </item>
         <item>
-Permet aux services Porter, Shizuku et Shevery de démarrer automatiquement au démarrage de votre appareil afin de garantir leur disponibilité immédiate.
+Demandé dynamiquement via votre gestionnaire racine (Magisk, KernelSU, APatch, SuperSU) uniquement lorsque vous activez explicitement l\'accès racine dans les paramètres sur les appareils mobiles. Utilisé strictement pour les opérations sur les fichiers racine locaux.
 </item>
         <item>
-Vous permet d\'activer le maintien des services Porter, Shizuku et Shevery en arrière-plan pour des performances fiables.
+Permet aux services Porter, Shizuku et Shevery de démarrer automatiquement au démarrage de votre appareil pour garantir une disponibilité immédiate.
 </item>
         <item>
-Maintient le processeur et le Wi-Fi actifs lors des transferts de fichiers volumineux afin qu\'ils se terminent de manière fiable même lorsque l\'écran s\'éteint.
+Vous permet de choisir de garder les services Porter, Shizuku et Shevery actifs en arrière-plan pour des performances fiables.
 </item>
         <item>
-Utilise les autorisations de stockage pour analyser et indexer les métadonnées des fichiers pour les performances — géré via Paramètres -> Indexeur de stockage.
+Nécessaire pour exécuter la synchronisation des dossiers et les transferts de fichiers en tant que service de premier plan afin qu\'ils se terminent de manière fiable même lorsque l\'écran est éteint.
 </item>
         <item>
-Se connecte à votre Android TV appairé pour agir comme un clavier et une souris Bluetooth pour le contrôle à distance.
+Maintient le processeur et le Wi-Fi actifs pendant les transferts de fichiers volumineux afin qu\'ils se terminent de manière fiable même lorsque l\'écran s\'éteint.
 </item>
         <item>
-Fournit un retour haptique lors de l\'appui sur les boutons de la télécommande TV.
+Utilise les autorisations de stockage pour analyser et indexer les métadonnées des fichiers pour améliorer les performances – gérées via Paramètres -&gt; Indexeur de stockage.
+</item>
+        <item>
+Se connecte à votre Android TV couplé pour agir comme un clavier et une souris Bluetooth pour le contrôle à distance.
 </item>
         <item>
 Fournit un retour haptique lorsque vous appuyez sur les boutons de la télécommande du téléviseur.
@@ -1264,6 +1270,9 @@ En dessous de API 29 · Modification de fichiers héritée sur les anciens appar
 INTERNET
 </item>
         <item>
+ACCESS_LOCAL_NETWORK
+</item>
+        <item>
 ACCESS_WIFI_STATE
 </item>
         <item>
@@ -1278,13 +1287,16 @@ CHANGE_WIFI_MULTICAST_STATE
 Permet la gestion à distance des fichiers, l\'hébergement de serveurs de fichiers locaux, l\'accès aux partages réseau SMB/FTP/SFTP/SCP/NFS et l\'appairage d\'appareils
 </item>
         <item>
+Permet la découverte de périphériques réseau locaux, le partage de fichiers LAN (SMB/NFS/WebDAV/FTP/SFTP), le streaming multimédia DLNA et l\'ADB sans fil sur Android 17+
+</item>
+        <item>
 Affiche votre adresse IP locale pour l\'accès à distance
 </item>
         <item>
-Détecte le réseau actif et le statut VPN pour la gestion à distance et les partages réseau
+Détecte l\'état actif du réseau et du VPN pour la gestion à distance et les partages réseau
 </item>
         <item>
-Active la découverte d\'appareils sur le réseau local (NSD/mDNS) pour l\'appairage
+Permet la découverte de périphériques de réseau local (NSD/mDNS) pour le couplage de périphériques
 </item>
     </string-array>
 

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Inline Recovery Banner for Local Network Access
+    Displayed at the top of NetworkBrowserActivity and NetworkBrowserFragment
+    when local network permission is denied.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardLocalNetBanner"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    android:visibility="gone"
+    app:cardBackgroundColor="@color/mobile_glass_card"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/mobile_glass_stroke">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="12dp">
+
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="12dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_cloud"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_local_network_status_denied"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="13.5sp"
+                android:fontFamily="sans-serif-bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/local_network_banner_text"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="11.5sp" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBannerGrant"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/local_network_banner_grant"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-bold"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="10dp"
+            app:elevation="0dp" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

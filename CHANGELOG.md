@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.8] — 2026-11-20
 
 ### Added
+- **Android 17 (API 37) Platform Compatibility & Local Network Protection**:
+  - Full compatibility targeting Android 17 (API 37 SDK) with backward compatibility spanning Android 8.0 through Android 16 (API 26–36).
+  - Adopted Android 17's new `android.permission.ACCESS_LOCAL_NETWORK` runtime permission model for local area network communication (SMB, NFS, WebShare, Wireless ADB pairing & discovery).
+  - Implemented `LocalNetworkPermissionManager` and modern `NetworkInterfaceUtils` for non-loopback IPv4/Ethernet interface discovery without deprecated `WifiManager` APIs.
+  - Contextual permission request flow with UFMStandard frosted glass rationale dialogs for both mobile (`dialog_local_network_rationale.xml`) and Android TV (`dialog_local_network_rationale_tv.xml`).
+  - Added non-intrusive inline recovery banners (`item_banner_local_network_permission.xml`) across mobile, tablet, and TV network browser views for smooth recovery if permission is denied.
+  - Added dedicated Local Network Permission card in Settings (`activity_settings.xml`, `activity_settings_tv.xml`) with live status badge ("Granted" / "Denied") and direct management actions.
 - **First-Run Onboarding Setup Flow & Reconfiguration Wizard (`Onboarding*Activity`, `BaseOnboardingStepActivity`)**:
   - Implemented a dedicated 10-screen onboarding wizard guiding first-time users through personalized setup: View Appearance & Density, Font Size Scale, Scrolling Text, Edit Mode Hold Duration, Left-Handed FAB Mode, Quick Access Edge Drawer, Recycle Bin Protection, Show Hidden Files, App Lock & Security, and Crash & Diagnostic Reporting.
   - Each setting features its own standalone Activity with default-first live visual preview mockups pre-rendered upon screen opening.
@@ -16,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added a "Quick Setup Wizard" entry in `SettingsActivity` under General & Interface allowing users to reconfigure key preferences anytime.
 
 ### Changed
+- **Privacy Policy & Terms of Service Disclosures**:
+  - Updated in-app legal policy resources (`strings_policy.xml`) and website legal pages (`UFMPrivacyPolicy.html`, `UFMTerms.html`) disclosing the new `ACCESS_LOCAL_NETWORK` permission and purpose.
 - **Settings Hierarchy, Granular Groupings & Logical Sequencing (`activity_settings.xml`, `activity_settings_tv.xml`, `strings.xml`)**:
   - Restructured monolithic settings sections into intuitive, bite-sized categories of 2 to 5 items each (e.g. splitting File Browsing into Permissions & Storage Access, Browsing & Display, File Operations & Safety, and Organization & File Tools; splitting Media Player into Media Playback and Player Controls & Gestures; splitting Network into Transfers & Downloads, Network Caching & Streaming, and Servers & Indexing).
   - Re-sequenced settings top-to-bottom in a natural progression from visual/interaction setup, through core file operations and media, down to security, maintenance, and diagnostics.

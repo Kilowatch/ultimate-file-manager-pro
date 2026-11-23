@@ -6188,6 +6188,22 @@
     <string name="fav_protocol_type_format">%1$s • %2$s</string>
     <string name="fav_protocol_local">Local</string>
     <string name="file">File</string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">Allow Local Network Access</string>
+    <string name="local_network_rationale_subtitle">Required for Local Device Discovery &amp; Transfer</string>
+    <string name="local_network_rationale_message">Ultimate File Manager Pro uses your local network exclusively to discover and connect to devices you select on your home network (such as SMB and NFS shares, DLNA TVs, and Wireless ADB debugging). No local network data is transmitted externally.</string>
+    <string name="local_network_btn_continue">Continue</string>
+    <string name="local_network_btn_settings">Open Settings</string>
+    <string name="local_network_btn_not_now">Not Now</string>
+    <string name="local_network_banner_text">Local network access is required to browse and discover local shares, DLNA devices, and Wireless ADB.</string>
+    <string name="local_network_banner_grant">Grant Access</string>
+    <string name="settings_local_network_title">Local Network Access</string>
+    <string name="settings_local_network_subtitle">Manage Android 17 local network protection permission</string>
+    <string name="settings_local_network_status_granted">Permission Granted</string>
+    <string name="settings_local_network_status_denied">Permission Required</string>
+    <string name="settings_local_network_btn_manage">Manage</string>
+    <string name="toast_local_network_permission_required">Local network permission is required for this operation</string>
 </resources>
 
 

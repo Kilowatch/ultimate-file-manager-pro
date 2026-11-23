@@ -416,6 +416,9 @@ Notifiche
 Rete/Wi-Fi
 </item>
         <item>
+Accesso alla rete locale (Android 17+)
+</item>
+        <item>
 Multicast
 </item>
         <item>
@@ -434,7 +437,10 @@ Fatturazione
 Ponte di debug ADB
 </item>
         <item>
-Accesso elevato (Porter, Shizuku &amp; Shevery)
+Accesso sopraelevato (Porter, Shizuku e Shevery)
+</item>
+        <item>
+Accesso root/superutente
 </item>
         <item>
 Avvio Avvio
@@ -446,13 +452,10 @@ Ottimizzazione della batteria
 Servizio in primo piano
 </item>
         <item>
-Blocco della riattivazione
+Blocco riattivazione
 </item>
         <item>
 Indicizzatore di archiviazione
-</item>
-        <item>
-Bluetooth
 </item>
         <item>
 Vibrare
@@ -475,6 +478,9 @@ Utilizzato per avvisarti quando le operazioni sui file vengono completate o quan
 Potenzia la gestione remota dei file, l\'accesso alla condivisione di rete (SMB/FTP/SFTP/SCP/NFS), la sincronizzazione delle cartelle, l\'associazione dei dispositivi e l\'accesso al terminale ADB sulla rete locale. L\'individuazione della rete esegue la scansione dei dispositivi sulla sottorete locale (fino a 254 IP) sulle porte ADB 5555, 5037 e 5038 per trovare dispositivi abilitati per ADB.
 </item>
         <item>
+Richiesto su Android 17 (API 37) e versioni successive per rilevare e connettersi ai dispositivi sulla rete locale (LAN) per SMB, NFS, SFTP, FTP, WebDAV, trasmissione DLNA, associazione dei dispositivi e ADB wireless.
+</item>
+        <item>
 Utilizzato per il rilevamento dei dispositivi di rete locale (NSD/mDNS) durante l\'associazione dei dispositivi.
 </item>
         <item>
@@ -493,28 +499,28 @@ Elabora gli acquisti opzionali di Tip Jar tramite Google Play.
 Consente la connessione sicura ai dispositivi Android per l\'accesso avanzato alla shell. Genera un certificato RSA univoco sul tuo dispositivo per l\'accoppiamento; nessun certificato viene trasmesso a server esterni.
 </item>
         <item>
-Consente all\'app di utilizzare l\'API Porter / Shizuku / Shevery (incluse le Impostazioni protette) per gestire file in directory di sistema protette senza root.
+Consente all\'app di utilizzare l\'API Porter/Shizuku/Shevery (incluse le impostazioni di sicurezza) per la gestione dei file nelle directory di sistema riservate senza rooting.
 </item>
         <item>
-Consente ai servizi Shizuku e Shevery di avviarsi automaticamente all\'avvio del dispositivo per garantire la disponibilità immediata.
+Richiesto dinamicamente tramite il tuo root manager (Magisk, KernelSU, APatch, SuperSU) solo quando abiliti esplicitamente l\'accesso root nelle Impostazioni sui dispositivi mobili. Utilizzato esclusivamente per le operazioni sul file root locale.
 </item>
         <item>
 Consente ai servizi Porter, Shizuku e Shevery di avviarsi automaticamente all\'avvio del dispositivo per garantire la disponibilità immediata.
 </item>
         <item>
-Ti consente di attivare l\'opzione per mantenere i servizi Porter, Shizuku e Shevery attivi in background per prestazioni affidabili.
+Ti consente di attivare il mantenimento dei servizi Porter, Shizuku e Shevery attivi in ​​background per prestazioni affidabili.
+</item>
+        <item>
+Necessario per eseguire la sincronizzazione delle cartelle e i trasferimenti di file come servizio in primo piano in modo che vengano completati in modo affidabile anche quando lo schermo è spento.
 </item>
         <item>
 Mantiene attivi la CPU e il Wi-Fi durante i trasferimenti di file di grandi dimensioni in modo che vengano completati in modo affidabile anche quando lo schermo si spegne.
 </item>
         <item>
-Utilizza le autorizzazioni di archiviazione per scansionare e indicizzare i metadati dei file per migliorare le prestazioni, gestite tramite Impostazioni -> Indicizzatore di archiviazione.
+Utilizza le autorizzazioni di archiviazione per scansionare e indicizzare i metadati dei file per migliorare le prestazioni, gestite tramite Impostazioni -&gt; Indicizzatore di archiviazione.
 </item>
         <item>
 Si collega alla tua TV Android abbinata per fungere da tastiera e mouse Bluetooth per il controllo remoto.
-</item>
-        <item>
-Fornisce feedback tattile quando si premono i pulsanti sul telecomando del TV.
 </item>
         <item>
 Fornisce feedback tattile quando si premono i pulsanti sul telecomando del TV.
@@ -1260,6 +1266,9 @@ Sotto API 29 · Modifica di file legacy su dispositivi meno recenti
 INTERNET
 </item>
         <item>
+ACCESS_LOCAL_NETWORK
+</item>
+        <item>
 ACCESSO_WIFI_STATO
 </item>
         <item>
@@ -1272,6 +1281,9 @@ CHANGE_WIFI_MULTICAST_STATE
     <string-array name="pp_network_perm_details">
         <item>
 Consente la gestione remota dei file, l\'hosting di file server locali, l\'accesso alla condivisione di rete SMB/FTP/SFTP/SCP/NFS e l\'associazione dei dispositivi
+</item>
+        <item>
+Consente il rilevamento dei dispositivi di rete locale, la condivisione di file LAN (SMB/NFS/WebDAV/FTP/SFTP), lo streaming multimediale DLNA e ADB wireless su Android 17+
 </item>
         <item>
 Visualizza il tuo indirizzo IP locale per l\'accesso remoto

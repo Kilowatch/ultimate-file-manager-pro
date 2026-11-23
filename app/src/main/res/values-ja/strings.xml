@@ -17584,6 +17584,50 @@ Android のセキュリティ制限により、アプリはホーム画面から
     <string name="file">
 ファイル
 </string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">
+ローカルネットワークアクセスを許可する
+</string>
+    <string name="local_network_rationale_subtitle">
+ローカルデバイスの検出と転送に必要
+</string>
+    <string name="local_network_rationale_message">
+Ultimate File Manager Pro は、ホーム ネットワーク上で選択したデバイス (SMB および NFS 共有、DLNA TV、ワイヤレス ADB デバッグなど) を検出して接続するためにのみローカル ネットワークを使用します。ローカル ネットワーク データは外部に送信されません。
+</string>
+    <string name="local_network_btn_continue">
+続く
+</string>
+    <string name="local_network_btn_settings">
+設定を開く
+</string>
+    <string name="local_network_btn_not_now">
+今じゃない
+</string>
+    <string name="local_network_banner_text">
+ローカル共有、DLNA デバイス、およびワイヤレス ADB を参照して検出するには、ローカル ネットワーク アクセスが必要です。
+</string>
+    <string name="local_network_banner_grant">
+アクセスを許可する
+</string>
+    <string name="settings_local_network_title">
+ローカルネットワークアクセス
+</string>
+    <string name="settings_local_network_subtitle">
+Android 17 のローカル ネットワーク保護権限を管理する
+</string>
+    <string name="settings_local_network_status_granted">
+許可が与えられました
+</string>
+    <string name="settings_local_network_status_denied">
+許可が必要です
+</string>
+    <string name="settings_local_network_btn_manage">
+管理
+</string>
+    <string name="toast_local_network_permission_required">
+この操作にはローカル ネットワークの許可が必要です
+</string>
 </resources>
 
 

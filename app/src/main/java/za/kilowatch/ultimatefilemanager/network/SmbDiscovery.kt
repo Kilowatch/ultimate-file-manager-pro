@@ -53,7 +53,10 @@ object SmbDiscovery {
         timeoutMs: Int = 3000,
         onHostFound: ((String) -> Unit)? = null
     ): List<String> {
-        val subnet = getSubnetPrefix(context) ?: return emptyList()
+        if (!LocalNetworkPermissionManager.hasPermission(context)) {
+            return emptyList()
+        }
+        val subnet = NetworkInterfaceUtils.getSubnetPrefix(context) ?: getSubnetPrefix(context) ?: return emptyList()
         val pool = Executors.newFixedThreadPool(MAX_THREADS)
         val found = mutableListOf<String>()
         val lock = Any()

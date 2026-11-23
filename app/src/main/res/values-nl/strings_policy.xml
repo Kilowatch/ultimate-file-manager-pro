@@ -416,6 +416,9 @@ Meldingen
 Netwerk / Wi-Fi
 </item>
         <item>
+Lokale netwerktoegang (Android 17+)
+</item>
+        <item>
 Multicast
 </item>
         <item>
@@ -434,7 +437,10 @@ Facturering
 ADB-foutopsporingsbrug
 </item>
         <item>
-Verhoogde toegang (Porter, Shizuku &amp; Shevery)
+Verhoogde toegang (Porter, Shizuku en Shevery)
+</item>
+        <item>
+Root-/superuser-toegang
 </item>
         <item>
 Opstarten
@@ -446,13 +452,10 @@ Batterij-optimalisatie
 Voorgronddienst
 </item>
         <item>
-Wake-Lock
+Wake-lock
 </item>
         <item>
 Opslagindexer
-</item>
-        <item>
-Bluetooth
 </item>
         <item>
 Trillen
@@ -475,13 +478,16 @@ Wordt gebruikt om u te waarschuwen wanneer de bestandsbewerkingen zijn voltooid 
 Maakt extern bestandsbeheer, toegang tot netwerkshares (SMB/FTP/SFTP/SCP/NFS), mapsynchronisatie, apparaatkoppeling en ADB-terminaltoegang op uw lokale netwerk mogelijk. Netwerkdetectie scant apparaten op uw lokale subnet (tot 254 IP\'s) op ADB-poorten 5555, 5037 en 5038 om apparaten te vinden die geschikt zijn voor ADB.
 </item>
         <item>
+Vereist op Android 17 (API 37)+ om apparaten op uw lokale netwerk (LAN) te ontdekken en er verbinding mee te maken voor SMB, NFS, SFTP, FTP, WebDAV, DLNA-casting, apparaatkoppeling en draadloze ADB.
+</item>
+        <item>
 Wordt gebruikt voor detectie van lokale netwerkapparaten (NSD/mDNS) bij het koppelen van apparaten.
 </item>
         <item>
 Detecteert VPN-verbindingen tijdens extern beheer en toegang tot netwerkshares.
 </item>
         <item>
-Laat App Manager alle apps opsommen die op uw apparaat zijn geïnstalleerd. De toegankelijke gegevens omvatten: app-naam, pakket-ID, versie, APK-grootte, tijdstempels voor installatie en updates, en of elke app een systeem- of door de gebruiker geïnstalleerde app is. Deze informatie wordt uitsluitend op het apparaat gebruikt om App Manager weer te geven, de opslag per app te berekenen en pakketnamen te vergelijken met een openbaar beschikbare debloat-referentielijst die lokaal wordt gedownload en in de cache wordt opgeslagen. Er worden nooit geïnstalleerde applicatiegegevens verzonden naar de servers van KiloWatch of een derde partij.
+Laat App Manager alle apps opsommen die op uw apparaat zijn geïnstalleerd. Tot de toegankelijke gegevens behoren: app-naam, pakket-ID, versie, APK-grootte, tijdstempels voor installatie en updates, en of elke app een systeem- of door de gebruiker geïnstalleerde app is. Deze informatie wordt uitsluitend op het apparaat gebruikt om App Manager weer te geven, de opslag per app te berekenen en pakketnamen te vergelijken met een openbaar beschikbare debloat-referentielijst die lokaal wordt gedownload en in de cache wordt opgeslagen. Er worden nooit geïnstalleerde applicatiegegevens verzonden naar de servers van KiloWatch of naar een derde partij.
 </item>
         <item>
 Vereist om APK-bestanden te installeren die u vanuit de lokale opslag wilt uitvoeren.
@@ -493,28 +499,28 @@ Verwerkt optionele Tip Jar-aankopen via Google Play.
 Maakt een veilige verbinding met Android-apparaten mogelijk voor geavanceerde shell-toegang. Genereert een uniek RSA-certificaat op uw apparaat om te koppelen; er worden geen certificaten verzonden naar externe servers.
 </item>
         <item>
-Staat de app toe om de Porter / Shizuku / Shevery API (inclusief Secure Settings) te gebruiken voor het beheren van bestanden in beperkte systeemmappen zonder te rooten.
+Hiermee kan de app de Porter/Shizuku/Shevery API (inclusief Veilige instellingen) gebruiken voor het beheren van bestanden in beperkte systeemmappen zonder te rooten.
 </item>
         <item>
-Zorgt ervoor dat Shizuku- en Shevery-services automatisch starten wanneer uw apparaat opstart, zodat onmiddellijke beschikbaarheid wordt gegarandeerd.
+Dynamisch aangevraagd via uw rootmanager (Magisk, KernelSU, APatch, SuperSU) alleen wanneer u Root Access expliciet inschakelt in Instellingen op mobiele apparaten. Wordt strikt gebruikt voor lokale rootbestandsbewerkingen.
 </item>
         <item>
-Staat Porter-, Shizuku- en Shevery-services toe om automatisch te starten wanneer je apparaat opstart, om onmiddellijke beschikbaarheid te garanderen.
+Zorgt ervoor dat Porter-, Shizuku- en Shevery-services automatisch worden gestart wanneer uw apparaat opstart, zodat onmiddellijke beschikbaarheid wordt gegarandeerd.
 </item>
         <item>
-Staat je toe om ervoor te kiezen om Porter-, Shizuku- en Shevery-services actief te houden op de achtergrond voor betrouwbare prestaties.
+Hiermee kunt u ervoor kiezen om de Porter-, Shizuku- en Shevery-services op de achtergrond actief te houden voor betrouwbare prestaties.
+</item>
+        <item>
+Vereist om mapsynchronisatie en bestandsoverdracht als voorgrondservice uit te voeren, zodat deze betrouwbaar worden voltooid, zelfs als het scherm is uitgeschakeld.
 </item>
         <item>
 Houdt de CPU en Wi-Fi actief tijdens de overdracht van grote bestanden, zodat deze betrouwbaar worden voltooid, zelfs als het scherm wordt uitgeschakeld.
 </item>
         <item>
-Gebruikt opslagrechten om metagegevens van bestanden te scannen en te indexeren voor prestaties – beheerd via Instellingen -> Storage Indexer.
+Gebruikt opslagrechten om metagegevens van bestanden te scannen en te indexeren voor prestaties – beheerd via Instellingen -&gt; Storage Indexer.
 </item>
         <item>
 Maakt verbinding met uw gekoppelde Android TV en fungeert als Bluetooth-toetsenbord en -muis voor afstandsbediening.
-</item>
-        <item>
-Biedt haptische feedback bij het indrukken van knoppen op de afstandsbediening van de tv.
 </item>
         <item>
 Biedt haptische feedback bij het indrukken van knoppen op de afstandsbediening van de tv.
@@ -1260,6 +1266,9 @@ Hieronder API 29 · Wijziging van verouderde bestanden op oudere apparaten
 INTERNET
 </item>
         <item>
+TOEGANG_LOCAL_NETWERK
+</item>
+        <item>
 TOEGANG_WIFI_STATE
 </item>
         <item>
@@ -1272,6 +1281,9 @@ CHANGE_WIFI_MULTICAST_STATE
     <string-array name="pp_network_perm_details">
         <item>
 Maakt extern bestandsbeheer mogelijk, host lokale bestandsservers, SMB/FTP/SFTP/SCP/NFS netwerksharetoegang en apparaatkoppeling
+</item>
+        <item>
+Maakt detectie van lokale netwerkapparaten, LAN-bestandsdeling (SMB/NFS/WebDAV/FTP/SFTP), DLNA-mediastreaming en draadloze ADB op Android 17+ mogelijk
 </item>
         <item>
 Toont uw lokale IP-adres voor externe toegang

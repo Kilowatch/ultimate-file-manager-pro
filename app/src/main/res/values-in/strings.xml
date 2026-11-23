@@ -17583,6 +17583,50 @@ Lokal
     <string name="file">
 Mengajukan
 </string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">
+Izinkan Akses Jaringan Lokal
+</string>
+    <string name="local_network_rationale_subtitle">
+Diperlukan untuk Penemuan &amp; Transfer Perangkat Lokal
+</string>
+    <string name="local_network_rationale_message">
+Ultimate File Manager Pro menggunakan jaringan lokal Anda secara eksklusif untuk menemukan dan menyambung ke perangkat yang Anda pilih di jaringan rumah Anda (seperti share SMB dan NFS, TV DLNA, dan debugging ADB Nirkabel). Tidak ada data jaringan lokal yang ditransmisikan secara eksternal.
+</string>
+    <string name="local_network_btn_continue">
+Melanjutkan
+</string>
+    <string name="local_network_btn_settings">
+Buka Pengaturan
+</string>
+    <string name="local_network_btn_not_now">
+Tidak Sekarang
+</string>
+    <string name="local_network_banner_text">
+Akses jaringan lokal diperlukan untuk menelusuri dan menemukan share lokal, perangkat DLNA, dan ADB Nirkabel.
+</string>
+    <string name="local_network_banner_grant">
+Berikan Akses
+</string>
+    <string name="settings_local_network_title">
+Akses Jaringan Lokal
+</string>
+    <string name="settings_local_network_subtitle">
+Kelola izin perlindungan jaringan lokal Android 17
+</string>
+    <string name="settings_local_network_status_granted">
+Izin Diberikan
+</string>
+    <string name="settings_local_network_status_denied">
+Izin Diperlukan
+</string>
+    <string name="settings_local_network_btn_manage">
+Mengelola
+</string>
+    <string name="toast_local_network_permission_required">
+Izin jaringan lokal diperlukan untuk operasi ini
+</string>
 </resources>
 
 

@@ -1,55 +1,68 @@
-# Clarifications: First-Run Onboarding Setup Flow with Dedicated Per-Setting Activities
+# Clarifications: Android 17 (API 37) Platform Compatibility & Local Network Protection
 
 ## Status
-Confirmed — Ready for /plan
+Answers received — ready for `/tasks`
 
 ## Questions and Answers
 
-### Architecture & Activity Structure
-**Q1.** How should the setup steps be structured architecturally?
-**A:** Each individual preview setting has its own dedicated Activity (10 standalone Activities in total). Each Activity follows the strict project Activity pattern (`attachBaseContext` with `LocaleManagerWrapper`, `EdgeToEdge.enable`, and paired mobile + TV layouts).
+### UI and Layout
+**Q1. How should the permission request flow be triggered when accessing a LAN share on Android 17+?**  
+**A:** Contextual prompt on tap (UFM glass rationale dialog followed by OS prompt), plus an inline recovery banner in `NetworkBrowserActivity` if declined so the user has an immediate recovery button.
 
-The 10-Activity sequence:
-1. `OnboardingViewDensityActivity`
-2. `OnboardingFontSizeActivity`
-3. `OnboardingScrollingTextActivity`
-4. `OnboardingHoldDurationActivity`
-5. `OnboardingLeftHandedFabActivity` (Mobile only; skipped on TV)
-6. `OnboardingEdgeDrawerActivity` (Mobile only; skipped on TV)
-7. `OnboardingRecycleBinActivity`
-8. `OnboardingHiddenFilesActivity`
-9. `OnboardingAppLockActivity` (Skipped if device lacks secure lock hardware)
-10. `OnboardingDiagnosticsActivity`
+**Q1b. What UI/UX standard must all dialogs, banners, and buttons follow?**  
+**A:** Strict adherence to `UFMStandard`:
+- Custom glass background (`@drawable/bg_dialog_glass`), transparent window background (`ColorDrawable(Color.TRANSPARENT)`), styled via `R.style.UFM_Dialog`.
+- Embedded buttons inside XML layouts (never `.setPositiveButton()` / `.setNegativeButton()`).
+- Vertical button stacking: primary action on top, secondary/cancel below.
+- Mobile: Primary `MaterialButton` (`Widget.Material3Expressive.Button`, 48-50dp, 12dp corner radius); Secondary TextButton.
+- TV: Paired `dialog_*_tv.xml` layouts (fixed 650dp width) with `@drawable/selector_tv_button_yellow` (primary) and `@drawable/selector_tv_button` (secondary), full D-pad focusability.
 
-### Skip Button Contextual Labeling & Progressive Behavior
-**Q2.** What should the Skip button be named and how should it behave?
-**A:**
-- **Screen 1 (`OnboardingViewDensityActivity`):** Labeled **"Skip & Use Defaults"** (since nothing has been configured yet; applies all defaults and opens the app).
-- **Screens 2 through 10:** Labeled **"Skip Remaining"** (preserves and commits all choices made on previous screens, applies recommended defaults to all remaining skipped screens, marks onboarding complete, and opens `StorageBrowserActivity`).
+**Q2. If the user permanently denies the permission ('Don't ask again'), should the dialog link directly to App Info Settings?**  
+**A:** Yes, direct the user directly to the OS App Info / Permission Settings screen (`ACTION_APPLICATION_DETAILS_SETTINGS`) with clear guidance.
 
-### Option 10 Default Value
-**Q3.** Is Option 10 (Crash & ANR Reporting) on by default?
-**A:** Yes! In the codebase (`CrashReportManager.isEnabled()`), Crash & ANR Reporting defaults to `true` (Enabled/ON). In `OnboardingDiagnosticsActivity`, the toggle and preview open in the active state (*Enabled by default — 100% anonymous technical crash reports, zero personal data*).
+**Q3. In `StorageBrowserActivity` (Main Menu) and `NetworkBrowserActivity`, how should saved LAN tiles appear when permission is not granted?**  
+**A:** Normal appearance — prompt contextually when tapped (no cluttering warning badges on idle tiles).
 
-### Preview Initial State
-**Q4.** How should the live preview render when each Activity opens?
-**A:** Always pre-rendered and actively displaying the **recommended default selection** immediately upon opening (or currently saved preferences if running in Reconfigure Mode).
+### Settings and Navigation
+**Q4. Should a status card for Local Network Permission be added to Settings under Network Settings?**  
+**A:** Yes, add a dedicated Local Network Permission status card in `SettingsActivity` under Network Settings displaying current status (`Granted` / `Not Granted`) with a button to check/request permission.
 
-### TV Layout & Screen Arrangement
-**Q5.** How should the visual preview be arranged on Android TV displays?
-**A:** Side-by-side split screen (Left: Options & Controls, Right: Large Live Visual Preview) to make full, ergonomic use of 16:9 TV landscape screens.
+### Network Interfaces & Connectivity
+**Q5. Should discovery and socket pre-flight checks support both wired Ethernet and Wi-Fi via ConnectivityManager?**  
+**A:** Yes, unify pre-flight checks under `ConnectivityManager` to ensure seamless discovery and socket operations on both wired Ethernet (especially on Android TV / set-top boxes) and Wi-Fi.
 
-### Re-Entry Mode from Settings
-**Q6.** When re-running the wizard from `SettingsActivity`, how should current preferences and exit navigation behave?
-**A:** Pre-populate live previews and options with the user's currently saved preferences (rather than resetting to defaults), and return directly back to `SettingsActivity` upon completion or skip.
+**Q5b. What specific functionality must be verified and guaranteed on Android 17?**  
+**A:** All existing features must remain 100% operational on Android 17, with special emphasis on:
+- **Wireless ADB Suite**:
+  - ADB Subnet Discovery (Ethernet and Wi-Fi) with `ACCESS_LOCAL_NETWORK` gating.
+  - ADB 6-digit PIN Pairing and TLS handshake.
+  - ADB TCP socket connection for terminal shell and remote commands.
+  - `AdbPushManager` file push and pull transfers.
+  - `AdbRemoteControlActivity` and `AdbWifiTransport` input injection.
+  - `AdbSessionForegroundService` and `AdbRemoteForegroundService` (`connectedDevice` type) lifecycle stability, notifications, and background task retention.
+  - Local loopback (`localhost` / `127.0.0.1`) wireless debugging preserved without requiring LAN permission.
+- **Network Storage Protocols**: SMB2/3, NFS, SFTP, FTP/FTPS, and WebDAV discovery, navigation, and streaming.
+- **DLNA & Casting**: SSDP multicast discovery, XML descriptions, SOAP commands, and media streaming.
+- **Companion & Pairing**: UDP beacons, secure credential exchange, and WebShareServer.
+- **Elevated Access**: Shizuku and Porter integration for protected storage (`Android/data`, `Android/obb`).
 
-### Activity Transition Animations
-**Q7.** What transition animation should be used between the 10 onboarding Activities?
-**A:** Polished horizontal slide animations (slide in from right on Next, slide back from left on Back) to reinforce a fluid, premium wizard flow.
+**Q6. If local network permission is denied when starting `WebShareServer` or `PairingServer`, how should they behave?**  
+**A:** Fail gracefully with a localized dialog/toast explaining that local network access is required, without crashing or hanging.
 
-### Security / App Lock Hardware Check
-**Q8.** If a user enables App Lock during onboarding, how should PIN creation be handled?
-**A:** Check device keyguard/security support upfront; if unsupported, skip `OnboardingAppLockActivity`. If supported and enabled, immediately present the PIN creation dialog on-screen, reverting the toggle to Off if cancelled.
+### SDK & Build Configuration
+**Q7. What SDK & build rollout approach should be followed?**  
+**A:** Immediate: bump `compileSdk` and `targetSdk` to 37 directly in `app/build.gradle.kts` as part of the implementation.
 
-## Confirmed — Ready for /plan
-All questions have been clarified and approved. Proceed to `/plan` to design the technical architecture and implementation strategy.
+---
+
+## Spec / Plan Impact
+- **`spec.md` updated**:
+  - FR-01: Confirmed immediate bump of `compileSdk` and `targetSdk` to 37 in `app/build.gradle.kts`.
+  - FR-02: Added dedicated Local Network Permission status card in `SettingsActivity` under Network Settings.
+  - FR-03 & FR-04: Explicit requirement that `WebShareServer` and `PairingServer` show a clear localized dialog/toast if started without local network permission.
+  - NFR-04: Confirmed unified `ConnectivityManager` interface abstraction supporting both wired Ethernet and Wi-Fi for discovery.
+
+---
+
+## Confirmed — Ready for /tasks
+All questions have been answered and recorded. The specification in `.plans/spec.md` and clarifications in `.plans/clarifications.md` form the authoritative baseline. Ready to proceed to `/tasks`.

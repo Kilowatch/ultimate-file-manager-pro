@@ -5355,6 +5355,74 @@
                                 android:clickable="false"
                                 android:focusable="false" />
                         </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/mobile_glass_stroke" />
+
+                        <!-- Local Network Permission -->
+                        <LinearLayout
+                            android:id="@+id/cardLocalNetworkPermission"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_btn_icon_frosted"
+                                android:layout_marginEnd="16dp">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_cloud"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@string/settings_local_network_title" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_local_network_title"
+                                    android:textColor="@color/mobile_card_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtLocalNetworkPermissionSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_local_network_subtitle"
+                                    android:textColor="@color/mobile_text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnLocalNetworkPermissionAction"
+                                style="@style/Widget.Material3Expressive.Button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="38dp"
+                                android:text="@string/settings_local_network_btn_manage"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-bold"
+                                app:backgroundTint="?attr/colorPrimary"
+                                app:cornerRadius="10dp"
+                                app:elevation="0dp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>

@@ -26,16 +26,14 @@ class AdbDeviceDiscovery(private val context: Context) {
         onProgress: ((scanned: Int, total: Int, devicesFound: Int) -> Unit)? = null
     ): List<AdbDevice> = withContext(Dispatchers.IO) {
         val devices = mutableListOf<AdbDevice>()
+
+        if (!LocalNetworkPermissionManager.hasPermission(context)) {
+            Log.w(TAG, "Local network permission not granted, skipping ADB device scan")
+            return@withContext devices
+        }
         
         try {
-            val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as? WifiManager
-            val connectionInfo = wifiManager?.connectionInfo ?: return@withContext devices
-
-            val ipAddress = connectionInfo.ipAddress
-            if (ipAddress == 0) return@withContext devices
-
-            // Convert IP address to string
-            val subnet = buildSubnet(ipAddress)
+            val subnet = NetworkInterfaceUtils.getSubnetPrefix(context) ?: return@withContext devices
             
             Log.d(TAG, "Scanning subnet: $subnet")
 

@@ -416,43 +416,46 @@ Notificações
 Rede / Wi-Fi
 </item>
         <item>
+Acesso à rede local (Android 17+)
+</item>
+        <item>
 Multitransmissão
 </item>
         <item>
-Estado da Rede
+Estado da rede
 </item>
         <item>
-Consulta de Pacotes
+Consulta de pacote
 </item>
         <item>
-Instalar Pacotes
+Instalar pacotes
 </item>
         <item>
-Faturamento
+Cobrança
 </item>
         <item>
 Ponte de depuração ADB
 </item>
         <item>
-Acesso Elevado (Porter, Shizuku &amp; Shevery)
+Acesso Elevado (Porter, Shizuku e Shevery)
+</item>
+        <item>
+Acesso root/superusuário
 </item>
         <item>
 Inicialização
 </item>
         <item>
-Otimização de Bateria
+Otimização da bateria
 </item>
         <item>
-Serviço em Primeiro Plano
+Serviço em primeiro plano
 </item>
         <item>
-Wake Lock
+Bloqueio de despertar
 </item>
         <item>
-Indexador de Armazenamento
-</item>
-        <item>
-Bluetooth
+Indexador de armazenamento
 </item>
         <item>
 Vibrar
@@ -475,46 +478,49 @@ Usado para alertá-lo quando as operações de arquivo forem concluídas ou quan
 Alimenta o gerenciamento remoto de arquivos, acesso a compartilhamentos de rede (SMB/FTP/SFTP/SCP/NFS), sincronização de pastas, emparelhamento de dispositivos e acesso ao terminal ADB na sua rede local. A descoberta de rede verifica dispositivos na sub-rede local (até 254 IPs) nas portas ADB 5555, 5037 e 5038 para encontrar dispositivos habilitados para ADB.
 </item>
         <item>
-Usado para descoberta de dispositivos na rede local (NSD/mDNS) ao emparelhar dispositivos.
+Obrigatório no Android 17 (API 37)+ para descobrir e conectar-se a dispositivos em sua rede local (LAN) para SMB, NFS, SFTP, FTP, WebDAV, transmissão de DLNA, emparelhamento de dispositivos e ADB sem fio.
 </item>
         <item>
-Detecta conexões VPN durante o Gerenciamento Remoto e acesso a compartilhamentos de rede.
+Usado para descoberta de dispositivos de rede local (NSD/mDNS) ao emparelhar dispositivos.
 </item>
         <item>
-Permite que o Gerenciador de Aplicativos enumere todos os aplicativos instalados no dispositivo. Os dados acessados incluem: nome do aplicativo, ID do pacote, versão, tamanho do APK, carimbo de data/hora de instalação e atualização, e se cada aplicativo é do sistema ou instalado pelo usuário. Essas informações são usadas exclusivamente no dispositivo para exibir o Gerenciador de Aplicativos, calcular o armazenamento por aplicativo e fazer referência cruzada dos nomes dos pacotes com uma lista de referência de desbloqueio publicamente disponível que é baixada e armazenada em cache localmente. Nenhum dado de aplicativo instalado é transmitido para os servidores da KiloWatch ou para terceiros.
+Detecta conexões VPN durante o gerenciamento remoto e acesso ao compartilhamento de rede.
 </item>
         <item>
-Necessário para instalar arquivos APK que você escolher executar a partir do armazenamento local.
+Permite que o App Manager enumere todos os aplicativos instalados no seu dispositivo. Os dados acessados ​​incluem: nome do aplicativo, ID do pacote, versão, tamanho do APK, carimbos de data/hora de instalação e atualização e se cada aplicativo é um aplicativo instalado pelo sistema ou pelo usuário. Essas informações são usadas exclusivamente no dispositivo para exibir o App Manager, calcular o armazenamento por aplicativo e fazer referência cruzada de nomes de pacotes com uma lista de referência de debloat disponível publicamente que é baixada e armazenada em cache localmente. Nenhum dado de aplicativo instalado é transmitido aos servidores KiloWatch ou a terceiros.
 </item>
         <item>
-Processa compras opcionais da Caixinha de Gorjetas via Google Play.
+Necessário para instalar arquivos APK que você escolhe para executar no armazenamento local.
+</item>
+        <item>
+Processa compras opcionais do Tip Jar via Google Play.
 </item>
         <item>
 Permite conexão segura com dispositivos Android para acesso avançado ao shell. Gera um certificado RSA exclusivo no seu dispositivo para emparelhamento; nenhum certificado é transmitido para servidores externos.
 </item>
         <item>
-Permite que o aplicativo use a API Porter / Shizuku / Shevery (incluindo Configurações Seguras) para gerenciar arquivos em diretórios restritos do sistema sem root.
+Permite que o aplicativo use a API Porter/Shizuku/Shevery (incluindo configurações seguras) para gerenciar arquivos em diretórios restritos do sistema sem fazer root.
 </item>
         <item>
-Permite que os serviços Shizuku e Shevery iniciem automaticamente quando o dispositivo for inicializado para garantir disponibilidade imediata.
+Solicitado dinamicamente por meio de seu gerenciador root (Magisk, KernelSU, APatch, SuperSU) somente quando você habilita explicitamente o acesso root nas configurações de dispositivos móveis. Usado estritamente para operações de arquivo raiz local.
 </item>
         <item>
-Permite que os serviços Porter, Shizuku e Shevery sejam iniciados automaticamente quando o dispositivo for ligado para garantir disponibilidade imediata.
+Permite que os serviços Porter, Shizuku e Shevery sejam iniciados automaticamente quando o dispositivo for inicializado para garantir disponibilidade imediata.
 </item>
         <item>
 Permite que você opte por manter os serviços Porter, Shizuku e Shevery ativos em segundo plano para um desempenho confiável.
 </item>
         <item>
-Mantém a CPU e o Wi-Fi ativos durante grandes transferências de arquivos para que sejam concluídas de forma confiável mesmo quando a tela desliga.
+Necessário para executar a sincronização de pastas e transferências de arquivos como um serviço em primeiro plano para que sejam concluídas de maneira confiável mesmo quando a tela estiver desligada.
 </item>
         <item>
-Usa permissões de armazenamento para escanear e indexar metadados de arquivos para desempenho — gerenciado em Configurações -> Indexador de Armazenamento.
+Mantém a CPU e o Wi-Fi ativos durante grandes transferências de arquivos para que sejam concluídas de maneira confiável mesmo quando a tela é desligada.
 </item>
         <item>
-Conecta-se à sua Android TV emparelhada para atuar como teclado e mouse Bluetooth para controle remoto.
+Usa permissões de armazenamento para verificar e indexar metadados de arquivos para desempenho - gerenciados por meio de Configurações -&gt; Indexador de armazenamento.
 </item>
         <item>
-Fornece feedback tátil ao pressionar botões no Controle Remoto da TV.
+Conecta-se à sua Android TV emparelhada para funcionar como teclado e mouse Bluetooth para controle remoto.
 </item>
         <item>
 Fornece feedback tátil ao pressionar botões no controle remoto da TV.
@@ -1260,6 +1266,9 @@ Abaixo da API 29 · Modificação legada de arquivos em dispositivos mais antigo
 INTERNET
 </item>
         <item>
+ACCESS_LOCAL_NETWORK
+</item>
+        <item>
 ACESSO_WIFI_STATE
 </item>
         <item>
@@ -1274,13 +1283,16 @@ CHANGE_WIFI_MULTICAST_STATE
 Permite gerenciamento remoto de arquivos, hospedagem de Servidores de Arquivos locais, acesso a compartilhamentos de rede SMB/FTP/SFTP/SCP/NFS e pareamento de dispositivos
 </item>
         <item>
+Permite descoberta de dispositivos de rede local, compartilhamento de arquivos LAN (SMB/NFS/WebDAV/FTP/SFTP), streaming de mídia DLNA e ADB sem fio no Android 17+
+</item>
+        <item>
 Exibe seu endereço IP local para acesso remoto
 </item>
         <item>
-Detecta status de rede ativa e VPN para Gerenciamento Remoto e compartilhamentos de rede
+Detecta rede ativa e status de VPN para gerenciamento remoto e compartilhamentos de rede
 </item>
         <item>
-Permite descoberta de dispositivos na rede local (NSD/mDNS) para pareamento
+Permite a descoberta de dispositivos de rede local (NSD/mDNS) para emparelhamento de dispositivos
 </item>
     </string-array>
 

@@ -416,6 +416,9 @@ ADB 配对需要通过本地 Wi-Fi 在您的设备和目标设备之间交换证
 网络/无线网络
 </item>
         <item>
+本地网络访问（Android 17+）
+</item>
+        <item>
 组播
 </item>
         <item>
@@ -434,28 +437,28 @@ ADB 配对需要通过本地 Wi-Fi 在您的设备和目标设备之间交换证
 ADB 调试桥
 </item>
         <item>
-特权访问（Porter、Shizuku 和 Shevery）
+高架通道（Porter、Shizuku 和 Shevery）
 </item>
         <item>
-Boot Start
+根/超级用户访问
 </item>
         <item>
-Battery Optimization
+开机启动
 </item>
         <item>
-Foreground Service
+电池优化
 </item>
         <item>
-Wake Lock
+前台服务
 </item>
         <item>
-Storage Indexer
+唤醒锁
 </item>
         <item>
-Bluetooth
+存储索引器
 </item>
         <item>
-Vibrate
+颤动
 </item>
         <item>
 颤动
@@ -473,6 +476,9 @@ Vibrate
 </item>
         <item>
 支持本地网络上的远程文件管理、网络共享访问 (SMB/FTP/SFTP/SCP/NFS)、文件夹同步、设备配对和 ADB 终端访问。网络发现通过 ADB 端口 5555、5037 和 5038 扫描本地子网（最多 254 个 IP）上的设备，以查找启用 ADB 的设备。
+</item>
+        <item>
+在 Android 17 (API 37)+ 上需要发现并连接到本地网络 (LAN) 上的设备，以进行 SMB、NFS、SFTP、FTP、WebDAV、DLNA 投射、设备配对和无线 ADB。
 </item>
         <item>
 用于设备配对时本地网络设备发现 (NSD/mDNS)。
@@ -493,28 +499,28 @@ Vibrate
 允许安全连接到 Android 设备以进行高级 shell 访问。在您的设备上生成唯一的 RSA 证书以进行配对；没有证书传输到外部服务器。
 </item>
         <item>
-允许应用使用 Porter / Shizuku / Shevery API（包括安全设置）来管理受限系统目录中的文件，而无需 Root 设备。
+允许应用程序使用 Porter / Shizuku / Shevery API（包括安全设置）来管理受限系统目录中的文件，而无需 root。
 </item>
         <item>
-允许 Shizuku 和 Shevery 服务在您的设备启动时自动启动，以确保立即可用。
+仅当您在移动设备上的“设置”中明确启用根访问时，才会通过根管理器（Magisk、KernelSU、APatch、SuperSU）动态请求。严格用于本地根文件操作。
 </item>
         <item>
-允许 Porter、Shizuku 和 Shevery 服务在设备启动时自动启动，以确保立即可用。
+允许 Porter、Shizuku 和 Shevery 服务在您的设备启动时自动启动，以确保立即可用。
 </item>
         <item>
-允许您选择让 Porter、Shizuku 和 Shevery 服务在后台保持运行，以获得可靠性能。
+允许您选择让 Porter、Shizuku 和 Shevery 服务在后台保持活动状态，以获得可靠的性能。
 </item>
         <item>
-Keeps the CPU and Wi-Fi active during large file transfers so they complete reliably even when the screen turns off.
+需要将文件夹同步和文件传输作为前台服务运行，以便即使屏幕关闭时也能可靠地完成。
 </item>
         <item>
-使用存储权限扫描文件元数据并为其建立索引以提高性能 - 通过“设置”->“存储索引器”进行管理。
+在大文件传输过程中保持 CPU 和 Wi-Fi 处于活动状态，以便即使在屏幕关闭时也能可靠地完成传输。
+</item>
+        <item>
+使用存储权限扫描文件元数据并为其建立索引以提高性能 - 通过“设置”-&gt;“存储索引器”进行管理。
 </item>
         <item>
 连接到配对的 Android TV，充当蓝牙键盘和鼠标进行远程控制。
-</item>
-        <item>
-按下电视遥控器上的按钮时提供触觉反馈。
 </item>
         <item>
 按下电视遥控器上的按钮时提供触觉反馈。
@@ -1260,6 +1266,9 @@ API 30+ · 跨所有存储的完整文件管理
 互联网
 </item>
         <item>
+访问本地网络
+</item>
+        <item>
 ACCESS_WIFI_STATE
 </item>
         <item>
@@ -1272,6 +1281,9 @@ CHANGE_WIFI_MULTICAST_STATE
     <string-array name="pp_network_perm_details">
         <item>
 启用远程文件管理、托管本地文件服务器、SMB/FTP/SFTP/SCP/NFS 网络共享访问和设备配对
+</item>
+        <item>
+在 Android 17+ 上启用本地网络设备发现、LAN 文件共享 (SMB/NFS/WebDAV/FTP/SFTP)、DLNA 媒体流和无线 ADB
 </item>
         <item>
 显示您的本地 IP 地址以进行远程访问

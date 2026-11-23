@@ -416,6 +416,9 @@ Aviseringar
 Nätverk / Wi-Fi
 </item>
         <item>
+Lokal nätverksåtkomst (Android 17+)
+</item>
+        <item>
 Multicast
 </item>
         <item>
@@ -434,7 +437,10 @@ Fakturering
 ADB Debug Bridge
 </item>
         <item>
-Förhöjd åtkomst (Porter, Shizuku &amp; Shevery)
+Förhöjd åtkomst (Porter, Shizuku och Shevery)
+</item>
+        <item>
+Root / Superuser Access
 </item>
         <item>
 Starta start
@@ -450,9 +456,6 @@ Wake Lock
 </item>
         <item>
 Förvaringsindexerare
-</item>
-        <item>
-Bluetooth
 </item>
         <item>
 Vibrera
@@ -475,6 +478,9 @@ Används för att varna dig när filhanteringen är klar eller när lagringsutry
 Ger fjärrfilhantering, nätverksdelningsåtkomst (SMB/FTP/SFTP/SCP/NFS), mappsynkronisering, enhetsparning och ADB-terminalåtkomst på ditt lokala nätverk. Nätverksupptäckt skannar enheter på ditt lokala undernät (upp till 254 IP-adresser) på ADB-portarna 5555, 5037 och 5038 för att hitta ADB-aktiverade enheter.
 </item>
         <item>
+Krävs på Android 17 (API 37)+ för att upptäcka och ansluta till enheter i ditt lokala nätverk (LAN) för SMB, NFS, SFTP, FTP, WebDAV, DLNA-casting, enhetsparning och trådlös ADB.
+</item>
+        <item>
 Används för lokal nätverksenhetsidentifiering (NSD/mDNS) vid ihopparning av enheter.
 </item>
         <item>
@@ -493,28 +499,28 @@ Behandlar valfria Tips Jar-köp via Google Play.
 Tillåter säker anslutning till Android-enheter för avancerad skalåtkomst. Genererar ett unikt RSA-certifikat på din enhet för ihopparning; inga certifikat överförs till externa servrar.
 </item>
         <item>
-Tillåter appen att använda Porter / Shizuku / Shevery API (inklusive Secure Settings) för att hantera filer i begränsade systemkataloger utan att roota.
+Tillåter att appen använder Porter / Shizuku / Shevery API (inklusive Secure Settings) för att hantera filer i begränsade systemkataloger utan att rota.
 </item>
         <item>
-Tillåter Shizuku- och Shevery-tjänster att starta automatiskt när din enhet startar för att säkerställa omedelbar tillgänglighet.
+Begärs dynamiskt via din rothanterare (Magisk, KernelSU, APatch, SuperSU) endast när du uttryckligen aktiverar rotåtkomst i inställningar på mobila enheter. Används strikt för lokala rotfiloperationer.
 </item>
         <item>
 Tillåter Porter-, Shizuku- och Shevery-tjänster att starta automatiskt när din enhet startar för att säkerställa omedelbar tillgänglighet.
 </item>
         <item>
-Tillåter dig att välja att hålla Porter-, Shizuku- och Shevery-tjänster aktiva i bakgrunden för tillförlitlig prestanda.
+Låter dig välja att hålla Porter-, Shizuku- och Shevery-tjänsterna aktiva i bakgrunden för pålitlig prestanda.
+</item>
+        <item>
+Krävs för att köra mappsynkronisering och filöverföringar som en förgrundstjänst så att de slutförs tillförlitligt även när skärmen är avstängd.
 </item>
         <item>
 Håller CPU och Wi-Fi aktiva under stora filöverföringar så att de slutförs tillförlitligt även när skärmen stängs av.
 </item>
         <item>
-Använder lagringsbehörigheter för att skanna och indexera filmetadata för prestanda – hanteras via Inställningar -> Lagringsindexerare.
+Använder lagringsbehörigheter för att skanna och indexera filmetadata för prestanda – hanteras via Inställningar -&gt; Lagringsindexerare.
 </item>
         <item>
 Ansluts till din parade Android TV för att fungera som ett Bluetooth-tangentbord och en mus för fjärrkontroll.
-</item>
-        <item>
-Ger haptisk feedback när du trycker på knappar på TV-fjärrkontrollen.
 </item>
         <item>
 Ger haptisk feedback när du trycker på knappar på TV-fjärrkontrollen.
@@ -1260,6 +1266,9 @@ Nedan API 29 · Äldre filändring på äldre enheter
 INTERNET
 </item>
         <item>
+ACCESS_LOCAL_NETWORK
+</item>
+        <item>
 ACCESS_WIFI_STATE
 </item>
         <item>
@@ -1272,6 +1281,9 @@ CHANGE_WIFI_MULTICAST_STATE
     <string-array name="pp_network_perm_details">
         <item>
 Möjliggör fjärrfilhantering, värd för lokala filservrar, SMB/FTP/SFTP/SCP/NFS nätverksdelningsåtkomst och enhetsparning
+</item>
+        <item>
+Möjliggör lokal nätverksenhetsupptäckt, LAN-fildelning (SMB/NFS/WebDAV/FTP/SFTP), DLNA-mediaströmning och trådlös ADB på Android 17+
 </item>
         <item>
 Visar din lokala IP-adress för fjärråtkomst

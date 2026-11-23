@@ -1,83 +1,215 @@
-# Implementation Plan: First-Run Onboarding Setup Flow with Dedicated Per-Setting Activities
+# Implementation Plan: Android 17 (API 37) Platform Compatibility & Local Network Protection
 
 ## Goals
-- Create a visual first-run onboarding setup sequence consisting of 10 standalone Activities.
-- Each Activity puts 100% focus on a single setting, featuring rich explanatory text and a **large live visual preview example** pre-rendered on the recommended default selection.
-- Implement contextual skip controls: **"Skip & Use Defaults"** on Screen 1, and **"Skip Remaining"** from Screen 2 onwards (progressively saving prior selections and defaulting only remaining unvisited settings).
-- Support full Android TV 16:9 split-screen D-pad parity (skipping mobile touch screens automatically).
-- Guarantee zero preference drift with `SettingsActivity` and add an on-demand re-entry card in Settings.
+Target Android 17 (API 37) in `app/build.gradle.kts` while maintaining backward compatibility across Android 8.0–16 (API 26–36), Android TV, and desktop companions.
+Satisfy all requirements in `.plans/spec.md` and confirmed answers in `.plans/clarifications.md`:
+- Seamlessly integrate Android 17's Local Network Protection (`android.permission.ACCESS_LOCAL_NETWORK`).
+- Ensure full functionality for the Wireless ADB suite (discovery, pairing, shell, push/pull, remote control, and `connectedDevice` foreground services).
+- Unify LAN discovery across Wi-Fi and wired Ethernet on Android TV.
+- Strictly adhere to `UFMStandard` for all dialogs, recovery banners, and Settings cards.
+- Guarantee that saved shares, credentials, and offline features are never cleared or broken by permission states.
+
+---
 
 ## Architecture Overview
-The 10 Activities share a common base architecture `BaseOnboardingStepActivity`:
-- Implements `attachBaseContext` with `LocaleManagerWrapper`.
-- Calls `EdgeToEdge.enable(this)` and applies window insets.
-- Manages standardized header and bottom button bar ("Back", "Next", "Skip Remaining" / "Skip & Use Defaults").
-- Connects screens with horizontal slide transitions (`ufm_slide_in_right` / `ufm_slide_out_left`).
-- Centralizes progressive skip logic: commits prior choices + applies defaults to unvisited settings + finishes onboarding.
-- Supports `EXTRA_RECONFIGURE_MODE`: pre-populates with user's current preferences and returns to `SettingsActivity`.
 
 ```
-Sequential Flow:
-1.  [OnboardingViewDensityActivity]        (Button: "Skip & Use Defaults")
-2.  [OnboardingFontSizeActivity]           (Button: "Skip Remaining")
-3.  [OnboardingScrollingTextActivity]      (Button: "Skip Remaining")
-4.  [OnboardingHoldDurationActivity]       (Button: "Skip Remaining")
-5.  [OnboardingLeftHandedFabActivity]      (Button: "Skip Remaining" — Mobile Only)
-6.  [OnboardingEdgeDrawerActivity]         (Button: "Skip Remaining" — Mobile Only)
-7.  [OnboardingRecycleBinActivity]         (Button: "Skip Remaining")
-8.  [OnboardingHiddenFilesActivity]        (Button: "Skip Remaining")
-9.  [OnboardingAppLockActivity]            (Button: "Skip Remaining" — Skipped if hardware lacks secure lock)
-10. [OnboardingDiagnosticsActivity]       (Button: "Skip Remaining" / "Start Browsing")
++--------------------------------------------------------------------------------------------------+
+|                                    Android 17 Runtime Layer                                      |
++--------------------------------------------------------------------------------------------------+
+|                                                                                                  |
+|   +------------------------------------+          +-----------------------------------------+    |
+|   |   LocalNetworkPermissionManager    |          |          NetworkInterfaceUtils          |    |
+|   +------------------------------------+          +-----------------------------------------+    |
+|   | - isEnforced() (API >= 37)         |          | - getLocalIpv4Address()                 |    |
+|   | - hasPermission(context)           |          | - getSubnetPrefix() (Wi-Fi + Ethernet)  |    |
+|   | - isLoopbackAddress(host)          |          | - isLocalNetworkConnected()             |    |
+|   | - checkOrRequest(activity, ...)    |          +-----------------------------------------+    |
+|   | - showRationaleDialog()            |                               │                         |
+|   +-----------------+------------------+                               │                         |
+|                     │                                                  │                         |
+|         +-----------┴-------------------------+                        │                         |
+|         ▼                                     ▼                        ▼                         |
+|  +--------------------+             +-------------------+   +--------------------+               |
+|  |   UFMStandard      |             |  Storage / Shares |   |   Discovery & ADB  |               |
+|  |  Rationale Dialog  |             |  Protocol Clients |   |  - SmbDiscovery    |               |
+|  |  (Mobile & TV)     |             |  - SMB, NFS       |   |  - NfsDiscovery    |               |
+|  +--------------------+             |  - SFTP, FTP      |   |  - DlnaDiscovery   |               |
+|                                     |  - WebDAV, WebShr |   |  - AdbDiscovery    |               |
+|                                     +-------------------+   |  - AdbManager      |               |
+|                                                             |  - PairingDisc.    |               |
+|                                                             +--------------------+               |
++--------------------------------------------------------------------------------------------------+
 ```
+
+### Architectural Decisions:
+1. **Central Permission Abstraction (`LocalNetworkPermissionManager`)**:
+   - Single source of truth in `za.kilowatch.ultimatefilemanager.network`.
+   - Bypassed on Android < 37 (`isEnforced() == false`) and for loopback/localhost targets (`127.0.0.1`, `localhost`).
+   - Integrates with modern Android `ActivityResultLauncher<String>` or custom fallback Activity result callback.
+2. **Unified Interface Helper (`NetworkInterfaceUtils`)**:
+   - Replaces deprecated and Wi-Fi-only `WifiManager.connectionInfo.ipAddress`.
+   - Inspects `NetworkInterface.getNetworkInterfaces()` across both `wlan*` and `eth*` (Ethernet) to safely compute IPv4 subnet prefixes.
+3. **UFMStandard Frosted Glass Dialogs**:
+   - Paired layouts: `dialog_local_network_rationale.xml` (mobile) and `dialog_local_network_rationale_tv.xml` (TV 650dp width).
+   - Glass background `@drawable/bg_dialog_glass`, transparent window background, embedded XML buttons vertically stacked (primary on top, secondary/cancel below).
+4. **Wireless ADB Guarantee**:
+   - `AdbDeviceDiscovery`: Swapped to `NetworkInterfaceUtils` subnet resolver and gated with `LocalNetworkPermissionManager`.
+   - `AdbPairingActivity` and `AdbPairingTvActivity`: "Scan Devices" and "Connect" buttons protected by contextual permission gate.
+   - `AdbSessionForegroundService` and `AdbRemoteForegroundService`: Verified lifecycle, foreground launch checks, and clean shutdown handling.
+
+---
 
 ## Files to Create
 
-### Architecture & Base
-- `app/src/main/java/za/kilowatch/ultimatefilemanager/onboarding/BaseOnboardingStepActivity.kt`: Abstract base coordinator for all 10 activities, handling navigation, transitions, TV detection, and progressive skip logic.
+### 1. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/LocalNetworkPermissionManager.kt`
+- **What**: Central manager handling Android 17 Local Network Protection checks, rationales, request launcher bindings, and permanent denial routing.
+- **Key details**:
+  - `const val PERMISSION = "android.permission.ACCESS_LOCAL_NETWORK"`
+  - `fun isEnforced(): Boolean` (returns `Build.VERSION.SDK_INT >= 37`)
+  - `fun hasPermission(context: Context): Boolean`
+  - `fun isLoopbackAddress(host: String?): Boolean`
+  - `fun checkOrRequest(activity: ComponentActivity, launcher: ActivityResultLauncher<String>?, onGranted: () -> Unit, onDenied: () -> Unit)`
+  - `fun showRationaleDialog(activity: Activity, launcher: ActivityResultLauncher<String>?, onGranted: () -> Unit, onDenied: () -> Unit)`
+  - `fun openAppPermissionSettings(activity: Activity)`
 
-### 10 Dedicated Activities (One Activity Class, Two Layouts Each)
-1. `OnboardingViewDensityActivity.kt` + `res/layout/activity_onboarding_view_density.xml` + `res/layout/activity_onboarding_view_density_tv.xml`
-2. `OnboardingFontSizeActivity.kt` + `res/layout/activity_onboarding_font_size.xml` + `res/layout/activity_onboarding_font_size_tv.xml`
-3. `OnboardingScrollingTextActivity.kt` + `res/layout/activity_onboarding_scrolling_text.xml` + `res/layout/activity_onboarding_scrolling_text_tv.xml`
-4. `OnboardingHoldDurationActivity.kt` + `res/layout/activity_onboarding_hold_duration.xml` + `res/layout/activity_onboarding_hold_duration_tv.xml`
-5. `OnboardingLeftHandedFabActivity.kt` + `res/layout/activity_onboarding_left_handed_fab.xml` + `res/layout/activity_onboarding_left_handed_fab_tv.xml`
-6. `OnboardingEdgeDrawerActivity.kt` + `res/layout/activity_onboarding_edge_drawer.xml` + `res/layout/activity_onboarding_edge_drawer_tv.xml`
-7. `OnboardingRecycleBinActivity.kt` + `res/layout/activity_onboarding_recycle_bin.xml` + `res/layout/activity_onboarding_recycle_bin_tv.xml`
-8. `OnboardingHiddenFilesActivity.kt` + `res/layout/activity_onboarding_hidden_files.xml` + `res/layout/activity_onboarding_hidden_files_tv.xml`
-9. `OnboardingAppLockActivity.kt` + `res/layout/activity_onboarding_app_lock.xml` + `res/layout/activity_onboarding_app_lock_tv.xml`
-10. `OnboardingDiagnosticsActivity.kt` + `res/layout/activity_onboarding_diagnostics.xml` + `res/layout/activity_onboarding_diagnostics_tv.xml`
+### 2. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/NetworkInterfaceUtils.kt`
+- **What**: Unified network interface detection helper supporting Wi-Fi and wired Ethernet without relying on deprecated `WifiManager` APIs.
+- **Key details**:
+  - `fun getActiveLocalIpv4(context: Context): Inet4Address?`
+  - `fun getSubnetPrefix(context: Context): String?`
+  - `fun isLocalNetworkConnected(context: Context): Boolean`
+
+### 3. `app/src/main/res/layout/dialog_local_network_rationale.xml`
+- **What**: Mobile rationale dialog strictly conforming to `UFMStandard`.
+- **Key details**:
+  - Background `@drawable/bg_dialog_glass`, 56dp frosted squircle hero badge with `@drawable/ic_cloud` / `@drawable/ic_lightning`.
+  - Title: 20sp `sans-serif-black`, Subtitle: 13sp.
+  - Frosted card (`@color/mobile_glass_card`, `@color/mobile_glass_stroke`).
+  - Vertically stacked buttons: Primary filled `MaterialButton` (`Widget.Material3Expressive.Button`) on top, TextButton secondary below.
+
+### 4. `app/src/main/res/layout/dialog_local_network_rationale_tv.xml`
+- **What**: Android TV rationale dialog strictly conforming to `UFMStandard`.
+- **Key details**:
+  - Width fixed to 650dp (`@dimen/tv_dialog_standard_width`), background `@drawable/bg_dialog_glass`.
+  - D-pad focusable primary button (`@drawable/selector_tv_button_yellow`) and secondary button (`@drawable/selector_tv_button`).
+
+### 5. `app/src/main/res/layout/item_banner_local_network_permission.xml`
+- **What**: Inline recovery banner for `NetworkBrowserActivity` and `NetworkBrowserFragment`.
+- **Key details**: Frosted glass card with message and "Grant Permission" action button.
+
+---
 
 ## Files to Modify
 
-### `WelcomeActivity.kt`
-- Transition to `OnboardingViewDensityActivity` when permissions are granted instead of directly launching `StorageBrowserActivity`.
+### 1. `app/build.gradle.kts`
+- **What**: Update `compileSdk` and `targetSdk` to 37.
+- **Changes**:
+  - Change `compileSdk { version = release(36) { minorApiLevel = 1 } }` to `compileSdk { version = release(37) }` (or `compileSdk = 37`).
+  - Change `targetSdk { version = release(36) }` to `targetSdk { version = release(37) }` (or `targetSdk = 37`).
 
-### `SettingsActivity.kt` + `activity_settings.xml` + `activity_settings_tv.xml`
-- Add `cardQuickSetupWizard` under `layoutSectionGeneral` to launch the wizard in Reconfigure Mode.
+### 2. `app/src/main/AndroidManifest.xml`
+- **What**: Declare the Android 17 permission.
+- **Changes**:
+  - Add `<uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />`.
 
-### `AndroidManifest.xml`
-- Register all 10 new Activities with `android:exported="false"`.
+### 3. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/AdbDeviceDiscovery.kt`
+- **What**: Replace deprecated `WifiManager` subnet logic with `NetworkInterfaceUtils` and gate with `LocalNetworkPermissionManager`.
+- **Changes**:
+  - Check `LocalNetworkPermissionManager.hasPermission(context)`. If false, log and return empty list.
+  - Use `NetworkInterfaceUtils.getSubnetPrefix(context)` for subnet IP construction.
 
-### `strings.xml`
-- Add translatable titles, subtitles, and button labels for each onboarding Activity and preview card.
+### 4. `app/src/main/java/za/kilowatch/ultimatefilemanager/ui/AdbPairingActivity.kt` & `AdbPairingTvActivity.kt`
+- **What**: Gate discovery and manual socket connections with `LocalNetworkPermissionManager`.
+- **Changes**:
+  - Register `ActivityResultLauncher<String>` for local network permission.
+  - Wrap `btnScan.setOnClickListener`, `btnConnectNoPIN`, and `btnConnectWithPin` in permission checks before launching network operations.
 
-## Data Model & Persistence
-No new database tables or preference files. Direct integration with existing preference managers:
-- `ViewModeManager`
-- `FontSizeHelper`
-- `ScrollingTextPreferenceManager`
-- `LongPressDurationManager`
-- `LeftHandedFabPreferenceManager`
-- `QuickAccessManager`
-- `RecycleBinSettingsManager`
-- `HiddenFilesManager`
-- `AppSecurityManager`
-- `CrashReportManager`
+### 5. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/SmbDiscovery.kt` & `NfsDiscovery.kt`
+- **What**: Migrate subnet discovery to `NetworkInterfaceUtils` and gate probes with `LocalNetworkPermissionManager`.
+- **Changes**:
+  - Replace `WifiManager` IP parsing with `NetworkInterfaceUtils.getSubnetPrefix(context)`.
+  - Pre-flight permission check before launching port probes.
+
+### 6. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/NetworkBrowserActivity.kt` & `NetworkBrowserFragment.kt`
+- **What**: Implement contextual tap gating and inline recovery banner on denial.
+- **Changes**:
+  - Register `permissionLauncher` for `LocalNetworkPermissionManager.PERMISSION`.
+  - Wrap share connection entry points (`loadShares`, `openShare`) to check permission (unless loopback).
+  - Add and toggle visibility of inline recovery banner if user declines permission.
+
+### 7. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/WebShareServer.kt` & `PairingServer.kt`
+- **What**: Ensure clean localized failure/toast if user initiates server without local network permission.
+- **Changes**:
+  - Check `LocalNetworkPermissionManager.hasPermission(context)`.
+  - If denied on API 37+, show localized notice and cancel server startup safely.
+
+### 8. `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/SettingsActivity.kt` & `activity_settings.xml` / `activity_settings_tv.xml`
+- **What**: Add dedicated Local Network Permission card in Network Settings section.
+- **Changes**:
+  - Add `cardLocalNetworkPermission` card view with icon, title, subtitle, and action button in both mobile and TV layouts.
+  - In `SettingsActivity.kt`, update card subtitle to show "Granted" or "Not Granted / Required" and handle click to trigger permission request / open settings.
+
+### 9. `app/src/main/res/values/strings.xml`
+- **What**: Add all localized strings for rationales, banner, and settings cards.
+- **Changes**:
+  - `local_network_rationale_title`, `local_network_rationale_subtitle`, `local_network_rationale_message`
+  - `local_network_btn_continue`, `local_network_btn_settings`, `local_network_btn_not_now`
+  - `local_network_banner_text`, `local_network_banner_grant`
+  - `settings_local_network_title`, `settings_local_network_subtitle`, `settings_local_network_status_granted`, `settings_local_network_status_denied`
+  - `toast_local_network_permission_required`
+
+### 10. `app/src/main/res/values/strings_policy.xml`
+- **What**: Update in-app legal and privacy policy tables to disclose the Android 17 Local Network Protection permission.
+- **Changes**:
+  - `pp_network_perm_labels` & `pp_network_perm_details`: Add `ACCESS_LOCAL_NETWORK` and explanation.
+  - `tc_permission_labels` & `tc_permission_details`: Add `Local Network Access (Android 17+)` and explanation.
+
+### 11. `WEBSITE/UFMPrivacyPolicy.html` & `WEBSITE/UFMTerms.html`
+- **What**: Keep external website legal policies synchronized with Android 17 permission disclosures.
+- **Changes**:
+  - `UFMPrivacyPolicy.html`: Add `ACCESS_LOCAL_NETWORK` row under the Network Permissions table.
+  - `UFMTerms.html`: Add Local Network Access disclosure row in Section 05 Permissions table.
+
+---
+
+## Data Model
+No database schema or SharedPreferences schema changes required. Local network permission status is queried live from the OS (`ContextCompat.checkSelfPermission`), with a boolean flag in SharedPreferences (`KEY_LOCAL_NETWORK_RATIONALE_SHOWN`) to track whether the user has seen the explanation previously.
+
+---
+
+## Dependencies
+- Android SDK Platform `android-37` (already installed locally in SDK directory).
+- Android Gradle Plugin `9.2.1` (already in project).
+
+---
 
 ## Test Plan
-- Compile with `./gradlew assembleMobileGoogleDebug`.
-- Verify full 10-screen sequence from fresh install.
-- Verify Screen 1 button is "Skip & Use Defaults"; Screens 2-10 are "Skip Remaining".
-- Verify mid-flow skip correctly preserves configured settings and defaults remaining.
-- Verify TV 16:9 side-by-side layout and D-pad remote focus.
-- Verify Reconfigure Mode from `SettingsActivity`.
+
+### Automated Build Verification:
+```bash
+./gradlew assembleMobileGoogleDebug
+```
+
+### Manual Verification Matrix:
+1. **Android 17+ (API 37)**:
+   - Fresh launch: Verify no aggressive permission prompt appears on Welcome screen or Main Menu.
+   - Tap SMB share: Rationale dialog appears adhering to `UFMStandard`.
+   - Click "Continue": OS permission prompt appears.
+   - On Grant: SMB share opens and lists contents immediately.
+   - On Denial: Return to browser; inline recovery banner is visible; clicking "Grant" re-prompts.
+   - Revocation in OS Settings: While browsing, revoke permission in Settings; app reports recoverable error without crashing.
+   - Wireless ADB: Open ADB pairing; test subnet scan, 6-digit PIN pairing, shell terminal, and `AdbSessionForegroundService` background notification.
+   - Android TV: Test on TV layout with D-pad navigation over wired Ethernet.
+2. **Android 8.0–16 (API 26–36)**:
+   - Verify all LAN features (SMB, NFS, ADB, DLNA) execute directly without showing any Android 17 permission dialogs or crashing.
+
+---
+
+## Risks & Mitigations
+- **Risk**: Android 17 platform pre-release SDK behavior changes.
+  - **Mitigation**: Guard permission constants safely with `Build.VERSION.SDK_INT >= 37` runtime check.
+- **Risk**: Users confusing Local Network Permission with Internet access.
+  - **Mitigation**: Rationale dialog explicitly explains that access is strictly limited to discovering and transferring files with local devices on the home network.
+- **Risk**: TV devices on Ethernet failing Wi-Fi checks.
+  - **Mitigation**: `NetworkInterfaceUtils` enumerates all active non-loopback IPv4 interfaces, treating Ethernet and Wi-Fi as first-class peers.

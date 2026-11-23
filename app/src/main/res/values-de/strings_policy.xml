@@ -416,6 +416,9 @@ Benachrichtigungen
 Netzwerk / WLAN
 </item>
         <item>
+Lokaler Netzwerkzugriff (Android 17+)
+</item>
+        <item>
 Multicast
 </item>
         <item>
@@ -434,25 +437,25 @@ Abrechnung
 ADB-Debug-Brücke
 </item>
         <item>
-Erweiterter Zugriff (Porter, Shizuku &amp; Shevery)
+Erhöhter Zugang (Porter, Shizuku &amp; Shevery)
 </item>
         <item>
-Autostart
+Root-/Superuser-Zugriff
 </item>
         <item>
-Akkuoptimierung
+Bootstart
+</item>
+        <item>
+Batterieoptimierung
 </item>
         <item>
 Vordergrunddienst
 </item>
         <item>
-Wake Lock
+Wake-Lock
 </item>
         <item>
-Speicherindexierer
-</item>
-        <item>
-Bluetooth
+Speicherindexer
 </item>
         <item>
 Vibrieren
@@ -475,46 +478,49 @@ Wird verwendet, um Sie zu benachrichtigen, wenn Dateivorgänge abgeschlossen sin
 Ermöglicht die Fernverwaltung von Dateien, den Zugriff auf Netzwerkfreigaben (SMB/FTP/SFTP/SCP/NFS), Ordnersynchronisation, Gerätekopplung und ADB-Terminalzugriff in Ihrem lokalen Netzwerk. Die Netzwerkerkennung scannt Geräte in Ihrem lokalen Subnetz (bis zu 254 IPs) auf den ADB-Ports 5555, 5037 und 5038, um ADB-fähige Geräte zu finden.
 </item>
         <item>
-Wird für die Geräteerkennung im lokalen Netzwerk (NSD/mDNS) beim Koppeln von Geräten verwendet.
+Erforderlich auf Android 17 (API 37)+, um Geräte in Ihrem lokalen Netzwerk (LAN) für SMB, NFS, SFTP, FTP, WebDAV, DLNA-Casting, Gerätekopplung und Wireless ADB zu erkennen und eine Verbindung zu ihnen herzustellen.
 </item>
         <item>
-Erkennt VPN-Verbindungen während der Fernverwaltung und dem Zugriff auf Netzwerkfreigaben.
+Wird für die lokale Netzwerkgeräteerkennung (NSD/mDNS) beim Koppeln von Geräten verwendet.
 </item>
         <item>
-Ermöglicht dem App-Manager, alle auf Ihrem Gerät installierten Apps aufzulisten. Die abgerufenen Daten umfassen: App-Name, Paket-ID, Version, APK-Größe, Installations- und Aktualisierungszeitstempel sowie ob es sich um eine System- oder eine benutzerinstallierte App handelt. Diese Informationen werden ausschließlich auf dem Gerät verwendet, um den App-Manager anzuzeigen, den Speicher pro App zu berechnen und Paketnamen mit einer öffentlich verfügbaren Debloat-Referenzliste abzugleichen, die lokal heruntergeladen und zwischengespeichert wird. Es werden niemals Daten über installierte Anwendungen an KiloWatch-Server oder Dritte übertragen.
+Erkennt VPN-Verbindungen während der Fernverwaltung und beim Zugriff auf Netzwerkfreigaben.
 </item>
         <item>
-Erforderlich, um APK-Dateien zu installieren, die Sie vom lokalen Speicher aus ausführen möchten.
+Ermöglicht dem App Manager, alle auf Ihrem Gerät installierten Apps aufzulisten. Zu den Daten, auf die zugegriffen wird, gehören: App-Name, Paket-ID, Version, APK-Größe, Installations- und Aktualisierungszeitstempel und ob es sich bei jeder App um eine System- oder eine vom Benutzer installierte App handelt. Diese Informationen werden ausschließlich auf dem Gerät verwendet, um den App Manager anzuzeigen, den Speicher pro App zu berechnen und Paketnamen mit einer öffentlich verfügbaren Debloat-Referenzliste zu vergleichen, die heruntergeladen und lokal zwischengespeichert wird. Es werden niemals Daten installierter Anwendungen an KiloWatch-Server oder Dritte übertragen.
 </item>
         <item>
-Verarbeitet optionale Trinkgeldglas-Käufe über Google Play.
+Erforderlich, um APK-Dateien zu installieren, die Sie im lokalen Speicher ausführen möchten.
 </item>
         <item>
-Ermöglicht die sichere Verbindung zu Android-Geräten für erweiterten Shell-Zugriff. Erzeugt ein eindeutiges RSA-Zertifikat auf Ihrem Gerät zur Kopplung; es werden keine Zertifikate an externe Server übertragen.
+Verarbeitet optionale Tip Jar-Käufe über Google Play.
 </item>
         <item>
-Ermöglicht der App die Verwendung der Porter-/Shizuku-/Shevery-API (einschließlich Secure Settings) zur Verwaltung von Dateien in eingeschränkten Systemverzeichnissen ohne Root.
+Ermöglicht eine sichere Verbindung zu Android-Geräten für erweiterten Shell-Zugriff. Erzeugt ein eindeutiges RSA-Zertifikat auf Ihrem Gerät zum Koppeln; Es werden keine Zertifikate an externe Server übertragen.
 </item>
         <item>
-Ermöglicht, dass Shizuku- und Shevery-Dienste beim Hochfahren Ihres Geräts automatisch starten, um sofortige Verfügbarkeit zu gewährleisten.
+Ermöglicht der App die Verwendung der Porter-/Shizuku-/Shevery-API (einschließlich sicherer Einstellungen) zum Verwalten von Dateien in eingeschränkten Systemverzeichnissen ohne Rooting.
 </item>
         <item>
-Ermöglicht den Diensten Porter, Shizuku und Shevery, beim Start Ihres Geräts automatisch zu starten, um sofortige Verfügbarkeit zu gewährleisten.
+Wird dynamisch über Ihren Root-Manager (Magisk, KernelSU, APatch, SuperSU) angefordert, nur wenn Sie den Root-Zugriff in den Einstellungen auf Mobilgeräten explizit aktivieren. Wird ausschließlich für lokale Root-Dateioperationen verwendet.
 </item>
         <item>
-Ermöglicht es Ihnen, die Dienste Porter, Shizuku und Shevery im Hintergrund aktiv zu halten, um eine zuverlässige Leistung zu gewährleisten.
+Ermöglicht den automatischen Start der Porter-, Shizuku- und Shevery-Dienste beim Hochfahren Ihres Geräts, um sofortige Verfügbarkeit sicherzustellen.
 </item>
         <item>
-Hält CPU und WLAN während großer Dateiübertragungen aktiv, damit sie auch bei ausgeschaltetem Bildschirm zuverlässig abgeschlossen werden.
+Ermöglicht Ihnen die Aktivierung der Porter-, Shizuku- und Shevery-Dienste im Hintergrund für eine zuverlässige Leistung.
 </item>
         <item>
-Verwendet Speicherberechtigungen, um Dateimetadaten für die Leistung zu scannen und zu indizieren – verwaltet über Einstellungen -> Speicherindexierer.
+Erforderlich, um die Ordnersynchronisierung und Dateiübertragungen als Vordergrunddienst auszuführen, damit sie auch bei ausgeschaltetem Bildschirm zuverlässig ausgeführt werden.
 </item>
         <item>
-Verbindet sich mit Ihrem gekoppelten Android TV, um als Bluetooth-Tastatur und -Maus für die Fernbedienung zu fungieren.
+Hält die CPU und das WLAN während großer Dateiübertragungen aktiv, sodass diese auch bei ausgeschaltetem Bildschirm zuverlässig ausgeführt werden.
 </item>
         <item>
-Bietet haptisches Feedback beim Drücken von Tasten auf der TV-Fernbedienung.
+Verwendet Speicherberechtigungen, um Dateimetadaten aus Leistungsgründen zu scannen und zu indizieren – verwaltet über Einstellungen -&gt; Speicherindexer.
+</item>
+        <item>
+Verbindet sich mit Ihrem gekoppelten Android-Fernseher und fungiert als Bluetooth-Tastatur und -Maus für die Fernbedienung.
 </item>
         <item>
 Bietet haptisches Feedback beim Drücken von Tasten auf der TV-Fernbedienung.
@@ -1260,6 +1266,9 @@ Unter API 29 · Legacy-Dateiänderung auf älteren Geräten
 INTERNET
 </item>
         <item>
+ACCESS_LOCAL_NETWORK
+</item>
+        <item>
 ACCESS_WIFI_STATE
 </item>
         <item>
@@ -1274,13 +1283,16 @@ CHANGE_WIFI_MULTICAST_STATE
 Ermöglicht Fernverwaltung von Dateien, Hosten lokaler Dateiserver, Zugriff auf SMB/FTP/SFTP/SCP/NFS-Netzwerkfreigaben und Gerätekopplung
 </item>
         <item>
+Ermöglicht die Erkennung lokaler Netzwerkgeräte, LAN-Dateifreigabe (SMB/NFS/WebDAV/FTP/SFTP), DLNA-Medienstreaming und Wireless ADB auf Android 17+
+</item>
+        <item>
 Zeigt Ihre lokale IP-Adresse für den Fernzugriff an
 </item>
         <item>
-Erkennt aktiven Netzwerk- und VPN-Status für Fernverwaltung und Netzwerkfreigaben
+Erkennt den aktiven Netzwerk- und VPN-Status für Remote Management und Netzwerkfreigaben
 </item>
         <item>
-Ermöglicht lokale Netzwerkgeräteerkennung (NSD/mDNS) für Gerätekopplung
+Ermöglicht die Erkennung lokaler Netzwerkgeräte (NSD/mDNS) für die Gerätekopplung
 </item>
     </string-array>
 

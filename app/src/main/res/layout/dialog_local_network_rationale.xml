@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Local Network Protection Rationale Dialog — Mobile Frosted Glass
+    Strictly adheres to UFMStandard:
+    - Root background: @drawable/bg_dialog_glass (frosted glass)
+    - 56dp frosted squircle hero badge with network icon
+    - sans-serif-black 20sp title, 13sp subtitle
+    - Frosted message card (@color/mobile_glass_card, @color/mobile_glass_stroke)
+    - Vertically stacked buttons: Primary filled button on top, Secondary text button below
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/bg_btn_icon_frosted">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_cloud"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtLocalNetTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/local_network_rationale_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/txtLocalNetSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:text="@string/local_network_rationale_subtitle"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp" />
+
+    <!-- Frosted Message Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="20dp"
+        app:cardBackgroundColor="@color/mobile_glass_card"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/mobile_glass_stroke">
+
+        <TextView
+            android:id="@+id/txtLocalNetMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/local_network_rationale_message"
+            android:textColor="@color/mobile_card_text_secondary"
+            android:textSize="13.5sp"
+            android:lineSpacingExtra="3dp"
+            android:gravity="center" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Action Buttons — Vertically stacked -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLocalNetPrimary"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/local_network_btn_continue"
+            android:textColor="@color/white"
+            android:textSize="14.5sp"
+            android:fontFamily="sans-serif-bold"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp"
+            app:elevation="0dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLocalNetSecondary"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/local_network_btn_not_now"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -250,6 +250,32 @@ class NetworkBrowserFragment : Fragment() {
     var onInvalidShare: (() -> Unit)? = null
     var onDirectoryChanged: ((String) -> Unit)? = null
 
+    private val localNetworkPermissionLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            showLocalNetworkBanner(false)
+            loadDirectory()
+        } else {
+            showLocalNetworkBanner(true)
+            context?.let { android.widget.Toast.makeText(it, R.string.toast_local_network_permission_required, android.widget.Toast.LENGTH_SHORT).show() }
+        }
+    }
+
+    private fun showLocalNetworkBanner(visible: Boolean) {
+        val banner = view?.findViewById<View>(R.id.cardLocalNetBanner) ?: return
+        banner.visibility = if (visible) View.VISIBLE else View.GONE
+        view?.findViewById<View>(R.id.btnBannerGrant)?.setOnClickListener {
+            val act = activity ?: return@setOnClickListener
+            LocalNetworkPermissionManager.checkOrRequest(act, localNetworkPermissionLauncher, onGranted = {
+                showLocalNetworkBanner(false)
+                loadDirectory()
+            }, onDenied = {
+                showLocalNetworkBanner(true)
+            })
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shareId = arguments?.getString(ARG_SHARE_ID) ?: ""
@@ -1373,6 +1399,16 @@ class NetworkBrowserFragment : Fragment() {
     fun loadDirectory() {
         val isTv = context?.packageManager?.hasSystemFeature("android.software.leanback") == true
         val ctx = context ?: return
+
+        if (::share.isInitialized && !LocalNetworkPermissionManager.isLoopbackAddress(share.host)) {
+            val hasPerm = LocalNetworkPermissionManager.hasPermission(ctx)
+            showLocalNetworkBanner(!hasPerm)
+            if (!hasPerm) {
+                progressBar.visibility = View.GONE
+                layoutEmpty?.visibility = View.VISIBLE
+                return
+            }
+        }
 
         if (isTv && ::recyclerFiles.isInitialized) {
             val hadFocus = view?.hasFocus() == true || recyclerFiles.hasFocus()

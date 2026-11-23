@@ -329,6 +329,31 @@ class NetworkBrowserActivity : AppCompatActivity() {
             onBatchRenameCompleted(renamedMap)
         }
     }
+
+    private val localNetworkPermissionLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            showLocalNetworkBanner(false)
+            loadDirectory()
+        } else {
+            showLocalNetworkBanner(true)
+            Toast.makeText(this, R.string.toast_local_network_permission_required, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showLocalNetworkBanner(visible: Boolean) {
+        val banner = findViewById<View>(R.id.cardLocalNetBanner) ?: return
+        banner.visibility = if (visible) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.btnBannerGrant)?.setOnClickListener {
+            LocalNetworkPermissionManager.checkOrRequest(this, localNetworkPermissionLauncher, onGranted = {
+                showLocalNetworkBanner(false)
+                loadDirectory()
+            }, onDenied = {
+                showLocalNetworkBanner(true)
+            })
+        }
+    }
     
     // Sort & filter state
     private var sortMode = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME
@@ -735,7 +760,18 @@ class NetworkBrowserActivity : AppCompatActivity() {
             }
         }
         
-        loadDirectory()
+        if (::share.isInitialized && !LocalNetworkPermissionManager.isLoopbackAddress(share.host) && !LocalNetworkPermissionManager.hasPermission(this)) {
+            LocalNetworkPermissionManager.checkOrRequest(this, localNetworkPermissionLauncher, onGranted = {
+                showLocalNetworkBanner(false)
+                loadDirectory()
+            }, onDenied = {
+                showLocalNetworkBanner(true)
+                progressBar.visibility = View.GONE
+                layoutEmpty.visibility = View.VISIBLE
+            })
+        } else {
+            loadDirectory()
+        }
     }
 
     private val updateReceiver = object : BroadcastReceiver() {
@@ -3444,6 +3480,17 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private fun loadDirectory() {
         if (isTransferring) return   // Don't refresh while a copy/move is in progress
         Log.d("NetBrowser", "loadDirectory: share=${share.name} type=${share.type} currentPath='$currentPath'")
+
+        if (::share.isInitialized && !LocalNetworkPermissionManager.isLoopbackAddress(share.host)) {
+            if (!LocalNetworkPermissionManager.hasPermission(this)) {
+                showLocalNetworkBanner(true)
+                progressBar.visibility = View.GONE
+                layoutEmpty.visibility = View.VISIBLE
+                return
+            } else {
+                showLocalNetworkBanner(false)
+            }
+        }
 
         // Load folder-specific sort settings (or fall back to global) on IO thread
         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {

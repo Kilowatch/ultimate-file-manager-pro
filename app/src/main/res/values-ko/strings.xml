@@ -17583,6 +17583,50 @@ Android 보안 제한으로 인해 앱은 홈 화면에서 아이콘을 직접 �
     <string name="file">
 파일
 </string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">
+로컬 네트워크 액세스 허용
+</string>
+    <string name="local_network_rationale_subtitle">
+로컬 장치 검색 및 전송에 필요
+</string>
+    <string name="local_network_rationale_message">
+Ultimate File Manager Pro는 로컬 네트워크를 독점적으로 사용하여 홈 네트워크에서 선택한 장치(예: SMB 및 NFS 공유, DLNA TV 및 무선 ADB 디버깅)를 검색하고 연결합니다. 로컬 네트워크 데이터는 외부로 전송되지 않습니다.
+</string>
+    <string name="local_network_btn_continue">
+계속하다
+</string>
+    <string name="local_network_btn_settings">
+설정 열기
+</string>
+    <string name="local_network_btn_not_now">
+지금은 아님
+</string>
+    <string name="local_network_banner_text">
+로컬 공유, DLNA 장치 및 무선 ADB를 탐색하고 검색하려면 로컬 네트워크 액세스가 필요합니다.
+</string>
+    <string name="local_network_banner_grant">
+액세스 권한 부여
+</string>
+    <string name="settings_local_network_title">
+로컬 네트워크 액세스
+</string>
+    <string name="settings_local_network_subtitle">
+Android 17 로컬 네트워크 보호 권한 관리
+</string>
+    <string name="settings_local_network_status_granted">
+허가가 부여되었습니다
+</string>
+    <string name="settings_local_network_status_denied">
+권한 필요
+</string>
+    <string name="settings_local_network_btn_manage">
+관리하다
+</string>
+    <string name="toast_local_network_permission_required">
+이 작업에는 로컬 네트워크 권한이 필요합니다
+</string>
 </resources>
 
 

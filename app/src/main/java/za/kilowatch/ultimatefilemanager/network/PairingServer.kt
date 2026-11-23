@@ -93,6 +93,10 @@ class PairingServer(
      * Regeneration: destroying app data clears the key; a new one is generated on next start.
      */
     fun startSecure() {
+        if (!LocalNetworkPermissionManager.hasPermission(context)) {
+            Log.w("PairingServer", "Local network permission not granted, skipping startSecure")
+            return
+        }
         try {
             val aks = KeyStore.getInstance("AndroidKeyStore").also { it.load(null) }
             val alias = "ufm_pairing_ecdsa_v3"
@@ -459,6 +463,10 @@ class PairingServer(
     // Listens for DISCOVER and RESOLVE packets
     private fun startUdpListener() {
         if (isListeningUdp) return
+        if (!LocalNetworkPermissionManager.hasPermission(context)) {
+            Log.w("PairingServer", "Local network permission not granted, skipping UDP listener")
+            return
+        }
         isListeningUdp = true
 
         GlobalScope.launch(Dispatchers.IO) {

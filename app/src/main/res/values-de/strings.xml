@@ -17569,6 +17569,50 @@ Lokal
     <string name="file">
 Datei
 </string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">
+Lokalen Netzwerkzugriff zulassen
+</string>
+    <string name="local_network_rationale_subtitle">
+Erforderlich für die lokale Geräteerkennung und -übertragung
+</string>
+    <string name="local_network_rationale_message">
+Ultimate File Manager Pro verwendet Ihr lokales Netzwerk ausschließlich zum Erkennen und Herstellen einer Verbindung zu Geräten, die Sie in Ihrem Heimnetzwerk auswählen (z. B. SMB- und NFS-Freigaben, DLNA-Fernseher und Wireless ADB-Debugging). Es werden keine lokalen Netzwerkdaten nach außen übertragen.
+</string>
+    <string name="local_network_btn_continue">
+Weitermachen
+</string>
+    <string name="local_network_btn_settings">
+Öffnen Sie Einstellungen
+</string>
+    <string name="local_network_btn_not_now">
+Nicht jetzt
+</string>
+    <string name="local_network_banner_text">
+Zum Durchsuchen und Erkennen lokaler Freigaben, DLNA-Geräte und Wireless ADB ist ein lokaler Netzwerkzugriff erforderlich.
+</string>
+    <string name="local_network_banner_grant">
+Zugriff gewähren
+</string>
+    <string name="settings_local_network_title">
+Lokaler Netzwerkzugriff
+</string>
+    <string name="settings_local_network_subtitle">
+Verwalten Sie die Berechtigung zum lokalen Netzwerkschutz für Android 17
+</string>
+    <string name="settings_local_network_status_granted">
+Erlaubnis erteilt
+</string>
+    <string name="settings_local_network_status_denied">
+Erlaubnis erforderlich
+</string>
+    <string name="settings_local_network_btn_manage">
+Verwalten
+</string>
+    <string name="toast_local_network_permission_required">
+Für diesen Vorgang ist eine lokale Netzwerkberechtigung erforderlich
+</string>
 </resources>
 
 

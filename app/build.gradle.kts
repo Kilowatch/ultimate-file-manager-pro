@@ -120,18 +120,12 @@ val effectiveAppVersionName = if (simulateOldVersion) {
 
 android {
     namespace = "za.kilowatch.ultimatefilemanager"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "za.kilowatch.ultimatefilemanager"
         minSdk = 26
-        targetSdk {
-            version = release(36)
-        }
+        targetSdk = 37
         // versionCode / versionName are set per device flavor below
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

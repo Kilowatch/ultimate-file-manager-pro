@@ -35,12 +35,23 @@ import za.kilowatch.ultimatefilemanager.storage.ViewModeManager.ViewMode
 import za.kilowatch.ultimatefilemanager.storage.FloatingBarManager
 import za.kilowatch.ultimatefilemanager.viewer.subtitles.SubtitleStyleDialog
 import za.kilowatch.ultimatefilemanager.storage.QuickAccessManager
+import androidx.activity.result.contract.ActivityResultContracts
+import za.kilowatch.ultimatefilemanager.network.LocalNetworkPermissionManager
 
 /**
  * Settings hub screen.
  * Shows Font Size and Analytics toggle.
  */
 class SettingsActivity : AppCompatActivity() {
+
+    private val localNetworkPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { _ ->
+        updateLocalNetworkPermissionStatus()
+    }
+    private var cardLocalNetworkPermission: View? = null
+    private var txtLocalNetworkPermissionSubtitle: TextView? = null
+    private var btnLocalNetworkPermissionAction: MaterialButton? = null
 
     private var isTv = false
     // Persisted through recreate() to prevent looping when restartPending is still true.
@@ -524,6 +535,25 @@ class SettingsActivity : AppCompatActivity() {
         txtNetworkTransferThreadsSubtitle = findViewById(R.id.txtNetworkTransferThreadsSubtitle)
         updateNetworkTransferThreadsSubtitle(NetworkTransferPreferenceManager.getThreadCount(this))
         cardNetworkTransferThreads.setOnClickListener { showNetworkTransferThreadsDialog() }
+
+        // Local Network Protection (Android 17+)
+        cardLocalNetworkPermission = findViewById(R.id.cardLocalNetworkPermission)
+        txtLocalNetworkPermissionSubtitle = findViewById(R.id.txtLocalNetworkPermissionSubtitle)
+        btnLocalNetworkPermissionAction = findViewById(R.id.btnLocalNetworkPermissionAction)
+        val onLocalNetClick = View.OnClickListener {
+            if (LocalNetworkPermissionManager.hasPermission(this)) {
+                LocalNetworkPermissionManager.openAppPermissionSettings(this)
+            } else {
+                LocalNetworkPermissionManager.checkOrRequest(this, localNetworkPermissionLauncher, onGranted = {
+                    updateLocalNetworkPermissionStatus()
+                }, onDenied = {
+                    updateLocalNetworkPermissionStatus()
+                })
+            }
+        }
+        cardLocalNetworkPermission?.setOnClickListener(onLocalNetClick)
+        btnLocalNetworkPermissionAction?.setOnClickListener(onLocalNetClick)
+        updateLocalNetworkPermissionStatus()
 
         // Background TV Server toggle (TV only)
         val cardTvBackgroundServer = findViewById<View>(R.id.cardTvBackgroundServer)
@@ -1221,6 +1251,7 @@ class SettingsActivity : AppCompatActivity() {
             switchNetworkMediaProcessCache.isChecked = enabled
             updateNetworkMediaProcessCacheSubtitle(enabled)
         }
+        updateLocalNetworkPermissionStatus()
 
         // Refresh TV background server subtitle
         switchTvBackgroundServer?.let { sw ->
@@ -2094,6 +2125,27 @@ class SettingsActivity : AppCompatActivity() {
             getString(R.string.settings_network_media_process_subtitle_on)
         } else {
             getString(R.string.settings_network_media_process_subtitle_off)
+        }
+    }
+
+    private fun updateLocalNetworkPermissionStatus() {
+        val isEnforced = LocalNetworkPermissionManager.isEnforced()
+        if (!isEnforced) {
+            txtLocalNetworkPermissionSubtitle?.setText(R.string.settings_local_network_status_granted)
+            btnLocalNetworkPermissionAction?.visibility = View.GONE
+            return
+        }
+        val hasPerm = LocalNetworkPermissionManager.hasPermission(this)
+        if (hasPerm) {
+            txtLocalNetworkPermissionSubtitle?.setText(R.string.settings_local_network_status_granted)
+            txtLocalNetworkPermissionSubtitle?.setTextColor(getColor(R.color.ufm_granted))
+            btnLocalNetworkPermissionAction?.setText(R.string.settings_local_network_btn_manage)
+            btnLocalNetworkPermissionAction?.visibility = View.VISIBLE
+        } else {
+            txtLocalNetworkPermissionSubtitle?.setText(R.string.settings_local_network_status_denied)
+            txtLocalNetworkPermissionSubtitle?.setTextColor(getColor(R.color.vpn_warning_amber))
+            btnLocalNetworkPermissionAction?.setText(R.string.local_network_banner_grant)
+            btnLocalNetworkPermissionAction?.visibility = View.VISIBLE
         }
     }
 

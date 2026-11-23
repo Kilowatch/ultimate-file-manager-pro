@@ -17583,6 +17583,50 @@ Yerel
     <string name="file">
 Dosya
 </string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">
+Yerel Ağ Erişimine İzin Ver
+</string>
+    <string name="local_network_rationale_subtitle">
+Yerel Cihaz Keşfi ve Aktarımı için Gerekli
+</string>
+    <string name="local_network_rationale_message">
+Ultimate File Manager Pro, ev ağınızda seçtiğiniz cihazları (SMB ve NFS paylaşımları, DLNA TV\'ler ve Kablosuz ADB hata ayıklama gibi) keşfetmek ve bunlara bağlanmak için özel olarak yerel ağınızı kullanır. Hiçbir yerel ağ verisi harici olarak iletilmez.
+</string>
+    <string name="local_network_btn_continue">
+Devam etmek
+</string>
+    <string name="local_network_btn_settings">
+Ayarları Aç
+</string>
+    <string name="local_network_btn_not_now">
+Şimdi değil
+</string>
+    <string name="local_network_banner_text">
+Yerel paylaşımlara, DLNA cihazlarına ve Kablosuz ADB\'ye göz atmak ve bunları keşfetmek için yerel ağ erişimi gereklidir.
+</string>
+    <string name="local_network_banner_grant">
+Erişim Ver
+</string>
+    <string name="settings_local_network_title">
+Yerel Ağ Erişimi
+</string>
+    <string name="settings_local_network_subtitle">
+Android 17 yerel ağ koruma iznini yönetin
+</string>
+    <string name="settings_local_network_status_granted">
+İzin Verildi
+</string>
+    <string name="settings_local_network_status_denied">
+İzin Gerekli
+</string>
+    <string name="settings_local_network_btn_manage">
+Üstesinden gelmek
+</string>
+    <string name="toast_local_network_permission_required">
+Bu işlem için yerel ağ izni gerekiyor
+</string>
 </resources>
 
 

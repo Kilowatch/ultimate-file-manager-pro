@@ -431,6 +431,16 @@
         </LinearLayout>
     </HorizontalScrollView>
 
+    <!-- Local Network Permission Recovery Banner -->
+    <include
+        android:id="@+id/bannerLocalNetworkPermission"
+        layout="@layout/item_banner_local_network_permission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/barrier_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- File List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerFiles"
@@ -438,7 +448,7 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingVertical="@dimen/margin_xs"
-        app:layout_constraintTop_toBottomOf="@id/barrier_header"
+        app:layout_constraintTop_toBottomOf="@id/bannerLocalNetworkPermission"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

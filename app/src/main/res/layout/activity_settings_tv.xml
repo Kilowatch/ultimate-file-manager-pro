@@ -3152,6 +3152,76 @@
                                 android:clickable="false"
                                 android:focusable="false" />
                         </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/tv_glass_border" />
+
+                        <!-- Local Network Permission -->
+                        <LinearLayout
+                            android:id="@+id/cardLocalNetworkPermission"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="@dimen/margin_xl"
+                            android:paddingVertical="@dimen/margin_md"
+                            android:background="@drawable/bg_tv_card_selector"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false">
+
+                            <FrameLayout
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="@drawable/bg_btn_icon_frosted"
+                                android:layout_marginEnd="@dimen/margin_lg">
+
+                                <ImageView
+                                    android:layout_width="26dp"
+                                    android:layout_height="26dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_cloud"
+                                    app:tint="@color/ufm_primary"
+                                    android:contentDescription="@string/settings_local_network_title" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_local_network_title"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="16sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtLocalNetworkPermissionSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_local_network_subtitle"
+                                    android:textColor="@color/tv_text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnLocalNetworkPermissionAction"
+                                android:layout_width="wrap_content"
+                                android:layout_height="38dp"
+                                android:text="@string/settings_local_network_btn_manage"
+                                android:background="@drawable/selector_tv_button_yellow"
+                                app:backgroundTint="@null"
+                                android:textColor="@color/tv_button_focused_yellow_text"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-bold"
+                                android:focusable="false" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>

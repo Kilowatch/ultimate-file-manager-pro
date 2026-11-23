@@ -416,13 +416,16 @@ Notificaciones
 Red / Wi-Fi
 </item>
         <item>
+Acceso a la red local (Android 17+)
+</item>
+        <item>
 Multidifusión
 </item>
         <item>
 Estado de la red
 </item>
         <item>
-Consulta de paquetes
+Consulta de paquete
 </item>
         <item>
 Instalar paquetes
@@ -437,22 +440,22 @@ Puente de depuración ADB
 Acceso elevado (Porter, Shizuku y Shevery)
 </item>
         <item>
-Inicio al arrancar
+Acceso raíz/superusuario
 </item>
         <item>
-Optimización de batería
+Inicio de arranque
 </item>
         <item>
-Servicio en primer plano
+Optimización de la batería
+</item>
+        <item>
+Servicio de primer plano
 </item>
         <item>
 Bloqueo de activación
 </item>
         <item>
 Indexador de almacenamiento
-</item>
-        <item>
-Bluetooth
 </item>
         <item>
 Vibrar
@@ -475,46 +478,49 @@ Se usa para alertarte cuando se completan operaciones de archivos o cuando el al
 Potencia la gestión remota de archivos, el acceso a recursos compartidos de red (SMB/FTP/SFTP/SCP/NFS), la sincronización de carpetas, el emparejamiento de dispositivos y el acceso al terminal ADB en tu red local. El descubrimiento de red escanea dispositivos en tu subred local (hasta 254 IPs) en los puertos ADB 5555, 5037 y 5038 para encontrar dispositivos con ADB habilitado.
 </item>
         <item>
-Se usa para el descubrimiento de dispositivos en la red local (NSD/mDNS) al emparejar dispositivos.
+Requerido en Android 17 (API 37)+ para descubrir y conectarse a dispositivos en su red local (LAN) para SMB, NFS, SFTP, FTP, WebDAV, transmisión DLNA, emparejamiento de dispositivos y ADB inalámbrico.
 </item>
         <item>
-Detecta conexiones VPN durante la gestión remota y el acceso a recursos compartidos de red.
+Se utiliza para el descubrimiento de dispositivos de red local (NSD/mDNS) al emparejar dispositivos.
 </item>
         <item>
-Permite al Administrador de aplicaciones enumerar todas las aplicaciones instaladas en tu dispositivo. Los datos a los que se accede incluyen: nombre de la aplicación, ID del paquete, versión, tamaño del APK, marcas de tiempo de instalación y actualización, y si cada aplicación es del sistema o instalada por el usuario. Esta información se utiliza exclusivamente en el dispositivo para mostrar el Administrador de aplicaciones, calcular el almacenamiento por aplicación y cotejar los nombres de los paquetes con una lista de referencia de desbloqueo disponible públicamente que se descarga y almacena en caché localmente. Ningún dato de aplicación instalada se transmite nunca a los servidores de KiloWatch ni a terceros.
+Detecta conexiones VPN durante la administración remota y el acceso a recursos compartidos de red.
 </item>
         <item>
-Necesario para instalar archivos APK que elijas ejecutar desde el almacenamiento local.
+Permite que el Administrador de aplicaciones enumere todas las aplicaciones instaladas en su dispositivo. Los datos a los que se accede incluyen: nombre de la aplicación, ID del paquete, versión, tamaño del APK, marcas de tiempo de instalación y actualización, y si cada aplicación es un sistema o una aplicación instalada por el usuario. Esta información se utiliza exclusivamente en el dispositivo para mostrar el Administrador de aplicaciones, calcular el almacenamiento por aplicación y comparar los nombres de los paquetes con una lista de referencia de debloat disponible públicamente que se descarga y almacena en caché localmente. Ningún dato de la aplicación instalada se transmite nunca a los servidores de KiloWatch ni a ningún tercero.
 </item>
         <item>
-Procesa compras opcionales del bote de propinas a través de Google Play.
+Requerido para instalar archivos APK que elija ejecutar desde el almacenamiento local.
 </item>
         <item>
-Permite la conexión segura a dispositivos Android para acceso avanzado a la shell. Genera un certificado RSA único en tu dispositivo para el emparejamiento; no se transmiten certificados a servidores externos.
+Procesa compras opcionales de Tip Jar a través de Google Play.
 </item>
         <item>
-Permite que la app use la API de Porter / Shizuku / Shevery (incluidos los ajustes seguros) para gestionar archivos en directorios restringidos del sistema sin rootear.
+Permite una conexión segura a dispositivos Android para acceso avanzado al shell. Genera un certificado RSA único en su dispositivo para el emparejamiento; no se transmiten certificados a servidores externos.
 </item>
         <item>
-Permite que los servicios de Shizuku y Shevery se inicien automáticamente al arrancar tu dispositivo para garantizar su disponibilidad inmediata.
+Permite que la aplicación utilice la API Porter/Shizuku/Shevery (incluida la configuración segura) para administrar archivos en directorios restringidos del sistema sin rootear.
 </item>
         <item>
-Permite que los servicios de Porter, Shizuku y Shevery se inicien automáticamente cuando el dispositivo arranque para garantizar su disponibilidad inmediata.
+Solicitado dinámicamente a través de su administrador raíz (Magisk, KernelSU, APatch, SuperSU) solo cuando habilita explícitamente el acceso raíz en Configuración en dispositivos móviles. Se utiliza estrictamente para operaciones de archivos raíz locales.
 </item>
         <item>
-Permite optar por mantener los servicios de Porter, Shizuku y Shevery activos en segundo plano para un rendimiento fiable.
+Permite que los servicios Porter, Shizuku y Shevery se inicien automáticamente cuando su dispositivo se inicia para garantizar una disponibilidad inmediata.
 </item>
         <item>
-Mantiene la CPU y el Wi-Fi activos durante transferencias de archivos grandes para que se completen de manera fiable incluso cuando la pantalla se apaga.
+Le permite optar por mantener activos los servicios de Porter, Shizuku y Shevery en segundo plano para un rendimiento confiable.
 </item>
         <item>
-Usa permisos de almacenamiento para escanear e indexar metadatos de archivos para mejorar el rendimiento; se administra a través de Ajustes -> Indexador de almacenamiento.
+Necesario para ejecutar Folder Sync y transferencias de archivos como servicio en primer plano para que se completen de manera confiable incluso cuando la pantalla está apagada.
 </item>
         <item>
-Se conecta a tu Android TV emparejado para actuar como un teclado y ratón Bluetooth para control remoto.
+Mantiene la CPU y Wi-Fi activos durante transferencias de archivos grandes para que se completen de manera confiable incluso cuando la pantalla se apaga.
 </item>
         <item>
-Proporciona retroalimentación háptica al presionar botones en el control remoto de TV.
+Utiliza permisos de almacenamiento para escanear e indexar metadatos de archivos para mejorar el rendimiento; se administra a través de Configuración -&gt; Indexador de almacenamiento.
+</item>
+        <item>
+Se conecta a su Android TV emparejado para actuar como un teclado y un mouse Bluetooth para control remoto.
 </item>
         <item>
 Proporciona retroalimentación háptica al presionar botones en el control remoto del televisor.
@@ -1264,6 +1270,9 @@ Por debajo de API 29 · Modificación de archivos heredada en dispositivos antig
 INTERNET
 </item>
         <item>
+ACCESO_LOCAL_NETWORK
+</item>
+        <item>
 ACCESO_WIFI_ESTADO
 </item>
         <item>
@@ -1278,13 +1287,16 @@ CAMBIAR_WIFI_MULTICAST_STATE
 Permite la gestión remota de archivos, alojar servidores de archivos locales, acceso a recursos compartidos en red SMB/FTP/SFTP/SCP/NFS y emparejamiento de dispositivos
 </item>
         <item>
-Muestra tu dirección IP local para acceso remoto
+Permite el descubrimiento de dispositivos de red local, el intercambio de archivos LAN (SMB/NFS/WebDAV/FTP/SFTP), la transmisión de medios DLNA y ADB inalámbrico en Android 17+
 </item>
         <item>
-Detecta el estado de la red activa y de la VPN para la gestión remota y los recursos compartidos en red
+Muestra su dirección IP local para acceso remoto
 </item>
         <item>
-Permite el descubrimiento de dispositivos en la red local (NSD/mDNS) para emparejamiento
+Detecta la red activa y el estado de VPN para administración remota y recursos compartidos de red.
+</item>
+        <item>
+Permite el descubrimiento de dispositivos de red local (NSD/mDNS) para el emparejamiento de dispositivos
 </item>
     </string-array>
 

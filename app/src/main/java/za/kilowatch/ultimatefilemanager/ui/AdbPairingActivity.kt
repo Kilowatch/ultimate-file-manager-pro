@@ -27,8 +27,18 @@ import za.kilowatch.ultimatefilemanager.network.AdbManager
 import za.kilowatch.ultimatefilemanager.settings.AdbPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
+import za.kilowatch.ultimatefilemanager.network.LocalNetworkPermissionManager
 
 class AdbPairingActivity : AppCompatActivity() {
+
+    private val localNetworkPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (!isGranted) {
+            Toast.makeText(this, R.string.toast_local_network_permission_required, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     private lateinit var adbManager: AdbManager
     private var currentConnectionJob: kotlinx.coroutines.Job? = null
@@ -107,55 +117,59 @@ class AdbPairingActivity : AppCompatActivity() {
         }
 
         btnScan.setOnClickListener {
-            btnScan.isEnabled = false
-            scanProgressContainer.visibility = View.VISIBLE
-            scanProgressText.setText(R.string.scanning_0254_ips_scanned)
-            devicesDetectedText.setText(R.string.devices_detected_0)
+            LocalNetworkPermissionManager.checkOrRequest(this, localNetworkPermissionLauncher, onGranted = {
+                btnScan.isEnabled = false
+                scanProgressContainer.visibility = View.VISIBLE
+                scanProgressText.setText(R.string.scanning_0254_ips_scanned)
+                devicesDetectedText.setText(R.string.devices_detected_0)
 
-            lifecycleScope.launch {
-                try {
-                    discoveredDevices.clear()
-                    val devices = discovery.scanNetwork(5000) { scanned, total, devicesFound ->
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            scanProgressText.text = getString(R.string.scanning_scannedtotal_ips_scanned, scanned, total)
-                            val deviceWord = if (devicesFound == 1) "device" else "devices"
-                            devicesDetectedText.text = getString(R.string.devices_detected_devicesfound_deviceword, devicesFound, deviceWord)
-                        }
-                    }
-
-                    withContext(Dispatchers.Main) {
-                        if (devices.isNotEmpty()) {
-                            discoveredDevices.addAll(devices)
-                            val displayNames = devices.map { "${it.host}:${it.port}" }
-                            deviceAdapter.clear()
-                            deviceAdapter.addAll(displayNames)
-                            deviceAdapter.notifyDataSetChanged()
-                            
-                            // Auto-select first device
-                            if (spinnerDevices.selectedItemPosition != 0) {
-                                spinnerDevices.setSelection(0)
-                            } else {
-                                spinnerDevices.onItemSelectedListener?.onItemSelected(spinnerDevices, null, 0, 0)
+                lifecycleScope.launch {
+                    try {
+                        discoveredDevices.clear()
+                        val devices = discovery.scanNetwork(5000) { scanned, total, devicesFound ->
+                            lifecycleScope.launch(Dispatchers.Main) {
+                                scanProgressText.text = getString(R.string.scanning_scannedtotal_ips_scanned, scanned, total)
+                                val deviceWord = if (devicesFound == 1) "device" else "devices"
+                                devicesDetectedText.text = getString(R.string.devices_detected_devicesfound_deviceword, devicesFound, deviceWord)
                             }
-                        } else {
-                            deviceAdapter.clear()
-                            deviceAdapter.add(getString(R.string.no_devices_found))
-                            deviceAdapter.notifyDataSetChanged()
-                            Toast.makeText(this@AdbPairingActivity, R.string.no_adb_devices_found, Toast.LENGTH_SHORT).show()
                         }
 
-                        btnScan.visibility = View.GONE
-                        scanProgressContainer.visibility = View.GONE
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@AdbPairingActivity, R.string.scan_failed_emessage, Toast.LENGTH_SHORT).show()
-                        btnScan.isEnabled = true
-                        btnScan.text = resources.getString(R.string.adb_scan_devices)
-                        scanProgressContainer.visibility = View.GONE
+                        withContext(Dispatchers.Main) {
+                            if (devices.isNotEmpty()) {
+                                discoveredDevices.addAll(devices)
+                                val displayNames = devices.map { "${it.host}:${it.port}" }
+                                deviceAdapter.clear()
+                                deviceAdapter.addAll(displayNames)
+                                deviceAdapter.notifyDataSetChanged()
+                                
+                                // Auto-select first device
+                                if (spinnerDevices.selectedItemPosition != 0) {
+                                    spinnerDevices.setSelection(0)
+                                } else {
+                                    spinnerDevices.onItemSelectedListener?.onItemSelected(spinnerDevices, null, 0, 0)
+                                }
+                            } else {
+                                deviceAdapter.clear()
+                                deviceAdapter.add(getString(R.string.no_devices_found))
+                                deviceAdapter.notifyDataSetChanged()
+                                Toast.makeText(this@AdbPairingActivity, R.string.no_adb_devices_found, Toast.LENGTH_SHORT).show()
+                            }
+
+                            btnScan.visibility = View.GONE
+                            scanProgressContainer.visibility = View.GONE
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@AdbPairingActivity, R.string.scan_failed_emessage, Toast.LENGTH_SHORT).show()
+                            btnScan.isEnabled = true
+                            btnScan.text = resources.getString(R.string.adb_scan_devices)
+                            scanProgressContainer.visibility = View.GONE
+                        }
                     }
                 }
-            }
+            }, onDenied = {
+                Toast.makeText(this, R.string.toast_local_network_permission_required, Toast.LENGTH_SHORT).show()
+            })
         }
 
         btnConnectNoPIN.setOnClickListener {
@@ -163,6 +177,14 @@ class AdbPairingActivity : AppCompatActivity() {
             val port = editPort.text.toString().toIntOrNull() ?: AdbPreferenceManager.DEFAULT_PORT
             if (!AdbPreferenceManager.isValidHost(host) || !AdbPreferenceManager.isValidPort(port)) {
                 Toast.makeText(this, R.string.invalid_ip_or_port, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (!LocalNetworkPermissionManager.isLoopbackAddress(host) && !LocalNetworkPermissionManager.hasPermission(this)) {
+                LocalNetworkPermissionManager.checkOrRequest(this, localNetworkPermissionLauncher, onGranted = {
+                    attemptConnection(host, port, "", txtAdbStatus, txtHeaderStatus, btnConnectNoPIN, btnConnectWithPin)
+                }, onDenied = {
+                    Toast.makeText(this, R.string.toast_local_network_permission_required, Toast.LENGTH_SHORT).show()
+                })
                 return@setOnClickListener
             }
             attemptConnection(host, port, "", txtAdbStatus, txtHeaderStatus, btnConnectNoPIN, btnConnectWithPin)
@@ -176,11 +198,19 @@ class AdbPairingActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             val pin = pins.joinToString("") { it.text.toString() }
-            if (pin.length == 6) {
-                attemptConnection(host, port, pin, txtAdbStatus, txtHeaderStatus, btnConnectNoPIN, btnConnectWithPin)
-            } else {
+            if (pin.length != 6) {
                 Toast.makeText(this, R.string.please_enter_a_6digit_pin, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+            if (!LocalNetworkPermissionManager.isLoopbackAddress(host) && !LocalNetworkPermissionManager.hasPermission(this)) {
+                LocalNetworkPermissionManager.checkOrRequest(this, localNetworkPermissionLauncher, onGranted = {
+                    attemptConnection(host, port, pin, txtAdbStatus, txtHeaderStatus, btnConnectNoPIN, btnConnectWithPin)
+                }, onDenied = {
+                    Toast.makeText(this, R.string.toast_local_network_permission_required, Toast.LENGTH_SHORT).show()
+                })
+                return@setOnClickListener
+            }
+            attemptConnection(host, port, pin, txtAdbStatus, txtHeaderStatus, btnConnectNoPIN, btnConnectWithPin)
         }
 
         // PIN auto-focus

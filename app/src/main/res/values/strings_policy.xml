@@ -169,6 +169,7 @@
         <item>Media Access</item>
         <item>Notifications</item>
         <item>Network / Wi-Fi</item>
+        <item>Local Network Access (Android 17+)</item>
         <item>Multicast</item>
         <item>Network State</item>
         <item>Package Query</item>
@@ -190,6 +191,7 @@
         <item>Needed to organise and manage your photos, videos, and audio files.</item>
         <item>Used to alert you when file operations complete or when storage is running low.</item>
         <item>Powers remote file management, network share access (SMB/FTP/SFTP/SCP/NFS), folder sync, device pairing, and ADB terminal access on your local network. Network discovery scans devices on your local subnet (up to 254 IPs) on ADB ports 5555, 5037, and 5038 to find ADB-enabled devices.</item>
+        <item>Required on Android 17 (API 37)+ to discover and connect to devices on your local network (LAN) for SMB, NFS, SFTP, FTP, WebDAV, DLNA casting, device pairing, and Wireless ADB.</item>
         <item>Used for local network device discovery (NSD/mDNS) when pairing devices.</item>
         <item>Detects VPN connections during Remote Management and network share access.</item>
         <item>Lets the App Manager enumerate all apps installed on your device. Data accessed includes: app name, package ID, version, APK size, install and update timestamps, and whether each app is a system or user-installed app. This information is used exclusively on-device to display the App Manager, calculate per-app storage, and cross-reference package names against a publicly available debloat reference list that is downloaded and cached locally. No installed application data is ever transmitted to KiloWatch servers or any third party.</item>
@@ -505,12 +507,14 @@
     <!-- Network permissions (Section 4) -->
     <string-array name="pp_network_perm_labels">
         <item>INTERNET</item>
+        <item>ACCESS_LOCAL_NETWORK</item>
         <item>ACCESS_WIFI_STATE</item>
         <item>ACCESS_NETWORK_STATE</item>
         <item>CHANGE_WIFI_MULTICAST_STATE</item>
     </string-array>
     <string-array name="pp_network_perm_details">
         <item>Enables remote file management, hosting local File Servers, SMB/FTP/SFTP/SCP/NFS network share access, and device pairing</item>
+        <item>Enables local network device discovery, LAN file sharing (SMB/NFS/WebDAV/FTP/SFTP), DLNA media streaming, and Wireless ADB on Android 17+</item>
         <item>Displays your local IP address for remote access</item>
         <item>Detects active network and VPN status for Remote Management and network shares</item>
         <item>Enables local network device discovery (NSD/mDNS) for device pairing</item>

@@ -561,6 +561,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Local Network Permission Recovery Banner -->
+    <include
+        android:id="@+id/bannerLocalNetworkPermission"
+        layout="@layout/item_banner_local_network_permission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/layoutSelectionBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- File List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerFiles"
@@ -571,7 +581,7 @@
         android:paddingVertical="@dimen/margin_sm"
         android:paddingBottom="120dp"
         android:nextFocusDown="@id/btnPillCopy"
-        app:layout_constraintTop_toBottomOf="@id/layoutSelectionBar"
+        app:layout_constraintTop_toBottomOf="@id/bannerLocalNetworkPermission"
         app:layout_constraintBottom_toTopOf="@id/layoutTvClipboardPanel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

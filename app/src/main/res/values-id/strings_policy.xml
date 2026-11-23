@@ -416,13 +416,16 @@ Notifikasi
 Jaringan / Wi-Fi
 </item>
         <item>
+Akses Jaringan Lokal (Android 17+)
+</item>
+        <item>
 Multicast
 </item>
         <item>
 Status Jaringan
 </item>
         <item>
-Kueri Paket
+Permintaan Paket
 </item>
         <item>
 Instal Paket
@@ -434,10 +437,13 @@ Penagihan
 Jembatan Debug ADB
 </item>
         <item>
-Akses yang Ditingkatkan (Porter, Shizuku &amp; Shevery)
+Akses Tinggi (Porter, Shizuku &amp; Shevery)
 </item>
         <item>
-Mulai Saat Boot
+Akses Root / Pengguna Super
+</item>
+        <item>
+Mulai Booting
 </item>
         <item>
 Optimasi Baterai
@@ -446,16 +452,13 @@ Optimasi Baterai
 Layanan Latar Depan
 </item>
         <item>
-Wake Lock
+Kunci Bangun
 </item>
         <item>
 Pengindeks Penyimpanan
 </item>
         <item>
-Bluetooth
-</item>
-        <item>
-Getar
+Bergetar
 </item>
         <item>
 Bergetar
@@ -475,46 +478,49 @@ Digunakan untuk memberi tahu Anda saat operasi berkas selesai atau saat penyimpa
 Mendukung manajemen berkas jarak jauh, akses berbagi jaringan (SMB/FTP/SFTP/SCP/NFS), sinkronisasi folder, pemasangan perangkat, dan akses terminal ADB di jaringan lokal Anda. Penemuan jaringan memindai perangkat di subnet lokal Anda (hingga 254 IP) pada port ADB 5555, 5037, dan 5038 untuk menemukan perangkat yang mendukung ADB.
 </item>
         <item>
+Diperlukan di Android 17 (API 37)+ untuk menemukan dan terhubung ke perangkat di jaringan lokal (LAN) Anda untuk SMB, NFS, SFTP, FTP, WebDAV, transmisi DLNA, penyandingan perangkat, dan ADB Nirkabel.
+</item>
+        <item>
 Digunakan untuk penemuan perangkat jaringan lokal (NSD/mDNS) saat memasangkan perangkat.
 </item>
         <item>
 Mendeteksi koneksi VPN selama Manajemen Jarak Jauh dan akses berbagi jaringan.
 </item>
         <item>
-Memungkinkan Manajer Aplikasi menghitung semua aplikasi yang terinstal di perangkat Anda. Data yang diakses meliputi: nama aplikasi, ID paket, versi, ukuran APK, stempel waktu instalasi dan pembaruan, dan apakah setiap aplikasi adalah aplikasi sistem atau yang diinstal pengguna. Informasi ini digunakan secara eksklusif di perangkat untuk menampilkan Manajer Aplikasi, menghitung penyimpanan per aplikasi, dan merujuk silang nama paket terhadap daftar referensi debloat yang tersedia untuk umum yang diunduh dan di-cache secara lokal. Tidak ada data aplikasi yang diinstal yang pernah dikirimkan ke server KiloWatch atau pihak ketiga mana pun.
+Memungkinkan Manajer Aplikasi menghitung semua aplikasi yang diinstal pada perangkat Anda. Data yang diakses meliputi: nama aplikasi, ID paket, versi, ukuran APK, stempel waktu pemasangan dan pembaruan, dan apakah setiap aplikasi merupakan aplikasi yang dipasang oleh sistem atau pengguna. Informasi ini digunakan secara eksklusif pada perangkat untuk menampilkan Manajer Aplikasi, menghitung penyimpanan per aplikasi, dan melakukan referensi silang nama paket terhadap daftar referensi debloat yang tersedia untuk umum yang diunduh dan disimpan dalam cache secara lokal. Tidak ada data aplikasi terinstal yang dikirimkan ke server KiloWatch atau pihak ketiga mana pun.
 </item>
         <item>
-Diperlukan untuk menginstal berkas APK yang Anda pilih untuk dijalankan dari penyimpanan lokal.
+Diperlukan untuk menginstal file APK yang Anda pilih untuk dijalankan dari penyimpanan lokal.
 </item>
         <item>
 Memproses pembelian Tip Jar opsional melalui Google Play.
 </item>
         <item>
-Memungkinkan koneksi aman ke perangkat Android untuk akses shell tingkat lanjut. Menghasilkan sertifikat RSA unik pada perangkat Anda untuk pemasangan; tidak ada sertifikat yang dikirimkan ke server eksternal.
+Memungkinkan koneksi aman ke perangkat Android untuk akses shell tingkat lanjut. Menghasilkan sertifikat RSA unik pada perangkat Anda untuk dipasangkan; tidak ada sertifikat yang dikirimkan ke server eksternal.
 </item>
         <item>
-Memungkinkan aplikasi menggunakan API Porter / Shizuku / Shevery (termasuk Pengaturan Aman) untuk mengelola file di direktori sistem yang dibatasi tanpa melakukan root.
+Mengizinkan aplikasi menggunakan Porter / Shizuku / Shevery API (termasuk Pengaturan Aman) untuk mengelola file di direktori sistem terbatas tanpa rooting.
 </item>
         <item>
-Memungkinkan layanan Shizuku dan Shevery dimulai secara otomatis saat perangkat Anda boot untuk memastikan ketersediaan segera.
+Diminta secara dinamis melalui root manager Anda (Magisk, KernelSU, APatch, SuperSU) hanya ketika Anda secara eksplisit mengaktifkan Akses Root di Pengaturan pada perangkat seluler. Digunakan secara ketat untuk operasi file root lokal.
 </item>
         <item>
-Memungkinkan layanan Porter, Shizuku, dan Shevery untuk mulai secara otomatis saat perangkat Anda menyala untuk memastikan ketersediaan segera.
+Mengizinkan layanan Porter, Shizuku, dan Shevery dimulai secara otomatis saat perangkat Anda melakukan booting untuk memastikan ketersediaan segera.
 </item>
         <item>
-Memungkinkan Anda untuk memilih agar layanan Porter, Shizuku, dan Shevery tetap aktif di latar belakang untuk performa yang andal.
+Memungkinkan Anda memilih untuk tetap mengaktifkan layanan Porter, Shizuku, dan Shevery di latar belakang untuk kinerja yang andal.
 </item>
         <item>
-Menjaga CPU dan Wi-Fi tetap aktif selama transfer berkas besar sehingga selesai dengan andal bahkan saat layar mati.
+Diperlukan untuk menjalankan Sinkronisasi Folder dan transfer file sebagai layanan latar depan sehingga dapat diselesaikan dengan andal bahkan saat layar mati.
 </item>
         <item>
-Menggunakan izin penyimpanan untuk memindai dan mengindeks metadata berkas untuk kinerja — dikelola melalui Pengaturan -> Pengindeks Penyimpanan.
+Menjaga CPU dan Wi-Fi tetap aktif selama transfer file berukuran besar sehingga dapat diselesaikan dengan andal bahkan saat layar mati.
 </item>
         <item>
-Terhubung ke Android TV yang dipasangkan untuk bertindak sebagai keyboard dan mouse Bluetooth untuk kendali jarak jauh.
+Menggunakan izin penyimpanan untuk memindai dan mengindeks metadata file untuk kinerja — dikelola melalui Pengaturan -&gt; Pengindeks Penyimpanan.
 </item>
         <item>
-Memberikan umpan balik haptik saat menekan tombol pada Remote TV.
+Terhubung ke TV Android pasangan Anda untuk bertindak sebagai keyboard dan mouse Bluetooth untuk kendali jarak jauh.
 </item>
         <item>
 Memberikan umpan balik haptik saat menekan tombol di Remote TV.
@@ -1262,6 +1268,9 @@ Di bawah API 29 · Modifikasi file warisan di perangkat lama
 INTERNET
 </item>
         <item>
+ACCESS_LOCAL_NETWORK
+</item>
+        <item>
 ACCESS_WIFI_STATE
 </item>
         <item>
@@ -1276,13 +1285,16 @@ CHANGE_WIFI_MULTICAST_STATE
 Memungkinkan manajemen file jarak jauh, hosting File Server lokal, akses berbagi jaringan SMB/FTP/SFTP/SCP/NFS, dan pemasangan perangkat
 </item>
         <item>
+Memungkinkan penemuan perangkat jaringan lokal, berbagi file LAN (SMB/NFS/WebDAV/FTP/SFTP), streaming media DLNA, dan ADB Nirkabel di Android 17+
+</item>
+        <item>
 Menampilkan alamat IP lokal Anda untuk akses jarak jauh
 </item>
         <item>
 Mendeteksi jaringan aktif dan status VPN untuk Manajemen Jarak Jauh dan berbagi jaringan
 </item>
         <item>
-Memungkinkan penemuan perangkat jaringan lokal (NSD/mDNS) untuk pemasangan perangkat
+Mengaktifkan penemuan perangkat jaringan lokal (NSD/mDNS) untuk pemasangan perangkat
 </item>
     </string-array>
 

@@ -17561,6 +17561,50 @@ Bookmark Hub
     <string name="file">
 फ़ाइल
 </string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">
+स्थानीय प्रसार के उपयोग की अनुमति दें
+</string>
+    <string name="local_network_rationale_subtitle">
+स्थानीय डिवाइस खोज एवं स्थानांतरण के लिए आवश्यक
+</string>
+    <string name="local_network_rationale_message">
+अल्टीमेट फाइल मैनेजर प्रो विशेष रूप से आपके घरेलू नेटवर्क पर आपके द्वारा चुने गए डिवाइस (जैसे एसएमबी और एनएफएस शेयर, डीएलएनए टीवी और वायरलेस एडीबी डिबगिंग) को खोजने और कनेक्ट करने के लिए आपके स्थानीय नेटवर्क का उपयोग करता है। कोई भी स्थानीय नेटवर्क डेटा बाहरी रूप से प्रसारित नहीं होता है।
+</string>
+    <string name="local_network_btn_continue">
+जारी रखना
+</string>
+    <string name="local_network_btn_settings">
+खुली सेटिंग
+</string>
+    <string name="local_network_btn_not_now">
+अभी नहीं
+</string>
+    <string name="local_network_banner_text">
+स्थानीय शेयरों, डीएलएनए उपकरणों और वायरलेस एडीबी को ब्राउज़ करने और खोजने के लिए स्थानीय नेटवर्क पहुंच आवश्यक है।
+</string>
+    <string name="local_network_banner_grant">
+अनुदान पहुँच
+</string>
+    <string name="settings_local_network_title">
+स्थानीय नेटवर्क पहुंच
+</string>
+    <string name="settings_local_network_subtitle">
+Android 17 स्थानीय नेटवर्क सुरक्षा अनुमति प्रबंधित करें
+</string>
+    <string name="settings_local_network_status_granted">
+की अनुमति दी
+</string>
+    <string name="settings_local_network_status_denied">
+अनुमति आवश्यक है
+</string>
+    <string name="settings_local_network_btn_manage">
+प्रबंधित करना
+</string>
+    <string name="toast_local_network_permission_required">
+इस ऑपरेशन के लिए स्थानीय नेटवर्क की अनुमति आवश्यक है
+</string>
 </resources>
 
 

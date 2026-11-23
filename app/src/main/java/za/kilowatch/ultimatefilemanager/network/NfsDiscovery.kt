@@ -62,6 +62,10 @@ object NfsDiscovery {
         onServerFound: ((NfsDiscoveredServer) -> Unit)? = null,
         cancelled: () -> Boolean = { false }
     ): List<NfsDiscoveredServer> {
+        if (!LocalNetworkPermissionManager.hasPermission(context)) {
+            Log.w(TAG, "Local network permission not granted, skipping NFS discovery")
+            return emptyList()
+        }
         val seenIps = mutableSetOf<String>()
         val found = mutableListOf<NfsDiscoveredServer>()
         val lock = Any()
@@ -225,6 +229,12 @@ object NfsDiscovery {
      */
     private fun getActiveSubnetPrefix(context: Context): String? {
         Log.d(TAG, "getActiveSubnetPrefix: starting detection...")
+
+        val unifiedPrefix = NetworkInterfaceUtils.getSubnetPrefix(context)
+        if (unifiedPrefix != null) {
+            Log.i(TAG, "getActiveSubnetPrefix: resolved via NetworkInterfaceUtils: $unifiedPrefix")
+            return unifiedPrefix
+        }
 
         // ── Attempt 1: ConnectivityManager ──────────────────────────────────
         try {

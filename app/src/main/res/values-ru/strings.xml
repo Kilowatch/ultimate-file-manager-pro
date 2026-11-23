@@ -17583,6 +17583,50 @@ Flat View требует, чтобы этот том хранилища был �
     <string name="file">
 Файл
 </string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">
+Разрешить доступ к локальной сети
+</string>
+    <string name="local_network_rationale_subtitle">
+Требуется для обнаружения и передачи локальных устройств
+</string>
+    <string name="local_network_rationale_message">
+Ultimate File Manager Pro использует вашу локальную сеть исключительно для обнаружения и подключения к устройствам, которые вы выбираете в своей домашней сети (например, общие ресурсы SMB и NFS, телевизоры DLNA и беспроводная отладка ADB). Никакие данные локальной сети не передаются наружу.
+</string>
+    <string name="local_network_btn_continue">
+Продолжать
+</string>
+    <string name="local_network_btn_settings">
+Открыть настройки
+</string>
+    <string name="local_network_btn_not_now">
+Не сейчас
+</string>
+    <string name="local_network_banner_text">
+Доступ к локальной сети необходим для просмотра и обнаружения локальных общих ресурсов, устройств DLNA и Wireless ADB.
+</string>
+    <string name="local_network_banner_grant">
+Предоставить доступ
+</string>
+    <string name="settings_local_network_title">
+Доступ к локальной сети
+</string>
+    <string name="settings_local_network_subtitle">
+Управление разрешением на защиту локальной сети Android 17
+</string>
+    <string name="settings_local_network_status_granted">
+Разрешение получено
+</string>
+    <string name="settings_local_network_status_denied">
+Требуется разрешение
+</string>
+    <string name="settings_local_network_btn_manage">
+Управлять
+</string>
+    <string name="toast_local_network_permission_required">
+Для этой операции требуется разрешение локальной сети.
+</string>
 </resources>
 
 

@@ -1,223 +1,149 @@
-# Specification: First-Run Onboarding Setup Flow with Dedicated Per-Setting Activities
+# Specification: Android 17 (API 37) Platform Compatibility & Local Network Protection
 
 ## Overview
-Introduce a visual first-run onboarding setup sequence immediately following permissions in `WelcomeActivity`. Every individual setting is implemented as its own dedicated Activity with paired mobile and TV layouts. Each Activity dedicates full screen focus to that single setting, rendering rich explanatory text alongside a **large, live visual preview example** that is **always pre-rendered on the recommended default selection** upon opening (or the user's saved preferences if re-running from Settings). The sequence features contextual skip buttons: **"Skip & Use Defaults"** on Screen 1, and **"Skip Remaining"** from Screen 2 onwards, which **preserves all settings configured up to that point while applying recommended defaults to all remaining skipped settings**. The flow provides full Android TV 16:9 D-pad parity, checks hardware security compatibility, uses polished horizontal slide transitions, guarantees unified preference persistence with `SettingsActivity`, and adds an on-demand re-entry card in Settings.
+Prepare Ultimate File Manager Pro (UFM) to fully target Android 17 (API 37) while maintaining backward compatibility across Android 8.0 through Android 16 (API 26–36), Android TV, and companion connectivity. The primary functional mandate is adopting Android 17's Local Network Protection (LNP) runtime security model (`ACCESS_LOCAL_NETWORK`), ensuring LAN discovery, network file protocols (SMB, SFTP, FTP, WebDAV, NFS), DLNA/SSDP casting, wireless ADB debugging, and companion pairing operate reliably with contextual user rationales, graceful degradation upon denial or revocation, zero data loss of saved connections, and seamless mobile/TV user experience parity.
+
+---
 
 ## User Stories
-- **As a new user entering Screen 1 who wants to bypass setup immediately**, I want a clear **"Skip & Use Defaults"** button so I can open the app in one tap with all recommended defaults applied.
-- **As a user who customizes the first few screens and then wants to jump into the app**, I want the button on Screen 2 onwards to read **"Skip Remaining"** so I know my custom choices are preserved while remaining unvisited options use defaults.
-- **As a visual learner**, I want every screen to open with the live preview actively demonstrating the recommended default so I immediately see the baseline experience before touching anything.
-- **As a user exploring choices**, I want the preview to instantly react as I change options so I can compare alternatives against the default before deciding.
-- **As an Android TV user**, I want every screen to provide a 10-foot TV layout with glowing D-pad focus outlines, remote-friendly controls, and automatic exclusion of mobile-only touch screens.
-- **As an existing user re-running the wizard from Settings**, I want the wizard to open with my current settings already selected, and return back to Settings once finished without disrupting my current session.
+
+- **As a user running Android 17**, I want UFM to explain why it needs local network access before prompting me for system permissions so that I understand why my local storage and TV devices require network access.
+- **As a user who declines the local network permission**, I want the rest of UFM (local storage, cloud storage, zip/archive tools, vault encryption, settings) to remain fully functional without crashes, persistent nag dialogs, or infinite loading spinners.
+- **As a power user with saved network shares (SMB, SFTP, NFS, WebDAV)**, I want all my server bookmarks, saved credentials, and custom configurations preserved untouched even if local network permission is temporarily missing or revoked.
+- **As an Android TV user**, I want full D-pad navigable dialogs and rationale screens when connecting to LAN storage, pairing with mobile devices, or casting DLNA media, including on wired Ethernet connections.
+- **As a developer using Wireless ADB and Session Services**, I want uninterrupted background ADB sessions with persistent foreground service notifications and clean recovery if Wi-Fi disconnects or reconnects.
+- **As a user who revokes local network permission in OS Settings while UFM is active**, I want in-flight LAN operations to fail gracefully with an actionable error and a clear retry route rather than an unhandled app crash.
+- **As a legacy Android user (Android 8.0–16)**, I want the existing network, storage, and discovery behavior to remain completely untouched, with zero unnecessary permission prompts or regression in performance.
+
+---
 
 ## Functional Requirements
 
-- **FR-01: Dedicated Per-Setting Activity Architecture**
-  - Every one of the 10 settings shall be implemented as its own standalone Activity class.
-  - Every Activity must strictly follow the project Activity pattern:
-    - `attachBaseContext` override with `LocaleManagerWrapper`.
-    - Edge-to-edge support with window insets.
-    - One Activity class, two layouts: `activity_<name>.xml` (mobile) and `activity_<name>_tv.xml` (TV).
-  - Clean linear Activity backstack with "Back" returning to the previous setting Activity and preserving prior selections.
-  - Transitions: Fluid horizontal slide animation (`slide_in_right` / `slide_out_left` on Next; `slide_in_left` / `slide_out_right` on Back).
+### FR-01: Target API 37 Baseline & Manifest Alignment
+- Update `compileSdk` and `targetSdk` to 37 in `app/build.gradle.kts` while preserving `minSdk = 26` compatibility.
+- Declare the required Android 17 Local Network Protection permission (`android.permission.ACCESS_LOCAL_NETWORK`) in the application manifest.
+- Ensure the runtime permission check is conditionally executed only when running on Android 17+ (API 37+). On older Android versions (API 26–36), network operations must proceed as before without requesting this permission.
 
-- **FR-02: Sequential Flow of the 10 Dedicated Activities**
+### FR-02: Contextual Permission Request Flow, User Rationale & Settings Card
+- Local network permission must **never** be requested aggressively on app launch or onboarding.
+- Requests must be triggered contextually when the user initiates a feature requiring LAN traffic (e.g., Scan LAN, Add/Open SMB/NFS share, Connect ADB over Wi-Fi, Pair Device, Cast/Browse DLNA).
+- Saved LAN tiles in `StorageBrowserActivity` (Main Menu) and `NetworkBrowserActivity` maintain normal appearance and prompt contextually when tapped.
+- If declined, display an inline recovery banner in `NetworkBrowserActivity` with a direct button to grant access.
+- If permanently denied ("Don't ask again"), direct the user to the OS App Info / Permission Settings screen (`ACTION_APPLICATION_DETAILS_SETTINGS`).
+- **Strict UFMStandard Adherence for All Dialogs**:
+  - All rationale dialogs, permission notices, and recovery dialogs must strictly adhere to `UFMStandard`:
+    - Container: `android:background="@drawable/bg_dialog_glass"`. TV width fixed to 650dp (`@dimen/tv_dialog_standard_width`).
+    - Builder: `MaterialAlertDialogBuilder(context, R.style.UFM_Dialog).setView(dialogView).create()` with `dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))`.
+    - Embedded Buttons: All action buttons embedded directly in layout XML (never `.setPositiveButton()` / `.setNegativeButton()`).
+    - Button Hierarchy: Primary action stacked on top, secondary/cancel action below.
+    - Mobile Buttons: Primary using `@style/Widget.Material3Expressive.Button` (48-50dp height, `?attr/colorPrimary`, 12dp corner radius); Secondary using TextButton style (`@color/mobile_text_secondary`).
+    - TV Buttons: Primary using `@drawable/selector_tv_button_yellow` with `@color/tv_button_focused_yellow_text`, D-pad focusable; Secondary using `@drawable/selector_tv_button` with `@color/tv_button_text_selector`.
+    - Layout Pairs: Paired layouts `dialog_<name>.xml` (mobile) and `dialog_<name>_tv.xml` (TV).
+- Add a dedicated **Local Network Permission** status card in `SettingsActivity` under Network Settings displaying current status (`Granted` / `Not Granted`) with a button to check/request permission.
+- Android TV devices must render a TV-optimized 10-foot layout with complete D-pad focus handling and focus restoration.
+- All rationale and status strings must be localized across all supported languages.
 
-  ```
-  [WelcomeActivity] (Permissions Complete)
-         │
-         ▼
-  1.  [OnboardingViewDensityActivity]        (Button: "Skip & Use Defaults")
-         │
-         ▼
-  2.  [OnboardingFontSizeActivity]           (Button: "Skip Remaining")
-         │
-         ▼
-  3.  [OnboardingScrollingTextActivity]      (Button: "Skip Remaining")
-         │
-         ▼
-  4.  [OnboardingHoldDurationActivity]       (Button: "Skip Remaining")
-         │
-         ▼
-  5.  [OnboardingLeftHandedFabActivity]      (Button: "Skip Remaining" — Mobile Only, skipped on TV)
-         │
-         ▼
-  6.  [OnboardingEdgeDrawerActivity]         (Button: "Skip Remaining" — Mobile Only, skipped on TV)
-         │
-         ▼
-  7.  [OnboardingRecycleBinActivity]         (Button: "Skip Remaining")
-         │
-         ▼
-  8.  [OnboardingHiddenFilesActivity]        (Button: "Skip Remaining")
-         │
-         ▼
-  9.  [OnboardingAppLockActivity]            (Button: "Skip Remaining" — Skipped if hardware lacks secure lock)
-         │
-         ▼
-  10. [OnboardingDiagnosticsActivity]       (Button: "Skip Remaining" / "Start Browsing")
-         │
-         ▼
-  [StorageBrowserActivity] (Main App — Configured & Ready!)
-  ```
+### FR-03: Denial, Revocation, and Graceful Degradation Handling
+- If the user declines the permission:
+  - Do not loop or re-prompt immediately.
+  - Present an inline, non-blocking empty/error state explaining that local network access is disabled.
+  - Provide an explicit "Grant Permission" / "Open Settings" retry button.
+  - Ensure discovery progress bars, spinners, and scans immediately terminate and do not hang indefinitely.
+- If permission is revoked at runtime via OS Settings while the app is active or suspended:
+  - Active network connections and background workers must fail gracefully with a recoverable network permission error.
+  - In-flight background transfers must pause or abort safely without corrupting local or remote files.
+- Saved connections, host configurations, passwords, and server profiles must remain intact and must never be cleared or deleted due to missing permissions.
 
-- **FR-03: Detailed Specification of Each Dedicated Activity & Live Preview**
+### FR-04: Network Protocols & Operations Integration
+Local network protection gating and error handling must be applied across all LAN-facing features:
+- **SMB Client & Discovery**: Broadcast/mDNS/NetBIOS probing, direct IP connections, share listings, file transfers, and streaming.
+- **NFS Client & Discovery**: Portmapper/RPC discovery, mount exports, file reads, writes, and listings.
+- **SFTP / FTP / FTPS / WebDAV**: LAN IP resolution, socket connects, directory navigation, and file transfers.
+- **DLNA / UPnP / SSDP**: Multicast M-SEARCH packets, unicast responses, XML device description fetching, ContentDirectory SOAP operations, and media streaming.
+- **DLNA Server / Receiver**: Local LAN advertising, listening ports, and incoming media streaming requests.
+- **Device Pairing & Companion**: UDP broadcast beacons, pairing handshake, encrypted credential/settings exchange, and companion sync over Wi-Fi/LAN. If started without permission, fail gracefully with a localized dialog/toast explaining access is required.
+- **Local HTTP / Proxy Services & Web Share**: If `WebShareServer` or local servers are initiated without permission, fail gracefully with a localized prompt. Differentiate strictly between loopback (`127.0.0.1` / `::1`) services and LAN-bound services.
+- **Unified Network Connectivity**: Unify all discovery and socket pre-flight checks under `ConnectivityManager` to support both wired Ethernet (especially on Android TV / set-top boxes) and Wi-Fi seamlessly.
 
-  ### 1. `OnboardingViewDensityActivity` (Screen 1)
-  - **What It Offers:** Controls row height, spacing, and thumbnail sizing in file listings.
-  - **Options:** *Standard List (Recommended Default)*, *Compact List*, *Large Grid*.
-  - **Live Preview:** Prominent file directory mockup (*Documents*, *Photos*, *Music*).
-    - *Default:* Pre-renders in **Standard List** (48dp row height, standard padding).
-    - *On Selection:* Fluidly adjusts between Compact (36dp tight rows) and Large Grid cards.
-  - **Skip Button Label:** **"Skip & Use Defaults"** (skips all and commits all recommended defaults).
+### FR-05: Wireless ADB, Remote Control & Foreground Service Lifecycle on Android 17
+- **ADB Discovery & Subnet Scanning**:
+  - Gated by `ACCESS_LOCAL_NETWORK` permission on Android 17+.
+  - Subnet IP resolution must use `ConnectivityManager` and `NetworkInterface` enumeration so discovery works across wired Ethernet (Android TV) and Wi-Fi without relying on deprecated `WifiManager.connectionInfo.ipAddress`.
+- **ADB Pairing & Authentication**:
+  - Full support for 6-digit PIN pairing and port negotiation over TLS on Android 17.
+  - RSA key generation and persistence remain fully compatible and functional.
+- **ADB Connection & Operations**:
+  - Raw socket connects to target device IPs (ports 5555, 5037, or dynamic wireless debugging ports) must be protected by permission checks before socket creation.
+  - Interactive terminal shell, remote package commands, and `AdbPushManager` file push/pull transfers must execute reliably on Android 17.
+  - Loopback (`localhost` / `127.0.0.1`) local debugging must be recognized and allowed without requiring LAN permission.
+- **ADB Foreground Services (`connectedDevice` type)**:
+  - Both `AdbSessionForegroundService` and `AdbRemoteForegroundService` must adhere to Android 17 foreground service requirements:
+    - Maintain ongoing low-priority notification with an instant one-tap "Disconnect" action.
+    - Validate process foreground state before startup to prevent background start restrictions.
+    - Handle task removal (swipe from Recents), network interface transitions (Wi-Fi drop, IP change), and permission revocation with clean notification teardown and socket disposal.
+- **ADB Remote Control Mode**:
+  - `AdbWifiTransport` and remote input injection via ADB must function seamlessly on Android 17 Mobile and TV.
 
-  ### 2. `OnboardingFontSizeActivity` (Screen 2)
-  - **What It Offers:** Independently scales typography across file names, path breadcrumbs, metadata, and dialogs.
-  - **Options:** *Small (85% / 13sp)*, *Medium (100% / 15sp — Recommended Default)*, *Large (115% / 17sp)*.
-  - **Live Preview:** Sample metadata row (`"Documents • 14 files • 2.4 GB"`).
-    - *Default:* Pre-renders at **Medium (100% / 15sp)**.
-    - *On Selection:* Live text immediately rescales when a chip is tapped.
-  - **Skip Button Label:** **"Skip Remaining"**.
+### FR-06: Storage, Elevated Access & Platform Stability Verification
+- Elevated access providers (Shizuku, Porter, root shell) must be verified for operational stability on Android 17 across protected paths (`Android/data`, `Android/obb`).
+- Core file indexing, search, removable SD card access, and Storage Access Framework (SAF) workflows must execute without regression on Android 17.
+- Framework diagnostics, crash handling, and background thread dispatchers must avoid private framework reflection or fragile assumptions regarding platform internal message queues.
 
-  ### 3. `OnboardingScrollingTextActivity` (Screen 3)
-  - **What It Offers:** Automatically animates long file and folder names that exceed screen width, preventing clipped extensions.
-  - **Options:** *Marquee Auto-Scroll (Recommended Default)*, *Truncate with Ellipsis*.
-  - **Live Preview:** Mock row with long filename (`"Ultimate_Backup_Archive_2026_Final_v2.tar.gz"`).
-    - *Default:* Marquee auto-scrolling is **actively running** on screen open.
-    - *On Selection:* Switching to Truncate stops animation and displays static ellipsis (`...`).
-  - **Skip Button Label:** **"Skip Remaining"**.
-
-  ### 4. `OnboardingHoldDurationActivity` (Screen 4)
-  - **What It Offers:** Sets the physical press-and-hold duration required to trigger multi-selection edit mode.
-  - **Options:** *Short (300ms)*, *Normal (500ms — Recommended Default)*, *Long (800ms)*.
-  - **Live Preview:** Interactive "Touch & Hold to Test" visual ring.
-    - *Default:* Pre-configured at **Normal (500ms)**.
-    - *On Interaction:* User presses down; a glowing cyan ring fills at the chosen duration (300ms, 500ms, or 800ms) with a haptic pulse and checkmark upon completing the hold.
-  - **Skip Button Label:** **"Skip Remaining"**.
-
-  ### 5. `OnboardingLeftHandedFabActivity` (Screen 5 — Mobile Only)
-  - **What It Offers:** Re-anchors the primary Tools & Quick Actions button to the bottom-left corner for left-handed ergonomics.
-  - **Options:** *Right-Handed (Default — Off)*, *Left-Handed (On)*.
-  - **Live Preview:** Miniature phone frame mockup.
-    - *Default:* FAB sits at standard **Bottom-Right**.
-    - *On Selection:* Smoothly translates the button over to **Bottom-Left** with glow indicator.
-  - **Skip Button Label:** **"Skip Remaining"**.
-  - **Platform Handling:** Skipped automatically on TV.
-
-  ### 6. `OnboardingEdgeDrawerActivity` (Screen 6 — Mobile Only)
-  - **What It Offers:** A swipe-from-edge translucent drawer providing instant access to bookmarks and drives from anywhere in UFM.
-  - **Options:** *Enabled (Recommended Default — On)*, *Disabled (Off)*.
-  - **Live Preview:** Phone mockup with edge handle.
-    - *Default:* Shows the edge handle and animated shortcut drawer sliding into view.
-    - *On Selection:* Toggling Off dims and collapses the edge drawer.
-  - **Skip Button Label:** **"Skip Remaining"**.
-  - **Platform Handling:** Skipped automatically on TV.
-
-  ### 7. `OnboardingRecycleBinActivity` (Screen 7)
-  - **What It Offers:** Two-stage deletion safety net allowing restoration of accidentally deleted files.
-  - **Options:** *Safe Delete (Recommended Default — On)*, *Permanent Erase (Off)*.
-  - **Live Preview:** Visual state comparison card.
-    - *Default:* Displays **Green Shield (Safe Delete Active: Files can be recovered)**.
-    - *On Selection:* Toggling Off switches to an **Orange Alert (Permanent Erase: Files immediately destroyed)**.
-  - **Skip Button Label:** **"Skip Remaining"**.
-
-  ### 8. `OnboardingHiddenFilesActivity` (Screen 8)
-  - **What It Offers:** Controls whether dotfiles and hidden directories (e.g. `.nomedia`, `.config`) appear in listings.
-  - **Options:** *Hidden (Recommended Default — Off)*, *Visible (On)*.
-  - **Live Preview:** File list preview showing a standard `DCIM` folder and `.thumbnails` folder.
-    - *Default:* `.thumbnails` folder is **hidden**.
-    - *On Selection:* Toggling On reveals `.thumbnails` with a subtle dimmed dotfile indicator.
-  - **Skip Button Label:** **"Skip Remaining"**.
-
-  ### 9. `OnboardingAppLockActivity` (Screen 9)
-  - **What It Offers:** Enforces 4-digit PIN or biometric authentication (fingerprint/face) each time UFM is opened.
-  - **Hardware Capability Check:** Automatically checks device keyguard/biometric capabilities upfront; if the hardware or OS does not support secure lock, this Activity is completely bypassed in the sequence.
-  - **Options:** *Open Access (Recommended Default — Off)*, *Protected Lock (On)*.
-  - **Live Preview:** Glassmorphic security card illustrating the biometric fingerprint sensor and glowing 4-digit PIN pad.
-  - **Setup Action:** Toggling On immediately launches the PIN setup dialog; dismissing/cancelling reverts the toggle to Off.
-  - **Skip Button Label:** **"Skip Remaining"**.
-
-  ### 10. `OnboardingDiagnosticsActivity` (Screen 10)
-  - **What It Offers:** Transmits anonymous, privacy-safe crash stack traces and ANR reports to help the developer fix bugs.
-  - **Privacy Guarantee:** 100% anonymous. Zero personal data, zero file names, zero storage contents, zero IP addresses.
-  - **Options:** *On (Recommended Default)*, *Off*.
-  - **Live Preview:** Transparency card highlighting privacy badges (*Enabled by Default*, *No Personal Data*, *Anonymous Stack Traces Only*, *Zero File Tracking*).
-  - **Actions:** Displays **"Skip Remaining"** and **"Start Browsing"** (both save preferences and complete onboarding).
-
-- **FR-04: Contextual Skip Button & Progressive Persistence Behavior**
-  - **Screen 1 (`OnboardingViewDensityActivity`):** Button reads **"Skip & Use Defaults"**. Tapping it applies all recommended defaults and immediately opens the storage browser.
-  - **Screens 2 through 10:** Button reads **"Skip Remaining"**. Tapping it:
-    1. Immediately preserves and commits all choices made on current and previous screens.
-    2. Identifies all subsequent unvisited/skipped screens and commits their recommended defaults:
-       - View Appearance: Standard List (if skipped)
-       - Font Size Scale: Medium 100% (if skipped)
-       - Scrolling Text: Marquee Auto-Scroll Enabled (if skipped)
-       - Edit Mode Hold Duration: Normal 500ms (if skipped)
-       - Left-Handed FAB Mode: Disabled / Bottom-Right (if skipped)
-       - Quick Access Edge Drawer: Enabled (if skipped)
-       - Recycle Bin: Safe Delete Enabled (if skipped)
-       - Show Hidden Files: Disabled / Hidden (if skipped)
-       - App Lock & Security: Disabled / Open Access (if skipped)
-       - Crash & ANR Reporting: Enabled (if skipped)
-    3. Sets the onboarding completion flag in `PolicyAcceptanceManager`.
-    4. Immediately launches `StorageBrowserActivity` (or returns to `SettingsActivity` in Reconfigure Mode).
-
-- **FR-05: Preference Persistence & Zero Settings Drift**
-  - All selections write directly to their canonical preference managers:
-    - `ViewAppearancePreferenceManager`
-    - `FontSizePreferenceManager`
-    - `ScrollingTextPreferenceManager`
-    - `LongPressDurationManager`
-    - `LeftHandedFabPreferenceManager`
-    - `QuickAccessPreferenceManager`
-    - `RecycleBinPreferenceManager`
-    - `HiddenFilesPreferenceManager`
-    - `AppSecurityManager`
-    - `CrashReportManager`
-  - Values apply immediately on initial dashboard load without requiring an app restart.
-
-- **FR-06: Android TV 16:9 Side-by-Side Parity & 10-Foot Adaptation**
-  - Every onboarding activity implements a paired `_tv.xml` layout.
-  - Side-by-side split screen:
-    - **Left Column**: D-pad navigable options, chips, and toggles with glowing cyan borders.
-    - **Right Column**: Large, glowing live visual preview card reflecting current selection.
-  - High-visibility focus indicators with glowing cyan borders.
-  - Automatically skips mobile-only Activities 5 and 6 on TV.
-
-- **FR-07: Re-Entry Shortcut & Reconfigure Mode from Settings**
-  - Add a "Quick Setup Wizard" card row in `SettingsActivity` under `layoutSectionGeneral`.
-  - Tapping launches `OnboardingViewDensityActivity` with intent extra `EXTRA_RECONFIGURE_MODE = true`.
-  - In Reconfigure Mode:
-    - Pre-populates all previews and selection controls with the user's *currently saved preferences* (rather than resetting to factory defaults).
-    - On completion or Skip, finishes directly back to `SettingsActivity` rather than restarting or navigating away to the storage dashboard.
+---
 
 ## Non-Functional Requirements
-- **NFR-01: Visual Polish**: Follows the app's established dark glassmorphism design language with frosted translucent cards and cyan/accent glows.
-- **NFR-02: 60fps+ Live Preview Animations**: Visual previews (marquee scrolling, FAB positioning animation, density transitions) and horizontal slide activity transitions must animate smoothly at 60fps+.
-- **NFR-03: Rapid Completion**: The full sequence takes under 45 seconds for a user to walk through, or 1 second to tap Skip.
+
+- **NFR-01: Performance & Zero Lag**
+  - Permission checks must be instantaneous, cached in-memory during active sessions, and never perform blocking I/O on the main thread.
+  - Discovery failure on denial must resolve in `< 100ms` without blocking the UI thread.
+- **NFR-02: Backward Compatibility**
+  - Identical behavior, performance, and UI on Android 8.0 through Android 16 (API 26–36).
+  - No behavioral regressions across standalone, tabbed, and twin-window browser modes.
+- **NFR-03: Security & Privacy**
+  - Adhere strictly to the principle of least privilege: network permission requested only when user requests LAN operations.
+  - Credentials and tokens for LAN shares remain securely stored in encrypted preferences regardless of permission state.
+- **NFR-04: UI/UX Parity (Mobile & TV)**
+  - Mobile dialogs and inline views conform to mobile design standards.
+  - Android TV layouts conform to 10-foot TV standards (clear D-pad focus, high-contrast indicators, safe-margin padding).
+  - Wired Ethernet connections on TV and set-top boxes must be fully recognized and supported alongside Wi-Fi interfaces.
+
+---
 
 ## Edge Cases & Error States
-- **One-Tap "Skip & Use Defaults" on Screen 1**: Saves all defaults and immediately opens the storage browser.
-- **Mid-Flow "Skip Remaining" (e.g. Screen 4)**: Persists user's choices on screens 1, 2, 3, applies defaults for 4 through 10, and opens storage browser.
-- **Back Navigation**: User can press Back at any step to return to the previous Activity; prior selections are preserved.
-- **App Killed Mid-Flow**: Launching resumes at the current onboarding Activity without resetting earlier selections.
-- **Device Lacks Security Capabilities**: `OnboardingAppLockActivity` is completely bypassed in the sequence.
+
+- **Revocation during Active Transfer**: User initiates a 10 GB SMB transfer, switches to OS Settings, and revokes local network permission. App must abort socket gracefully, notify user with a recoverable prompt, and prevent corruption.
+- **Ethernet vs. Wi-Fi on Android TV**: TV connected via physical Ethernet cable instead of Wi-Fi must handle permission and discovery requests identically without assuming Wi-Fi-specific APIs (such as `WifiManager`).
+- **Airplane Mode / No Network Interface**: Initiating a LAN feature when no network interface is active must report "No Local Network Connection" rather than falsely prompting for permission.
+- **Loopback-Only Operations**: Internal proxy or localhost communication (`127.0.0.1`) must function independently without triggering a local network permission prompt.
+- **Process Death & Recreation**: App killed by the OS while waiting for the system permission dialog must restore state properly upon recreation without getting stuck in a pending state.
+- **"Don't Ask Again" / Permanent Denial**: When system marks permission permanently denied, the rationale dialog must offer a direct shortcut to the application's OS App Info / Permission Settings screen.
+
+---
 
 ## Out of Scope
-- Modifying existing language (`LanguageWelcomeActivity`) or legal policies (`PolicyWelcomeActivity`).
-- Modifying deep technical settings (e.g. SMB threads, TV server background mode, mock USB).
-- Theme selection (Theme remains in Settings).
+
+- Proactively rewriting the underlying ADB protocol client or session architecture.
+- Replacing or rewriting the native Go engine (`rclone.aar`) or native SMB2/3 engine.
+- Rewriting DLNA/SSDP multicast parsers or SOAP clients unless an API 37 platform failure is demonstrated.
+- Redesigning Shizuku or Porter IPC protocols.
+- Removing any existing network protocols, cloud providers, or storage capabilities.
+- Proactively changing indexing or database schemas.
+
+---
 
 ## Success Criteria
-- [ ] Screen 1 displays button labeled "Skip & Use Defaults".
-- [ ] Screens 2 through 10 display button labeled "Skip Remaining".
-- [ ] Tapping Skip commits all prior user selections and applies recommended defaults to all skipped screens.
-- [ ] Option 10 (Crash & ANR Reporting) is correctly defaulted to On.
-- [ ] 10 dedicated Activities implemented with mobile and TV layout pairs following the project activity pattern.
-- [ ] Horizontal slide transitions connect all 10 Activities smoothly.
-- [ ] Every visual preview is fully rendered and animated on the recommended default selection on screen open.
-- [ ] Android TV layout uses an ergonomic 16:9 side-by-side split screen with full D-pad focus traversal.
-- [ ] Device security capability check properly protects against showing App Lock on unsupported hardware.
-- [ ] Reconfigure mode correctly reads current user settings and returns to SettingsActivity upon completion.
-- [ ] All settings persist to existing preference managers with 100% parity with `SettingsActivity`.
-- [ ] Onboarding runs only once on first install.
+
+- [ ] Manifest correctly declares `ACCESS_LOCAL_NETWORK` for Android 17 builds.
+- [ ] On Android 17+, contextual rationale dialog appears on first attempt to use any LAN feature (SMB, NFS, SFTP, DLNA, ADB, Pairing).
+- [ ] On Android 17+, denying permission leaves all other UFM features intact, cleanly halts discovery/connection attempts, and never loops prompts.
+- [ ] On Android 17+, granting permission enables full, uninterrupted LAN browsing, device discovery, transfers, and DLNA streaming.
+- [ ] Permission denial or revocation never modifies or deletes saved shares, hosts, or credentials.
+- [ ] TV interface is 100% operable via D-pad navigation across all permission and rationale flows on Wi-Fi and Ethernet.
+- [ ] Wireless ADB device discovery, 6-digit PIN pairing, and socket connection succeed on Android 17.
+- [ ] ADB shell terminal commands and `AdbPushManager` file push/pull operations execute without error on Android 17.
+- [ ] Background ADB sessions with `AdbSessionForegroundService` and `AdbRemoteForegroundService` operate reliably without lifecycle crashes or background start exceptions.
+- [ ] SMB, SFTP, FTP, WebDAV, NFS, and DLNA discovery, browsing, transfers, and streaming function seamlessly on Android 17.
+- [ ] Mobile-to-TV pairing, Web Share, and companion connectivity execute reliably on Android 17.
+- [ ] Elevated access (Shizuku, Porter) operates reliably on Android 17 without Binder or permission regressions.
+- [ ] Regression testing confirms zero regressions on Android 8.0–16 (API 26–36) devices.
+- [ ] All new rationale and status strings are integrated into localization workflows with no hardcoded strings.

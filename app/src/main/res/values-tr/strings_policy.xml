@@ -416,7 +416,10 @@ Bildirimler
 Ağ / Wi-Fi
 </item>
         <item>
-Çoklu Yayın
+Yerel Ağ Erişimi (Android 17+)
+</item>
+        <item>
+Çok noktaya yayın
 </item>
         <item>
 Ağ Durumu
@@ -425,7 +428,7 @@ Ağ Durumu
 Paket Sorgulama
 </item>
         <item>
-Paket Yükleme
+Paketleri Yükle
 </item>
         <item>
 Faturalandırma
@@ -437,22 +440,22 @@ ADB Hata Ayıklama Köprüsü
 Yükseltilmiş Erişim (Porter, Shizuku ve Shevery)
 </item>
         <item>
-Başlangıçta Başlat
+Kök / Süper Kullanıcı Erişimi
+</item>
+        <item>
+Önyükleme Başlatma
 </item>
         <item>
 Pil Optimizasyonu
 </item>
         <item>
-Ön Planda Hizmet
+Ön Plan Hizmeti
 </item>
         <item>
-Uyku Kilidi
+Uyandırma Kilidi
 </item>
         <item>
-Depolama Dizinleyici
-</item>
-        <item>
-Bluetooth
+Depolama Dizini Oluşturucu
 </item>
         <item>
 Titreşim
@@ -475,46 +478,49 @@ Dosya işlemleri tamamlandığında veya depolama alanı azaldığında sizi uya
 Uzaktan dosya yönetimi, ağ paylaşımı erişimi (SMB/FTP/SFTP/SCP/NFS), klasör senkronizasyonu, cihaz eşleme ve yerel ağınızda ADB terminal erişimini sağlar. Ağ keşfi, ADB özellikli cihazları bulmak için yerel alt ağınızdaki cihazları (254 IP\'ye kadar) ADB bağlantı noktaları 5555, 5037 ve 5038\'de tarar.
 </item>
         <item>
-Cihaz eşleme sırasında yerel ağ cihaz keşfi (NSD/mDNS) için kullanılır.
+Android 17 (API 37)+ sürümünde SMB, NFS, SFTP, FTP, WebDAV, DLNA yayını, cihaz eşleştirme ve Kablosuz ADB için yerel ağınızdaki (LAN) cihazları keşfetmek ve bunlara bağlanmak için gereklidir.
 </item>
         <item>
-Uzaktan Yönetim ve ağ paylaşımı erişimi sırasında VPN bağlantılarını algılar.
+Cihazları eşleştirirken yerel ağ cihazı keşfi (NSD/mDNS) için kullanılır.
 </item>
         <item>
-Uygulama Yöneticisi\'nin cihazınızda yüklü tüm uygulamaları numaralandırmasını sağlar. Erişilen veriler: uygulama adı, paket kimliği, sürüm, APK boyutu, yükleme ve güncelleme zaman damgaları ve her uygulamanın sistem veya kullanıcı tarafından yüklenmiş bir uygulama olup olmadığı. Bu bilgiler, Uygulama Yöneticisi\'ni görüntülemek, uygulama başına depolamayı hesaplamak ve paket adlarını yerel olarak indirilip önbelleğe alınan herkese açık bir bloatware referans listesiyle karşılaştırmak için yalnızca cihaz içinde kullanılır. Hiçbir yüklü uygulama verisi KiloWatch sunucularına veya herhangi bir üçüncü tarafa iletilmez.
+Uzaktan Yönetim ve ağ paylaşım erişimi sırasında VPN bağlantılarını algılar.
+</item>
+        <item>
+Uygulama Yöneticisinin cihazınızda yüklü tüm uygulamaları numaralandırmasına izin verir. Erişilen veriler şunları içerir: uygulama adı, paket kimliği, sürüm, APK boyutu, yükleme ve güncelleme zaman damgaları ve her uygulamanın bir sistem mi yoksa kullanıcı tarafından yüklenen bir uygulama mı olduğu. Bu bilgiler yalnızca cihaz üzerinde Uygulama Yöneticisini görüntülemek, uygulama başına depolamayı hesaplamak ve paket adlarını, yerel olarak indirilen ve önbelleğe alınan, herkese açık bir debloat referans listesiyle çapraz referans olarak kullanmak için kullanılır. Yüklü hiçbir uygulama verisi hiçbir zaman KiloWatch sunucularına veya herhangi bir üçüncü tarafa iletilmez.
 </item>
         <item>
 Yerel depolamadan çalıştırmayı seçtiğiniz APK dosyalarını yüklemek için gereklidir.
 </item>
         <item>
-İsteğe bağlı Bahşiş Kavanozu satın almalarını Google Play üzerinden işler.
+İsteğe bağlı İpucu Kavanozu satın alımlarını Google Play aracılığıyla işler.
 </item>
         <item>
-Gelişmiş kabuk erişimi için Android cihazlara güvenli bağlantı sağlar. Eşleme için cihazınızda benzersiz bir RSA sertifikası oluşturur; harici sunuculara hiçbir sertifika iletilmez.
+Gelişmiş kabuk erişimi için Android cihazlara güvenli bağlantı sağlar. Eşleştirme için cihazınızda benzersiz bir RSA sertifikası oluşturur; harici sunuculara hiçbir sertifika aktarılmaz.
 </item>
         <item>
-Uygulamanın, rootlamadan kısıtlı sistem dizinlerindeki dosyaları yönetmek için Porter / Shizuku / Shevery API\'sini (Güvenli Ayarlar dahil) kullanmasına izin verir.
+Uygulamaya, kısıtlı sistem dizinlerindeki dosyaları köklendirme yapmadan yönetmek için Porter / Shizuku / Shevery API\'sini (Güvenli Ayarlar dahil) kullanma izni verir.
 </item>
         <item>
-Shizuku ve Shevery hizmetlerinin cihazınız önyüklendiğinde otomatik olarak başlamasını sağlayarak anında kullanılabilirlik sağlar.
+Yalnızca mobil cihazlarda Ayarlar\'da Kök Erişimini açıkça etkinleştirdiğinizde kök yöneticiniz (Magisk, KernelSU, APatch, SuperSU) aracılığıyla dinamik olarak talep edilir. Kesinlikle yerel kök dosya işlemleri için kullanılır.
 </item>
         <item>
-Cihazınız açıldığında Porter, Shizuku ve Shevery hizmetlerinin otomatik olarak başlamasına ve hemen kullanılabilir olmasına izin verir.
+Anında kullanılabilirliği sağlamak için cihazınız başlatıldığında Porter, Shizuku ve Shevery hizmetlerinin otomatik olarak başlatılmasına olanak tanır.
 </item>
         <item>
-Güvenilir performans için Porter, Shizuku ve Shevery hizmetlerini arka planda etkin tutmayı seçmenize olanak tanır.
+Güvenilir performans için Porter, Shizuku ve Shevery hizmetlerini arka planda aktif tutmayı tercih etmenize olanak tanır.
 </item>
         <item>
-Büyük dosya aktarımları sırasında CPU ve Wi-Fi\'yi etkin tutarak ekran kapandığında bile aktarımların güvenilir bir şekilde tamamlanmasını sağlar.
+Klasör Senkronizasyonunu ve dosya aktarımlarını ön plan hizmeti olarak çalıştırmak için gereklidir, böylece ekran kapalıyken bile güvenilir bir şekilde tamamlanırlar.
 </item>
         <item>
-Performans için dosya meta verilerini taramak ve dizinlemek üzere depolama izinlerini kullanır — Ayarlar -> Depolama Dizinleyici aracılığıyla yönetilir.
+Büyük dosya aktarımları sırasında CPU ve Wi-Fi\'yi aktif tutar, böylece ekran kapansa bile aktarımlar güvenilir bir şekilde tamamlanır.
 </item>
         <item>
-Eşleştirilmiş Android TV\'nize bağlanarak uzaktan kumanda için Bluetooth klavye ve fare olarak çalışır.
+Performans için dosya meta verilerini taramak ve indekslemek amacıyla depolama izinlerini kullanır; Ayarlar -&gt; Depolama Dizini Oluşturucu aracılığıyla yönetilir.
 </item>
         <item>
-TV Uzaktan Kumandası\'ndaki düğmelere basıldığında dokunsal geri bildirim sağlar.
+Uzaktan kumanda için Bluetooth klavye ve fare görevi görmek üzere eşleştirilmiş Android TV\'nize bağlanır.
 </item>
         <item>
 TV Uzaktan Kumandasındaki düğmelere basıldığında dokunsal geri bildirim sağlar.
@@ -1264,6 +1270,9 @@ API 29 altı · Eski cihazlarda eski dosya değişikliği
 İNTERNET
 </item>
         <item>
+ACCESS_LOCAL_NETWORK
+</item>
+        <item>
 ACCESS_WIFI_STATE
 </item>
         <item>
@@ -1278,13 +1287,16 @@ CHANGE_WIFI_MULTICAST_STATE
 Uzaktan dosya yönetimi, yerel Dosya Sunucuları barındırma, SMB/FTP/SFTP/SCP/NFS ağ paylaşım erişimi ve cihaz eşleştirmeyi etkinleştirir
 </item>
         <item>
+Android 17+ üzerinde yerel ağ cihazı keşfini, LAN dosya paylaşımını (SMB/NFS/WebDAV/FTP/SFTP), DLNA medya akışını ve Kablosuz ADB\'yi etkinleştirir
+</item>
+        <item>
 Uzaktan erişim için yerel IP adresinizi görüntüler
 </item>
         <item>
 Uzaktan Yönetim ve ağ paylaşımları için etkin ağ ve VPN durumunu algılar
 </item>
         <item>
-Cihaz eşleştirme için yerel ağ cihaz keşfini (NSD/mDNS) etkinleştirir
+Cihaz eşleştirme için yerel ağ cihazı keşfini (NSD/mDNS) etkinleştirir
 </item>
     </string-array>
 

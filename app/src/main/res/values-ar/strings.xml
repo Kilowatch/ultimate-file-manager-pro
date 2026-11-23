@@ -17585,6 +17585,50 @@ Bookmark Hub
     <string name="file">
 ملف
 </string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">
+السماح بالوصول إلى الشبكة المحلية
+</string>
+    <string name="local_network_rationale_subtitle">
+مطلوب لاكتشاف الجهاز المحلي ونقله
+</string>
+    <string name="local_network_rationale_message">
+يستخدم Ultimate File Manager Pro شبكتك المحلية حصريًا لاكتشاف الأجهزة التي تحددها على شبكتك المنزلية والاتصال بها (مثل مشاركات SMB وNFS وأجهزة تلفزيون DLNA وتصحيح أخطاء Wireless ADB). لا يتم نقل أي بيانات الشبكة المحلية خارجيا.
+</string>
+    <string name="local_network_btn_continue">
+يكمل
+</string>
+    <string name="local_network_btn_settings">
+افتح الإعدادات
+</string>
+    <string name="local_network_btn_not_now">
+ليس الآن
+</string>
+    <string name="local_network_banner_text">
+يلزم الوصول إلى الشبكة المحلية لتصفح واكتشاف المشاركات المحلية وأجهزة DLNA وWireless ADB.
+</string>
+    <string name="local_network_banner_grant">
+منح الوصول
+</string>
+    <string name="settings_local_network_title">
+الوصول إلى الشبكة المحلية
+</string>
+    <string name="settings_local_network_subtitle">
+إدارة إذن حماية الشبكة المحلية لنظام Android 17
+</string>
+    <string name="settings_local_network_status_granted">
+تم منح الإذن
+</string>
+    <string name="settings_local_network_status_denied">
+الإذن مطلوب
+</string>
+    <string name="settings_local_network_btn_manage">
+يدير
+</string>
+    <string name="toast_local_network_permission_required">
+مطلوب إذن الشبكة المحلية لهذه العملية
+</string>
 </resources>
 
 

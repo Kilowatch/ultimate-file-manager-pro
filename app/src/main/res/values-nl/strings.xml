@@ -17279,6 +17279,50 @@ Lokaal
     <string name="file">
 Bestand
 </string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">
+Lokale netwerktoegang toestaan
+</string>
+    <string name="local_network_rationale_subtitle">
+Vereist voor detectie en overdracht van lokale apparaten
+</string>
+    <string name="local_network_rationale_message">
+Ultimate File Manager Pro gebruikt uitsluitend uw lokale netwerk om apparaten die u selecteert in uw thuisnetwerk te ontdekken en er verbinding mee te maken (zoals SMB- en NFS-shares, DLNA-tv\'s en draadloze ADB-foutopsporing). Er worden geen lokale netwerkgegevens extern verzonden.
+</string>
+    <string name="local_network_btn_continue">
+Doorgaan
+</string>
+    <string name="local_network_btn_settings">
+Instellingen openen
+</string>
+    <string name="local_network_btn_not_now">
+Niet nu
+</string>
+    <string name="local_network_banner_text">
+Lokale netwerktoegang is vereist om lokale gedeelde mappen, DLNA-apparaten en draadloze ADB te doorzoeken en te ontdekken.
+</string>
+    <string name="local_network_banner_grant">
+Toegang verlenen
+</string>
+    <string name="settings_local_network_title">
+Lokale netwerktoegang
+</string>
+    <string name="settings_local_network_subtitle">
+Beheer toestemming voor lokale netwerkbeveiliging van Android 17
+</string>
+    <string name="settings_local_network_status_granted">
+Toestemming verleend
+</string>
+    <string name="settings_local_network_status_denied">
+Toestemming vereist
+</string>
+    <string name="settings_local_network_btn_manage">
+Beheren
+</string>
+    <string name="toast_local_network_permission_required">
+Voor deze bewerking is lokale netwerktoestemming vereist
+</string>
 </resources>
 
 

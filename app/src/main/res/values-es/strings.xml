@@ -17595,6 +17595,50 @@ Local
     <string name="file">
 Archivo
 </string>
+
+    <!-- Android 17 (API 37) Local Network Protection -->
+    <string name="local_network_rationale_title">
+Permitir acceso a la red local
+</string>
+    <string name="local_network_rationale_subtitle">
+Requerido para el descubrimiento y transferencia de dispositivos locales
+</string>
+    <string name="local_network_rationale_message">
+Ultimate File Manager Pro utiliza su red local exclusivamente para descubrir y conectarse a los dispositivos que seleccione en su red doméstica (como recursos compartidos SMB y NFS, televisores DLNA y depuración inalámbrica ADB). No se transmiten datos de la red local al exterior.
+</string>
+    <string name="local_network_btn_continue">
+Continuar
+</string>
+    <string name="local_network_btn_settings">
+Abrir configuración
+</string>
+    <string name="local_network_btn_not_now">
+Ahora no
+</string>
+    <string name="local_network_banner_text">
+Se requiere acceso a la red local para explorar y descubrir recursos compartidos locales, dispositivos DLNA y ADB inalámbrico.
+</string>
+    <string name="local_network_banner_grant">
+Conceder acceso
+</string>
+    <string name="settings_local_network_title">
+Acceso a la red local
+</string>
+    <string name="settings_local_network_subtitle">
+Administrar el permiso de protección de la red local de Android 17
+</string>
+    <string name="settings_local_network_status_granted">
+Permiso concedido
+</string>
+    <string name="settings_local_network_status_denied">
+Permiso requerido
+</string>
+    <string name="settings_local_network_btn_manage">
+Administrar
+</string>
+    <string name="toast_local_network_permission_required">
+Se requiere permiso de red local para esta operación
+</string>
 </resources>
 
 
