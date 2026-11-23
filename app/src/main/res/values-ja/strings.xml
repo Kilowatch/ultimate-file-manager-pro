@@ -15284,6 +15284,21 @@ UFM の安全なパスワードを入力してください
     <string name="settings_security_lock_frequency_dialog_title">
 ロック周波数の選択
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+バックグラウンドに配置されたときに UFM をロックする速度を選択します
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+アプリを閉じて再度開くときのみロックします
+</string>
+    <string name="settings_security_lock_immediately_desc">
+UFM が最小化されるとすぐにロックされます
+</string>
+    <string name="settings_security_lock_1min_desc">
+バックグラウンドで 1 分間操作がないとロックされる
+</string>
+    <string name="settings_security_lock_5min_desc">
+バックグラウンドで 5 分間操作がないとロックされる
+</string>
     <string name="security_warning_title">
 重要なセキュリティに関するお知らせ
 </string>

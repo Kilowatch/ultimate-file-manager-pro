@@ -15284,6 +15284,21 @@ SHA-256
     <string name="settings_security_lock_frequency_dialog_title">
 Виберіть Блокувати частоту
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+Виберіть швидкість блокування UFM у фоновому режимі
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+Блокується лише під час закриття та повторного відкриття програми
+</string>
+    <string name="settings_security_lock_immediately_desc">
+Миттєво блокується, коли UFM мінімізується
+</string>
+    <string name="settings_security_lock_1min_desc">
+Блокується через 1 хвилину бездіяльності у фоновому режимі
+</string>
+    <string name="settings_security_lock_5min_desc">
+Блокується через 5 хвилин бездіяльності у фоновому режимі
+</string>
     <string name="security_warning_title">
 Важливе повідомлення про безпеку
 </string>

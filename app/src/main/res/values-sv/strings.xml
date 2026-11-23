@@ -15261,6 +15261,21 @@ Efter 5 minuter
     <string name="settings_security_lock_frequency_dialog_title">
 Välj Lås frekvens
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+Välj hur snabbt UFM låses när den placeras i bakgrunden
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+Låser endast när du stänger och öppnar appen igen
+</string>
+    <string name="settings_security_lock_immediately_desc">
+Låser omedelbart när UFM minimeras
+</string>
+    <string name="settings_security_lock_1min_desc">
+Låser efter 1 minuts inaktivitet i bakgrunden
+</string>
+    <string name="settings_security_lock_5min_desc">
+Låser efter 5 minuters inaktivitet i bakgrunden
+</string>
     <string name="security_warning_title">
 Viktigt säkerhetsmeddelande
 </string>

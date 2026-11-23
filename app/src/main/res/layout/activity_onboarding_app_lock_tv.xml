@@ -29,18 +29,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Left Column: Options Cards -->
         <ScrollView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginEnd="16dp"
             android:overScrollMode="never"
-            android:scrollbars="none">
+            android:scrollbars="vertical"
+            android:scrollbarThumbVertical="@color/tv_glass_white_10">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -51,13 +54,13 @@
                     android:fontFamily="sans-serif-black"
                     android:letterSpacing="0.08" />
 
-                <!-- Open Option -->
+                <!-- Option 1: Open Access (Default) -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardOptionOpen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardCornerRadius="14dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:cardBackgroundColor="@color/tv_glass_white_10"
                     app:strokeWidth="2dp"
@@ -72,19 +75,25 @@
                         android:gravity="center_vertical"
                         android:padding="16dp">
 
-                        <RadioButton
-                            android:id="@+id/radioOptionOpen"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:clickable="false"
-                            android:focusable="false" />
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_btn_icon_frosted"
+                            android:layout_marginEnd="14dp">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_lock"
+                                app:tint="@color/tv_accent"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="12dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -101,18 +110,26 @@
                                 android:layout_marginTop="2dp"
                                 android:text="@string/onboarding_app_lock_open_desc"
                                 android:textColor="@color/tv_text_secondary"
-                                android:textSize="13sp" />
+                                android:textSize="12sp" />
                         </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/checkOptionOpen"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="@color/tv_accent"
+                            android:layout_marginStart="8dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Protected Option -->
+                <!-- Option 2: Protected Lock -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardOptionProtected"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardCornerRadius="14dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:cardBackgroundColor="@color/tv_glass_white_10"
                     app:strokeWidth="1dp"
@@ -127,19 +144,25 @@
                         android:gravity="center_vertical"
                         android:padding="16dp">
 
-                        <RadioButton
-                            android:id="@+id/radioOptionProtected"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="false"
-                            android:clickable="false"
-                            android:focusable="false" />
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_btn_icon_frosted"
+                            android:layout_marginEnd="14dp">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_security_lock"
+                                app:tint="@color/tv_accent"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="12dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -156,21 +179,267 @@
                                 android:layout_marginTop="2dp"
                                 android:text="@string/onboarding_app_lock_secure_desc"
                                 android:textColor="@color/tv_text_secondary"
-                                android:textSize="13sp" />
+                                android:textSize="12sp" />
                         </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/checkOptionProtected"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="@color/tv_accent"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+
+                <!-- 3. Protected Sub-Options Container (Shown when Protected is active) -->
+                <LinearLayout
+                    android:id="@+id/layoutProtectedSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_section_security"
+                        android:textColor="@color/tv_accent"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:letterSpacing="0.08"
+                        android:textAllCaps="true"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginBottom="8dp" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardGroupSecuritySettings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/tv_glass_white_10"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/tv_glass_border">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <!-- Security Method -->
+                            <LinearLayout
+                                android:id="@+id/cardSecurityMethod"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:padding="16dp"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <FrameLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_btn_icon_frosted"
+                                    android:layout_marginEnd="14dp">
+
+                                    <ImageView
+                                        android:id="@+id/imgSecurityMethodIcon"
+                                        android:layout_width="22dp"
+                                        android:layout_height="22dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_dialpad"
+                                        app:tint="@color/tv_accent"
+                                        android:contentDescription="@null" />
+                                </FrameLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/settings_security_method_title"
+                                        android:textColor="@color/tv_text_primary"
+                                        android:textSize="16sp"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                    <TextView
+                                        android:id="@+id/txtSecurityMethodSubtitle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/settings_security_method_pin"
+                                        android:textColor="@color/tv_text_secondary"
+                                        android:textSize="12sp"
+                                        android:layout_marginTop="2dp" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:src="@drawable/ic_arrow_down"
+                                    android:rotation="-90"
+                                    app:tint="@color/tv_text_secondary"
+                                    android:contentDescription="@null" />
+                            </LinearLayout>
+
+                            <!-- Divider for Change Credential -->
+                            <View
+                                android:id="@+id/dividerChangeCredential"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/tv_glass_border" />
+
+                            <!-- Change Credential -->
+                            <LinearLayout
+                                android:id="@+id/cardChangeCredential"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:padding="16dp"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <FrameLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_btn_icon_frosted"
+                                    android:layout_marginEnd="14dp">
+
+                                    <ImageView
+                                        android:id="@+id/imgChangeCredentialIcon"
+                                        android:layout_width="22dp"
+                                        android:layout_height="22dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_edit"
+                                        app:tint="@color/tv_accent"
+                                        android:contentDescription="@null" />
+                                </FrameLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/txtChangeCredentialTitle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/settings_security_change_pin"
+                                        android:textColor="@color/tv_text_primary"
+                                        android:textSize="16sp"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                    <TextView
+                                        android:id="@+id/txtChangeCredentialSubtitle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/settings_security_change_pin_subtitle"
+                                        android:textColor="@color/tv_text_secondary"
+                                        android:textSize="12sp"
+                                        android:layout_marginTop="2dp" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:src="@drawable/ic_arrow_down"
+                                    android:rotation="-90"
+                                    app:tint="@color/tv_text_secondary"
+                                    android:contentDescription="@null" />
+                            </LinearLayout>
+
+                            <!-- Divider for Lock Timeout -->
+                            <View
+                                android:id="@+id/dividerAutoLockTimeout"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/tv_glass_border" />
+
+                            <!-- Lock Frequency -->
+                            <LinearLayout
+                                android:id="@+id/cardAutoLockTimeout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:padding="16dp"
+                                android:clickable="true"
+                                android:focusable="true">
+
+                                <FrameLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_btn_icon_frosted"
+                                    android:layout_marginEnd="14dp">
+
+                                    <ImageView
+                                        android:layout_width="22dp"
+                                        android:layout_height="22dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_time"
+                                        app:tint="@color/tv_accent"
+                                        android:contentDescription="@null" />
+                                </FrameLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/settings_security_lock_frequency"
+                                        android:textColor="@color/tv_text_primary"
+                                        android:textSize="16sp"
+                                        android:fontFamily="sans-serif-medium" />
+
+                                    <TextView
+                                        android:id="@+id/txtAutoLockTimeoutSubtitle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/settings_security_lock_fresh_open"
+                                        android:textColor="@color/tv_text_secondary"
+                                        android:textSize="12sp"
+                                        android:layout_marginTop="2dp" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:src="@drawable/ic_arrow_down"
+                                    android:rotation="-90"
+                                    app:tint="@color/tv_text_secondary"
+                                    android:contentDescription="@null" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>
 
+        <!-- Right Column: Live Preview Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardPreview"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="@color/tv_glass_white_10"
             app:strokeWidth="1dp"
@@ -182,57 +451,116 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="LIVE SECURITY PREVIEW"
-                    android:textColor="@color/tv_accent"
-                    android:textSize="12sp"
-                    android:fontFamily="sans-serif-black"
-                    android:letterSpacing="0.08" />
-
+                <!-- Header -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:background="@drawable/bg_tv_card_glass">
+                    android:gravity="center_vertical">
 
                     <ImageView
-                        android:id="@+id/imgLockStatus"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_security_lock"
-                        app:tint="@color/tv_accent" />
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_eye_preview"
+                        app:tint="@color/tv_accent"
+                        android:contentDescription="@null" />
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="16dp"
-                        android:orientation="vertical">
+                        android:layout_marginStart="10dp"
+                        android:text="Live Preview"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-bold" />
 
-                        <TextView
-                            android:id="@+id/txtLockStatusTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Open Access (Instant Launch)"
-                            android:textColor="@color/tv_text_primary"
-                            android:textSize="16sp"
-                            android:fontFamily="sans-serif-bold" />
-
-                        <TextView
-                            android:id="@+id/txtLockStatusDesc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="No authentication required when opening UFM"
-                            android:textColor="@color/tv_text_secondary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="3dp"
+                        android:background="@drawable/bg_pill_live"
+                        android:text="LIVE"
+                        android:textColor="@color/tv_accent"
+                        android:textSize="11sp"
+                        android:fontFamily="sans-serif-black"
+                        android:letterSpacing="0.08" />
                 </LinearLayout>
+
+                <!-- Security Preview Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_glass_card">
+                            <ImageView
+                                android:id="@+id/imgLockStatus"
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_security_lock"
+                                app:tint="@color/tv_accent"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:id="@+id/txtLockStatusTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Open Access (Instant Launch)"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="18sp"
+                                android:fontFamily="sans-serif-black" />
+
+                            <TextView
+                                android:id="@+id/txtLockStatusDesc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="No authentication required when opening UFM"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtLockStatusPill"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="4dp"
+                            android:background="@drawable/bg_pill_selected"
+                            android:text="OPEN"
+                            android:textColor="@color/tv_accent"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-black"
+                            android:letterSpacing="0.05" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

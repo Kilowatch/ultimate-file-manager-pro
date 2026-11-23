@@ -1,34 +1,68 @@
-# Reddit Post: WebDAV & Network Favorites Fix, Protocol Badging, and Shortcut UX
+# Reddit Post: New Feature Added - First-Run Setup Wizard
 
 ## Title
-Update - WebDAV & Network Favorites Resolution, Protocol Badging, and Home Shortcut UX
+New Feature Added - First-Run Setup Wizard
 
 ## Platform
-Mobile and TV
+TV and Mobile
 
 ## Post
 
 Good Day Community,
 
-### What changed
-I addressed a set of issues related to WebDAV and remote network storage favorites, along with introducing visual protocol badging and clearer shortcut management:
+### What is new
+I added a first-run visual setup sequence to the app.
+It walks you through core settings one by one before you start browsing your storage.
+Every screen focuses on a single preference and renders a live visual preview that updates immediately as you change options.
+This feature is available on both the mobile and TV versions of the app.
 
-* **Fixed Remote WebDAV and Network Favorite Opening:**
-  Fixed an issue where opening in-app favorites or home screen shortcuts pointing to WebDAV folders or files (such as those hosted via rclone, Nextcloud, or ownCloud) would stall on "Opening..." or bounce back to the main Storage screen with a *"Previous storage location is unavailable"* error. The browser resolution engine now accurately detects and falls back between network and online storage repositories and passes complete provider metadata.
-* **Connection Protocol Badging:**
-  When managing multiple servers with similar folder structures (e.g. "Movies", "Documents", or "Backups"), it was previously difficult to tell which favorite belonged to which protocol or server. Favorites on the Storage screen and in Manage Favorites now display a clear `{Protocol} • {Type}` badge (e.g., `WebDAV • Folder`, `WebDAV • File`, `SMB • Folder`, `Local • Folder`).
-* **Home Screen Shortcut Badging:**
-  Pinned home screen shortcut icons now display a compact, high-contrast protocol badge pill (such as `WDAV`, `SMB`, `NFS`, `FTP`) on the bottom quadrant of the icon, making remote server shortcuts immediately identifiable on your launcher.
-* **Clearer Home Screen Shortcut Removal UX:**
-  Due to Android OS security restrictions, third-party apps cannot programmatically delete pinned shortcuts from your home screen launcher; Android only allows apps to disable them. When removing a shortcut from inside UFM, a new dialog now clearly explains this so you know the shortcut is disabled and can be dragged to "Remove" on your home screen grid.
+### Why I built it
+New users often had to hunt through deep settings menus just to get the layout, font size, or navigation behavior they preferred.
+I wanted to give everyone a chance to personalize their experience right from the start without being overwhelmed by a wall of text.
+By showing a live preview of each choice, you can see exactly how the app will look and behave before making a decision.
+
+### The ten setup screens
+* The first screen lets you choose your main menu layout.
+You can pick between a modern categorized layout, a classic list, or a grid.
+On mobile, you can also adjust row spacing and choose whether categories start expanded or collapsed.
+On TV, the sequence starts in classic list mode with grid column options.
+* The second screen configures your font size.
+It scales file names, path breadcrumbs, and detail text across the interface.
+Options include small, medium, and large with a sample text line that resizes in real time.
+* The third screen controls long file name behavior.
+You can choose smooth marquee auto-scrolling, multi-line wrapping across two, three, or unlimited lines, or clean truncation at the end or in the middle.
+If you pick marquee scrolling, you can also customize scroll speed, loop behavior, and whether all files or only focused items scroll.
+* The fourth screen adjusts the press duration required to enter multi-selection mode.
+You can select short, normal, or long durations.
+It features an interactive test ring on mobile where you can press and feel the vibration to test the timing.
+* The fifth screen is mobile only and lets left-handed users move the floating action button to the bottom-left corner of the screen.
+A miniature phone preview demonstrates the button relocating across corners.
+This screen is automatically skipped on TV since TV uses remote control navigation.
+* The sixth screen is also mobile only and lets you enable or disable the quick access edge drawer.
+A phone preview demonstrates the translucent drawer sliding into view from the side.
+This screen is also skipped on TV.
+* The seventh screen sets your file deletion safety preference.
+You can choose permanent deletion to remove files immediately, or safe delete to move files to the recycle bin so they can be restored later.
+* The eighth screen controls the visibility of hidden files and dotfiles.
+A live preview demonstrates system folders appearing and disappearing from the list.
+* The ninth screen configures application security.
+You can choose open access for instant launch, or protected lock to require authentication.
+Selecting protected lock lets you configure a four-digit PIN, custom password, or biometric unlock, and set how quickly the app locks when minimized.
+This screen only appears on devices with secure lock hardware.
+* The tenth screen asks whether you want to share anonymous crash and diagnostic reports with me.
+It includes a clear privacy guarantee confirming that zero file names, zero storage contents, and zero personal identifiers are ever collected.
 
 ### How to use it
-* Open **Ultimate File Manager Pro** on your mobile device or Android TV.
-* Navigate to any remote storage location (WebDAV, SMB, NFS, FTP, SFTP, or Cloud storage).
-* Long-press any folder or file and choose **Add Favorite**.
-* If you want a launcher icon on your home screen, toggle **Add to home screen** on.
-* Notice the clean protocol badge pill (`WDAV`, `SMB`, etc.) on your home screen icon and the `{Protocol} • {Type}` subtitle in your in-app favorites list.
-* Tapping the favorite or home screen shortcut will now reliably open the remote folder or launch the file directly without redirection errors.
-* To remove a shortcut, open **Manage Favorites** in Settings and tap the shortcut toggle; the app will explain the launcher behavior and disable the shortcut safely.
+* When you open the app for the very first time, the sequence appears immediately after permissions are granted.
+* On the first screen, you can tap the Skip and Use Defaults button to jump straight into the file browser with all recommended settings applied in one tap.
+* From the second screen onwards, the button changes to Skip Remaining.
+* Tapping Skip Remaining preserves every preference you chose on earlier screens and applies defaults only to the screens you did not visit.
+* You can also use the Next button to move forward or the Back button to revisit any previous choice.
+* If you are an existing user or want to change your choices later, open the Settings screen from the main menu.
+* Look for the General and Interface section near the top.
+* Select the Quick Setup Wizard option.
+* The setup will open with your current preferences already pre-selected.
+* On Android TV, the entire sequence uses a split-screen layout designed for 16:9 displays.
+* On TV, you navigate through options and preview items using your remote control D-pad with clear focus highlights.
 
 Thank you and kind regards

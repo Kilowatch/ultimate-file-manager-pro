@@ -15284,6 +15284,21 @@ UFM के लिए एक सुरक्षित पासवर्ड द�
     <string name="settings_security_lock_frequency_dialog_title">
 लॉक फ़्रीक्वेंसी चुनें
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+चुनें कि पृष्ठभूमि में रखे जाने पर UFM कितनी जल्दी लॉक हो जाता है
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+ऐप को बंद करने और दोबारा खोलने पर ही लॉक होता है
+</string>
+    <string name="settings_security_lock_immediately_desc">
+जब भी यूएफएम न्यूनतम हो जाता है तो तुरंत लॉक हो जाता है
+</string>
+    <string name="settings_security_lock_1min_desc">
+पृष्ठभूमि में 1 मिनट की निष्क्रियता के बाद लॉक हो जाता है
+</string>
+    <string name="settings_security_lock_5min_desc">
+पृष्ठभूमि में 5 मिनट की निष्क्रियता के बाद लॉक हो जाता है
+</string>
     <string name="security_warning_title">
 महत्वपूर्ण सुरक्षा सूचना
 </string>

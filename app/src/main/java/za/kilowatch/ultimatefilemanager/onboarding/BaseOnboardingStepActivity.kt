@@ -160,7 +160,12 @@ abstract class BaseOnboardingStepActivity : AppCompatActivity() {
             MainMenuViewModeManager.saveColumnCount(this, 3)
         }
         if (stepIndex < 2) FontSizeHelper.save(this, FontSizeHelper.FONT_NORMAL)
-        if (stepIndex < 3) ScrollingTextPreferenceManager.setMode(this, ScrollingTextPreferenceManager.MODE_MARQUEE)
+        if (stepIndex < 3) {
+            ScrollingTextPreferenceManager.setMode(this, ScrollingTextPreferenceManager.MODE_MARQUEE)
+            ScrollingTextPreferenceManager.setScrollSpeed(this, ScrollingTextPreferenceManager.SPEED_NORMAL)
+            ScrollingTextPreferenceManager.setLoopMode(this, ScrollingTextPreferenceManager.LOOP_ONE_SHOT)
+            ScrollingTextPreferenceManager.setScrollScope(this, ScrollingTextPreferenceManager.SCOPE_ALL)
+        }
         if (stepIndex < 4) LongPressDurationManager.saveStep(this, LongPressDurationManager.DEFAULT_STEP)
         if (stepIndex < 5 && !isTv) LeftHandedFabPreferenceManager.setLeftHanded(this, false)
         if (stepIndex < 6 && !isTv) QuickAccessManager.setMode(this, QuickAccessManager.MODE_EDGE_MENU)

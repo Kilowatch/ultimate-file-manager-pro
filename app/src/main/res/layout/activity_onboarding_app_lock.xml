@@ -21,6 +21,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/includeHeader"
         app:layout_constraintBottom_toTopOf="@id/includeFooter"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,15 +31,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp"
+            android:paddingHorizontal="20dp"
             android:paddingBottom="24dp">
 
-            <!-- Live Preview Card -->
+            <!-- 1. Live Preview Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:strokeWidth="1dp"
@@ -48,41 +49,76 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center_horizontal"
-                    android:padding="20dp">
+                    android:padding="16dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="LIVE SECURITY PREVIEW"
-                        android:textColor="?attr/colorPrimary"
-                        android:textSize="11sp"
-                        android:fontFamily="sans-serif-black"
-                        android:letterSpacing="0.08" />
-
-                    <!-- Security Preview Box -->
+                    <!-- Live Preview Title & LIVE Pill Badge -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="16dp"
-                        android:background="@drawable/bg_btn_icon_frosted">
+                        android:gravity="center_vertical">
 
                         <ImageView
-                            android:id="@+id/imgLockStatus"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_eye_preview"
+                            app:tint="?attr/colorPrimary"
+                            android:contentDescription="@null" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:text="Live Preview"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="3dp"
+                            android:background="@drawable/bg_pill_live"
+                            android:text="LIVE"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="11sp"
+                            android:fontFamily="sans-serif-black"
+                            android:letterSpacing="0.08" />
+                    </LinearLayout>
+
+                    <!-- Security Status Box -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="14dp"
+                        android:padding="12dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
+
+                        <FrameLayout
                             android:layout_width="44dp"
                             android:layout_height="44dp"
-                            android:src="@drawable/ic_security_lock"
-                            app:tint="?attr/colorPrimary" />
+                            android:background="@drawable/bg_squircle_category_icon">
+                            <ImageView
+                                android:id="@+id/imgLockStatus"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_security_lock"
+                                app:tint="?attr/colorPrimary"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:orientation="vertical"
                             android:layout_marginStart="14dp"
-                            android:orientation="vertical">
+                            android:layout_marginEnd="8dp">
 
                             <TextView
                                 android:id="@+id/txtLockStatusTitle"
@@ -97,16 +133,29 @@
                                 android:id="@+id/txtLockStatusDesc"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
+                                android:layout_marginTop="2dp"
                                 android:text="No authentication required when opening UFM"
                                 android:textColor="@color/mobile_text_secondary"
                                 android:textSize="12sp" />
                         </LinearLayout>
-                    </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/txtLockStatusPill"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="3dp"
+                            android:background="@drawable/bg_pill_selected"
+                            android:text="OPEN"
+                            android:textColor="?attr/colorPrimary"
+                            android:textSize="11sp"
+                            android:fontFamily="sans-serif-black"
+                            android:letterSpacing="0.05" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- 2. Section Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -123,7 +172,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:cardCornerRadius="14dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:strokeWidth="2dp"
@@ -136,21 +185,26 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:padding="16dp">
+                    android:padding="14dp">
 
-                    <RadioButton
-                        android:id="@+id/radioOptionOpen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:checked="true" />
+                    <FrameLayout
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginEnd="12dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_lock"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="12dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -158,17 +212,25 @@
                             android:layout_height="wrap_content"
                             android:text="@string/onboarding_app_lock_open"
                             android:textColor="@color/mobile_text_primary"
-                            android:textSize="16sp"
+                            android:textSize="15sp"
                             android:fontFamily="sans-serif-bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
                             android:text="@string/onboarding_app_lock_open_desc"
                             android:textColor="@color/mobile_text_secondary"
-                            android:textSize="13sp" />
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
                     </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/checkOptionOpen"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_check_circle"
+                        app:tint="?attr/colorPrimary"
+                        android:layout_marginStart="8dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -177,8 +239,8 @@
                 android:id="@+id/cardOptionProtected"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:cardCornerRadius="14dp"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:strokeWidth="1dp"
@@ -191,21 +253,26 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:padding="16dp">
+                    android:padding="14dp">
 
-                    <RadioButton
-                        android:id="@+id/radioOptionProtected"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:checked="false" />
+                    <FrameLayout
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginEnd="12dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_security_lock"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="12dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -213,19 +280,268 @@
                             android:layout_height="wrap_content"
                             android:text="@string/onboarding_app_lock_secure"
                             android:textColor="@color/mobile_text_primary"
-                            android:textSize="16sp"
+                            android:textSize="15sp"
                             android:fontFamily="sans-serif-bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
                             android:text="@string/onboarding_app_lock_secure_desc"
                             android:textColor="@color/mobile_text_secondary"
-                            android:textSize="13sp" />
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
                     </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/checkOptionProtected"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_check_circle"
+                        app:tint="?attr/colorPrimary"
+                        android:layout_marginStart="8dp"
+                        android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- 3. Protected Sub-Options Container (Shown when Protected Lock is active) -->
+            <LinearLayout
+                android:id="@+id/layoutProtectedSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_section_security"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Grouped Settings Card matching Settings screen -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGroupSecuritySettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/mobile_glass_card"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/mobile_glass_stroke">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!-- Security Method -->
+                        <LinearLayout
+                            android:id="@+id/cardSecurityMethod"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="14dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_btn_icon_frosted"
+                                android:layout_marginEnd="12dp">
+
+                                <ImageView
+                                    android:id="@+id/imgSecurityMethodIcon"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_dialpad"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_security_method_title"
+                                    android:textColor="@color/mobile_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtSecurityMethodSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_security_method_pin"
+                                    android:textColor="@color/mobile_text_secondary"
+                                    android:textSize="12sp"
+                                    android:layout_marginTop="2dp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_arrow_down"
+                                android:rotation="-90"
+                                app:tint="@color/mobile_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+
+                        <!-- Divider for Change Credential -->
+                        <View
+                            android:id="@+id/dividerChangeCredential"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/mobile_glass_stroke" />
+
+                        <!-- Change Credential (PIN or Password) -->
+                        <LinearLayout
+                            android:id="@+id/cardChangeCredential"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="14dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_btn_icon_frosted"
+                                android:layout_marginEnd="12dp">
+
+                                <ImageView
+                                    android:id="@+id/imgChangeCredentialIcon"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_edit"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/txtChangeCredentialTitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_security_change_pin"
+                                    android:textColor="@color/mobile_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtChangeCredentialSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_security_change_pin_subtitle"
+                                    android:textColor="@color/mobile_text_secondary"
+                                    android:textSize="12sp"
+                                    android:layout_marginTop="2dp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_arrow_down"
+                                android:rotation="-90"
+                                app:tint="@color/mobile_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+
+                        <!-- Divider for Lock Timeout -->
+                        <View
+                            android:id="@+id/dividerAutoLockTimeout"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/mobile_glass_stroke" />
+
+                        <!-- Lock Frequency / Timeout -->
+                        <LinearLayout
+                            android:id="@+id/cardAutoLockTimeout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="14dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_btn_icon_frosted"
+                                android:layout_marginEnd="12dp">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_time"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_security_lock_frequency"
+                                    android:textColor="@color/mobile_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:id="@+id/txtAutoLockTimeoutSubtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_security_lock_fresh_open"
+                                    android:textColor="@color/mobile_text_secondary"
+                                    android:textSize="12sp"
+                                    android:layout_marginTop="2dp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_arrow_down"
+                                android:rotation="-90"
+                                app:tint="@color/mobile_text_secondary"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

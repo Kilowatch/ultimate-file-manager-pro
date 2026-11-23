@@ -15284,6 +15284,21 @@ UFM의 보안 비밀번호를 입력하세요
     <string name="settings_security_lock_frequency_dialog_title">
 잠금 빈도 선택
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+UFM이 배경에 배치될 때 얼마나 빨리 잠길지 선택하세요.
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+앱을 닫았다가 다시 열 때만 잠깁니다.
+</string>
+    <string name="settings_security_lock_immediately_desc">
+UFM이 최소화될 때마다 즉시 잠깁니다.
+</string>
+    <string name="settings_security_lock_1min_desc">
+백그라운드에서 1분 동안 활동이 없으면 잠김
+</string>
+    <string name="settings_security_lock_5min_desc">
+백그라운드에서 5분 동안 활동이 없으면 잠김
+</string>
     <string name="security_warning_title">
 중요한 보안 공지
 </string>

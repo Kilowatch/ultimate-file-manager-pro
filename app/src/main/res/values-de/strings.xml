@@ -15272,6 +15272,21 @@ Nach 5 Minuten
     <string name="settings_security_lock_frequency_dialog_title">
 Wählen Sie Sperrhäufigkeit aus
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+Wählen Sie, wie schnell UFM gesperrt wird, wenn es im Hintergrund platziert wird
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+Sperrt nur beim Schließen und erneuten Öffnen der App
+</string>
+    <string name="settings_security_lock_immediately_desc">
+Wird sofort gesperrt, wenn UFM minimiert wird
+</string>
+    <string name="settings_security_lock_1min_desc">
+Sperrt nach 1 Minute Inaktivität im Hintergrund
+</string>
+    <string name="settings_security_lock_5min_desc">
+Sperrt nach 5 Minuten Inaktivität im Hintergrund
+</string>
     <string name="security_warning_title">
 Wichtiger Sicherheitshinweis
 </string>

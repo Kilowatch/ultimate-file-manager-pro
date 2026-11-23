@@ -36,29 +36,31 @@
             android:layout_weight="1"
             android:layout_marginEnd="16dp"
             android:overScrollMode="never"
-            android:scrollbars="none">
+            android:scrollbars="vertical"
+            android:scrollbarThumbVertical="@color/tv_glass_white_10">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="OVERFLOW BEHAVIOR"
+                    android:text="@string/settings_file_name_display_title"
                     android:textColor="@color/tv_text_secondary"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-black"
                     android:letterSpacing="0.08" />
 
-                <!-- Marquee Option (Default) -->
+                <!-- Option 1: Marquee Auto-Scroll (Default) -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardOptionMarquee"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardCornerRadius="14dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:cardBackgroundColor="@color/tv_glass_white_10"
                     app:strokeWidth="2dp"
@@ -69,51 +71,193 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="16dp">
-
-                        <RadioButton
-                            android:id="@+id/radioOptionMarquee"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:clickable="false"
-                            android:focusable="false" />
+                        android:orientation="vertical"
+                        android:padding="14dp">
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="12dp"
-                            android:orientation="vertical">
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
 
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_btn_icon_frosted"
+                                android:layout_marginEnd="14dp">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_font_size"
+                                    app:tint="@color/tv_accent"
+                                    android:importantForAccessibility="no" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_file_name_display_marquee"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="16sp"
+                                    android:fontFamily="sans-serif-bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/settings_file_name_display_marquee_desc"
+                                    android:textColor="@color/tv_text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/checkModeMarquee"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_check_circle"
+                                app:tint="@color/tv_accent"
+                                android:layout_marginStart="8dp" />
+                        </LinearLayout>
+
+                        <!-- Marquee Sub-options Container -->
+                        <LinearLayout
+                            android:id="@+id/layoutMarqueeSubOptions"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="12dp"
+                            android:layout_marginTop="12dp"
+                            android:background="@drawable/bg_card_glass">
+
+                            <!-- Scroll Speed -->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/onboarding_scrolling_marquee"
-                                android:textColor="@color/tv_text_primary"
-                                android:textSize="16sp"
-                                android:fontFamily="sans-serif-bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="@string/onboarding_scrolling_marquee_desc"
+                                android:text="@string/settings_marquee_speed_title"
                                 android:textColor="@color/tv_text_secondary"
-                                android:textSize="13sp" />
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-bold"
+                                android:layout_marginBottom="4dp" />
+
+                            <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/cgSpeed"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:singleSelection="true"
+                                app:selectionRequired="true"
+                                app:singleLine="false"
+                                app:chipSpacingVertical="4dp"
+                                android:layout_marginBottom="10dp">
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipSpeedSlow"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_marquee_speed_slow" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipSpeedNormal"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_marquee_speed_normal" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipSpeedFast"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_marquee_speed_fast" />
+                            </com.google.android.material.chip.ChipGroup>
+
+                            <!-- Loop Mode -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_marquee_loop_title"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-bold"
+                                android:layout_marginBottom="4dp" />
+
+                            <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/cgLoop"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:singleSelection="true"
+                                app:selectionRequired="true"
+                                app:singleLine="false"
+                                app:chipSpacingVertical="4dp"
+                                android:layout_marginBottom="10dp">
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipLoopOneShot"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_marquee_loop_one_shot" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipLoopContinuous"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_marquee_loop_continuous" />
+                            </com.google.android.material.chip.ChipGroup>
+
+                            <!-- Scroll Scope -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_marquee_scope_title"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-bold"
+                                android:layout_marginBottom="4dp" />
+
+                            <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/cgScope"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:singleSelection="true"
+                                app:selectionRequired="true"
+                                app:singleLine="false"
+                                app:chipSpacingVertical="4dp">
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipScopeAll"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_marquee_scope_all" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipScopeFocused"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_marquee_scope_focused" />
+                            </com.google.android.material.chip.ChipGroup>
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Truncate Option -->
+                <!-- Option 2: 2 Lines -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardOptionTruncate"
+                    android:id="@+id/cardOption2Lines"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    app:cardCornerRadius="14dp"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:cardBackgroundColor="@color/tv_glass_white_10"
                     app:strokeWidth="1dp"
@@ -126,27 +270,32 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:padding="16dp">
+                        android:padding="14dp">
 
-                        <RadioButton
-                            android:id="@+id/radioOptionTruncate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="false"
-                            android:clickable="false"
-                            android:focusable="false" />
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_btn_icon_frosted"
+                            android:layout_marginEnd="14dp">
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_font_size"
+                                app:tint="@color/tv_accent"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="12dp"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/onboarding_scrolling_truncate"
+                                android:text="@string/settings_file_name_display_2_lines"
                                 android:textColor="@color/tv_text_primary"
                                 android:textSize="16sp"
                                 android:fontFamily="sans-serif-bold" />
@@ -155,10 +304,295 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="@string/onboarding_scrolling_truncate_desc"
+                                android:text="@string/settings_file_name_display_2_lines_desc"
                                 android:textColor="@color/tv_text_secondary"
-                                android:textSize="13sp" />
+                                android:textSize="12sp" />
                         </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/checkMode2Lines"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="@color/tv_accent"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Option 3: 3 Lines -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardOption3Lines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    android:focusable="true"
+                    android:clickable="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="14dp">
+
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_btn_icon_frosted"
+                            android:layout_marginEnd="14dp">
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_font_size"
+                                app:tint="@color/tv_accent"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_file_name_display_3_lines"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/settings_file_name_display_3_lines_desc"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/checkMode3Lines"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="@color/tv_accent"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Option 4: Unlimited Lines -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardOptionUnlimited"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    android:focusable="true"
+                    android:clickable="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="14dp">
+
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_btn_icon_frosted"
+                            android:layout_marginEnd="14dp">
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_font_size"
+                                app:tint="@color/tv_accent"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_file_name_display_unlimited"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/settings_file_name_display_unlimited_desc"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/checkModeUnlimited"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="@color/tv_accent"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Option 5: Single Line (Truncate End) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardOptionTruncate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    android:focusable="true"
+                    android:clickable="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="14dp">
+
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_btn_icon_frosted"
+                            android:layout_marginEnd="14dp">
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_close"
+                                app:tint="@color/tv_accent"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_file_name_display_truncate"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/settings_file_name_display_truncate_desc"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/checkModeTruncate"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="@color/tv_accent"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Option 6: Single Line (Truncate Middle) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardOptionTruncateMiddle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    android:focusable="true"
+                    android:clickable="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="14dp">
+
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_btn_icon_frosted"
+                            android:layout_marginEnd="14dp">
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_font_size"
+                                app:tint="@color/tv_accent"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_file_name_display_truncate_middle"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/settings_file_name_display_truncate_middle_desc"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/checkModeTruncateMiddle"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="@color/tv_accent"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -172,7 +606,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="@color/tv_glass_white_10"
             app:strokeWidth="1dp"
@@ -184,59 +618,101 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LIVE PREVIEW"
-                    android:textColor="@color/tv_accent"
-                    android:textSize="12sp"
-                    android:fontFamily="sans-serif-black"
-                    android:letterSpacing="0.08" />
-
+                <!-- Header -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_file_archive"
-                        app:tint="@color/tv_accent" />
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_eye_preview"
+                        app:tint="@color/tv_accent"
+                        android:contentDescription="@null" />
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="16dp"
-                        android:orientation="vertical">
+                        android:layout_marginStart="10dp"
+                        android:text="Live Preview"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-bold" />
 
-                        <TextView
-                            android:id="@+id/previewFileName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/onboarding_preview_sample_long_name"
-                            android:textColor="@color/tv_text_primary"
-                            android:textSize="17sp"
-                            android:fontFamily="sans-serif-medium"
-                            android:singleLine="true"
-                            android:ellipsize="marquee"
-                            android:marqueeRepeatLimit="marquee_forever"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="14.8 GB • Compressed Gzip Archive"
-                            android:textColor="@color/tv_text_secondary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="3dp"
+                        android:background="@drawable/bg_pill_live"
+                        android:text="LIVE"
+                        android:textColor="@color/tv_accent"
+                        android:textSize="11sp"
+                        android:fontFamily="sans-serif-black"
+                        android:letterSpacing="0.08" />
                 </LinearLayout>
 
+                <!-- Preview File Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/tv_glass_white_10"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/tv_glass_border">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_glass_card">
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_file_archive"
+                                app:tint="@color/tv_accent"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:id="@+id/txtPreviewFileName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_file_name_preview_sample"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="18sp"
+                                android:fontFamily="sans-serif-black" />
+
+                            <TextView
+                                android:id="@+id/txtPreviewDetails"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="14.8 GB • Compressed Gzip Archive"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

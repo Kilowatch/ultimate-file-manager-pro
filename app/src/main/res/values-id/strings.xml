@@ -15284,6 +15284,21 @@ Setelah 5 menit
     <string name="settings_security_lock_frequency_dialog_title">
 Pilih Frekuensi Kunci
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+Pilih seberapa cepat UFM mengunci saat ditempatkan di latar belakang
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+Mengunci hanya saat menutup dan membuka kembali aplikasi
+</string>
+    <string name="settings_security_lock_immediately_desc">
+Segera terkunci setiap kali UFM diminimalkan
+</string>
+    <string name="settings_security_lock_1min_desc">
+Terkunci setelah 1 menit tidak aktif di latar belakang
+</string>
+    <string name="settings_security_lock_5min_desc">
+Terkunci setelah 5 menit tidak ada aktivitas di latar belakang
+</string>
     <string name="security_warning_title">
 Pemberitahuan Keamanan Penting
 </string>

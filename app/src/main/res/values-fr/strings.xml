@@ -15284,6 +15284,21 @@ Après 5 minutes
     <string name="settings_security_lock_frequency_dialog_title">
 Sélectionnez la fréquence de verrouillage
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+Choisissez la rapidité avec laquelle l\'UFM se verrouille lorsqu\'il est placé en arrière-plan
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+Se verrouille uniquement lors de la fermeture et de la réouverture de l\'application
+</string>
+    <string name="settings_security_lock_immediately_desc">
+Se verrouille immédiatement chaque fois que l\'UFM est minimisé
+</string>
+    <string name="settings_security_lock_1min_desc">
+Se verrouille après 1 minute d\'inactivité en arrière-plan
+</string>
+    <string name="settings_security_lock_5min_desc">
+Se verrouille après 5 minutes d\'inactivité en arrière-plan
+</string>
     <string name="security_warning_title">
 Avis de sécurité important
 </string>

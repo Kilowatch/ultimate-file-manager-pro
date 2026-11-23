@@ -15284,6 +15284,21 @@ Depois de 5 minutos
     <string name="settings_security_lock_frequency_dialog_title">
 Selecione Frequência de bloqueio
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+Escolha a rapidez com que o UFM é bloqueado quando colocado em segundo plano
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+Bloqueia apenas ao fechar e reabrir o aplicativo
+</string>
+    <string name="settings_security_lock_immediately_desc">
+Bloqueia imediatamente sempre que o UFM é minimizado
+</string>
+    <string name="settings_security_lock_1min_desc">
+Bloqueia após 1 minuto de inatividade em segundo plano
+</string>
+    <string name="settings_security_lock_5min_desc">
+Bloqueia após 5 minutos de inatividade em segundo plano
+</string>
     <string name="security_warning_title">
 Aviso importante de segurança
 </string>

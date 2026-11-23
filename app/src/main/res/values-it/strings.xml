@@ -15250,6 +15250,21 @@ Dopo 5 minuti
     <string name="settings_security_lock_frequency_dialog_title">
 Seleziona Blocca frequenza
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+Scegli la velocità con cui UFM si blocca quando viene posizionato in background
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+Si blocca solo alla chiusura e riapertura dell\'app
+</string>
+    <string name="settings_security_lock_immediately_desc">
+Si blocca immediatamente ogni volta che UFM viene ridotto a icona
+</string>
+    <string name="settings_security_lock_1min_desc">
+Si blocca dopo 1 minuto di inattività in background
+</string>
+    <string name="settings_security_lock_5min_desc">
+Si blocca dopo 5 minuti di inattività in background
+</string>
     <string name="security_warning_title">
 Avviso importante sulla sicurezza
 </string>

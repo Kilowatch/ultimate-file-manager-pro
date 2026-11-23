@@ -3637,35 +3637,58 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showLockTimeoutDialog() {
+        val layoutRes = if (isTv) R.layout.dialog_lock_frequency_tv else R.layout.dialog_lock_frequency
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
         val secManager = AppSecurityManager.getInstance(this)
         val current = secManager.getLockTimeout()
-        val options = arrayOf(
-            getString(R.string.settings_security_lock_fresh_open),
-            getString(R.string.settings_security_lock_immediately),
-            getString(R.string.settings_security_lock_1min),
-            getString(R.string.settings_security_lock_5min)
-        )
-        val values = longArrayOf(
-            AppSecurityManager.TIMEOUT_FRESH_OPEN_ONLY,
-            AppSecurityManager.TIMEOUT_IMMEDIATELY,
-            AppSecurityManager.TIMEOUT_ONE_MINUTE,
-            AppSecurityManager.TIMEOUT_FIVE_MINUTES
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val options = listOf(
+            Triple(R.id.btnTimeoutFreshOpen, R.id.checkTimeoutFreshOpen, AppSecurityManager.TIMEOUT_FRESH_OPEN_ONLY),
+            Triple(R.id.btnTimeoutImmediately, R.id.checkTimeoutImmediately, AppSecurityManager.TIMEOUT_IMMEDIATELY),
+            Triple(R.id.btnTimeout1Min, R.id.checkTimeout1Min, AppSecurityManager.TIMEOUT_ONE_MINUTE),
+            Triple(R.id.btnTimeout5Min, R.id.checkTimeout5Min, AppSecurityManager.TIMEOUT_FIVE_MINUTES)
         )
 
-        val selectedIndex = values.indexOfFirst { it == current }.let { if (it >= 0) it else 0 }
+        var defaultFocusView: View? = null
 
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.settings_security_lock_frequency_dialog_title)
-            .setSingleChoiceItems(options, selectedIndex) { dialog, which ->
-                val selectedTimeout = values[which]
+        options.forEach { (btnId, checkId, timeoutVal) ->
+            val btn = dialogView.findViewById<View>(btnId)
+            val check = dialogView.findViewById<ImageView>(checkId)
+            val isSelected = current == timeoutVal
+            check?.visibility = if (isSelected) View.VISIBLE else View.GONE
+            if (isSelected) {
+                defaultFocusView = btn
+            }
+
+            btn?.setOnClickListener {
+                dialog.dismiss()
                 lifecycleScope.launch {
-                    secManager.setLockTimeout(selectedTimeout)
+                    secManager.setLockTimeout(timeoutVal)
                     updateSecurityUi(secManager.isSecurityEnabled(), secManager.getSecurityMode())
                 }
-                dialog.dismiss()
             }
-            .setNegativeButton(R.string.btn_cancel, null)
-            .show()
+
+            if (isTv && btn != null) {
+                setupTvCardFocus(btn)
+            }
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            (defaultFocusView ?: dialogView.findViewById(R.id.btnTimeoutFreshOpen))?.requestFocus()
+        }
     }
 
     private fun setupViewAppearanceSection() {

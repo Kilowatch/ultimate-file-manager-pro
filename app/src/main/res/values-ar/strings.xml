@@ -15286,6 +15286,21 @@ MD5
     <string name="settings_security_lock_frequency_dialog_title">
 حدد تردد القفل
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+اختر مدى سرعة قفل UFM عند وضعه في الخلفية
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+يتم القفل فقط عند إغلاق التطبيق وإعادة فتحه
+</string>
+    <string name="settings_security_lock_immediately_desc">
+يتم القفل فورًا عند تصغير UFM
+</string>
+    <string name="settings_security_lock_1min_desc">
+يتم القفل بعد دقيقة واحدة من عدم النشاط في الخلفية
+</string>
+    <string name="settings_security_lock_5min_desc">
+يتم القفل بعد 5 دقائق من عدم النشاط في الخلفية
+</string>
     <string name="security_warning_title">
 إشعار أمني مهم
 </string>

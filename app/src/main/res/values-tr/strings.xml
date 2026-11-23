@@ -15284,6 +15284,21 @@ Hemen arka planda
     <string name="settings_security_lock_frequency_dialog_title">
 Kilit Frekansını Seçin
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+UFM\'nin arka plana yerleştirildiğinde ne kadar hızlı kilitleneceğini seçin
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+Yalnızca uygulamayı kapatıp yeniden açarken kilitlenir
+</string>
+    <string name="settings_security_lock_immediately_desc">
+UFM simge durumuna küçültüldüğünde anında kilitlenir
+</string>
+    <string name="settings_security_lock_1min_desc">
+Arka planda 1 dakika işlem yapılmadığında kilitlenir
+</string>
+    <string name="settings_security_lock_5min_desc">
+Arka planda 5 dakika işlem yapılmadığında kilitlenir
+</string>
     <string name="security_warning_title">
 Önemli Güvenlik Uyarısı
 </string>

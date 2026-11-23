@@ -15284,6 +15284,21 @@ MD5
     <string name="settings_security_lock_frequency_dialog_title">
 Выберите частоту блокировки
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+Выберите, насколько быстро UFM будет блокироваться в фоновом режиме.
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+Блокируется только при закрытии и повторном открытии приложения
+</string>
+    <string name="settings_security_lock_immediately_desc">
+Блокируется немедленно при сворачивании UFM.
+</string>
+    <string name="settings_security_lock_1min_desc">
+Блокируется после 1 минуты бездействия в фоновом режиме
+</string>
+    <string name="settings_security_lock_5min_desc">
+Блокируется после 5 минут бездействия в фоновом режиме
+</string>
     <string name="security_warning_title">
 Важное уведомление о безопасности
 </string>

@@ -15012,6 +15012,21 @@ Na 5 minuten
     <string name="settings_security_lock_frequency_dialog_title">
 Selecteer Vergrendelingsfrequentie
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+Kies hoe snel UFM vergrendelt wanneer deze op de achtergrond wordt geplaatst
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+Vergrendelt alleen bij het sluiten en opnieuw openen van de app
+</string>
+    <string name="settings_security_lock_immediately_desc">
+Vergrendelt onmiddellijk wanneer UFM wordt geminimaliseerd
+</string>
+    <string name="settings_security_lock_1min_desc">
+Vergrendelt na 1 minuut inactiviteit op de achtergrond
+</string>
+    <string name="settings_security_lock_5min_desc">
+Vergrendelt na 5 minuten inactiviteit op de achtergrond
+</string>
     <string name="security_warning_title">
 Belangrijke veiligheidsmededeling
 </string>

@@ -15284,6 +15284,21 @@ Android 设置中未设置生物识别或设备锁定
     <string name="settings_security_lock_frequency_dialog_title">
 选择锁定频率
 </string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">
+选择置于后台时 UFM 锁定的速度
+</string>
+    <string name="settings_security_lock_fresh_open_desc">
+仅在关闭并重新打开应用程序时锁定
+</string>
+    <string name="settings_security_lock_immediately_desc">
+当 UFM 最小化时立即锁定
+</string>
+    <string name="settings_security_lock_1min_desc">
+后台不活动 1 分钟后锁定
+</string>
+    <string name="settings_security_lock_5min_desc">
+后台不活动 5 分钟后锁定
+</string>
     <string name="security_warning_title">
 重要安全通知
 </string>

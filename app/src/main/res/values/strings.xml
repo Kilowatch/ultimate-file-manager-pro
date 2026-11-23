@@ -5389,6 +5389,11 @@
     <string name="settings_security_lock_1min">After 1 minute</string>
     <string name="settings_security_lock_5min">After 5 minutes</string>
     <string name="settings_security_lock_frequency_dialog_title">Select Lock Frequency</string>
+    <string name="settings_security_lock_frequency_dialog_subtitle">Choose how quickly UFM locks when placed in the background</string>
+    <string name="settings_security_lock_fresh_open_desc">Locks only when closing and reopening the app</string>
+    <string name="settings_security_lock_immediately_desc">Locks immediately whenever UFM is minimized</string>
+    <string name="settings_security_lock_1min_desc">Locks after 1 minute of inactivity in the background</string>
+    <string name="settings_security_lock_5min_desc">Locks after 5 minutes of inactivity in the background</string>
     <string name="security_warning_title">Important Security Notice</string>
     <string name="security_warning_message">If you forget your PIN or Password and lose your Recovery Key, you will be permanently locked out of Ultimate File Manager Pro.\n\nNeither KiloWatch nor anyone else can recover your credentials or unlock your files. Make sure to keep your Recovery Key in a safe, secure place.</string>
     <string name="security_warning_confirm">I Understand — Show Recovery Key</string>
