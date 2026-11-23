@@ -225,6 +225,336 @@ Etkinleştir
 Ayarları Aç
 </string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">
+%2$d adımının %1$d adımı
+</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">
+Atla ve Varsayılanları Kullan
+</string>
+    <string name="onboarding_btn_skip_remaining">
+Kalanı Atla
+</string>
+    <string name="onboarding_btn_start_browsing">
+Göz Atmaya Başlayın
+</string>
+    <string name="onboarding_settings_reconfigure_title">
+Hızlı Kurulum Sihirbazı
+</string>
+    <string name="onboarding_settings_reconfigure_subtitle">
+Ekran yoğunluğunu, kontrolleri ve tuş tercihlerini kişiselleştirin
+</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">
+Ana Menü Düzeni
+</string>
+    <string name="onboarding_view_density_subtitle">
+Depolama alanınıza nasıl göz atmak istediğinizi seçin.
+</string>
+    <string name="onboarding_view_mode_header">
+Görünüm Modu
+</string>
+    <string name="onboarding_categorized_title">
+Kategorize edilmiş
+</string>
+    <string name="onboarding_categorized_sub">
+Modern
+</string>
+    <string name="onboarding_list_title">
+Liste
+</string>
+    <string name="onboarding_list_sub">
+Klasik
+</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">
+Klasik
+</string>
+    <string name="onboarding_selected_badge">
+✓ Seçildi
+</string>
+    <string name="onboarding_categorized_settings">
+Kategorize Edilmiş Ayarlar
+</string>
+    <string name="onboarding_categorized_settings_desc">
+Kategorilerin nasıl görüntüleneceğini özelleştirin.
+</string>
+    <string name="onboarding_category_spacing">
+Kategori Aralığı
+</string>
+    <string name="onboarding_spacing_compact">
+Kompakt
+</string>
+    <string name="onboarding_spacing_compact_desc">
+Daha az alan
+</string>
+    <string name="onboarding_spacing_comfortable">
+Rahat
+</string>
+    <string name="onboarding_spacing_comfortable_desc">
+Dengeli aralık
+</string>
+    <string name="onboarding_expand_categories">
+Kategorileri Genişlet
+</string>
+    <string name="onboarding_expand_categories_desc">
+Açılışta kategori içeriğini göster
+</string>
+    <string name="onboarding_list_settings">
+Liste Ayarları
+</string>
+    <string name="onboarding_list_settings_desc">
+Satır aralığını ve yoğunluğunu özelleştirin.
+</string>
+    <string name="onboarding_row_spacing">
+Satır Aralığı
+</string>
+    <string name="onboarding_grid_settings">
+Izgara Ayarları
+</string>
+    <string name="onboarding_grid_settings_desc">
+Izgara sütun yoğunluğunu özelleştirin.
+</string>
+    <string name="onboarding_grid_columns">
+Izgara Sütunları
+</string>
+    <string name="onboarding_columns_3_title">
+3 Sütun
+</string>
+    <string name="onboarding_columns_3_sub">
+Standart
+</string>
+    <string name="onboarding_columns_4_title">
+4 Sütun
+</string>
+    <string name="onboarding_columns_4_sub">
+Kompakt
+</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">
+Yazı Tipi Boyutu Ölçeği
+</string>
+    <string name="onboarding_font_size_subtitle">
+UFM genelinde dosya adları ve meta veriler için tipografi ölçeğini ayarlayın.
+</string>
+    <string name="onboarding_font_small">
+Küçük (%85)
+</string>
+    <string name="onboarding_font_small_desc">
+Daha küçük ekranlar için yüksek bilgi yoğunluğu.
+</string>
+    <string name="onboarding_font_medium">
+Orta (%100)
+</string>
+    <string name="onboarding_font_medium_desc">
+Dengeli netlik ve okunabilirlik. Tavsiye edilen.
+</string>
+    <string name="onboarding_font_large">
+Büyük (%115)
+</string>
+    <string name="onboarding_font_large_desc">
+Yüksek erişilebilirlik ve zahmetsiz okunabilirlik.
+</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">
+Kayan Metin
+</string>
+    <string name="onboarding_scrolling_text_subtitle">
+Ekran genişliğini aşan dosya adlarının nasıl davranacağını seçin.
+</string>
+    <string name="onboarding_scrolling_marquee">
+Seçim Çerçevesi Otomatik Kaydırma
+</string>
+    <string name="onboarding_scrolling_marquee_desc">
+Uzun adları yatay olarak düzgün bir şekilde kaydırarak tam uzantıların görünmesini sağlar. Tavsiye edilen.
+</string>
+    <string name="onboarding_scrolling_truncate">
+Elips ile kesme
+</string>
+    <string name="onboarding_scrolling_truncate_desc">
+Dosya adlarını statik tutar ve sonunu şununla keser:
+</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">
+Düzenleme Modu Bekletme Süresi
+</string>
+    <string name="onboarding_hold_duration_subtitle">
+Çoklu seçim düzenleme modu etkinleştirilmeden önce bir dosyayı veya klasörü ne kadar süre beklettiğiniz.
+</string>
+    <string name="onboarding_hold_short">
+Kısa (300 ms)
+</string>
+    <string name="onboarding_hold_short_desc">
+Uzman kullanıcılar için hızlı ve çevik çoklu seçim.
+</string>
+    <string name="onboarding_hold_normal">
+Normal (500 ms)
+</string>
+    <string name="onboarding_hold_normal_desc">
+Kaydırma sırasında yanlışlıkla tetiklenenleri önleyen standart süre. Tavsiye edilen.
+</string>
+    <string name="onboarding_hold_long">
+Uzun (800 ms)
+</string>
+    <string name="onboarding_hold_long_desc">
+Hassas dokunmatik ekranlar için ekstra kasıtlı tutma süresi.
+</string>
+    <string name="onboarding_hold_test_button">
+Test Etmek İçin Dokunup Basılı Tutun
+</string>
+    <string name="onboarding_hold_test_success">
+Tetiklendi!
+</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">
+Solak FAB Modu
+</string>
+    <string name="onboarding_left_handed_fab_subtitle">
+Tek elle rahat gezinme için Kayan Eylem Düğmesini yeniden sabitleyin.
+</string>
+    <string name="onboarding_fab_right">
+Sağ El (Varsayılan)
+</string>
+    <string name="onboarding_fab_right_desc">
+Standart sağ başparmak erişimi için sağ altta konumlandırılmıştır.
+</string>
+    <string name="onboarding_fab_left">
+Solak
+</string>
+    <string name="onboarding_fab_left_desc">
+Sol elle rahat kullanım için sol altta konumlandırılmıştır.
+</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">
+Hızlı Erişim Kenar Çekmecesi
+</string>
+    <string name="onboarding_edge_drawer_subtitle">
+Yer imlerine ve sürücülere anında erişim için ekranın kenarından içeri doğru kaydırın.
+</string>
+    <string name="onboarding_edge_drawer_enabled">
+Kenar Çekmecesini Etkinleştir
+</string>
+    <string name="onboarding_edge_drawer_enabled_desc">
+İnce kenar tutamacı, uygulamanın herhangi bir yerinden tek kaydırmayla kısayol erişimi sağlar. Tavsiye edilen.
+</string>
+    <string name="onboarding_edge_drawer_disabled">
+Kenar Çekmecesini Devre Dışı Bırak
+</string>
+    <string name="onboarding_edge_drawer_disabled_desc">
+Yalnızca standart araç çubuğu gezinmesini kullanın.
+</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">
+Geri Dönüşüm Kutusu Koruması
+</string>
+    <string name="onboarding_recycle_bin_subtitle">
+Depolama birimlerinizdeki silinmiş dosyalar için güvenlik ağı.
+</string>
+    <string name="onboarding_recycle_bin_safe">
+Geri Dönüşüm Kutusu\'na Taşı
+</string>
+    <string name="onboarding_recycle_bin_safe_desc">
+Silinen dosyalar Geri Dönüşüm Kutusu\'na taşınır ve istediğiniz zaman geri yüklenebilir.
+</string>
+    <string name="onboarding_recycle_bin_permanent">
+Kalıcı Silme (Varsayılan)
+</string>
+    <string name="onboarding_recycle_bin_permanent_desc">
+Geri Dönüşüm Kutusu\'nu atlar. Dosyalar depolama alanından hemen silinir.
+</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">
+Gizli Dosyaları Göster
+</string>
+    <string name="onboarding_hidden_files_subtitle">
+Nokta dosyalarının ve gizli önbellek klasörlerinin görünürlüğünü kontrol edin.
+</string>
+    <string name="onboarding_hidden_files_hide">
+Nokta Dosyalarını Gizle
+</string>
+    <string name="onboarding_hidden_files_hide_desc">
+.nomedia, .config ve sistem nokta dosyalarını gizleyerek dosya listelerini temiz tutar. Tavsiye edilen.
+</string>
+    <string name="onboarding_hidden_files_show">
+Gizli Dosyaları Göster
+</string>
+    <string name="onboarding_hidden_files_show_desc">
+Uzman kullanıcılar için soluk stil ile tüm gizli nokta dosyalarını ve dizinleri ortaya çıkarır.
+</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">
+Uygulama Kilidi ve Güvenliği
+</string>
+    <string name="onboarding_app_lock_subtitle">
+Ultimate File Manager Pro her açıldığında kimlik doğrulamayı zorunlu kılın.
+</string>
+    <string name="onboarding_app_lock_open">
+Açık Erişim
+</string>
+    <string name="onboarding_app_lock_open_desc">
+Kimlik doğrulama istemi olmadan doğrudan dosya taramayı başlatır. Tavsiye edilen.
+</string>
+    <string name="onboarding_app_lock_secure">
+Korumalı Kilit (PIN / Biyometri)
+</string>
+    <string name="onboarding_app_lock_secure_desc">
+Başlatma sırasında 4 basamaklı PIN veya parmak izi kimlik doğrulamasını zorunlu kılar.
+</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">
+Kilitlenme ve Teşhis Raporlaması
+</string>
+    <string name="onboarding_diagnostics_subtitle">
+Anonim kilitlenme ve ANR yığın izlemelerini ileterek UFM\'nin iyileştirilmesine yardımcı olun.
+</string>
+    <string name="onboarding_diagnostics_enabled">
+Etkin (Önerilen)
+</string>
+    <string name="onboarding_diagnostics_enabled_desc">
+Anonim teknik kilitlenme izleri, hataların hızlı bir şekilde düzeltilmesine yardımcı olur. Sıfır kişisel veri toplandı.
+</string>
+    <string name="onboarding_diagnostics_disabled">
+Engelli
+</string>
+    <string name="onboarding_diagnostics_disabled_desc">
+Tüm otomatik kilitlenme ve hata raporlamasını kapatır.
+</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">
+Belgeler
+</string>
+    <string name="onboarding_preview_sample_meta">
+14 öğe • 2,4 GB
+</string>
+    <string name="onboarding_preview_sample_long_name">
+Ultimate_Backup_Archive_2026_Final_v2.tar.gz
+</string>
+    <string name="onboarding_preview_sample_hidden_name">
+.küçük resimler
+</string>
+    <string name="onboarding_preview_safe_badge">
+Geri Dönüşüm Kutusu Etkin: Dosyalar kurtarılabilir
+</string>
+    <string name="onboarding_preview_warn_badge">
+Doğrudan Silme Etkin: Dosyalar kalıcı olarak silindi
+</string>
+    <string name="onboarding_preview_privacy_badge">
+%100 Anonim • Sıfır Kişisel Veri • Sıfır Dosya Takibi
+</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
 Bildirimler

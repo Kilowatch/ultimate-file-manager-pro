@@ -200,6 +200,38 @@
             android:name=".onboarding.WelcomeActivity"
             android:exported="true" />
 
+        <!-- First-Run Dedicated Onboarding Wizard Activities -->
+        <activity
+            android:name=".onboarding.OnboardingViewDensityActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.OnboardingFontSizeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.OnboardingScrollingTextActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.OnboardingHoldDurationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.OnboardingLeftHandedFabActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.OnboardingEdgeDrawerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.OnboardingRecycleBinActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.OnboardingHiddenFilesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.OnboardingAppLockActivity"
+            android:exported="false" />
+        <activity
+            android:name=".onboarding.OnboardingDiagnosticsActivity"
+            android:exported="false" />
+
         <!-- Storage Browser -->
         <activity
             android:name=".storage.OtherStorageActivity"

@@ -219,6 +219,336 @@ Inschakelen
 Instellingen openen
 </string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">
+Stap %1$d van %2$d
+</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">
+Standaardinstellingen overslaan en gebruiken
+</string>
+    <string name="onboarding_btn_skip_remaining">
+Resterend overslaan
+</string>
+    <string name="onboarding_btn_start_browsing">
+Begin met browsen
+</string>
+    <string name="onboarding_settings_reconfigure_title">
+Snelle installatiewizard
+</string>
+    <string name="onboarding_settings_reconfigure_subtitle">
+Personaliseer de weergavedichtheid, bedieningselementen en belangrijke voorkeuren
+</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">
+Indeling hoofdmenu
+</string>
+    <string name="onboarding_view_density_subtitle">
+Kies hoe u door uw opslag wilt bladeren.
+</string>
+    <string name="onboarding_view_mode_header">
+Bekijk modus
+</string>
+    <string name="onboarding_categorized_title">
+Gecategoriseerd
+</string>
+    <string name="onboarding_categorized_sub">
+Modern
+</string>
+    <string name="onboarding_list_title">
+Lijst
+</string>
+    <string name="onboarding_list_sub">
+Klassiek
+</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">
+Klassiek
+</string>
+    <string name="onboarding_selected_badge">
+✓ Geselecteerd
+</string>
+    <string name="onboarding_categorized_settings">
+Gecategoriseerde instellingen
+</string>
+    <string name="onboarding_categorized_settings_desc">
+Pas aan hoe categorieën worden weergegeven.
+</string>
+    <string name="onboarding_category_spacing">
+Categorie-afstand
+</string>
+    <string name="onboarding_spacing_compact">
+Compact
+</string>
+    <string name="onboarding_spacing_compact_desc">
+Minder ruimte
+</string>
+    <string name="onboarding_spacing_comfortable">
+Comfortabel
+</string>
+    <string name="onboarding_spacing_comfortable_desc">
+Evenwichtige afstand
+</string>
+    <string name="onboarding_expand_categories">
+Vouw Categorieën uit
+</string>
+    <string name="onboarding_expand_categories_desc">
+Toon categorie-inhoud bij openen
+</string>
+    <string name="onboarding_list_settings">
+Lijstinstellingen
+</string>
+    <string name="onboarding_list_settings_desc">
+Pas de rijafstand en dichtheid aan.
+</string>
+    <string name="onboarding_row_spacing">
+Rijafstand
+</string>
+    <string name="onboarding_grid_settings">
+Rasterinstellingen
+</string>
+    <string name="onboarding_grid_settings_desc">
+Pas de kolomdichtheid van het raster aan.
+</string>
+    <string name="onboarding_grid_columns">
+Rasterkolommen
+</string>
+    <string name="onboarding_columns_3_title">
+3 Kolommen
+</string>
+    <string name="onboarding_columns_3_sub">
+Standaard
+</string>
+    <string name="onboarding_columns_4_title">
+4 Kolommen
+</string>
+    <string name="onboarding_columns_4_sub">
+Compact
+</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">
+Schaal van lettergrootte
+</string>
+    <string name="onboarding_font_size_subtitle">
+Stel de typografische schaal in voor bestandsnamen en metagegevens in UFM.
+</string>
+    <string name="onboarding_font_small">
+Klein (85%)
+</string>
+    <string name="onboarding_font_small_desc">
+Hoge informatiedichtheid voor kleinere schermen.
+</string>
+    <string name="onboarding_font_medium">
+Gemiddeld (100%)
+</string>
+    <string name="onboarding_font_medium_desc">
+Evenwichtige helderheid en leesbaarheid. Aanbevolen.
+</string>
+    <string name="onboarding_font_large">
+Groot (115%)
+</string>
+    <string name="onboarding_font_large_desc">
+Hoge toegankelijkheid en moeiteloze leesbaarheid.
+</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">
+Scrollende tekst
+</string>
+    <string name="onboarding_scrolling_text_subtitle">
+Kies hoe bestandsnamen die de schermbreedte overschrijden zich gedragen.
+</string>
+    <string name="onboarding_scrolling_marquee">
+Markeer automatisch scrollen
+</string>
+    <string name="onboarding_scrolling_marquee_desc">
+Bladert lange namen soepel horizontaal zodat volledige extensies zichtbaar zijn. Aanbevolen.
+</string>
+    <string name="onboarding_scrolling_truncate">
+Afkappen met ellips
+</string>
+    <string name="onboarding_scrolling_truncate_desc">
+Houdt bestandsnamen statisch en knipt het einde af met …
+</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">
+Bewerkingsmodus Houdduur
+</string>
+    <string name="onboarding_hold_duration_subtitle">
+Hoe lang u een bestand of map vasthoudt voordat de bewerkingsmodus voor meerdere selecties wordt geactiveerd.
+</string>
+    <string name="onboarding_hold_short">
+Kort (300 ms)
+</string>
+    <string name="onboarding_hold_short_desc">
+Snelle en flexibele meervoudige selectie voor ervaren gebruikers.
+</string>
+    <string name="onboarding_hold_normal">
+Normaal (500 ms)
+</string>
+    <string name="onboarding_hold_normal_desc">
+Standaardduur om onbedoelde triggers tijdens het scrollen te voorkomen. Aanbevolen.
+</string>
+    <string name="onboarding_hold_long">
+Lang (800 ms)
+</string>
+    <string name="onboarding_hold_long_desc">
+Extra bewuste wachttijd voor gevoelige touchscreens.
+</string>
+    <string name="onboarding_hold_test_button">
+Blijf aanraken om te testen
+</string>
+    <string name="onboarding_hold_test_success">
+Geactiveerd!
+</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">
+Linkshandige FAB-modus
+</string>
+    <string name="onboarding_left_handed_fab_subtitle">
+Veranker de zwevende actieknop opnieuw voor comfortabele navigatie met één hand.
+</string>
+    <string name="onboarding_fab_right">
+Rechtshandig (standaard)
+</string>
+    <string name="onboarding_fab_right_desc">
+Rechtsonder geplaatst voor standaard rechterduimbereik.
+</string>
+    <string name="onboarding_fab_left">
+Linkshandige
+</string>
+    <string name="onboarding_fab_left_desc">
+Linksonder geplaatst voor comfortabel linkshandig gebruik.
+</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">
+Snelle toegang tot randlade
+</string>
+    <string name="onboarding_edge_drawer_subtitle">
+Veeg vanaf de schermrand naar binnen voor directe toegang tot bladwijzers en stations.
+</string>
+    <string name="onboarding_edge_drawer_enabled">
+Randlade inschakelen
+</string>
+    <string name="onboarding_edge_drawer_enabled_desc">
+De subtiele randhandgreep geeft met één veegbeweging overal in de app toegang tot snelkoppelingen. Aanbevolen.
+</string>
+    <string name="onboarding_edge_drawer_disabled">
+Randlade uitschakelen
+</string>
+    <string name="onboarding_edge_drawer_disabled_desc">
+Gebruik alleen standaardwerkbalknavigatie.
+</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">
+Bescherming tegen prullenbak
+</string>
+    <string name="onboarding_recycle_bin_subtitle">
+Vangnet voor verwijderde bestanden op uw opslagvolumes.
+</string>
+    <string name="onboarding_recycle_bin_safe">
+Verplaatsen naar Prullenbak
+</string>
+    <string name="onboarding_recycle_bin_safe_desc">
+Verwijderde bestanden worden naar de Prullenbak verplaatst en kunnen op elk moment worden hersteld.
+</string>
+    <string name="onboarding_recycle_bin_permanent">
+Permanent wissen (standaard)
+</string>
+    <string name="onboarding_recycle_bin_permanent_desc">
+Omzeilt de Prullenbak. Bestanden worden onmiddellijk uit de opslag verwijderd.
+</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">
+Toon verborgen bestanden
+</string>
+    <string name="onboarding_hidden_files_subtitle">
+Beheer de zichtbaarheid van dotfiles en verborgen cachemappen.
+</string>
+    <string name="onboarding_hidden_files_hide">
+Dotbestanden verbergen
+</string>
+    <string name="onboarding_hidden_files_hide_desc">
+Houdt bestandslijsten schoon en verbergt .nomedia-, .config- en systeemdotbestanden. Aanbevolen.
+</string>
+    <string name="onboarding_hidden_files_show">
+Toon verborgen bestanden
+</string>
+    <string name="onboarding_hidden_files_show_desc">
+Onthult alle verborgen puntbestanden en mappen met gedimde stijl voor ervaren gebruikers.
+</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">
+App-vergrendeling en beveiliging
+</string>
+    <string name="onboarding_app_lock_subtitle">
+Vereist authenticatie telkens wanneer Ultimate File Manager Pro wordt geopend.
+</string>
+    <string name="onboarding_app_lock_open">
+Open toegang
+</string>
+    <string name="onboarding_app_lock_open_desc">
+Start direct in het bladeren door bestanden zonder een authenticatieprompt. Aanbevolen.
+</string>
+    <string name="onboarding_app_lock_secure">
+Beschermd slot (PIN / Biometrie)
+</string>
+    <string name="onboarding_app_lock_secure_desc">
+Dwingt een 4-cijferige pincode of vingerafdrukverificatie af bij het opstarten.
+</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">
+Crash- en diagnostische rapportage
+</string>
+    <string name="onboarding_diagnostics_subtitle">
+Help UFM te verbeteren door anonieme crash- en ANR-stacktraces te verzenden.
+</string>
+    <string name="onboarding_diagnostics_enabled">
+Ingeschakeld (aanbevolen)
+</string>
+    <string name="onboarding_diagnostics_enabled_desc">
+Anonieme technische crashsporen helpen bugs snel op te lossen. Geen persoonlijke gegevens verzameld.
+</string>
+    <string name="onboarding_diagnostics_disabled">
+Gehandicapt
+</string>
+    <string name="onboarding_diagnostics_disabled_desc">
+Schakelt alle geautomatiseerde crash- en foutrapportage uit.
+</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">
+Documenten
+</string>
+    <string name="onboarding_preview_sample_meta">
+14 stuks • 2,4 GB
+</string>
+    <string name="onboarding_preview_sample_long_name">
+Ultimate_Backup_Archive_2026_Final_v2.tar.gz
+</string>
+    <string name="onboarding_preview_sample_hidden_name">
+.miniaturen
+</string>
+    <string name="onboarding_preview_safe_badge">
+Prullenbak actief: bestanden kunnen worden hersteld
+</string>
+    <string name="onboarding_preview_warn_badge">
+Direct verwijderen actief: bestanden permanent gewist
+</string>
+    <string name="onboarding_preview_privacy_badge">
+100% anoniem • Geen persoonlijke gegevens • Geen bestandstracking
+</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
 Meldingen

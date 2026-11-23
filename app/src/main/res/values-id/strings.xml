@@ -225,6 +225,336 @@ Aktifkan
 Buka Pengaturan
 </string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">
+Langkah %1$d dari %2$d
+</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">
+Lewati &amp; Gunakan Default
+</string>
+    <string name="onboarding_btn_skip_remaining">
+Lewati Sisanya
+</string>
+    <string name="onboarding_btn_start_browsing">
+Mulai Menjelajah
+</string>
+    <string name="onboarding_settings_reconfigure_title">
+Wisaya Pengaturan Cepat
+</string>
+    <string name="onboarding_settings_reconfigure_subtitle">
+Personalisasi kepadatan tampilan, kontrol, dan preferensi tombol
+</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">
+Tata Letak Menu Utama
+</string>
+    <string name="onboarding_view_density_subtitle">
+Pilih bagaimana Anda ingin menelusuri penyimpanan Anda.
+</string>
+    <string name="onboarding_view_mode_header">
+Modus Tampilan
+</string>
+    <string name="onboarding_categorized_title">
+Dikategorikan
+</string>
+    <string name="onboarding_categorized_sub">
+Modern
+</string>
+    <string name="onboarding_list_title">
+Daftar
+</string>
+    <string name="onboarding_list_sub">
+Klasik
+</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">
+Klasik
+</string>
+    <string name="onboarding_selected_badge">
+✓ Dipilih
+</string>
+    <string name="onboarding_categorized_settings">
+Pengaturan yang Dikategorikan
+</string>
+    <string name="onboarding_categorized_settings_desc">
+Sesuaikan bagaimana kategori ditampilkan.
+</string>
+    <string name="onboarding_category_spacing">
+Spasi Kategori
+</string>
+    <string name="onboarding_spacing_compact">
+Kompak
+</string>
+    <string name="onboarding_spacing_compact_desc">
+Lebih sedikit ruang
+</string>
+    <string name="onboarding_spacing_comfortable">
+Nyaman
+</string>
+    <string name="onboarding_spacing_comfortable_desc">
+Jarak yang seimbang
+</string>
+    <string name="onboarding_expand_categories">
+Perluas Kategori
+</string>
+    <string name="onboarding_expand_categories_desc">
+Tampilkan konten kategori saat pembukaan
+</string>
+    <string name="onboarding_list_settings">
+Pengaturan Daftar
+</string>
+    <string name="onboarding_list_settings_desc">
+Sesuaikan jarak dan kepadatan baris.
+</string>
+    <string name="onboarding_row_spacing">
+Jarak Baris
+</string>
+    <string name="onboarding_grid_settings">
+Pengaturan Jaringan
+</string>
+    <string name="onboarding_grid_settings_desc">
+Sesuaikan kepadatan kolom kisi.
+</string>
+    <string name="onboarding_grid_columns">
+Kolom Kotak
+</string>
+    <string name="onboarding_columns_3_title">
+3 Kolom
+</string>
+    <string name="onboarding_columns_3_sub">
+Standar
+</string>
+    <string name="onboarding_columns_4_title">
+4 Kolom
+</string>
+    <string name="onboarding_columns_4_sub">
+Kompak
+</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">
+Skala Ukuran Font
+</string>
+    <string name="onboarding_font_size_subtitle">
+Atur skala tipografi untuk nama file dan metadata di seluruh UFM.
+</string>
+    <string name="onboarding_font_small">
+Kecil (85%)
+</string>
+    <string name="onboarding_font_small_desc">
+Kepadatan informasi yang tinggi untuk layar yang lebih kecil.
+</string>
+    <string name="onboarding_font_medium">
+Sedang (100%)
+</string>
+    <string name="onboarding_font_medium_desc">
+Kejelasan dan keterbacaan yang seimbang. Direkomendasikan.
+</string>
+    <string name="onboarding_font_large">
+Besar (115%)
+</string>
+    <string name="onboarding_font_large_desc">
+Aksesibilitas tinggi dan keterbacaan yang mudah.
+</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">
+Teks Bergulir
+</string>
+    <string name="onboarding_scrolling_text_subtitle">
+Pilih perilaku nama file yang melebihi lebar layar.
+</string>
+    <string name="onboarding_scrolling_marquee">
+Gulir Otomatis Marquee
+</string>
+    <string name="onboarding_scrolling_marquee_desc">
+Menggulir nama panjang secara horizontal dengan lancar sehingga ekstensi penuh terlihat. Direkomendasikan.
+</string>
+    <string name="onboarding_scrolling_truncate">
+Potong dengan Ellipsis
+</string>
+    <string name="onboarding_scrolling_truncate_desc">
+Menjaga nama file tetap statis dan memotong bagian akhir dengan…
+</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">
+Edit Durasi Tahan Mode
+</string>
+    <string name="onboarding_hold_duration_subtitle">
+Berapa lama Anda menyimpan file atau folder sebelum mode edit multi-pilihan diaktifkan.
+</string>
+    <string name="onboarding_hold_short">
+Pendek (300 mdtk)
+</string>
+    <string name="onboarding_hold_short_desc">
+Multi-pilihan yang cepat dan gesit untuk pengguna tingkat lanjut.
+</string>
+    <string name="onboarding_hold_normal">
+Biasa (500 mdtk)
+</string>
+    <string name="onboarding_hold_normal_desc">
+Durasi standar mencegah pemicu yang tidak disengaja saat menggulir. Direkomendasikan.
+</string>
+    <string name="onboarding_hold_long">
+Panjang (800 ms)
+</string>
+    <string name="onboarding_hold_long_desc">
+Waktu tunggu ekstra yang disengaja untuk layar sentuh sensitif.
+</string>
+    <string name="onboarding_hold_test_button">
+Sentuh &amp; Tahan untuk Menguji
+</string>
+    <string name="onboarding_hold_test_success">
+Terpicu!
+</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">
+Mode FAB Tangan Kiri
+</string>
+    <string name="onboarding_left_handed_fab_subtitle">
+Pasang kembali Tombol Aksi Mengambang untuk navigasi satu tangan yang nyaman.
+</string>
+    <string name="onboarding_fab_right">
+Tangan Kanan (Default)
+</string>
+    <string name="onboarding_fab_right_desc">
+Diposisikan di kanan bawah untuk jangkauan jempol kanan standar.
+</string>
+    <string name="onboarding_fab_left">
+Kidal
+</string>
+    <string name="onboarding_fab_left_desc">
+Diposisikan di kiri bawah untuk kenyamanan penggunaan tangan kiri.
+</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">
+Laci Tepi Akses Cepat
+</string>
+    <string name="onboarding_edge_drawer_subtitle">
+Gesek ke dalam dari tepi layar untuk akses cepat ke bookmark dan drive.
+</string>
+    <string name="onboarding_edge_drawer_enabled">
+Aktifkan Laci Tepi
+</string>
+    <string name="onboarding_edge_drawer_enabled_desc">
+Pegangan tepi yang halus memberikan akses pintasan sekali usap dari mana saja di aplikasi. Direkomendasikan.
+</string>
+    <string name="onboarding_edge_drawer_disabled">
+Nonaktifkan Laci Tepi
+</string>
+    <string name="onboarding_edge_drawer_disabled_desc">
+Gunakan navigasi toolbar standar saja.
+</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">
+Perlindungan Tempat Sampah
+</string>
+    <string name="onboarding_recycle_bin_subtitle">
+Jaring pengaman untuk file yang dihapus di seluruh volume penyimpanan Anda.
+</string>
+    <string name="onboarding_recycle_bin_safe">
+Pindah ke Keranjang Sampah
+</string>
+    <string name="onboarding_recycle_bin_safe_desc">
+File yang terhapus akan dipindahkan ke Recycle Bin dan dapat dipulihkan kapan saja.
+</string>
+    <string name="onboarding_recycle_bin_permanent">
+Penghapusan Permanen (Default)
+</string>
+    <string name="onboarding_recycle_bin_permanent_desc">
+Melewati Recycle Bin. File segera dihapus dari penyimpanan.
+</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">
+Tampilkan File Tersembunyi
+</string>
+    <string name="onboarding_hidden_files_subtitle">
+Kontrol visibilitas dotfiles dan folder cache tersembunyi.
+</string>
+    <string name="onboarding_hidden_files_hide">
+Sembunyikan Dotfile
+</string>
+    <string name="onboarding_hidden_files_hide_desc">
+Menjaga daftar file tetap bersih, menyembunyikan .nomedia, .config, dan dotfile sistem. Direkomendasikan.
+</string>
+    <string name="onboarding_hidden_files_show">
+Tampilkan File Tersembunyi
+</string>
+    <string name="onboarding_hidden_files_show_desc">
+Mengungkapkan semua dotfile dan direktori tersembunyi dengan gaya redup untuk pengguna tingkat lanjut.
+</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">
+Kunci &amp; Keamanan Aplikasi
+</string>
+    <string name="onboarding_app_lock_subtitle">
+Memerlukan otentikasi setiap kali Ultimate File Manager Pro dibuka.
+</string>
+    <string name="onboarding_app_lock_open">
+Akses Terbuka
+</string>
+    <string name="onboarding_app_lock_open_desc">
+Diluncurkan langsung ke penjelajahan file tanpa perintah otentikasi. Direkomendasikan.
+</string>
+    <string name="onboarding_app_lock_secure">
+Kunci Terlindungi (PIN / Biometrik)
+</string>
+    <string name="onboarding_app_lock_secure_desc">
+Menerapkan PIN 4 digit atau otentikasi sidik jari saat peluncuran.
+</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">
+Pelaporan Kecelakaan &amp; Diagnostik
+</string>
+    <string name="onboarding_diagnostics_subtitle">
+Membantu meningkatkan UFM dengan mengirimkan kerusakan anonim dan jejak tumpukan ANR.
+</string>
+    <string name="onboarding_diagnostics_enabled">
+Diaktifkan (Disarankan)
+</string>
+    <string name="onboarding_diagnostics_enabled_desc">
+Jejak kerusakan teknis anonim membantu memperbaiki bug dengan cepat. Tidak ada data pribadi yang dikumpulkan.
+</string>
+    <string name="onboarding_diagnostics_disabled">
+Dengan disabilitas
+</string>
+    <string name="onboarding_diagnostics_disabled_desc">
+Menonaktifkan semua pelaporan kerusakan dan kesalahan otomatis.
+</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">
+Dokumen
+</string>
+    <string name="onboarding_preview_sample_meta">
+14 item • 2,4 GB
+</string>
+    <string name="onboarding_preview_sample_long_name">
+Ultimate_Backup_Archive_2026_Final_v2.tar.gz
+</string>
+    <string name="onboarding_preview_sample_hidden_name">
+.thumbnail
+</string>
+    <string name="onboarding_preview_safe_badge">
+Recycle Bin Aktif: File dapat dipulihkan
+</string>
+    <string name="onboarding_preview_warn_badge">
+Hapus Langsung Aktif: File terhapus secara permanen
+</string>
+    <string name="onboarding_preview_privacy_badge">
+100% Anonim • Tanpa Data Pribadi • Tanpa Pelacakan File
+</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
 Notifikasi

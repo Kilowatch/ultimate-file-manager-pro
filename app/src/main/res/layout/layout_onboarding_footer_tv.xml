@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutFooter"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="@dimen/tv_safe_horizontal"
+    android:paddingTop="12dp"
+    android:paddingBottom="16dp"
+    android:background="@color/tv_glass_white_10">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnOnboardingSkip"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="52dp"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/onboarding_btn_skip_defaults"
+        android:focusable="true" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnOnboardingNext"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="52dp"
+        android:paddingHorizontal="24dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/onboarding_btn_next"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-bold"
+        android:letterSpacing="0.02"
+        android:focusable="true"
+        app:backgroundTint="@color/tv_accent"
+        app:cornerRadius="26dp"
+        app:elevation="3dp"
+        app:icon="@drawable/ic_arrow_forward"
+        app:iconGravity="textEnd"
+        app:iconPadding="8dp"
+        app:iconSize="18dp"
+        app:iconTint="@android:color/white" />
+
+</LinearLayout>

@@ -1,83 +1,83 @@
-# Implementation Plan: Settings Hierarchy, Granular Groupings & Logical Sequencing
+# Implementation Plan: First-Run Onboarding Setup Flow with Dedicated Per-Setting Activities
 
 ## Goals
-- Break down monolithic settings groups (File Browsing 14 items, Media Player 11 items, Network & Performance 9 items, Appearance 9 items) into intuitive, bite-sized groupings of 2 to 5 items each.
-- Re-sequence the settings screen top-to-bottom so it flows logically from visual/interaction setup, through core file operations, to media, connectivity, and system maintenance.
-- Maintain complete symmetry between Mobile (`activity_settings.xml`) and Android TV (`activity_settings_tv.xml`).
-- Ensure 100% compatibility with real-time settings search filtering, TV D-pad focus traversal, and card icon customizations.
+- Create a visual first-run onboarding setup sequence consisting of 10 standalone Activities.
+- Each Activity puts 100% focus on a single setting, featuring rich explanatory text and a **large live visual preview example** pre-rendered on the recommended default selection.
+- Implement contextual skip controls: **"Skip & Use Defaults"** on Screen 1, and **"Skip Remaining"** from Screen 2 onwards (progressively saving prior selections and defaulting only remaining unvisited settings).
+- Support full Android TV 16:9 split-screen D-pad parity (skipping mobile touch screens automatically).
+- Guarantee zero preference drift with `SettingsActivity` and add an on-demand re-entry card in Settings.
 
 ## Architecture Overview
-The settings screen uses a vertical `layoutSettingsList` inside a ScrollView. Each section is a `LinearLayout` containing:
-1. A small all-caps bold section header `TextView` (e.g. `headerGeneral`, `headerThemeDisplay`).
-2. A single `MaterialCardView` (`cardGroup...`) with rounded corners and border stroke.
-3. An inner vertical `LinearLayout` containing the setting rows (`card...`) separated by hairline `View` dividers.
-
-`SettingsActivity.kt` dynamically inspects every child of `layoutSettingsList`, traverses inner group cards, and performs real-time search filtering. By retaining this exact architectural contract for each new section, search filtering and focus management will work out-of-the-box without touching the core search traversal logic.
+The 10 Activities share a common base architecture `BaseOnboardingStepActivity`:
+- Implements `attachBaseContext` with `LocaleManagerWrapper`.
+- Calls `EdgeToEdge.enable(this)` and applies window insets.
+- Manages standardized header and bottom button bar ("Back", "Next", "Skip Remaining" / "Skip & Use Defaults").
+- Connects screens with horizontal slide transitions (`ufm_slide_in_right` / `ufm_slide_out_left`).
+- Centralizes progressive skip logic: commits prior choices + applies defaults to unvisited settings + finishes onboarding.
+- Supports `EXTRA_RECONFIGURE_MODE`: pre-populates with user's current preferences and returns to `SettingsActivity`.
 
 ```
-Settings Flow:
-1. General & Interface
-2. Appearance & Display (Theme & Display -> Interface Details & Animations)
-3. Navigation & Controls (Quick Access [Mobile] -> Controls & Gestures -> Dual-Pane)
-4. File Management & Storage (Permissions -> Browsing & Display -> File Safety -> Tools -> SAF)
-5. Thumbnails & Media (Thumbnails & Previews -> Media Playback -> Player Controls & Gestures)
-6. Network & Connectivity (Transfers & Downloads -> Network Caching & Streaming -> Servers & Indexing)
-7. Security & Access (Security & App Lock)
-8. System, Maintenance & About (Accessibility -> Backup & Restore -> Privacy & Diagnostics)
+Sequential Flow:
+1.  [OnboardingViewDensityActivity]        (Button: "Skip & Use Defaults")
+2.  [OnboardingFontSizeActivity]           (Button: "Skip Remaining")
+3.  [OnboardingScrollingTextActivity]      (Button: "Skip Remaining")
+4.  [OnboardingHoldDurationActivity]       (Button: "Skip Remaining")
+5.  [OnboardingLeftHandedFabActivity]      (Button: "Skip Remaining" — Mobile Only)
+6.  [OnboardingEdgeDrawerActivity]         (Button: "Skip Remaining" — Mobile Only)
+7.  [OnboardingRecycleBinActivity]         (Button: "Skip Remaining")
+8.  [OnboardingHiddenFilesActivity]        (Button: "Skip Remaining")
+9.  [OnboardingAppLockActivity]            (Button: "Skip Remaining" — Skipped if hardware lacks secure lock)
+10. [OnboardingDiagnosticsActivity]       (Button: "Skip Remaining" / "Start Browsing")
 ```
+
+## Files to Create
+
+### Architecture & Base
+- `app/src/main/java/za/kilowatch/ultimatefilemanager/onboarding/BaseOnboardingStepActivity.kt`: Abstract base coordinator for all 10 activities, handling navigation, transitions, TV detection, and progressive skip logic.
+
+### 10 Dedicated Activities (One Activity Class, Two Layouts Each)
+1. `OnboardingViewDensityActivity.kt` + `res/layout/activity_onboarding_view_density.xml` + `res/layout/activity_onboarding_view_density_tv.xml`
+2. `OnboardingFontSizeActivity.kt` + `res/layout/activity_onboarding_font_size.xml` + `res/layout/activity_onboarding_font_size_tv.xml`
+3. `OnboardingScrollingTextActivity.kt` + `res/layout/activity_onboarding_scrolling_text.xml` + `res/layout/activity_onboarding_scrolling_text_tv.xml`
+4. `OnboardingHoldDurationActivity.kt` + `res/layout/activity_onboarding_hold_duration.xml` + `res/layout/activity_onboarding_hold_duration_tv.xml`
+5. `OnboardingLeftHandedFabActivity.kt` + `res/layout/activity_onboarding_left_handed_fab.xml` + `res/layout/activity_onboarding_left_handed_fab_tv.xml`
+6. `OnboardingEdgeDrawerActivity.kt` + `res/layout/activity_onboarding_edge_drawer.xml` + `res/layout/activity_onboarding_edge_drawer_tv.xml`
+7. `OnboardingRecycleBinActivity.kt` + `res/layout/activity_onboarding_recycle_bin.xml` + `res/layout/activity_onboarding_recycle_bin_tv.xml`
+8. `OnboardingHiddenFilesActivity.kt` + `res/layout/activity_onboarding_hidden_files.xml` + `res/layout/activity_onboarding_hidden_files_tv.xml`
+9. `OnboardingAppLockActivity.kt` + `res/layout/activity_onboarding_app_lock.xml` + `res/layout/activity_onboarding_app_lock_tv.xml`
+10. `OnboardingDiagnosticsActivity.kt` + `res/layout/activity_onboarding_diagnostics.xml` + `res/layout/activity_onboarding_diagnostics_tv.xml`
 
 ## Files to Modify
 
-### `app/src/main/res/values/strings.xml`
-- **What:** Add localized section title string resources:
-  - `settings_section_theme_display` ("Theme & Display")
-  - `settings_section_interface_animations` ("Interface Details & Animations")
-  - `settings_section_permissions_storage` ("Permissions & Storage Access")
-  - `settings_section_browsing_display` ("Browsing & Display")
-  - `settings_section_file_safety` ("File Operations & Safety")
-  - `settings_section_organization_tools` ("Organization & File Tools")
-  - `settings_section_saf_transfers` ("Storage Transfers & SAF")
-  - `settings_section_thumbnails` ("Thumbnails & Previews")
-  - `settings_section_media_playback` ("Media Playback")
-  - `settings_section_player_controls` ("Player Controls & Gestures")
-  - `settings_section_transfers_downloads` ("Transfers & Downloads")
-  - `settings_section_network_caching` ("Network Caching & Streaming")
-  - `settings_section_servers_indexing` ("Servers & Indexing")
-  - `settings_section_security` ("Security & App Lock")
+### `WelcomeActivity.kt`
+- Transition to `OnboardingViewDensityActivity` when permissions are granted instead of directly launching `StorageBrowserActivity`.
 
-### `app/src/main/res/layout/activity_settings.xml`
-- **What:** Reorganize the settings container into the newly defined 21 granular sections and sequence them in the approved top-to-bottom order.
-- **Key details:**
-  - Wrap each group of 2-5 cards inside its own `layoutSection*` and `cardGroup*`.
-  - Maintain consistent divider insets (`56dp`) and card elevation / stroke styling.
-  - Preserve all existing card IDs (`cardSettingsSearch`, `cardFontSize`, `cardDuplicateRetention`, etc.).
+### `SettingsActivity.kt` + `activity_settings.xml` + `activity_settings_tv.xml`
+- Add `cardQuickSetupWizard` under `layoutSectionGeneral` to launch the wizard in Reconfigure Mode.
 
-### `app/src/main/res/layout/activity_settings_tv.xml`
-- **What:** Reorganize the TV settings layout symmetrically into matching granular sections and order.
-- **Key details:**
-  - Maintain TV-specific dimensions (`20dp` corner radius, `1.5dp` stroke width, `14sp` header font, `64dp` divider margin).
-  - Include all TV cards in their corresponding new sections while excluding mobile-only cards.
+### `AndroidManifest.xml`
+- Register all 10 new Activities with `android:exported="false"`.
 
-### `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/SettingsActivity.kt`
-- **What:** Verify section view bindings and TV focus listener mappings.
-- **Key details:**
-  - `layoutSectionSecurity` and `layoutSectionQuickAccess` maintain their exact IDs and behavior.
-  - Validate TV focus helper and search visibility recursion.
+### `strings.xml`
+- Add translatable titles, subtitles, and button labels for each onboarding Activity and preview card.
 
-## Data Model
-No data model or SharedPreferences schema changes required. All settings keys remain unchanged.
-
-## Dependencies
-None. Uses existing Android Jetpack and Material components.
+## Data Model & Persistence
+No new database tables or preference files. Direct integration with existing preference managers:
+- `ViewModeManager`
+- `FontSizeHelper`
+- `ScrollingTextPreferenceManager`
+- `LongPressDurationManager`
+- `LeftHandedFabPreferenceManager`
+- `QuickAccessManager`
+- `RecycleBinSettingsManager`
+- `HiddenFilesManager`
+- `AppSecurityManager`
+- `CrashReportManager`
 
 ## Test Plan
-- Compile and build debug APK with `./gradlew assembleMobileGoogleDebug`.
-- Verify settings page rendering on mobile layout: visually confirm headers, card groupings, and divider lines.
-- Verify settings search: test partial queries for items in different sections; confirm empty state displays when query doesn't match; confirm full list restores on clear.
-- Verify TV layout inflation and D-pad navigation.
-
-## Risks & Mitigations
-- **Risk:** Search filter hides a section header when some cards match.
-  - **Mitigation:** The existing `filterSettings()` function checks `sectionHasVisibleRow`; if any child card matches, the entire section remains visible, which will automatically keep the new granular section headers visible.
-- **Risk:** Divider visibility glitch at the bottom of a card group when some cards are hidden.
-  - **Mitigation:** `filterSettings()` dynamically scans visible rows and hides trailing/leading dividers within `container`.
+- Compile with `./gradlew assembleMobileGoogleDebug`.
+- Verify full 10-screen sequence from fresh install.
+- Verify Screen 1 button is "Skip & Use Defaults"; Screens 2-10 are "Skip Remaining".
+- Verify mid-flow skip correctly preserves configured settings and defaults remaining.
+- Verify TV 16:9 side-by-side layout and D-pad remote focus.
+- Verify Reconfigure Mode from `SettingsActivity`.

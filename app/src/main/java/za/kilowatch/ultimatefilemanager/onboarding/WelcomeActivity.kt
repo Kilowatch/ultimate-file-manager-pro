@@ -136,8 +136,15 @@ class WelcomeActivity : AppCompatActivity() {
         recyclerPermissions.adapter = permissionAdapter
 
         btnContinue.setOnClickListener {
-            markOnboardingComplete()
-            navigateToDefaultStartScreen()
+            if (!isOnboardingComplete()) {
+                val intent = Intent(this, OnboardingViewDensityActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(R.anim.ufm_slide_in_right, R.anim.ufm_slide_out_left)
+                finish()
+            } else {
+                markOnboardingComplete()
+                navigateToDefaultStartScreen()
+            }
         }
 
         // TV: swap Continue button bg+text on focus

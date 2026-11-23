@@ -225,6 +225,336 @@ Ultimate File Manager Pro에 오신 것을 환영합니다
 설정 열기
 </string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">
+%2$d의 %1$d 단계
+</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">
+건너뛰고 기본값 사용
+</string>
+    <string name="onboarding_btn_skip_remaining">
+남은 부분 건너뛰기
+</string>
+    <string name="onboarding_btn_start_browsing">
+탐색 시작
+</string>
+    <string name="onboarding_settings_reconfigure_title">
+빠른 설정 마법사
+</string>
+    <string name="onboarding_settings_reconfigure_subtitle">
+디스플레이 밀도, 컨트롤, 주요 기본 설정을 개인화하세요
+</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">
+메인 메뉴 레이아웃
+</string>
+    <string name="onboarding_view_density_subtitle">
+스토리지를 탐색할 방법을 선택하세요.
+</string>
+    <string name="onboarding_view_mode_header">
+보기 모드
+</string>
+    <string name="onboarding_categorized_title">
+분류됨
+</string>
+    <string name="onboarding_categorized_sub">
+현대의
+</string>
+    <string name="onboarding_list_title">
+목록
+</string>
+    <string name="onboarding_list_sub">
+권위 있는
+</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">
+권위 있는
+</string>
+    <string name="onboarding_selected_badge">
+✓ 선택됨
+</string>
+    <string name="onboarding_categorized_settings">
+분류된 설정
+</string>
+    <string name="onboarding_categorized_settings_desc">
+카테고리 표시 방법을 사용자 정의합니다.
+</string>
+    <string name="onboarding_category_spacing">
+카테고리 간격
+</string>
+    <string name="onboarding_spacing_compact">
+콤팩트
+</string>
+    <string name="onboarding_spacing_compact_desc">
+더 적은 공간
+</string>
+    <string name="onboarding_spacing_comfortable">
+편안한
+</string>
+    <string name="onboarding_spacing_comfortable_desc">
+균형 잡힌 간격
+</string>
+    <string name="onboarding_expand_categories">
+카테고리 확장
+</string>
+    <string name="onboarding_expand_categories_desc">
+열 때 카테고리 내용 표시
+</string>
+    <string name="onboarding_list_settings">
+목록 설정
+</string>
+    <string name="onboarding_list_settings_desc">
+행 간격과 밀도를 사용자 정의합니다.
+</string>
+    <string name="onboarding_row_spacing">
+행 간격
+</string>
+    <string name="onboarding_grid_settings">
+그리드 설정
+</string>
+    <string name="onboarding_grid_settings_desc">
+그리드 열 밀도를 사용자 정의합니다.
+</string>
+    <string name="onboarding_grid_columns">
+그리드 열
+</string>
+    <string name="onboarding_columns_3_title">
+3개의 칼럼
+</string>
+    <string name="onboarding_columns_3_sub">
+기준
+</string>
+    <string name="onboarding_columns_4_title">
+4개의 기둥
+</string>
+    <string name="onboarding_columns_4_sub">
+콤팩트
+</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">
+글꼴 크기 비율
+</string>
+    <string name="onboarding_font_size_subtitle">
+UFM 전체에서 파일 이름과 메타데이터의 타이포그래피 배율을 설정합니다.
+</string>
+    <string name="onboarding_font_small">
+작음(85%)
+</string>
+    <string name="onboarding_font_small_desc">
+작은 화면을 위한 높은 정보 밀도.
+</string>
+    <string name="onboarding_font_medium">
+중간 (100%)
+</string>
+    <string name="onboarding_font_medium_desc">
+균형 잡힌 명확성과 가독성. 추천합니다.
+</string>
+    <string name="onboarding_font_large">
+대형 (115%)
+</string>
+    <string name="onboarding_font_large_desc">
+높은 접근성과 쉬운 가독성.
+</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">
+스크롤링 텍스트
+</string>
+    <string name="onboarding_scrolling_text_subtitle">
+화면 너비를 초과하는 파일 이름의 작동 방식을 선택합니다.
+</string>
+    <string name="onboarding_scrolling_marquee">
+선택 윤곽 자동 스크롤
+</string>
+    <string name="onboarding_scrolling_marquee_desc">
+전체 확장명이 표시되도록 긴 이름을 수평으로 부드럽게 스크롤합니다. 추천합니다.
+</string>
+    <string name="onboarding_scrolling_truncate">
+줄임표로 자르기
+</string>
+    <string name="onboarding_scrolling_truncate_desc">
+파일 이름을 정적으로 유지하고 다음으로 끝 부분을 자릅니다.
+</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">
+편집 모드 보류 기간
+</string>
+    <string name="onboarding_hold_duration_subtitle">
+다중 선택 편집 모드가 활성화되기 전에 파일이나 폴더를 보관하는 기간입니다.
+</string>
+    <string name="onboarding_hold_short">
+짧음(300ms)
+</string>
+    <string name="onboarding_hold_short_desc">
+고급 사용자를 위한 빠르고 민첩한 다중 선택.
+</string>
+    <string name="onboarding_hold_normal">
+일반(500ms)
+</string>
+    <string name="onboarding_hold_normal_desc">
+스크롤하는 동안 우발적인 트리거를 방지하는 표준 기간입니다. 추천합니다.
+</string>
+    <string name="onboarding_hold_long">
+긴(800ms)
+</string>
+    <string name="onboarding_hold_long_desc">
+민감한 터치스크린을 위한 추가 의도적인 대기 시간.
+</string>
+    <string name="onboarding_hold_test_button">
+테스트하려면 길게 터치하세요.
+</string>
+    <string name="onboarding_hold_test_success">
+발동됨!
+</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">
+왼손잡이용 FAB 모드
+</string>
+    <string name="onboarding_left_handed_fab_subtitle">
+한 손으로 편안하게 탐색할 수 있도록 플로팅 작업 버튼을 다시 고정합니다.
+</string>
+    <string name="onboarding_fab_right">
+오른손잡이용(기본값)
+</string>
+    <string name="onboarding_fab_right_desc">
+표준 오른쪽 엄지손가락으로 닿을 수 있도록 오른쪽 하단에 위치합니다.
+</string>
+    <string name="onboarding_fab_left">
+왼손잡이
+</string>
+    <string name="onboarding_fab_left_desc">
+왼손잡이가 편안하게 사용할 수 있도록 왼쪽 하단에 배치되었습니다.
+</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">
+빠른 액세스 가장자리 서랍
+</string>
+    <string name="onboarding_edge_drawer_subtitle">
+북마크와 드라이브에 즉시 액세스하려면 화면 가장자리에서 안쪽으로 스와이프하세요.
+</string>
+    <string name="onboarding_edge_drawer_enabled">
+가장자리 서랍 활성화
+</string>
+    <string name="onboarding_edge_drawer_enabled_desc">
+섬세한 가장자리 핸들을 통해 앱 어디에서나 한 번의 스와이프로 바로가기에 액세스할 수 있습니다. 추천합니다.
+</string>
+    <string name="onboarding_edge_drawer_disabled">
+가장자리 서랍 비활성화
+</string>
+    <string name="onboarding_edge_drawer_disabled_desc">
+표준 도구 모음 탐색만 사용하십시오.
+</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">
+휴지통 보호
+</string>
+    <string name="onboarding_recycle_bin_subtitle">
+스토리지 볼륨 전체에서 삭제된 파일에 대한 안전망입니다.
+</string>
+    <string name="onboarding_recycle_bin_safe">
+휴지통으로 이동
+</string>
+    <string name="onboarding_recycle_bin_safe_desc">
+삭제된 파일은 휴지통으로 이동되어 언제든지 복원할 수 있습니다.
+</string>
+    <string name="onboarding_recycle_bin_permanent">
+영구 삭제(기본값)
+</string>
+    <string name="onboarding_recycle_bin_permanent_desc">
+휴지통을 우회합니다. 파일은 저장소에서 즉시 삭제됩니다.
+</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">
+숨겨진 파일 표시
+</string>
+    <string name="onboarding_hidden_files_subtitle">
+도트 파일 및 숨겨진 캐시 폴더의 가시성을 제어합니다.
+</string>
+    <string name="onboarding_hidden_files_hide">
+도트 파일 숨기기
+</string>
+    <string name="onboarding_hidden_files_hide_desc">
+파일 목록을 깔끔하게 유지하고 .nomedia, .config 및 시스템 도트 파일을 숨깁니다. 추천합니다.
+</string>
+    <string name="onboarding_hidden_files_show">
+숨겨진 파일 표시
+</string>
+    <string name="onboarding_hidden_files_show_desc">
+고급 사용자를 위해 희미한 스타일로 모든 숨겨진 도트 파일과 디렉터리를 표시합니다.
+</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">
+앱 잠금 및 보안
+</string>
+    <string name="onboarding_app_lock_subtitle">
+Ultimate File Manager Pro를 열 때마다 인증이 필요합니다.
+</string>
+    <string name="onboarding_app_lock_open">
+오픈 액세스
+</string>
+    <string name="onboarding_app_lock_open_desc">
+인증 프롬프트 없이 파일 탐색을 직접 시작합니다. 추천합니다.
+</string>
+    <string name="onboarding_app_lock_secure">
+보호된 잠금 장치(PIN/생체 인식)
+</string>
+    <string name="onboarding_app_lock_secure_desc">
+실행 시 4자리 PIN 또는 지문 인증을 시행합니다.
+</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">
+충돌 및 진단 보고
+</string>
+    <string name="onboarding_diagnostics_subtitle">
+익명의 충돌 및 ANR 스택 추적을 전송하여 UFM 개선에 도움을 주세요.
+</string>
+    <string name="onboarding_diagnostics_enabled">
+활성화됨(권장)
+</string>
+    <string name="onboarding_diagnostics_enabled_desc">
+익명의 기술 충돌 추적은 버그를 신속하게 수정하는 데 도움이 됩니다. 개인정보가 전혀 수집되지 않습니다.
+</string>
+    <string name="onboarding_diagnostics_disabled">
+장애가 있는
+</string>
+    <string name="onboarding_diagnostics_disabled_desc">
+모든 자동 충돌 및 오류 보고를 끕니다.
+</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">
+서류
+</string>
+    <string name="onboarding_preview_sample_meta">
+14개 항목 • 2.4GB
+</string>
+    <string name="onboarding_preview_sample_long_name">
+Ultimate_Backup_Archive_2026_Final_v2.tar.gz
+</string>
+    <string name="onboarding_preview_sample_hidden_name">
+.썸네일
+</string>
+    <string name="onboarding_preview_safe_badge">
+휴지통 활성: 파일을 복구할 수 있습니다.
+</string>
+    <string name="onboarding_preview_warn_badge">
+직접 삭제 활성: 파일이 영구적으로 지워졌습니다.
+</string>
+    <string name="onboarding_preview_privacy_badge">
+100% 익명 • 개인 데이터 없음 • 파일 추적 없음
+</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
 알림

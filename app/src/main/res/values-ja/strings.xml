@@ -225,6 +225,336 @@ Ultimate File Manager Pro へようこそ
 設定を開く
 </string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">
+ステップ %1$d/%2$d
+</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">
+スキップしてデフォルトを使用
+</string>
+    <string name="onboarding_btn_skip_remaining">
+残りをスキップ
+</string>
+    <string name="onboarding_btn_start_browsing">
+閲覧を開始する
+</string>
+    <string name="onboarding_settings_reconfigure_title">
+クイックセットアップウィザード
+</string>
+    <string name="onboarding_settings_reconfigure_subtitle">
+表示密度、コントロール、主要な設定をパーソナライズ
+</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">
+メインメニューのレイアウト
+</string>
+    <string name="onboarding_view_density_subtitle">
+ストレージを参照する方法を選択します。
+</string>
+    <string name="onboarding_view_mode_header">
+ビューモード
+</string>
+    <string name="onboarding_categorized_title">
+分類された
+</string>
+    <string name="onboarding_categorized_sub">
+モダンな
+</string>
+    <string name="onboarding_list_title">
+リスト
+</string>
+    <string name="onboarding_list_sub">
+クラシック
+</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">
+クラシック
+</string>
+    <string name="onboarding_selected_badge">
+✓ 選択済み
+</string>
+    <string name="onboarding_categorized_settings">
+分類された設定
+</string>
+    <string name="onboarding_categorized_settings_desc">
+カテゴリの表示方法をカスタマイズします。
+</string>
+    <string name="onboarding_category_spacing">
+カテゴリの間隔
+</string>
+    <string name="onboarding_spacing_compact">
+コンパクト
+</string>
+    <string name="onboarding_spacing_compact_desc">
+スペースが少ない
+</string>
+    <string name="onboarding_spacing_comfortable">
+快適
+</string>
+    <string name="onboarding_spacing_comfortable_desc">
+バランスの取れた間隔
+</string>
+    <string name="onboarding_expand_categories">
+カテゴリを展開する
+</string>
+    <string name="onboarding_expand_categories_desc">
+開くときにカテゴリの内容を表示する
+</string>
+    <string name="onboarding_list_settings">
+リスト設定
+</string>
+    <string name="onboarding_list_settings_desc">
+行の間隔と密度をカスタマイズします。
+</string>
+    <string name="onboarding_row_spacing">
+行間隔
+</string>
+    <string name="onboarding_grid_settings">
+グリッド設定
+</string>
+    <string name="onboarding_grid_settings_desc">
+グリッド列の密度をカスタマイズします。
+</string>
+    <string name="onboarding_grid_columns">
+グリッド列
+</string>
+    <string name="onboarding_columns_3_title">
+3列
+</string>
+    <string name="onboarding_columns_3_sub">
+標準
+</string>
+    <string name="onboarding_columns_4_title">
+4列
+</string>
+    <string name="onboarding_columns_4_sub">
+コンパクト
+</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">
+フォントサイズスケール
+</string>
+    <string name="onboarding_font_size_subtitle">
+UFM 全体でファイル名とメタデータのタイポグラフィ スケールを設定します。
+</string>
+    <string name="onboarding_font_small">
+小 (85%)
+</string>
+    <string name="onboarding_font_small_desc">
+小さな画面でも高い情報密度。
+</string>
+    <string name="onboarding_font_medium">
+中(100%)
+</string>
+    <string name="onboarding_font_medium_desc">
+明瞭さと可読性のバランスが取れています。推奨。
+</string>
+    <string name="onboarding_font_large">
+大(115%)
+</string>
+    <string name="onboarding_font_large_desc">
+高いアクセシビリティと容易な読みやすさ。
+</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">
+スクロールテキスト
+</string>
+    <string name="onboarding_scrolling_text_subtitle">
+画面の幅を超えるファイル名の動作を選択します。
+</string>
+    <string name="onboarding_scrolling_marquee">
+マーキー自動スクロール
+</string>
+    <string name="onboarding_scrolling_marquee_desc">
+長い名前を水平方向にスムーズにスクロールして、完全な拡張子が表示されるようにします。推奨。
+</string>
+    <string name="onboarding_scrolling_truncate">
+省略記号で切り詰める
+</string>
+    <string name="onboarding_scrolling_truncate_desc">
+ファイル名を静的に保ち、末尾を…でクリップします。
+</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">
+編集モードのホールド時間
+</string>
+    <string name="onboarding_hold_duration_subtitle">
+複数選択編集モードがアクティブになるまでにファイルまたはフォルダーを保持する時間。
+</string>
+    <string name="onboarding_hold_short">
+短い (300 ミリ秒)
+</string>
+    <string name="onboarding_hold_short_desc">
+パワーユーザー向けの高速かつ機敏な複数選択。
+</string>
+    <string name="onboarding_hold_normal">
+通常(500ms)
+</string>
+    <string name="onboarding_hold_normal_desc">
+標準的な継続時間により、スクロール中の偶発的なトリガーを防ぎます。推奨。
+</string>
+    <string name="onboarding_hold_long">
+長い (800 ミリ秒)
+</string>
+    <string name="onboarding_hold_long_desc">
+敏感なタッチスクリーンのために特別に意図的に保持時間を設けます。
+</string>
+    <string name="onboarding_hold_test_button">
+タッチアンドホールドしてテストします
+</string>
+    <string name="onboarding_hold_test_success">
+発動！
+</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">
+左手用 FAB モード
+</string>
+    <string name="onboarding_left_handed_fab_subtitle">
+フローティング アクション ボタンを再固定して、片手で快適にナビゲーションできるようにします。
+</string>
+    <string name="onboarding_fab_right">
+右利き用 (デフォルト)
+</string>
+    <string name="onboarding_fab_right_desc">
+標準的な右手親指が届くように右下に配置されています。
+</string>
+    <string name="onboarding_fab_left">
+左利き
+</string>
+    <string name="onboarding_fab_left_desc">
+左利きでも快適に使用できるよう、左下に配置されています。
+</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">
+クイックアクセスエッジドロワー
+</string>
+    <string name="onboarding_edge_drawer_subtitle">
+画面の端から内側にスワイプすると、ブックマークやドライブにすぐにアクセスできます。
+</string>
+    <string name="onboarding_edge_drawer_enabled">
+エッジドロワーを有効にする
+</string>
+    <string name="onboarding_edge_drawer_enabled_desc">
+微妙なエッジハンドルにより、アプリ内のどこからでもワンスワイプでショートカットにアクセスできます。推奨。
+</string>
+    <string name="onboarding_edge_drawer_disabled">
+エッジドロワーを無効にする
+</string>
+    <string name="onboarding_edge_drawer_disabled_desc">
+標準のツールバー ナビゲーションのみを使用してください。
+</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">
+ごみ箱の保護
+</string>
+    <string name="onboarding_recycle_bin_subtitle">
+ストレージ ボリューム全体で削除されたファイルに対するセーフティ ネット。
+</string>
+    <string name="onboarding_recycle_bin_safe">
+ごみ箱に移動
+</string>
+    <string name="onboarding_recycle_bin_safe_desc">
+削除されたファイルはごみ箱に移動され、いつでも復元できます。
+</string>
+    <string name="onboarding_recycle_bin_permanent">
+永久消去 (デフォルト)
+</string>
+    <string name="onboarding_recycle_bin_permanent_desc">
+ごみ箱をバイパスします。ファイルはストレージからすぐに削除されます。
+</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">
+隠しファイルを表示
+</string>
+    <string name="onboarding_hidden_files_subtitle">
+ドットファイルと非表示のキャッシュ フォルダーの表示を制御します。
+</string>
+    <string name="onboarding_hidden_files_hide">
+ドットファイルを隠す
+</string>
+    <string name="onboarding_hidden_files_hide_desc">
+.nomedia、.config、およびシステム ドットファイルを非表示にして、ファイル リストをクリーンな状態に保ちます。推奨。
+</string>
+    <string name="onboarding_hidden_files_show">
+隠しファイルを表示
+</string>
+    <string name="onboarding_hidden_files_show_desc">
+パワー ユーザー向けに、すべての非表示のドットファイルとディレクトリを淡色表示のスタイルで表示します。
+</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">
+アプリのロックとセキュリティ
+</string>
+    <string name="onboarding_app_lock_subtitle">
+Ultimate File Manager Pro を開くたびに認証を要求します。
+</string>
+    <string name="onboarding_app_lock_open">
+オープンアクセス
+</string>
+    <string name="onboarding_app_lock_open_desc">
+認証プロンプトを表示せずにファイルの参照を直接起動します。推奨。
+</string>
+    <string name="onboarding_app_lock_secure">
+保護されたロック (PIN / 生体認証)
+</string>
+    <string name="onboarding_app_lock_secure_desc">
+起動時に 4 桁の PIN または指紋認証を強制します。
+</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">
+クラッシュと診断レポート
+</string>
+    <string name="onboarding_diagnostics_subtitle">
+匿名のクラッシュ トレースと ANR スタック トレースを送信することで、UFM の改善に役立ちます。
+</string>
+    <string name="onboarding_diagnostics_enabled">
+有効 (推奨)
+</string>
+    <string name="onboarding_diagnostics_enabled_desc">
+匿名の技術クラッシュ トレースは、バグを迅速に修正するのに役立ちます。収集される個人データはゼロです。
+</string>
+    <string name="onboarding_diagnostics_disabled">
+無効
+</string>
+    <string name="onboarding_diagnostics_disabled_desc">
+すべての自動クラッシュおよびエラー レポートをオフにします。
+</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">
+書類
+</string>
+    <string name="onboarding_preview_sample_meta">
+14 アイテム • 2.4 GB
+</string>
+    <string name="onboarding_preview_sample_long_name">
+Ultimate_Backup_Archive_2026_Final_v2.tar.gz
+</string>
+    <string name="onboarding_preview_sample_hidden_name">
+.サムネイル
+</string>
+    <string name="onboarding_preview_safe_badge">
+ごみ箱がアクティブ: ファイルを回復できます
+</string>
+    <string name="onboarding_preview_warn_badge">
+直接削除アクティブ: ファイルは完全に消去されます
+</string>
+    <string name="onboarding_preview_privacy_badge">
+100% 匿名 • 個人データゼロ • ファイル追跡ゼロ
+</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
 通知

@@ -223,6 +223,336 @@ Aktivera
 Öppna inställningar
 </string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">
+Steg %1$d av %2$d
+</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">
+Hoppa över &amp; använd standardvärden
+</string>
+    <string name="onboarding_btn_skip_remaining">
+Hoppa över återstående
+</string>
+    <string name="onboarding_btn_start_browsing">
+Börja surfa
+</string>
+    <string name="onboarding_settings_reconfigure_title">
+Snabbinstallationsguide
+</string>
+    <string name="onboarding_settings_reconfigure_subtitle">
+Anpassa skärmdensitet, kontroller och nyckelinställningar
+</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">
+Huvudmeny Layout
+</string>
+    <string name="onboarding_view_density_subtitle">
+Välj hur du vill bläddra i din lagring.
+</string>
+    <string name="onboarding_view_mode_header">
+Visningsläge
+</string>
+    <string name="onboarding_categorized_title">
+Kategoriserad
+</string>
+    <string name="onboarding_categorized_sub">
+Modern
+</string>
+    <string name="onboarding_list_title">
+Lista
+</string>
+    <string name="onboarding_list_sub">
+Klassisk
+</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">
+Klassisk
+</string>
+    <string name="onboarding_selected_badge">
+✓ Vald
+</string>
+    <string name="onboarding_categorized_settings">
+Kategoriserade inställningar
+</string>
+    <string name="onboarding_categorized_settings_desc">
+Anpassa hur kategorier visas.
+</string>
+    <string name="onboarding_category_spacing">
+Kategoriavstånd
+</string>
+    <string name="onboarding_spacing_compact">
+Kompakt
+</string>
+    <string name="onboarding_spacing_compact_desc">
+Mindre utrymme
+</string>
+    <string name="onboarding_spacing_comfortable">
+Bekväm
+</string>
+    <string name="onboarding_spacing_comfortable_desc">
+Balanserat avstånd
+</string>
+    <string name="onboarding_expand_categories">
+Expandera kategorier
+</string>
+    <string name="onboarding_expand_categories_desc">
+Visa kategoriinnehåll vid öppning
+</string>
+    <string name="onboarding_list_settings">
+Listinställningar
+</string>
+    <string name="onboarding_list_settings_desc">
+Anpassa radavstånd och täthet.
+</string>
+    <string name="onboarding_row_spacing">
+Radavstånd
+</string>
+    <string name="onboarding_grid_settings">
+Rutnätsinställningar
+</string>
+    <string name="onboarding_grid_settings_desc">
+Anpassa rutnätets kolumndensitet.
+</string>
+    <string name="onboarding_grid_columns">
+Rutnätskolumner
+</string>
+    <string name="onboarding_columns_3_title">
+3 kolumner
+</string>
+    <string name="onboarding_columns_3_sub">
+Standard
+</string>
+    <string name="onboarding_columns_4_title">
+4 kolumner
+</string>
+    <string name="onboarding_columns_4_sub">
+Kompakt
+</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">
+Teckenstorleksskala
+</string>
+    <string name="onboarding_font_size_subtitle">
+Ställ in typografiskalan för filnamn och metadata över UFM.
+</string>
+    <string name="onboarding_font_small">
+Liten (85 %)
+</string>
+    <string name="onboarding_font_small_desc">
+Hög informationstäthet för mindre skärmar.
+</string>
+    <string name="onboarding_font_medium">
+Medium (100 %)
+</string>
+    <string name="onboarding_font_medium_desc">
+Balanserad tydlighet och läsbarhet. Rekommenderad.
+</string>
+    <string name="onboarding_font_large">
+Stor (115 %)
+</string>
+    <string name="onboarding_font_large_desc">
+Hög tillgänglighet och enkel läsbarhet.
+</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">
+Rullande text
+</string>
+    <string name="onboarding_scrolling_text_subtitle">
+Välj hur filnamn som överskrider skärmbredden beter sig.
+</string>
+    <string name="onboarding_scrolling_marquee">
+Marquee Auto-Scroll
+</string>
+    <string name="onboarding_scrolling_marquee_desc">
+Rulla långa namn jämnt horisontellt så att fullständiga tillägg är synliga. Rekommenderad.
+</string>
+    <string name="onboarding_scrolling_truncate">
+Trunkera med Ellipsis
+</string>
+    <string name="onboarding_scrolling_truncate_desc">
+Håller filnamn statiska och klipper slutet med ...
+</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">
+Redigeringsläge Hold Duration
+</string>
+    <string name="onboarding_hold_duration_subtitle">
+Hur länge du håller en fil eller mapp innan redigeringsläget för flera val aktiveras.
+</string>
+    <string name="onboarding_hold_short">
+Kort (300 ms)
+</string>
+    <string name="onboarding_hold_short_desc">
+Snabbt och smidigt flerval för avancerade användare.
+</string>
+    <string name="onboarding_hold_normal">
+Normal (500 ms)
+</string>
+    <string name="onboarding_hold_normal_desc">
+Standardvaraktighet förhindrar oavsiktliga utlösare under rullning. Rekommenderad.
+</string>
+    <string name="onboarding_hold_long">
+Lång (800 ms)
+</string>
+    <string name="onboarding_hold_long_desc">
+Extra avsiktlig hålltid för känsliga pekskärmar.
+</string>
+    <string name="onboarding_hold_test_button">
+Tryck och håll ned för att testa
+</string>
+    <string name="onboarding_hold_test_success">
+Utlöst!
+</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">
+Vänsterhänt FAB-läge
+</string>
+    <string name="onboarding_left_handed_fab_subtitle">
+Förankra den flytande åtgärdsknappen igen för bekväm navigering med en hand.
+</string>
+    <string name="onboarding_fab_right">
+Högerhänt (standard)
+</string>
+    <string name="onboarding_fab_right_desc">
+Placerad längst ner till höger för standard räckvidd för höger tumme.
+</string>
+    <string name="onboarding_fab_left">
+Vänsterhänt
+</string>
+    <string name="onboarding_fab_left_desc">
+Placerad längst ner till vänster för bekväm vänsterhänt användning.
+</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">
+Quick Access Edge-låda
+</string>
+    <string name="onboarding_edge_drawer_subtitle">
+Svep inåt från skärmkanten för omedelbar åtkomst till bokmärken och enheter.
+</string>
+    <string name="onboarding_edge_drawer_enabled">
+Aktivera Edge Drawer
+</string>
+    <string name="onboarding_edge_drawer_enabled_desc">
+Det subtila kanthandtaget ger genvägsåtkomst med ett svep var som helst i appen. Rekommenderad.
+</string>
+    <string name="onboarding_edge_drawer_disabled">
+Inaktivera Edge Drawer
+</string>
+    <string name="onboarding_edge_drawer_disabled_desc">
+Använd endast standardverktygsfältsnavigering.
+</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">
+Papperskorgen skydd
+</string>
+    <string name="onboarding_recycle_bin_subtitle">
+Skyddsnät för raderade filer över dina lagringsvolymer.
+</string>
+    <string name="onboarding_recycle_bin_safe">
+Flytta till papperskorgen
+</string>
+    <string name="onboarding_recycle_bin_safe_desc">
+Raderade filer flyttas till papperskorgen och kan återställas när som helst.
+</string>
+    <string name="onboarding_recycle_bin_permanent">
+Permanent radering (standard)
+</string>
+    <string name="onboarding_recycle_bin_permanent_desc">
+Går förbi papperskorgen. Filer raderas omedelbart från lagringen.
+</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">
+Visa dolda filer
+</string>
+    <string name="onboarding_hidden_files_subtitle">
+Kontrollera synligheten för dotfiler och dolda cachemappar.
+</string>
+    <string name="onboarding_hidden_files_hide">
+Göm dotfiler
+</string>
+    <string name="onboarding_hidden_files_hide_desc">
+Håller fillistor rena, döljer .nomedia-, .config- och systemdotfiler. Rekommenderad.
+</string>
+    <string name="onboarding_hidden_files_show">
+Visa dolda filer
+</string>
+    <string name="onboarding_hidden_files_show_desc">
+Avslöjar alla dolda punktfiler och kataloger med nedtonad stil för avancerade användare.
+</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">
+Applås och säkerhet
+</string>
+    <string name="onboarding_app_lock_subtitle">
+Kräv autentisering varje gång Ultimate File Manager Pro öppnas.
+</string>
+    <string name="onboarding_app_lock_open">
+Open Access
+</string>
+    <string name="onboarding_app_lock_open_desc">
+Startar direkt i filbläddring utan en autentiseringsprompt. Rekommenderad.
+</string>
+    <string name="onboarding_app_lock_secure">
+Skyddat lås (PIN / Biometrics)
+</string>
+    <string name="onboarding_app_lock_secure_desc">
+Genomför 4-siffrig PIN-kod eller fingeravtrycksautentisering vid lansering.
+</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">
+Krasch- och diagnostisk rapportering
+</string>
+    <string name="onboarding_diagnostics_subtitle">
+Hjälp till att förbättra UFM genom att sända anonyma krasch- och ANR-stackspår.
+</string>
+    <string name="onboarding_diagnostics_enabled">
+Aktiverad (rekommenderas)
+</string>
+    <string name="onboarding_diagnostics_enabled_desc">
+Anonyma tekniska kraschspår hjälper till att fixa buggar snabbt. Noll personuppgifter samlade in.
+</string>
+    <string name="onboarding_diagnostics_disabled">
+Inaktiverad
+</string>
+    <string name="onboarding_diagnostics_disabled_desc">
+Stänger av all automatisk krasch- och felrapportering.
+</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">
+Dokument
+</string>
+    <string name="onboarding_preview_sample_meta">
+14 artiklar • 2,4 GB
+</string>
+    <string name="onboarding_preview_sample_long_name">
+Ultimate_Backup_Archive_2026_Final_v2.tar.gz
+</string>
+    <string name="onboarding_preview_sample_hidden_name">
+.miniatyrer
+</string>
+    <string name="onboarding_preview_safe_badge">
+Papperskorgen aktiv: Filer kan återställas
+</string>
+    <string name="onboarding_preview_warn_badge">
+Direkt radering aktiv: Filer raderas permanent
+</string>
+    <string name="onboarding_preview_privacy_badge">
+100 % anonym • Noll personuppgifter • Noll filspårning
+</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
 Aviseringar

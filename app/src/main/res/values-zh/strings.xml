@@ -225,6 +225,336 @@ Ultimate File Manager Pro
 打开设置
 </string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">
+%2$d 第 %1$d 步
+</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">
+跳过并使用默认值
+</string>
+    <string name="onboarding_btn_skip_remaining">
+跳过剩余
+</string>
+    <string name="onboarding_btn_start_browsing">
+开始浏览
+</string>
+    <string name="onboarding_settings_reconfigure_title">
+快速设置向导
+</string>
+    <string name="onboarding_settings_reconfigure_subtitle">
+个性化显示密度、控件和关键首选项
+</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">
+主菜单布局
+</string>
+    <string name="onboarding_view_density_subtitle">
+选择您想要浏览存储的方式。
+</string>
+    <string name="onboarding_view_mode_header">
+查看模式
+</string>
+    <string name="onboarding_categorized_title">
+分类
+</string>
+    <string name="onboarding_categorized_sub">
+现代的
+</string>
+    <string name="onboarding_list_title">
+列表
+</string>
+    <string name="onboarding_list_sub">
+经典的
+</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">
+经典的
+</string>
+    <string name="onboarding_selected_badge">
+✓ 已选择
+</string>
+    <string name="onboarding_categorized_settings">
+分类设置
+</string>
+    <string name="onboarding_categorized_settings_desc">
+自定义类别的显示方式。
+</string>
+    <string name="onboarding_category_spacing">
+类别间距
+</string>
+    <string name="onboarding_spacing_compact">
+袖珍的
+</string>
+    <string name="onboarding_spacing_compact_desc">
+空间较小
+</string>
+    <string name="onboarding_spacing_comfortable">
+舒服的
+</string>
+    <string name="onboarding_spacing_comfortable_desc">
+平衡间距
+</string>
+    <string name="onboarding_expand_categories">
+展开类别
+</string>
+    <string name="onboarding_expand_categories_desc">
+打开时显示类别内容
+</string>
+    <string name="onboarding_list_settings">
+列表设置
+</string>
+    <string name="onboarding_list_settings_desc">
+自定义行距和密度。
+</string>
+    <string name="onboarding_row_spacing">
+行距
+</string>
+    <string name="onboarding_grid_settings">
+网格设置
+</string>
+    <string name="onboarding_grid_settings_desc">
+自定义网格列密度。
+</string>
+    <string name="onboarding_grid_columns">
+网格列
+</string>
+    <string name="onboarding_columns_3_title">
+3 列
+</string>
+    <string name="onboarding_columns_3_sub">
+标准
+</string>
+    <string name="onboarding_columns_4_title">
+4 列
+</string>
+    <string name="onboarding_columns_4_sub">
+袖珍的
+</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">
+字体大小比例
+</string>
+    <string name="onboarding_font_size_subtitle">
+设置 UFM 中文件名和元数据的排版比例。
+</string>
+    <string name="onboarding_font_small">
+小 (85%)
+</string>
+    <string name="onboarding_font_small_desc">
+较小屏幕的高信息密度。
+</string>
+    <string name="onboarding_font_medium">
+中（100%）
+</string>
+    <string name="onboarding_font_medium_desc">
+平衡清晰度和可读性。受到推崇的。
+</string>
+    <string name="onboarding_font_large">
+大 (115%)
+</string>
+    <string name="onboarding_font_large_desc">
+高可访问性和轻松的可读性。
+</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">
+滚动文本
+</string>
+    <string name="onboarding_scrolling_text_subtitle">
+选择超出屏幕宽度的文件名的行为方式。
+</string>
+    <string name="onboarding_scrolling_marquee">
+选取框自动滚动
+</string>
+    <string name="onboarding_scrolling_marquee_desc">
+平滑地水平滚动长名称，以便完整的扩展名可见。受到推崇的。
+</string>
+    <string name="onboarding_scrolling_truncate">
+用省略号截断
+</string>
+    <string name="onboarding_scrolling_truncate_desc">
+保持文件名静态并用...剪辑结尾
+</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">
+编辑模式保持持续时间
+</string>
+    <string name="onboarding_hold_duration_subtitle">
+在激活多选编辑模式之前您保存文件或文件夹的时间。
+</string>
+    <string name="onboarding_hold_short">
+短（300 毫秒）
+</string>
+    <string name="onboarding_hold_short_desc">
+为高级用户提供快速灵活的多重选择。
+</string>
+    <string name="onboarding_hold_normal">
+正常（500 毫秒）
+</string>
+    <string name="onboarding_hold_normal_desc">
+标准持续时间可防止滚动时意外触发。受到推崇的。
+</string>
+    <string name="onboarding_hold_long">
+长（800 毫秒）
+</string>
+    <string name="onboarding_hold_long_desc">
+为敏感的触摸屏提供额外的持续时间。
+</string>
+    <string name="onboarding_hold_test_button">
+触摸并按住进行测试
+</string>
+    <string name="onboarding_hold_test_success">
+触发了！
+</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">
+左手 FAB 模式
+</string>
+    <string name="onboarding_left_handed_fab_subtitle">
+重新固定浮动操作按钮，以实现舒适的单手导航。
+</string>
+    <string name="onboarding_fab_right">
+右手（默认）
+</string>
+    <string name="onboarding_fab_right_desc">
+位于右下角，适合标准右手拇指触及。
+</string>
+    <string name="onboarding_fab_left">
+左撇子
+</string>
+    <string name="onboarding_fab_left_desc">
+位于左下角，方便左手使用。
+</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">
+快速访问边缘抽屉
+</string>
+    <string name="onboarding_edge_drawer_subtitle">
+从屏幕边缘向内滑动即可立即访问书签和驱动器。
+</string>
+    <string name="onboarding_edge_drawer_enabled">
+启用边缘抽屉
+</string>
+    <string name="onboarding_edge_drawer_enabled_desc">
+微妙的边缘手柄可让您从应用程序中的任何位置一键快捷访问。受到推崇的。
+</string>
+    <string name="onboarding_edge_drawer_disabled">
+禁用边缘抽屉
+</string>
+    <string name="onboarding_edge_drawer_disabled_desc">
+仅使用标准工具栏导航。
+</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">
+回收站保护
+</string>
+    <string name="onboarding_recycle_bin_subtitle">
+存储卷中已删除文件的安全网。
+</string>
+    <string name="onboarding_recycle_bin_safe">
+移至回收站
+</string>
+    <string name="onboarding_recycle_bin_safe_desc">
+删除的文件会移至回收站并可以随时恢复。
+</string>
+    <string name="onboarding_recycle_bin_permanent">
+永久擦除（默认）
+</string>
+    <string name="onboarding_recycle_bin_permanent_desc">
+绕过回收站。文件会立即从存储中删除。
+</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">
+显示隐藏文件
+</string>
+    <string name="onboarding_hidden_files_subtitle">
+控制点文件和隐藏缓存文件夹的可见性。
+</string>
+    <string name="onboarding_hidden_files_hide">
+隐藏点文件
+</string>
+    <string name="onboarding_hidden_files_hide_desc">
+保持文件列表干净，隐藏 .nomedia、.config 和系统点文件。受到推崇的。
+</string>
+    <string name="onboarding_hidden_files_show">
+显示隐藏文件
+</string>
+    <string name="onboarding_hidden_files_show_desc">
+为高级用户显示所有隐藏的点文件和目录，并带有灰色样式。
+</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">
+应用程序锁定和安全
+</string>
+    <string name="onboarding_app_lock_subtitle">
+每次打开 Ultimate File Manager Pro 时都需要进行身份验证。
+</string>
+    <string name="onboarding_app_lock_open">
+开放获取
+</string>
+    <string name="onboarding_app_lock_open_desc">
+直接启动文件浏览，无需身份验证提示。受到推崇的。
+</string>
+    <string name="onboarding_app_lock_secure">
+受保护的锁（PIN /生物识别）
+</string>
+    <string name="onboarding_app_lock_secure_desc">
+启动时强制执行 4 位 PIN 或指纹身份验证。
+</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">
+碰撞和诊断报告
+</string>
+    <string name="onboarding_diagnostics_subtitle">
+通过传输匿名崩溃和 ANR 堆栈跟踪来帮助改进 UFM。
+</string>
+    <string name="onboarding_diagnostics_enabled">
+启用（推荐）
+</string>
+    <string name="onboarding_diagnostics_enabled_desc">
+匿名技术崩溃跟踪有助于快速修复错误。零收集个人数据。
+</string>
+    <string name="onboarding_diagnostics_disabled">
+残疾人
+</string>
+    <string name="onboarding_diagnostics_disabled_desc">
+关闭所有自动崩溃和错误报告。
+</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">
+文件
+</string>
+    <string name="onboarding_preview_sample_meta">
+14 项 • 2.4 GB
+</string>
+    <string name="onboarding_preview_sample_long_name">
+Ultimate_Backup_Archive_2026_Final_v2.tar.gz
+</string>
+    <string name="onboarding_preview_sample_hidden_name">
+.缩略图
+</string>
+    <string name="onboarding_preview_safe_badge">
+回收站活动：文件可以恢复
+</string>
+    <string name="onboarding_preview_warn_badge">
+直接删除活动：文件永久删除
+</string>
+    <string name="onboarding_preview_privacy_badge">
+100% 匿名 • 零个人数据 • 零文件跟踪
+</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
 通知

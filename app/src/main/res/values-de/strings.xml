@@ -225,6 +225,336 @@ Aktivieren
 Einstellungen öffnen
 </string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">
+Schritt %1$d von %2$d
+</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">
+Überspringen und Standardeinstellungen verwenden
+</string>
+    <string name="onboarding_btn_skip_remaining">
+Verbleibend überspringen
+</string>
+    <string name="onboarding_btn_start_browsing">
+Beginnen Sie mit dem Surfen
+</string>
+    <string name="onboarding_settings_reconfigure_title">
+Schnell-Setup-Assistent
+</string>
+    <string name="onboarding_settings_reconfigure_subtitle">
+Personalisieren Sie Anzeigedichte, Steuerelemente und Tasteneinstellungen
+</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">
+Hauptmenü-Layout
+</string>
+    <string name="onboarding_view_density_subtitle">
+Wählen Sie aus, wie Sie Ihren Speicher durchsuchen möchten.
+</string>
+    <string name="onboarding_view_mode_header">
+Ansichtsmodus
+</string>
+    <string name="onboarding_categorized_title">
+Kategorisiert
+</string>
+    <string name="onboarding_categorized_sub">
+Modern
+</string>
+    <string name="onboarding_list_title">
+Liste
+</string>
+    <string name="onboarding_list_sub">
+Klassiker
+</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">
+Klassiker
+</string>
+    <string name="onboarding_selected_badge">
+✓ Ausgewählt
+</string>
+    <string name="onboarding_categorized_settings">
+Kategorisierte Einstellungen
+</string>
+    <string name="onboarding_categorized_settings_desc">
+Passen Sie an, wie Kategorien angezeigt werden.
+</string>
+    <string name="onboarding_category_spacing">
+Kategorienabstand
+</string>
+    <string name="onboarding_spacing_compact">
+Kompakt
+</string>
+    <string name="onboarding_spacing_compact_desc">
+Weniger Platz
+</string>
+    <string name="onboarding_spacing_comfortable">
+Komfortabel
+</string>
+    <string name="onboarding_spacing_comfortable_desc">
+Ausgewogener Abstand
+</string>
+    <string name="onboarding_expand_categories">
+Erweitern Sie Kategorien
+</string>
+    <string name="onboarding_expand_categories_desc">
+Kategorieinhalte beim Öffnen anzeigen
+</string>
+    <string name="onboarding_list_settings">
+Listeneinstellungen
+</string>
+    <string name="onboarding_list_settings_desc">
+Passen Sie den Reihenabstand und die Reihendichte an.
+</string>
+    <string name="onboarding_row_spacing">
+Zeilenabstand
+</string>
+    <string name="onboarding_grid_settings">
+Rastereinstellungen
+</string>
+    <string name="onboarding_grid_settings_desc">
+Passen Sie die Dichte der Rasterspalten an.
+</string>
+    <string name="onboarding_grid_columns">
+Rasterspalten
+</string>
+    <string name="onboarding_columns_3_title">
+3 Spalten
+</string>
+    <string name="onboarding_columns_3_sub">
+Standard
+</string>
+    <string name="onboarding_columns_4_title">
+4 Spalten
+</string>
+    <string name="onboarding_columns_4_sub">
+Kompakt
+</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">
+Schriftgrößenskala
+</string>
+    <string name="onboarding_font_size_subtitle">
+Legen Sie die Typografieskala für Dateinamen und Metadaten in UFM fest.
+</string>
+    <string name="onboarding_font_small">
+Klein (85 %)
+</string>
+    <string name="onboarding_font_small_desc">
+Hohe Informationsdichte für kleinere Bildschirme.
+</string>
+    <string name="onboarding_font_medium">
+Mittel (100 %)
+</string>
+    <string name="onboarding_font_medium_desc">
+Ausgewogene Klarheit und Lesbarkeit. Empfohlen.
+</string>
+    <string name="onboarding_font_large">
+Groß (115 %)
+</string>
+    <string name="onboarding_font_large_desc">
+Hohe Zugänglichkeit und mühelose Lesbarkeit.
+</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">
+Lauftext
+</string>
+    <string name="onboarding_scrolling_text_subtitle">
+Wählen Sie aus, wie sich Dateinamen verhalten, die die Bildschirmbreite überschreiten.
+</string>
+    <string name="onboarding_scrolling_marquee">
+Marquee-Auto-Scroll
+</string>
+    <string name="onboarding_scrolling_marquee_desc">
+Lässt lange Namen reibungslos horizontal scrollen, sodass vollständige Erweiterungen sichtbar sind. Empfohlen.
+</string>
+    <string name="onboarding_scrolling_truncate">
+Mit Auslassungspunkten abschneiden
+</string>
+    <string name="onboarding_scrolling_truncate_desc">
+Hält Dateinamen statisch und schneidet das Ende mit … ab.
+</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">
+Haltedauer im Bearbeitungsmodus
+</string>
+    <string name="onboarding_hold_duration_subtitle">
+Wie lange Sie eine Datei oder einen Ordner gedrückt halten, bevor der Mehrfachauswahl-Bearbeitungsmodus aktiviert wird.
+</string>
+    <string name="onboarding_hold_short">
+Kurz (300 ms)
+</string>
+    <string name="onboarding_hold_short_desc">
+Schnelle und agile Mehrfachauswahl für Power-User.
+</string>
+    <string name="onboarding_hold_normal">
+Normal (500 ms)
+</string>
+    <string name="onboarding_hold_normal_desc">
+Standarddauer verhindert versehentliches Auslösen beim Scrollen. Empfohlen.
+</string>
+    <string name="onboarding_hold_long">
+Lang (800 ms)
+</string>
+    <string name="onboarding_hold_long_desc">
+Extra bewusste Haltezeit für empfindliche Touchscreens.
+</string>
+    <string name="onboarding_hold_test_button">
+Zum Testen berühren und halten
+</string>
+    <string name="onboarding_hold_test_success">
+Ausgelöst!
+</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">
+Linkshänder-FAB-Modus
+</string>
+    <string name="onboarding_left_handed_fab_subtitle">
+Verankern Sie den schwebenden Aktionsknopf neu, um eine komfortable Einhandnavigation zu ermöglichen.
+</string>
+    <string name="onboarding_fab_right">
+Rechtshänder (Standard)
+</string>
+    <string name="onboarding_fab_right_desc">
+Unten rechts positioniert, um die Standardreichweite mit dem rechten Daumen zu gewährleisten.
+</string>
+    <string name="onboarding_fab_left">
+Linkshänder
+</string>
+    <string name="onboarding_fab_left_desc">
+Unten links positioniert für eine bequeme Verwendung durch Linkshänder.
+</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">
+Schnellzugriff-Kantenschublade
+</string>
+    <string name="onboarding_edge_drawer_subtitle">
+Wischen Sie vom Bildschirmrand nach innen, um sofort auf Lesezeichen und Laufwerke zuzugreifen.
+</string>
+    <string name="onboarding_edge_drawer_enabled">
+Aktivieren Sie Edge Drawer
+</string>
+    <string name="onboarding_edge_drawer_enabled_desc">
+Der dezente Kantengriff ermöglicht den Zugriff auf Verknüpfungen mit einem Wisch von überall in der App. Empfohlen.
+</string>
+    <string name="onboarding_edge_drawer_disabled">
+Deaktivieren Sie Edge Drawer
+</string>
+    <string name="onboarding_edge_drawer_disabled_desc">
+Verwenden Sie nur die Standard-Symbolleistennavigation.
+</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">
+Schutz des Papierkorbs
+</string>
+    <string name="onboarding_recycle_bin_subtitle">
+Sicherheitsnetz für gelöschte Dateien auf Ihren Speichervolumes.
+</string>
+    <string name="onboarding_recycle_bin_safe">
+In den Papierkorb verschieben
+</string>
+    <string name="onboarding_recycle_bin_safe_desc">
+Gelöschte Dateien werden in den Papierkorb verschoben und können jederzeit wiederhergestellt werden.
+</string>
+    <string name="onboarding_recycle_bin_permanent">
+Dauerhaftes Löschen (Standard)
+</string>
+    <string name="onboarding_recycle_bin_permanent_desc">
+Umgeht den Papierkorb. Dateien werden sofort aus dem Speicher gelöscht.
+</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">
+Versteckte Dateien anzeigen
+</string>
+    <string name="onboarding_hidden_files_subtitle">
+Kontrollieren Sie die Sichtbarkeit von Dotfiles und versteckten Cache-Ordnern.
+</string>
+    <string name="onboarding_hidden_files_hide">
+Dotfiles ausblenden
+</string>
+    <string name="onboarding_hidden_files_hide_desc">
+Hält Dateilisten sauber und verbirgt .nomedia, .config und System-Dotfiles. Empfohlen.
+</string>
+    <string name="onboarding_hidden_files_show">
+Versteckte Dateien anzeigen
+</string>
+    <string name="onboarding_hidden_files_show_desc">
+Zeigt alle versteckten Punktdateien und Verzeichnisse mit abgeblendeter Darstellung für Power-User an.
+</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">
+App-Sperre und Sicherheit
+</string>
+    <string name="onboarding_app_lock_subtitle">
+Erfordert bei jedem Öffnen von Ultimate File Manager Pro eine Authentifizierung.
+</string>
+    <string name="onboarding_app_lock_open">
+Open Access
+</string>
+    <string name="onboarding_app_lock_open_desc">
+Startet direkt das Durchsuchen von Dateien ohne eine Authentifizierungsaufforderung. Empfohlen.
+</string>
+    <string name="onboarding_app_lock_secure">
+Geschütztes Schloss (PIN / Biometrie)
+</string>
+    <string name="onboarding_app_lock_secure_desc">
+Erzwingt beim Start eine 4-stellige PIN- oder Fingerabdruck-Authentifizierung.
+</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">
+Absturz- und Diagnoseberichte
+</string>
+    <string name="onboarding_diagnostics_subtitle">
+Helfen Sie dabei, UFM zu verbessern, indem Sie anonyme Absturz- und ANR-Stack-Traces übertragen.
+</string>
+    <string name="onboarding_diagnostics_enabled">
+Aktiviert (empfohlen)
+</string>
+    <string name="onboarding_diagnostics_enabled_desc">
+Anonyme technische Absturzspuren helfen dabei, Fehler schnell zu beheben. Es werden keine personenbezogenen Daten erhoben.
+</string>
+    <string name="onboarding_diagnostics_disabled">
+Deaktiviert
+</string>
+    <string name="onboarding_diagnostics_disabled_desc">
+Schaltet alle automatischen Absturz- und Fehlerberichte aus.
+</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">
+Unterlagen
+</string>
+    <string name="onboarding_preview_sample_meta">
+14 Artikel • 2,4 GB
+</string>
+    <string name="onboarding_preview_sample_long_name">
+Ultimate_Backup_Archive_2026_Final_v2.tar.gz
+</string>
+    <string name="onboarding_preview_sample_hidden_name">
+.Miniaturansichten
+</string>
+    <string name="onboarding_preview_safe_badge">
+Papierkorb aktiv: Dateien können wiederhergestellt werden
+</string>
+    <string name="onboarding_preview_warn_badge">
+Direktes Löschen aktiv: Dateien werden dauerhaft gelöscht
+</string>
+    <string name="onboarding_preview_privacy_badge">
+100 % anonym • Keine persönlichen Daten • Keine Dateiverfolgung
+</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
 Benachrichtigungen

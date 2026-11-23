@@ -225,6 +225,336 @@ Ultimate File Manager Pro में आपका स्वागत है
 सेटिंग्स खोलें
 </string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">
+%2$d का चरण %1$d
+</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">
+छोड़ें और डिफ़ॉल्ट का उपयोग करें
+</string>
+    <string name="onboarding_btn_skip_remaining">
+शेष छोड़ें
+</string>
+    <string name="onboarding_btn_start_browsing">
+ब्राउज़िंग प्रारंभ करें
+</string>
+    <string name="onboarding_settings_reconfigure_title">
+त्वरित सेटअप विज़ार्ड
+</string>
+    <string name="onboarding_settings_reconfigure_subtitle">
+प्रदर्शन घनत्व, नियंत्रण और मुख्य प्राथमिकताओं को वैयक्तिकृत करें
+</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">
+मुख्य मेनू लेआउट
+</string>
+    <string name="onboarding_view_density_subtitle">
+चुनें कि आप अपना संग्रहण कैसे ब्राउज़ करना चाहते हैं।
+</string>
+    <string name="onboarding_view_mode_header">
+दृश्य मोड
+</string>
+    <string name="onboarding_categorized_title">
+वर्गीकृत किया
+</string>
+    <string name="onboarding_categorized_sub">
+आधुनिक
+</string>
+    <string name="onboarding_list_title">
+सूची
+</string>
+    <string name="onboarding_list_sub">
+क्लासिक
+</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">
+क्लासिक
+</string>
+    <string name="onboarding_selected_badge">
+✓ चयनित
+</string>
+    <string name="onboarding_categorized_settings">
+वर्गीकृत सेटिंग्स
+</string>
+    <string name="onboarding_categorized_settings_desc">
+श्रेणियों को प्रदर्शित करने का तरीका अनुकूलित करें।
+</string>
+    <string name="onboarding_category_spacing">
+श्रेणी रिक्ति
+</string>
+    <string name="onboarding_spacing_compact">
+सघन
+</string>
+    <string name="onboarding_spacing_compact_desc">
+कम जगह
+</string>
+    <string name="onboarding_spacing_comfortable">
+आरामदायक
+</string>
+    <string name="onboarding_spacing_comfortable_desc">
+संतुलित दूरी
+</string>
+    <string name="onboarding_expand_categories">
+श्रेणियाँ विस्तृत करें
+</string>
+    <string name="onboarding_expand_categories_desc">
+खोलने पर श्रेणी सामग्री दिखाएँ
+</string>
+    <string name="onboarding_list_settings">
+सूची सेटिंग्स
+</string>
+    <string name="onboarding_list_settings_desc">
+पंक्ति रिक्ति और घनत्व को अनुकूलित करें।
+</string>
+    <string name="onboarding_row_spacing">
+पंक्ति रिक्ति
+</string>
+    <string name="onboarding_grid_settings">
+ग्रिड सेटिंग्स
+</string>
+    <string name="onboarding_grid_settings_desc">
+ग्रिड कॉलम घनत्व को अनुकूलित करें।
+</string>
+    <string name="onboarding_grid_columns">
+ग्रिड कॉलम
+</string>
+    <string name="onboarding_columns_3_title">
+3 कॉलम
+</string>
+    <string name="onboarding_columns_3_sub">
+मानक
+</string>
+    <string name="onboarding_columns_4_title">
+4 कॉलम
+</string>
+    <string name="onboarding_columns_4_sub">
+सघन
+</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">
+फ़ॉन्ट आकार स्केल
+</string>
+    <string name="onboarding_font_size_subtitle">
+यूएफएम में फ़ाइल नाम और मेटाडेटा के लिए टाइपोग्राफी स्केल सेट करें।
+</string>
+    <string name="onboarding_font_small">
+छोटा (85%)
+</string>
+    <string name="onboarding_font_small_desc">
+छोटी स्क्रीन के लिए उच्च सूचना घनत्व।
+</string>
+    <string name="onboarding_font_medium">
+मध्यम (100%)
+</string>
+    <string name="onboarding_font_medium_desc">
+संतुलित स्पष्टता और पठनीयता. अनुशंसित।
+</string>
+    <string name="onboarding_font_large">
+बड़ा (115%)
+</string>
+    <string name="onboarding_font_large_desc">
+उच्च पहुंच और सहज पठनीयता।
+</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">
+स्क्रॉलिंग टेक्स्ट
+</string>
+    <string name="onboarding_scrolling_text_subtitle">
+चुनें कि स्क्रीन की चौड़ाई से अधिक फ़ाइल नाम कैसे व्यवहार करेंगे।
+</string>
+    <string name="onboarding_scrolling_marquee">
+मार्की ऑटो-स्क्रॉल
+</string>
+    <string name="onboarding_scrolling_marquee_desc">
+लंबे नामों को क्षैतिज रूप से आसानी से स्क्रॉल करता है ताकि पूर्ण एक्सटेंशन दिखाई दे सकें। अनुशंसित।
+</string>
+    <string name="onboarding_scrolling_truncate">
+इलिप्सिस के साथ काट-छाँट करें
+</string>
+    <string name="onboarding_scrolling_truncate_desc">
+फ़ाइल नामों को स्थिर रखता है और अंत को ... से क्लिप करता है
+</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">
+संपादन मोड होल्ड अवधि
+</string>
+    <string name="onboarding_hold_duration_subtitle">
+बहु-चयन संपादन मोड सक्रिय होने से पहले आप किसी फ़ाइल या फ़ोल्डर को कितनी देर तक पकड़कर रखते हैं।
+</string>
+    <string name="onboarding_hold_short">
+लघु (300 एमएस)
+</string>
+    <string name="onboarding_hold_short_desc">
+बिजली उपयोगकर्ताओं के लिए तेज़ और चुस्त बहु-चयन।
+</string>
+    <string name="onboarding_hold_normal">
+सामान्य (500 एमएस)
+</string>
+    <string name="onboarding_hold_normal_desc">
+स्क्रॉल करते समय आकस्मिक ट्रिगर को रोकने वाली मानक अवधि। अनुशंसित।
+</string>
+    <string name="onboarding_hold_long">
+लंबा (800 एमएस)
+</string>
+    <string name="onboarding_hold_long_desc">
+संवेदनशील टचस्क्रीन के लिए अतिरिक्त जानबूझकर पकड़ने का समय।
+</string>
+    <string name="onboarding_hold_test_button">
+परीक्षण करने के लिए स्पर्श करके रखें
+</string>
+    <string name="onboarding_hold_test_success">
+ट्रिगर!
+</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">
+बाएं हाथ का FAB मोड
+</string>
+    <string name="onboarding_left_handed_fab_subtitle">
+आरामदायक एक-हाथ वाले नेविगेशन के लिए फ़्लोटिंग एक्शन बटन को फिर से एंकर करें।
+</string>
+    <string name="onboarding_fab_right">
+दाएँ हाथ से (डिफ़ॉल्ट)
+</string>
+    <string name="onboarding_fab_right_desc">
+मानक दाएं अंगूठे की पहुंच के लिए नीचे-दाईं ओर स्थित।
+</string>
+    <string name="onboarding_fab_left">
+बाएं हाथ से काम करने वाला
+</string>
+    <string name="onboarding_fab_left_desc">
+बाएं हाथ से आरामदायक उपयोग के लिए नीचे बाईं ओर स्थित।
+</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">
+क्विक एक्सेस एज ड्रॉअर
+</string>
+    <string name="onboarding_edge_drawer_subtitle">
+बुकमार्क और ड्राइव तक तुरंत पहुंच के लिए स्क्रीन किनारे से अंदर की ओर स्वाइप करें।
+</string>
+    <string name="onboarding_edge_drawer_enabled">
+एज ड्रॉअर सक्षम करें
+</string>
+    <string name="onboarding_edge_drawer_enabled_desc">
+सूक्ष्म किनारे वाला हैंडल ऐप में कहीं से भी एक-स्वाइप शॉर्टकट एक्सेस देता है। अनुशंसित।
+</string>
+    <string name="onboarding_edge_drawer_disabled">
+एज ड्रॉअर को अक्षम करें
+</string>
+    <string name="onboarding_edge_drawer_disabled_desc">
+केवल मानक टूलबार नेविगेशन का उपयोग करें.
+</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">
+रीसायकल बिन सुरक्षा
+</string>
+    <string name="onboarding_recycle_bin_subtitle">
+आपके स्टोरेज वॉल्यूम में हटाई गई फ़ाइलों के लिए सुरक्षा जाल।
+</string>
+    <string name="onboarding_recycle_bin_safe">
+रीसायकल बिन में ले जाएँ
+</string>
+    <string name="onboarding_recycle_bin_safe_desc">
+हटाई गई फ़ाइलें रीसायकल बिन में चली जाती हैं और उन्हें कभी भी पुनर्स्थापित किया जा सकता है।
+</string>
+    <string name="onboarding_recycle_bin_permanent">
+स्थायी मिटाएँ (डिफ़ॉल्ट)
+</string>
+    <string name="onboarding_recycle_bin_permanent_desc">
+रीसायकल बिन को बायपास करता है। फ़ाइलें तुरंत संग्रहण से हटा दी जाती हैं.
+</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">
+छुपी हुई फ़ाइलें दिखाएँ
+</string>
+    <string name="onboarding_hidden_files_subtitle">
+डॉटफ़ाइल्स और छिपे हुए कैश फ़ोल्डरों की दृश्यता को नियंत्रित करें।
+</string>
+    <string name="onboarding_hidden_files_hide">
+डॉटफ़ाइलें छिपाएँ
+</string>
+    <string name="onboarding_hidden_files_hide_desc">
+.nomedia, .config और सिस्टम dotfiles को छुपाकर फ़ाइल सूचियों को साफ़ रखता है। अनुशंसित।
+</string>
+    <string name="onboarding_hidden_files_show">
+छुपी हुई फ़ाइलें दिखाएँ
+</string>
+    <string name="onboarding_hidden_files_show_desc">
+पावर उपयोगकर्ताओं के लिए मंद स्टाइल के साथ सभी छुपे हुए डॉटफ़ाइल्स और निर्देशिकाओं को प्रकट करता है।
+</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">
+ऐप लॉक और सुरक्षा
+</string>
+    <string name="onboarding_app_lock_subtitle">
+हर बार अल्टीमेट फ़ाइल मैनेजर प्रो खोले जाने पर प्रमाणीकरण की आवश्यकता होती है।
+</string>
+    <string name="onboarding_app_lock_open">
+खुला एक्सेस
+</string>
+    <string name="onboarding_app_lock_open_desc">
+प्रमाणीकरण संकेत के बिना सीधे फ़ाइल ब्राउज़िंग में लॉन्च होता है। अनुशंसित।
+</string>
+    <string name="onboarding_app_lock_secure">
+संरक्षित लॉक (पिन / बायोमेट्रिक्स)
+</string>
+    <string name="onboarding_app_lock_secure_desc">
+लॉन्च पर 4-अंकीय पिन या फ़िंगरप्रिंट प्रमाणीकरण लागू करता है।
+</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">
+दुर्घटना एवं निदान रिपोर्टिंग
+</string>
+    <string name="onboarding_diagnostics_subtitle">
+अनाम क्रैश और ANR स्टैक ट्रेस संचारित करके UFM को बेहतर बनाने में सहायता करें।
+</string>
+    <string name="onboarding_diagnostics_enabled">
+सक्षम (अनुशंसित)
+</string>
+    <string name="onboarding_diagnostics_enabled_desc">
+अनाम तकनीकी क्रैश ट्रेस बग को तेजी से ठीक करने में मदद करते हैं। शून्य व्यक्तिगत डेटा एकत्र किया गया.
+</string>
+    <string name="onboarding_diagnostics_disabled">
+अक्षम
+</string>
+    <string name="onboarding_diagnostics_disabled_desc">
+सभी स्वचालित क्रैश और त्रुटि रिपोर्टिंग बंद कर देता है।
+</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">
+दस्तावेज़
+</string>
+    <string name="onboarding_preview_sample_meta">
+14 आइटम • 2.4 जीबी
+</string>
+    <string name="onboarding_preview_sample_long_name">
+अल्टीमेट_बैकअप_आर्काइव_2026_फाइनल_v2.tar.gz
+</string>
+    <string name="onboarding_preview_sample_hidden_name">
+.थंबनेल
+</string>
+    <string name="onboarding_preview_safe_badge">
+रीसायकल बिन सक्रिय: फ़ाइलें पुनर्प्राप्त की जा सकती हैं
+</string>
+    <string name="onboarding_preview_warn_badge">
+डायरेक्ट डिलीट एक्टिव: फ़ाइलें स्थायी रूप से मिटा दी गईं
+</string>
+    <string name="onboarding_preview_privacy_badge">
+100% गुमनाम • शून्य व्यक्तिगत डेटा • शून्य फ़ाइल ट्रैकिंग
+</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
 सूचनाएँ

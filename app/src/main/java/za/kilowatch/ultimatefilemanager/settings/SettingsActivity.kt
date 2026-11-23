@@ -261,6 +261,15 @@ class SettingsActivity : AppCompatActivity() {
             btnListViewSize?.setOnClickListener { showListSizeBottomSheet() }
         }
 
+        // Quick Setup Wizard (Reconfigure Mode)
+        findViewById<View>(R.id.cardOnboardingWizard)?.setOnClickListener {
+            val intent = Intent(this, za.kilowatch.ultimatefilemanager.onboarding.OnboardingViewDensityActivity::class.java).apply {
+                putExtra(za.kilowatch.ultimatefilemanager.onboarding.BaseOnboardingStepActivity.EXTRA_RECONFIGURE_MODE, true)
+            }
+            startActivity(intent)
+            overridePendingTransition(R.anim.ufm_slide_in_right, R.anim.ufm_slide_out_left)
+        }
+
         // Font Size row
         val cardFontSize = findViewById<View>(R.id.cardFontSize)
         cardFontSize.setOnClickListener {

@@ -225,6 +225,336 @@ Ultimate File Manager Pro
 Открыть настройки
 </string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">
+Шаг %1$d из %2$d
+</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">
+Пропустить и использовать настройки по умолчанию
+</string>
+    <string name="onboarding_btn_skip_remaining">
+Пропустить оставшееся
+</string>
+    <string name="onboarding_btn_start_browsing">
+Начать просмотр
+</string>
+    <string name="onboarding_settings_reconfigure_title">
+Мастер быстрой настройки
+</string>
+    <string name="onboarding_settings_reconfigure_subtitle">
+Персонализируйте плотность отображения, элементы управления и ключевые настройки.
+</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">
+Макет главного меню
+</string>
+    <string name="onboarding_view_density_subtitle">
+Выберите, как вы хотите просматривать свое хранилище.
+</string>
+    <string name="onboarding_view_mode_header">
+Режим просмотра
+</string>
+    <string name="onboarding_categorized_title">
+Категории
+</string>
+    <string name="onboarding_categorized_sub">
+Современный
+</string>
+    <string name="onboarding_list_title">
+Список
+</string>
+    <string name="onboarding_list_sub">
+Классический
+</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">
+Классический
+</string>
+    <string name="onboarding_selected_badge">
+✓ Выбрано
+</string>
+    <string name="onboarding_categorized_settings">
+Настройки по категориям
+</string>
+    <string name="onboarding_categorized_settings_desc">
+Настройте способ отображения категорий.
+</string>
+    <string name="onboarding_category_spacing">
+Расстояние между категориями
+</string>
+    <string name="onboarding_spacing_compact">
+Компактный
+</string>
+    <string name="onboarding_spacing_compact_desc">
+Меньше места
+</string>
+    <string name="onboarding_spacing_comfortable">
+Комфортный
+</string>
+    <string name="onboarding_spacing_comfortable_desc">
+Сбалансированное расстояние
+</string>
+    <string name="onboarding_expand_categories">
+Развернуть категории
+</string>
+    <string name="onboarding_expand_categories_desc">
+Показывать содержимое категории при открытии
+</string>
+    <string name="onboarding_list_settings">
+Список настроек
+</string>
+    <string name="onboarding_list_settings_desc">
+Настройте расстояние между рядами и плотность.
+</string>
+    <string name="onboarding_row_spacing">
+Расстояние между строками
+</string>
+    <string name="onboarding_grid_settings">
+Настройки сетки
+</string>
+    <string name="onboarding_grid_settings_desc">
+Настройте плотность столбцов сетки.
+</string>
+    <string name="onboarding_grid_columns">
+Столбцы сетки
+</string>
+    <string name="onboarding_columns_3_title">
+3 столбца
+</string>
+    <string name="onboarding_columns_3_sub">
+Стандартный
+</string>
+    <string name="onboarding_columns_4_title">
+4 столбца
+</string>
+    <string name="onboarding_columns_4_sub">
+Компактный
+</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">
+Шкала размера шрифта
+</string>
+    <string name="onboarding_font_size_subtitle">
+Установите масштаб оформления для имен файлов и метаданных в UFM.
+</string>
+    <string name="onboarding_font_small">
+Малый (85%)
+</string>
+    <string name="onboarding_font_small_desc">
+Высокая плотность информации для небольших экранов.
+</string>
+    <string name="onboarding_font_medium">
+Средний (100%)
+</string>
+    <string name="onboarding_font_medium_desc">
+Сбалансированная четкость и читаемость. Рекомендуется.
+</string>
+    <string name="onboarding_font_large">
+Большой (115%)
+</string>
+    <string name="onboarding_font_large_desc">
+Высокая доступность и легкая читаемость.
+</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">
+Прокрутка текста
+</string>
+    <string name="onboarding_scrolling_text_subtitle">
+Выберите, как будут вести себя имена файлов, превышающие ширину экрана.
+</string>
+    <string name="onboarding_scrolling_marquee">
+Автопрокрутка области выделения
+</string>
+    <string name="onboarding_scrolling_marquee_desc">
+Плавно прокручивает длинные имена по горизонтали, чтобы были видны полные расширения. Рекомендуется.
+</string>
+    <string name="onboarding_scrolling_truncate">
+Усечь с помощью многоточия
+</string>
+    <string name="onboarding_scrolling_truncate_desc">
+Сохраняет имена файлов статичными и обрезает их конец...
+</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">
+Редактировать продолжительность удержания режима
+</string>
+    <string name="onboarding_hold_duration_subtitle">
+Как долго вы удерживаете файл или папку, прежде чем активируется режим редактирования с множественным выбором.
+</string>
+    <string name="onboarding_hold_short">
+Короткий (300 мс)
+</string>
+    <string name="onboarding_hold_short_desc">
+Быстрый и гибкий множественный выбор для опытных пользователей.
+</string>
+    <string name="onboarding_hold_normal">
+Нормальный (500 мс)
+</string>
+    <string name="onboarding_hold_normal_desc">
+Стандартная длительность, предотвращающая случайные срабатывания при прокрутке. Рекомендуется.
+</string>
+    <string name="onboarding_hold_long">
+Длинный (800 мс)
+</string>
+    <string name="onboarding_hold_long_desc">
+Дополнительное время удержания для чувствительных сенсорных экранов.
+</string>
+    <string name="onboarding_hold_test_button">
+Нажмите и удерживайте, чтобы проверить
+</string>
+    <string name="onboarding_hold_test_success">
+Сработало!
+</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">
+Режим FAB для левшей
+</string>
+    <string name="onboarding_left_handed_fab_subtitle">
+Закрепите плавающую кнопку действия для удобной навигации одной рукой.
+</string>
+    <string name="onboarding_fab_right">
+Правша (по умолчанию)
+</string>
+    <string name="onboarding_fab_right_desc">
+Расположен в правом нижнем углу для стандартного доступа большого пальца правой руки.
+</string>
+    <string name="onboarding_fab_left">
+Левша
+</string>
+    <string name="onboarding_fab_left_desc">
+Расположен внизу слева для удобства использования левой рукой.
+</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">
+Краевой ящик быстрого доступа
+</string>
+    <string name="onboarding_edge_drawer_subtitle">
+Проведите пальцем внутрь от края экрана для мгновенного доступа к закладкам и дискам.
+</string>
+    <string name="onboarding_edge_drawer_enabled">
+Включить крайний ящик
+</string>
+    <string name="onboarding_edge_drawer_enabled_desc">
+Тонкая ручка по краю обеспечивает доступ к ярлыкам одним движением из любой точки приложения. Рекомендуется.
+</string>
+    <string name="onboarding_edge_drawer_disabled">
+Отключить крайний ящик
+</string>
+    <string name="onboarding_edge_drawer_disabled_desc">
+Используйте только стандартную навигацию по панели инструментов.
+</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">
+Защита корзины
+</string>
+    <string name="onboarding_recycle_bin_subtitle">
+Защитная сеть для удаленных файлов на ваших томах хранения.
+</string>
+    <string name="onboarding_recycle_bin_safe">
+Переместить в корзину
+</string>
+    <string name="onboarding_recycle_bin_safe_desc">
+Удаленные файлы перемещаются в корзину и могут быть восстановлены в любое время.
+</string>
+    <string name="onboarding_recycle_bin_permanent">
+Постоянное стирание (по умолчанию)
+</string>
+    <string name="onboarding_recycle_bin_permanent_desc">
+Обходит корзину. Файлы сразу удаляются из хранилища.
+</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">
+Показать скрытые файлы
+</string>
+    <string name="onboarding_hidden_files_subtitle">
+Контролируйте видимость точечных файлов и скрытых папок кэша.
+</string>
+    <string name="onboarding_hidden_files_hide">
+Скрыть точечные файлы
+</string>
+    <string name="onboarding_hidden_files_hide_desc">
+Содержит списки файлов в чистоте, скрывая .nomedia, .config и системные точечные файлы. Рекомендуется.
+</string>
+    <string name="onboarding_hidden_files_show">
+Показать скрытые файлы
+</string>
+    <string name="onboarding_hidden_files_show_desc">
+Открывает все скрытые точечные файлы и каталоги с затемненным стилем для опытных пользователей.
+</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">
+Блокировка приложений и безопасность
+</string>
+    <string name="onboarding_app_lock_subtitle">
+Требовать аутентификацию каждый раз при открытии Ultimate File Manager Pro.
+</string>
+    <string name="onboarding_app_lock_open">
+Открытый доступ
+</string>
+    <string name="onboarding_app_lock_open_desc">
+Запускает непосредственно просмотр файлов без запроса аутентификации. Рекомендуется.
+</string>
+    <string name="onboarding_app_lock_secure">
+Защищенная блокировка (ПИН-код / ​​биометрия)
+</string>
+    <string name="onboarding_app_lock_secure_desc">
+Обеспечивает аутентификацию по 4-значному PIN-коду или отпечатку пальца при запуске.
+</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">
+Отчеты о сбоях и диагностике
+</string>
+    <string name="onboarding_diagnostics_subtitle">
+Помогите улучшить UFM, передавая анонимные следы сбоя и стека ANR.
+</string>
+    <string name="onboarding_diagnostics_enabled">
+Включено (рекомендуется)
+</string>
+    <string name="onboarding_diagnostics_enabled_desc">
+Анонимные следы технических сбоев помогают быстро исправлять ошибки. Не собрано никаких личных данных.
+</string>
+    <string name="onboarding_diagnostics_disabled">
+Неполноценный
+</string>
+    <string name="onboarding_diagnostics_disabled_desc">
+Отключает все автоматические отчеты о сбоях и ошибках.
+</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">
+Документы
+</string>
+    <string name="onboarding_preview_sample_meta">
+14 предметов • 2,4 ГБ
+</string>
+    <string name="onboarding_preview_sample_long_name">
+Ultimate_Backup_Archive_2026_Final_v2.tar.gz
+</string>
+    <string name="onboarding_preview_sample_hidden_name">
+.миниатюры
+</string>
+    <string name="onboarding_preview_safe_badge">
+Корзина активна: файлы можно восстановить.
+</string>
+    <string name="onboarding_preview_warn_badge">
+Прямое удаление активно: файлы удаляются без возможности восстановления.
+</string>
+    <string name="onboarding_preview_privacy_badge">
+100% анонимность • Никакие личные данные • Никакое отслеживание файлов
+</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
 Уведомления

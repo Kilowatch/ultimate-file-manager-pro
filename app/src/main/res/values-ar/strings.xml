@@ -225,6 +225,336 @@ Ultimate File Manager Pro
 فتح الإعدادات
 </string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">
+الخطوة %1$d من %2$d
+</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">
+تخطي واستخدام الإعدادات الافتراضية
+</string>
+    <string name="onboarding_btn_skip_remaining">
+تخطي المتبقية
+</string>
+    <string name="onboarding_btn_start_browsing">
+ابدأ التصفح
+</string>
+    <string name="onboarding_settings_reconfigure_title">
+معالج الإعداد السريع
+</string>
+    <string name="onboarding_settings_reconfigure_subtitle">
+قم بتخصيص كثافة العرض وعناصر التحكم والتفضيلات الرئيسية
+</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">
+تخطيط القائمة الرئيسية
+</string>
+    <string name="onboarding_view_density_subtitle">
+اختر الطريقة التي تريد بها تصفح مساحة التخزين الخاصة بك.
+</string>
+    <string name="onboarding_view_mode_header">
+وضع العرض
+</string>
+    <string name="onboarding_categorized_title">
+مصنفة
+</string>
+    <string name="onboarding_categorized_sub">
+حديث
+</string>
+    <string name="onboarding_list_title">
+قائمة
+</string>
+    <string name="onboarding_list_sub">
+كلاسيكي
+</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">
+كلاسيكي
+</string>
+    <string name="onboarding_selected_badge">
+✓ مختارة
+</string>
+    <string name="onboarding_categorized_settings">
+الإعدادات المصنفة
+</string>
+    <string name="onboarding_categorized_settings_desc">
+تخصيص كيفية عرض الفئات.
+</string>
+    <string name="onboarding_category_spacing">
+تباعد الفئة
+</string>
+    <string name="onboarding_spacing_compact">
+مدمج
+</string>
+    <string name="onboarding_spacing_compact_desc">
+مساحة أقل
+</string>
+    <string name="onboarding_spacing_comfortable">
+مريح
+</string>
+    <string name="onboarding_spacing_comfortable_desc">
+تباعد متوازن
+</string>
+    <string name="onboarding_expand_categories">
+قم بتوسيع الفئات
+</string>
+    <string name="onboarding_expand_categories_desc">
+إظهار محتويات الفئة عند الفتح
+</string>
+    <string name="onboarding_list_settings">
+إعدادات القائمة
+</string>
+    <string name="onboarding_list_settings_desc">
+تخصيص تباعد الصفوف وكثافتها.
+</string>
+    <string name="onboarding_row_spacing">
+تباعد الصفوف
+</string>
+    <string name="onboarding_grid_settings">
+إعدادات الشبكة
+</string>
+    <string name="onboarding_grid_settings_desc">
+تخصيص كثافة عمود الشبكة.
+</string>
+    <string name="onboarding_grid_columns">
+أعمدة الشبكة
+</string>
+    <string name="onboarding_columns_3_title">
+3 أعمدة
+</string>
+    <string name="onboarding_columns_3_sub">
+معيار
+</string>
+    <string name="onboarding_columns_4_title">
+4 أعمدة
+</string>
+    <string name="onboarding_columns_4_sub">
+مدمج
+</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">
+مقياس حجم الخط
+</string>
+    <string name="onboarding_font_size_subtitle">
+قم بتعيين مقياس الطباعة لأسماء الملفات والبيانات التعريفية عبر UFM.
+</string>
+    <string name="onboarding_font_small">
+صغير (85%)
+</string>
+    <string name="onboarding_font_small_desc">
+كثافة معلومات عالية للشاشات الصغيرة.
+</string>
+    <string name="onboarding_font_medium">
+متوسطة (100%)
+</string>
+    <string name="onboarding_font_medium_desc">
+الوضوح المتوازن وسهولة القراءة. مُستَحسَن.
+</string>
+    <string name="onboarding_font_large">
+كبير (115%)
+</string>
+    <string name="onboarding_font_large_desc">
+إمكانية الوصول العالية وسهولة القراءة.
+</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">
+التمرير النص
+</string>
+    <string name="onboarding_scrolling_text_subtitle">
+اختر كيفية تصرف أسماء الملفات التي تتجاوز عرض الشاشة.
+</string>
+    <string name="onboarding_scrolling_marquee">
+شاشة التحديد للتمرير التلقائي
+</string>
+    <string name="onboarding_scrolling_marquee_desc">
+يقوم بتمرير الأسماء الطويلة أفقيًا بسلاسة حتى تظهر الامتدادات الكاملة. مُستَحسَن.
+</string>
+    <string name="onboarding_scrolling_truncate">
+اقتطاع مع القطع الناقص
+</string>
+    <string name="onboarding_scrolling_truncate_desc">
+يحافظ على أسماء الملفات ثابتة ويقطع النهاية بـ ...
+</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">
+تحرير مدة تعليق الوضع
+</string>
+    <string name="onboarding_hold_duration_subtitle">
+المدة التي تحتفظ فيها بملف أو مجلد قبل تنشيط وضع التحرير متعدد التحديد.
+</string>
+    <string name="onboarding_hold_short">
+قصير (300 مللي ثانية)
+</string>
+    <string name="onboarding_hold_short_desc">
+اختيار متعدد سريع ورشيق للمستخدمين المتميزين.
+</string>
+    <string name="onboarding_hold_normal">
+عادي (500 مللي ثانية)
+</string>
+    <string name="onboarding_hold_normal_desc">
+المدة القياسية تمنع المشغلات العرضية أثناء التمرير. مُستَحسَن.
+</string>
+    <string name="onboarding_hold_long">
+طويل (800 مللي ثانية)
+</string>
+    <string name="onboarding_hold_long_desc">
+وقت انتظار متعمد إضافي لشاشات اللمس الحساسة.
+</string>
+    <string name="onboarding_hold_test_button">
+المس مع الاستمرار للاختبار
+</string>
+    <string name="onboarding_hold_test_success">
+أثار!
+</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">
+وضع FAB أعسر
+</string>
+    <string name="onboarding_left_handed_fab_subtitle">
+أعد تثبيت زر الإجراء العائم للتنقل المريح بيد واحدة.
+</string>
+    <string name="onboarding_fab_right">
+اليد اليمنى (افتراضي)
+</string>
+    <string name="onboarding_fab_right_desc">
+تم وضعه في أسفل اليمين للوصول القياسي للإبهام الأيمن.
+</string>
+    <string name="onboarding_fab_left">
+عسراء
+</string>
+    <string name="onboarding_fab_left_desc">
+تم وضعه في أسفل اليسار للاستخدام المريح باليد اليسرى.
+</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">
+الوصول السريع إلى درج الحافة
+</string>
+    <string name="onboarding_edge_drawer_subtitle">
+اسحب للداخل من حافة الشاشة للوصول الفوري إلى الإشارات المرجعية ومحركات الأقراص.
+</string>
+    <string name="onboarding_edge_drawer_enabled">
+تمكين درج الحافة
+</string>
+    <string name="onboarding_edge_drawer_enabled_desc">
+يتيح المقبض ذو الحافة الدقيقة الوصول إلى الاختصار بتمريرة واحدة من أي مكان في التطبيق. مُستَحسَن.
+</string>
+    <string name="onboarding_edge_drawer_disabled">
+تعطيل درج الحافة
+</string>
+    <string name="onboarding_edge_drawer_disabled_desc">
+استخدم شريط الأدوات القياسي للتنقل فقط.
+</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">
+حماية سلة المحذوفات
+</string>
+    <string name="onboarding_recycle_bin_subtitle">
+شبكة أمان للملفات المحذوفة عبر وحدات التخزين الخاصة بك.
+</string>
+    <string name="onboarding_recycle_bin_safe">
+الانتقال إلى سلة المحذوفات
+</string>
+    <string name="onboarding_recycle_bin_safe_desc">
+يتم نقل الملفات المحذوفة إلى سلة المحذوفات ويمكن استعادتها في أي وقت.
+</string>
+    <string name="onboarding_recycle_bin_permanent">
+المحو الدائم (افتراضي)
+</string>
+    <string name="onboarding_recycle_bin_permanent_desc">
+يتجاوز سلة المحذوفات. يتم حذف الملفات على الفور من التخزين.
+</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">
+إظهار الملفات المخفية
+</string>
+    <string name="onboarding_hidden_files_subtitle">
+التحكم في رؤية الملفات النقطية ومجلدات ذاكرة التخزين المؤقت المخفية.
+</string>
+    <string name="onboarding_hidden_files_hide">
+إخفاء الملفات النقطية
+</string>
+    <string name="onboarding_hidden_files_hide_desc">
+يحافظ على نظافة قوائم الملفات، ويخفي ملفات .nomedia و.config وملفات dotfiles الخاصة بالنظام. مُستَحسَن.
+</string>
+    <string name="onboarding_hidden_files_show">
+إظهار الملفات المخفية
+</string>
+    <string name="onboarding_hidden_files_show_desc">
+يكشف عن جميع الملفات والدلائل المخفية ذات التصميم الخافت للمستخدمين المتميزين.
+</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">
+قفل التطبيق والأمن
+</string>
+    <string name="onboarding_app_lock_subtitle">
+يتطلب المصادقة في كل مرة يتم فيها فتح Ultimate File Manager Pro.
+</string>
+    <string name="onboarding_app_lock_open">
+الوصول المفتوح
+</string>
+    <string name="onboarding_app_lock_open_desc">
+يتم تشغيله مباشرة في تصفح الملفات دون مطالبة بالمصادقة. مُستَحسَن.
+</string>
+    <string name="onboarding_app_lock_secure">
+القفل المحمي (PIN / القياسات الحيوية)
+</string>
+    <string name="onboarding_app_lock_secure_desc">
+يفرض رقم التعريف الشخصي المكون من 4 أرقام أو مصادقة بصمة الإصبع عند التشغيل.
+</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">
+تقارير الأعطال والتشخيص
+</string>
+    <string name="onboarding_diagnostics_subtitle">
+ساعد في تحسين UFM عن طريق إرسال تتبعات الأعطال ومكدس ANR المجهولة.
+</string>
+    <string name="onboarding_diagnostics_enabled">
+ممكّن (مستحسن)
+</string>
+    <string name="onboarding_diagnostics_enabled_desc">
+تساعد آثار الأعطال الفنية المجهولة على إصلاح الأخطاء بسرعة. لم يتم جمع أي بيانات شخصية.
+</string>
+    <string name="onboarding_diagnostics_disabled">
+عاجز
+</string>
+    <string name="onboarding_diagnostics_disabled_desc">
+يقوم بإيقاف تشغيل كافة التقارير التلقائية عن الأعطال والأخطاء.
+</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">
+وثائق
+</string>
+    <string name="onboarding_preview_sample_meta">
+14 عنصر • 2.4 جيجابايت
+</string>
+    <string name="onboarding_preview_sample_long_name">
+Ultimate_Backup_Archive_2026_Final_v2.tar.gz
+</string>
+    <string name="onboarding_preview_sample_hidden_name">
+.المصغرات
+</string>
+    <string name="onboarding_preview_safe_badge">
+سلة المحذوفات النشطة: يمكن استرداد الملفات
+</string>
+    <string name="onboarding_preview_warn_badge">
+الحذف المباشر النشط: تم مسح الملفات نهائيًا
+</string>
+    <string name="onboarding_preview_privacy_badge">
+مجهول بنسبة 100% • صفر بيانات شخصية • صفر تتبع للملفات
+</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
 الإشعارات

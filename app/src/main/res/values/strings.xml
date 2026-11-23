@@ -79,6 +79,134 @@
     <string name="btn_enable">Enable</string>
     <string name="btn_open_settings">Open Settings</string>
 
+    <!-- Onboarding Quick Setup Wizard Strings -->
+    <string name="onboarding_step_format">Step %1$d of %2$d</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_back">Back</string>
+    <string name="onboarding_btn_skip_defaults">Skip &amp; Use Defaults</string>
+    <string name="onboarding_btn_skip_remaining">Skip Remaining</string>
+    <string name="onboarding_btn_start_browsing">Start Browsing</string>
+    <string name="onboarding_settings_reconfigure_title">Quick Setup Wizard</string>
+    <string name="onboarding_settings_reconfigure_subtitle">Personalize display density, controls, and key preferences</string>
+
+    <!-- Onboarding Step 1: Main Menu Layout -->
+    <string name="onboarding_view_density_title">Main Menu Layout</string>
+    <string name="onboarding_view_density_subtitle">Choose how you want to browse your storage.</string>
+    <string name="onboarding_view_mode_header">View Mode</string>
+    <string name="onboarding_categorized_title">Categorized</string>
+    <string name="onboarding_categorized_sub">Modern</string>
+    <string name="onboarding_list_title">List</string>
+    <string name="onboarding_list_sub">Classic</string>
+    <string name="onboarding_grid_title">Grid</string>
+    <string name="onboarding_grid_sub">Classic</string>
+    <string name="onboarding_selected_badge">✓ Selected</string>
+    <string name="onboarding_categorized_settings">Categorized Settings</string>
+    <string name="onboarding_categorized_settings_desc">Customize how categories are displayed.</string>
+    <string name="onboarding_category_spacing">Category Spacing</string>
+    <string name="onboarding_spacing_compact">Compact</string>
+    <string name="onboarding_spacing_compact_desc">Less space</string>
+    <string name="onboarding_spacing_comfortable">Comfortable</string>
+    <string name="onboarding_spacing_comfortable_desc">Balanced spacing</string>
+    <string name="onboarding_expand_categories">Expand Categories</string>
+    <string name="onboarding_expand_categories_desc">Show category contents on opening</string>
+    <string name="onboarding_list_settings">List Settings</string>
+    <string name="onboarding_list_settings_desc">Customize row spacing and density.</string>
+    <string name="onboarding_row_spacing">Row Spacing</string>
+    <string name="onboarding_grid_settings">Grid Settings</string>
+    <string name="onboarding_grid_settings_desc">Customize grid column density.</string>
+    <string name="onboarding_grid_columns">Grid Columns</string>
+    <string name="onboarding_columns_3_title">3 Columns</string>
+    <string name="onboarding_columns_3_sub">Standard</string>
+    <string name="onboarding_columns_4_title">4 Columns</string>
+    <string name="onboarding_columns_4_sub">Compact</string>
+
+    <!-- Onboarding Step 2: Font Size -->
+    <string name="onboarding_font_size_title">Font Size Scale</string>
+    <string name="onboarding_font_size_subtitle">Set the typography scale for file names and metadata across UFM.</string>
+    <string name="onboarding_font_small">Small (85%)</string>
+    <string name="onboarding_font_small_desc">High information density for smaller screens.</string>
+    <string name="onboarding_font_medium">Medium (100%)</string>
+    <string name="onboarding_font_medium_desc">Balanced clarity and readability. Recommended.</string>
+    <string name="onboarding_font_large">Large (115%)</string>
+    <string name="onboarding_font_large_desc">High accessibility and effortless readability.</string>
+
+    <!-- Onboarding Step 3: Scrolling Text -->
+    <string name="onboarding_scrolling_text_title">Scrolling Text</string>
+    <string name="onboarding_scrolling_text_subtitle">Choose how filenames that exceed the screen width behave.</string>
+    <string name="onboarding_scrolling_marquee">Marquee Auto-Scroll</string>
+    <string name="onboarding_scrolling_marquee_desc">Smoothly scrolls long names horizontally so full extensions are visible. Recommended.</string>
+    <string name="onboarding_scrolling_truncate">Truncate with Ellipsis</string>
+    <string name="onboarding_scrolling_truncate_desc">Keeps file names static and clips the end with …</string>
+
+    <!-- Onboarding Step 4: Edit Mode Hold Duration -->
+    <string name="onboarding_hold_duration_title">Edit Mode Hold Duration</string>
+    <string name="onboarding_hold_duration_subtitle">How long you hold a file or folder before multi-selection edit mode activates.</string>
+    <string name="onboarding_hold_short">Short (300 ms)</string>
+    <string name="onboarding_hold_short_desc">Fast and agile multi-selection for power users.</string>
+    <string name="onboarding_hold_normal">Normal (500 ms)</string>
+    <string name="onboarding_hold_normal_desc">Standard duration preventing accidental triggers while scrolling. Recommended.</string>
+    <string name="onboarding_hold_long">Long (800 ms)</string>
+    <string name="onboarding_hold_long_desc">Extra deliberate hold time for sensitive touchscreens.</string>
+    <string name="onboarding_hold_test_button">Touch &amp; Hold to Test</string>
+    <string name="onboarding_hold_test_success">Triggered!</string>
+
+    <!-- Onboarding Step 5: Left-Handed FAB Mode -->
+    <string name="onboarding_left_handed_fab_title">Left-Handed FAB Mode</string>
+    <string name="onboarding_left_handed_fab_subtitle">Re-anchor the Floating Action Button for comfortable one-handed navigation.</string>
+    <string name="onboarding_fab_right">Right-Handed (Default)</string>
+    <string name="onboarding_fab_right_desc">Positioned at bottom-right for standard right-thumb reach.</string>
+    <string name="onboarding_fab_left">Left-Handed</string>
+    <string name="onboarding_fab_left_desc">Positioned at bottom-left for comfortable left-handed use.</string>
+
+    <!-- Onboarding Step 6: Quick Access Edge Drawer -->
+    <string name="onboarding_edge_drawer_title">Quick Access Edge Drawer</string>
+    <string name="onboarding_edge_drawer_subtitle">Swipe inward from the screen edge for instant access to bookmarks and drives.</string>
+    <string name="onboarding_edge_drawer_enabled">Enable Edge Drawer</string>
+    <string name="onboarding_edge_drawer_enabled_desc">Subtle edge handle gives one-swipe shortcut access from anywhere in the app. Recommended.</string>
+    <string name="onboarding_edge_drawer_disabled">Disable Edge Drawer</string>
+    <string name="onboarding_edge_drawer_disabled_desc">Use standard toolbar navigation only.</string>
+
+    <!-- Onboarding Step 7: Recycle Bin -->
+    <string name="onboarding_recycle_bin_title">Recycle Bin Protection</string>
+    <string name="onboarding_recycle_bin_subtitle">Safety net for deleted files across your storage volumes.</string>
+    <string name="onboarding_recycle_bin_safe">Move to Recycle Bin</string>
+    <string name="onboarding_recycle_bin_safe_desc">Deleted files move to the Recycle Bin and can be restored anytime.</string>
+    <string name="onboarding_recycle_bin_permanent">Permanent Erase (Default)</string>
+    <string name="onboarding_recycle_bin_permanent_desc">Bypasses the Recycle Bin. Files are immediately deleted from storage.</string>
+
+    <!-- Onboarding Step 8: Show Hidden Files -->
+    <string name="onboarding_hidden_files_title">Show Hidden Files</string>
+    <string name="onboarding_hidden_files_subtitle">Control visibility of dotfiles and hidden cache folders.</string>
+    <string name="onboarding_hidden_files_hide">Hide Dotfiles</string>
+    <string name="onboarding_hidden_files_hide_desc">Keeps file lists clean, hiding .nomedia, .config, and system dotfiles. Recommended.</string>
+    <string name="onboarding_hidden_files_show">Show Hidden Files</string>
+    <string name="onboarding_hidden_files_show_desc">Reveals all hidden dotfiles and directories with dimmed styling for power users.</string>
+
+    <!-- Onboarding Step 9: App Lock & Security -->
+    <string name="onboarding_app_lock_title">App Lock &amp; Security</string>
+    <string name="onboarding_app_lock_subtitle">Require authentication each time Ultimate File Manager Pro is opened.</string>
+    <string name="onboarding_app_lock_open">Open Access</string>
+    <string name="onboarding_app_lock_open_desc">Launches directly into file browsing without an authentication prompt. Recommended.</string>
+    <string name="onboarding_app_lock_secure">Protected Lock (PIN / Biometrics)</string>
+    <string name="onboarding_app_lock_secure_desc">Enforces 4-digit PIN or fingerprint authentication on launch.</string>
+
+    <!-- Onboarding Step 10: Crash & Diagnostic Reporting -->
+    <string name="onboarding_diagnostics_title">Crash &amp; Diagnostic Reporting</string>
+    <string name="onboarding_diagnostics_subtitle">Help improve UFM by transmitting anonymous crash and ANR stack traces.</string>
+    <string name="onboarding_diagnostics_enabled">Enabled (Recommended)</string>
+    <string name="onboarding_diagnostics_enabled_desc">Anonymous technical crash traces help fix bugs rapidly. Zero personal data collected.</string>
+    <string name="onboarding_diagnostics_disabled">Disabled</string>
+    <string name="onboarding_diagnostics_disabled_desc">Turns off all automated crash and error reporting.</string>
+
+    <!-- Onboarding Live Preview Mockup Strings -->
+    <string name="onboarding_preview_sample_folder">Documents</string>
+    <string name="onboarding_preview_sample_meta">14 items • 2.4 GB</string>
+    <string name="onboarding_preview_sample_long_name">Ultimate_Backup_Archive_2026_Final_v2.tar.gz</string>
+    <string name="onboarding_preview_sample_hidden_name">.thumbnails</string>
+    <string name="onboarding_preview_safe_badge">Recycle Bin Active: Files can be recovered</string>
+    <string name="onboarding_preview_warn_badge">Direct Delete Active: Files permanently erased</string>
+    <string name="onboarding_preview_privacy_badge">100% Anonymous • Zero Personal Data • Zero File Tracking</string>
+
     <!-- Permission Titles -->
     <string name="perm_notifications_title">Notifications</string>
     <string name="perm_audio_title">Music &amp; Audio</string>

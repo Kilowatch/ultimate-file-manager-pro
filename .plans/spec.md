@@ -1,113 +1,223 @@
-# Specification: Settings Hierarchy, Granular Groupings & Logical Sequencing
+# Specification: First-Run Onboarding Setup Flow with Dedicated Per-Setting Activities
 
 ## Overview
-Reorganize the settings in Ultimate File Manager Pro by breaking down oversized, confusing categories (e.g., File Browsing & Management with 14 items, Media Player with 11 items, and Network & Performance with 9 items) into intuitive, focused groupings of 2 to 5 related settings each. In addition, establish a natural, top-to-bottom sequence of settings categories that guides the user logically from general setup and visual appearance, through core file browsing, media, and networking, down to security, maintenance, and diagnostics.
+Introduce a visual first-run onboarding setup sequence immediately following permissions in `WelcomeActivity`. Every individual setting is implemented as its own dedicated Activity with paired mobile and TV layouts. Each Activity dedicates full screen focus to that single setting, rendering rich explanatory text alongside a **large, live visual preview example** that is **always pre-rendered on the recommended default selection** upon opening (or the user's saved preferences if re-running from Settings). The sequence features contextual skip buttons: **"Skip & Use Defaults"** on Screen 1, and **"Skip Remaining"** from Screen 2 onwards, which **preserves all settings configured up to that point while applying recommended defaults to all remaining skipped settings**. The flow provides full Android TV 16:9 D-pad parity, checks hardware security compatibility, uses polished horizontal slide transitions, guarantees unified preference persistence with `SettingsActivity`, and adds an on-demand re-entry card in Settings.
 
 ## User Stories
-- **As a UFM Pro mobile user**, I want settings to flow in a logical sequence (General -> Appearance -> Navigation/Controls -> File Management -> Media -> Network -> Security -> System) so that configuration feels intuitive and progressive rather than scattered.
-- **As a user looking for a specific option**, I want related settings to be clustered into focused, cohesive groups (such as "Permissions & Storage Access", "File Operations & Safety", "Playback & Streaming", and "Player Controls") so that I can quickly spot and adjust options without scrolling through massive, unfocused lists.
-- **As an Android TV user**, I want the TV settings screen to follow the exact same logical sequence with clear section headers so that navigating via D-pad is structured and effortless.
-- **As a power user searching settings**, I want in-page search filtering to reveal matching items beneath clear, contextual sub-headers that preserve their natural categorized place in the hierarchy.
+- **As a new user entering Screen 1 who wants to bypass setup immediately**, I want a clear **"Skip & Use Defaults"** button so I can open the app in one tap with all recommended defaults applied.
+- **As a user who customizes the first few screens and then wants to jump into the app**, I want the button on Screen 2 onwards to read **"Skip Remaining"** so I know my custom choices are preserved while remaining unvisited options use defaults.
+- **As a visual learner**, I want every screen to open with the live preview actively demonstrating the recommended default so I immediately see the baseline experience before touching anything.
+- **As a user exploring choices**, I want the preview to instantly react as I change options so I can compare alternatives against the default before deciding.
+- **As an Android TV user**, I want every screen to provide a 10-foot TV layout with glowing D-pad focus outlines, remote-friendly controls, and automatic exclusion of mobile-only touch screens.
+- **As an existing user re-running the wizard from Settings**, I want the wizard to open with my current settings already selected, and return back to Settings once finished without disrupting my current session.
 
 ## Functional Requirements
 
-- **FR-01: Break Down Oversized "File Browsing & Management" Section**
-  - Replace the monolithic 14-item section with focused, specialized groups:
-    - **Permissions & Storage Access**: Elevated/system access and virtual drives (*All Files Access*, *Root Access*, *Simulate USB OTG Drive*).
-    - **Browsing & Display**: File discovery and listing behavior (*Show Hidden Files*, *Flat View*, *Folder Sort Overrides*, *Search Results Limit*).
-    - **File Operations & Safety**: Data protection and cleanup (*Recycle Bin*, *Duplicate Retention Strategy*).
-    - **Organization & File Tools**: Metadata and management tools (*Manage Favorites*, *Custom Drive Names*, *File Tags*, *APK / XAPK Extract*).
+- **FR-01: Dedicated Per-Setting Activity Architecture**
+  - Every one of the 10 settings shall be implemented as its own standalone Activity class.
+  - Every Activity must strictly follow the project Activity pattern:
+    - `attachBaseContext` override with `LocaleManagerWrapper`.
+    - Edge-to-edge support with window insets.
+    - One Activity class, two layouts: `activity_<name>.xml` (mobile) and `activity_<name>_tv.xml` (TV).
+  - Clean linear Activity backstack with "Back" returning to the previous setting Activity and preserving prior selections.
+  - Transitions: Fluid horizontal slide animation (`slide_in_right` / `slide_out_left` on Next; `slide_in_left` / `slide_out_right` on Back).
 
-- **FR-02: Break Down Oversized "Media Player & Playback" Section**
-  - Replace the 11-item section with two focused groups:
-    - **Media Playback**: Playback logic and video automation (*Side-by-Side Video*, *Controls on Repeat*, *Auto-play Next*, *Background Video Mode*, *Resume After Interruption*).
-    - **Player Controls & Gestures**: Player UI, touch interaction, and timing (*Show Mini-Player*, *Player Gestures*, *Button Feedback Toasts*, *Skip Length*, *Controls Auto-Hide Duration*, *Subtitle Style*).
+- **FR-02: Sequential Flow of the 10 Dedicated Activities**
 
-- **FR-03: Break Down Oversized "Network & Performance" Section**
-  - Replace the 9-item section with distinct categories:
-    - **Transfers & Downloads**: Active transfers and connection handling (*QuickTransfer*, *Download Manager*, *Cache Copy*, *Multi-threading*).
-    - **Network Caching & Streaming**: Caching engine and stream processing (*Network File Caching*, *Network Media Processing*).
-    - **Servers & Indexing**: Host server and indexer utilities (*Background TV Sharing*, *File Server System Tiles*, *Storage Indexer*).
+  ```
+  [WelcomeActivity] (Permissions Complete)
+         │
+         ▼
+  1.  [OnboardingViewDensityActivity]        (Button: "Skip & Use Defaults")
+         │
+         ▼
+  2.  [OnboardingFontSizeActivity]           (Button: "Skip Remaining")
+         │
+         ▼
+  3.  [OnboardingScrollingTextActivity]      (Button: "Skip Remaining")
+         │
+         ▼
+  4.  [OnboardingHoldDurationActivity]       (Button: "Skip Remaining")
+         │
+         ▼
+  5.  [OnboardingLeftHandedFabActivity]      (Button: "Skip Remaining" — Mobile Only, skipped on TV)
+         │
+         ▼
+  6.  [OnboardingEdgeDrawerActivity]         (Button: "Skip Remaining" — Mobile Only, skipped on TV)
+         │
+         ▼
+  7.  [OnboardingRecycleBinActivity]         (Button: "Skip Remaining")
+         │
+         ▼
+  8.  [OnboardingHiddenFilesActivity]        (Button: "Skip Remaining")
+         │
+         ▼
+  9.  [OnboardingAppLockActivity]            (Button: "Skip Remaining" — Skipped if hardware lacks secure lock)
+         │
+         ▼
+  10. [OnboardingDiagnosticsActivity]       (Button: "Skip Remaining" / "Start Browsing")
+         │
+         ▼
+  [StorageBrowserActivity] (Main App — Configured & Ready!)
+  ```
 
-- **FR-04: Streamline "Appearance & Customization" Section**
-  - Group visual options logically:
-    - **Theme & Display**: High-level visual styles (*Theme/Appearance*, *View Appearance Presets*, *Font Size*).
-    - **Interface Details & Animations**: UI micro-customizations (*Icons*, *Default Icon Colors*, *Folder Transitions*, *Path Breadcrumbs*, *Scrolling Text*, *Grid Item Indicators*, *Grid Text Position on TV*).
+- **FR-03: Detailed Specification of Each Dedicated Activity & Live Preview**
 
-- **FR-05: Preserved Focused Groups**
-  - Maintain well-scoped groups without unnecessary fragmentation:
-    - **General & Interface** (*Search Bar*, *Default Start Screen*, *Language*, *Default Apps*, *Main Menu Layout*).
-    - **Quick Access** (*Style*, *Swipe Edge*, *Edge Handle*, *Hide Docked Tiles*, *Manage Tiles* - mobile).
-    - **Other Storage & Transfers** (*SAF Picked File Action*, *Copy Destination Folder*).
-    - **Controls & Gestures** (*Edit Mode Hold Duration*, *Toolbar Icons*, *Keyboard Shortcuts*, *Tap Icon to Edit*, *Selection Checkboxes*, *Left-Handed FAB*).
-    - **Dual-Pane (Twin Window)** (*Layout*, *Start in Twin Panel*).
-    - **Thumbnails & Caching** (*Media Thumbnails*, *Video Thumbnail Time*, *Network Thumbnails*).
-    - **Security** (*App Lock*, *Auth Method*, *Change PIN*, *Lock Frequency*).
-    - **Backup & Restore** (*Backup & Restore*, *Auto Backup*).
-    - **Privacy & Diagnostics** (*Tip Jar Popup*, *Usage Analytics*, *Crash Reporting*, *Check for Updates*).
-    - **Accessibility** (*Colorblind Mode*).
+  ### 1. `OnboardingViewDensityActivity` (Screen 1)
+  - **What It Offers:** Controls row height, spacing, and thumbnail sizing in file listings.
+  - **Options:** *Standard List (Recommended Default)*, *Compact List*, *Large Grid*.
+  - **Live Preview:** Prominent file directory mockup (*Documents*, *Photos*, *Music*).
+    - *Default:* Pre-renders in **Standard List** (48dp row height, standard padding).
+    - *On Selection:* Fluidly adjusts between Compact (36dp tight rows) and Large Grid cards.
+  - **Skip Button Label:** **"Skip & Use Defaults"** (skips all and commits all recommended defaults).
 
-- **FR-06: Natural Top-to-Bottom Settings Flow & Sequencing**
-  - The overall page shall be ordered in an intuitive sequence from general preferences to system maintenance:
-    1. **General & Interface**
-    2. **Appearance & Display**
-       - 2.1 *Theme & Display*
-       - 2.2 *Interface Details & Animations*
-    3. **Navigation & Controls**
-       - 3.1 *Quick Access* (mobile)
-       - 3.2 *Controls & Gestures*
-       - 3.3 *Dual-Pane (Twin Window)*
-    4. **File Management & Storage**
-       - 4.1 *Permissions & Storage Access*
-       - 4.2 *Browsing & Display*
-       - 4.3 *File Operations & Safety*
-       - 4.4 *Organization & File Tools*
-       - 4.5 *Other Storage & Transfers (SAF)*
-    5. **Thumbnails & Media**
-       - 5.1 *Thumbnails & Previews*
-       - 5.2 *Media Playback*
-       - 5.3 *Player Controls & Gestures*
-    6. **Network & Connectivity**
-       - 6.1 *Transfers & Downloads*
-       - 6.2 *Network Caching & Streaming*
-       - 6.3 *Servers & Indexing*
-    7. **Security & Access**
-       - 7.1 *Security & App Lock*
-    8. **System, Maintenance & About**
-       - 8.1 *Accessibility*
-       - 8.2 *Backup & Restore*
-       - 8.3 *Privacy & Diagnostics*
+  ### 2. `OnboardingFontSizeActivity` (Screen 2)
+  - **What It Offers:** Independently scales typography across file names, path breadcrumbs, metadata, and dialogs.
+  - **Options:** *Small (85% / 13sp)*, *Medium (100% / 15sp — Recommended Default)*, *Large (115% / 17sp)*.
+  - **Live Preview:** Sample metadata row (`"Documents • 14 files • 2.4 GB"`).
+    - *Default:* Pre-renders at **Medium (100% / 15sp)**.
+    - *On Selection:* Live text immediately rescales when a chip is tapped.
+  - **Skip Button Label:** **"Skip Remaining"**.
 
-- **FR-07: Unified Mobile and Android TV Structure**
-  - Mirror the new section hierarchy and ordering symmetrically across both Mobile and Android TV layouts, respecting platform-specific item inclusions/exclusions.
-  - Maintain TV D-pad focus traversal order and header styling.
+  ### 3. `OnboardingScrollingTextActivity` (Screen 3)
+  - **What It Offers:** Automatically animates long file and folder names that exceed screen width, preventing clipped extensions.
+  - **Options:** *Marquee Auto-Scroll (Recommended Default)*, *Truncate with Ellipsis*.
+  - **Live Preview:** Mock row with long filename (`"Ultimate_Backup_Archive_2026_Final_v2.tar.gz"`).
+    - *Default:* Marquee auto-scrolling is **actively running** on screen open.
+    - *On Selection:* Switching to Truncate stops animation and displays static ellipsis (`...`).
+  - **Skip Button Label:** **"Skip Remaining"**.
 
-- **FR-08: In-Page Search Filtering Compatibility**
-  - Ensure the dynamic search filter in settings seamlessly handles the new section order, section headers, and group cards, properly showing matching rows with their respective section header and hiding empty sections with no matching rows.
+  ### 4. `OnboardingHoldDurationActivity` (Screen 4)
+  - **What It Offers:** Sets the physical press-and-hold duration required to trigger multi-selection edit mode.
+  - **Options:** *Short (300ms)*, *Normal (500ms — Recommended Default)*, *Long (800ms)*.
+  - **Live Preview:** Interactive "Touch & Hold to Test" visual ring.
+    - *Default:* Pre-configured at **Normal (500ms)**.
+    - *On Interaction:* User presses down; a glowing cyan ring fills at the chosen duration (300ms, 500ms, or 800ms) with a haptic pulse and checkmark upon completing the hold.
+  - **Skip Button Label:** **"Skip Remaining"**.
 
-- **FR-09: Card Icon & Preference Continuity**
-  - Retain all existing settings keys, SharedPreferences bindings, click handlers, dialog triggers, and card icon customizations without regression.
+  ### 5. `OnboardingLeftHandedFabActivity` (Screen 5 — Mobile Only)
+  - **What It Offers:** Re-anchors the primary Tools & Quick Actions button to the bottom-left corner for left-handed ergonomics.
+  - **Options:** *Right-Handed (Default — Off)*, *Left-Handed (On)*.
+  - **Live Preview:** Miniature phone frame mockup.
+    - *Default:* FAB sits at standard **Bottom-Right**.
+    - *On Selection:* Smoothly translates the button over to **Bottom-Left** with glow indicator.
+  - **Skip Button Label:** **"Skip Remaining"**.
+  - **Platform Handling:** Skipped automatically on TV.
+
+  ### 6. `OnboardingEdgeDrawerActivity` (Screen 6 — Mobile Only)
+  - **What It Offers:** A swipe-from-edge translucent drawer providing instant access to bookmarks and drives from anywhere in UFM.
+  - **Options:** *Enabled (Recommended Default — On)*, *Disabled (Off)*.
+  - **Live Preview:** Phone mockup with edge handle.
+    - *Default:* Shows the edge handle and animated shortcut drawer sliding into view.
+    - *On Selection:* Toggling Off dims and collapses the edge drawer.
+  - **Skip Button Label:** **"Skip Remaining"**.
+  - **Platform Handling:** Skipped automatically on TV.
+
+  ### 7. `OnboardingRecycleBinActivity` (Screen 7)
+  - **What It Offers:** Two-stage deletion safety net allowing restoration of accidentally deleted files.
+  - **Options:** *Safe Delete (Recommended Default — On)*, *Permanent Erase (Off)*.
+  - **Live Preview:** Visual state comparison card.
+    - *Default:* Displays **Green Shield (Safe Delete Active: Files can be recovered)**.
+    - *On Selection:* Toggling Off switches to an **Orange Alert (Permanent Erase: Files immediately destroyed)**.
+  - **Skip Button Label:** **"Skip Remaining"**.
+
+  ### 8. `OnboardingHiddenFilesActivity` (Screen 8)
+  - **What It Offers:** Controls whether dotfiles and hidden directories (e.g. `.nomedia`, `.config`) appear in listings.
+  - **Options:** *Hidden (Recommended Default — Off)*, *Visible (On)*.
+  - **Live Preview:** File list preview showing a standard `DCIM` folder and `.thumbnails` folder.
+    - *Default:* `.thumbnails` folder is **hidden**.
+    - *On Selection:* Toggling On reveals `.thumbnails` with a subtle dimmed dotfile indicator.
+  - **Skip Button Label:** **"Skip Remaining"**.
+
+  ### 9. `OnboardingAppLockActivity` (Screen 9)
+  - **What It Offers:** Enforces 4-digit PIN or biometric authentication (fingerprint/face) each time UFM is opened.
+  - **Hardware Capability Check:** Automatically checks device keyguard/biometric capabilities upfront; if the hardware or OS does not support secure lock, this Activity is completely bypassed in the sequence.
+  - **Options:** *Open Access (Recommended Default — Off)*, *Protected Lock (On)*.
+  - **Live Preview:** Glassmorphic security card illustrating the biometric fingerprint sensor and glowing 4-digit PIN pad.
+  - **Setup Action:** Toggling On immediately launches the PIN setup dialog; dismissing/cancelling reverts the toggle to Off.
+  - **Skip Button Label:** **"Skip Remaining"**.
+
+  ### 10. `OnboardingDiagnosticsActivity` (Screen 10)
+  - **What It Offers:** Transmits anonymous, privacy-safe crash stack traces and ANR reports to help the developer fix bugs.
+  - **Privacy Guarantee:** 100% anonymous. Zero personal data, zero file names, zero storage contents, zero IP addresses.
+  - **Options:** *On (Recommended Default)*, *Off*.
+  - **Live Preview:** Transparency card highlighting privacy badges (*Enabled by Default*, *No Personal Data*, *Anonymous Stack Traces Only*, *Zero File Tracking*).
+  - **Actions:** Displays **"Skip Remaining"** and **"Start Browsing"** (both save preferences and complete onboarding).
+
+- **FR-04: Contextual Skip Button & Progressive Persistence Behavior**
+  - **Screen 1 (`OnboardingViewDensityActivity`):** Button reads **"Skip & Use Defaults"**. Tapping it applies all recommended defaults and immediately opens the storage browser.
+  - **Screens 2 through 10:** Button reads **"Skip Remaining"**. Tapping it:
+    1. Immediately preserves and commits all choices made on current and previous screens.
+    2. Identifies all subsequent unvisited/skipped screens and commits their recommended defaults:
+       - View Appearance: Standard List (if skipped)
+       - Font Size Scale: Medium 100% (if skipped)
+       - Scrolling Text: Marquee Auto-Scroll Enabled (if skipped)
+       - Edit Mode Hold Duration: Normal 500ms (if skipped)
+       - Left-Handed FAB Mode: Disabled / Bottom-Right (if skipped)
+       - Quick Access Edge Drawer: Enabled (if skipped)
+       - Recycle Bin: Safe Delete Enabled (if skipped)
+       - Show Hidden Files: Disabled / Hidden (if skipped)
+       - App Lock & Security: Disabled / Open Access (if skipped)
+       - Crash & ANR Reporting: Enabled (if skipped)
+    3. Sets the onboarding completion flag in `PolicyAcceptanceManager`.
+    4. Immediately launches `StorageBrowserActivity` (or returns to `SettingsActivity` in Reconfigure Mode).
+
+- **FR-05: Preference Persistence & Zero Settings Drift**
+  - All selections write directly to their canonical preference managers:
+    - `ViewAppearancePreferenceManager`
+    - `FontSizePreferenceManager`
+    - `ScrollingTextPreferenceManager`
+    - `LongPressDurationManager`
+    - `LeftHandedFabPreferenceManager`
+    - `QuickAccessPreferenceManager`
+    - `RecycleBinPreferenceManager`
+    - `HiddenFilesPreferenceManager`
+    - `AppSecurityManager`
+    - `CrashReportManager`
+  - Values apply immediately on initial dashboard load without requiring an app restart.
+
+- **FR-06: Android TV 16:9 Side-by-Side Parity & 10-Foot Adaptation**
+  - Every onboarding activity implements a paired `_tv.xml` layout.
+  - Side-by-side split screen:
+    - **Left Column**: D-pad navigable options, chips, and toggles with glowing cyan borders.
+    - **Right Column**: Large, glowing live visual preview card reflecting current selection.
+  - High-visibility focus indicators with glowing cyan borders.
+  - Automatically skips mobile-only Activities 5 and 6 on TV.
+
+- **FR-07: Re-Entry Shortcut & Reconfigure Mode from Settings**
+  - Add a "Quick Setup Wizard" card row in `SettingsActivity` under `layoutSectionGeneral`.
+  - Tapping launches `OnboardingViewDensityActivity` with intent extra `EXTRA_RECONFIGURE_MODE = true`.
+  - In Reconfigure Mode:
+    - Pre-populates all previews and selection controls with the user's *currently saved preferences* (rather than resetting to factory defaults).
+    - On completion or Skip, finishes directly back to `SettingsActivity` rather than restarting or navigating away to the storage dashboard.
 
 ## Non-Functional Requirements
-- **NFR-01: Visual Consistency**: Section headers, card backgrounds, corner radii, and divider margins must match the app's established dark glassmorphism design system.
-- **NFR-02: Localization**: Every new section header string must use standard Android string resources (`@string/...`) and be ready for translation.
-- **NFR-03: Performance**: Scrolling through the newly sequenced settings list must remain smooth (60fps+) with zero stutter.
-- **NFR-04: Accessibility**: All cards and switches must maintain appropriate touch targets (minimum 48dp on mobile) and clear focus outlines on TV.
+- **NFR-01: Visual Polish**: Follows the app's established dark glassmorphism design language with frosted translucent cards and cyan/accent glows.
+- **NFR-02: 60fps+ Live Preview Animations**: Visual previews (marquee scrolling, FAB positioning animation, density transitions) and horizontal slide activity transitions must animate smoothly at 60fps+.
+- **NFR-03: Rapid Completion**: The full sequence takes under 45 seconds for a user to walk through, or 1 second to tap Skip.
 
 ## Edge Cases & Error States
-- **Empty Search Query**: When clearing search, all sections and cards restore their original visibility states instantly in the correct sequence.
-- **Search Query With No Matches**: All sections hide and the "No settings found" empty state appears correctly.
-- **TV D-pad Navigation Across New Section Boundaries**: Focus must move smoothly between the last item of one section and the first item of the next section without getting trapped.
-- **Dynamically Hidden Items**: Conditional rows (e.g. Root Access, TV Background Sharing) maintain clean spacing and divider visibility if hidden at runtime.
+- **One-Tap "Skip & Use Defaults" on Screen 1**: Saves all defaults and immediately opens the storage browser.
+- **Mid-Flow "Skip Remaining" (e.g. Screen 4)**: Persists user's choices on screens 1, 2, 3, applies defaults for 4 through 10, and opens storage browser.
+- **Back Navigation**: User can press Back at any step to return to the previous Activity; prior selections are preserved.
+- **App Killed Mid-Flow**: Launching resumes at the current onboarding Activity without resetting earlier selections.
+- **Device Lacks Security Capabilities**: `OnboardingAppLockActivity` is completely bypassed in the sequence.
 
 ## Out of Scope
-- Adding new functional settings or modifying how any specific setting works (e.g. changing how Backup & Restore or PIN encryption operates).
-- Changing settings into multi-level nested activities or tabbed views (retaining the familiar, fast single-page hub layout).
-- Altering the Main Menu tiles or Quick Access bar logic.
+- Modifying existing language (`LanguageWelcomeActivity`) or legal policies (`PolicyWelcomeActivity`).
+- Modifying deep technical settings (e.g. SMB threads, TV server background mode, mock USB).
+- Theme selection (Theme remains in Settings).
 
 ## Success Criteria
-- [ ] No section in Settings contains more than 5-6 items.
-- [ ] Settings follow a natural, logical sequence from general appearance through file management and media down to system maintenance.
-- [ ] Both Mobile and Android TV layouts share the synchronized grouping hierarchy and sequence.
-- [ ] In-page settings search accurately filters cards and dynamically hides/shows new section headers.
-- [ ] All existing settings functionality, dialogs, toggles, and icon bindings function without regression.
+- [ ] Screen 1 displays button labeled "Skip & Use Defaults".
+- [ ] Screens 2 through 10 display button labeled "Skip Remaining".
+- [ ] Tapping Skip commits all prior user selections and applies recommended defaults to all skipped screens.
+- [ ] Option 10 (Crash & ANR Reporting) is correctly defaulted to On.
+- [ ] 10 dedicated Activities implemented with mobile and TV layout pairs following the project activity pattern.
+- [ ] Horizontal slide transitions connect all 10 Activities smoothly.
+- [ ] Every visual preview is fully rendered and animated on the recommended default selection on screen open.
+- [ ] Android TV layout uses an ergonomic 16:9 side-by-side split screen with full D-pad focus traversal.
+- [ ] Device security capability check properly protects against showing App Lock on unsupported hardware.
+- [ ] Reconfigure mode correctly reads current user settings and returns to SettingsActivity upon completion.
+- [ ] All settings persist to existing preference managers with 100% parity with `SettingsActivity`.
+- [ ] Onboarding runs only once on first install.

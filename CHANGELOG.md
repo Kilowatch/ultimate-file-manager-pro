@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.2.8] — 2026-11-20
 
+### Added
+- **First-Run Onboarding Setup Flow & Reconfiguration Wizard (`Onboarding*Activity`, `BaseOnboardingStepActivity`)**:
+  - Implemented a dedicated 10-screen onboarding wizard guiding first-time users through personalized setup: View Appearance & Density, Font Size Scale, Scrolling Text, Edit Mode Hold Duration, Left-Handed FAB Mode, Quick Access Edge Drawer, Recycle Bin Protection, Show Hidden Files, App Lock & Security, and Crash & Diagnostic Reporting.
+  - Each setting features its own standalone Activity with default-first live visual preview mockups pre-rendered upon screen opening.
+  - Progressive skip navigation: Screen 1 provides "Skip & Use Defaults"; Screens 2–10 provide "Skip Remaining" to persist all chosen settings and apply recommended defaults to skipped steps.
+  - Full Android TV parity with 16:9 split-screen layouts and automatic skipping of mobile touch-only settings (FAB & Edge Drawer).
+  - Added a "Quick Setup Wizard" entry in `SettingsActivity` under General & Interface allowing users to reconfigure key preferences anytime.
+
 ### Changed
 - **Settings Hierarchy, Granular Groupings & Logical Sequencing (`activity_settings.xml`, `activity_settings_tv.xml`, `strings.xml`)**:
   - Restructured monolithic settings sections into intuitive, bite-sized categories of 2 to 5 items each (e.g. splitting File Browsing into Permissions & Storage Access, Browsing & Display, File Operations & Safety, and Organization & File Tools; splitting Media Player into Media Playback and Player Controls & Gestures; splitting Network into Transfers & Downloads, Network Caching & Streaming, and Servers & Indexing).
