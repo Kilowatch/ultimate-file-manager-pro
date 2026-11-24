@@ -3640,6 +3640,155 @@ Erreur d\'achat Amazon : %1$s
     <string name="amazon_iap_not_ready">
 Les achats ne sont pas encore disponibles. Veuillez réessayer dans un instant.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+Insignes
+</string>
+    <string name="badge_section_subtitle">
+Déverrouillez et définissez ces badges d\'étape comme icône d\'application personnalisée sur votre écran d\'accueil
+</string>
+    <string name="badge_default_icon_title">
+Icône de l\'application par défaut
+</string>
+    <string name="badge_default_icon_desc">
+Icône du gestionnaire de fichiers ultime standard
+</string>
+    <string name="badge_title_5">
+Partisan de 5 points
+</string>
+    <string name="badge_title_10">
+10 points Supporter Bronze
+</string>
+    <string name="badge_title_20">
+Supporter Argent 20 points
+</string>
+    <string name="badge_title_50">
+Supporter Or 50 points
+</string>
+    <string name="badge_title_100">
+100 points Supporter ultime
+</string>
+    <string name="badge_title_200">
+Supporter Platine 200 points
+</string>
+    <string name="badge_title_300">
+Supporter Diamant 300 points
+</string>
+    <string name="badge_title_500">
+500 points Supporter royal
+</string>
+    <string name="badge_title_750">
+750 points Supporter légendaire
+</string>
+    <string name="badge_title_1000">
+1 000 points Supporter suprême
+</string>
+    <string name="badge_points_format">
+%1$d Points
+</string>
+    <string name="badge_active_tag">
+Actif
+</string>
+    <string name="badge_applied_toast">
+Icône de l\'application mise à jour : %1$s !
+</string>
+    <string name="badge_reset_toast">
+L\'icône de l\'application est réinitialisée par défaut !
+</string>
+    <string name="badge_dialog_title">
+Icône de l\'application mise à jour !
+</string>
+    <string name="badge_dialog_subtitle">
+L\'icône de votre écran d\'accueil a été modifiée
+</string>
+    <string name="badge_dialog_hint">
+Remarque : Certains lanceurs d\'écran d\'accueil peuvent prendre quelques secondes pour actualiser la nouvelle icône.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d Points • Besoin de %2$d plus
+</string>
+    <string name="badge_locked_dialog_title">
+Badge verrouillé
+</string>
+    <string name="badge_locked_dialog_msg">
+Cette icône de jalon personnalisée se débloque en %1$d points.\n
+\n
+Vous avez actuellement %2$d points (vous avez besoin de %3$d points supplémentaires).\n
+\n
+Chaque $1 dans le pot de pourboires rapporte 10 points ($10 = 100 points, $25 = 250 points). Soutenez le développement ci-dessus pour débloquer cette icône !
+</string>
+    <string name="badge_locked_dialog_btn">
+Carburant à débloquer
+</string>
+    <string name="badge_btn_active">
+Actif
+</string>
+    <string name="badge_btn_apply">
+Appliquer
+</string>
+    <string name="badge_btn_locked">
+Fermé
+</string>
+    <string name="badge_apply_dialog_title">
+Appliquer l\'icône de l\'application ?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+Définir le badge de jalon comme icône de l\'écran d\'accueil
+</string>
+    <string name="badge_apply_dialog_notice">
+L\'application d\'une icône personnalisée nécessite la fermeture d\'Ultimate File Manager afin que votre lanceur puisse enregistrer la nouvelle icône.\n
+\n
+Appuyez sur Appliquer et fermer pour mettre à jour votre icône ou sur Annuler pour conserver votre icône actuelle.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+Postuler et fermer
+</string>
+    <string name="badge_default_dialog_title">
+Restaurer l\'icône par défaut ?
+</string>
+    <string name="badge_default_dialog_subtitle">
+Restaurer l\'icône originale d\'Ultimate File Manager
+</string>
+    <string name="badge_default_dialog_notice">
+La restauration de l\'icône par défaut nécessite la fermeture d\'Ultimate File Manager afin que votre lanceur puisse enregistrer la modification.\n
+\n
+Appuyez sur Restaurer et fermer pour continuer, ou sur Annuler pour conserver votre icône actuelle.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+Restaurer et fermer
+</string>
+    <string name="badge_desc_5">
+Montrez votre soutien avec 5 points !
+</string>
+    <string name="badge_desc_10">
+Gagnez le badge Bronze avec 10 points !
+</string>
+    <string name="badge_desc_20">
+Gagnez le badge Argent avec 20 points !
+</string>
+    <string name="badge_desc_50">
+Gagnez le badge Or avec 50 points !
+</string>
+    <string name="badge_desc_100">
+Gagnez le badge Ultimate avec 100 points !
+</string>
+    <string name="badge_desc_200">
+Gagnez le badge Platine avec 200 points !
+</string>
+    <string name="badge_desc_300">
+Gagnez le badge Diamant avec 300 points !
+</string>
+    <string name="badge_desc_500">
+Gagnez le badge Royal avec 500 points !
+</string>
+    <string name="badge_desc_750">
+Gagnez le badge Légendaire avec 750 points !
+</string>
+    <string name="badge_desc_1000">
+Gagnez le badge Suprême avec 1 000 points !
+</string>
     <string name="tile_hidden_with_name">
 Tuile \"%1$s\" masquée
 </string>

@@ -3640,6 +3640,155 @@ Kesalahan pembelian Amazon: %1$s
     <string name="amazon_iap_not_ready">
 Pembelian belum tersedia. Silakan coba lagi sebentar lagi.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+Lencana
+</string>
+    <string name="badge_section_subtitle">
+Buka kunci dan tetapkan lencana pencapaian ini sebagai ikon aplikasi khusus di layar beranda
+</string>
+    <string name="badge_default_icon_title">
+Ikon Aplikasi Bawaan
+</string>
+    <string name="badge_default_icon_desc">
+Ikon Manajer File Ultimate Standar
+</string>
+    <string name="badge_title_5">
+Pendukung 5 Poin
+</string>
+    <string name="badge_title_10">
+10 Poin Pendukung Perunggu
+</string>
+    <string name="badge_title_20">
+20 Poin Pendukung Perak
+</string>
+    <string name="badge_title_50">
+Pendukung Emas 50 Poin
+</string>
+    <string name="badge_title_100">
+100 Poin Pendukung Utama
+</string>
+    <string name="badge_title_200">
+Pendukung Platinum 200 Poin
+</string>
+    <string name="badge_title_300">
+300 Poin Pendukung Berlian
+</string>
+    <string name="badge_title_500">
+500 Poin Pendukung Kerajaan
+</string>
+    <string name="badge_title_750">
+750 Poin Pendukung Legendaris
+</string>
+    <string name="badge_title_1000">
+1.000 Poin Pendukung Tertinggi
+</string>
+    <string name="badge_points_format">
+%1$d Poin
+</string>
+    <string name="badge_active_tag">
+Aktif
+</string>
+    <string name="badge_applied_toast">
+Ikon aplikasi diperbarui menjadi %1$s!
+</string>
+    <string name="badge_reset_toast">
+Ikon aplikasi disetel ulang ke default!
+</string>
+    <string name="badge_dialog_title">
+Ikon Aplikasi Diperbarui!
+</string>
+    <string name="badge_dialog_subtitle">
+Ikon layar beranda Anda telah diubah
+</string>
+    <string name="badge_dialog_hint">
+Catatan: Beberapa peluncur layar beranda mungkin memerlukan waktu beberapa detik untuk menyegarkan ikon baru.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d Poin • Butuh %2$d lebih banyak
+</string>
+    <string name="badge_locked_dialog_title">
+Lencana Terkunci
+</string>
+    <string name="badge_locked_dialog_msg">
+Ikon pencapaian khusus ini terbuka pada %1$d poin.\n
+\n
+Saat ini Anda memiliki %2$d poin (membutuhkan %3$d poin lagi).\n
+\n
+Setiap $1 di Tip Jar mendapatkan 10 poin ($10 = 100 poin, $25 = 250 poin). Dukung pengembangan di atas untuk membuka kunci ikon ini!
+</string>
+    <string name="badge_locked_dialog_btn">
+Bahan Bakar untuk Membuka Kunci
+</string>
+    <string name="badge_btn_active">
+Aktif
+</string>
+    <string name="badge_btn_apply">
+Menerapkan
+</string>
+    <string name="badge_btn_locked">
+Terkunci
+</string>
+    <string name="badge_apply_dialog_title">
+Terapkan Ikon Aplikasi?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+Tetapkan lencana pencapaian sebagai ikon layar beranda
+</string>
+    <string name="badge_apply_dialog_notice">
+Untuk menerapkan ikon khusus, Ultimate File Manager harus ditutup agar peluncur Anda dapat mendaftarkan ikon baru.\n
+\n
+Ketuk Terapkan &amp; Tutup untuk memperbarui ikon, atau Batal untuk menyimpan ikon saat ini.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+Terapkan &amp; Tutup
+</string>
+    <string name="badge_default_dialog_title">
+Kembalikan Ikon Default?
+</string>
+    <string name="badge_default_dialog_subtitle">
+Kembalikan ikon Ultimate File Manager asli
+</string>
+    <string name="badge_default_dialog_notice">
+Memulihkan ikon default mengharuskan Ultimate File Manager menutup agar peluncur Anda dapat mendaftarkan perubahannya.\n
+\n
+Ketuk Pulihkan &amp; Tutup untuk melanjutkan, atau Batal untuk menyimpan ikon Anda saat ini.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+Pulihkan &amp; Tutup
+</string>
+    <string name="badge_desc_5">
+Tunjukkan dukungan Anda dengan 5 poin!
+</string>
+    <string name="badge_desc_10">
+Dapatkan lencana Perunggu dengan 10 poin!
+</string>
+    <string name="badge_desc_20">
+Dapatkan lencana Perak dengan 20 poin!
+</string>
+    <string name="badge_desc_50">
+Dapatkan lencana Emas dengan 50 poin!
+</string>
+    <string name="badge_desc_100">
+Dapatkan lencana Ultimate dengan 100 poin!
+</string>
+    <string name="badge_desc_200">
+Dapatkan lencana Platinum dengan 200 poin!
+</string>
+    <string name="badge_desc_300">
+Dapatkan lencana Berlian dengan 300 poin!
+</string>
+    <string name="badge_desc_500">
+Hasilkan lencana Kerajaan dengan 500 poin!
+</string>
+    <string name="badge_desc_750">
+Dapatkan lencana Legendaris dengan 750 poin!
+</string>
+    <string name="badge_desc_1000">
+Dapatkan lencana Tertinggi dengan 1.000 poin!
+</string>
     <string name="tile_hidden_with_name">
 Tile \"%1$s\" disembunyikan
 </string>

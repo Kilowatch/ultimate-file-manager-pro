@@ -3640,6 +3640,155 @@ Amazon satın alma hatası: %1$s
     <string name="amazon_iap_not_ready">
 Satın alımlar henüz kullanılamıyor. Lütfen birazdan tekrar deneyin.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+Rozetler
+</string>
+    <string name="badge_section_subtitle">
+Bu dönüm noktası rozetlerinin kilidini açın ve ana ekranınızda özel uygulama simgeniz olarak ayarlayın
+</string>
+    <string name="badge_default_icon_title">
+Varsayılan Uygulama Simgesi
+</string>
+    <string name="badge_default_icon_desc">
+Standart Ultimate Dosya Yöneticisi simgesi
+</string>
+    <string name="badge_title_5">
+5 Puan Destekçisi
+</string>
+    <string name="badge_title_10">
+10 Puan Bronz Destekçi
+</string>
+    <string name="badge_title_20">
+20 Puan Gümüş Destekçi
+</string>
+    <string name="badge_title_50">
+50 Puan Altın Destekçi
+</string>
+    <string name="badge_title_100">
+100 Puan Nihai Destekçi
+</string>
+    <string name="badge_title_200">
+200 Puan Platin Destekçi
+</string>
+    <string name="badge_title_300">
+300 Puan Elmas Destekçisi
+</string>
+    <string name="badge_title_500">
+500 Puan Kraliyet Destekçisi
+</string>
+    <string name="badge_title_750">
+750 Puan Efsanevi Destekçi
+</string>
+    <string name="badge_title_1000">
+1.000 Puan Yüce Destekçi
+</string>
+    <string name="badge_points_format">
+%1$d Puan
+</string>
+    <string name="badge_active_tag">
+Aktif
+</string>
+    <string name="badge_applied_toast">
+Uygulama simgesi %1$s olarak güncellendi!
+</string>
+    <string name="badge_reset_toast">
+Uygulama simgesi varsayılana sıfırlandı!
+</string>
+    <string name="badge_dialog_title">
+Uygulama Simgesi Güncellendi!
+</string>
+    <string name="badge_dialog_subtitle">
+Ana ekran simgeniz değiştirildi
+</string>
+    <string name="badge_dialog_hint">
+Not: Bazı ana ekran başlatıcılarının yeni simgeyi yenilemesi birkaç saniye sürebilir.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d Puan • %2$d puan daha gerekiyor
+</string>
+    <string name="badge_locked_dialog_title">
+Rozet Kilitli
+</string>
+    <string name="badge_locked_dialog_msg">
+Bu özel kilometre taşı simgesinin kilidi %1$d puanla açılır.\n
+\n
+Şu anda %2$d puanınız var (%3$d puana daha ihtiyacınız var).\n
+\n
+İpucu Kavanozundaki her $1 10 puan kazanır ($10 = 100 puan, $25 = 250 puan). Bu simgenin kilidini açmak için yukarıdaki geliştirmeyi destekleyin!
+</string>
+    <string name="badge_locked_dialog_btn">
+Kilidi Açılacak Yakıt
+</string>
+    <string name="badge_btn_active">
+Aktif
+</string>
+    <string name="badge_btn_apply">
+Uygula
+</string>
+    <string name="badge_btn_locked">
+Kilitli
+</string>
+    <string name="badge_apply_dialog_title">
+Uygulama Simgesi Uygulansın mı?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+Dönüm noktası rozetini ana ekran simgesi olarak ayarlayın
+</string>
+    <string name="badge_apply_dialog_notice">
+Özel bir simgenin uygulanması, başlatıcınızın yeni simgeyi kaydedebilmesi için Ultimate Dosya Yöneticisinin kapatılmasını gerektirir.\n
+\n
+Simgenizi güncellemek için Uygula ve Kapat\'a, mevcut simgenizi korumak için İptal\'e dokunun.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+Uygula ve Kapat
+</string>
+    <string name="badge_default_dialog_title">
+Varsayılan Simge Geri Yüklensin mi?
+</string>
+    <string name="badge_default_dialog_subtitle">
+Orijinal Ultimate Dosya Yöneticisi simgesini geri yükleyin
+</string>
+    <string name="badge_default_dialog_notice">
+Varsayılan simgeyi geri yüklemek, başlatıcınızın değişikliği kaydedebilmesi için Ultimate Dosya Yöneticisinin kapatılmasını gerektirir.\n
+\n
+Devam etmek için Geri Yükle ve Kapat\'a, mevcut simgenizi korumak için İptal\'e dokunun.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+Geri Yükle ve Kapat
+</string>
+    <string name="badge_desc_5">
+Desteğinizi 5 puanla gösterin!
+</string>
+    <string name="badge_desc_10">
+10 puanla Bronz rozeti kazanın!
+</string>
+    <string name="badge_desc_20">
+20 puanla Gümüş rozeti kazanın!
+</string>
+    <string name="badge_desc_50">
+50 puanla Altın rozeti kazanın!
+</string>
+    <string name="badge_desc_100">
+100 puanla Ultimate rozetini kazanın!
+</string>
+    <string name="badge_desc_200">
+200 puanla Platin rozetini kazanın!
+</string>
+    <string name="badge_desc_300">
+300 puanla Elmas rozetini kazanın!
+</string>
+    <string name="badge_desc_500">
+500 puanla Kraliyet rozetini kazanın!
+</string>
+    <string name="badge_desc_750">
+750 puanla Efsanevi rozeti kazanın!
+</string>
+    <string name="badge_desc_1000">
+1.000 puanla Yüce rozetini kazanın!
+</string>
     <string name="tile_hidden_with_name">
 \"%1$s\" kutucuğu gizlendi
 </string>

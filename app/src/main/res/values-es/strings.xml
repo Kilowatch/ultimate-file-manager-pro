@@ -3640,6 +3640,155 @@ Error de compra en Amazon: %1$s
     <string name="amazon_iap_not_ready">
 Las compras aún no están disponibles. Inténtalo de nuevo en un momento.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+Insignias
+</string>
+    <string name="badge_section_subtitle">
+Desbloquee y configure estas insignias de hitos como el ícono de su aplicación personalizada en su pantalla de inicio
+</string>
+    <string name="badge_default_icon_title">
+Icono de aplicación predeterminado
+</string>
+    <string name="badge_default_icon_desc">
+Icono estándar de Ultimate File Manager
+</string>
+    <string name="badge_title_5">
+Partidario de 5 puntos
+</string>
+    <string name="badge_title_10">
+Partidario de bronce de 10 puntos
+</string>
+    <string name="badge_title_20">
+Partidario Plata de 20 Puntos
+</string>
+    <string name="badge_title_50">
+Partidario de oro de 50 puntos
+</string>
+    <string name="badge_title_100">
+Partidario definitivo de 100 puntos
+</string>
+    <string name="badge_title_200">
+Partidario Platino de 200 Puntos
+</string>
+    <string name="badge_title_300">
+Partidario Diamante de 300 Puntos
+</string>
+    <string name="badge_title_500">
+500 Puntos Partidario Real
+</string>
+    <string name="badge_title_750">
+750 puntos Partidario legendario
+</string>
+    <string name="badge_title_1000">
+Partidario supremo de 1000 puntos
+</string>
+    <string name="badge_points_format">
+%1$d Puntos
+</string>
+    <string name="badge_active_tag">
+Activo
+</string>
+    <string name="badge_applied_toast">
+¡Icono de la aplicación actualizado a %1$s!
+</string>
+    <string name="badge_reset_toast">
+¡El ícono de la aplicación se restablece a los valores predeterminados!
+</string>
+    <string name="badge_dialog_title">
+¡Ícono de la aplicación actualizado!
+</string>
+    <string name="badge_dialog_subtitle">
+El icono de tu pantalla de inicio ha sido cambiado.
+</string>
+    <string name="badge_dialog_hint">
+Nota: Algunos iniciadores de pantalla de inicio pueden tardar unos segundos en actualizar el nuevo icono.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d Puntos • Necesita %2$d más
+</string>
+    <string name="badge_locked_dialog_title">
+Insignia bloqueada
+</string>
+    <string name="badge_locked_dialog_msg">
+Este ícono de hito personalizado se desbloquea en %1$d puntos.\n
+\n
+Actualmente tienes %2$d puntos (necesitas %3$d puntos más).\n
+\n
+Cada $1 en el tarro de propinas gana 10 puntos ($10 = 100 puntos, $25 = 250 puntos). ¡Apoye el desarrollo anterior para desbloquear este ícono!
+</string>
+    <string name="badge_locked_dialog_btn">
+Combustible para desbloquear
+</string>
+    <string name="badge_btn_active">
+Activo
+</string>
+    <string name="badge_btn_apply">
+Aplicar
+</string>
+    <string name="badge_btn_locked">
+bloqueado
+</string>
+    <string name="badge_apply_dialog_title">
+¿Aplicar el ícono de la aplicación?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+Establecer insignia de hito como icono de la pantalla de inicio
+</string>
+    <string name="badge_apply_dialog_notice">
+La aplicación de un ícono personalizado requiere que Ultimate File Manager se cierre para que su iniciador pueda registrar el nuevo ícono.\n
+\n
+Toque Aplicar y cerrar para actualizar su ícono, o Cancelar para conservar su ícono actual.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+Aplicar y cerrar
+</string>
+    <string name="badge_default_dialog_title">
+¿Restaurar el icono predeterminado?
+</string>
+    <string name="badge_default_dialog_subtitle">
+Restaurar el icono original de Ultimate File Manager
+</string>
+    <string name="badge_default_dialog_notice">
+Restaurar el ícono predeterminado requiere que Ultimate File Manager se cierre para que su iniciador pueda registrar el cambio.\n
+\n
+Toque Restaurar y cerrar para continuar, o Cancelar para conservar su ícono actual.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+Restaurar y cerrar
+</string>
+    <string name="badge_desc_5">
+¡Muestra tu apoyo con 5 puntos!
+</string>
+    <string name="badge_desc_10">
+¡Gana la insignia de Bronce con 10 puntos!
+</string>
+    <string name="badge_desc_20">
+¡Gana la insignia Plata con 20 puntos!
+</string>
+    <string name="badge_desc_50">
+¡Gana la insignia de oro con 50 puntos!
+</string>
+    <string name="badge_desc_100">
+¡Gana la insignia Ultimate con 100 puntos!
+</string>
+    <string name="badge_desc_200">
+¡Gana la insignia Platino con 200 puntos!
+</string>
+    <string name="badge_desc_300">
+¡Gana la insignia Diamante con 300 puntos!
+</string>
+    <string name="badge_desc_500">
+¡Gana la insignia Real con 500 puntos!
+</string>
+    <string name="badge_desc_750">
+¡Gana la insignia legendaria con 750 puntos!
+</string>
+    <string name="badge_desc_1000">
+¡Gana la insignia Suprema con 1000 puntos!
+</string>
     <string name="tile_hidden_with_name">
 El mosaico \"%1$s\" está oculto
 </string>

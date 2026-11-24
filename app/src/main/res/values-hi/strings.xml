@@ -3640,6 +3640,155 @@ Amazon खरीदारी त्रुटि: %1$s
     <string name="amazon_iap_not_ready">
 खरीदारी अभी उपलब्ध नहीं हैं। कृपया कुछ क्षण में पुनः प्रयास करें।
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+बैज
+</string>
+    <string name="badge_section_subtitle">
+अनलॉक करें और इन माइलस्टोन बैज को अपनी होम स्क्रीन पर अपने कस्टम ऐप आइकन के रूप में सेट करें
+</string>
+    <string name="badge_default_icon_title">
+डिफ़ॉल्ट ऐप आइकन
+</string>
+    <string name="badge_default_icon_desc">
+मानक अल्टीमेट फ़ाइल प्रबंधक आइकन
+</string>
+    <string name="badge_title_5">
+5 अंक समर्थक
+</string>
+    <string name="badge_title_10">
+10 अंक कांस्य समर्थक
+</string>
+    <string name="badge_title_20">
+20 पॉइंट सिल्वर सपोर्टर
+</string>
+    <string name="badge_title_50">
+50 पॉइंट गोल्ड सपोर्टर
+</string>
+    <string name="badge_title_100">
+100 अंक परम समर्थक
+</string>
+    <string name="badge_title_200">
+200 अंक प्लैटिनम समर्थक
+</string>
+    <string name="badge_title_300">
+300 पॉइंट डायमंड सपोर्टर
+</string>
+    <string name="badge_title_500">
+500 अंक रॉयल समर्थक
+</string>
+    <string name="badge_title_750">
+750 अंक महान समर्थक
+</string>
+    <string name="badge_title_1000">
+1,000 अंक सर्वोच्च समर्थक
+</string>
+    <string name="badge_points_format">
+%1$d अंक
+</string>
+    <string name="badge_active_tag">
+सक्रिय
+</string>
+    <string name="badge_applied_toast">
+ऐप आइकन को %1$s में अपडेट किया गया!
+</string>
+    <string name="badge_reset_toast">
+ऐप आइकन डिफ़ॉल्ट पर रीसेट हो गया!
+</string>
+    <string name="badge_dialog_title">
+ऐप आइकन अपडेट किया गया!
+</string>
+    <string name="badge_dialog_subtitle">
+आपका होम स्क्रीन आइकन बदल दिया गया है
+</string>
+    <string name="badge_dialog_hint">
+ध्यान दें: कुछ होम स्क्रीन लॉन्चर को नए आइकन को रीफ्रेश करने में कुछ सेकंड लग सकते हैं।
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d अंक • %2$d और चाहिए
+</string>
+    <string name="badge_locked_dialog_title">
+बैज लॉक किया गया
+</string>
+    <string name="badge_locked_dialog_msg">
+यह कस्टम माइलस्टोन आइकन %1$d अंक पर अनलॉक होता है।\n
+\n
+आपके पास वर्तमान में %2$d अंक हैं (%3$d अधिक अंक चाहिए)।\n
+\n
+टिप जार में प्रत्येक $1 10 अंक अर्जित करता है ($10 = 100 अंक, $25 = 250 अंक)। इस आइकन को अनलॉक करने के लिए उपरोक्त विकास का समर्थन करें!
+</string>
+    <string name="badge_locked_dialog_btn">
+अनलॉक करने के लिए ईंधन
+</string>
+    <string name="badge_btn_active">
+सक्रिय
+</string>
+    <string name="badge_btn_apply">
+आवेदन करना
+</string>
+    <string name="badge_btn_locked">
+बंद
+</string>
+    <string name="badge_apply_dialog_title">
+ऐप आइकन लागू करें?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+होम स्क्रीन आइकन के रूप में मील का पत्थर बैज सेट करें
+</string>
+    <string name="badge_apply_dialog_notice">
+कस्टम आइकन लागू करने के लिए अल्टीमेट फ़ाइल मैनेजर को बंद करना आवश्यक है ताकि आपका लॉन्चर नया आइकन पंजीकृत कर सके।\n
+\n
+अपने आइकन को अपडेट करने के लिए लागू करें और बंद करें पर टैप करें, या अपने वर्तमान आइकन को बनाए रखने के लिए रद्द करें पर टैप करें।
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+लागू करें और बंद करें
+</string>
+    <string name="badge_default_dialog_title">
+डिफ़ॉल्ट चिह्न पुनर्स्थापित करें?
+</string>
+    <string name="badge_default_dialog_subtitle">
+मूल अल्टीमेट फ़ाइल मैनेजर आइकन पुनर्स्थापित करें
+</string>
+    <string name="badge_default_dialog_notice">
+डिफ़ॉल्ट आइकन को पुनर्स्थापित करने के लिए अल्टीमेट फ़ाइल मैनेजर को बंद करना आवश्यक है ताकि आपका लॉन्चर परिवर्तन दर्ज कर सके।\n
+\n
+आगे बढ़ने के लिए पुनर्स्थापित करें और बंद करें पर टैप करें, या अपने वर्तमान आइकन को बनाए रखने के लिए रद्द करें पर टैप करें।
+</string>
+    <string name="badge_default_dialog_btn_restore">
+पुनर्स्थापित करें और बंद करें
+</string>
+    <string name="badge_desc_5">
+5 बिंदुओं के साथ अपना समर्थन दिखाएं!
+</string>
+    <string name="badge_desc_10">
+10 अंकों के साथ कांस्य बैज अर्जित करें!
+</string>
+    <string name="badge_desc_20">
+20 अंकों के साथ रजत बैज अर्जित करें!
+</string>
+    <string name="badge_desc_50">
+50 अंकों के साथ स्वर्ण बैज अर्जित करें!
+</string>
+    <string name="badge_desc_100">
+100 अंकों के साथ अंतिम बैज अर्जित करें!
+</string>
+    <string name="badge_desc_200">
+200 अंकों के साथ प्लेटिनम बैज अर्जित करें!
+</string>
+    <string name="badge_desc_300">
+300 अंकों के साथ डायमंड बैज अर्जित करें!
+</string>
+    <string name="badge_desc_500">
+500 अंकों के साथ रॉयल बैज अर्जित करें!
+</string>
+    <string name="badge_desc_750">
+750 अंकों के साथ पौराणिक बैज अर्जित करें!
+</string>
+    <string name="badge_desc_1000">
+1,000 अंकों के साथ सर्वोच्च बैज अर्जित करें!
+</string>
     <string name="tile_hidden_with_name">
 \"%1$s\" टाइल छिपाई गई
 </string>

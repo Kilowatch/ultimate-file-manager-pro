@@ -3640,6 +3640,155 @@ Amazon Tip Jar незабаром — дякуємо за терпіння! ☕
     <string name="amazon_iap_not_ready">
 Покупки ще недоступні. Спробуйте ще раз за мить.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+Значки
+</string>
+    <string name="badge_section_subtitle">
+Розблокуйте та встановіть ці значки віх як власну піктограму програми на головному екрані
+</string>
+    <string name="badge_default_icon_title">
+Значок програми за умовчанням
+</string>
+    <string name="badge_default_icon_desc">
+Значок стандартного Ultimate File Manager
+</string>
+    <string name="badge_title_5">
+5 очок підтримки
+</string>
+    <string name="badge_title_10">
+10 очок бронзової опори
+</string>
+    <string name="badge_title_20">
+20 очок срібного прихильника
+</string>
+    <string name="badge_title_50">
+50 очок золотого прихильника
+</string>
+    <string name="badge_title_100">
+100 балів Ultimate Supporter
+</string>
+    <string name="badge_title_200">
+200 балів Platinum Supporter
+</string>
+    <string name="badge_title_300">
+300 балів Diamond Supporter
+</string>
+    <string name="badge_title_500">
+500 очок Royal Supporter
+</string>
+    <string name="badge_title_750">
+750 очок легендарного прихильника
+</string>
+    <string name="badge_title_1000">
+1000 балів Верховний прибічник
+</string>
+    <string name="badge_points_format">
+%1$d балів
+</string>
+    <string name="badge_active_tag">
+Активний
+</string>
+    <string name="badge_applied_toast">
+Значок програми оновлено на %1$s!
+</string>
+    <string name="badge_reset_toast">
+Значок програми скинуто до стандартного!
+</string>
+    <string name="badge_dialog_title">
+Значок програми оновлено!
+</string>
+    <string name="badge_dialog_subtitle">
+Піктограму головного екрана було змінено
+</string>
+    <string name="badge_dialog_hint">
+Примітка. Оновлення нової піктограми деяких програм запуску головного екрана може зайняти кілька секунд.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d балів • Потрібно ще %2$d.
+</string>
+    <string name="badge_locked_dialog_title">
+Бейдж заблоковано
+</string>
+    <string name="badge_locked_dialog_msg">
+Ця спеціальна піктограма етапу розблоковується за %1$d балів.\n
+\n
+Наразі ви маєте %2$d балів (потрібно ще %3$d балів).\n
+\n
+Кожний $1 у банку підказок приносить 10 балів ($10 = 100 балів, $25 = 250 балів). Підтримайте розробку вище, щоб розблокувати цей значок!
+</string>
+    <string name="badge_locked_dialog_btn">
+Паливо для розблокування
+</string>
+    <string name="badge_btn_active">
+Активний
+</string>
+    <string name="badge_btn_apply">
+Застосувати
+</string>
+    <string name="badge_btn_locked">
+Заблоковано
+</string>
+    <string name="badge_apply_dialog_title">
+Застосувати значок програми?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+Установіть значок етапу як значок головного екрана
+</string>
+    <string name="badge_apply_dialog_notice">
+Для застосування спеціальної піктограми потрібно закрити Ultimate File Manager, щоб програма запуску могла зареєструвати нову піктограму.\n
+\n
+Торкніться «Застосувати та закрити», щоб оновити піктограму, або «Скасувати», щоб зберегти поточну піктограму.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+Застосувати та закрити
+</string>
+    <string name="badge_default_dialog_title">
+Відновити значок за умовчанням?
+</string>
+    <string name="badge_default_dialog_subtitle">
+Відновити оригінальну піктограму Ultimate File Manager
+</string>
+    <string name="badge_default_dialog_notice">
+Для відновлення значка за замовчуванням Ultimate File Manager потрібно закрити, щоб програма запуску могла зареєструвати зміни.\n
+\n
+Торкніться «Відновити та закрити», щоб продовжити, або «Скасувати», щоб зберегти поточний значок.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+Відновити та закрити
+</string>
+    <string name="badge_desc_5">
+Покажіть свою підтримку 5 балами!
+</string>
+    <string name="badge_desc_10">
+Отримайте бронзовий значок за 10 балів!
+</string>
+    <string name="badge_desc_20">
+Отримайте срібний значок за 20 балів!
+</string>
+    <string name="badge_desc_50">
+Отримайте золотий значок за 50 балів!
+</string>
+    <string name="badge_desc_100">
+Отримайте значок Ultimate зі 100 балами!
+</string>
+    <string name="badge_desc_200">
+Отримайте платиновий значок, набравши 200 балів!
+</string>
+    <string name="badge_desc_300">
+Отримайте значок «Діамант», набравши 300 балів!
+</string>
+    <string name="badge_desc_500">
+Отримайте королівський значок за 500 балів!
+</string>
+    <string name="badge_desc_750">
+Отримайте легендарний значок із 750 балами!
+</string>
+    <string name="badge_desc_1000">
+Отримайте значок Supreme за 1000 балів!
+</string>
     <string name="tile_hidden_with_name">
 Плитку \"%1$s\" приховано
 </string>

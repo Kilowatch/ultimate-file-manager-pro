@@ -3640,6 +3640,155 @@ Amazon購入エラー: %1$s
     <string name="amazon_iap_not_ready">
 購入はまだ利用できません。しばらくしてもう一度お試しください。
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+バッジ
+</string>
+    <string name="badge_section_subtitle">
+これらのマイルストーン バッジのロックを解除して、ホーム画面のカスタム アプリ アイコンとして設定します
+</string>
+    <string name="badge_default_icon_title">
+デフォルトのアプリアイコン
+</string>
+    <string name="badge_default_icon_desc">
+標準の Ultimate ファイル マネージャー アイコン
+</string>
+    <string name="badge_title_5">
+5ポイントサポーター
+</string>
+    <string name="badge_title_10">
+10ポイントブロンズサポーター
+</string>
+    <string name="badge_title_20">
+20ポイントシルバーサポーター
+</string>
+    <string name="badge_title_50">
+50ポイントゴールドサポーター
+</string>
+    <string name="badge_title_100">
+100ポイントアルティメットサポーター
+</string>
+    <string name="badge_title_200">
+200ポイントプラチナサポーター
+</string>
+    <string name="badge_title_300">
+300ポイントダイヤモンドサポーター
+</string>
+    <string name="badge_title_500">
+500ポイント ロイヤルサポーター
+</string>
+    <string name="badge_title_750">
+750ポイントレジェンドサポーター
+</string>
+    <string name="badge_title_1000">
+1,000ポイント スプリームサポーター
+</string>
+    <string name="badge_points_format">
+%1$d ポイント
+</string>
+    <string name="badge_active_tag">
+アクティブ
+</string>
+    <string name="badge_applied_toast">
+アプリアイコンが%1$sに更新されました!
+</string>
+    <string name="badge_reset_toast">
+アプリのアイコンがデフォルトにリセットされました!
+</string>
+    <string name="badge_dialog_title">
+アプリアイコンが更新されました！
+</string>
+    <string name="badge_dialog_subtitle">
+ホーム画面のアイコンが変更されました
+</string>
+    <string name="badge_dialog_hint">
+注: 一部のホーム画面ランチャーでは、新しいアイコンを更新するのに数秒かかる場合があります。
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d ポイント • さらに %2$d 個が必要です
+</string>
+    <string name="badge_locked_dialog_title">
+バッジがロックされました
+</string>
+    <string name="badge_locked_dialog_msg">
+このカスタム マイルストーン アイコンは %1$d ポイントでロック解除されます。\n
+\n
+現在 %2$d ポイントを持っています (さらに %3$d ポイントが必要です)。\n
+\n
+ヒント ジャー内の $1 ごとに 10 ポイントを獲得します ($10 = 100 ポイント、$25 = 250 ポイント)。このアイコンのロックを解除するには、上記の開発をサポートしてください。
+</string>
+    <string name="badge_locked_dialog_btn">
+ロックを解除するための燃料
+</string>
+    <string name="badge_btn_active">
+アクティブ
+</string>
+    <string name="badge_btn_apply">
+適用する
+</string>
+    <string name="badge_btn_locked">
+ロックされています
+</string>
+    <string name="badge_apply_dialog_title">
+アプリアイコンを適用しますか?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+マイルストーンバッジをホーム画面のアイコンとして設定する
+</string>
+    <string name="badge_apply_dialog_notice">
+カスタム アイコンを適用するには、ランチャーが新しいアイコンを登録できるように Ultimate File Manager を閉じる必要があります。\n
+\n
+[適用して閉じる] をタップしてアイコンを更新するか、[キャンセル] をタップして現在のアイコンを保持します。
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+適用して閉じる
+</string>
+    <string name="badge_default_dialog_title">
+デフォルトのアイコンを復元しますか?
+</string>
+    <string name="badge_default_dialog_subtitle">
+元の Ultimate File Manager アイコンを復元する
+</string>
+    <string name="badge_default_dialog_notice">
+デフォルトのアイコンを復元するには、ランチャーが変更を登録できるように Ultimate File Manager を閉じる必要があります。\n
+\n
+[復元して閉じる] をタップして続行するか、[キャンセル] をタップして現在のアイコンを保持します。
+</string>
+    <string name="badge_default_dialog_btn_restore">
+復元して閉じる
+</string>
+    <string name="badge_desc_5">
+5 ポイントでサポートを示してください!
+</string>
+    <string name="badge_desc_10">
+10ポイントでブロンズバッジを獲得しましょう！
+</string>
+    <string name="badge_desc_20">
+20ポイントでシルバーバッジを獲得しましょう！
+</string>
+    <string name="badge_desc_50">
+50ポイントでゴールドバッジを獲得しましょう！
+</string>
+    <string name="badge_desc_100">
+100ポイントでアルティメットバッジを獲得しましょう！
+</string>
+    <string name="badge_desc_200">
+200ポイントでプラチナバッジを獲得しましょう！
+</string>
+    <string name="badge_desc_300">
+300ポイントでダイヤモンドバッジを獲得しましょう！
+</string>
+    <string name="badge_desc_500">
+500ポイントでロイヤルバッジを獲得しましょう！
+</string>
+    <string name="badge_desc_750">
+750 ポイントでレジェンドバッジを獲得しましょう！
+</string>
+    <string name="badge_desc_1000">
+1,000 ポイントで Supreme バッジを獲得しましょう!
+</string>
     <string name="tile_hidden_with_name">
 \"%1$s\"タイルを非表示
 </string>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardBadgeItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:strokeWidth="0dp"
+    app:strokeColor="@android:color/transparent"
+    app:rippleColor="@color/mobile_glass_ripple">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Inset hairline divider between consecutive rows -->
+        <View
+            android:id="@+id/dividerRow"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="96dp"
+            android:background="@color/mobile_glass_stroke"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/layoutBadgeRowContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="12dp">
+
+            <!-- Left Icon Container (72x72dp) -->
+            <FrameLayout
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="center_vertical">
+
+                <!-- Default App Icon Glowing Squircle Container -->
+                <FrameLayout
+                    android:id="@+id/layoutDefaultIconContainer"
+                    android:layout_width="66dp"
+                    android:layout_height="66dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_default_icon_glow"
+                    android:padding="5dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/imgBadgeSquare"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/ic_launcher" />
+                </FrameLayout>
+
+                <!-- Cutout Badge (5 to 1000 points milestones) -->
+                <ImageView
+                    android:id="@+id/imgBadgeCutout"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone"
+                    tools:src="@drawable/badge_points_5"
+                    tools:visibility="visible" />
+            </FrameLayout>
+
+            <!-- Badge Title, Description, and Points -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtBadgeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-bold"
+                    tools:text="10 Points Bronze Supporter" />
+
+                <TextView
+                    android:id="@+id/txtBadgeDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#94A3B8"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp"
+                    tools:text="Earn the Bronze badge with 10 points!" />
+
+                <!-- Points line with Star -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="5dp">
+
+                    <ImageView
+                        android:id="@+id/imgBadgeStar"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ic_star"
+                        app:tint="#00C2FF" />
+
+                    <TextView
+                        android:id="@+id/txtBadgePoints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textColor="#00C2FF"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-bold"
+                        tools:text="10 Points" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Pill Button (Active / Apply / Locked) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBadgeAction"
+                style="@style/Widget.Material3.Button.UnelevatedButton"
+                android:layout_width="wrap_content"
+                android:minWidth="92dp"
+                android:layout_height="38dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="16dp"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-bold"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="19dp"
+                app:iconSize="14dp"
+                app:iconPadding="5dp"
+                app:iconGravity="textStart"
+                tools:text="Active"
+                tools:icon="@drawable/ic_check_bold" />
+
+        </LinearLayout>
+    </FrameLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -3515,6 +3515,155 @@ Amazon-aankoopfout: %1$s
     <string name="amazon_iap_not_ready">
 Aankopen zijn nog niet beschikbaar. Probeer het over enkele ogenblikken opnieuw.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+Insignes
+</string>
+    <string name="badge_section_subtitle">
+Ontgrendel deze mijlpaalbadges en stel deze in als uw aangepaste app-pictogram op uw startscherm
+</string>
+    <string name="badge_default_icon_title">
+Standaard app-pictogram
+</string>
+    <string name="badge_default_icon_desc">
+Standaard Ultimate File Manager-pictogram
+</string>
+    <string name="badge_title_5">
+5 punten supporter
+</string>
+    <string name="badge_title_10">
+10 punten bronzen supporter
+</string>
+    <string name="badge_title_20">
+20 punten zilveren supporter
+</string>
+    <string name="badge_title_50">
+50 punten gouden supporter
+</string>
+    <string name="badge_title_100">
+100 punten ultieme supporter
+</string>
+    <string name="badge_title_200">
+200 punten platina-supporter
+</string>
+    <string name="badge_title_300">
+300 punten diamantondersteuner
+</string>
+    <string name="badge_title_500">
+500 punten Koninklijke Supporter
+</string>
+    <string name="badge_title_750">
+750 punten legendarische supporter
+</string>
+    <string name="badge_title_1000">
+1.000 punten Supreme Supporter
+</string>
+    <string name="badge_points_format">
+%1$d Punten
+</string>
+    <string name="badge_active_tag">
+Actief
+</string>
+    <string name="badge_applied_toast">
+App-pictogram bijgewerkt naar %1$s!
+</string>
+    <string name="badge_reset_toast">
+App-pictogram opnieuw ingesteld op standaard!
+</string>
+    <string name="badge_dialog_title">
+App-pictogram bijgewerkt!
+</string>
+    <string name="badge_dialog_subtitle">
+Het pictogram op uw startscherm is gewijzigd
+</string>
+    <string name="badge_dialog_hint">
+Opmerking: bij sommige startschermstarters kan het een paar seconden duren voordat het nieuwe pictogram is vernieuwd.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d Punten • Nog %2$d nodig
+</string>
+    <string name="badge_locked_dialog_title">
+Badge vergrendeld
+</string>
+    <string name="badge_locked_dialog_msg">
+Dit aangepaste mijlpaalpictogram wordt ontgrendeld bij %1$d punten.\n
+\n
+Je hebt momenteel %2$d punten (heb nog %3$d punten nodig).\n
+\n
+Elke $1 in de fooienpot levert 10 punten op ($10 = 100 punten, $25 = 250 punten). Ondersteun de ontwikkeling hierboven om dit pictogram te ontgrendelen!
+</string>
+    <string name="badge_locked_dialog_btn">
+Brandstof om te ontgrendelen
+</string>
+    <string name="badge_btn_active">
+Actief
+</string>
+    <string name="badge_btn_apply">
+Toepassen
+</string>
+    <string name="badge_btn_locked">
+Vergrendeld
+</string>
+    <string name="badge_apply_dialog_title">
+App-pictogram toepassen?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+Stel de mijlpaalbadge in als startschermpictogram
+</string>
+    <string name="badge_apply_dialog_notice">
+Als u een aangepast pictogram wilt toepassen, moet Ultimate File Manager worden gesloten, zodat uw opstartprogramma het nieuwe pictogram kan registreren.\n
+\n
+Tik op Toepassen en sluiten om uw pictogram bij te werken, of op Annuleren om uw huidige pictogram te behouden.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+Toepassen en sluiten
+</string>
+    <string name="badge_default_dialog_title">
+Standaardpictogram herstellen?
+</string>
+    <string name="badge_default_dialog_subtitle">
+Herstel het originele Ultimate File Manager-pictogram
+</string>
+    <string name="badge_default_dialog_notice">
+Als u het standaardpictogram wilt herstellen, moet Ultimate File Manager worden afgesloten, zodat uw opstartprogramma de wijziging kan registreren.\n
+\n
+Tik op Herstellen en sluiten om door te gaan, of op Annuleren om uw huidige pictogram te behouden.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+Herstellen en sluiten
+</string>
+    <string name="badge_desc_5">
+Toon uw steun met 5 punten!
+</string>
+    <string name="badge_desc_10">
+Verdien de bronzen badge met 10 punten!
+</string>
+    <string name="badge_desc_20">
+Verdien de zilveren badge met 20 punten!
+</string>
+    <string name="badge_desc_50">
+Verdien de gouden badge met 50 punten!
+</string>
+    <string name="badge_desc_100">
+Verdien de Ultimate-badge met 100 punten!
+</string>
+    <string name="badge_desc_200">
+Verdien de Platinum-badge met 200 punten!
+</string>
+    <string name="badge_desc_300">
+Verdien de Diamond-badge met 300 punten!
+</string>
+    <string name="badge_desc_500">
+Verdien de Royal-badge met 500 punten!
+</string>
+    <string name="badge_desc_750">
+Verdien de legendarische badge met 750 punten!
+</string>
+    <string name="badge_desc_1000">
+Verdien de Supreme-badge met 1.000 punten!
+</string>
     <string name="tile_hidden_with_name">
 Tegel \'%1$s\' verborgen
 </string>

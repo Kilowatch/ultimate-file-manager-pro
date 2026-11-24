@@ -76,6 +76,7 @@
 
     <!-- Scrollable content below toolbar -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollTipJar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -612,6 +613,104 @@
                             app:backgroundTint="@null"
                             app:cornerRadius="18dp" />
                     </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Badges Section Card (Google Mobile Only — visibility controlled in SupporterLoyaltyActivity) -->
+            <!-- Badges Section: Unified Container matching Home Screen Category Card (Google Mobile Only) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardBadgesSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:rippleColor="@android:color/transparent"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Header Banner -->
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_badges_header_banner">
+
+                        <!-- Right Trophy Watermark -->
+                        <ImageView
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:layout_marginEnd="16dp"
+                            android:src="@drawable/ic_trophy_watermark"
+                            android:importantForAccessibility="no" />
+
+                        <!-- Content Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="18dp">
+
+                            <!-- Rosette Ribbon Medal -->
+                            <ImageView
+                                android:id="@+id/imgActiveBadgeHeader"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:src="@drawable/ic_ribbon_medal"
+                                android:importantForAccessibility="no" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="48dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/badge_section_title"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="20sp"
+                                    android:fontFamily="sans-serif-black" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/badge_section_subtitle"
+                                    android:textColor="#B0D5FF"
+                                    android:textSize="12sp"
+                                    android:lineSpacingMultiplier="1.2"
+                                    android:layout_marginTop="3dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <!-- Divider below Header -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Vertical Badges List inside the same container -->
+                    <LinearLayout
+                        android:id="@+id/containerBadgesList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingVertical="4dp" />
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

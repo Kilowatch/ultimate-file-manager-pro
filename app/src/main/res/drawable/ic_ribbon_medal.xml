@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Ribbons hanging down -->
+    <path
+        android:fillColor="#0284C7"
+        android:pathData="M7,13l-3,8 6,-3 2,3 -1,-8z" />
+    <path
+        android:fillColor="#0369A1"
+        android:pathData="M17,13l3,8 -6,-3 -2,3 1,-8z" />
+    <!-- Outer Cyan Rosette Scallop -->
+    <path
+        android:fillColor="#00C2FF"
+        android:pathData="M12,2c-4.42,0 -8,3.58 -8,8 0,2.97 1.62,5.55 4,6.93V21l4,-2 4,2v-4.07c2.38,-1.38 4,-3.96 4,-6.93 0,-4.42 -3.58,-8 -8,-8z"/>
+    <!-- Inner Dark Circle -->
+    <path
+        android:fillColor="#0A3C6B"
+        android:pathData="M12,4c-3.31,0 -6,2.69 -6,6s2.69,6 6,6 6,-2.69 6,-6 -2.69,-6 -6,-6z"/>
+    <!-- Center Bright Star -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,6.2l1.15,2.72 2.95,0.26 -2.22,1.98 0.67,2.88 -2.55,-1.52 -2.55,1.52 0.67,-2.88 -2.22,-1.98 2.95,-0.26z"/>
+</vector>

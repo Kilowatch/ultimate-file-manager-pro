@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
@@ -128,6 +129,10 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         initBilling()
         refreshLoyaltyUI()
         fetchGlobalProgress()
+
+        if (!isTv && !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
+            setupBadgesSection()
+        }
     }
 
     private fun setupViews(isTv: Boolean) {
@@ -306,6 +311,9 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         if (tipAmount > 0) {
             LoyaltyPrefs.addTip(this, tipAmount)
             refreshLoyaltyUI()
+            if (!isTv && !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
+                setupBadgesSection()
+            }
             // Trigger auto-backup if enabled
             AutoBackupScheduler.runOnceNow(this)
         }
@@ -484,6 +492,258 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         btnCappuccino.isEnabled = enabled
         btnLatte.isEnabled      = enabled
         btnBeans.isEnabled      = enabled
+    }
+
+    private fun setupBadgesSection() {
+        val cardBadges = findViewById<View>(R.id.cardBadgesSection) ?: return
+        val container = findViewById<ViewGroup>(R.id.containerBadgesList) ?: return
+        val imgHeader = findViewById<ImageView>(R.id.imgActiveBadgeHeader)
+        cardBadges.visibility = View.VISIBLE
+
+        populateBadgesList(container, imgHeader)
+    }
+
+    private fun populateBadgesList(container: ViewGroup, imgHeader: ImageView?) {
+        container.removeAllViews()
+        val inflater = LayoutInflater.from(this)
+        val selectedPoints = BadgeIconManager.getSelectedBadgePoints(this)
+        val totalPoints = BadgeIconManager.getTotalTippedPoints(this)
+
+        if (imgHeader != null) {
+            imgHeader.setImageResource(R.drawable.ic_ribbon_medal)
+        }
+
+        // 1. Default App Icon Option (Restores original launcher icon)
+        val defaultView = inflater.inflate(R.layout.item_supporter_badge, container, false)
+        val cardDefault = defaultView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardBadgeItem)
+        val layoutDefaultContainer = defaultView.findViewById<View>(R.id.layoutDefaultIconContainer)
+        val imgDefaultSquare = defaultView.findViewById<ImageView>(R.id.imgBadgeSquare)
+        val imgDefaultCutout = defaultView.findViewById<ImageView>(R.id.imgBadgeCutout)
+        val txtDefaultTitle = defaultView.findViewById<TextView>(R.id.txtBadgeTitle)
+        val txtDefaultDesc = defaultView.findViewById<TextView>(R.id.txtBadgeDesc)
+        val txtDefaultPoints = defaultView.findViewById<TextView>(R.id.txtBadgePoints)
+        val btnDefaultAction = defaultView.findViewById<MaterialButton>(R.id.btnBadgeAction)
+        val dividerDefault = defaultView.findViewById<View>(R.id.dividerRow)
+
+        dividerDefault.visibility = View.GONE
+        layoutDefaultContainer.visibility = View.VISIBLE
+        imgDefaultCutout.visibility = View.GONE
+        imgDefaultSquare.setImageResource(R.mipmap.ic_launcher)
+        txtDefaultTitle.setText(R.string.badge_default_icon_title)
+        txtDefaultDesc.setText(R.string.badge_default_icon_desc)
+        txtDefaultPoints.text = getString(R.string.badge_btn_apply)
+
+        val isDefaultActive = (selectedPoints == null || selectedPoints == 0)
+        if (isDefaultActive) {
+            btnDefaultAction.text = getString(R.string.badge_btn_active)
+            btnDefaultAction.setIconResource(R.drawable.ic_check_bold)
+            btnDefaultAction.iconTint = ColorStateList.valueOf(android.graphics.Color.WHITE)
+            btnDefaultAction.setTextColor(android.graphics.Color.WHITE)
+            btnDefaultAction.backgroundTintList = ColorStateList.valueOf(android.graphics.Color.parseColor("#10B981"))
+            btnDefaultAction.strokeWidth = 0
+            cardDefault.setCardBackgroundColor(android.graphics.Color.parseColor("#1410B981"))
+        } else {
+            btnDefaultAction.text = getString(R.string.badge_btn_apply)
+            btnDefaultAction.setIconResource(R.drawable.ic_check_bold)
+            btnDefaultAction.iconTint = ColorStateList.valueOf(android.graphics.Color.WHITE)
+            btnDefaultAction.setTextColor(android.graphics.Color.WHITE)
+            btnDefaultAction.backgroundTintList = ColorStateList.valueOf(android.graphics.Color.parseColor("#00B4D8"))
+            btnDefaultAction.strokeWidth = 0
+            cardDefault.setCardBackgroundColor(android.graphics.Color.TRANSPARENT)
+        }
+        btnDefaultAction.setOnClickListener { defaultView.performClick() }
+
+        defaultView.setOnClickListener {
+            if (!isDefaultActive) {
+                showDefaultIconConfirmationDialog()
+            }
+        }
+        container.addView(defaultView)
+
+        // 2. 10 Milestone Badges in ascending order (5 points first, 1000 points last)
+        for (badge in BadgeIconManager.BADGES) {
+            val itemView = inflater.inflate(R.layout.item_supporter_badge, container, false)
+            val cardItem = itemView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardBadgeItem)
+            val layoutContainer = itemView.findViewById<View>(R.id.layoutDefaultIconContainer)
+            val imgCutout = itemView.findViewById<ImageView>(R.id.imgBadgeCutout)
+            val txtTitle = itemView.findViewById<TextView>(R.id.txtBadgeTitle)
+            val txtDesc = itemView.findViewById<TextView>(R.id.txtBadgeDesc)
+            val txtPoints = itemView.findViewById<TextView>(R.id.txtBadgePoints)
+            val btnAction = itemView.findViewById<MaterialButton>(R.id.btnBadgeAction)
+            val dividerRow = itemView.findViewById<View>(R.id.dividerRow)
+
+            dividerRow.visibility = View.VISIBLE
+
+            val isUnlocked = BadgeIconManager.isBadgeUnlocked(this, badge.points)
+            val isActive = (selectedPoints == badge.points)
+
+            // Setup View for Cutout Badge
+            layoutContainer.visibility = View.GONE
+            imgCutout.visibility = View.VISIBLE
+            imgCutout.setImageResource(badge.cutoutRes)
+            txtTitle.setText(badge.titleRes)
+            txtDesc.setText(badge.descRes)
+            txtPoints.text = getString(R.string.badge_points_format, badge.points)
+
+            if (isActive) {
+                btnAction.text = getString(R.string.badge_btn_active)
+                btnAction.setIconResource(R.drawable.ic_check_bold)
+                btnAction.iconTint = ColorStateList.valueOf(android.graphics.Color.WHITE)
+                btnAction.setTextColor(android.graphics.Color.WHITE)
+                btnAction.backgroundTintList = ColorStateList.valueOf(android.graphics.Color.parseColor("#10B981"))
+                btnAction.strokeWidth = 0
+                cardItem.setCardBackgroundColor(android.graphics.Color.parseColor("#1410B981"))
+            } else if (isUnlocked) {
+                btnAction.text = getString(R.string.badge_btn_apply)
+                btnAction.setIconResource(R.drawable.ic_check_bold)
+                btnAction.iconTint = ColorStateList.valueOf(android.graphics.Color.WHITE)
+                btnAction.setTextColor(android.graphics.Color.WHITE)
+                btnAction.backgroundTintList = ColorStateList.valueOf(android.graphics.Color.parseColor("#00B4D8"))
+                btnAction.strokeWidth = 0
+                cardItem.setCardBackgroundColor(android.graphics.Color.TRANSPARENT)
+            } else {
+                btnAction.text = getString(R.string.badge_btn_locked)
+                btnAction.setIconResource(R.drawable.ic_lock)
+                val lockColor = android.graphics.Color.parseColor("#94A3B8")
+                btnAction.iconTint = ColorStateList.valueOf(lockColor)
+                btnAction.setTextColor(lockColor)
+                btnAction.backgroundTintList = ColorStateList.valueOf(android.graphics.Color.parseColor("#182234"))
+                btnAction.strokeColor = ColorStateList.valueOf(android.graphics.Color.parseColor("#334155"))
+                btnAction.strokeWidth = (1 * resources.displayMetrics.density).toInt()
+                cardItem.setCardBackgroundColor(android.graphics.Color.TRANSPARENT)
+            }
+            btnAction.setOnClickListener { itemView.performClick() }
+
+            if (isUnlocked) {
+                itemView.alpha = 1.0f
+                itemView.setOnClickListener {
+                    if (BadgeIconManager.getSelectedBadgePoints(this) != badge.points) {
+                        showBadgeApplyConfirmationDialog(badge)
+                    }
+                }
+            } else {
+                itemView.alpha = 0.85f
+                itemView.setOnClickListener {
+                    showBadgeLockedDialog(badge)
+                }
+            }
+
+            container.addView(itemView)
+        }
+    }
+
+    private fun showBadgeLockedDialog(badge: BadgeItem) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_badge_locked, null)
+        val imgPreview = dialogView.findViewById<ImageView>(R.id.imgDialogBadgeLockedSquare)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogBadgeLockedTitle)
+        val txtMsg = dialogView.findViewById<TextView>(R.id.txtDialogBadgeLockedMsg)
+        val btnFuel = dialogView.findViewById<MaterialButton>(R.id.btnDialogLockedFuel)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnDialogLockedCancel)
+
+        val totalPoints = BadgeIconManager.getTotalTippedPoints(this)
+        val needed = (badge.points - totalPoints).coerceAtLeast(0)
+
+        imgPreview.setImageResource(badge.iconRes)
+        txtTitle.setText(badge.titleRes)
+        txtMsg.text = getString(R.string.badge_locked_dialog_msg, badge.points, totalPoints, needed)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnFuel.setOnClickListener {
+            dialog.dismiss()
+            findViewById<androidx.core.widget.NestedScrollView>(R.id.scrollTipJar)?.smoothScrollTo(0, 0)
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showBadgeApplyConfirmationDialog(badge: BadgeItem) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_badge_icon_updated, null)
+        val imgPreview = dialogView.findViewById<ImageView>(R.id.imgDialogBadgePreview)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtDialogSubtitle)
+        val txtName = dialogView.findViewById<TextView>(R.id.txtDialogBadgeName)
+        val txtNotice = dialogView.findViewById<TextView>(R.id.txtDialogApplyNotice)
+        val btnApply = dialogView.findViewById<MaterialButton>(R.id.btnDialogApply)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnDialogCancel)
+
+        imgPreview.setImageResource(badge.iconRes)
+        txtTitle.setText(R.string.badge_apply_dialog_title)
+        txtSubtitle.setText(R.string.badge_apply_dialog_subtitle)
+        txtName.setText(badge.titleRes)
+        txtNotice.setText(R.string.badge_apply_dialog_notice)
+        btnApply.setText(R.string.badge_apply_dialog_btn_apply)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnApply.setOnClickListener {
+            dialog.dismiss()
+            BadgeIconManager.setSelectedBadge(this, badge.points)
+            Toast.makeText(
+                this,
+                getString(R.string.badge_applied_toast, getString(badge.titleRes)),
+                Toast.LENGTH_LONG
+            ).show()
+            finishAffinity()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showDefaultIconConfirmationDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_badge_icon_updated, null)
+        val imgPreview = dialogView.findViewById<ImageView>(R.id.imgDialogBadgePreview)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtDialogSubtitle)
+        val txtName = dialogView.findViewById<TextView>(R.id.txtDialogBadgeName)
+        val txtNotice = dialogView.findViewById<TextView>(R.id.txtDialogApplyNotice)
+        val btnApply = dialogView.findViewById<MaterialButton>(R.id.btnDialogApply)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnDialogCancel)
+
+        imgPreview.setImageResource(R.mipmap.ic_launcher)
+        txtTitle.setText(R.string.badge_default_dialog_title)
+        txtSubtitle.setText(R.string.badge_default_dialog_subtitle)
+        txtName.setText(R.string.badge_default_icon_title)
+        txtNotice.setText(R.string.badge_default_dialog_notice)
+        btnApply.setText(R.string.badge_default_dialog_btn_restore)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnApply.setOnClickListener {
+            dialog.dismiss()
+            BadgeIconManager.setSelectedBadge(this, null)
+            Toast.makeText(this, R.string.badge_reset_toast, Toast.LENGTH_LONG).show()
+            finishAffinity()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     override fun onDestroy() {

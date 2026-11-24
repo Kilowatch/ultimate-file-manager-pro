@@ -149,6 +149,15 @@ class EdgeMenuOverlayController(private val activity: Activity) {
         rvItems = overlay.findViewById(R.id.rvEdgeMenuItems)
         layoutEmpty = overlay.findViewById(R.id.layoutEmptyEdgeMenu)
 
+        // Setup dynamic app logo based on active badge icon
+        val imgAppLogo = overlay.findViewById<ImageView?>(R.id.imgAppLogo)
+        val activeIconRes = za.kilowatch.ultimatefilemanager.billing.ActiveBadgeIconHelper.getActiveAppIcon(activity)
+        if (activeIconRes != null) {
+            imgAppLogo?.setImageResource(activeIconRes)
+        } else {
+            imgAppLogo?.setImageResource(R.mipmap.ic_launcher)
+        }
+
         // Apply system window insets so header is below status bar and footer is above nav bar
         val inner = overlay.findViewById<View>(R.id.layoutDrawerInner)
         ViewCompat.setOnApplyWindowInsetsListener(overlay) { _, insets ->
@@ -321,6 +330,15 @@ class EdgeMenuOverlayController(private val activity: Activity) {
         btnManage?.findViewById<TextView?>(R.id.txtManageTilesLabel)?.setTextColor(Color.WHITE)
 
         root.findViewById<TextView?>(R.id.txtMenuSubtitle)?.setTextColor(accentColor)
+
+        // 7. Dynamic App Logo based on active custom badge icon
+        val imgAppLogo = root.findViewById<ImageView?>(R.id.imgAppLogo)
+        val activeIconRes = za.kilowatch.ultimatefilemanager.billing.ActiveBadgeIconHelper.getActiveAppIcon(activity)
+        if (activeIconRes != null) {
+            imgAppLogo?.setImageResource(activeIconRes)
+        } else {
+            imgAppLogo?.setImageResource(R.mipmap.ic_launcher)
+        }
     }
 
     fun openMenu() {

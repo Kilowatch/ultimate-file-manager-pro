@@ -3640,6 +3640,155 @@ Amazon-Kauffehler: %1$s
     <string name="amazon_iap_not_ready">
 Käufe sind noch nicht verfügbar. Bitte versuchen Sie es in einem Moment erneut.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+Abzeichen
+</string>
+    <string name="badge_section_subtitle">
+Schalten Sie diese Meilenstein-Abzeichen frei und legen Sie sie als Ihr benutzerdefiniertes App-Symbol auf Ihrem Startbildschirm fest
+</string>
+    <string name="badge_default_icon_title">
+Standard-App-Symbol
+</string>
+    <string name="badge_default_icon_desc">
+Standard-Ultimate-Dateimanager-Symbol
+</string>
+    <string name="badge_title_5">
+5 Punkte Unterstützer
+</string>
+    <string name="badge_title_10">
+10 Punkte Bronze-Unterstützer
+</string>
+    <string name="badge_title_20">
+20 Punkte Silber-Unterstützer
+</string>
+    <string name="badge_title_50">
+50 Punkte Gold-Unterstützer
+</string>
+    <string name="badge_title_100">
+100 Punkte Ultimate Supporter
+</string>
+    <string name="badge_title_200">
+200 Punkte Platin-Unterstützer
+</string>
+    <string name="badge_title_300">
+300 Punkte Diamant-Unterstützer
+</string>
+    <string name="badge_title_500">
+500 Punkte Royal Supporter
+</string>
+    <string name="badge_title_750">
+750 Punkte Legendärer Unterstützer
+</string>
+    <string name="badge_title_1000">
+1.000 Punkte Oberster Unterstützer
+</string>
+    <string name="badge_points_format">
+%1$d Punkte
+</string>
+    <string name="badge_active_tag">
+Aktiv
+</string>
+    <string name="badge_applied_toast">
+App-Symbol auf %1$s aktualisiert!
+</string>
+    <string name="badge_reset_toast">
+App-Symbol auf Standard zurückgesetzt!
+</string>
+    <string name="badge_dialog_title">
+App-Symbol aktualisiert!
+</string>
+    <string name="badge_dialog_subtitle">
+Das Symbol Ihres Startbildschirms wurde geändert
+</string>
+    <string name="badge_dialog_hint">
+Hinweis: Bei einigen Startbildschirm-Startprogrammen kann es einige Sekunden dauern, bis das neue Symbol aktualisiert ist.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d Punkte • Benötige %2$d mehr
+</string>
+    <string name="badge_locked_dialog_title">
+Ausweis gesperrt
+</string>
+    <string name="badge_locked_dialog_msg">
+Dieses benutzerdefinierte Meilensteinsymbol wird bei %1$d Punkten freigeschaltet.\n
+\n
+Sie haben derzeit %2$d Punkte (benötigen %3$d weitere Punkte).\n
+\n
+Jeder $1 im Trinkgeldglas erhält 10 Punkte ($10 = 100 Punkte, $25 = 250 Punkte). Unterstützen Sie die oben genannte Entwicklung, um dieses Symbol freizuschalten!
+</string>
+    <string name="badge_locked_dialog_btn">
+Treibstoff zum Freischalten
+</string>
+    <string name="badge_btn_active">
+Aktiv
+</string>
+    <string name="badge_btn_apply">
+Anwenden
+</string>
+    <string name="badge_btn_locked">
+Gesperrt
+</string>
+    <string name="badge_apply_dialog_title">
+App-Symbol anwenden?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+Legen Sie das Meilenstein-Abzeichen als Startbildschirmsymbol fest
+</string>
+    <string name="badge_apply_dialog_notice">
+Zum Anwenden eines benutzerdefinierten Symbols muss Ultimate File Manager geschlossen werden, damit Ihr Launcher das neue Symbol registrieren kann.\n
+\n
+Tippen Sie auf „Übernehmen und schließen“, um Ihr Symbol zu aktualisieren, oder auf „Abbrechen“, um Ihr aktuelles Symbol beizubehalten.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+Anwenden und schließen
+</string>
+    <string name="badge_default_dialog_title">
+Standardsymbol wiederherstellen?
+</string>
+    <string name="badge_default_dialog_subtitle">
+Stellen Sie das ursprüngliche Ultimate File Manager-Symbol wieder her
+</string>
+    <string name="badge_default_dialog_notice">
+Um das Standardsymbol wiederherzustellen, muss Ultimate File Manager geschlossen werden, damit Ihr Launcher die Änderung registrieren kann.\n
+\n
+Tippen Sie auf „Wiederherstellen und schließen“, um fortzufahren, oder auf „Abbrechen“, um Ihr aktuelles Symbol beizubehalten.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+Wiederherstellen und schließen
+</string>
+    <string name="badge_desc_5">
+Zeigen Sie Ihre Unterstützung mit 5 Punkten!
+</string>
+    <string name="badge_desc_10">
+Verdiene dir das Bronze-Abzeichen mit 10 Punkten!
+</string>
+    <string name="badge_desc_20">
+Verdienen Sie sich das Silberabzeichen mit 20 Punkten!
+</string>
+    <string name="badge_desc_50">
+Verdiene dir das Gold-Abzeichen mit 50 Punkten!
+</string>
+    <string name="badge_desc_100">
+Verdiene dir das Ultimate-Abzeichen mit 100 Punkten!
+</string>
+    <string name="badge_desc_200">
+Verdienen Sie sich das Platin-Abzeichen mit 200 Punkten!
+</string>
+    <string name="badge_desc_300">
+Verdienen Sie sich das Diamond-Abzeichen mit 300 Punkten!
+</string>
+    <string name="badge_desc_500">
+Verdiene dir das Royal-Abzeichen mit 500 Punkten!
+</string>
+    <string name="badge_desc_750">
+Verdiene dir das legendäre Abzeichen mit 750 Punkten!
+</string>
+    <string name="badge_desc_1000">
+Verdiene dir das Supreme-Abzeichen mit 1.000 Punkten!
+</string>
     <string name="tile_hidden_with_name">
 \"%1$s\"-Kachel ausgeblendet
 </string>

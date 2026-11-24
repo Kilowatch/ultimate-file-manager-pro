@@ -3640,6 +3640,155 @@ Amazon 구매 오류: %1$s
     <string name="amazon_iap_not_ready">
 구매가 아직 이용할 수 없습니다. 잠시 후 다시 시도해 주세요.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+배지
+</string>
+    <string name="badge_section_subtitle">
+이 마일스톤 배지를 잠금 해제하고 홈 화면의 맞춤형 앱 아이콘으로 설정하세요.
+</string>
+    <string name="badge_default_icon_title">
+기본 앱 아이콘
+</string>
+    <string name="badge_default_icon_desc">
+표준 Ultimate 파일 관리자 아이콘
+</string>
+    <string name="badge_title_5">
+5점 서포터
+</string>
+    <string name="badge_title_10">
+10포인트 브론즈 서포터
+</string>
+    <string name="badge_title_20">
+20포인트 실버 서포터
+</string>
+    <string name="badge_title_50">
+50 포인트 골드 서포터
+</string>
+    <string name="badge_title_100">
+100포인트 얼티밋 서포터
+</string>
+    <string name="badge_title_200">
+200 포인트 플래티넘 서포터
+</string>
+    <string name="badge_title_300">
+300 포인트 다이아몬드 서포터
+</string>
+    <string name="badge_title_500">
+500 포인트 로얄 서포터
+</string>
+    <string name="badge_title_750">
+750 포인트 전설적인 서포터
+</string>
+    <string name="badge_title_1000">
+1,000포인트 슈프림 서포터
+</string>
+    <string name="badge_points_format">
+%1$d 포인트
+</string>
+    <string name="badge_active_tag">
+활동적인
+</string>
+    <string name="badge_applied_toast">
+앱 아이콘이 %1$s(으)로 업데이트되었습니다!
+</string>
+    <string name="badge_reset_toast">
+앱 아이콘이 기본값으로 재설정되었습니다!
+</string>
+    <string name="badge_dialog_title">
+앱 아이콘이 업데이트되었습니다!
+</string>
+    <string name="badge_dialog_subtitle">
+홈 화면 아이콘이 변경되었습니다
+</string>
+    <string name="badge_dialog_hint">
+참고: 일부 홈 화면 실행 프로그램은 새 아이콘을 새로 고치는 데 몇 초 정도 걸릴 수 있습니다.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d 포인트 • %2$d개 더 필요
+</string>
+    <string name="badge_locked_dialog_title">
+배지 잠김
+</string>
+    <string name="badge_locked_dialog_msg">
+이 맞춤 이정표 아이콘은 %1$d포인트에서 잠금 해제됩니다.\n
+\n
+현재 %2$d포인트가 있습니다(%3$d포인트가 더 필요함).\n
+\n
+팁 병에 있는 모든 $1포인트는 10포인트를 얻습니다($10 = 100포인트, $25 = 250포인트). 이 아이콘을 잠금 해제하려면 위의 개발을 지원하세요!
+</string>
+    <string name="badge_locked_dialog_btn">
+잠금을 해제할 연료
+</string>
+    <string name="badge_btn_active">
+활동적인
+</string>
+    <string name="badge_btn_apply">
+적용하다
+</string>
+    <string name="badge_btn_locked">
+잠김
+</string>
+    <string name="badge_apply_dialog_title">
+앱 아이콘을 적용하시겠습니까?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+마일스톤 배지를 홈 화면 아이콘으로 설정
+</string>
+    <string name="badge_apply_dialog_notice">
+사용자 정의 아이콘을 적용하려면 Ultimate File Manager를 닫아야 런처가 새 아이콘을 등록할 수 있습니다.\n
+\n
+아이콘을 업데이트하려면 적용 및 닫기를 탭하고, 현재 아이콘을 유지하려면 취소를 탭하세요.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+적용 및 종료
+</string>
+    <string name="badge_default_dialog_title">
+기본 아이콘을 복원하시겠습니까?
+</string>
+    <string name="badge_default_dialog_subtitle">
+원본 Ultimate File Manager 아이콘 복원
+</string>
+    <string name="badge_default_dialog_notice">
+기본 아이콘을 복원하려면 Ultimate File Manager를 닫아야 실행 프로그램이 변경 사항을 등록할 수 있습니다.\n
+\n
+계속하려면 복원 및 닫기를 탭하고 현재 아이콘을 유지하려면 취소를 탭하세요.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+복원 및 닫기
+</string>
+    <string name="badge_desc_5">
+5포인트로 여러분의 지지를 보여주세요!
+</string>
+    <string name="badge_desc_10">
+10포인트로 브론즈 배지를 획득하세요!
+</string>
+    <string name="badge_desc_20">
+20포인트로 실버배지를 획득하세요!
+</string>
+    <string name="badge_desc_50">
+50포인트로 골드 배지를 획득하세요!
+</string>
+    <string name="badge_desc_100">
+100포인트로 Ultimate 배지를 획득하세요!
+</string>
+    <string name="badge_desc_200">
+200포인트로 플래티넘 배지를 획득하세요!
+</string>
+    <string name="badge_desc_300">
+300포인트로 다이아몬드 배지를 획득하세요!
+</string>
+    <string name="badge_desc_500">
+500포인트로 왕실 배지를 획득하세요!
+</string>
+    <string name="badge_desc_750">
+750포인트로 전설 배지를 획득하세요!
+</string>
+    <string name="badge_desc_1000">
+1,000포인트로 Supreme 배지를 획득하세요!
+</string>
     <string name="tile_hidden_with_name">
 \"%1$s\" 타일 숨김
 </string>

@@ -3640,6 +3640,155 @@ SMB3 فقط (آمن حديث)
     <string name="amazon_iap_not_ready">
 المشتريات غير متاحة بعد. يرجى المحاولة مرة أخرى بعد قليل.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+شارات
+</string>
+    <string name="badge_section_subtitle">
+افتح هذه الشارات المهمة وقم بتعيينها كرمز تطبيق مخصص على شاشتك الرئيسية
+</string>
+    <string name="badge_default_icon_title">
+أيقونة التطبيق الافتراضية
+</string>
+    <string name="badge_default_icon_desc">
+أيقونة مدير الملفات القياسية
+</string>
+    <string name="badge_title_5">
+5 نقاط مؤيد
+</string>
+    <string name="badge_title_10">
+10 نقاط برونزية للمؤيد
+</string>
+    <string name="badge_title_20">
+20 نقطة مؤيد فضية
+</string>
+    <string name="badge_title_50">
+50 نقطة مؤيد الذهب
+</string>
+    <string name="badge_title_100">
+100 نقطة الداعم النهائي
+</string>
+    <string name="badge_title_200">
+200 نقطة داعم بلاتيني
+</string>
+    <string name="badge_title_300">
+300 نقطة الماس للداعم
+</string>
+    <string name="badge_title_500">
+500 نقطة الداعم الملكي
+</string>
+    <string name="badge_title_750">
+750 نقطة الداعم الأسطوري
+</string>
+    <string name="badge_title_1000">
+1000 نقطة الداعم الأعلى
+</string>
+    <string name="badge_points_format">
+%1$d النقاط
+</string>
+    <string name="badge_active_tag">
+نشيط
+</string>
+    <string name="badge_applied_toast">
+تم تحديث رمز التطبيق إلى %1$s!
+</string>
+    <string name="badge_reset_toast">
+إعادة تعيين أيقونة التطبيق إلى الوضع الافتراضي!
+</string>
+    <string name="badge_dialog_title">
+تم تحديث أيقونة التطبيق!
+</string>
+    <string name="badge_dialog_subtitle">
+تم تغيير رمز الشاشة الرئيسية
+</string>
+    <string name="badge_dialog_hint">
+ملاحظة: قد تستغرق بعض مشغلات الشاشة الرئيسية بضع ثوانٍ لتحديث الرمز الجديد.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d النقاط • بحاجة إلى %2$d المزيد
+</string>
+    <string name="badge_locked_dialog_title">
+شارة مقفلة
+</string>
+    <string name="badge_locked_dialog_msg">
+يتم فتح رمز الحدث الرئيسي المخصص هذا عند %1$d من النقاط.\n
+\n
+لديك حاليًا %2$d نقاط (تحتاج إلى %3$d نقاط إضافية).\n
+\n
+كل $1 في جرة النصائح تكسب 10 نقاط ($10 = 100 نقطة، $25 = 250 نقطة). دعم التطوير أعلاه لفتح هذا الرمز!
+</string>
+    <string name="badge_locked_dialog_btn">
+الوقود لفتح
+</string>
+    <string name="badge_btn_active">
+نشيط
+</string>
+    <string name="badge_btn_apply">
+يتقدم
+</string>
+    <string name="badge_btn_locked">
+مغلق
+</string>
+    <string name="badge_apply_dialog_title">
+تطبيق أيقونة التطبيق؟
+</string>
+    <string name="badge_apply_dialog_subtitle">
+قم بتعيين شارة الحدث كرمز للشاشة الرئيسية
+</string>
+    <string name="badge_apply_dialog_notice">
+يتطلب تطبيق رمز مخصص إغلاق Ultimate File Manager حتى يتمكن المشغل الخاص بك من تسجيل الرمز الجديد.\n
+\n
+انقر فوق \"تطبيق وإغلاق\" لتحديث الرمز الخاص بك، أو \"إلغاء الأمر\" للاحتفاظ بالرمز الحالي.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+تطبيق وإغلاق
+</string>
+    <string name="badge_default_dialog_title">
+استعادة الرمز الافتراضي؟
+</string>
+    <string name="badge_default_dialog_subtitle">
+استعادة أيقونة Ultimate File Manager الأصلية
+</string>
+    <string name="badge_default_dialog_notice">
+تتطلب استعادة الرمز الافتراضي إغلاق Ultimate File Manager حتى يتمكن المشغل من تسجيل التغيير.\n
+\n
+انقر فوق \"استعادة وإغلاق\" للمتابعة، أو \"إلغاء الأمر\" للاحتفاظ بالرمز الحالي.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+استعادة وإغلاق
+</string>
+    <string name="badge_desc_5">
+أظهر دعمك بـ 5 نقاط!
+</string>
+    <string name="badge_desc_10">
+احصل على الشارة البرونزية بـ 10 نقاط!
+</string>
+    <string name="badge_desc_20">
+احصل على الشارة الفضية بـ 20 نقطة!
+</string>
+    <string name="badge_desc_50">
+احصل على الشارة الذهبية بـ 50 نقطة!
+</string>
+    <string name="badge_desc_100">
+احصل على الشارة النهائية بـ 100 نقطة!
+</string>
+    <string name="badge_desc_200">
+احصل على الشارة البلاتينية بـ 200 نقطة!
+</string>
+    <string name="badge_desc_300">
+احصل على الشارة الماسية بـ 300 نقطة!
+</string>
+    <string name="badge_desc_500">
+احصل على الشارة الملكية بـ 500 نقطة!
+</string>
+    <string name="badge_desc_750">
+احصل على الشارة الأسطورية بـ 750 نقطة!
+</string>
+    <string name="badge_desc_1000">
+احصل على الشارة العليا بـ 1000 نقطة!
+</string>
     <string name="tile_hidden_with_name">
 تم إخفاء بلاطة \"%1$s\"
 </string>

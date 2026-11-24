@@ -3640,6 +3640,155 @@ Amazon 购买错误：%1$s
     <string name="amazon_iap_not_ready">
 购买功能暂不可用，请稍后再试。
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+徽章
+</string>
+    <string name="badge_section_subtitle">
+解锁这些里程碑徽章并将其设置为主屏幕上的自定义应用程序图标
+</string>
+    <string name="badge_default_icon_title">
+默认应用程序图标
+</string>
+    <string name="badge_default_icon_desc">
+标准终极文件管理器图标
+</string>
+    <string name="badge_title_5">
+5分支持者
+</string>
+    <string name="badge_title_10">
+10 分铜牌支持者
+</string>
+    <string name="badge_title_20">
+20 点银牌支持者
+</string>
+    <string name="badge_title_50">
+50 点金牌支持者
+</string>
+    <string name="badge_title_100">
+100 点终极支持者
+</string>
+    <string name="badge_title_200">
+200 积分白金支持者
+</string>
+    <string name="badge_title_300">
+300 积分钻石支持者
+</string>
+    <string name="badge_title_500">
+500 积分皇家支持者
+</string>
+    <string name="badge_title_750">
+750 点传奇支持者
+</string>
+    <string name="badge_title_1000">
+1,000 积分 至尊支持者
+</string>
+    <string name="badge_points_format">
+%1$d 积分
+</string>
+    <string name="badge_active_tag">
+积极的
+</string>
+    <string name="badge_applied_toast">
+应用图标已更新为 %1$s！
+</string>
+    <string name="badge_reset_toast">
+应用程序图标重置为默认值！
+</string>
+    <string name="badge_dialog_title">
+应用程序图标已更新！
+</string>
+    <string name="badge_dialog_subtitle">
+您的主屏幕图标已更改
+</string>
+    <string name="badge_dialog_hint">
+注意：某些主屏幕启动器可能需要几秒钟才能刷新新图标。
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d 分 • 还需要 %2$d 分
+</string>
+    <string name="badge_locked_dialog_title">
+徽章已锁定
+</string>
+    <string name="badge_locked_dialog_msg">
+此自定义里程碑图标需要 %1$d 点解锁。\n
+\n
+您目前有 %2$d 点（还需要 %3$d 点）。\n
+\n
+提示罐中的每个 $1 均可获得 10 点（$10 = 100 点，$25 = 250 点）。支持以上开发即可解锁此图标！
+</string>
+    <string name="badge_locked_dialog_btn">
+解锁燃料
+</string>
+    <string name="badge_btn_active">
+积极的
+</string>
+    <string name="badge_btn_apply">
+申请
+</string>
+    <string name="badge_btn_locked">
+锁定
+</string>
+    <string name="badge_apply_dialog_title">
+应用应用程序图标？
+</string>
+    <string name="badge_apply_dialog_subtitle">
+将里程碑徽章设置为主屏幕图标
+</string>
+    <string name="badge_apply_dialog_notice">
+应用自定义图标需要关闭 Ultimate 文件管理器，以便您的启动器可以注册新图标。\n
+\n
+点击“应用并关闭”以更新您的图标，或点击“取消”以保留当前图标。
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+申请并关闭
+</string>
+    <string name="badge_default_dialog_title">
+恢复默认图标？
+</string>
+    <string name="badge_default_dialog_subtitle">
+恢复原来的终极文件管理器图标
+</string>
+    <string name="badge_default_dialog_notice">
+恢复默认图标需要关闭 Ultimate File Manager，以便您的启动器可以注册更改。\n
+\n
+点击“恢复并关闭”继续，或点击“取消”保留当前图标。
+</string>
+    <string name="badge_default_dialog_btn_restore">
+恢复并关闭
+</string>
+    <string name="badge_desc_5">
+表示支持5分！
+</string>
+    <string name="badge_desc_10">
+获得 10 点铜牌徽章！
+</string>
+    <string name="badge_desc_20">
+获得 20 积分银徽章！
+</string>
+    <string name="badge_desc_50">
+获得 50 积分即可获得金牌徽章！
+</string>
+    <string name="badge_desc_100">
+获得 100 积分即可获得终极徽章！
+</string>
+    <string name="badge_desc_200">
+获得 200 积分白金徽章！
+</string>
+    <string name="badge_desc_300">
+获得 300 积分钻石徽章！
+</string>
+    <string name="badge_desc_500">
+获得 500 积分即可获得皇家徽章！
+</string>
+    <string name="badge_desc_750">
+用 750 点积分赢得传奇徽章！
+</string>
+    <string name="badge_desc_1000">
+获得 1,000 积分即可获得至尊徽章！
+</string>
     <string name="tile_hidden_with_name">
 \"%1$s\" 方块已隐藏
 </string>

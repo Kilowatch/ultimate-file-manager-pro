@@ -21,5 +21,156 @@
             android:name="com.google.firebase.provider.FirebaseInitProvider"
             android:authorities="${applicationId}.firebaseinitprovider"
             tools:node="remove" />
+
+        <!-- 10 Milestone Badge App Icon Launcher Aliases (Google Mobile) -->
+        <!-- 5 Points -->
+        <activity-alias
+            android:name=".BadgeIcon5"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_points_5"
+            android:roundIcon="@mipmap/ic_launcher_points_5_round"
+            android:label="@string/app_name"
+            android:targetActivity=".onboarding.LanguageWelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 10 Points -->
+        <activity-alias
+            android:name=".BadgeIcon10"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_points_10"
+            android:roundIcon="@mipmap/ic_launcher_points_10_round"
+            android:label="@string/app_name"
+            android:targetActivity=".onboarding.LanguageWelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 20 Points -->
+        <activity-alias
+            android:name=".BadgeIcon20"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_points_20"
+            android:roundIcon="@mipmap/ic_launcher_points_20_round"
+            android:label="@string/app_name"
+            android:targetActivity=".onboarding.LanguageWelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 50 Points -->
+        <activity-alias
+            android:name=".BadgeIcon50"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_points_50"
+            android:roundIcon="@mipmap/ic_launcher_points_50_round"
+            android:label="@string/app_name"
+            android:targetActivity=".onboarding.LanguageWelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 100 Points -->
+        <activity-alias
+            android:name=".BadgeIcon100"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_points_100"
+            android:roundIcon="@mipmap/ic_launcher_points_100_round"
+            android:label="@string/app_name"
+            android:targetActivity=".onboarding.LanguageWelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 200 Points -->
+        <activity-alias
+            android:name=".BadgeIcon200"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_points_200"
+            android:roundIcon="@mipmap/ic_launcher_points_200_round"
+            android:label="@string/app_name"
+            android:targetActivity=".onboarding.LanguageWelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 300 Points -->
+        <activity-alias
+            android:name=".BadgeIcon300"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_points_300"
+            android:roundIcon="@mipmap/ic_launcher_points_300_round"
+            android:label="@string/app_name"
+            android:targetActivity=".onboarding.LanguageWelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 500 Points -->
+        <activity-alias
+            android:name=".BadgeIcon500"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_points_500"
+            android:roundIcon="@mipmap/ic_launcher_points_500_round"
+            android:label="@string/app_name"
+            android:targetActivity=".onboarding.LanguageWelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 750 Points -->
+        <activity-alias
+            android:name=".BadgeIcon750"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_points_750"
+            android:roundIcon="@mipmap/ic_launcher_points_750_round"
+            android:label="@string/app_name"
+            android:targetActivity=".onboarding.LanguageWelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 1000 Points -->
+        <activity-alias
+            android:name=".BadgeIcon1000"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_points_1000"
+            android:roundIcon="@mipmap/ic_launcher_points_1000_round"
+            android:label="@string/app_name"
+            android:targetActivity=".onboarding.LanguageWelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
     </application>
 </manifest>

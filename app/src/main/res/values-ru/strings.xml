@@ -3640,6 +3640,155 @@ Amazon Tip Jar скоро появится — спасибо за терпен�
     <string name="amazon_iap_not_ready">
 Покупки пока недоступны. Пожалуйста, попробуйте снова через некоторое время.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+Значки
+</string>
+    <string name="badge_section_subtitle">
+Разблокируйте и установите эти значки этапов в качестве значка собственного приложения на главном экране.
+</string>
+    <string name="badge_default_icon_title">
+Значок приложения по умолчанию
+</string>
+    <string name="badge_default_icon_desc">
+Стандартный значок файлового менеджера Ultimate
+</string>
+    <string name="badge_title_5">
+Сторонник с 5 очками
+</string>
+    <string name="badge_title_10">
+Бронзовый сторонник с 10 очками
+</string>
+    <string name="badge_title_20">
+Серебряный спонсор на 20 очков
+</string>
+    <string name="badge_title_50">
+Золотой спонсор на 50 очков
+</string>
+    <string name="badge_title_100">
+100 очков абсолютного сторонника
+</string>
+    <string name="badge_title_200">
+Платиновый сторонник с 200 очками
+</string>
+    <string name="badge_title_300">
+Алмазный сторонник на 300 очков
+</string>
+    <string name="badge_title_500">
+Королевский сторонник 500 очков
+</string>
+    <string name="badge_title_750">
+Легендарный сторонник 750 очков
+</string>
+    <string name="badge_title_1000">
+Высший сторонник 1000 очков
+</string>
+    <string name="badge_points_format">
+%1$d Баллы
+</string>
+    <string name="badge_active_tag">
+Активный
+</string>
+    <string name="badge_applied_toast">
+Значок приложения обновлен до %1$s!
+</string>
+    <string name="badge_reset_toast">
+Значок приложения сброшен до значения по умолчанию!
+</string>
+    <string name="badge_dialog_title">
+Значок приложения обновлен!
+</string>
+    <string name="badge_dialog_subtitle">
+Значок вашего главного экрана был изменен
+</string>
+    <string name="badge_dialog_hint">
+Примечание. Некоторым программам запуска на главном экране может потребоваться несколько секунд, чтобы обновить новый значок.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d Баллы • Нужно ещё %2$d
+</string>
+    <string name="badge_locked_dialog_title">
+Значок заблокирован
+</string>
+    <string name="badge_locked_dialog_msg">
+Этот пользовательский значок этапа разблокируется, когда вы получаете %1$d баллов.\n
+\n
+В настоящее время у вас есть %2$d баллов (нужно еще %3$d баллов).\n
+\n
+Каждый $1 в банке с подсказками приносит 10 баллов ($10 = 100 баллов, $25 = 250 баллов. Поддержите разработку выше, чтобы разблокировать этот значок!
+</string>
+    <string name="badge_locked_dialog_btn">
+Топливо для разблокировки
+</string>
+    <string name="badge_btn_active">
+Активный
+</string>
+    <string name="badge_btn_apply">
+Применять
+</string>
+    <string name="badge_btn_locked">
+Заблокировано
+</string>
+    <string name="badge_apply_dialog_title">
+Применить значок приложения?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+Установить значок вехи в качестве значка на главном экране
+</string>
+    <string name="badge_apply_dialog_notice">
+Для применения пользовательского значка необходимо закрыть Ultimate File Manager, чтобы программа запуска могла зарегистрировать новый значок.\n
+\n
+Нажмите «Применить и закрыть», чтобы обновить значок, или «Отмена», чтобы сохранить текущий значок.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+Применить и закрыть
+</string>
+    <string name="badge_default_dialog_title">
+Восстановить значок по умолчанию?
+</string>
+    <string name="badge_default_dialog_subtitle">
+Восстановить исходный значок Ultimate File Manager
+</string>
+    <string name="badge_default_dialog_notice">
+Для восстановления значка по умолчанию необходимо закрыть Ultimate File Manager, чтобы программа запуска могла зарегистрировать изменения.\n
+\n
+Нажмите «Восстановить и закрыть», чтобы продолжить, или «Отмена», чтобы сохранить текущий значок.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+Восстановить и закрыть
+</string>
+    <string name="badge_desc_5">
+Покажите свою поддержку 5 баллами!
+</string>
+    <string name="badge_desc_10">
+Получите бронзовый значок, набрав 10 баллов!
+</string>
+    <string name="badge_desc_20">
+Получите серебряный значок, набрав 20 баллов!
+</string>
+    <string name="badge_desc_50">
+Заработайте золотой значок, набрав 50 очков!
+</string>
+    <string name="badge_desc_100">
+Получите значок Ultimate, набрав 100 баллов!
+</string>
+    <string name="badge_desc_200">
+Получите платиновый значок, набрав 200 баллов!
+</string>
+    <string name="badge_desc_300">
+Получите значок «Бриллиант», набрав 300 баллов!
+</string>
+    <string name="badge_desc_500">
+Заработайте Королевский значок, набрав 500 очков!
+</string>
+    <string name="badge_desc_750">
+Получите легендарный значок, набрав 750 очков!
+</string>
+    <string name="badge_desc_1000">
+Получите значок Supreme, набрав 1000 баллов!
+</string>
     <string name="tile_hidden_with_name">
 Плитка \"%1$s\" скрыта
 </string>

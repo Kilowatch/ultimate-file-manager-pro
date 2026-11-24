@@ -1,68 +1,92 @@
-# Clarifications: Android 17 (API 37) Platform Compatibility & Local Network Protection
+# Clarifications: High-Quality Badge & Custom App Icon Asset Pipeline
 
 ## Status
-Answers received — ready for `/tasks`
+Answers received — ready for /plan and /tasks
 
 ## Questions and Answers
 
-### UI and Layout
-**Q1. How should the permission request flow be triggered when accessing a LAN share on Android 17+?**  
-**A:** Contextual prompt on tap (UFM glass rationale dialog followed by OS prompt), plus an inline recovery banner in `NetworkBrowserActivity` if declined so the user has an immediate recovery button.
+### 1. Visual Styling & Background (Set 2: Square App Icons)
+**Q1.1:** What background treatment do you prefer for the Set 2 square app icons?
+**A:** Subtle radial gradient (centered soft highlight behind badge fading to darker tone at edges).
 
-**Q1b. What UI/UX standard must all dialogs, banners, and buttons follow?**  
-**A:** Strict adherence to `UFMStandard`:
-- Custom glass background (`@drawable/bg_dialog_glass`), transparent window background (`ColorDrawable(Color.TRANSPARENT)`), styled via `R.style.UFM_Dialog`.
-- Embedded buttons inside XML layouts (never `.setPositiveButton()` / `.setNegativeButton()`).
-- Vertical button stacking: primary action on top, secondary/cancel below.
-- Mobile: Primary `MaterialButton` (`Widget.Material3Expressive.Button`, 48-50dp, 12dp corner radius); Secondary TextButton.
-- TV: Paired `dialog_*_tv.xml` layouts (fixed 650dp width) with `@drawable/selector_tv_button_yellow` (primary) and `@drawable/selector_tv_button` (secondary), full D-pad focusability.
+**Q1.2:** Should the badge emblem have a soft drop shadow on the app icon background?
+**A:** No, flat emblem directly on the background.
 
-**Q2. If the user permanently denies the permission ('Don't ask again'), should the dialog link directly to App Info Settings?**  
-**A:** Yes, direct the user directly to the OS App Info / Permission Settings screen (`ACTION_APPLICATION_DETAILS_SETTINGS`) with clear guidance.
+---
 
-**Q3. In `StorageBrowserActivity` (Main Menu) and `NetworkBrowserActivity`, how should saved LAN tiles appear when permission is not granted?**  
-**A:** Normal appearance — prompt contextually when tapped (no cluttering warning badges on idle tiles).
+### 2. Android Icon Architecture (Adaptive Icons vs Flat Icons)
+**Q2.1:** What Android icon architecture should be generated for Set 2?
+**A:** Full set: Flattened square icons (2048px & 512px) PLUS Android Adaptive Icon layers (foreground with mobile launcher padding + matching background layer).
 
-### Settings and Navigation
-**Q4. Should a status card for Local Network Permission be added to Settings under Network Settings?**  
-**A:** Yes, add a dedicated Local Network Permission status card in `SettingsActivity` under Network Settings displaying current status (`Granted` / `Not Granted`) with a button to check/request permission.
+---
 
-### Network Interfaces & Connectivity
-**Q5. Should discovery and socket pre-flight checks support both wired Ethernet and Wi-Fi via ConnectivityManager?**  
-**A:** Yes, unify pre-flight checks under `ConnectivityManager` to ensure seamless discovery and socket operations on both wired Ethernet (especially on Android TV / set-top boxes) and Wi-Fi.
+### 3. Android TV Banners & Formats
+**Q3.1:** Will this pipeline also cover the Android TV banner (`tv_banner`)?
+**A:** Yes. We are explicitly adding **Set 3: Android TV Leanback Banners** (`images/tv_banners/`):
+- Standard 16:9 widescreen format (1920×1080 master, 1280×720 xxxhdpi, and 320×180 baseline Leanback).
+- The milestone emblem centered on the matching harmonized radial gradient background with TV overscan margins.
+- Exported in both PNG and WebP.
 
-**Q5b. What specific functionality must be verified and guaranteed on Android 17?**  
-**A:** All existing features must remain 100% operational on Android 17, with special emphasis on:
-- **Wireless ADB Suite**:
-  - ADB Subnet Discovery (Ethernet and Wi-Fi) with `ACCESS_LOCAL_NETWORK` gating.
-  - ADB 6-digit PIN Pairing and TLS handshake.
-  - ADB TCP socket connection for terminal shell and remote commands.
-  - `AdbPushManager` file push and pull transfers.
-  - `AdbRemoteControlActivity` and `AdbWifiTransport` input injection.
-  - `AdbSessionForegroundService` and `AdbRemoteForegroundService` (`connectedDevice` type) lifecycle stability, notifications, and background task retention.
-  - Local loopback (`localhost` / `127.0.0.1`) wireless debugging preserved without requiring LAN permission.
-- **Network Storage Protocols**: SMB2/3, NFS, SFTP, FTP/FTPS, and WebDAV discovery, navigation, and streaming.
-- **DLNA & Casting**: SSDP multicast discovery, XML descriptions, SOAP commands, and media streaming.
-- **Companion & Pairing**: UDP beacons, secure credential exchange, and WebShareServer.
-- **Elevated Access**: Shizuku and Porter integration for protected storage (`Android/data`, `Android/obb`).
+---
 
-**Q6. If local network permission is denied when starting `WebShareServer` or `PairingServer`, how should they behave?**  
-**A:** Fail gracefully with a localized dialog/toast explaining that local network access is required, without crashing or hanging.
+### 4. Output Location & Integration Scope
+**Q4.1:** What is the scope and destination for this phase?
+**A:** Create new folders just in `images/` for now, each set to have their own dedicated folder:
+- `images/badges_transparent/`
+- `images/app_icons_square/`
+- `images/app_icons_adaptive/`
+- `images/tv_banners/`
+No code or resources inside `app/src/main/res/` will be altered during this phase.
 
-### SDK & Build Configuration
-**Q7. What SDK & build rollout approach should be followed?**  
-**A:** Immediate: bump `compileSdk` and `targetSdk` to 37 directly in `app/build.gradle.kts` as part of the implementation.
+---
+
+### 5. Image Formats
+**Q5.1:** Which file format should be generated?
+**A:** Both lossless master PNGs (32-bit RGBA) and high-quality WebP assets for production efficiency.
 
 ---
 
 ## Spec / Plan Impact
-- **`spec.md` updated**:
-  - FR-01: Confirmed immediate bump of `compileSdk` and `targetSdk` to 37 in `app/build.gradle.kts`.
-  - FR-02: Added dedicated Local Network Permission status card in `SettingsActivity` under Network Settings.
-  - FR-03 & FR-04: Explicit requirement that `WebShareServer` and `PairingServer` show a clear localized dialog/toast if started without local network permission.
-  - NFR-04: Confirmed unified `ConnectivityManager` interface abstraction supporting both wired Ethernet and Wi-Fi for discovery.
+- **Added FR-06 (TV Leanback Banners)** to [.plans/spec.md](file:///F:/Share/UFM/.plans/spec.md): Generates 16:9 banners in `images/tv_banners/` for each of the 10 milestone point tiers at 1920×1080, 1280×720, and 320×180 in both PNG and WebP formats.
 
 ---
 
-## Confirmed — Ready for /tasks
-All questions have been answered and recorded. The specification in `.plans/spec.md` and clarifications in `.plans/clarifications.md` form the authoritative baseline. Ready to proceed to `/tasks`.
+### 6. Phase 2: In-App Badges Section in "Fuel the Developer" (Google Mobile Only)
+**Q6.1:** For the mobile launcher icon update ("for the badge to be used, use cutouts"), how should the updated launcher icon be formatted?
+**A:** (Recommended) Adaptive Icon with Cutout Foreground: Use the cutout emblem as the foreground layer with its matching color gradient background (ensures standard circular/squircle mask support on modern Android without being squished onto a plain white plate).
+
+**Q6.2:** Should all 10 badges be immediately selectable, or unlocked through tipping?
+**A:** (Recommended) All 10 badges freely selectable immediately in the Badges section.
+
+**Q6.3:** What platforms/devices should this Badges section appear on?
+**A:** Only for GOOGLE Mobile, nothing else (not for TV, not for Amazon, not for FOSS). Listed vertically from smallest (5 points) to biggest (1,000 points). Items display the `app_icons_square` preview and cutout badge thumbnail. Selecting an item immediately updates the home screen app icon via `<activity-alias>`.
+
+
+---
+
+### 7. Phase 3: Unlocking Expansion & Selection Confirmation Dialog
+**Q7.1:** For the upcoming unlock expansion, how should users unlock the milestone badges?
+**A:** Dollar-to-Points Scale ($1 = 10 Points):
+- Every **$1 spent** grants **10 Points**.
+- Point values per purchase:
+  - Ristretto Shot ($1) -> 10 Points (unlocks 5, 10 pt tiers).
+  - A Quick Espresso ($3) -> 30 Points (unlocks 20 pt tier).
+  - The Cappuccino ($5) -> 50 Points (unlocks 50 pt tier).
+  - The Full Latte ($10) -> 100 Points (unlocks 100 pt tier).
+  - The Coffee Bean Bag ($25) -> 250 Points (unlocks 200 pt tier).
+- Cumulative tipping accumulates points across all purchases toward higher tiers:
+  - 300 Points ($30 total)
+  - 500 Points ($50 total)
+  - 750 Points ($75 total)
+  - 1,000 Points ($100 total).
+
+**Q7.2:** How should locked badges look in the selection list before they are unlocked?
+**A:** Translucent overlay with Lock icon & Progress: The badge art remains visible with a subtle lock icon and progress indicator (e.g., "15 / 50 pts" or "Need 35 more pts to unlock").
+
+**Q7.3:** When the user selects a badge, what user feedback should be shown?
+**A:** Confirmation Dialog: A popup modal showing the updated icon preview with title, description, and an "OK" button (informing the user that the home screen icon has updated).
+
+---
+
+## Confirmed — Ready for /plan & /tasks
+All requirements, dimensions, safe zones, and asset suites (Mobile Badges, Mobile App Icons, Adaptive Layers, and TV Banners) are completely specified.

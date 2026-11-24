@@ -3627,6 +3627,155 @@ Amazon köpfel: %1$s
     <string name="amazon_iap_not_ready">
 Köp är inte tillgängliga ännu. Försök igen om ett ögonblick.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+Märken
+</string>
+    <string name="badge_section_subtitle">
+Lås upp och ställ in dessa milstolpsmärken som din anpassade appikon på din startskärm
+</string>
+    <string name="badge_default_icon_title">
+Standardappikon
+</string>
+    <string name="badge_default_icon_desc">
+Standard Ultimate File Manager-ikon
+</string>
+    <string name="badge_title_5">
+5 poäng supporter
+</string>
+    <string name="badge_title_10">
+10 poäng brons supporter
+</string>
+    <string name="badge_title_20">
+20 poäng Silver Supporter
+</string>
+    <string name="badge_title_50">
+50 poäng guld supporter
+</string>
+    <string name="badge_title_100">
+100 poäng Ultimate Supporter
+</string>
+    <string name="badge_title_200">
+200 poäng Platinum Supporter
+</string>
+    <string name="badge_title_300">
+300 poäng Diamond Supporter
+</string>
+    <string name="badge_title_500">
+500 poäng kunglig supporter
+</string>
+    <string name="badge_title_750">
+Legendarisk supporter med 750 poäng
+</string>
+    <string name="badge_title_1000">
+1 000 poäng Supreme Supporter
+</string>
+    <string name="badge_points_format">
+%1$d Poäng
+</string>
+    <string name="badge_active_tag">
+Aktiv
+</string>
+    <string name="badge_applied_toast">
+Appikonen uppdaterad till %1$s!
+</string>
+    <string name="badge_reset_toast">
+Appikonen återställd till standard!
+</string>
+    <string name="badge_dialog_title">
+Appikonen uppdaterad!
+</string>
+    <string name="badge_dialog_subtitle">
+Din hemskärmsikon har ändrats
+</string>
+    <string name="badge_dialog_hint">
+Obs: Vissa startskärmsstartare kan ta några sekunder att uppdatera den nya ikonen.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d Poäng • Behöver %2$d till
+</string>
+    <string name="badge_locked_dialog_title">
+Badge låst
+</string>
+    <string name="badge_locked_dialog_msg">
+Den här anpassade milstolpeikonen låses upp vid %1$d poäng.\n
+\n
+Du har för närvarande %2$d poäng (behöver %3$d poäng till).\n
+\n
+Varje $1 i tipsburken får 10 poäng ($10 = 100 poäng, $25). = 250 poäng. Stöd utvecklingen ovan för att låsa upp den här ikonen!
+</string>
+    <string name="badge_locked_dialog_btn">
+Bränsle att låsa upp
+</string>
+    <string name="badge_btn_active">
+Aktiv
+</string>
+    <string name="badge_btn_apply">
+Tillämpas
+</string>
+    <string name="badge_btn_locked">
+Låst
+</string>
+    <string name="badge_apply_dialog_title">
+Använd appikon?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+Ställ in milstolpemärke som startskärmsikon
+</string>
+    <string name="badge_apply_dialog_notice">
+Att använda en anpassad ikon kräver att Ultimate File Manager stängs så att startprogrammet kan registrera den nya ikonen.\n
+\n
+Knacka på Apply &amp; Close för att uppdatera din ikon, eller Avbryt för att behålla din nuvarande ikon.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+Applicera &amp; Stäng
+</string>
+    <string name="badge_default_dialog_title">
+Återställa standardikonen?
+</string>
+    <string name="badge_default_dialog_subtitle">
+Återställ den ursprungliga Ultimate File Manager-ikonen
+</string>
+    <string name="badge_default_dialog_notice">
+Att återställa standardikonen kräver att Ultimate File Manager stängs så att startprogrammet kan registrera ändringen.\n
+\n
+Knacka på Återställ och stäng för att fortsätta, eller Avbryt för att behålla din nuvarande ikon.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+Återställ &amp; Stäng
+</string>
+    <string name="badge_desc_5">
+Visa ditt stöd med 5 poäng!
+</string>
+    <string name="badge_desc_10">
+Få bronsmärket med 10 poäng!
+</string>
+    <string name="badge_desc_20">
+Få silvermärket med 20 poäng!
+</string>
+    <string name="badge_desc_50">
+Få guldmärket med 50 poäng!
+</string>
+    <string name="badge_desc_100">
+Få Ultimate-märket med 100 poäng!
+</string>
+    <string name="badge_desc_200">
+Få platinamärket med 200 poäng!
+</string>
+    <string name="badge_desc_300">
+Få diamantmärket med 300 poäng!
+</string>
+    <string name="badge_desc_500">
+Få det kungliga märket med 500 poäng!
+</string>
+    <string name="badge_desc_750">
+Få det legendariska märket med 750 poäng!
+</string>
+    <string name="badge_desc_1000">
+Få Supreme-märket med 1 000 poäng!
+</string>
     <string name="tile_hidden_with_name">
 \"%1$s\"-brickan dold
 </string>

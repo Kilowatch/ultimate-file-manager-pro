@@ -1,215 +1,163 @@
-# Implementation Plan: Android 17 (API 37) Platform Compatibility & Local Network Protection
+# Implementation Plan: High-Quality Badge & Custom App Icon Asset Pipeline
 
 ## Goals
-Target Android 17 (API 37) in `app/build.gradle.kts` while maintaining backward compatibility across Android 8.0–16 (API 26–36), Android TV, and desktop companions.
-Satisfy all requirements in `.plans/spec.md` and confirmed answers in `.plans/clarifications.md`:
-- Seamlessly integrate Android 17's Local Network Protection (`android.permission.ACCESS_LOCAL_NETWORK`).
-- Ensure full functionality for the Wireless ADB suite (discovery, pairing, shell, push/pull, remote control, and `connectedDevice` foreground services).
-- Unify LAN discovery across Wi-Fi and wired Ethernet on Android TV.
-- Strictly adhere to `UFMStandard` for all dialogs, recovery banners, and Settings cards.
-- Guarantee that saved shares, credentials, and offline features are never cleared or broken by permission states.
+Implement an automated, high-precision image processing pipeline to transform the 10 raw milestone renders (`images/5.jpg` through `images/1000.jpg`) into three production-ready asset suites organized into dedicated folders under `images/`:
+1. **Set 1: In-App Transparent Badges** (`images/badges_transparent/`): 2048×2048, 512×512, and 256×256 transparent PNG & WebP assets with normalized optical scale (~90%).
+2. **Set 2: Square App Icons** (`images/app_icons_square/`): 2048×2048 and 512×512 PNG & WebP square icons with a matching radial gradient background and the exact mobile launcher safe-zone padding (66.67% emblem scale, 16.67% edge margins).
+3. **Set 2 (B): Adaptive Icon Layers** (`images/app_icons_adaptive/`): Separate foreground (emblem with 16.67% margin on transparent canvas) and matching background layers at 2048×2048 and 432×432 (xxxhdpi).
+4. **Set 3: Android TV Leanback Banners** (`images/tv_banners/`): 16:9 widescreen banners at 1920×1080, 1280×720, and 320×180 (PNG & WebP) with centered emblem and overscan protection.
 
 ---
 
 ## Architecture Overview
 
-```
-+--------------------------------------------------------------------------------------------------+
-|                                    Android 17 Runtime Layer                                      |
-+--------------------------------------------------------------------------------------------------+
-|                                                                                                  |
-|   +------------------------------------+          +-----------------------------------------+    |
-|   |   LocalNetworkPermissionManager    |          |          NetworkInterfaceUtils          |    |
-|   +------------------------------------+          +-----------------------------------------+    |
-|   | - isEnforced() (API >= 37)         |          | - getLocalIpv4Address()                 |    |
-|   | - hasPermission(context)           |          | - getSubnetPrefix() (Wi-Fi + Ethernet)  |    |
-|   | - isLoopbackAddress(host)          |          | - isLocalNetworkConnected()             |    |
-|   | - checkOrRequest(activity, ...)    |          +-----------------------------------------+    |
-|   | - showRationaleDialog()            |                               │                         |
-|   +-----------------+------------------+                               │                         |
-|                     │                                                  │                         |
-|         +-----------┴-------------------------+                        │                         |
-|         ▼                                     ▼                        ▼                         |
-|  +--------------------+             +-------------------+   +--------------------+               |
-|  |   UFMStandard      |             |  Storage / Shares |   |   Discovery & ADB  |               |
-|  |  Rationale Dialog  |             |  Protocol Clients |   |  - SmbDiscovery    |               |
-|  |  (Mobile & TV)     |             |  - SMB, NFS       |   |  - NfsDiscovery    |               |
-|  +--------------------+             |  - SFTP, FTP      |   |  - DlnaDiscovery   |               |
-|                                     |  - WebDAV, WebShr |   |  - AdbDiscovery    |               |
-|                                     +-------------------+   |  - AdbManager      |               |
-|                                                             |  - PairingDisc.    |               |
-|                                                             +--------------------+               |
-+--------------------------------------------------------------------------------------------------+
+```mermaid
+flowchart TD
+    Raw["Raw 2048x2048 Master JPEGs\n(5.jpg .. 1000.jpg)"] --> Rembg["AI Alpha Matting (rembg / U2-Net)\nExtract Clean RGBA Transparency"]
+    
+    Rembg --> BBox["Tight Bounding Box Normalization\n(Crop & Aspect Ratio Lock)"]
+    Rembg --> Palette["Harmonious Palette Extraction\n(Dominant Color & Gradient Stems)"]
+    
+    BBox --> Set1["Set 1: Transparent Badges\n- 90% Uniform Optical Scale\n- Centered on Transparent Canvas\n- 2048x2048, 512x512, 256x256"]
+    
+    BBox & Palette --> Set2["Set 2: Square App Icons\n- Radial Gradient Background\n- 66.67% Mobile Safe Zone Scale\n- 16.67% Edge Margins (ic_launcher_foreground)\n- 2048x2048, 512x512"]
+    
+    BBox & Palette --> Set2B["Set 2 (B): Adaptive Icon Layers\n- Foreground (Transparent 66.67% Safe Zone)\n- Background (Radial Gradient)\n- 2048x2048, 432x432 (xxxhdpi)"]
+    
+    BBox & Palette --> Set3["Set 3: Android TV Banners\n- 16:9 Aspect Ratio\n- Radial Gradient Background\n- TV Overscan Safe Centering\n- 1920x1080, 1280x720, 320x180"]
+    
+    Set1 --> Out1["images/badges_transparent/\n(PNG + WebP)"]
+    Set2 --> Out2["images/app_icons_square/\n(PNG + WebP)"]
+    Set2B --> Out2B["images/app_icons_adaptive/\n(PNG + WebP)"]
+    Set3 --> Out3["images/tv_banners/\n(PNG + WebP)"]
 ```
 
-### Architectural Decisions:
-1. **Central Permission Abstraction (`LocalNetworkPermissionManager`)**:
-   - Single source of truth in `za.kilowatch.ultimatefilemanager.network`.
-   - Bypassed on Android < 37 (`isEnforced() == false`) and for loopback/localhost targets (`127.0.0.1`, `localhost`).
-   - Integrates with modern Android `ActivityResultLauncher<String>` or custom fallback Activity result callback.
-2. **Unified Interface Helper (`NetworkInterfaceUtils`)**:
-   - Replaces deprecated and Wi-Fi-only `WifiManager.connectionInfo.ipAddress`.
-   - Inspects `NetworkInterface.getNetworkInterfaces()` across both `wlan*` and `eth*` (Ethernet) to safely compute IPv4 subnet prefixes.
-3. **UFMStandard Frosted Glass Dialogs**:
-   - Paired layouts: `dialog_local_network_rationale.xml` (mobile) and `dialog_local_network_rationale_tv.xml` (TV 650dp width).
-   - Glass background `@drawable/bg_dialog_glass`, transparent window background, embedded XML buttons vertically stacked (primary on top, secondary/cancel below).
-4. **Wireless ADB Guarantee**:
-   - `AdbDeviceDiscovery`: Swapped to `NetworkInterfaceUtils` subnet resolver and gated with `LocalNetworkPermissionManager`.
-   - `AdbPairingActivity` and `AdbPairingTvActivity`: "Scan Devices" and "Connect" buttons protected by contextual permission gate.
-   - `AdbSessionForegroundService` and `AdbRemoteForegroundService`: Verified lifecycle, foreground launch checks, and clean shutdown handling.
+### Key Technical Decisions
+1. **Neural Alpha Matting**: Uses `rembg` (U2-Net ONNX engine) for background extraction, followed by alpha border cleanup to prevent single-pixel dark boundary halos.
+2. **Deterministic Palette Computation**: Computes the dominant primary hue using k-means/histogram clustering on visible emblem pixels (alpha > 128), generating a paired radial gradient:
+   - Inner highlight: slightly desaturated and brightened (+15% luminance) for a gentle rim spotlight behind the emblem.
+   - Outer rim: deep shade (35–45% luminance) for contrast and depth.
+3. **Exact Launcher Geometry Matching**: Conforms directly to UFM's mobile launcher standard:
+   - Canvas: Square.
+   - Safe Zone: Exactly `(w * 2/3, h * 2/3)`.
+   - Edge Padding: Exactly `(w * 1/6, h * 1/6)`.
+   - Guaranteed immunity against masking cutoffs on circular (50% radius), squircle, or pebble launcher shapes.
+4. **Leanback TV 16:9 Standard**: 
+   - Banner aspect ratio: exactly 16:9 (`1920×1080` master, `1280×720` xxxhdpi, `320×180` baseline).
+   - Emblem height: ~72% of banner height with centered alignment, providing ample overscan buffer.
+5. **Dual Format Generation**: Outputs both master 32-bit lossless PNG and modern high-quality WebP (`quality=95`, method=6) for instant, lightweight deployment.
 
 ---
 
 ## Files to Create
 
-### 1. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/LocalNetworkPermissionManager.kt`
-- **What**: Central manager handling Android 17 Local Network Protection checks, rationales, request launcher bindings, and permanent denial routing.
-- **Key details**:
-  - `const val PERMISSION = "android.permission.ACCESS_LOCAL_NETWORK"`
-  - `fun isEnforced(): Boolean` (returns `Build.VERSION.SDK_INT >= 37`)
-  - `fun hasPermission(context: Context): Boolean`
-  - `fun isLoopbackAddress(host: String?): Boolean`
-  - `fun checkOrRequest(activity: ComponentActivity, launcher: ActivityResultLauncher<String>?, onGranted: () -> Unit, onDenied: () -> Unit)`
-  - `fun showRationaleDialog(activity: Activity, launcher: ActivityResultLauncher<String>?, onGranted: () -> Unit, onDenied: () -> Unit)`
-  - `fun openAppPermissionSettings(activity: Activity)`
+### `scripts/process_badges.py` — Automated Pipeline Script
+- **What**: End-to-end Python script that loads raw images from `images/`, applies background removal, calculates bounding boxes, extracts color gradients, generates Set 1, Set 2, Set 2 (B), and Set 3, and saves both PNG and WebP files.
+- **Key Modules**:
+  - `remove_backgrounds()`: Executes `rembg` session, returns clean RGBA `Image`.
+  - `extract_palette()`: Analyzes emblem pixels to yield inner and outer gradient RGB tuples.
+  - `render_radial_gradient(width, height, inner_color, outer_color)`: Generates high-fidelity smooth 2D radial gradient canvas using NumPy.
+  - `build_transparent_badge(emblem, size)`: Centers and scales emblem to 90% canvas dimension.
+  - `build_square_app_icon(emblem, size, inner_color, outer_color)`: Centers and scales emblem to 66.67% safe zone over radial gradient.
+  - `build_adaptive_layers(emblem, size, inner_color, outer_color)`: Generates separate foreground and background images.
+  - `build_tv_banner(emblem, width, height, inner_color, outer_color)`: Generates 16:9 banner with centered emblem.
+  - `save_dual_format(image, base_path)`: Exports both `.png` and `.webp`.
 
-### 2. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/NetworkInterfaceUtils.kt`
-- **What**: Unified network interface detection helper supporting Wi-Fi and wired Ethernet without relying on deprecated `WifiManager` APIs.
-- **Key details**:
-  - `fun getActiveLocalIpv4(context: Context): Inet4Address?`
-  - `fun getSubnetPrefix(context: Context): String?`
-  - `fun isLocalNetworkConnected(context: Context): Boolean`
+---
 
-### 3. `app/src/main/res/layout/dialog_local_network_rationale.xml`
-- **What**: Mobile rationale dialog strictly conforming to `UFMStandard`.
-- **Key details**:
-  - Background `@drawable/bg_dialog_glass`, 56dp frosted squircle hero badge with `@drawable/ic_cloud` / `@drawable/ic_lightning`.
-  - Title: 20sp `sans-serif-black`, Subtitle: 13sp.
-  - Frosted card (`@color/mobile_glass_card`, `@color/mobile_glass_stroke`).
-  - Vertically stacked buttons: Primary filled `MaterialButton` (`Widget.Material3Expressive.Button`) on top, TextButton secondary below.
-
-### 4. `app/src/main/res/layout/dialog_local_network_rationale_tv.xml`
-- **What**: Android TV rationale dialog strictly conforming to `UFMStandard`.
-- **Key details**:
-  - Width fixed to 650dp (`@dimen/tv_dialog_standard_width`), background `@drawable/bg_dialog_glass`.
-  - D-pad focusable primary button (`@drawable/selector_tv_button_yellow`) and secondary button (`@drawable/selector_tv_button`).
-
-### 5. `app/src/main/res/layout/item_banner_local_network_permission.xml`
-- **What**: Inline recovery banner for `NetworkBrowserActivity` and `NetworkBrowserFragment`.
-- **Key details**: Frosted glass card with message and "Grant Permission" action button.
+## Output Directory Structure
+```
+images/
+├── 5.jpg ... 1000.jpg                    (Raw original inputs)
+├── badges_transparent/                   (Set 1: In-App Badges)
+│   ├── badge_points_5.png / .webp
+│   ├── ...
+│   ├── badge_points_1000.png / .webp
+│   ├── 512/                              (512x512 variants)
+│   └── 256/                              (256x256 variants)
+├── app_icons_square/                     (Set 2: Square App Icons)
+│   ├── app_icon_points_5.png / .webp     (2048x2048 master)
+│   ├── ...
+│   ├── app_icon_points_1000.png / .webp
+│   └── 512/                              (512x512 Play Store standard)
+├── app_icons_adaptive/                   (Set 2 B: Adaptive Layers)
+│   ├── foreground/
+│   │   ├── ic_launcher_points_5_foreground.png / .webp (2048x2048)
+│   │   └── 432/                          (432x432 xxxhdpi standard)
+│   └── background/
+│       ├── ic_launcher_points_5_background.png / .webp (2048x2048)
+│       └── 432/                          (432x432 xxxhdpi standard)
+└── tv_banners/                           (Set 3: Android TV Leanback Banners)
+    ├── tv_banner_points_5.png / .webp    (1920x1080 Full HD master)
+    ├── ...
+    ├── tv_banner_points_1000.png / .webp
+    ├── 1280/                             (1280x720 HD xxxhdpi)
+    └── 320/                              (320x180 Leanback baseline)
+```
 
 ---
 
 ## Files to Modify
-
-### 1. `app/build.gradle.kts`
-- **What**: Update `compileSdk` and `targetSdk` to 37.
-- **Changes**:
-  - Change `compileSdk { version = release(36) { minorApiLevel = 1 } }` to `compileSdk { version = release(37) }` (or `compileSdk = 37`).
-  - Change `targetSdk { version = release(36) }` to `targetSdk { version = release(37) }` (or `targetSdk = 37`).
-
-### 2. `app/src/main/AndroidManifest.xml`
-- **What**: Declare the Android 17 permission.
-- **Changes**:
-  - Add `<uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />`.
-
-### 3. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/AdbDeviceDiscovery.kt`
-- **What**: Replace deprecated `WifiManager` subnet logic with `NetworkInterfaceUtils` and gate with `LocalNetworkPermissionManager`.
-- **Changes**:
-  - Check `LocalNetworkPermissionManager.hasPermission(context)`. If false, log and return empty list.
-  - Use `NetworkInterfaceUtils.getSubnetPrefix(context)` for subnet IP construction.
-
-### 4. `app/src/main/java/za/kilowatch/ultimatefilemanager/ui/AdbPairingActivity.kt` & `AdbPairingTvActivity.kt`
-- **What**: Gate discovery and manual socket connections with `LocalNetworkPermissionManager`.
-- **Changes**:
-  - Register `ActivityResultLauncher<String>` for local network permission.
-  - Wrap `btnScan.setOnClickListener`, `btnConnectNoPIN`, and `btnConnectWithPin` in permission checks before launching network operations.
-
-### 5. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/SmbDiscovery.kt` & `NfsDiscovery.kt`
-- **What**: Migrate subnet discovery to `NetworkInterfaceUtils` and gate probes with `LocalNetworkPermissionManager`.
-- **Changes**:
-  - Replace `WifiManager` IP parsing with `NetworkInterfaceUtils.getSubnetPrefix(context)`.
-  - Pre-flight permission check before launching port probes.
-
-### 6. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/NetworkBrowserActivity.kt` & `NetworkBrowserFragment.kt`
-- **What**: Implement contextual tap gating and inline recovery banner on denial.
-- **Changes**:
-  - Register `permissionLauncher` for `LocalNetworkPermissionManager.PERMISSION`.
-  - Wrap share connection entry points (`loadShares`, `openShare`) to check permission (unless loopback).
-  - Add and toggle visibility of inline recovery banner if user declines permission.
-
-### 7. `app/src/main/java/za/kilowatch/ultimatefilemanager/network/WebShareServer.kt` & `PairingServer.kt`
-- **What**: Ensure clean localized failure/toast if user initiates server without local network permission.
-- **Changes**:
-  - Check `LocalNetworkPermissionManager.hasPermission(context)`.
-  - If denied on API 37+, show localized notice and cancel server startup safely.
-
-### 8. `app/src/main/java/za/kilowatch/ultimatefilemanager/settings/SettingsActivity.kt` & `activity_settings.xml` / `activity_settings_tv.xml`
-- **What**: Add dedicated Local Network Permission card in Network Settings section.
-- **Changes**:
-  - Add `cardLocalNetworkPermission` card view with icon, title, subtitle, and action button in both mobile and TV layouts.
-  - In `SettingsActivity.kt`, update card subtitle to show "Granted" or "Not Granted / Required" and handle click to trigger permission request / open settings.
-
-### 9. `app/src/main/res/values/strings.xml`
-- **What**: Add all localized strings for rationales, banner, and settings cards.
-- **Changes**:
-  - `local_network_rationale_title`, `local_network_rationale_subtitle`, `local_network_rationale_message`
-  - `local_network_btn_continue`, `local_network_btn_settings`, `local_network_btn_not_now`
-  - `local_network_banner_text`, `local_network_banner_grant`
-  - `settings_local_network_title`, `settings_local_network_subtitle`, `settings_local_network_status_granted`, `settings_local_network_status_denied`
-  - `toast_local_network_permission_required`
-
-### 10. `app/src/main/res/values/strings_policy.xml`
-- **What**: Update in-app legal and privacy policy tables to disclose the Android 17 Local Network Protection permission.
-- **Changes**:
-  - `pp_network_perm_labels` & `pp_network_perm_details`: Add `ACCESS_LOCAL_NETWORK` and explanation.
-  - `tc_permission_labels` & `tc_permission_details`: Add `Local Network Access (Android 17+)` and explanation.
-
-### 11. `WEBSITE/UFMPrivacyPolicy.html` & `WEBSITE/UFMTerms.html`
-- **What**: Keep external website legal policies synchronized with Android 17 permission disclosures.
-- **Changes**:
-  - `UFMPrivacyPolicy.html`: Add `ACCESS_LOCAL_NETWORK` row under the Network Permissions table.
-  - `UFMTerms.html`: Add Local Network Access disclosure row in Section 05 Permissions table.
+None in this phase (as confirmed in clarifications, all asset generation is isolated to `images/` subdirectories).
 
 ---
 
-## Data Model
-No database schema or SharedPreferences schema changes required. Local network permission status is queried live from the OS (`ContextCompat.checkSelfPermission`), with a boolean flag in SharedPreferences (`KEY_LOCAL_NETWORK_RATIONALE_SHOWN`) to track whether the user has seen the explanation previously.
+## Data Model & Points Mapping
+```python
+TIERS = [
+    {"points": 5, "file": "5.jpg"},
+    {"points": 10, "file": "10.jpg"},
+    {"points": 20, "file": "20.jpg"},
+    {"points": 50, "file": "50.jpg"},
+    {"points": 100, "file": "100.jpg"},
+    {"points": 200, "file": "200.jpg"},
+    {"points": 300, "file": "300.jpg"},
+    {"points": 500, "file": "500.jpg"},
+    {"points": 750, "file": "750.jpg"},
+    {"points": 1000, "file": "1000.jpg"},
+]
+```
 
 ---
 
 ## Dependencies
-- Android SDK Platform `android-37` (already installed locally in SDK directory).
-- Android Gradle Plugin `9.2.1` (already in project).
+- `Pillow` (PIL) >= 10.0: Image resampling (LANCZOS), RGBA composite, WebP encoding.
+- `rembg` >= 2.0: AI background removal using U2-Net ONNX runtime.
+- `numpy` >= 1.24: Fast vector array computations for radial gradient rendering and bounding-box alpha masks.
 
 ---
 
-## Test Plan
+## Test & Verification Plan
 
-### Automated Build Verification:
-```bash
-./gradlew assembleMobileGoogleDebug
-```
+### Automated Verification Script (`scripts/verify_badges.py`)
+- **Dimension Check**: Asserts exact pixel dimensions for all generated PNG and WebP files across all size variants.
+- **Alpha Purity Check**: Asserts corner pixels on `badges_transparent/` and adaptive foregrounds are strictly transparent `(0, 0, 0, 0)`.
+- **Safe-Zone Bound Check**: Asserts that no non-zero alpha pixel in `app_icons_square` or adaptive foregrounds exceeds the 66.67% safe boundary (left/top >= 16.67%, right/bottom <= 83.33%).
+- **File Integrity & Non-Zero Size**: Verifies all generated files exist, are valid readable images, and non-empty.
 
-### Manual Verification Matrix:
-1. **Android 17+ (API 37)**:
-   - Fresh launch: Verify no aggressive permission prompt appears on Welcome screen or Main Menu.
-   - Tap SMB share: Rationale dialog appears adhering to `UFMStandard`.
-   - Click "Continue": OS permission prompt appears.
-   - On Grant: SMB share opens and lists contents immediately.
-   - On Denial: Return to browser; inline recovery banner is visible; clicking "Grant" re-prompts.
-   - Revocation in OS Settings: While browsing, revoke permission in Settings; app reports recoverable error without crashing.
-   - Wireless ADB: Open ADB pairing; test subnet scan, 6-digit PIN pairing, shell terminal, and `AdbSessionForegroundService` background notification.
-   - Android TV: Test on TV layout with D-pad navigation over wired Ethernet.
-2. **Android 8.0–16 (API 26–36)**:
-   - Verify all LAN features (SMB, NFS, ADB, DLNA) execute directly without showing any Android 17 permission dialogs or crashing.
+### Visual Inspection
+- Simulate Android launcher circular mask on Set 2 icons to confirm zero edge clipping.
+- Verify color contrast and smoothness of radial gradients.
 
 ---
 
-## Risks & Mitigations
-- **Risk**: Android 17 platform pre-release SDK behavior changes.
-  - **Mitigation**: Guard permission constants safely with `Build.VERSION.SDK_INT >= 37` runtime check.
-- **Risk**: Users confusing Local Network Permission with Internet access.
-  - **Mitigation**: Rationale dialog explicitly explains that access is strictly limited to discovering and transferring files with local devices on the home network.
-- **Risk**: TV devices on Ethernet failing Wi-Fi checks.
-  - **Mitigation**: `NetworkInterfaceUtils` enumerates all active non-loopback IPv4 interfaces, treating Ethernet and Wi-Fi as first-class peers.
+## Phase 2: "Fuel the Developer" Badges Section & Dynamic Launcher Icon (Google Mobile Only)
+
+### Goals
+Expose the milestone badges in an interactive, prominent "Badges" section within the "Fuel the Developer" tip screen (`SupporterLoyaltyActivity.kt`) exclusively on Google Mobile (`mobileGoogle` flavor, `!isTv`), enabling users to choose any badge and have their Android home screen app icon update dynamically.
+
+### Architecture & Components
+1. **Prominent UI Presentation**:
+   - `cardBadgesSection`: In `activity_supporter_loyalty.xml`, hidden by default; revealed only on Google Mobile.
+   - Header with active badge preview showcase (`imgActiveBadgeHeader`).
+   - `item_supporter_badge.xml`: Large 76×76 dp elevated cards with rounded corners displaying the full radial gradient badge from `app_icons_square` alongside the transparent cutout badge accent, points metric, and active selection indicator.
+   - 10 badges listed vertically in ascending order (5 to 1,000 points), plus a "Default App Icon" restoration option.
+2. **Dynamic Launcher Icon Switching**:
+   - 10 `<activity-alias>` declarations in `app/src/google/AndroidManifest.xml` targeting `.onboarding.LanguageWelcomeActivity`.
+   - `BadgeIconManager.kt`: Controls `PackageManager.setComponentEnabledSetting(..., DONT_KILL_APP)` to activate the chosen alias and disable the default/other aliases.
+   - Persists selected tier in `SharedPreferences` (`ufm_badge_prefs`).
+3. **Adaptive Icon Resource Packaging**:
+   - Density buckets (`mipmap-mdpi` through `mipmap-xxxhdpi`) installed in `app/src/google/res/`.
+   - `mipmap-anydpi-v26/ic_launcher_points_{pts}.xml` combining cutout foreground and matching gradient background.
+   - High-res 512px WebP previews in `app/src/google/res/drawable-nodpi/`.
+

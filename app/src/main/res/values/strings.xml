@@ -1298,6 +1298,55 @@
     <string name="amazon_iap_error">Amazon purchase error: %1$s</string>
     <!-- Shown when the Amazon PurchasingListener hasn't been registered yet -->
     <string name="amazon_iap_not_ready">Purchases aren\'t available yet. Please try again in a moment.</string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">Badges</string>
+    <string name="badge_section_subtitle">Unlock and set these milestone badges as your custom app icon on your home screen</string>
+    <string name="badge_default_icon_title">Default App Icon</string>
+    <string name="badge_default_icon_desc">Standard Ultimate File Manager icon</string>
+    <string name="badge_title_5">5 Points Supporter</string>
+    <string name="badge_title_10">10 Points Bronze Supporter</string>
+    <string name="badge_title_20">20 Points Silver Supporter</string>
+    <string name="badge_title_50">50 Points Gold Supporter</string>
+    <string name="badge_title_100">100 Points Ultimate Supporter</string>
+    <string name="badge_title_200">200 Points Platinum Supporter</string>
+    <string name="badge_title_300">300 Points Diamond Supporter</string>
+    <string name="badge_title_500">500 Points Royal Supporter</string>
+    <string name="badge_title_750">750 Points Legendary Supporter</string>
+    <string name="badge_title_1000">1,000 Points Supreme Supporter</string>
+    <string name="badge_points_format">%1$d Points</string>
+    <string name="badge_active_tag">Active</string>
+    <string name="badge_applied_toast">App icon updated to %1$s!</string>
+    <string name="badge_reset_toast">App icon reset to default!</string>
+    <string name="badge_dialog_title">App Icon Updated!</string>
+    <string name="badge_dialog_subtitle">Your home screen icon has been changed</string>
+    <string name="badge_dialog_hint">Note: Some home screen launchers may take a few seconds to refresh the new icon.</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">%1$d Pts • Need %2$d more</string>
+    <string name="badge_locked_dialog_title">Badge Locked</string>
+    <string name="badge_locked_dialog_msg">This custom milestone icon unlocks at %1$d points.\n\nYou currently have %2$d points (need %3$d more points).\n\nEvery $1 in the Tip Jar earns 10 points ($10 = 100 points, $25 = 250 points). Support development above to unlock this icon!</string>
+    <string name="badge_locked_dialog_btn">Fuel to Unlock</string>
+    <string name="badge_btn_active">Active</string>
+    <string name="badge_btn_apply">Apply</string>
+    <string name="badge_btn_locked">Locked</string>
+    <string name="badge_apply_dialog_title">Apply App Icon?</string>
+    <string name="badge_apply_dialog_subtitle">Set milestone badge as home screen icon</string>
+    <string name="badge_apply_dialog_notice">Applying a custom icon requires Ultimate File Manager to close so your launcher can register the new icon.\n\nTap Apply &amp; Close to update your icon, or Cancel to keep your current icon.</string>
+    <string name="badge_apply_dialog_btn_apply">Apply &amp; Close</string>
+    <string name="badge_default_dialog_title">Restore Default Icon?</string>
+    <string name="badge_default_dialog_subtitle">Restore original Ultimate File Manager icon</string>
+    <string name="badge_default_dialog_notice">Restoring the default icon requires Ultimate File Manager to close so your launcher can register the change.\n\nTap Restore &amp; Close to proceed, or Cancel to keep your current icon.</string>
+    <string name="badge_default_dialog_btn_restore">Restore &amp; Close</string>
+    <string name="badge_desc_5">Show your support with 5 points!</string>
+    <string name="badge_desc_10">Earn the Bronze badge with 10 points!</string>
+    <string name="badge_desc_20">Earn the Silver badge with 20 points!</string>
+    <string name="badge_desc_50">Earn the Gold badge with 50 points!</string>
+    <string name="badge_desc_100">Earn the Ultimate badge with 100 points!</string>
+    <string name="badge_desc_200">Earn the Platinum badge with 200 points!</string>
+    <string name="badge_desc_300">Earn the Diamond badge with 300 points!</string>
+    <string name="badge_desc_500">Earn the Royal badge with 500 points!</string>
+    <string name="badge_desc_750">Earn the Legendary badge with 750 points!</string>
+    <string name="badge_desc_1000">Earn the Supreme badge with 1,000 points!</string>
     <string name="tile_hidden_with_name">\"%1$s\" tile hidden</string>
 
     <!-- Folder Sync -->

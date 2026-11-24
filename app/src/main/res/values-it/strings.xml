@@ -3624,6 +3624,155 @@ Errore di acquisto Amazon: %1$s
     <string name="amazon_iap_not_ready">
 Gli acquisti non sono ancora disponibili. Per favore riprova tra poco.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+Distintivi
+</string>
+    <string name="badge_section_subtitle">
+Sblocca e imposta questi badge cardine come icona dell\'app personalizzata nella schermata iniziale
+</string>
+    <string name="badge_default_icon_title">
+Icona dell\'app predefinita
+</string>
+    <string name="badge_default_icon_desc">
+Icona standard di Ultimate File Manager
+</string>
+    <string name="badge_title_5">
+Sostenitore da 5 punti
+</string>
+    <string name="badge_title_10">
+Sostenitore Bronzo da 10 punti
+</string>
+    <string name="badge_title_20">
+Sostenitore Argento 20 Punti
+</string>
+    <string name="badge_title_50">
+Sostenitore Oro 50 Punti
+</string>
+    <string name="badge_title_100">
+Sostenitore definitivo da 100 punti
+</string>
+    <string name="badge_title_200">
+Sostenitore Platino da 200 punti
+</string>
+    <string name="badge_title_300">
+Sostenitore Diamante da 300 punti
+</string>
+    <string name="badge_title_500">
+500 punti Sostenitore reale
+</string>
+    <string name="badge_title_750">
+Sostenitore leggendario da 750 punti
+</string>
+    <string name="badge_title_1000">
+1.000 punti Sostenitore supremo
+</string>
+    <string name="badge_points_format">
+%1$d Punti
+</string>
+    <string name="badge_active_tag">
+Attivo
+</string>
+    <string name="badge_applied_toast">
+Icona dell\'app aggiornata a %1$s!
+</string>
+    <string name="badge_reset_toast">
+L\'icona dell\'app viene ripristinata ai valori predefiniti!
+</string>
+    <string name="badge_dialog_title">
+Icona dell\'app aggiornata!
+</string>
+    <string name="badge_dialog_subtitle">
+L\'icona della schermata iniziale è stata modificata
+</string>
+    <string name="badge_dialog_hint">
+Nota: alcuni launcher della schermata iniziale potrebbero impiegare alcuni secondi per aggiornare la nuova icona.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d punti • Ne servono altri %2$d.
+</string>
+    <string name="badge_locked_dialog_title">
+Badge bloccato
+</string>
+    <string name="badge_locked_dialog_msg">
+Questa icona traguardo personalizzata si sblocca a %1$d punti.\n
+\n
+Al momento hai %2$d punti (ti servono %3$d altri punti).\n
+\n
+Ogni $1 nel barattolo delle mance guadagna 10 punti ($10 = 100 punti, $25 = 250 punti). Supporta lo sviluppo qui sopra per sbloccare questa icona!
+</string>
+    <string name="badge_locked_dialog_btn">
+Carburante da sbloccare
+</string>
+    <string name="badge_btn_active">
+Attivo
+</string>
+    <string name="badge_btn_apply">
+Fare domanda a
+</string>
+    <string name="badge_btn_locked">
+Bloccato
+</string>
+    <string name="badge_apply_dialog_title">
+Applicare l\'icona dell\'app?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+Imposta il badge traguardo come icona della schermata iniziale
+</string>
+    <string name="badge_apply_dialog_notice">
+L\'applicazione di un\'icona personalizzata richiede la chiusura di Ultimate File Manager in modo che il programma di avvio possa registrare la nuova icona.\n
+\n
+Tocca Applica e chiudi per aggiornare l\'icona o Annulla per mantenere l\'icona corrente.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+Applica e chiudi
+</string>
+    <string name="badge_default_dialog_title">
+Ripristinare l\'icona predefinita?
+</string>
+    <string name="badge_default_dialog_subtitle">
+Ripristina l\'icona originale di Ultimate File Manager
+</string>
+    <string name="badge_default_dialog_notice">
+Il ripristino dell\'icona predefinita richiede la chiusura di Ultimate File Manager in modo che il programma di avvio possa registrare la modifica.\n
+\n
+Tocca Ripristina e chiudi per procedere o Annulla per mantenere l\'icona corrente.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+Ripristina e chiudi
+</string>
+    <string name="badge_desc_5">
+Dimostra il tuo sostegno con 5 punti!
+</string>
+    <string name="badge_desc_10">
+Guadagna il badge Bronzo con 10 punti!
+</string>
+    <string name="badge_desc_20">
+Guadagna il badge Argento con 20 punti!
+</string>
+    <string name="badge_desc_50">
+Guadagna il badge Oro con 50 punti!
+</string>
+    <string name="badge_desc_100">
+Guadagna il badge Ultimate con 100 punti!
+</string>
+    <string name="badge_desc_200">
+Guadagna il badge Platino con 200 punti!
+</string>
+    <string name="badge_desc_300">
+Guadagna il badge Diamante con 300 punti!
+</string>
+    <string name="badge_desc_500">
+Guadagna il distintivo reale con 500 punti!
+</string>
+    <string name="badge_desc_750">
+Guadagna il distintivo Leggendario con 750 punti!
+</string>
+    <string name="badge_desc_1000">
+Guadagna il distintivo Supremo con 1.000 punti!
+</string>
     <string name="tile_hidden_with_name">
 Riquadro \"%1$s\" nascosto
 </string>

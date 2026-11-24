@@ -3640,6 +3640,155 @@ Erro na compra Amazon: %1$s
     <string name="amazon_iap_not_ready">
 As compras ainda não estão disponíveis. Tente novamente em instantes.
 </string>
+
+    <!-- Supporter Milestone Badges & Launcher App Icons (Google Mobile) -->
+    <string name="badge_section_title">
+Emblemas
+</string>
+    <string name="badge_section_subtitle">
+Desbloqueie e defina esses emblemas de marco como ícone de aplicativo personalizado na tela inicial
+</string>
+    <string name="badge_default_icon_title">
+Ícone do aplicativo padrão
+</string>
+    <string name="badge_default_icon_desc">
+Ícone padrão do Ultimate File Manager
+</string>
+    <string name="badge_title_5">
+Apoiador de 5 pontos
+</string>
+    <string name="badge_title_10">
+Apoiador Bronze de 10 pontos
+</string>
+    <string name="badge_title_20">
+Apoiador Prata de 20 pontos
+</string>
+    <string name="badge_title_50">
+Apoiador Ouro de 50 Pontos
+</string>
+    <string name="badge_title_100">
+Apoiador final de 100 pontos
+</string>
+    <string name="badge_title_200">
+Apoiador Platina de 200 pontos
+</string>
+    <string name="badge_title_300">
+Apoiador Diamante de 300 Pontos
+</string>
+    <string name="badge_title_500">
+500 pontos de apoiador real
+</string>
+    <string name="badge_title_750">
+Apoiador Lendário de 750 pontos
+</string>
+    <string name="badge_title_1000">
+Apoiador Supremo de 1.000 pontos
+</string>
+    <string name="badge_points_format">
+%1$d Pontos
+</string>
+    <string name="badge_active_tag">
+Ativo
+</string>
+    <string name="badge_applied_toast">
+Ícone do aplicativo atualizado para %1$s!
+</string>
+    <string name="badge_reset_toast">
+Ícone do aplicativo redefinido para o padrão!
+</string>
+    <string name="badge_dialog_title">
+Ícone do aplicativo atualizado!
+</string>
+    <string name="badge_dialog_subtitle">
+O ícone da sua tela inicial foi alterado
+</string>
+    <string name="badge_dialog_hint">
+Nota: Alguns iniciadores da tela inicial podem demorar alguns segundos para atualizar o novo ícone.
+</string>
+    <string name="badge_dialog_ok">OK</string>
+    <string name="badge_locked_need_pts">
+%1$d Pontos • Precisa de %2$d mais
+</string>
+    <string name="badge_locked_dialog_title">
+Selo bloqueado
+</string>
+    <string name="badge_locked_dialog_msg">
+Este ícone de marco personalizado é desbloqueado com %1$d pontos.\n
+\n
+Atualmente você tem %2$d pontos (precisa de mais %3$d pontos).\n
+\n
+Cada $1 no Jar de gorjetas ganha 10 pontos ($10 = 100 pontos, $25 = 250 pontos). Apoie o desenvolvimento acima para desbloquear este ícone!
+</string>
+    <string name="badge_locked_dialog_btn">
+Combustível para desbloquear
+</string>
+    <string name="badge_btn_active">
+Ativo
+</string>
+    <string name="badge_btn_apply">
+Aplicar
+</string>
+    <string name="badge_btn_locked">
+Bloqueado
+</string>
+    <string name="badge_apply_dialog_title">
+Aplicar ícone do aplicativo?
+</string>
+    <string name="badge_apply_dialog_subtitle">
+Definir selo de marco como ícone da tela inicial
+</string>
+    <string name="badge_apply_dialog_notice">
+Aplicar um ícone personalizado requer que o Ultimate File Manager feche para que o iniciador possa registrar o novo ícone.\n
+\n
+Toque em Aplicar e Fechar para atualizar seu ícone ou em Cancelar para manter seu ícone atual.
+</string>
+    <string name="badge_apply_dialog_btn_apply">
+Aplicar e fechar
+</string>
+    <string name="badge_default_dialog_title">
+Restaurar ícone padrão?
+</string>
+    <string name="badge_default_dialog_subtitle">
+Restaurar ícone original do Ultimate File Manager
+</string>
+    <string name="badge_default_dialog_notice">
+Restaurar o ícone padrão exige que o Ultimate File Manager feche para que o iniciador possa registrar a alteração.\n
+\n
+Toque em Restaurar e Fechar para continuar ou em Cancelar para manter o ícone atual.
+</string>
+    <string name="badge_default_dialog_btn_restore">
+Restaurar e fechar
+</string>
+    <string name="badge_desc_5">
+Mostre seu apoio com 5 pontos!
+</string>
+    <string name="badge_desc_10">
+Ganhe a medalha de Bronze com 10 pontos!
+</string>
+    <string name="badge_desc_20">
+Ganhe a insígnia Prata com 20 pontos!
+</string>
+    <string name="badge_desc_50">
+Ganhe a insígnia Ouro com 50 pontos!
+</string>
+    <string name="badge_desc_100">
+Ganhe o distintivo Ultimate com 100 pontos!
+</string>
+    <string name="badge_desc_200">
+Ganhe o distintivo Platinum com 200 pontos!
+</string>
+    <string name="badge_desc_300">
+Ganhe a insígnia Diamante com 300 pontos!
+</string>
+    <string name="badge_desc_500">
+Ganhe a insígnia Real com 500 pontos!
+</string>
+    <string name="badge_desc_750">
+Ganhe o distintivo Lendário com 750 pontos!
+</string>
+    <string name="badge_desc_1000">
+Ganhe o distintivo Supremo com 1.000 pontos!
+</string>
     <string name="tile_hidden_with_name">
 Bloco \"%1$s\" oculto
 </string>
