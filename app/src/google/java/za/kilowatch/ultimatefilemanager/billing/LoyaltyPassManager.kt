@@ -92,7 +92,7 @@ object LoyaltyPassManager {
         val localPoints = LoyaltyPrefs.getTotalTipped(context) * BadgeIconManager.POINTS_PER_DOLLAR
 
         return if (hasPass) {
-            maxOf(syncedPoints, localPoints)
+            syncedPoints
         } else {
             localPoints
         }
@@ -333,6 +333,11 @@ object LoyaltyPassManager {
             val serverLoyaltyId = json.getString("loyalty_id")
             val totalPoints = json.optInt("total_points", 0)
             val incomingOrders = parseOrdersFromJson(json)
+
+            val previousLoyaltyId = getLoyaltyId(context)
+            if (previousLoyaltyId.isNotEmpty() && previousLoyaltyId != serverLoyaltyId.trim().uppercase()) {
+                getPrefs(context).edit().remove(KEY_ORDERS_JSON).apply()
+            }
 
             savePassCredentials(context, serverLoyaltyId, passkey.trim())
             val newlyAdded = deltaSync(context, incomingOrders, totalPoints)

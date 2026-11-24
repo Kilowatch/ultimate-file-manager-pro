@@ -17975,6 +17975,106 @@ Clé d\'accès
     <string name="dialog_connect_existing_btn_connect">
 Ordre des liens et points de fusion
 </string>
+
+    <!-- Loyalty Pass Info & Error Dialogs -->
+    <string name="loyalty_dialog_gen_failed_title">
+Échec de la génération
+</string>
+    <string name="loyalty_dialog_gen_failed_subtitle">
+Impossible de créer un pass de fidélité
+</string>
+    <string name="loyalty_dialog_invalid_gpa_title">
+ID de commande invalide
+</string>
+    <string name="loyalty_dialog_invalid_gpa_subtitle">
+Format GPA incorrect
+</string>
+    <string name="loyalty_dialog_invalid_gpa_msg">
+Veuillez saisir un identifiant de commande Google Play valide.\n
+\n
+Le format doit être GPA.XXXX-XXXX-XXXX-XXXXX (trouvé dans l\'e-mail de reçu d\'achat Google Play).
+</string>
+    <string name="loyalty_dialog_claim_failed_title">
+Échec de la réclamation
+</string>
+    <string name="loyalty_dialog_claim_failed_subtitle">
+Impossible de lier la commande
+</string>
+    <string name="loyalty_dialog_already_claimed_title">
+Déjà réclamé
+</string>
+    <string name="loyalty_dialog_already_claimed_subtitle">
+Commande liée au Pass
+</string>
+    <string name="loyalty_dialog_already_claimed_msg">
+L\'ID de commande Google Play %1$s a déjà été associé à un pass de fidélité (%2$s).\n
+\n
+S\'il s\'agit de votre pass, appuyez sur \"Restaurer le pass de fidélité\" et saisissez votre clé d\'accès de récupération pour restaurer vos points et vos badges.
+</string>
+    <string name="loyalty_dialog_not_found_title">
+Commande introuvable
+</string>
+    <string name="loyalty_dialog_not_found_subtitle">
+ID de commande non vérifié
+</string>
+    <string name="loyalty_dialog_not_found_msg">
+L\'ID de commande Google Play %1$s est introuvable dans nos dossiers.\n
+\n
+Si vous avez récemment envoyé cette astuce, veuillez attendre quelques minutes pour que Google Play confirme la transaction ou vérifiez que l\'ID de commande correspond à votre e-mail de réception.
+</string>
+    <string name="loyalty_dialog_verify_error_title">
+Erreur de vérification
+</string>
+    <string name="loyalty_dialog_verify_error_subtitle">
+Impossible de terminer la vérification
+</string>
+    <string name="loyalty_dialog_missing_details_title">
+Détails manquants
+</string>
+    <string name="loyalty_dialog_missing_details_subtitle">
+Champs obligatoires vides
+</string>
+    <string name="loyalty_dialog_missing_details_msg">
+Veuillez saisir votre identifiant de fidélité (ou votre numéro de commande GPA précédent) et votre mot de passe de récupération.
+</string>
+    <string name="loyalty_dialog_restore_failed_title">
+Échec de la restauration
+</string>
+    <string name="loyalty_dialog_restore_failed_subtitle">
+Échec de l\'authentification
+</string>
+    <string name="loyalty_dialog_invalid_id_title">
+Identifiant de fidélité invalide
+</string>
+    <string name="loyalty_dialog_invalid_id_subtitle">
+Le format doit être XXX-XXX-XXX-XXX
+</string>
+    <string name="loyalty_dialog_invalid_id_msg">
+Veuillez saisir un identifiant de fidélité valide à 12 caractères et votre clé d\'accès de récupération.
+</string>
+    <string name="loyalty_dialog_connect_failed_title">
+Échec de la connexion
+</string>
+    <string name="loyalty_dialog_connect_failed_subtitle">
+Impossible de lier la commande
+</string>
+
+    <!-- Tip Jar Tier Loyalty Points -->
+    <string name="tip_jar_ristretto_points">
++10 points de fidélité
+</string>
+    <string name="tip_jar_espresso_points">
++30 points de fidélité
+</string>
+    <string name="tip_jar_cappuccino_points">
++50 points de fidélité
+</string>
+    <string name="tip_jar_latte_points">
++100 points de fidélité
+</string>
+    <string name="tip_jar_beans_points">
++150 points de fidélité
+</string>
 </resources>
 
 

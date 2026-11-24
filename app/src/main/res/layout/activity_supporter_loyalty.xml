@@ -57,9 +57,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tip_jar_title"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="17sp"
+                android:fontFamily="sans-serif-black"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
@@ -67,12 +67,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/loyalty_card_title"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textSize="11sp"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="11.5sp"
+                android:fontFamily="sans-serif-medium"
                 android:maxLines="1"
                 android:ellipsize="end" />
         </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:id="@+id/dividerToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mobile_glass_stroke"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar" />
 
     <!-- Scrollable content below toolbar -->
     <androidx.core.widget.NestedScrollView
@@ -80,147 +88,164 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintTop_toBottomOf="@id/dividerToolbar"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp"
+            android:padding="16dp"
             android:gravity="center_horizontal">
 
             <!-- Fist Promo Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                app:cardBackgroundColor="@color/mobile_glass_card"
                 app:strokeWidth="1dp"
-                app:strokeColor="?attr/colorOutlineVariant">
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="12dp"
+                    android:padding="16dp"
                     android:gravity="center_vertical">
 
-                    <!-- Circular container for Raised Fist icon -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        app:cardCornerRadius="19dp"
-                        app:cardElevation="0dp"
-                        app:cardBackgroundColor="?attr/colorSecondaryContainer"
-                        app:strokeWidth="0dp">
+                    <!-- Frosted Squircle container for Raised Fist icon -->
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
+
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_fist"
-                            app:tint="?attr/colorOnSecondaryContainer" />
-                    </com.google.android.material.card.MaterialCardView>
+                            app:tint="#F59E0B"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="14dp"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tip_jar_every_coffee_powers"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                            android:textColor="@color/mobile_text_primary"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif-bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tip_jar_thanks_flowing"
-                            android:textColor="?attr/colorOnSurfaceVariant"
-                            android:textSize="11sp"
+                            android:textColor="@color/mobile_text_secondary"
+                            android:textSize="12sp"
+                            android:lineSpacingMultiplier="1.15"
                             android:layout_marginTop="2dp" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Tip Jar Progress Card (Global Progress Card styled to mockup) -->
+            <!-- Tip Jar Progress Card (Global Community Progress) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardGlobalProgress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="16dp"
                 android:visibility="gone"
-                app:cardCornerRadius="12dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                app:cardBackgroundColor="@color/mobile_glass_card"
                 app:strokeWidth="1dp"
-                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeColor="@color/mobile_glass_stroke"
                 tools:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
-
-                    <TextView
-                        android:id="@+id/txtGlobalTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tip jar progress • July 2026"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/txtGlobalDesc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="@string/tip_jar_community_contributions"
-                        android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="11sp" />
+                    android:padding="16dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="14dp">
+                        android:gravity="center_vertical">
 
-                        <ProgressBar
-                            android:id="@+id/progressGlobal"
-                            style="@android:style/Widget.ProgressBar.Horizontal"
-                            android:layout_width="0dp"
-                            android:layout_height="6dp"
-                            android:layout_weight="1"
-                            android:max="100"
-                            android:progressDrawable="@drawable/bg_tip_jar_progress" />
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_coffee"
+                                app:tint="#F59E0B"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:gravity="end"
-                            android:layout_marginStart="14dp">
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="10dp"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/txtGlobalPercent"
+                                android:id="@+id/txtGlobalTitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="?attr/colorPrimary"
+                                android:text="Tip jar progress • July 2026"
+                                android:textColor="@color/mobile_text_primary"
                                 android:textSize="15sp"
-                                android:textStyle="bold"
-                                tools:text="23%" />
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:id="@+id/txtGlobalDesc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/tip_jar_community_contributions"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
                         </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtGlobalPercent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_badge_bubble"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp"
+                            android:textColor="#F59E0B"
+                            android:textSize="13sp"
+                            android:fontFamily="sans-serif-black"
+                            tools:text="23%" />
                     </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/progressGlobal"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_marginTop="14dp"
+                        android:max="100"
+                        android:progressDrawable="@drawable/bg_tip_jar_progress" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -231,26 +256,91 @@
                 android:layout_height="wrap_content"
                 android:text="@string/tip_jar_loading"
                 android:gravity="center"
-                android:layout_marginBottom="6dp"
-                android:alpha="0.6"
+                android:layout_marginBottom="10dp"
+                android:alpha="0.7"
                 android:textSize="12sp"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/mobile_text_secondary" />
 
-            <!-- Products List Card -->
+            <!-- Products List Card (Espresso-Amber Glass Container) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                app:cardBackgroundColor="@color/mobile_glass_card"
                 app:strokeWidth="1dp"
-                app:strokeColor="?attr/colorOutlineVariant">
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
+                    <!-- Espresso-Amber Header Banner -->
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_tip_jar_header_banner">
+
+                        <!-- Right Coffee Watermark -->
+                        <ImageView
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:layout_marginEnd="16dp"
+                            android:src="@drawable/ic_coffee_watermark"
+                            android:importantForAccessibility="no" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="18dp">
+
+                            <ImageView
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:src="@drawable/ic_coffee"
+                                app:tint="#FBBF24"
+                                android:importantForAccessibility="no" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="48dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/tip_jar_title"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="20sp"
+                                    android:fontFamily="sans-serif-black" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/tip_jar_every_coffee_powers"
+                                    android:textColor="#FDE68A"
+                                    android:textSize="12sp"
+                                    android:lineSpacingMultiplier="1.2"
+                                    android:layout_marginTop="3dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <!-- Divider below Header -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/mobile_glass_stroke" />
 
                     <!-- Row 1: Ristretto Shot ($1) -->
                     <LinearLayout
@@ -259,44 +349,78 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:padding="12dp">
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="12dp">
 
-                        <ImageView
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
-                            android:src="@drawable/ic_loyalty_ristretto" />
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_loyalty_ristretto"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tip_jar_ristretto_title"
-                                android:textColor="?attr/colorOnSurface"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textColor="@color/mobile_text_primary"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tip_jar_ristretto_desc"
-                                android:textColor="?attr/colorOnSurfaceVariant"
-                                android:textSize="11sp"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp"
                                 android:layout_marginTop="2dp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginTop="4dp">
+
+                                <ImageView
+                                    android:layout_width="12dp"
+                                    android:layout_height="12dp"
+                                    android:src="@drawable/ic_star"
+                                    app:tint="#F59E0B"
+                                    android:importantForAccessibility="no" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/tip_jar_ristretto_points"
+                                    android:textColor="#F59E0B"
+                                    android:textSize="11sp"
+                                    android:fontFamily="sans-serif-bold"
+                                    android:layout_marginStart="4dp" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <TextView
                             android:id="@+id/txtRistrettoPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textSize="13.5sp"
+                            android:fontFamily="sans-serif-bold"
                             android:layout_marginEnd="10dp"
                             tools:text="R 17,99" />
 
@@ -305,8 +429,8 @@
                             android:layout_width="76dp"
                             android:layout_height="36dp"
                             android:text="@string/tip_jar_buy_button"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-bold"
                             android:textColor="@color/white"
                             android:background="@drawable/bg_buy_button"
                             android:insetTop="0dp"
@@ -320,8 +444,8 @@
                         android:id="@+id/dividerRistretto"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="?attr/colorOutlineVariant"
-                        android:alpha="0.2" />
+                        android:layout_marginHorizontal="14dp"
+                        android:background="@color/mobile_glass_stroke" />
 
                     <!-- Row 2: A Quick Espresso ($3) -->
                     <LinearLayout
@@ -329,44 +453,78 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:padding="12dp">
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="12dp">
 
-                        <ImageView
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
-                            android:src="@drawable/ic_loyalty_espresso" />
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_loyalty_espresso"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tip_jar_espresso_title"
-                                android:textColor="?attr/colorOnSurface"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textColor="@color/mobile_text_primary"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tip_jar_espresso_desc"
-                                android:textColor="?attr/colorOnSurfaceVariant"
-                                android:textSize="11sp"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp"
                                 android:layout_marginTop="2dp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginTop="4dp">
+
+                                <ImageView
+                                    android:layout_width="12dp"
+                                    android:layout_height="12dp"
+                                    android:src="@drawable/ic_star"
+                                    app:tint="#F59E0B"
+                                    android:importantForAccessibility="no" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/tip_jar_espresso_points"
+                                    android:textColor="#F59E0B"
+                                    android:textSize="11sp"
+                                    android:fontFamily="sans-serif-bold"
+                                    android:layout_marginStart="4dp" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <TextView
                             android:id="@+id/txtEspressoPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textSize="13.5sp"
+                            android:fontFamily="sans-serif-bold"
                             android:layout_marginEnd="10dp"
                             tools:text="R 39,99" />
 
@@ -375,8 +533,8 @@
                             android:layout_width="76dp"
                             android:layout_height="36dp"
                             android:text="@string/tip_jar_buy_button"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-bold"
                             android:textColor="@color/white"
                             android:background="@drawable/bg_buy_button"
                             android:insetTop="0dp"
@@ -389,8 +547,8 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="?attr/colorOutlineVariant"
-                        android:alpha="0.2" />
+                        android:layout_marginHorizontal="14dp"
+                        android:background="@color/mobile_glass_stroke" />
 
                     <!-- Row 3: The Cappuccino ($5) -->
                     <LinearLayout
@@ -399,44 +557,78 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:padding="12dp">
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="12dp">
 
-                        <ImageView
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
-                            android:src="@drawable/ic_loyalty_cappuccino" />
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_loyalty_cappuccino"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tip_jar_cappuccino_title"
-                                android:textColor="?attr/colorOnSurface"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textColor="@color/mobile_text_primary"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tip_jar_cappuccino_desc"
-                                android:textColor="?attr/colorOnSurfaceVariant"
-                                android:textSize="11sp"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp"
                                 android:layout_marginTop="2dp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginTop="4dp">
+
+                                <ImageView
+                                    android:layout_width="12dp"
+                                    android:layout_height="12dp"
+                                    android:src="@drawable/ic_star"
+                                    app:tint="#F59E0B"
+                                    android:importantForAccessibility="no" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/tip_jar_cappuccino_points"
+                                    android:textColor="#F59E0B"
+                                    android:textSize="11sp"
+                                    android:fontFamily="sans-serif-bold"
+                                    android:layout_marginStart="4dp" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <TextView
                             android:id="@+id/txtCappuccinoPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textSize="13.5sp"
+                            android:fontFamily="sans-serif-bold"
                             android:layout_marginEnd="10dp"
                             tools:text="R 91,99" />
 
@@ -451,8 +643,8 @@
                                 android:layout_width="76dp"
                                 android:layout_height="36dp"
                                 android:text="@string/tip_jar_buy_button"
-                                android:textSize="11sp"
-                                android:textStyle="bold"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-bold"
                                 android:textColor="@color/white"
                                 android:background="@drawable/bg_buy_button"
                                 android:insetTop="0dp"
@@ -467,7 +659,7 @@
                                 android:text="@string/tip_jar_popular_badge"
                                 android:textColor="@color/white"
                                 android:textSize="8sp"
-                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-bold"
                                 android:background="@drawable/bg_popular_badge"
                                 android:paddingHorizontal="6dp"
                                 android:paddingVertical="2dp"
@@ -479,8 +671,8 @@
                         android:id="@+id/dividerCappuccino"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="?attr/colorOutlineVariant"
-                        android:alpha="0.2" />
+                        android:layout_marginHorizontal="14dp"
+                        android:background="@color/mobile_glass_stroke" />
 
                     <!-- Row 4: The Full Latte ($10) -->
                     <LinearLayout
@@ -488,44 +680,78 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:padding="12dp">
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="12dp">
 
-                        <ImageView
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
-                            android:src="@drawable/ic_loyalty_latte" />
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_loyalty_latte"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tip_jar_latte_title"
-                                android:textColor="?attr/colorOnSurface"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textColor="@color/mobile_text_primary"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tip_jar_latte_desc"
-                                android:textColor="?attr/colorOnSurfaceVariant"
-                                android:textSize="11sp"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp"
                                 android:layout_marginTop="2dp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginTop="4dp">
+
+                                <ImageView
+                                    android:layout_width="12dp"
+                                    android:layout_height="12dp"
+                                    android:src="@drawable/ic_star"
+                                    app:tint="#F59E0B"
+                                    android:importantForAccessibility="no" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/tip_jar_latte_points"
+                                    android:textColor="#F59E0B"
+                                    android:textSize="11sp"
+                                    android:fontFamily="sans-serif-bold"
+                                    android:layout_marginStart="4dp" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <TextView
                             android:id="@+id/txtLattePrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textSize="13.5sp"
+                            android:fontFamily="sans-serif-bold"
                             android:layout_marginEnd="10dp"
                             tools:text="R 139,99" />
 
@@ -534,8 +760,8 @@
                             android:layout_width="76dp"
                             android:layout_height="36dp"
                             android:text="@string/tip_jar_buy_button"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-bold"
                             android:textColor="@color/white"
                             android:background="@drawable/bg_buy_button"
                             android:insetTop="0dp"
@@ -548,53 +774,87 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="?attr/colorOutlineVariant"
-                        android:alpha="0.2" />
+                        android:layout_marginHorizontal="14dp"
+                        android:background="@color/mobile_glass_stroke" />
 
-                    <!-- Row 5: The Coffee Bean Bag ($25) -->
+                    <!-- Row 5: The Coffee Bean Bag ($15) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:padding="12dp">
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="12dp">
 
-                        <ImageView
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
-                            android:src="@drawable/ic_loyalty_coffee_bag" />
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_loyalty_coffee_bag"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tip_jar_beans_title"
-                                android:textColor="?attr/colorOnSurface"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textColor="@color/mobile_text_primary"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/tip_jar_beans_desc"
-                                android:textColor="?attr/colorOnSurfaceVariant"
-                                android:textSize="11sp"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp"
                                 android:layout_marginTop="2dp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginTop="4dp">
+
+                                <ImageView
+                                    android:layout_width="12dp"
+                                    android:layout_height="12dp"
+                                    android:src="@drawable/ic_star"
+                                    app:tint="#F59E0B"
+                                    android:importantForAccessibility="no" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/tip_jar_beans_points"
+                                    android:textColor="#F59E0B"
+                                    android:textSize="11sp"
+                                    android:fontFamily="sans-serif-bold"
+                                    android:layout_marginStart="4dp" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <TextView
                             android:id="@+id/txtBeansPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnSurface"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textSize="13.5sp"
+                            android:fontFamily="sans-serif-bold"
                             android:layout_marginEnd="10dp"
                             tools:text="R 274,99" />
 
@@ -603,8 +863,8 @@
                             android:layout_width="76dp"
                             android:layout_height="36dp"
                             android:text="@string/tip_jar_buy_button"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-bold"
                             android:textColor="@color/white"
                             android:background="@drawable/bg_buy_button"
                             android:insetTop="0dp"
@@ -1177,51 +1437,57 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                app:cardBackgroundColor="@color/mobile_glass_card"
                 app:strokeWidth="1dp"
-                app:strokeColor="?attr/colorOutlineVariant">
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="12dp">
+                    android:padding="16dp">
 
-                    <ImageView
+                    <FrameLayout
                         android:id="@+id/imgShield"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_shield_check"
-                        app:tint="?attr/colorOnSurfaceVariant"
-                        android:alpha="0.8" />
+                        android:background="@drawable/bg_btn_icon_frosted">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_shield_check"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                     <ImageView
                         android:id="@+id/imgSparkle"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
+                        android:layout_centerVertical="true"
                         android:src="@drawable/ic_star"
-                        app:tint="?attr/colorOnSurfaceVariant"
-                        android:alpha="0.4" />
+                        app:tint="#F59E0B"
+                        android:alpha="0.55"
+                        android:importantForAccessibility="no" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/imgShield"
                         android:layout_toStartOf="@id/imgSparkle"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginStart="12dp"
                         android:layout_marginEnd="10dp"
                         android:layout_centerVertical="true"
                         android:text="@string/loyalty_disclaimer"
-                        android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="10sp"
-                        android:alpha="0.85"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="11sp"
                         android:lineSpacingMultiplier="1.2" />
 
                 </RelativeLayout>

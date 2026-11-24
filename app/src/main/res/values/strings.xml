@@ -6328,6 +6328,40 @@
     <string name="dialog_connect_existing_id_hint">Existing Loyalty ID (XXX-XXX-XXX-XXX)</string>
     <string name="dialog_connect_existing_key_hint">Passkey</string>
     <string name="dialog_connect_existing_btn_connect">Link Order &amp; Merge Points</string>
+
+    <!-- Loyalty Pass Info & Error Dialogs -->
+    <string name="loyalty_dialog_gen_failed_title">Generation Failed</string>
+    <string name="loyalty_dialog_gen_failed_subtitle">Could Not Create Loyalty Pass</string>
+    <string name="loyalty_dialog_invalid_gpa_title">Invalid Order ID</string>
+    <string name="loyalty_dialog_invalid_gpa_subtitle">GPA Format Incorrect</string>
+    <string name="loyalty_dialog_invalid_gpa_msg">Please enter a valid Google Play Order ID.\n\nFormat must be GPA.XXXX-XXXX-XXXX-XXXXX (found in your Google Play purchase receipt email).</string>
+    <string name="loyalty_dialog_claim_failed_title">Claim Failed</string>
+    <string name="loyalty_dialog_claim_failed_subtitle">Unable to Link Order</string>
+    <string name="loyalty_dialog_already_claimed_title">Already Claimed</string>
+    <string name="loyalty_dialog_already_claimed_subtitle">Order Linked to Pass</string>
+    <string name="loyalty_dialog_already_claimed_msg">Google Play Order ID %1$s has already been linked to a Loyalty Pass (%2$s).\n\nIf this is your pass, tap \'Restore Loyalty Pass\' and enter your Recovery Passkey to restore your points and badges.</string>
+    <string name="loyalty_dialog_not_found_title">Order Not Found</string>
+    <string name="loyalty_dialog_not_found_subtitle">Unverified Order ID</string>
+    <string name="loyalty_dialog_not_found_msg">Google Play Order ID %1$s was not found in our records.\n\nIf you recently made this tip, please allow a few minutes for Google Play to confirm the transaction, or check that the order ID matches your receipt email.</string>
+    <string name="loyalty_dialog_verify_error_title">Verification Error</string>
+    <string name="loyalty_dialog_verify_error_subtitle">Unable to Complete Check</string>
+    <string name="loyalty_dialog_missing_details_title">Missing Details</string>
+    <string name="loyalty_dialog_missing_details_subtitle">Required Fields Empty</string>
+    <string name="loyalty_dialog_missing_details_msg">Please enter both your Loyalty ID (or previous GPA order number) and your Recovery Passkey.</string>
+    <string name="loyalty_dialog_restore_failed_title">Restore Failed</string>
+    <string name="loyalty_dialog_restore_failed_subtitle">Authentication Failed</string>
+    <string name="loyalty_dialog_invalid_id_title">Invalid Loyalty ID</string>
+    <string name="loyalty_dialog_invalid_id_subtitle">Format Must Be XXX-XXX-XXX-XXX</string>
+    <string name="loyalty_dialog_invalid_id_msg">Please enter a valid 12-character Loyalty ID and your Recovery Passkey.</string>
+    <string name="loyalty_dialog_connect_failed_title">Connection Failed</string>
+    <string name="loyalty_dialog_connect_failed_subtitle">Could Not Link Order</string>
+
+    <!-- Tip Jar Tier Loyalty Points -->
+    <string name="tip_jar_ristretto_points">+10 Loyalty Points</string>
+    <string name="tip_jar_espresso_points">+30 Loyalty Points</string>
+    <string name="tip_jar_cappuccino_points">+50 Loyalty Points</string>
+    <string name="tip_jar_latte_points">+100 Loyalty Points</string>
+    <string name="tip_jar_beans_points">+150 Loyalty Points</string>
 </resources>
 
 

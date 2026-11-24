@@ -17975,6 +17975,106 @@ Geçiş anahtarı
     <string name="dialog_connect_existing_btn_connect">
 Bağlantı Sırası ve Birleştirme Noktaları
 </string>
+
+    <!-- Loyalty Pass Info & Error Dialogs -->
+    <string name="loyalty_dialog_gen_failed_title">
+Oluşturma Başarısız
+</string>
+    <string name="loyalty_dialog_gen_failed_subtitle">
+Bağlılık Kartı Oluşturulamadı
+</string>
+    <string name="loyalty_dialog_invalid_gpa_title">
+Geçersiz Sipariş Kimliği
+</string>
+    <string name="loyalty_dialog_invalid_gpa_subtitle">
+GPA Formatı Yanlış
+</string>
+    <string name="loyalty_dialog_invalid_gpa_msg">
+Lütfen geçerli bir Google Play Sipariş Kimliği girin.\n
+\n
+Biçim GPA.XXXX-XXXX-XXXX-XXXXX olmalıdır (Google Play satın alma makbuzu e-postanızda bulunur).
+</string>
+    <string name="loyalty_dialog_claim_failed_title">
+Hak Talebi Başarısız Oldu
+</string>
+    <string name="loyalty_dialog_claim_failed_subtitle">
+Sipariş Bağlantısı Kurulamıyor
+</string>
+    <string name="loyalty_dialog_already_claimed_title">
+Zaten Talep Edildi
+</string>
+    <string name="loyalty_dialog_already_claimed_subtitle">
+Geçişe Bağlı Sipariş
+</string>
+    <string name="loyalty_dialog_already_claimed_msg">
+Google Play Sipariş Kimliği %1$s zaten bir Bağlılık Geçişine (%2$s) bağlanmış.\n
+\n
+Bu sizin geçişinizse, \'Sadakat Geçişini Geri Yükle\'ye dokunun ve puanlarınızı ve rozetlerinizi geri yüklemek için Kurtarma Geçiş Anahtarınızı girin.
+</string>
+    <string name="loyalty_dialog_not_found_title">
+Sipariş Bulunamadı
+</string>
+    <string name="loyalty_dialog_not_found_subtitle">
+Doğrulanmamış Sipariş Kimliği
+</string>
+    <string name="loyalty_dialog_not_found_msg">
+Google Play Sipariş Kimliği %1$s kayıtlarımızda bulunamadı.\n
+\n
+Bu ipucunu yakın zamanda yaptıysanız, lütfen Google Play\'in işlemi onaylaması için birkaç dakika bekleyin veya sipariş kimliğinin makbuz e-postanızla eşleşip eşleşmediğini kontrol edin.
+</string>
+    <string name="loyalty_dialog_verify_error_title">
+Doğrulama Hatası
+</string>
+    <string name="loyalty_dialog_verify_error_subtitle">
+Kontrol Tamamlanamadı
+</string>
+    <string name="loyalty_dialog_missing_details_title">
+Eksik Ayrıntılar
+</string>
+    <string name="loyalty_dialog_missing_details_subtitle">
+Zorunlu Alanlar Boş
+</string>
+    <string name="loyalty_dialog_missing_details_msg">
+Lütfen hem Sadakat Kimliğinizi (veya önceki GPA sipariş numaranızı) hem de Kurtarma Şifrenizi girin.
+</string>
+    <string name="loyalty_dialog_restore_failed_title">
+Geri Yükleme Başarısız Oldu
+</string>
+    <string name="loyalty_dialog_restore_failed_subtitle">
+Kimlik Doğrulama Başarısız
+</string>
+    <string name="loyalty_dialog_invalid_id_title">
+Geçersiz Bağlılık Kimliği
+</string>
+    <string name="loyalty_dialog_invalid_id_subtitle">
+Biçim XXX-XXX-XXX-XXX Olmalıdır
+</string>
+    <string name="loyalty_dialog_invalid_id_msg">
+Lütfen 12 karakterlik geçerli bir Sadakat Kimliğinizi ve Kurtarma Şifrenizi girin.
+</string>
+    <string name="loyalty_dialog_connect_failed_title">
+Bağlantı Başarısız
+</string>
+    <string name="loyalty_dialog_connect_failed_subtitle">
+Sipariş Bağlanamadı
+</string>
+
+    <!-- Tip Jar Tier Loyalty Points -->
+    <string name="tip_jar_ristretto_points">
++10 Sadakat Puanı
+</string>
+    <string name="tip_jar_espresso_points">
++30 Sadakat Puanı
+</string>
+    <string name="tip_jar_cappuccino_points">
++50 Sadakat Puanı
+</string>
+    <string name="tip_jar_latte_points">
++100 Sadakat Puanı
+</string>
+    <string name="tip_jar_beans_points">
++150 Sadakat Puanı
+</string>
 </resources>
 
 

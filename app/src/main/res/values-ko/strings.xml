@@ -17975,6 +17975,106 @@ Google Play 구매 영수증 이메일에서 확인하실 수 있습니다.
     <string name="dialog_connect_existing_btn_connect">
 링크 순서 및 병합 포인트
 </string>
+
+    <!-- Loyalty Pass Info & Error Dialogs -->
+    <string name="loyalty_dialog_gen_failed_title">
+생성 실패
+</string>
+    <string name="loyalty_dialog_gen_failed_subtitle">
+로열티 패스를 생성할 수 없습니다.
+</string>
+    <string name="loyalty_dialog_invalid_gpa_title">
+잘못된 주문 ID
+</string>
+    <string name="loyalty_dialog_invalid_gpa_subtitle">
+GPA 형식이 잘못됨
+</string>
+    <string name="loyalty_dialog_invalid_gpa_msg">
+유효한 Google Play 주문 ID를 입력하세요.\n
+\n
+형식은 GPA.XXXX-XXXX-XXXX-XXXXX(Google Play 구매 영수증 이메일에 있음)여야 합니다.
+</string>
+    <string name="loyalty_dialog_claim_failed_title">
+청구 실패
+</string>
+    <string name="loyalty_dialog_claim_failed_subtitle">
+주문을 연결할 수 없습니다
+</string>
+    <string name="loyalty_dialog_already_claimed_title">
+이미 소유권이 주장됨
+</string>
+    <string name="loyalty_dialog_already_claimed_subtitle">
+패스에 연결된 주문
+</string>
+    <string name="loyalty_dialog_already_claimed_msg">
+Google Play 주문 ID %1$s은(는) 이미 로열티 패스(%2$s)에 연결되어 있습니다.\n
+\n
+이 패스가 귀하의 패스인 경우 \'Loyalty Pass 복원\'을 탭하고 복구 패스키를 입력하여 포인트와 배지를 복원하세요.
+</string>
+    <string name="loyalty_dialog_not_found_title">
+주문을 찾을 수 없음
+</string>
+    <string name="loyalty_dialog_not_found_subtitle">
+확인되지 않은 주문 ID
+</string>
+    <string name="loyalty_dialog_not_found_msg">
+Google Play 주문 ID %1$s을(를) Google 기록에서 찾을 수 없습니다.\n
+\n
+최근에 이 정보를 제공했다면 Google Play에서 거래를 확인하는 데 몇 분 정도 기다리거나 주문 ID가 영수증 이메일과 일치하는지 확인하세요.
+</string>
+    <string name="loyalty_dialog_verify_error_title">
+확인 오류
+</string>
+    <string name="loyalty_dialog_verify_error_subtitle">
+확인을 완료할 수 없습니다
+</string>
+    <string name="loyalty_dialog_missing_details_title">
+누락된 세부정보
+</string>
+    <string name="loyalty_dialog_missing_details_subtitle">
+필수 입력란이 비어 있습니다.
+</string>
+    <string name="loyalty_dialog_missing_details_msg">
+로열티 ID(또는 이전 GPA 주문 번호)와 복구 패스키를 모두 입력하세요.
+</string>
+    <string name="loyalty_dialog_restore_failed_title">
+복원 실패
+</string>
+    <string name="loyalty_dialog_restore_failed_subtitle">
+인증 실패
+</string>
+    <string name="loyalty_dialog_invalid_id_title">
+유효하지 않은 로열티 ID
+</string>
+    <string name="loyalty_dialog_invalid_id_subtitle">
+형식은 XXX-XXX-XXX-XXX여야 합니다.
+</string>
+    <string name="loyalty_dialog_invalid_id_msg">
+유효한 12자리 로열티 ID와 복구 패스키를 입력하세요.
+</string>
+    <string name="loyalty_dialog_connect_failed_title">
+연결 실패
+</string>
+    <string name="loyalty_dialog_connect_failed_subtitle">
+주문을 연결할 수 없습니다
+</string>
+
+    <!-- Tip Jar Tier Loyalty Points -->
+    <string name="tip_jar_ristretto_points">
++10 로열티 포인트
+</string>
+    <string name="tip_jar_espresso_points">
++30 로열티 포인트
+</string>
+    <string name="tip_jar_cappuccino_points">
++50 로열티 포인트
+</string>
+    <string name="tip_jar_latte_points">
++100 로열티 포인트
+</string>
+    <string name="tip_jar_beans_points">
++150 로열티 포인트
+</string>
 </resources>
 
 

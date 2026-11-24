@@ -17975,6 +17975,106 @@ Your tip has been confirmed! У вас уже есть анонимный про
     <string name="dialog_connect_existing_btn_connect">
 Порядок ссылок и точки слияния
 </string>
+
+    <!-- Loyalty Pass Info & Error Dialogs -->
+    <string name="loyalty_dialog_gen_failed_title">
+Генерация не удалась
+</string>
+    <string name="loyalty_dialog_gen_failed_subtitle">
+Не удалось создать пропуск лояльности
+</string>
+    <string name="loyalty_dialog_invalid_gpa_title">
+Неверный идентификатор заказа
+</string>
+    <string name="loyalty_dialog_invalid_gpa_subtitle">
+Неверный формат GPA
+</string>
+    <string name="loyalty_dialog_invalid_gpa_msg">
+Введите действительный идентификатор заказа в Google Play.\n
+\n
+Формат должен быть GPA.XXXX-XXXX-XXXX-XXXXX (указан в электронном письме с квитанцией о покупке в Google Play).
+</string>
+    <string name="loyalty_dialog_claim_failed_title">
+Претензия не удалась
+</string>
+    <string name="loyalty_dialog_claim_failed_subtitle">
+Невозможно связать заказ
+</string>
+    <string name="loyalty_dialog_already_claimed_title">
+Уже заявлено
+</string>
+    <string name="loyalty_dialog_already_claimed_subtitle">
+Заказ связан с пропуском
+</string>
+    <string name="loyalty_dialog_already_claimed_msg">
+Идентификатор заказа Google Play %1$s уже связан с пропуском лояльности (%2$s).\n
+\n
+Если это ваш пропуск, нажмите «Восстановить пропуск лояльности» и введите ключ восстановления, чтобы восстановить свои баллы и значки.
+</string>
+    <string name="loyalty_dialog_not_found_title">
+Заказ не найден
+</string>
+    <string name="loyalty_dialog_not_found_subtitle">
+Неподтвержденный идентификатор заказа
+</string>
+    <string name="loyalty_dialog_not_found_msg">
+Идентификатор заказа Google Play %1$s не найден в наших записях.\n
+\n
+Если вы недавно дали этот совет, подождите несколько минут, пока Google Play подтвердит транзакцию, или убедитесь, что идентификатор заказа соответствует адресу электронной почты с квитанцией.
+</string>
+    <string name="loyalty_dialog_verify_error_title">
+Ошибка проверки
+</string>
+    <string name="loyalty_dialog_verify_error_subtitle">
+Невозможно завершить проверку
+</string>
+    <string name="loyalty_dialog_missing_details_title">
+Недостающие детали
+</string>
+    <string name="loyalty_dialog_missing_details_subtitle">
+Обязательные поля пусты
+</string>
+    <string name="loyalty_dialog_missing_details_msg">
+Введите свой идентификатор лояльности (или номер предыдущего заказа GPA) и ключ восстановления.
+</string>
+    <string name="loyalty_dialog_restore_failed_title">
+Восстановление не удалось
+</string>
+    <string name="loyalty_dialog_restore_failed_subtitle">
+Аутентификация не удалась
+</string>
+    <string name="loyalty_dialog_invalid_id_title">
+Неверный идентификатор программы лояльности
+</string>
+    <string name="loyalty_dialog_invalid_id_subtitle">
+Формат должен быть XXX-XXX-XXX-XXX.
+</string>
+    <string name="loyalty_dialog_invalid_id_msg">
+Введите действительный 12-значный идентификатор лояльности и ключ восстановления.
+</string>
+    <string name="loyalty_dialog_connect_failed_title">
+Соединение не удалось
+</string>
+    <string name="loyalty_dialog_connect_failed_subtitle">
+Не удалось связать заказ
+</string>
+
+    <!-- Tip Jar Tier Loyalty Points -->
+    <string name="tip_jar_ristretto_points">
++10 очков лояльности
+</string>
+    <string name="tip_jar_espresso_points">
++30 очков лояльности
+</string>
+    <string name="tip_jar_cappuccino_points">
++50 очков лояльности
+</string>
+    <string name="tip_jar_latte_points">
++100 очков лояльности
+</string>
+    <string name="tip_jar_beans_points">
++150 очков лояльности
+</string>
 </resources>
 
 

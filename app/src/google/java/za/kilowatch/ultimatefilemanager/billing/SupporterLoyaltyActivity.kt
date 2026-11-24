@@ -990,7 +990,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
                 val syncRes = LoyaltyPassManager.syncPass(this@SupporterLoyaltyActivity)
                 if (syncRes is PassOperationResult.Success) {
                     txtPts?.text = getString(R.string.loyalty_pass_points_format, syncRes.totalPoints)
-                    setupBadgesSection()
+                    refreshLoyaltySectionsAfterPassChange(includePassCard = false)
                 }
             }
         } else {
@@ -1005,6 +1005,15 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         }
     }
 
+    private fun refreshLoyaltySectionsAfterPassChange(includePassCard: Boolean = true) {
+        if (includePassCard) {
+            setupLoyaltyPassSection()
+        }
+        setupCustomIconSection()
+        setupBadgesSection()
+        refreshLoyaltyUI()
+    }
+
     private fun handleTipOrderReceived(orderId: String, points: Int) {
         if (LoyaltyPassManager.hasLoyaltyPass(this)) {
             val passId = LoyaltyPassManager.getLoyaltyId(this)
@@ -1012,8 +1021,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 val res = LoyaltyPassManager.claimToExisting(this@SupporterLoyaltyActivity, orderId, passId, passkey)
                 if (res is PassOperationResult.Success) {
-                    setupLoyaltyPassSection()
-                    setupBadgesSection()
+                    refreshLoyaltySectionsAfterPassChange()
                     Toast.makeText(
                         this@SupporterLoyaltyActivity,
                         getString(R.string.loyalty_pass_points_format, res.totalPoints),
@@ -1048,13 +1056,12 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
                 val res = LoyaltyPassManager.createPass(this@SupporterLoyaltyActivity, orderId)
                 dialog.dismiss()
                 if (res is PassOperationResult.Success) {
-                    setupLoyaltyPassSection()
-                    setupBadgesSection()
+                    refreshLoyaltySectionsAfterPassChange()
                     showCredentialsDialog(res.loyaltyId, res.passkey)
                 } else if (res is PassOperationResult.Error) {
                     showUfmInfoDialog(
-                        title = "Generation Failed",
-                        subtitle = "Could Not Create Loyalty Pass",
+                        title = getString(R.string.loyalty_dialog_gen_failed_title),
+                        subtitle = getString(R.string.loyalty_dialog_gen_failed_subtitle),
                         message = res.message,
                         iconRes = R.drawable.ic_warning
                     )
@@ -1166,9 +1173,9 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
             val sanitized = GpaInputFormatter.sanitizeGpa(raw)
             if (!GpaInputFormatter.isValidGpa(sanitized)) {
                 showUfmInfoDialog(
-                    title = "Invalid Order ID",
-                    subtitle = "GPA Format Incorrect",
-                    message = "Please enter a valid Google Play Order ID.\n\nFormat must be GPA.XXXX-XXXX-XXXX-XXXXX (found in your Google Play purchase receipt email).",
+                    title = getString(R.string.loyalty_dialog_invalid_gpa_title),
+                    subtitle = getString(R.string.loyalty_dialog_invalid_gpa_subtitle),
+                    message = getString(R.string.loyalty_dialog_invalid_gpa_msg),
                     iconRes = R.drawable.ic_warning
                 )
                 return@setOnClickListener
@@ -1191,13 +1198,12 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
                             val passkey = LoyaltyPassManager.getPasskey(this@SupporterLoyaltyActivity)
                             val claimRes = LoyaltyPassManager.claimToExisting(this@SupporterLoyaltyActivity, sanitized, passId, passkey)
                             if (claimRes is PassOperationResult.Success) {
-                                setupLoyaltyPassSection()
-                                setupBadgesSection()
+                                refreshLoyaltySectionsAfterPassChange()
                                 Toast.makeText(this@SupporterLoyaltyActivity, getString(R.string.loyalty_pass_points_format, claimRes.totalPoints), Toast.LENGTH_SHORT).show()
                             } else if (claimRes is PassOperationResult.Error) {
                                 showUfmInfoDialog(
-                                    title = "Claim Failed",
-                                    subtitle = "Unable to Link Order",
+                                    title = getString(R.string.loyalty_dialog_claim_failed_title),
+                                    subtitle = getString(R.string.loyalty_dialog_claim_failed_subtitle),
                                     message = claimRes.message,
                                     iconRes = R.drawable.ic_warning
                                 )
@@ -1208,24 +1214,24 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
                     }
                     is GpaCheckResult.AlreadyClaimed -> {
                         showUfmInfoDialog(
-                            title = "Already Claimed",
-                            subtitle = "Order Linked to Pass",
-                            message = "Google Play Order ID $sanitized has already been linked to a Loyalty Pass (${check.loyaltyId}).\n\nIf this is your pass, tap 'Restore Loyalty Pass' and enter your Recovery Passkey to restore your points and badges.",
+                            title = getString(R.string.loyalty_dialog_already_claimed_title),
+                            subtitle = getString(R.string.loyalty_dialog_already_claimed_subtitle),
+                            message = getString(R.string.loyalty_dialog_already_claimed_msg, sanitized, check.loyaltyId),
                             iconRes = R.drawable.ic_security_lock
                         )
                     }
                     is GpaCheckResult.NotFound -> {
                         showUfmInfoDialog(
-                            title = "Order Not Found",
-                            subtitle = "Unverified Order ID",
-                            message = "Google Play Order ID $sanitized was not found in our records.\n\nIf you recently made this tip, please allow a few minutes for Google Play to confirm the transaction, or check that the order ID matches your receipt email.",
+                            title = getString(R.string.loyalty_dialog_not_found_title),
+                            subtitle = getString(R.string.loyalty_dialog_not_found_subtitle),
+                            message = getString(R.string.loyalty_dialog_not_found_msg, sanitized),
                             iconRes = R.drawable.ic_warning
                         )
                     }
                     is GpaCheckResult.Error -> {
                         showUfmInfoDialog(
-                            title = "Verification Error",
-                            subtitle = "Unable to Complete Check",
+                            title = getString(R.string.loyalty_dialog_verify_error_title),
+                            subtitle = getString(R.string.loyalty_dialog_verify_error_subtitle),
                             message = check.message,
                             iconRes = R.drawable.ic_warning
                         )
@@ -1262,9 +1268,9 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
             if (id.isEmpty() || key.isEmpty()) {
                 showUfmInfoDialog(
-                    title = "Missing Details",
-                    subtitle = "Required Fields Empty",
-                    message = "Please enter both your Loyalty ID (or previous GPA order number) and your Recovery Passkey.",
+                    title = getString(R.string.loyalty_dialog_missing_details_title),
+                    subtitle = getString(R.string.loyalty_dialog_missing_details_subtitle),
+                    message = getString(R.string.loyalty_dialog_missing_details_msg),
                     iconRes = R.drawable.ic_warning
                 )
                 return@setOnClickListener
@@ -1280,9 +1286,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
                 if (res is PassOperationResult.Success) {
                     dialog.dismiss()
-                    setupLoyaltyPassSection()
-                    setupBadgesSection()
-                    refreshLoyaltyUI()
+                    refreshLoyaltySectionsAfterPassChange()
                     Toast.makeText(
                         this@SupporterLoyaltyActivity,
                         getString(R.string.dialog_restore_pass_success, res.totalPoints),
@@ -1290,8 +1294,8 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
                     ).show()
                 } else if (res is PassOperationResult.Error) {
                     showUfmInfoDialog(
-                        title = "Restore Failed",
-                        subtitle = "Authentication Failed",
+                        title = getString(R.string.loyalty_dialog_restore_failed_title),
+                        subtitle = getString(R.string.loyalty_dialog_restore_failed_subtitle),
                         message = res.message,
                         iconRes = R.drawable.ic_security_lock
                     )
@@ -1329,9 +1333,9 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
             if (!GpaInputFormatter.isValidLoyaltyId(id) || key.isEmpty()) {
                 showUfmInfoDialog(
-                    title = "Invalid Loyalty ID",
-                    subtitle = "Format Must Be XXX-XXX-XXX-XXX",
-                    message = "Please enter a valid 12-character Loyalty ID and your Recovery Passkey.",
+                    title = getString(R.string.loyalty_dialog_invalid_id_title),
+                    subtitle = getString(R.string.loyalty_dialog_invalid_id_subtitle),
+                    message = getString(R.string.loyalty_dialog_invalid_id_msg),
                     iconRes = R.drawable.ic_warning
                 )
                 return@setOnClickListener
@@ -1347,9 +1351,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
                 if (res is PassOperationResult.Success) {
                     dialog.dismiss()
-                    setupLoyaltyPassSection()
-                    setupBadgesSection()
-                    refreshLoyaltyUI()
+                    refreshLoyaltySectionsAfterPassChange()
                     Toast.makeText(
                         this@SupporterLoyaltyActivity,
                         getString(R.string.dialog_restore_pass_success, res.totalPoints),
@@ -1357,8 +1359,8 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
                     ).show()
                 } else if (res is PassOperationResult.Error) {
                     showUfmInfoDialog(
-                        title = "Connection Failed",
-                        subtitle = "Could Not Link Order",
+                        title = getString(R.string.loyalty_dialog_connect_failed_title),
+                        subtitle = getString(R.string.loyalty_dialog_connect_failed_subtitle),
                         message = res.message,
                         iconRes = R.drawable.ic_warning
                     )
