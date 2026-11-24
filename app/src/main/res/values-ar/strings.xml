@@ -3789,6 +3789,61 @@ SMB3 فقط (آمن حديث)
     <string name="badge_desc_1000">
 احصل على الشارة العليا بـ 1000 نقطة!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+أيقونة مخصصة
+</string>
+    <string name="custom_icon_section_subtitle">
+حدد أي صورة أو صورة لإنشاء أيقونة التطبيق المخصصة الخاصة بك!
+</string>
+    <string name="custom_icon_item_title">
+أيقونة التطبيق المخصص
+</string>
+    <string name="custom_icon_item_desc_choose">
+انقر لاختيار أي صورة من مساحة التخزين الخاصة بك
+</string>
+    <string name="custom_icon_item_desc_active">
+أيقونة مخصصة نشطة
+</string>
+    <string name="custom_icon_item_desc_ready">
+الصورة المحددة • انقر لتطبيقها
+</string>
+    <string name="custom_icon_points_format">
+10 نقاط
+</string>
+    <string name="custom_icon_btn_choose">
+يختار
+</string>
+    <string name="custom_icon_dialog_title">
+أيقونة التطبيق المخصص
+</string>
+    <string name="custom_icon_dialog_subtitle">
+قم بمعاينة أيقونة المشغل المخصصة الخاصة بك
+</string>
+    <string name="custom_icon_preview_title">
+معاينة أيقونة المشغل
+</string>
+    <string name="custom_icon_dialog_notice">
+يؤدي تطبيق هذا الرمز إلى تحديث شعاراتك داخل التطبيق وإنشاء اختصار على الشاشة الرئيسية بالصورة التي اخترتها. سيتم إغلاق Ultimate File Manager للتحديث.
+</string>
+    <string name="custom_icon_btn_change">
+اختر صورة أخرى
+</string>
+    <string name="custom_icon_applied_toast">
+تم تطبيق رمز التطبيق المخصص!
+</string>
+    <string name="custom_icon_unsupported_image">
+يرجى تحديد ملف صورة مدعوم (PNG، JPG، WebP، GIF، BMP، HEIC).
+</string>
+    <string name="custom_icon_locked_msg">
+يتم فتح رمز التطبيق المخصص عند 10 نقاط ($1 في وعاء النصائح).\n
+\n
+لديك حاليًا %1$d نقاط (تحتاج إلى %2$d نقاط إضافية).\n
+\n
+ادعم التطوير أعلاه لإلغاء قفل رمز الشاشة الرئيسية المخصص الخاص بك!
+</string>
+
     <string name="tile_hidden_with_name">
 تم إخفاء بلاطة \"%1$s\"
 </string>

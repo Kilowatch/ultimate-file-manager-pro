@@ -3789,6 +3789,61 @@ Verdiene dir das legendäre Abzeichen mit 750 Punkten!
     <string name="badge_desc_1000">
 Verdiene dir das Supreme-Abzeichen mit 1.000 Punkten!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+Benutzerdefiniertes Symbol
+</string>
+    <string name="custom_icon_section_subtitle">
+Wählen Sie ein beliebiges Foto oder Bild aus, um Ihr eigenes personalisiertes App-Symbol zu erstellen!
+</string>
+    <string name="custom_icon_item_title">
+Benutzerdefiniertes App-Symbol
+</string>
+    <string name="custom_icon_item_desc_choose">
+Tippen Sie, um ein beliebiges Bild aus Ihrem Speicher auszuwählen
+</string>
+    <string name="custom_icon_item_desc_active">
+Personalisiertes Symbol aktiv
+</string>
+    <string name="custom_icon_item_desc_ready">
+Ausgewähltes Bild • Zum Übernehmen antippen
+</string>
+    <string name="custom_icon_points_format">
+10 Punkte
+</string>
+    <string name="custom_icon_btn_choose">
+Wählen
+</string>
+    <string name="custom_icon_dialog_title">
+Benutzerdefiniertes App-Symbol
+</string>
+    <string name="custom_icon_dialog_subtitle">
+Zeigen Sie eine Vorschau Ihres personalisierten Launcher-Symbols an
+</string>
+    <string name="custom_icon_preview_title">
+Vorschau des Launcher-Symbols
+</string>
+    <string name="custom_icon_dialog_notice">
+Wenn Sie dieses Symbol anwenden, werden Ihre In-App-Logos aktualisiert und eine Verknüpfung zum Startbildschirm mit dem von Ihnen ausgewählten Bild erstellt. Ultimate File Manager wird zur Aktualisierung geschlossen.
+</string>
+    <string name="custom_icon_btn_change">
+Wählen Sie ein anderes Bild
+</string>
+    <string name="custom_icon_applied_toast">
+Benutzerdefiniertes App-Symbol angewendet!
+</string>
+    <string name="custom_icon_unsupported_image">
+Bitte wählen Sie eine unterstützte Bilddatei (PNG, JPG, WebP, GIF, BMP, HEIC) aus.
+</string>
+    <string name="custom_icon_locked_msg">
+Das benutzerdefinierte App-Symbol wird bei 10 Punkten freigeschaltet ($1 im Trinkgeldglas).\n
+\n
+Sie haben derzeit %1$d Punkte (benötigen %2$d weitere Punkte).\n
+\n
+Unterstützen Sie die oben genannte Entwicklung, um Ihr eigenes benutzerdefiniertes Startbildschirmsymbol freizuschalten!
+</string>
+
     <string name="tile_hidden_with_name">
 \"%1$s\"-Kachel ausgeblendet
 </string>

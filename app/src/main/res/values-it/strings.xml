@@ -3773,6 +3773,61 @@ Guadagna il distintivo Leggendario con 750 punti!
     <string name="badge_desc_1000">
 Guadagna il distintivo Supremo con 1.000 punti!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+Icona personalizzata
+</string>
+    <string name="custom_icon_section_subtitle">
+Seleziona qualsiasi foto o immagine per creare la tua icona dell\'app personalizzata!
+</string>
+    <string name="custom_icon_item_title">
+Icona dell\'app personalizzata
+</string>
+    <string name="custom_icon_item_desc_choose">
+Tocca per scegliere qualsiasi immagine dalla tua memoria
+</string>
+    <string name="custom_icon_item_desc_active">
+Icona personalizzata attiva
+</string>
+    <string name="custom_icon_item_desc_ready">
+Immagine selezionata • Toccare per applicare
+</string>
+    <string name="custom_icon_points_format">
+10 punti
+</string>
+    <string name="custom_icon_btn_choose">
+Scegliere
+</string>
+    <string name="custom_icon_dialog_title">
+Icona dell\'app personalizzata
+</string>
+    <string name="custom_icon_dialog_subtitle">
+Visualizza l\'anteprima dell\'icona di avvio personalizzata
+</string>
+    <string name="custom_icon_preview_title">
+Anteprima dell\'icona di avvio
+</string>
+    <string name="custom_icon_dialog_notice">
+L\'applicazione di questa icona aggiorna i loghi in-app e crea un collegamento nella schermata iniziale con l\'immagine scelta. Ultimate File Manager si chiuderà per l\'aggiornamento.
+</string>
+    <string name="custom_icon_btn_change">
+Scegli un\'altra immagine
+</string>
+    <string name="custom_icon_applied_toast">
+Icona dell\'app personalizzata applicata!
+</string>
+    <string name="custom_icon_unsupported_image">
+Seleziona un file immagine supportato (PNG, JPG, WebP, GIF, BMP, HEIC).
+</string>
+    <string name="custom_icon_locked_msg">
+L\'icona dell\'app personalizzata si sblocca a 10 punti ($1 nel Tip Jar).\n
+\n
+Attualmente disponi di %1$d punti (ti servono %2$d punti in più).\n
+\n
+Supporta lo sviluppo qui sopra per sbloccare la tua icona personalizzata sulla schermata Home!
+</string>
+
     <string name="tile_hidden_with_name">
 Riquadro \"%1$s\" nascosto
 </string>

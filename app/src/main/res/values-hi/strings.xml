@@ -3789,6 +3789,61 @@ Amazon खरीदारी त्रुटि: %1$s
     <string name="badge_desc_1000">
 1,000 अंकों के साथ सर्वोच्च बैज अर्जित करें!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+कस्टम चिह्न
+</string>
+    <string name="custom_icon_section_subtitle">
+अपना व्यक्तिगत ऐप आइकन बनाने के लिए किसी भी फोटो या छवि का चयन करें!
+</string>
+    <string name="custom_icon_item_title">
+कस्टम ऐप आइकन
+</string>
+    <string name="custom_icon_item_desc_choose">
+अपने संग्रहण से कोई भी छवि चुनने के लिए टैप करें
+</string>
+    <string name="custom_icon_item_desc_active">
+वैयक्तिकृत आइकन सक्रिय
+</string>
+    <string name="custom_icon_item_desc_ready">
+छवि चयनित • लागू करने के लिए टैप करें
+</string>
+    <string name="custom_icon_points_format">
+10 पॉइंट
+</string>
+    <string name="custom_icon_btn_choose">
+चुनना
+</string>
+    <string name="custom_icon_dialog_title">
+कस्टम ऐप आइकन
+</string>
+    <string name="custom_icon_dialog_subtitle">
+अपने वैयक्तिकृत लॉन्चर आइकन का पूर्वावलोकन करें
+</string>
+    <string name="custom_icon_preview_title">
+लॉन्चर चिह्न पूर्वावलोकन
+</string>
+    <string name="custom_icon_dialog_notice">
+इस आइकन को लागू करने से आपके इन-ऐप लोगो अपडेट हो जाते हैं और आपकी चुनी हुई छवि के साथ एक होम स्क्रीन शॉर्टकट बन जाता है। अल्टीमेट फाइल मैनेजर रीफ्रेश करने के लिए बंद हो जाएगा।
+</string>
+    <string name="custom_icon_btn_change">
+कोई अन्य छवि चुनें
+</string>
+    <string name="custom_icon_applied_toast">
+कस्टम ऐप आइकन लागू किया गया!
+</string>
+    <string name="custom_icon_unsupported_image">
+कृपया एक समर्थित छवि फ़ाइल (पीएनजी, जेपीजी, वेबपी, जीआईएफ, बीएमपी, एचईआईसी) का चयन करें।
+</string>
+    <string name="custom_icon_locked_msg">
+कस्टम ऐप आइकन 10 बिंदुओं पर अनलॉक होता है ($1 टिप जार में)।\n
+\n
+आपके पास वर्तमान में %1$d अंक हैं (%2$d अधिक बिंदुओं की आवश्यकता है)।\n
+\n
+अपने स्वयं के कस्टम होम स्क्रीन आइकन को अनलॉक करने के लिए उपरोक्त विकास का समर्थन करें!
+</string>
+
     <string name="tile_hidden_with_name">
 \"%1$s\" टाइल छिपाई गई
 </string>

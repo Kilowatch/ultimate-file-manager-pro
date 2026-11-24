@@ -3789,6 +3789,61 @@ Amazon購入エラー: %1$s
     <string name="badge_desc_1000">
 1,000 ポイントで Supreme バッジを獲得しましょう!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+カスタムアイコン
+</string>
+    <string name="custom_icon_section_subtitle">
+任意の写真または画像を選択して、独自のパーソナライズされたアプリ アイコンを作成します。
+</string>
+    <string name="custom_icon_item_title">
+カスタムアプリアイコン
+</string>
+    <string name="custom_icon_item_desc_choose">
+タップしてストレージから画像を選択します
+</string>
+    <string name="custom_icon_item_desc_active">
+パーソナライズされたアイコンがアクティブです
+</string>
+    <string name="custom_icon_item_desc_ready">
+画像を選択しました • タップして適用します
+</string>
+    <string name="custom_icon_points_format">
+10ポイント
+</string>
+    <string name="custom_icon_btn_choose">
+選ぶ
+</string>
+    <string name="custom_icon_dialog_title">
+カスタムアプリアイコン
+</string>
+    <string name="custom_icon_dialog_subtitle">
+パーソナライズされたランチャーアイコンをプレビューする
+</string>
+    <string name="custom_icon_preview_title">
+ランチャーアイコンのプレビュー
+</string>
+    <string name="custom_icon_dialog_notice">
+このアイコンを適用すると、アプリ内ロゴが更新され、選択した画像を使用したホーム画面のショートカットが作成されます。更新するために Ultimate File Manager が終了します。
+</string>
+    <string name="custom_icon_btn_change">
+別の画像を選択してください
+</string>
+    <string name="custom_icon_applied_toast">
+カスタムアプリアイコンが適用されました!
+</string>
+    <string name="custom_icon_unsupported_image">
+サポートされている画像ファイル (PNG、JPG、WebP、GIF、BMP、HEIC) を選択してください。
+</string>
+    <string name="custom_icon_locked_msg">
+カスタム アプリ アイコンは 10 ポイント (ヒント ジャーの $1) でロック解除されます。\n
+\n
+現在 %1$d ポイントを持っています (さらに %2$d ポイントが必要です)。\n
+\n
+独自のカスタム ホーム画面アイコンのロックを解除するには、上記の開発をサポートしてください。
+</string>
+
     <string name="tile_hidden_with_name">
 \"%1$s\"タイルを非表示
 </string>

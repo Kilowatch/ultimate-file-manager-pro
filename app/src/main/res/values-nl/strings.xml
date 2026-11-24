@@ -3664,6 +3664,61 @@ Verdien de legendarische badge met 750 punten!
     <string name="badge_desc_1000">
 Verdien de Supreme-badge met 1.000 punten!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+Aangepast pictogram
+</string>
+    <string name="custom_icon_section_subtitle">
+Selecteer een foto of afbeelding om uw eigen gepersonaliseerde app-pictogram te maken!
+</string>
+    <string name="custom_icon_item_title">
+Aangepast app-pictogram
+</string>
+    <string name="custom_icon_item_desc_choose">
+Tik om een ​​afbeelding uit uw opslag te kiezen
+</string>
+    <string name="custom_icon_item_desc_active">
+Gepersonaliseerd pictogram actief
+</string>
+    <string name="custom_icon_item_desc_ready">
+Geselecteerde afbeelding • Tik om toe te passen
+</string>
+    <string name="custom_icon_points_format">
+10 punten
+</string>
+    <string name="custom_icon_btn_choose">
+Kiezen
+</string>
+    <string name="custom_icon_dialog_title">
+Aangepast app-pictogram
+</string>
+    <string name="custom_icon_dialog_subtitle">
+Bekijk een voorbeeld van uw gepersonaliseerde opstartpictogram
+</string>
+    <string name="custom_icon_preview_title">
+Launcher-pictogramvoorbeeld
+</string>
+    <string name="custom_icon_dialog_notice">
+Als u dit pictogram toepast, worden uw in-app-logo\'s bijgewerkt en wordt er een snelkoppeling op het startscherm gemaakt met de door u gekozen afbeelding. Ultimate File Manager wordt gesloten om te vernieuwen.
+</string>
+    <string name="custom_icon_btn_change">
+Kies een andere afbeelding
+</string>
+    <string name="custom_icon_applied_toast">
+Aangepast app-pictogram toegepast!
+</string>
+    <string name="custom_icon_unsupported_image">
+Selecteer een ondersteund afbeeldingsbestand (PNG, JPG, WebP, GIF, BMP, HEIC).
+</string>
+    <string name="custom_icon_locked_msg">
+Aangepast app-pictogram wordt ontgrendeld met 10 punten ($1 in de fooienpot).\n
+\n
+Je hebt momenteel %1$d punten (heb nog %2$d punten nodig).\n
+\n
+Ondersteun de ontwikkeling hierboven om je eigen aangepaste startschermpictogram te ontgrendelen!
+</string>
+
     <string name="tile_hidden_with_name">
 Tegel \'%1$s\' verborgen
 </string>

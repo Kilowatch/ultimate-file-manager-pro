@@ -3789,6 +3789,61 @@ Dapatkan lencana Legendaris dengan 750 poin!
     <string name="badge_desc_1000">
 Dapatkan lencana Tertinggi dengan 1.000 poin!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+Ikon Kustom
+</string>
+    <string name="custom_icon_section_subtitle">
+Pilih foto atau gambar apa pun untuk membuat ikon aplikasi hasil personalisasi Anda!
+</string>
+    <string name="custom_icon_item_title">
+Ikon Aplikasi Khusus
+</string>
+    <string name="custom_icon_item_desc_choose">
+Ketuk untuk memilih gambar apa pun dari penyimpanan Anda
+</string>
+    <string name="custom_icon_item_desc_active">
+Ikon hasil personalisasi aktif
+</string>
+    <string name="custom_icon_item_desc_ready">
+Gambar dipilih • Ketuk untuk menerapkan
+</string>
+    <string name="custom_icon_points_format">
+10 Poin
+</string>
+    <string name="custom_icon_btn_choose">
+Memilih
+</string>
+    <string name="custom_icon_dialog_title">
+Ikon Aplikasi Khusus
+</string>
+    <string name="custom_icon_dialog_subtitle">
+Pratinjau ikon peluncur hasil personalisasi Anda
+</string>
+    <string name="custom_icon_preview_title">
+Pratinjau Ikon Peluncur
+</string>
+    <string name="custom_icon_dialog_notice">
+Menerapkan ikon ini akan memperbarui logo dalam aplikasi Anda dan membuat pintasan layar beranda dengan gambar pilihan Anda. Ultimate File Manager akan ditutup untuk menyegarkan.
+</string>
+    <string name="custom_icon_btn_change">
+Pilih Gambar Lain
+</string>
+    <string name="custom_icon_applied_toast">
+Ikon aplikasi khusus diterapkan!
+</string>
+    <string name="custom_icon_unsupported_image">
+Silakan pilih file gambar yang didukung (PNG, JPG, WebP, GIF, BMP, HEIC).
+</string>
+    <string name="custom_icon_locked_msg">
+Ikon Aplikasi Khusus terbuka pada 10 poin ($1 di Tip Jar).\n
+\n
+Saat ini Anda memiliki %1$d poin (membutuhkan %2$d poin lagi).\n
+\n
+Dukung pengembangan di atas untuk membuka kunci ikon layar beranda khusus Anda sendiri!
+</string>
+
     <string name="tile_hidden_with_name">
 \"%1$s\" ubin disembunyikan
 </string>

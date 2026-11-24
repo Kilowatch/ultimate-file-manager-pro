@@ -22,7 +22,7 @@ object BadgeIconManager {
     const val POINTS_PER_DOLLAR = 10
 
     // DEBUG: Set to true to unlock all badges for testing/previewing, false for normal loyalty check.
-    var DEBUG_FORCE_ALL_UNLOCKED = true
+    var DEBUG_FORCE_ALL_UNLOCKED = false
 
     val BADGES = listOf(
         BadgeItem(5, R.string.badge_title_5, R.string.badge_desc_5, R.drawable.app_icon_points_5, R.drawable.badge_points_5, "za.kilowatch.ultimatefilemanager.BadgeIcon5", "#00B4D8"),

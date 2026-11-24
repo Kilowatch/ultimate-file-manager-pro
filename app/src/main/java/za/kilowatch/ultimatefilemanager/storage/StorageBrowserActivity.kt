@@ -4040,12 +4040,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     private fun updateToolbarLogo() {
         val logo = imgToolbarLogo ?: findViewById<android.widget.ImageView?>(R.id.imgToolbarLogo) ?: return
-        val activeIconRes = za.kilowatch.ultimatefilemanager.billing.ActiveBadgeIconHelper.getActiveAppIcon(this)
-        if (activeIconRes != null) {
-            logo.setImageResource(activeIconRes)
-        } else {
-            logo.setImageResource(R.drawable.ic_storage_browser_logo)
-        }
+        za.kilowatch.ultimatefilemanager.billing.ActiveBadgeIconHelper.applyToImageView(logo, R.drawable.ic_storage_browser_logo)
     }
 
     private fun updateHeaderActionButtons() {

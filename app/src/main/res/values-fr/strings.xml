@@ -3789,6 +3789,61 @@ Gagnez le badge Légendaire avec 750 points !
     <string name="badge_desc_1000">
 Gagnez le badge Suprême avec 1 000 points !
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+Icône personnalisée
+</string>
+    <string name="custom_icon_section_subtitle">
+Sélectionnez n\'importe quelle photo ou image pour créer votre propre icône d\'application personnalisée !
+</string>
+    <string name="custom_icon_item_title">
+Icône d\'application personnalisée
+</string>
+    <string name="custom_icon_item_desc_choose">
+Appuyez pour choisir n\'importe quelle image de votre stockage
+</string>
+    <string name="custom_icon_item_desc_active">
+Icône personnalisée active
+</string>
+    <string name="custom_icon_item_desc_ready">
+Image sélectionnée • Appuyez pour appliquer
+</string>
+    <string name="custom_icon_points_format">
+10 points
+</string>
+    <string name="custom_icon_btn_choose">
+Choisir
+</string>
+    <string name="custom_icon_dialog_title">
+Icône d\'application personnalisée
+</string>
+    <string name="custom_icon_dialog_subtitle">
+Prévisualisez votre icône de lanceur personnalisée
+</string>
+    <string name="custom_icon_preview_title">
+Aperçu de l\'icône du lanceur
+</string>
+    <string name="custom_icon_dialog_notice">
+L\'application de cette icône met à jour vos logos dans l\'application et crée un raccourci sur l\'écran d\'accueil avec l\'image de votre choix. Ultimate File Manager se fermera pour s\'actualiser.
+</string>
+    <string name="custom_icon_btn_change">
+Choisissez une autre image
+</string>
+    <string name="custom_icon_applied_toast">
+Icône d\'application personnalisée appliquée !
+</string>
+    <string name="custom_icon_unsupported_image">
+Veuillez sélectionner un fichier image pris en charge (PNG, JPG, WebP, GIF, BMP, HEIC).
+</string>
+    <string name="custom_icon_locked_msg">
+L\'icône d\'application personnalisée se déverrouille après 10 points ($1 dans le pot de conseils).\n
+\n
+Vous avez actuellement %1$d points (vous avez besoin de %2$d points supplémentaires).\n
+\n
+Supportez le développement ci-dessus pour débloquer votre propre icône d\'écran d\'accueil personnalisée !
+</string>
+
     <string name="tile_hidden_with_name">
 Tuile \"%1$s\" masquée
 </string>

@@ -3789,6 +3789,61 @@ Amazon Tip Jar скоро появится — спасибо за терпен�
     <string name="badge_desc_1000">
 Получите значок Supreme, набрав 1000 баллов!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+Пользовательский значок
+</string>
+    <string name="custom_icon_section_subtitle">
+Выберите любую фотографию или изображение, чтобы создать свой собственный значок приложения!
+</string>
+    <string name="custom_icon_item_title">
+Пользовательский значок приложения
+</string>
+    <string name="custom_icon_item_desc_choose">
+Нажмите, чтобы выбрать любое изображение из вашего хранилища.
+</string>
+    <string name="custom_icon_item_desc_active">
+Персонализированный значок активен
+</string>
+    <string name="custom_icon_item_desc_ready">
+Изображение выбрано • Нажмите, чтобы применить
+</string>
+    <string name="custom_icon_points_format">
+10 очков
+</string>
+    <string name="custom_icon_btn_choose">
+Выбирать
+</string>
+    <string name="custom_icon_dialog_title">
+Пользовательский значок приложения
+</string>
+    <string name="custom_icon_dialog_subtitle">
+Предварительный просмотр вашего персонализированного значка запуска
+</string>
+    <string name="custom_icon_preview_title">
+Предварительный просмотр значка запуска
+</string>
+    <string name="custom_icon_dialog_notice">
+Применение этого значка обновит ваши логотипы в приложении и создаст ярлык на главном экране с выбранным вами изображением. Ultimate File Manager закроется для обновления.
+</string>
+    <string name="custom_icon_btn_change">
+Выбрать другое изображение
+</string>
+    <string name="custom_icon_applied_toast">
+Пользовательский значок приложения применен!
+</string>
+    <string name="custom_icon_unsupported_image">
+Выберите поддерживаемый файл изображения (PNG, JPG, WebP, GIF, BMP, HEIC).
+</string>
+    <string name="custom_icon_locked_msg">
+Пользовательский значок приложения разблокируется после 10 баллов ($1 в банке подсказок).\n
+\n
+В настоящее время у вас есть %1$d баллов (нужно еще %2$d баллов).\n
+\n
+Поддержите разработку, указанную выше, чтобы разблокировать собственный собственный значок на главном экране!
+</string>
+
     <string name="tile_hidden_with_name">
 Плитка \"%1$s\" скрыта
 </string>

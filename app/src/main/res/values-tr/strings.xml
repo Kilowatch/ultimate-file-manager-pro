@@ -3789,6 +3789,61 @@ Desteğinizi 5 puanla gösterin!
     <string name="badge_desc_1000">
 1.000 puanla Yüce rozetini kazanın!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+Özel Simge
+</string>
+    <string name="custom_icon_section_subtitle">
+Kendi kişiselleştirilmiş uygulama simgenizi oluşturmak için herhangi bir fotoğraf veya görseli seçin!
+</string>
+    <string name="custom_icon_item_title">
+Özel Uygulama Simgesi
+</string>
+    <string name="custom_icon_item_desc_choose">
+Depolama alanınızdan herhangi bir resmi seçmek için dokunun
+</string>
+    <string name="custom_icon_item_desc_active">
+Kişiselleştirilmiş simge etkin
+</string>
+    <string name="custom_icon_item_desc_ready">
+Resim seçildi • Uygulamak için dokunun
+</string>
+    <string name="custom_icon_points_format">
+10 Puan
+</string>
+    <string name="custom_icon_btn_choose">
+Seçmek
+</string>
+    <string name="custom_icon_dialog_title">
+Özel Uygulama Simgesi
+</string>
+    <string name="custom_icon_dialog_subtitle">
+Kişiselleştirilmiş başlatıcı simgenizi önizleyin
+</string>
+    <string name="custom_icon_preview_title">
+Başlatıcı Simgesi Önizlemesi
+</string>
+    <string name="custom_icon_dialog_notice">
+Bu simgenin uygulanması uygulama içi logolarınızı günceller ve seçtiğiniz görselle bir ana ekran kısayolu oluşturur. Ultimate Dosya Yöneticisi yenileme için kapanacak.
+</string>
+    <string name="custom_icon_btn_change">
+Başka Bir Resim Seçin
+</string>
+    <string name="custom_icon_applied_toast">
+Özel uygulama simgesi uygulandı!
+</string>
+    <string name="custom_icon_unsupported_image">
+Lütfen desteklenen bir resim dosyası seçin (PNG, JPG, WebP, GIF, BMP, HEIC).
+</string>
+    <string name="custom_icon_locked_msg">
+Özel Uygulama Simgesinin kilidi 10 noktada açılır (İpucu Kavanozunda $1).\n
+\n
+Şu anda %1$d puanınız var (%2$d puana daha ihtiyacınız var).\n
+\n
+Kendi özel ana ekran simgenizin kilidini açmak için yukarıdaki geliştirmeyi destekleyin!
+</string>
+
     <string name="tile_hidden_with_name">
 \"%1$s\" kutucuğu gizlendi
 </string>

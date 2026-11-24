@@ -1347,6 +1347,25 @@
     <string name="badge_desc_500">Earn the Royal badge with 500 points!</string>
     <string name="badge_desc_750">Earn the Legendary badge with 750 points!</string>
     <string name="badge_desc_1000">Earn the Supreme badge with 1,000 points!</string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">Custom Icon</string>
+    <string name="custom_icon_section_subtitle">Select any photo or image to create your own personalized app icon!</string>
+    <string name="custom_icon_item_title">Custom App Icon</string>
+    <string name="custom_icon_item_desc_choose">Tap to choose any image from your storage</string>
+    <string name="custom_icon_item_desc_active">Personalized icon active</string>
+    <string name="custom_icon_item_desc_ready">Image selected • Tap to apply</string>
+    <string name="custom_icon_points_format">10 Points</string>
+    <string name="custom_icon_btn_choose">Choose</string>
+    <string name="custom_icon_dialog_title">Custom App Icon</string>
+    <string name="custom_icon_dialog_subtitle">Preview your personalized launcher icon</string>
+    <string name="custom_icon_preview_title">Launcher Icon Preview</string>
+    <string name="custom_icon_dialog_notice">Applying this icon updates your in-app logos and creates a home screen shortcut with your chosen image. Ultimate File Manager will close to refresh.</string>
+    <string name="custom_icon_btn_change">Choose Another Image</string>
+    <string name="custom_icon_applied_toast">Custom app icon applied!</string>
+    <string name="custom_icon_unsupported_image">Please select a supported image file (PNG, JPG, WebP, GIF, BMP, HEIC).</string>
+    <string name="custom_icon_locked_msg">Custom App Icon unlocks at 10 points ($1 in the Tip Jar).\n\nYou currently have %1$d points (need %2$d more points).\n\nSupport development above to unlock your own custom home screen icon!</string>
+
     <string name="tile_hidden_with_name">\"%1$s\" tile hidden</string>
 
     <!-- Folder Sync -->

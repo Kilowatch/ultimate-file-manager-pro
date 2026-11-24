@@ -313,7 +313,8 @@
         "onboarding_spacing_compact": "99452646e34b69704c9134a093d5ce5af823cc6d4ed3566fe8ad3ba1555057ae",
         "onboarding_columns_4_sub": "99452646e34b69704c9134a093d5ce5af823cc6d4ed3566fe8ad3ba1555057ae",
         "onboarding_columns_3_sub": "ef6691545d2c5523efed00424407cb261aeb0037d165ca5792f7f8bac3381362",
-        "badge_points_format": "2ad19966c0f84b074738bb62e24adac415ea382c36f5de46ebeb702d8ce2086f"
+        "badge_points_format": "2ad19966c0f84b074738bb62e24adac415ea382c36f5de46ebeb702d8ce2086f",
+        "custom_icon_points_format": "fdc8cd86ebde3699c7a4a1d3e1078746a4023aec6191997722a5ebe69bd1c6f1"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",

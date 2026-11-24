@@ -3789,6 +3789,61 @@ Restaurar y cerrar
     <string name="badge_desc_1000">
 ¡Gana la insignia Suprema con 1000 puntos!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+Icono personalizado
+</string>
+    <string name="custom_icon_section_subtitle">
+¡Selecciona cualquier foto o imagen para crear tu propio ícono de aplicación personalizado!
+</string>
+    <string name="custom_icon_item_title">
+Icono de aplicación personalizada
+</string>
+    <string name="custom_icon_item_desc_choose">
+Toca para elegir cualquier imagen de tu almacenamiento.
+</string>
+    <string name="custom_icon_item_desc_active">
+Icono personalizado activo
+</string>
+    <string name="custom_icon_item_desc_ready">
+Imagen seleccionada • Toque para aplicar
+</string>
+    <string name="custom_icon_points_format">
+10 puntos
+</string>
+    <string name="custom_icon_btn_choose">
+Elegir
+</string>
+    <string name="custom_icon_dialog_title">
+Icono de aplicación personalizada
+</string>
+    <string name="custom_icon_dialog_subtitle">
+Obtenga una vista previa de su icono de iniciador personalizado
+</string>
+    <string name="custom_icon_preview_title">
+Vista previa del icono del iniciador
+</string>
+    <string name="custom_icon_dialog_notice">
+La aplicación de este ícono actualiza los logotipos de la aplicación y crea un acceso directo a la pantalla de inicio con la imagen elegida. Ultimate File Manager se cerrará para actualizarse.
+</string>
+    <string name="custom_icon_btn_change">
+Elige otra imagen
+</string>
+    <string name="custom_icon_applied_toast">
+¡Se aplicó el ícono de aplicación personalizado!
+</string>
+    <string name="custom_icon_unsupported_image">
+Seleccione un archivo de imagen compatible (PNG, JPG, WebP, GIF, BMP, HEIC).
+</string>
+    <string name="custom_icon_locked_msg">
+El ícono de aplicación personalizada se desbloquea con 10 puntos ($1 en el tarro de sugerencias).\n
+\n
+Actualmente tienes %1$d puntos (necesitas %2$d puntos más).\n
+\n
+¡Apoya el desarrollo anterior para desbloquear tu propio ícono de pantalla de inicio personalizado!
+</string>
+
     <string name="tile_hidden_with_name">
 El mosaico \"%1$s\" está oculto
 </string>

@@ -1,7 +1,9 @@
 package za.kilowatch.ultimatefilemanager.billing
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -13,9 +15,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -26,11 +30,25 @@ import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
+import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
+import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import java.util.concurrent.TimeUnit
 
 class SupporterLoyaltyActivity : AppCompatActivity() {
+
+    // Launcher for selecting a custom app icon image via UFM Standard file browsing
+    private val pickCustomImageLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val selectedPath = result.data?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_PATH)
+            if (!selectedPath.isNullOrEmpty()) {
+                handleCustomImageSelected(selectedPath)
+            }
+        }
+    }
 
     // Google Play Billing manager — used on all Google Play/non-Amazon devices.
     private lateinit var billingManager: BillingManager
@@ -131,6 +149,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         fetchGlobalProgress()
 
         if (!isTv && !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
+            setupCustomIconSection()
             setupBadgesSection()
         }
     }
@@ -312,6 +331,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
             LoyaltyPrefs.addTip(this, tipAmount)
             refreshLoyaltyUI()
             if (!isTv && !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
+                setupCustomIconSection()
                 setupBadgesSection()
             }
             // Trigger auto-backup if enabled
@@ -494,6 +514,178 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         btnBeans.isEnabled      = enabled
     }
 
+    private fun setupCustomIconSection() {
+        val cardCustomIcon = findViewById<View>(R.id.cardCustomIconSection) ?: return
+        val cardItem = findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardCustomIconItem) ?: return
+        val imgThumb = findViewById<ImageView>(R.id.imgCustomIconPreviewThumb) ?: return
+        val txtDesc = findViewById<TextView>(R.id.txtCustomIconDesc) ?: return
+        val btnAction = findViewById<MaterialButton>(R.id.btnCustomIconAction) ?: return
+
+        cardCustomIcon.visibility = View.VISIBLE
+
+        val isUnlocked = CustomIconManager.isUnlocked(this)
+        val hasCustom = CustomIconManager.hasCustomIcon(this)
+        val isActive = CustomIconManager.isCustomIconActive(this)
+        val customBmp = if (hasCustom) CustomIconManager.getCustomIconBitmap(this) else null
+
+        if (customBmp != null) {
+            imgThumb.setImageBitmap(customBmp)
+        } else {
+            imgThumb.setImageResource(R.drawable.ic_add_photo)
+        }
+
+        if (isActive) {
+            txtDesc.setText(R.string.custom_icon_item_desc_active)
+            btnAction.text = getString(R.string.badge_btn_active)
+            btnAction.setIconResource(R.drawable.ic_check_bold)
+            btnAction.iconTint = ColorStateList.valueOf(android.graphics.Color.WHITE)
+            btnAction.setTextColor(android.graphics.Color.WHITE)
+            btnAction.backgroundTintList = ColorStateList.valueOf(android.graphics.Color.parseColor("#10B981"))
+            btnAction.strokeWidth = 0
+            cardItem.setCardBackgroundColor(android.graphics.Color.parseColor("#1410B981"))
+        } else if (hasCustom && isUnlocked) {
+            txtDesc.setText(R.string.custom_icon_item_desc_ready)
+            btnAction.text = getString(R.string.badge_btn_apply)
+            btnAction.setIconResource(R.drawable.ic_check_bold)
+            btnAction.iconTint = ColorStateList.valueOf(android.graphics.Color.WHITE)
+            btnAction.setTextColor(android.graphics.Color.WHITE)
+            btnAction.backgroundTintList = ColorStateList.valueOf(android.graphics.Color.parseColor("#00B4D8"))
+            btnAction.strokeWidth = 0
+            cardItem.setCardBackgroundColor(android.graphics.Color.TRANSPARENT)
+        } else if (isUnlocked) {
+            txtDesc.setText(R.string.custom_icon_item_desc_choose)
+            btnAction.text = getString(R.string.custom_icon_btn_choose)
+            btnAction.setIconResource(R.drawable.ic_file_image)
+            btnAction.iconTint = ColorStateList.valueOf(android.graphics.Color.WHITE)
+            btnAction.setTextColor(android.graphics.Color.WHITE)
+            btnAction.backgroundTintList = ColorStateList.valueOf(android.graphics.Color.parseColor("#8B5CF6"))
+            btnAction.strokeWidth = 0
+            cardItem.setCardBackgroundColor(android.graphics.Color.TRANSPARENT)
+        } else {
+            txtDesc.setText(R.string.custom_icon_item_desc_choose)
+            btnAction.text = getString(R.string.badge_btn_locked)
+            btnAction.setIconResource(R.drawable.ic_lock)
+            val lockColor = android.graphics.Color.parseColor("#94A3B8")
+            btnAction.iconTint = ColorStateList.valueOf(lockColor)
+            btnAction.setTextColor(lockColor)
+            btnAction.backgroundTintList = ColorStateList.valueOf(android.graphics.Color.parseColor("#182234"))
+            btnAction.strokeColor = ColorStateList.valueOf(android.graphics.Color.parseColor("#334155"))
+            btnAction.strokeWidth = (1 * resources.displayMetrics.density).toInt()
+            cardItem.setCardBackgroundColor(android.graphics.Color.TRANSPARENT)
+        }
+
+        btnAction.setOnClickListener { cardItem.performClick() }
+
+        cardItem.setOnClickListener {
+            if (!isUnlocked) {
+                showCustomIconLockedDialog()
+            } else if (hasCustom) {
+                val bmp = CustomIconManager.getCustomIconBitmap(this)
+                if (bmp != null) {
+                    showCustomIconPreviewDialog(bmp)
+                } else {
+                    launchUfmImagePicker()
+                }
+            } else {
+                launchUfmImagePicker()
+            }
+        }
+    }
+
+    private fun launchUfmImagePicker() {
+        val intent = Intent(this, StorageBrowserActivity::class.java).apply {
+            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+            putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, "png,jpg,jpeg,webp,bmp,gif,heic,heif")
+        }
+        pickCustomImageLauncher.launch(intent)
+    }
+
+    private fun handleCustomImageSelected(sourcePath: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val success = CustomIconManager.processAndSaveCustomIcon(this@SupporterLoyaltyActivity, sourcePath)
+            withContext(Dispatchers.Main) {
+                if (success) {
+                    val bmp = CustomIconManager.getCustomIconBitmap(this@SupporterLoyaltyActivity)
+                    setupCustomIconSection()
+                    if (bmp != null) {
+                        showCustomIconPreviewDialog(bmp)
+                    }
+                } else {
+                    Toast.makeText(
+                        this@SupporterLoyaltyActivity,
+                        R.string.custom_icon_unsupported_image,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun showCustomIconLockedDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_custom_icon_locked, null)
+        val txtMsg = dialogView.findViewById<TextView>(R.id.txtDialogCustomLockedMsg)
+        val btnFuel = dialogView.findViewById<MaterialButton>(R.id.btnDialogCustomLockedFuel)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnDialogCustomLockedCancel)
+
+        val totalPoints = BadgeIconManager.getTotalTippedPoints(this)
+        val needed = (CustomIconManager.CUSTOM_ICON_REQUIRED_POINTS - totalPoints).coerceAtLeast(0)
+        txtMsg.text = getString(R.string.custom_icon_locked_msg, totalPoints, needed)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnFuel.setOnClickListener {
+            dialog.dismiss()
+            findViewById<androidx.core.widget.NestedScrollView>(R.id.scrollTipJar)?.smoothScrollTo(0, 0)
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showCustomIconPreviewDialog(bitmap: Bitmap) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_custom_icon_preview, null)
+        val imgPreview = dialogView.findViewById<ImageView>(R.id.imgDialogCustomIconPreview)
+        val btnApply = dialogView.findViewById<MaterialButton>(R.id.btnDialogCustomApply)
+        val btnChange = dialogView.findViewById<MaterialButton>(R.id.btnDialogCustomChange)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnDialogCustomCancel)
+
+        imgPreview.setImageBitmap(bitmap)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnApply.setOnClickListener {
+            dialog.dismiss()
+            CustomIconManager.setCustomIconActive(this, true)
+            CustomIconManager.pinHomeScreenShortcut(this, bitmap)
+            Toast.makeText(this, R.string.custom_icon_applied_toast, Toast.LENGTH_LONG).show()
+            finishAffinity()
+        }
+
+        btnChange.setOnClickListener {
+            dialog.dismiss()
+            launchUfmImagePicker()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
     private fun setupBadgesSection() {
         val cardBadges = findViewById<View>(R.id.cardBadgesSection) ?: return
         val container = findViewById<ViewGroup>(R.id.containerBadgesList) ?: return
@@ -533,7 +725,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         txtDefaultDesc.setText(R.string.badge_default_icon_desc)
         txtDefaultPoints.text = getString(R.string.badge_btn_apply)
 
-        val isDefaultActive = (selectedPoints == null || selectedPoints == 0)
+        val isDefaultActive = (selectedPoints == null || selectedPoints == 0) && !CustomIconManager.isCustomIconActive(this)
         if (isDefaultActive) {
             btnDefaultAction.text = getString(R.string.badge_btn_active)
             btnDefaultAction.setIconResource(R.drawable.ic_check_bold)
@@ -575,7 +767,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
             dividerRow.visibility = View.VISIBLE
 
             val isUnlocked = BadgeIconManager.isBadgeUnlocked(this, badge.points)
-            val isActive = (selectedPoints == badge.points)
+            val isActive = (selectedPoints == badge.points) && !CustomIconManager.isCustomIconActive(this)
 
             // Setup View for Cutout Badge
             layoutContainer.visibility = View.GONE
@@ -692,6 +884,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
         btnApply.setOnClickListener {
             dialog.dismiss()
+            CustomIconManager.setCustomIconActive(this, false)
             BadgeIconManager.setSelectedBadge(this, badge.points)
             Toast.makeText(
                 this,
@@ -734,6 +927,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
         btnApply.setOnClickListener {
             dialog.dismiss()
+            CustomIconManager.setCustomIconActive(this, false)
             BadgeIconManager.setSelectedBadge(this, null)
             Toast.makeText(this, R.string.badge_reset_toast, Toast.LENGTH_LONG).show()
             finishAffinity()

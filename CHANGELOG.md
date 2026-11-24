@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.8] — 2026-11-20
 
 ### Added
+- **Custom App Icon & Supporter Milestone Badges (`SupporterLoyaltyActivity`, `CustomIconManager`, `ActiveBadgeIconHelper`)**:
+  - **Custom App Icon**: Select any photo or image from device storage using UFM file browsing to create a personalized home screen app icon (unlocks at the 10 loyalty points tier). Includes automatic 1:1 square center-cropping, 512×512 scaling, and permanent caching in app internal storage so icons persist even if source files are deleted.
+  - **Supporter Milestone Badges**: 10 progressive loyalty tiers (5 to 1,000 points) in "Fuel the Developer" allowing supporters to unlock and apply custom milestone emblem icons as their home screen launcher icon.
+  - **Dynamic In-App Branding**: Automatically updates dashboard toolbar and Edge Swipe Menu logos to match the active custom or milestone badge icon.
+  - **UFMStandard Confirmation & Preview Dialogs**: Displays interactive previews with rounded launcher corners, "Apply & Close" (automatically restarting the launcher/app context to refresh icons), "Choose Another Image", and "Cancel".
 - **Android 17 (API 37) Platform Compatibility & Local Network Protection**:
   - Full compatibility targeting Android 17 (API 37 SDK) with backward compatibility spanning Android 8.0 through Android 16 (API 26–36).
   - Adopted Android 17's new `android.permission.ACCESS_LOCAL_NETWORK` runtime permission model for local area network communication (SMB, NFS, WebShare, Wireless ADB pairing & discovery).

@@ -3776,6 +3776,61 @@ Få det legendariska märket med 750 poäng!
     <string name="badge_desc_1000">
 Få Supreme-märket med 1 000 poäng!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+Anpassad ikon
+</string>
+    <string name="custom_icon_section_subtitle">
+Välj valfritt foto eller bild för att skapa din egen personliga appikon!
+</string>
+    <string name="custom_icon_item_title">
+Anpassad app-ikon
+</string>
+    <string name="custom_icon_item_desc_choose">
+Tryck för att välja valfri bild från din lagring
+</string>
+    <string name="custom_icon_item_desc_active">
+Personlig ikon aktiv
+</string>
+    <string name="custom_icon_item_desc_ready">
+Bild vald • Tryck för att tillämpa
+</string>
+    <string name="custom_icon_points_format">
+10 poäng
+</string>
+    <string name="custom_icon_btn_choose">
+Välja
+</string>
+    <string name="custom_icon_dialog_title">
+Anpassad app-ikon
+</string>
+    <string name="custom_icon_dialog_subtitle">
+Förhandsgranska din personliga startikon
+</string>
+    <string name="custom_icon_preview_title">
+Förhandsvisning av startprogramikon
+</string>
+    <string name="custom_icon_dialog_notice">
+Genom att använda den här ikonen uppdateras dina logotyper i appen och en genväg på startskärmen skapas med din valda bild. Ultimate File Manager stängs för att uppdatera.
+</string>
+    <string name="custom_icon_btn_change">
+Välj en annan bild
+</string>
+    <string name="custom_icon_applied_toast">
+Anpassad appikon tillämpas!
+</string>
+    <string name="custom_icon_unsupported_image">
+Välj en bildfil som stöds (PNG, JPG, WebP, GIF, BMP, HEIC).
+</string>
+    <string name="custom_icon_locked_msg">
+Anpassad app-ikon låses upp vid 10 punkter ($1 i tipsburken).\n
+\n
+Du har för närvarande %1$d punkter (behöver %2$d poäng till).\n
+\n
+Stöd utvecklingen ovan för att låsa upp din egen anpassade hemskärmsikon!
+</string>
+
     <string name="tile_hidden_with_name">
 \"%1$s\"-brickan dold
 </string>

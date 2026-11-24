@@ -616,6 +616,216 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Custom Icon Section Card (Google Mobile Only) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCustomIconSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:rippleColor="@android:color/transparent"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Header Banner -->
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_custom_icon_header_banner">
+
+                        <!-- Right Brush Watermark -->
+                        <ImageView
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:layout_marginEnd="16dp"
+                            android:src="@drawable/ic_brush_watermark"
+                            android:importantForAccessibility="no" />
+
+                        <!-- Content Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="18dp">
+
+                            <!-- Palette & Brush Icon -->
+                            <ImageView
+                                android:id="@+id/imgCustomIconHeader"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:src="@drawable/ic_custom_icon_banner"
+                                android:importantForAccessibility="no" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="48dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/custom_icon_section_title"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="20sp"
+                                    android:fontFamily="sans-serif-black" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/custom_icon_section_subtitle"
+                                    android:textColor="#E9D5FF"
+                                    android:textSize="12sp"
+                                    android:lineSpacingMultiplier="1.2"
+                                    android:layout_marginTop="3dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <!-- Divider below Header -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Custom Icon Item Row -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardCustomIconItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardCornerRadius="0dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@android:color/transparent"
+                        app:strokeWidth="0dp"
+                        app:strokeColor="@android:color/transparent"
+                        app:rippleColor="@color/mobile_glass_ripple">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="12dp">
+
+                            <!-- Left Icon Container (72x72dp) -->
+                            <FrameLayout
+                                android:layout_width="72dp"
+                                android:layout_height="72dp"
+                                android:layout_gravity="center_vertical">
+
+                                <com.google.android.material.card.MaterialCardView
+                                    android:layout_width="66dp"
+                                    android:layout_height="66dp"
+                                    android:layout_gravity="center"
+                                    app:cardCornerRadius="16dp"
+                                    app:cardElevation="2dp"
+                                    app:strokeWidth="1.5dp"
+                                    app:strokeColor="#4DC084FC"
+                                    app:cardBackgroundColor="#2E1065">
+
+                                    <ImageView
+                                        android:id="@+id/imgCustomIconPreviewThumb"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:scaleType="centerCrop"
+                                        android:src="@drawable/ic_add_photo"
+                                        android:importantForAccessibility="no" />
+                                </com.google.android.material.card.MaterialCardView>
+                            </FrameLayout>
+
+                            <!-- Title, Description, and Points -->
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="8dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/txtCustomIconTitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/custom_icon_item_title"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-bold" />
+
+                                <TextView
+                                    android:id="@+id/txtCustomIconDesc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/custom_icon_item_desc_choose"
+                                    android:textColor="#94A3B8"
+                                    android:textSize="12sp"
+                                    android:layout_marginTop="2dp" />
+
+                                <!-- Points line with Star -->
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginTop="4dp">
+
+                                    <ImageView
+                                        android:layout_width="12dp"
+                                        android:layout_height="12dp"
+                                        android:src="@drawable/ic_star"
+                                        app:tint="#F59E0B"
+                                        android:importantForAccessibility="no" />
+
+                                    <TextView
+                                        android:id="@+id/txtCustomIconPoints"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/custom_icon_points_format"
+                                        android:textColor="#F59E0B"
+                                        android:textSize="11sp"
+                                        android:fontFamily="sans-serif-bold"
+                                        android:layout_marginStart="4dp" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <!-- Action Button (Locked / Choose / Apply / Active) -->
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCustomIconAction"
+                                android:layout_width="86dp"
+                                android:layout_height="36dp"
+                                android:text="@string/custom_icon_btn_choose"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-bold"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:padding="0dp"
+                                app:cornerRadius="18dp"
+                                app:icon="@drawable/ic_file_image"
+                                app:iconSize="14dp"
+                                app:iconGravity="textStart"
+                                app:iconPadding="4dp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Badges Section Card (Google Mobile Only — visibility controlled in SupporterLoyaltyActivity) -->
             <!-- Badges Section: Unified Container matching Home Screen Category Card (Google Mobile Only) -->
             <com.google.android.material.card.MaterialCardView

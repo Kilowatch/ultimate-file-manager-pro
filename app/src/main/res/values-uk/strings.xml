@@ -3789,6 +3789,61 @@ Amazon Tip Jar незабаром — дякуємо за терпіння! ☕
     <string name="badge_desc_1000">
 Отримайте значок Supreme за 1000 балів!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+Спеціальний значок
+</string>
+    <string name="custom_icon_section_subtitle">
+Виберіть будь-яку фотографію чи зображення, щоб створити свій власний персоналізований значок програми!
+</string>
+    <string name="custom_icon_item_title">
+Спеціальний значок програми
+</string>
+    <string name="custom_icon_item_desc_choose">
+Торкніться, щоб вибрати будь-яке зображення зі свого сховища
+</string>
+    <string name="custom_icon_item_desc_active">
+Персоналізована піктограма активна
+</string>
+    <string name="custom_icon_item_desc_ready">
+Зображення вибрано • Натисніть, щоб застосувати
+</string>
+    <string name="custom_icon_points_format">
+10 балів
+</string>
+    <string name="custom_icon_btn_choose">
+Виберіть
+</string>
+    <string name="custom_icon_dialog_title">
+Спеціальний значок програми
+</string>
+    <string name="custom_icon_dialog_subtitle">
+Перегляньте свій персоналізований значок запуску
+</string>
+    <string name="custom_icon_preview_title">
+Попередній перегляд значка панелі запуску
+</string>
+    <string name="custom_icon_dialog_notice">
+Застосування цієї піктограми оновлює ваші логотипи в програмі та створює ярлик головного екрана з вибраним зображенням. Ultimate File Manager закриється для оновлення.
+</string>
+    <string name="custom_icon_btn_change">
+Виберіть інше зображення
+</string>
+    <string name="custom_icon_applied_toast">
+Спеціальний значок програми застосовано!
+</string>
+    <string name="custom_icon_unsupported_image">
+Виберіть підтримуваний файл зображення (PNG, JPG, WebP, GIF, BMP, HEIC).
+</string>
+    <string name="custom_icon_locked_msg">
+Спеціальна піктограма програми розблоковується за 10 балів ($1 у вікні підказок).\n
+\n
+Наразі у вас є %1$d балів (потрібно ще %2$d балів).\n
+\n
+Підтримайте розробку вище, щоб розблокувати власну піктограму на головному екрані!
+</string>
+
     <string name="tile_hidden_with_name">
 Плитку \"%1$s\" приховано
 </string>

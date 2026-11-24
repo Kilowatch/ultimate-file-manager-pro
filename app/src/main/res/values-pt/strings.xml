@@ -3789,6 +3789,61 @@ Ganhe o distintivo Lendário com 750 pontos!
     <string name="badge_desc_1000">
 Ganhe o distintivo Supremo com 1.000 pontos!
 </string>
+
+    <!-- Custom App Icon -->
+    <string name="custom_icon_section_title">
+Ícone personalizado
+</string>
+    <string name="custom_icon_section_subtitle">
+Selecione qualquer foto ou imagem para criar seu próprio ícone de aplicativo personalizado!
+</string>
+    <string name="custom_icon_item_title">
+Ícone de aplicativo personalizado
+</string>
+    <string name="custom_icon_item_desc_choose">
+Toque para escolher qualquer imagem do seu armazenamento
+</string>
+    <string name="custom_icon_item_desc_active">
+Ícone personalizado ativo
+</string>
+    <string name="custom_icon_item_desc_ready">
+Imagem selecionada • Toque para aplicar
+</string>
+    <string name="custom_icon_points_format">
+10 pontos
+</string>
+    <string name="custom_icon_btn_choose">
+Escolher
+</string>
+    <string name="custom_icon_dialog_title">
+Ícone de aplicativo personalizado
+</string>
+    <string name="custom_icon_dialog_subtitle">
+Visualize seu ícone de iniciador personalizado
+</string>
+    <string name="custom_icon_preview_title">
+Visualização do ícone do iniciador
+</string>
+    <string name="custom_icon_dialog_notice">
+Aplicar este ícone atualiza os logotipos do aplicativo e cria um atalho na tela inicial com a imagem escolhida. O Ultimate File Manager será fechado para atualização.
+</string>
+    <string name="custom_icon_btn_change">
+Escolha outra imagem
+</string>
+    <string name="custom_icon_applied_toast">
+Ícone de aplicativo personalizado aplicado!
+</string>
+    <string name="custom_icon_unsupported_image">
+Selecione um arquivo de imagem compatível (PNG, JPG, WebP, GIF, BMP, HEIC).
+</string>
+    <string name="custom_icon_locked_msg">
+O ícone de aplicativo personalizado é desbloqueado com 10 pontos ($1 no jarro de gorjetas).\n
+\n
+Atualmente você tem %1$d pontos (precisa de mais %2$d pontos).\n
+\n
+Apoie o desenvolvimento acima para desbloquear seu próprio ícone personalizado na tela inicial.
+</string>
+
     <string name="tile_hidden_with_name">
 Bloco \"%1$s\" oculto
 </string>
