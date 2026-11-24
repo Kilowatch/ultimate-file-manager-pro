@@ -20,9 +20,18 @@ import za.kilowatch.ultimatefilemanager.R
  */
 class BillingManager(
     private val context: Context,
-    private val onPurchaseSuccess: (sku: String) -> Unit,
+    private val onPurchaseSuccessWithOrder: (sku: String, orderId: String?) -> Unit,
     private val onError: (message: String) -> Unit
 ) {
+    constructor(
+        context: Context,
+        onPurchaseSuccess: (sku: String) -> Unit,
+        onError: (message: String) -> Unit
+    ) : this(
+        context = context,
+        onPurchaseSuccessWithOrder = { sku, _ -> onPurchaseSuccess(sku) },
+        onError = onError
+    )
     companion object {
         // ─────────────────────────────────────────────────────────────
         // TODO: Replace these with your real Google Play product IDs
@@ -154,8 +163,9 @@ class BillingManager(
             val result = billingClient.consumePurchase(consumeParams)
             if (result.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 val sku = purchase.products.firstOrNull() ?: return@launch
+                val orderId = purchase.orderId
                 withContext(Dispatchers.Main) {
-                    onPurchaseSuccess(sku)
+                    onPurchaseSuccessWithOrder(sku, orderId)
                 }
             }
         }

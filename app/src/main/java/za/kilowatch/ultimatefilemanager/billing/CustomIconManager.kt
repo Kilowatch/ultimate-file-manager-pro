@@ -41,13 +41,27 @@ object CustomIconManager {
         prefs.edit().putBoolean(KEY_IS_CUSTOM_ACTIVE, active).apply()
         if (active) {
             // Unset selected milestone badge points so custom icon is uniquely active
-            BadgeIconManager.setSelectedBadge(context, null)
+            prefs.edit().putInt("selected_badge_points", 0).apply()
+            try {
+                val clazz = Class.forName("za.kilowatch.ultimatefilemanager.billing.BadgeIconManager")
+                val method = clazz.getMethod("setSelectedBadge", Context::class.java, java.lang.Integer::class.java)
+                method.invoke(null, context, null)
+            } catch (_: Throwable) {}
         }
     }
 
     fun isUnlocked(context: Context): Boolean {
-        if (BadgeIconManager.DEBUG_FORCE_ALL_UNLOCKED) return true
-        return BadgeIconManager.getTotalTippedPoints(context) >= CUSTOM_ICON_REQUIRED_POINTS
+        return try {
+            val clazz = Class.forName("za.kilowatch.ultimatefilemanager.billing.BadgeIconManager")
+            val forceUnlockedField = clazz.getField("DEBUG_FORCE_ALL_UNLOCKED")
+            if (forceUnlockedField.getBoolean(null)) return true
+            val instance = clazz.getField("INSTANCE").get(null)
+            val method = clazz.getMethod("getTotalTippedPoints", Context::class.java)
+            val points = method.invoke(instance, context) as? Int ?: 0
+            points >= CUSTOM_ICON_REQUIRED_POINTS
+        } catch (_: Throwable) {
+            (LoyaltyPrefs.getTotalTipped(context) * 10) >= CUSTOM_ICON_REQUIRED_POINTS
+        }
     }
 
     fun getCustomIconBitmap(context: Context): Bitmap? {

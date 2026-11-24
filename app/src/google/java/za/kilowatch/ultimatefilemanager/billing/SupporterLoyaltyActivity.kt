@@ -1,5 +1,7 @@
 package za.kilowatch.ultimatefilemanager.billing
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -12,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +24,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -151,6 +156,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         if (!isTv && !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
             setupCustomIconSection()
             setupBadgesSection()
+            setupLoyaltyPassSection()
         }
     }
 
@@ -280,8 +286,8 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
     private fun initBilling() {
         billingManager = BillingManager(
             context = this,
-            onPurchaseSuccess = { sku ->
-                handlePurchaseSuccess(sku)
+            onPurchaseSuccessWithOrder = { sku, orderId ->
+                handlePurchaseSuccess(sku, orderId)
                 showThankYou(sku) { fetchGlobalProgress() }
             },
             onError = { msg ->
@@ -317,7 +323,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         txtBeansPrice.text     = beansPrice.ifEmpty { "—" }
     }
 
-    private fun handlePurchaseSuccess(sku: String) {
+    private fun handlePurchaseSuccess(sku: String, orderId: String? = null) {
         val tipAmount = when (sku) {
             BillingManager.SKU_RISTRETTO  -> 1
             BillingManager.SKU_ESPRESSO   -> 3
@@ -333,6 +339,11 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
             if (!isTv && !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
                 setupCustomIconSection()
                 setupBadgesSection()
+                setupLoyaltyPassSection()
+
+                if (!orderId.isNullOrBlank()) {
+                    handleTipOrderReceived(orderId, tipAmount * BadgeIconManager.POINTS_PER_DOLLAR)
+                }
             }
             // Trigger auto-backup if enabled
             AutoBackupScheduler.runOnceNow(this)
@@ -340,7 +351,11 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
     }
 
     private fun refreshLoyaltyUI() {
-        val totalTipped = LoyaltyPrefs.getTotalTipped(this)
+        val totalTipped = if (!isTv && !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
+            maxOf(LoyaltyPrefs.getTotalTipped(this), LoyaltyPassManager.getTotalPoints(this) / BadgeIconManager.POINTS_PER_DOLLAR)
+        } else {
+            LoyaltyPrefs.getTotalTipped(this)
+        }
         
         // Progress bar
         progressBar.progress = Math.min(totalTipped, GOAL_TARGET)
@@ -523,7 +538,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
         cardCustomIcon.visibility = View.VISIBLE
 
-        val isUnlocked = CustomIconManager.isUnlocked(this)
+        val isUnlocked = BadgeIconManager.getTotalTippedPoints(this) >= CustomIconManager.CUSTOM_ICON_REQUIRED_POINTS || CustomIconManager.isUnlocked(this)
         val hasCustom = CustomIconManager.hasCustomIcon(this)
         val isActive = CustomIconManager.isCustomIconActive(this)
         val customBmp = if (hasCustom) CustomIconManager.getCustomIconBitmap(this) else null
@@ -931,6 +946,424 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
             BadgeIconManager.setSelectedBadge(this, null)
             Toast.makeText(this, R.string.badge_reset_toast, Toast.LENGTH_LONG).show()
             finishAffinity()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun setupLoyaltyPassSection() {
+        if (isTv || za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) return
+
+        val cardSection = findViewById<View>(R.id.cardLoyaltyPassSection) ?: return
+        cardSection.visibility = View.VISIBLE
+
+        val layoutActive = findViewById<View>(R.id.layoutPassActive)
+        val layoutInactive = findViewById<View>(R.id.layoutPassInactive)
+
+        val hasPass = LoyaltyPassManager.hasLoyaltyPass(this)
+        if (hasPass) {
+            layoutActive?.visibility = View.VISIBLE
+            layoutInactive?.visibility = View.GONE
+
+            val txtId = findViewById<TextView>(R.id.txtCardLoyaltyId)
+            val txtPts = findViewById<TextView>(R.id.txtCardPassPoints)
+            val btnClaim = findViewById<MaterialButton>(R.id.btnPassClaimGpa)
+            val btnCreds = findViewById<MaterialButton>(R.id.btnPassViewCreds)
+            val btnSwitch = findViewById<MaterialButton>(R.id.btnPassSwitch)
+
+            val loyaltyId = LoyaltyPassManager.getLoyaltyId(this)
+            txtId?.text = loyaltyId
+            txtPts?.text = getString(R.string.loyalty_pass_points_format, LoyaltyPassManager.getTotalPoints(this))
+
+            btnClaim?.setOnClickListener { showClaimPastGpaDialog() }
+            btnCreds?.setOnClickListener {
+                showCredentialsDialog(loyaltyId, LoyaltyPassManager.getPasskey(this))
+            }
+            btnSwitch?.setOnClickListener { showRestorePassDialog() }
+
+            // Silent sync in background to update points if any confirmed tips arrived via RTDN
+            lifecycleScope.launch {
+                val syncRes = LoyaltyPassManager.syncPass(this@SupporterLoyaltyActivity)
+                if (syncRes is PassOperationResult.Success) {
+                    txtPts?.text = getString(R.string.loyalty_pass_points_format, syncRes.totalPoints)
+                    setupBadgesSection()
+                }
+            }
+        } else {
+            layoutActive?.visibility = View.GONE
+            layoutInactive?.visibility = View.VISIBLE
+
+            val btnClaim = findViewById<MaterialButton>(R.id.btnNoPassClaimGpa)
+            val btnRestore = findViewById<MaterialButton>(R.id.btnNoPassRestore)
+
+            btnClaim?.setOnClickListener { showClaimPastGpaDialog() }
+            btnRestore?.setOnClickListener { showRestorePassDialog() }
+        }
+    }
+
+    private fun handleTipOrderReceived(orderId: String, points: Int) {
+        if (LoyaltyPassManager.hasLoyaltyPass(this)) {
+            val passId = LoyaltyPassManager.getLoyaltyId(this)
+            val passkey = LoyaltyPassManager.getPasskey(this)
+            lifecycleScope.launch {
+                val res = LoyaltyPassManager.claimToExisting(this@SupporterLoyaltyActivity, orderId, passId, passkey)
+                if (res is PassOperationResult.Success) {
+                    setupLoyaltyPassSection()
+                    setupBadgesSection()
+                    Toast.makeText(
+                        this@SupporterLoyaltyActivity,
+                        getString(R.string.loyalty_pass_points_format, res.totalPoints),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        } else {
+            showUnclaimedTipPromptDialog(orderId, points)
+        }
+    }
+
+    private fun showUnclaimedTipPromptDialog(orderId: String, points: Int) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_unclaimed_tip_prompt, null)
+        val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtPromptSubtitle)
+        val btnGenerate = dialogView.findViewById<MaterialButton>(R.id.btnGeneratePass)
+        val btnConnect = dialogView.findViewById<MaterialButton>(R.id.btnConnectExisting)
+        val btnSkip = dialogView.findViewById<MaterialButton>(R.id.btnSkipPrompt)
+
+        txtSubtitle.text = getString(R.string.dialog_unclaimed_tip_subtitle, orderId, points)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnGenerate.setOnClickListener {
+            btnGenerate.isEnabled = false
+            lifecycleScope.launch {
+                val res = LoyaltyPassManager.createPass(this@SupporterLoyaltyActivity, orderId)
+                dialog.dismiss()
+                if (res is PassOperationResult.Success) {
+                    setupLoyaltyPassSection()
+                    setupBadgesSection()
+                    showCredentialsDialog(res.loyaltyId, res.passkey)
+                } else if (res is PassOperationResult.Error) {
+                    showUfmInfoDialog(
+                        title = "Generation Failed",
+                        subtitle = "Could Not Create Loyalty Pass",
+                        message = res.message,
+                        iconRes = R.drawable.ic_warning
+                    )
+                }
+            }
+        }
+
+        btnConnect.setOnClickListener {
+            dialog.dismiss()
+            showConnectExistingPassDialog(orderId)
+        }
+
+        btnSkip.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showCredentialsDialog(loyaltyId: String, passkey: String?) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_loyalty_pass_credentials, null)
+        val txtId = dialogView.findViewById<TextView>(R.id.txtCredsLoyaltyId)
+        val txtKey = dialogView.findViewById<TextView>(R.id.txtCredsPasskey)
+        val btnCopy = dialogView.findViewById<MaterialButton>(R.id.btnCopyCreds)
+        val btnDone = dialogView.findViewById<MaterialButton>(R.id.btnDoneCreds)
+
+        txtId.text = loyaltyId
+        txtKey.text = passkey ?: "••••-••••-••••-••••"
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnCopy.setOnClickListener {
+            val clipData = ClipData.newPlainText(
+                "Loyalty Pass Credentials",
+                "Loyalty ID: $loyaltyId\nPasskey: ${passkey ?: ""}"
+            )
+            val cm = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+            cm?.setPrimaryClip(clipData)
+            Toast.makeText(this, R.string.dialog_pass_creds_copied, Toast.LENGTH_SHORT).show()
+        }
+
+        btnDone.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showUfmInfoDialog(
+        title: String,
+        subtitle: String,
+        message: String,
+        iconRes: Int = R.drawable.ic_warning,
+        iconTint: Int? = null
+    ) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_loyalty_info, null)
+        val imgHero = dialogView.findViewById<ImageView>(R.id.imgInfoHero)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtInfoTitle)
+        val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtInfoSubtitle)
+        val txtMsg = dialogView.findViewById<TextView>(R.id.txtInfoMessage)
+        val btnAction = dialogView.findViewById<MaterialButton>(R.id.btnInfoAction)
+
+        imgHero.setImageResource(iconRes)
+        if (iconTint != null) {
+            imgHero.imageTintList = ColorStateList.valueOf(iconTint)
+        }
+        txtTitle.text = title
+        txtSubtitle.text = subtitle
+        txtMsg.text = message
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnAction.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showClaimPastGpaDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_claim_past_gpa, null)
+        val etGpa = dialogView.findViewById<TextInputEditText>(R.id.etGpaInput)
+        val progress = dialogView.findViewById<ProgressBar>(R.id.progressClaim)
+        val btnClaim = dialogView.findViewById<MaterialButton>(R.id.btnDoClaim)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancelClaim)
+
+        // Attach GPA prefix and auto-hyphenation watcher
+        GpaInputFormatter.attachGpaPrefixWatcher(etGpa)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnClaim.setOnClickListener {
+            val raw = etGpa.text?.toString() ?: ""
+            val sanitized = GpaInputFormatter.sanitizeGpa(raw)
+            if (!GpaInputFormatter.isValidGpa(sanitized)) {
+                showUfmInfoDialog(
+                    title = "Invalid Order ID",
+                    subtitle = "GPA Format Incorrect",
+                    message = "Please enter a valid Google Play Order ID.\n\nFormat must be GPA.XXXX-XXXX-XXXX-XXXXX (found in your Google Play purchase receipt email).",
+                    iconRes = R.drawable.ic_warning
+                )
+                return@setOnClickListener
+            }
+
+            btnClaim.isEnabled = false
+            progress.visibility = View.VISIBLE
+
+            lifecycleScope.launch {
+                val check = LoyaltyPassManager.checkGpa(sanitized)
+                progress.visibility = View.GONE
+                btnClaim.isEnabled = true
+
+                when (check) {
+                    is GpaCheckResult.Unclaimed -> {
+                        dialog.dismiss()
+                        if (LoyaltyPassManager.hasLoyaltyPass(this@SupporterLoyaltyActivity)) {
+                            // Link directly to current pass
+                            val passId = LoyaltyPassManager.getLoyaltyId(this@SupporterLoyaltyActivity)
+                            val passkey = LoyaltyPassManager.getPasskey(this@SupporterLoyaltyActivity)
+                            val claimRes = LoyaltyPassManager.claimToExisting(this@SupporterLoyaltyActivity, sanitized, passId, passkey)
+                            if (claimRes is PassOperationResult.Success) {
+                                setupLoyaltyPassSection()
+                                setupBadgesSection()
+                                Toast.makeText(this@SupporterLoyaltyActivity, getString(R.string.loyalty_pass_points_format, claimRes.totalPoints), Toast.LENGTH_SHORT).show()
+                            } else if (claimRes is PassOperationResult.Error) {
+                                showUfmInfoDialog(
+                                    title = "Claim Failed",
+                                    subtitle = "Unable to Link Order",
+                                    message = claimRes.message,
+                                    iconRes = R.drawable.ic_warning
+                                )
+                            }
+                        } else {
+                            showUnclaimedTipPromptDialog(sanitized, check.points)
+                        }
+                    }
+                    is GpaCheckResult.AlreadyClaimed -> {
+                        showUfmInfoDialog(
+                            title = "Already Claimed",
+                            subtitle = "Order Linked to Pass",
+                            message = "Google Play Order ID $sanitized has already been linked to a Loyalty Pass (${check.loyaltyId}).\n\nIf this is your pass, tap 'Restore Loyalty Pass' and enter your Recovery Passkey to restore your points and badges.",
+                            iconRes = R.drawable.ic_security_lock
+                        )
+                    }
+                    is GpaCheckResult.NotFound -> {
+                        showUfmInfoDialog(
+                            title = "Order Not Found",
+                            subtitle = "Unverified Order ID",
+                            message = "Google Play Order ID $sanitized was not found in our records.\n\nIf you recently made this tip, please allow a few minutes for Google Play to confirm the transaction, or check that the order ID matches your receipt email.",
+                            iconRes = R.drawable.ic_warning
+                        )
+                    }
+                    is GpaCheckResult.Error -> {
+                        showUfmInfoDialog(
+                            title = "Verification Error",
+                            subtitle = "Unable to Complete Check",
+                            message = check.message,
+                            iconRes = R.drawable.ic_warning
+                        )
+                    }
+                }
+            }
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showRestorePassDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_loyalty_pass_restore, null)
+        val etId = dialogView.findViewById<TextInputEditText>(R.id.etRestoreIdentifier)
+        val etKey = dialogView.findViewById<TextInputEditText>(R.id.etRestorePasskey)
+        val progress = dialogView.findViewById<ProgressBar>(R.id.progressRestore)
+        val btnRestore = dialogView.findViewById<MaterialButton>(R.id.btnDoRestore)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancelRestore)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnRestore.setOnClickListener {
+            val id = etId.text?.toString()?.trim() ?: ""
+            val key = etKey.text?.toString()?.trim() ?: ""
+
+            if (id.isEmpty() || key.isEmpty()) {
+                showUfmInfoDialog(
+                    title = "Missing Details",
+                    subtitle = "Required Fields Empty",
+                    message = "Please enter both your Loyalty ID (or previous GPA order number) and your Recovery Passkey.",
+                    iconRes = R.drawable.ic_warning
+                )
+                return@setOnClickListener
+            }
+
+            btnRestore.isEnabled = false
+            progress.visibility = View.VISIBLE
+
+            lifecycleScope.launch {
+                val res = LoyaltyPassManager.restorePass(this@SupporterLoyaltyActivity, id, key)
+                progress.visibility = View.GONE
+                btnRestore.isEnabled = true
+
+                if (res is PassOperationResult.Success) {
+                    dialog.dismiss()
+                    setupLoyaltyPassSection()
+                    setupBadgesSection()
+                    refreshLoyaltyUI()
+                    Toast.makeText(
+                        this@SupporterLoyaltyActivity,
+                        getString(R.string.dialog_restore_pass_success, res.totalPoints),
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else if (res is PassOperationResult.Error) {
+                    showUfmInfoDialog(
+                        title = "Restore Failed",
+                        subtitle = "Authentication Failed",
+                        message = res.message,
+                        iconRes = R.drawable.ic_security_lock
+                    )
+                }
+            }
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showConnectExistingPassDialog(orderId: String) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_connect_existing_pass, null)
+        val etId = dialogView.findViewById<TextInputEditText>(R.id.etConnectLoyaltyId)
+        val etKey = dialogView.findViewById<TextInputEditText>(R.id.etConnectPasskey)
+        val progress = dialogView.findViewById<ProgressBar>(R.id.progressConnect)
+        val btnConnect = dialogView.findViewById<MaterialButton>(R.id.btnDoConnect)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancelConnect)
+
+        GpaInputFormatter.attachLoyaltyIdWatcher(etId)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnConnect.setOnClickListener {
+            val id = etId.text?.toString()?.trim() ?: ""
+            val key = etKey.text?.toString()?.trim() ?: ""
+
+            if (!GpaInputFormatter.isValidLoyaltyId(id) || key.isEmpty()) {
+                showUfmInfoDialog(
+                    title = "Invalid Loyalty ID",
+                    subtitle = "Format Must Be XXX-XXX-XXX-XXX",
+                    message = "Please enter a valid 12-character Loyalty ID and your Recovery Passkey.",
+                    iconRes = R.drawable.ic_warning
+                )
+                return@setOnClickListener
+            }
+
+            btnConnect.isEnabled = false
+            progress.visibility = View.VISIBLE
+
+            lifecycleScope.launch {
+                val res = LoyaltyPassManager.claimToExisting(this@SupporterLoyaltyActivity, orderId, id, key)
+                progress.visibility = View.GONE
+                btnConnect.isEnabled = true
+
+                if (res is PassOperationResult.Success) {
+                    dialog.dismiss()
+                    setupLoyaltyPassSection()
+                    setupBadgesSection()
+                    refreshLoyaltyUI()
+                    Toast.makeText(
+                        this@SupporterLoyaltyActivity,
+                        getString(R.string.dialog_restore_pass_success, res.totalPoints),
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else if (res is PassOperationResult.Error) {
+                    showUfmInfoDialog(
+                        title = "Connection Failed",
+                        subtitle = "Could Not Link Order",
+                        message = res.message,
+                        iconRes = R.drawable.ic_warning
+                    )
+                }
+            }
         }
 
         btnCancel.setOnClickListener {

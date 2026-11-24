@@ -17527,6 +17527,150 @@ Beheren
     <string name="toast_local_network_permission_required">
 Voor deze bewerking is lokale netwerktoestemming vereist
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+Anonieme loyaliteitspas
+</string>
+    <string name="loyalty_pass_card_subtitle">
+Herstel en synchroniseer uw supportpunten op verschillende apparaten
+</string>
+    <string name="loyalty_pass_privacy_badge">
+Geen persoonlijke gegevens vastgelegd • 100% anoniem
+</string>
+    <string name="loyalty_pass_id_label">
+Loyaliteits-ID
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d Gesynchroniseerde punten
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+Claim eerdere bestelling
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+Bekijk toegangscode/back-up
+</string>
+    <string name="loyalty_pass_btn_restore">
+Loyaliteitspas herstellen
+</string>
+    <string name="loyalty_pass_btn_switch">
+Wissel/Herstelpas
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+Nog geen Loyalty Pass aangesloten. Uw punten kunnen anoniem worden gesynchroniseerd en bewaard wanneer u een fooi geeft of een bestelling claimt.
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+Niet-geclaimde tip gedetecteerd
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+Bestel %1$s • +%2$d punten
+</string>
+    <string name="dialog_unclaimed_tip_message">
+Je tip is bevestigd! Heeft u al een Anonieme Loyalty Pass, of wilt u een nieuwe aanmaken?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100% Anoniem: We verzamelen of bewaren geen persoonlijke gegevens, e-mail, Google-account of apparaat-ID.
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+Genereer een nieuwe loyaliteitspas
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+Maak verbinding met bestaande loyaliteits-ID
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+Overslaan voor nu
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+Uw loyaliteitspas
+</string>
+    <string name="dialog_pass_creds_subtitle">
+Inloggegevens veilig gegenereerd
+</string>
+    <string name="dialog_pass_creds_id_label">
+ANONIEME LOYALITEIT-ID
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+HERSTEL PASSKEY
+</string>
+    <string name="dialog_pass_creds_notice">
+Bewaar uw toegangssleutel op een veilige plaats. Omdat we geen persoonlijke gegevens of e-mailadressen opslaan, is uw Passkey de enige sleutel om uw punten op een nieuw apparaat te herstellen.
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+Kopiëren naar Klembord
+</string>
+    <string name="dialog_pass_creds_btn_done">
+Ik heb mijn toegangssleutel bewaard
+</string>
+    <string name="dialog_pass_creds_copied">
+Loyaliteitsreferenties gekopieerd naar klembord
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+Claim eerdere tip
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Voer de Google Play-bestellings-ID in
+</string>
+    <string name="dialog_claim_gpa_hint">
+GPA.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+Gevonden in uw e-mail met aankoopbewijs van Google Play.
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+Verifiëren en claimen
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+Annuleren
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+Loyaliteitspas herstellen
+</string>
+    <string name="dialog_restore_pass_subtitle">
+Voer Loyaliteits-ID of eerder GPA-nummer en toegangssleutel in
+</string>
+    <string name="dialog_restore_pass_id_hint">
+Loyaliteits-ID (XXX-XXX-XXX-XXX) of GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+Herstelwachtwoord
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+Ontgrendelen en herstellen
+</string>
+    <string name="dialog_restore_pass_success">
+Loyaliteitspas hersteld! %1$d punten gesynchroniseerd.
+</string>
+    <string name="dialog_restore_pass_not_found">
+Bestellings- of loyaliteits-ID niet gevonden.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+Deze bestel-ID is al geclaimd door een Loyalty Pass.
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+Maak verbinding met bestaande pas
+</string>
+    <string name="dialog_connect_existing_subtitle">
+Koppel deze bestelling aan je bestaande Loyalty ID
+</string>
+    <string name="dialog_connect_existing_id_hint">
+Bestaande loyaliteits-ID (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+Wachtwoord
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+Linkvolgorde en punten samenvoegen
+</string>
 </resources>
 
 

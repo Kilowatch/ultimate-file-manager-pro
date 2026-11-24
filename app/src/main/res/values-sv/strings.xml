@@ -17802,6 +17802,150 @@ Hantera
     <string name="toast_local_network_permission_required">
 Lokalt nätverksbehörighet krävs för denna operation
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+Anonymt lojalitetskort
+</string>
+    <string name="loyalty_pass_card_subtitle">
+Återställ och synkronisera dina supporterpunkter på olika enheter
+</string>
+    <string name="loyalty_pass_privacy_badge">
+Noll personlig data fångad • 100 % anonym
+</string>
+    <string name="loyalty_pass_id_label">
+Lojalitets-ID
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d Synkroniserade poäng
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+Gör anspråk på tidigare beställning
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+Visa lösenord/säkerhetskopiering
+</string>
+    <string name="loyalty_pass_btn_restore">
+Återställ lojalitetskort
+</string>
+    <string name="loyalty_pass_btn_switch">
+Switch / Återställ Pass
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+Inget Lojalitetskort anslutet än. Dina poäng kan synkroniseras och bevaras anonymt när du tipsar eller gör anspråk på en beställning.
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+Ohämtat tips upptäckt
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+Beställ %1$s • +%2$d poäng
+</string>
+    <string name="dialog_unclaimed_tip_message">
+Ditt tips har bekräftats! Har du redan ett anonymt lojalitetskort eller vill du skapa ett nytt?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100 % anonym: Vi samlar inte in eller lagrar några personliga uppgifter, e-post, Google-konto eller enhetsidentifierare.
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+Skapa nytt lojalitetskort
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+Anslut till befintligt lojalitets-ID
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+Hoppa över nu
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+Ditt lojalitetskort
+</string>
+    <string name="dialog_pass_creds_subtitle">
+Inloggningsuppgifter skapas säkert
+</string>
+    <string name="dialog_pass_creds_id_label">
+ANONYMT LOJALITETS-ID
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+ÅTERSTÄLLNINGSNYCKEL
+</string>
+    <string name="dialog_pass_creds_notice">
+Spara din lösenordsnyckel på ett säkert ställe. Eftersom vi inte lagrar personliga uppgifter eller e-postadresser är din lösenordsnyckel den enda nyckeln för att återställa dina poäng på en ny enhet.
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+Kopiera till Urklipp
+</string>
+    <string name="dialog_pass_creds_btn_done">
+Jag har sparat min lösenordsnyckel
+</string>
+    <string name="dialog_pass_creds_copied">
+Lojalitetsuppgifterna har kopierats till urklipp
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+Gör anspråk på tidigare tips
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Ange beställnings-id för Google Play
+</string>
+    <string name="dialog_claim_gpa_hint">
+GPA.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+Finns på ditt köpkvitto på Google Play via e-post.
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+Verifiera och gör anspråk
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+Avboka
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+Återställ lojalitetskort
+</string>
+    <string name="dialog_restore_pass_subtitle">
+Ange lojalitets-ID eller tidigare GPA-nummer och lösenord
+</string>
+    <string name="dialog_restore_pass_id_hint">
+Lojalitets-ID (XXX-XXX-XXX-XXX) eller GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+Återställningsnyckel
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+Lås upp och återställ
+</string>
+    <string name="dialog_restore_pass_success">
+Lojalitetskortet återställt! %1$d poäng synkroniserade.
+</string>
+    <string name="dialog_restore_pass_not_found">
+Beställnings- eller lojalitets-ID hittades inte.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+Detta beställnings-ID har redan gjorts anspråk på av ett lojalitetskort.
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+Anslut till befintligt pass
+</string>
+    <string name="dialog_connect_existing_subtitle">
+Länka denna beställning till ditt befintliga lojalitets-ID
+</string>
+    <string name="dialog_connect_existing_id_hint">
+Befintligt lojalitets-ID (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+Nyckel
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+Länkbeställning och sammanslagningspunkter
+</string>
 </resources>
 
 

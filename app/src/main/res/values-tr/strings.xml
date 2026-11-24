@@ -17831,6 +17831,150 @@ Android 17 yerel ağ koruma iznini yönetin
     <string name="toast_local_network_permission_required">
 Bu işlem için yerel ağ izni gerekiyor
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+Anonim Sadakat Kartı
+</string>
+    <string name="loyalty_pass_card_subtitle">
+Taraftar puanlarınızı cihazlar arasında geri yükleyin ve senkronize edin
+</string>
+    <string name="loyalty_pass_privacy_badge">
+Sıfır kişisel veri yakalandı • %100 anonim
+</string>
+    <string name="loyalty_pass_id_label">
+Sadakat Kimliği
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d Senkronize Noktalar
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+Geçmiş Siparişi Talep Et
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+Parolayı / Yedeklemeyi Görüntüle
+</string>
+    <string name="loyalty_pass_btn_restore">
+Sadakat Biletini Geri Yükle
+</string>
+    <string name="loyalty_pass_btn_switch">
+Geçişi Değiştir / Geri Yükle
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+Henüz Bağlılık Kartı bağlanmadı. Bir siparişi bahşiş verdiğinizde veya talep ettiğinizde puanlarınız anonim olarak senkronize edilebilir ve saklanabilir.
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+Talep Edilmeyen Bahşiş Algılandı
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+Sipariş %1$s • +%2$d Puan
+</string>
+    <string name="dialog_unclaimed_tip_message">
+Your tip has been confirmed! Halihazırda bir Anonim Sadakat Geçiş Kartınız var mı veya yeni bir tane oluşturmak ister misiniz?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+%100 Anonim: Hiçbir kişisel veriyi, e-postayı, Google hesabını veya cihaz tanımlayıcısını toplamıyor veya saklamıyoruz.
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+Yeni Sadakat Kartı Oluştur
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+Mevcut Sadakat Kimliğine Bağlan
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+Şimdilik Atla
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+Sadakat Kartınız
+</string>
+    <string name="dialog_pass_creds_subtitle">
+Güvenli bir şekilde oluşturulan kimlik bilgileri
+</string>
+    <string name="dialog_pass_creds_id_label">
+ANONİM SADAKAT KİMLİĞİ
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+KURTARMA ŞİFRE
+</string>
+    <string name="dialog_pass_creds_notice">
+Şifrenizi güvenli bir yere saklayın. Kişisel ayrıntıları veya e-posta adreslerini saklamadığımız için, Parolanız puanlarınızı yeni bir cihaza geri yüklemek için tek anahtardır.
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+Panoya kopyala
+</string>
+    <string name="dialog_pass_creds_btn_done">
+Şifremi Kaydettim
+</string>
+    <string name="dialog_pass_creds_copied">
+Bağlılık bilgileri panoya kopyalandı
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+Geçmiş İpucunu Talep Edin
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Google Play Sipariş Kimliğini girin
+</string>
+    <string name="dialog_claim_gpa_hint">
+GPA.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+Google Play satın alma makbuzu e-postanızda bulunur.
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+Doğrula ve Hak Talebinde Bulun
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+İptal etmek
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+Sadakat Biletini Geri Yükle
+</string>
+    <string name="dialog_restore_pass_subtitle">
+Sadakat Kimliğini veya geçmiş GPA numarasını ve Şifre Anahtarını girin
+</string>
+    <string name="dialog_restore_pass_id_hint">
+Bağlılık Kimliği (XXX-XXX-XXX-XXX) veya GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+Kurtarma Şifresi
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+Kilidini Aç ve Geri Yükle
+</string>
+    <string name="dialog_restore_pass_success">
+Sadakat Kartı geri yüklendi! %1$d nokta senkronize edildi.
+</string>
+    <string name="dialog_restore_pass_not_found">
+Sipariş veya Bağlılık Kimliği bulunamadı.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+Bu Sipariş Kimliği zaten bir Sadakat Kartı tarafından talep edildi.
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+Mevcut Geçişe Bağlan
+</string>
+    <string name="dialog_connect_existing_subtitle">
+Bu siparişi mevcut Bağlılık Kimliğinize bağlayın
+</string>
+    <string name="dialog_connect_existing_id_hint">
+Mevcut Bağlılık Kimliği (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+Geçiş anahtarı
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+Bağlantı Sırası ve Birleştirme Noktaları
+</string>
 </resources>
 
 

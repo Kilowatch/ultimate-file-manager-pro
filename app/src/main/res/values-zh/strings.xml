@@ -17830,6 +17830,150 @@ Ultimate File Manager Pro 仅使用您的本地网络来发现并连接到您在
     <string name="toast_local_network_permission_required">
 此操作需要本地网络权限
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+匿名忠诚通行证
+</string>
+    <string name="loyalty_pass_card_subtitle">
+跨设备恢复和同步您的支持者积分
+</string>
+    <string name="loyalty_pass_privacy_badge">
+零捕获个人数据 • 100% 匿名
+</string>
+    <string name="loyalty_pass_id_label">
+忠诚度 ID
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d 同步点
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+索取过去的订单
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+查看密钥/备份
+</string>
+    <string name="loyalty_pass_btn_restore">
+恢复忠诚通行证
+</string>
+    <string name="loyalty_pass_btn_switch">
+切换/恢复通行证
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+尚未连接忠诚通行证。当您小费或领取订单时，您的积分可以匿名同步和保存。
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+检测到无人认领的小费
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+订购 %1$s • +%2$d 点
+</string>
+    <string name="dialog_unclaimed_tip_message">
+您的提示已被确认！您是否已经拥有匿名忠诚通行证，或者您想生成新的吗？
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100% 匿名：我们不收集或存储任何个人数据、电子邮件、Google 帐户或设备标识符。
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+生成新的忠诚通行证
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+连接到现有的忠诚度 ID
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+暂时跳过
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+您的忠诚通行证
+</string>
+    <string name="dialog_pass_creds_subtitle">
+安全生成的凭证
+</string>
+    <string name="dialog_pass_creds_id_label">
+匿名忠诚度 ID
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+恢复密码
+</string>
+    <string name="dialog_pass_creds_notice">
+将您的密码保存在安全的地方。由于我们不存储个人详细信息或电子邮件地址，因此您的密码是在新设备上恢复积分的唯一密钥。
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+复制到剪贴板
+</string>
+    <string name="dialog_pass_creds_btn_done">
+我已保存我的密码
+</string>
+    <string name="dialog_pass_creds_copied">
+忠诚度凭证已复制到剪贴板
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+索取过去的小费
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+输入 Google Play 订单 ID
+</string>
+    <string name="dialog_claim_gpa_hint">
+GPA.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+可在您的 Google Play 购买收据电子邮件中找到。
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+验证并索赔
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+取消
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+恢复忠诚通行证
+</string>
+    <string name="dialog_restore_pass_subtitle">
+输入忠诚度 ID 或过去的 GPA 编号和密码
+</string>
+    <string name="dialog_restore_pass_id_hint">
+忠诚度 ID (XXX-XXX-XXX-XXX) 或 GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+恢复密钥
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+解锁和恢复
+</string>
+    <string name="dialog_restore_pass_success">
+忠诚通行证已恢复！ %1$d 点已同步。
+</string>
+    <string name="dialog_restore_pass_not_found">
+未找到订单或忠诚度 ID。
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+此订单 ID 已被忠诚通行证认领。
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+连接到现有通行证
+</string>
+    <string name="dialog_connect_existing_subtitle">
+将此订单链接到您现有的忠诚度 ID
+</string>
+    <string name="dialog_connect_existing_id_hint">
+现有忠诚度 ID (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+万能钥匙
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+链接顺序和合并点
+</string>
 </resources>
 
 

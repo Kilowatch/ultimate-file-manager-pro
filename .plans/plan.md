@@ -1,163 +1,260 @@
-# Implementation Plan: High-Quality Badge & Custom App Icon Asset Pipeline
+# Implementation Plan: Anonymous Loyalty Pass & GPA Tip Verification System
 
-## Goals
-Implement an automated, high-precision image processing pipeline to transform the 10 raw milestone renders (`images/5.jpg` through `images/1000.jpg`) into three production-ready asset suites organized into dedicated folders under `images/`:
-1. **Set 1: In-App Transparent Badges** (`images/badges_transparent/`): 2048×2048, 512×512, and 256×256 transparent PNG & WebP assets with normalized optical scale (~90%).
-2. **Set 2: Square App Icons** (`images/app_icons_square/`): 2048×2048 and 512×512 PNG & WebP square icons with a matching radial gradient background and the exact mobile launcher safe-zone padding (66.67% emblem scale, 16.67% edge margins).
-3. **Set 2 (B): Adaptive Icon Layers** (`images/app_icons_adaptive/`): Separate foreground (emblem with 16.67% margin on transparent canvas) and matching background layers at 2048×2048 and 432×432 (xxxhdpi).
-4. **Set 3: Android TV Leanback Banners** (`images/tv_banners/`): 16:9 widescreen banners at 1920×1080, 1280×720, and 320×180 (PNG & WebP) with centered emblem and overscan protection.
+**Target Environments**:
+- Backend PHP APIs: `F:\APK\api\`
+- MySQL Database: `kilowatc_ufm_tips`
+- Android Application: `za.kilowatch.ultimatefilemanager.billing`
 
 ---
 
-## Architecture Overview
+## Goal Description
+Build an authoritative, privacy-first, central repository for Google Play tip orders (GPA numbers) and loyalty points ($1 = 10 points) that completely replaces device-local `SharedPreferences` point storage. 
+
+This enables supporters to retain, aggregate, and restore their points and unlocked badge tiers across devices and app reinstalls without requiring any personal data (no names, emails, Google accounts, or device identifiers).
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Zero Personal Data & Anonymous Terminology**:
+> In accordance with privacy requirements, the concept of "accounts" has been strictly replaced by **"Loyalty Pass"**, **"Loyalty ID"** (`XXX-XXX-XXX-XXX`), and **"Passkey"**. No personal data is captured or stored anywhere.
+
+> [!NOTE]
+> **Historical Backfill**:
+> A standalone migration script (`backfill_gpa_orders.php`) will parse all historical tip events from the existing `event_log` table (over 300 records as seen in `sql.PNG`) to populate `gpa_orders` with initial `points = ROUND(tip_amount * 10)`.
+
+---
+
+## Proposed Changes
 
 ```mermaid
 flowchart TD
-    Raw["Raw 2048x2048 Master JPEGs\n(5.jpg .. 1000.jpg)"] --> Rembg["AI Alpha Matting (rembg / U2-Net)\nExtract Clean RGBA Transparency"]
-    
-    Rembg --> BBox["Tight Bounding Box Normalization\n(Crop & Aspect Ratio Lock)"]
-    Rembg --> Palette["Harmonious Palette Extraction\n(Dominant Color & Gradient Stems)"]
-    
-    BBox --> Set1["Set 1: Transparent Badges\n- 90% Uniform Optical Scale\n- Centered on Transparent Canvas\n- 2048x2048, 512x512, 256x256"]
-    
-    BBox & Palette --> Set2["Set 2: Square App Icons\n- Radial Gradient Background\n- 66.67% Mobile Safe Zone Scale\n- 16.67% Edge Margins (ic_launcher_foreground)\n- 2048x2048, 512x512"]
-    
-    BBox & Palette --> Set2B["Set 2 (B): Adaptive Icon Layers\n- Foreground (Transparent 66.67% Safe Zone)\n- Background (Radial Gradient)\n- 2048x2048, 432x432 (xxxhdpi)"]
-    
-    BBox & Palette --> Set3["Set 3: Android TV Banners\n- 16:9 Aspect Ratio\n- Radial Gradient Background\n- TV Overscan Safe Centering\n- 1920x1080, 1280x720, 320x180"]
-    
-    Set1 --> Out1["images/badges_transparent/\n(PNG + WebP)"]
-    Set2 --> Out2["images/app_icons_square/\n(PNG + WebP)"]
-    Set2B --> Out2B["images/app_icons_adaptive/\n(PNG + WebP)"]
-    Set3 --> Out3["images/tv_banners/\n(PNG + WebP)"]
-```
+    subgraph MySQL Database: kilowatc_ufm_tips
+        TablePasses[loyalty_passes Table<br/>id, loyalty_id, passkey_hash, total_points]
+        TableOrders[gpa_orders Table<br/>id, pass_id, loyalty_id, order_id, tip_amount, points, call_count]
+        TableEventLog[event_log Table<br/>historical records]
+    end
 
-### Key Technical Decisions
-1. **Neural Alpha Matting**: Uses `rembg` (U2-Net ONNX engine) for background extraction, followed by alpha border cleanup to prevent single-pixel dark boundary halos.
-2. **Deterministic Palette Computation**: Computes the dominant primary hue using k-means/histogram clustering on visible emblem pixels (alpha > 128), generating a paired radial gradient:
-   - Inner highlight: slightly desaturated and brightened (+15% luminance) for a gentle rim spotlight behind the emblem.
-   - Outer rim: deep shade (35–45% luminance) for contrast and depth.
-3. **Exact Launcher Geometry Matching**: Conforms directly to UFM's mobile launcher standard:
-   - Canvas: Square.
-   - Safe Zone: Exactly `(w * 2/3, h * 2/3)`.
-   - Edge Padding: Exactly `(w * 1/6, h * 1/6)`.
-   - Guaranteed immunity against masking cutoffs on circular (50% radius), squircle, or pebble launcher shapes.
-4. **Leanback TV 16:9 Standard**: 
-   - Banner aspect ratio: exactly 16:9 (`1920×1080` master, `1280×720` xxxhdpi, `320×180` baseline).
-   - Emblem height: ~72% of banner height with centered alignment, providing ample overscan buffer.
-5. **Dual Format Generation**: Outputs both master 32-bit lossless PNG and modern high-quality WebP (`quality=95`, method=6) for instant, lightweight deployment.
+    subgraph Backend PHP: F:\APK\api
+        Backfill[backfill_gpa_orders.php] -->|Parse historical tips| TableOrders
+        RTDN[rtdn.php update] -->|Real-time tip ingestion| TableOrders
+        RateLimit[RateLimiter.php] -->|DDoS & Brute-Force Shield| VerifyAPI
+        VerifyAPI[verify_gpa.php] -->|CRUD & Sync| TablePasses
+        VerifyAPI -->|Link GPA & Atomic Counter| TableOrders
+    end
 
----
-
-## Files to Create
-
-### `scripts/process_badges.py` — Automated Pipeline Script
-- **What**: End-to-end Python script that loads raw images from `images/`, applies background removal, calculates bounding boxes, extracts color gradients, generates Set 1, Set 2, Set 2 (B), and Set 3, and saves both PNG and WebP files.
-- **Key Modules**:
-  - `remove_backgrounds()`: Executes `rembg` session, returns clean RGBA `Image`.
-  - `extract_palette()`: Analyzes emblem pixels to yield inner and outer gradient RGB tuples.
-  - `render_radial_gradient(width, height, inner_color, outer_color)`: Generates high-fidelity smooth 2D radial gradient canvas using NumPy.
-  - `build_transparent_badge(emblem, size)`: Centers and scales emblem to 90% canvas dimension.
-  - `build_square_app_icon(emblem, size, inner_color, outer_color)`: Centers and scales emblem to 66.67% safe zone over radial gradient.
-  - `build_adaptive_layers(emblem, size, inner_color, outer_color)`: Generates separate foreground and background images.
-  - `build_tv_banner(emblem, width, height, inner_color, outer_color)`: Generates 16:9 banner with centered emblem.
-  - `save_dual_format(image, base_path)`: Exports both `.png` and `.webp`.
-
----
-
-## Output Directory Structure
-```
-images/
-├── 5.jpg ... 1000.jpg                    (Raw original inputs)
-├── badges_transparent/                   (Set 1: In-App Badges)
-│   ├── badge_points_5.png / .webp
-│   ├── ...
-│   ├── badge_points_1000.png / .webp
-│   ├── 512/                              (512x512 variants)
-│   └── 256/                              (256x256 variants)
-├── app_icons_square/                     (Set 2: Square App Icons)
-│   ├── app_icon_points_5.png / .webp     (2048x2048 master)
-│   ├── ...
-│   ├── app_icon_points_1000.png / .webp
-│   └── 512/                              (512x512 Play Store standard)
-├── app_icons_adaptive/                   (Set 2 B: Adaptive Layers)
-│   ├── foreground/
-│   │   ├── ic_launcher_points_5_foreground.png / .webp (2048x2048)
-│   │   └── 432/                          (432x432 xxxhdpi standard)
-│   └── background/
-│       ├── ic_launcher_points_5_background.png / .webp (2048x2048)
-│       └── 432/                          (432x432 xxxhdpi standard)
-└── tv_banners/                           (Set 3: Android TV Leanback Banners)
-    ├── tv_banner_points_5.png / .webp    (1920x1080 Full HD master)
-    ├── ...
-    ├── tv_banner_points_1000.png / .webp
-    ├── 1280/                             (1280x720 HD xxxhdpi)
-    └── 320/                              (320x180 Leanback baseline)
+    subgraph Android App: za.kilowatch.ultimatefilemanager
+        AppBilling[BillingManager / SupporterLoyaltyActivity] -->|Complete Tip / Enter GPA| PassMgr[LoyaltyPassManager.kt]
+        PassMgr -->|HTTPS JSON| VerifyAPI
+        PassMgr -->|Prompts & Backup| Dialogs[UFMStandard Glass Dialogs]
+        Dialogs -->|Fixed GPA. & Auto-Hyphen| Formatter[GpaInputFormatter.kt]
+    end
 ```
 
 ---
 
-## Files to Modify
-None in this phase (as confirmed in clarifications, all asset generation is isolated to `images/` subdirectories).
+### Component 1: Database Migration Scripts
 
----
+#### [NEW] `F:\APK\api\schema_loyalty_system.sql`
+Creates the two relational tables with strict constraints and indexes:
 
-## Data Model & Points Mapping
-```python
-TIERS = [
-    {"points": 5, "file": "5.jpg"},
-    {"points": 10, "file": "10.jpg"},
-    {"points": 20, "file": "20.jpg"},
-    {"points": 50, "file": "50.jpg"},
-    {"points": 100, "file": "100.jpg"},
-    {"points": 200, "file": "200.jpg"},
-    {"points": 300, "file": "300.jpg"},
-    {"points": 500, "file": "500.jpg"},
-    {"points": 750, "file": "750.jpg"},
-    {"points": 1000, "file": "1000.jpg"},
-]
+```sql
+-- 1. Anonymous Loyalty Passes Table
+CREATE TABLE IF NOT EXISTS `loyalty_passes` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `loyalty_id` VARCHAR(19) NOT NULL,
+    `passkey_hash` VARCHAR(255) NOT NULL,
+    `total_points` INT UNSIGNED NOT NULL DEFAULT 0,
+    `total_amount_usd` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    `failed_attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    `locked_until` DATETIME DEFAULT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_loyalty_id` (`loyalty_id`),
+    KEY `idx_total_points` (`total_points`),
+    KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 2. GPA Orders Table
+CREATE TABLE IF NOT EXISTS `gpa_orders` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `pass_id` BIGINT UNSIGNED DEFAULT NULL,
+    `loyalty_id` VARCHAR(19) DEFAULT NULL,
+    `order_id` VARCHAR(64) NOT NULL,
+    `product_id` VARCHAR(64) DEFAULT NULL,
+    `tip_amount` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    `currency` VARCHAR(3) NOT NULL DEFAULT 'USD',
+    `points` INT UNSIGNED NOT NULL DEFAULT 0,
+    `call_count` INT UNSIGNED NOT NULL DEFAULT 0,
+    `last_called_at` DATETIME DEFAULT NULL,
+    `claimed_at` DATETIME DEFAULT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_order_id` (`order_id`),
+    KEY `fk_gpa_pass_id` (`pass_id`),
+    KEY `idx_loyalty_id` (`loyalty_id`),
+    KEY `idx_call_count` (`call_count`),
+    KEY `idx_created_at` (`created_at`),
+    CONSTRAINT `fk_gpa_orders_pass` 
+        FOREIGN KEY (`pass_id`) REFERENCES `loyalty_passes` (`id`) 
+        ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
 
 ---
 
-## Dependencies
-- `Pillow` (PIL) >= 10.0: Image resampling (LANCZOS), RGBA composite, WebP encoding.
-- `rembg` >= 2.0: AI background removal using U2-Net ONNX runtime.
-- `numpy` >= 1.24: Fast vector array computations for radial gradient rendering and bounding-box alpha masks.
+### Component 2: Backend Historical Backfill & RTDN Real-Time Ingestion
+
+#### [NEW] `F:\APK\api\backfill_gpa_orders.php`
+- Connects via `Database::getInstance()->getConnection()`.
+- Queries `event_log` where `message LIKE 'Tip processed:%GPA.%'`.
+- Regex extraction: `/Tip processed:\s*\$([0-9.]+)\s*USD\s*\(product:\s*([^,]+),\s*order:\s*(GPA\.\d{4}-\d{4}-\d{4}-\d{5})\)/i`.
+- Computes `points = ROUND(amount * 10)`.
+- Batch inserts into `gpa_orders` with `ON DUPLICATE KEY UPDATE updated_at = NOW()`.
+- Outputs CLI execution report (rows scanned, inserted, skipped).
+
+#### [MODIFY] `F:\APK\api\rtdn.php`
+- In step 7d of `rtdn.php` (where tips are processed), add atomic ingestion to `gpa_orders`:
+  ```php
+  if (!empty($orderId) && preg_match('/^GPA\.\d{4}-\d{4}-\d{4}-\d{5}$/i', $orderId)) {
+      $points = (int) round($usdAmount * 10);
+      $stmtGpa = $pdo->prepare(
+          'INSERT INTO gpa_orders (order_id, product_id, tip_amount, currency, points, call_count, created_at, updated_at)
+           VALUES (:order_id, :product_id, :amount, :currency, :points, 0, NOW(), NOW())
+           ON DUPLICATE KEY UPDATE
+               tip_amount = VALUES(tip_amount),
+               points     = VALUES(points),
+               product_id = VALUES(product_id),
+               updated_at = NOW()'
+      );
+      $stmtGpa->execute([
+          ':order_id'   => strtoupper($orderId),
+          ':product_id' => $productId,
+          ':amount'     => $usdAmount,
+          ':currency'   => 'USD',
+          ':points'     => $points,
+      ]);
+  }
+  ```
 
 ---
 
-## Test & Verification Plan
+### Component 3: Backend Security & Verification API
 
-### Automated Verification Script (`scripts/verify_badges.py`)
-- **Dimension Check**: Asserts exact pixel dimensions for all generated PNG and WebP files across all size variants.
-- **Alpha Purity Check**: Asserts corner pixels on `badges_transparent/` and adaptive foregrounds are strictly transparent `(0, 0, 0, 0)`.
-- **Safe-Zone Bound Check**: Asserts that no non-zero alpha pixel in `app_icons_square` or adaptive foregrounds exceeds the 66.67% safe boundary (left/top >= 16.67%, right/bottom <= 83.33%).
-- **File Integrity & Non-Zero Size**: Verifies all generated files exist, are valid readable images, and non-empty.
+#### [NEW] `F:\APK\api\RateLimiter.php`
+- File-based sliding window rate limiter:
+  - Global IP Limit: 30 requests/minute.
+  - Failure/Brute-Force Limit: 5 failed passkey attempts locks the Loyalty ID for 15 minutes.
+  - Returns remaining attempts, lockout status, and `Retry-After` headers.
 
-### Visual Inspection
-- Simulate Android launcher circular mask on Set 2 icons to confirm zero edge clipping.
-- Verify color contrast and smoothness of radial gradients.
+#### [NEW] `F:\APK\api\verify_gpa.php`
+Implements the 4 core actions (all case-insensitive for GPA numbers and Loyalty IDs):
+- **Case-Insensitive Normalization**:
+  All input identifiers are normalized on ingest:
+  `$orderId = strtoupper(trim($input['order_id'] ?? ''))`
+  `$loyaltyId = strtoupper(trim($input['loyalty_id'] ?? ''))`
+- Database collation `utf8mb4_unicode_ci` inherently guarantees case-insensitive comparisons.
+1. `check_gpa`:
+   - Validates regex `/^GPA\.\d{4}-\d{4}-\d{4}-\d{5}$/i`.
+   - Checks if order exists in `gpa_orders`.
+   - Returns `{ success: true, status: "unclaimed" }` or `{ success: true, status: "already_claimed", loyalty_id_masked: "B4K-***-***-8R1" }`.
+2. `create_pass`:
+   - **Guaranteed Unique Loyalty ID Generation**:
+     Generates a random `XXX-XXX-XXX-XXX` Loyalty ID using cryptographically secure `random_int`.
+     Checks `SELECT 1 FROM loyalty_passes WHERE loyalty_id = :id` in a retry loop (up to 10 attempts) to guarantee that the generated Loyalty ID does **NOT** already exist.
+     Enforced by `UNIQUE KEY uq_loyalty_id` at the MySQL engine level with `PDOException` (SQLState 23000) retry handling.
+   - Generates 16-character secure random Passkey (`random_bytes`).
+   - Hashes with `password_hash($passkey, PASSWORD_BCRYPT, ['cost' => 12])`.
+   - Inserts row into `loyalty_passes` and updates `gpa_orders` (`pass_id`, `loyalty_id`, `claimed_at = NOW()`).
+   - Returns Loyalty ID, raw Passkey, points, and tip history.
+3. `claim_to_existing`:
+   - Validates Loyalty ID and verifies `password_verify($passkey, $row['passkey_hash'])`.
+   - Attaches unclaimed GPA to the Loyalty Pass.
+   - Recalculates `total_points = SUM(points)` in `gpa_orders` and updates `loyalty_passes`.
+   - Returns all tips and updated total points.
+4. `restore`:
+   - Resolves Loyalty ID (from direct ID or previous GPA lookup, case-insensitively).
+   - Verifies passkey.
+   - Returns full tip history and cumulative points for local delta sync.
 
 ---
 
-## Phase 2: "Fuel the Developer" Badges Section & Dynamic Launcher Icon (Google Mobile Only)
+### Component 4: Android Client Integration (UFM Pro)
 
-### Goals
-Expose the milestone badges in an interactive, prominent "Badges" section within the "Fuel the Developer" tip screen (`SupporterLoyaltyActivity.kt`) exclusively on Google Mobile (`mobileGoogle` flavor, `!isTv`), enabling users to choose any badge and have their Android home screen app icon update dynamically.
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/billing/GpaInputFormatter.kt`
+- **Fixed `GPA.` Prefix**:
+  - Attached via `TextInputLayout.prefixText = "GPA."` with distinct accent styling.
+  - Non-editable: User cannot backspace or erase the prefix.
+- **Smart Auto-Hyphen Formatter (`TextWatcher`)**:
+  - Automatically formats raw digits as the user types into:
+    `XXXX-XXXX-XXXX-XXXXX` (4 digits, hyphen, 4 digits, hyphen, 4 digits, hyphen, 5 digits).
+  - Handles backspacing smoothly without cursor jumping or getting trapped on hyphens.
+  - **Paste-Aware Sanitization**:
+    If a user pastes from their email receipt (e.g., `GPA.3398-3263-8701-36162`, `gpa.33983263870136162`, or `3398-3263-8701-36162`), it automatically strips any leading `GPA.` or `gpa.`, extracts the 17 digits, and applies the hyphen format automatically.
+- **Case-Insensitive Loyalty ID Formatter**:
+  - Automatically converts all characters to uppercase as typed.
+  - Automatically inserts hyphens for `XXX-XXX-XXX-XXX` format.
 
-### Architecture & Components
-1. **Prominent UI Presentation**:
-   - `cardBadgesSection`: In `activity_supporter_loyalty.xml`, hidden by default; revealed only on Google Mobile.
-   - Header with active badge preview showcase (`imgActiveBadgeHeader`).
-   - `item_supporter_badge.xml`: Large 76×76 dp elevated cards with rounded corners displaying the full radial gradient badge from `app_icons_square` alongside the transparent cutout badge accent, points metric, and active selection indicator.
-   - 10 badges listed vertically in ascending order (5 to 1,000 points), plus a "Default App Icon" restoration option.
-2. **Dynamic Launcher Icon Switching**:
-   - 10 `<activity-alias>` declarations in `app/src/google/AndroidManifest.xml` targeting `.onboarding.LanguageWelcomeActivity`.
-   - `BadgeIconManager.kt`: Controls `PackageManager.setComponentEnabledSetting(..., DONT_KILL_APP)` to activate the chosen alias and disable the default/other aliases.
-   - Persists selected tier in `SharedPreferences` (`ufm_badge_prefs`).
-3. **Adaptive Icon Resource Packaging**:
-   - Density buckets (`mipmap-mdpi` through `mipmap-xxxhdpi`) installed in `app/src/google/res/`.
-   - `mipmap-anydpi-v26/ic_launcher_points_{pts}.xml` combining cutout foreground and matching gradient background.
-   - High-res 512px WebP previews in `app/src/google/res/drawable-nodpi/`.
+#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/billing/LoyaltyPassManager.kt`
+- Manages local storage of `active_loyalty_id` and passkey in encrypted shared preferences.
+- Performs async network calls to `verify_gpa.php` using standard `HttpURLConnection` / coroutines.
+- Computes delta sync: receives full tip list from server, checks local database, inserts missing entries, and synchronizes `total_points`.
+- Exposes `claimGpaOrder(gpa, callback)`, `restorePass(identifier, passkey, callback)`, and `syncPass(callback)`.
 
+#### [NEW] Layouts for UFMStandard Dialogs:
+All dialogs strictly adhere to **UFMStandard Dialog Architecture**:
+- Root layout: `@drawable/bg_dialog_glass`, `24dp` padding, transparent dialog window (`ColorDrawable(Color.TRANSPARENT)`).
+- Header: Centered 56×56dp frosted squircle icon (`@drawable/bg_btn_icon_frosted`) with 28×28dp themed vector icon.
+- Typography: 20sp `sans-serif-black` title (`@color/mobile_text_primary`) and 13sp `sans-serif-medium` subtitle (`@color/mobile_text_secondary`).
+- Content Cards: `@color/mobile_glass_card` with `@color/mobile_glass_stroke` (1dp stroke, 16dp corner radius).
+- Vertical Button Stack:
+  - Primary: `@style/Widget.Material3Expressive.Button`, 48dp height, 12dp corner radius, bold text, `?attr/colorPrimary`.
+  - Secondary/Dismiss: `@style/Widget.Material3.Button.TextButton` or TonalButton, 48dp height, 12dp corner radius.
+
+Files to implement:
+- `dialog_unclaimed_tip_prompt.xml`: Notifies of unclaimed tip and asks if the user already has a Loyalty ID.
+- `dialog_loyalty_pass_credentials.xml`: Displays newly generated Loyalty ID and Passkey with "Copy to Clipboard", "I Have Saved My Passkey", and the 100% Anonymous disclosure.
+- `dialog_loyalty_pass_restore.xml`: Input for Loyalty ID / previous GPA and Passkey to restore points on a clean install. Uses `GpaInputFormatter` for fixed `GPA.` prefix and auto-hyphenation.
+- `dialog_claim_past_gpa.xml`: Input dialog for existing supporters to paste historical GPA order numbers. Uses `GpaInputFormatter` for fixed `GPA.` prefix and auto-hyphenation.
+
+#### [MODIFY] `app/src/google/java/za/kilowatch/ultimatefilemanager/billing/SupporterLoyaltyActivity.kt`
+- Adds a **Loyalty Pass Card** in the UI:
+  - If no pass active: Shows "Anonymous Loyalty Pass • Tap to Restore or Create" and "Claim Past Tip".
+  - If pass active: Displays masked Loyalty ID (`B4K-***-***-8R1`), points total, "View / Backup Pass", and "Claim Past Tip".
+- On billing completion (`onPurchaseSuccess`), automatically queries `check_gpa` to guide the user into auto-attach or the decision modal.
+- Integrates `BadgeIconManager.getTotalTippedPoints` with `LoyaltyPassManager` verified points.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+1. **PHP Syntax & Linter Verification**:
+   ```powershell
+   php -l F:\APK\api\schema_loyalty_system.sql
+   php -l F:\APK\api\RateLimiter.php
+   php -l F:\APK\api\verify_gpa.php
+   php -l F:\APK\api\backfill_gpa_orders.php
+   php -l F:\APK\api\rtdn.php
+   ```
+2. **Android Compilation & Dex Verification**:
+   ```powershell
+   ./gradlew compileMobileGoogleDebugKotlin
+   ./gradlew assembleMobileGoogleDebug
+   ```
+
+### Manual Verification
+1. **Backfill Execution**: Run `backfill_gpa_orders.php` and verify rows are populated in `gpa_orders` from `event_log` with correct points ($1 = 10 pts).
+2. **API Verification via cURL / PowerShell**:
+   - `check_gpa`: Test valid GPA returns `unclaimed`.
+   - `create_pass`: Verify new Loyalty ID + Passkey generation and database link.
+   - `claim_to_existing`: Verify second GPA merges into the same Loyalty ID and combines points.
+   - `restore`: Verify entering GPA + Passkey restores the full tip list.
+   - Brute-force test: 5 bad passkeys trigger HTTP 423 lockout.
+3. **App UI Walkthrough**:
+   - Verify fixed `GPA.` prefix and auto-hyphen formatting when typing or pasting.
+   - Test "Claim Past Tip" in "Fuel the Developer" on mobile device.
+   - Verify UFMStandard glass dialogs and credentials clipboard copying.

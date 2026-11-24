@@ -6272,6 +6272,62 @@
     <string name="settings_local_network_status_denied">Permission Required</string>
     <string name="settings_local_network_btn_manage">Manage</string>
     <string name="toast_local_network_permission_required">Local network permission is required for this operation</string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">Anonymous Loyalty Pass</string>
+    <string name="loyalty_pass_card_subtitle">Restore &amp; sync your supporter points across devices</string>
+    <string name="loyalty_pass_privacy_badge">Zero personal data captured • 100% anonymous</string>
+    <string name="loyalty_pass_id_label">Loyalty ID</string>
+    <string name="loyalty_pass_points_format">%1$d Synced Points</string>
+    <string name="loyalty_pass_btn_claim_gpa">Claim Past Order</string>
+    <string name="loyalty_pass_btn_view_passkey">View Passkey / Backup</string>
+    <string name="loyalty_pass_btn_restore">Restore Loyalty Pass</string>
+    <string name="loyalty_pass_btn_switch">Switch / Restore Pass</string>
+    <string name="loyalty_pass_no_pass_desc">No Loyalty Pass connected yet. Your points can be synced and preserved anonymously when you tip or claim an order.</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">Unclaimed Tip Detected</string>
+    <string name="dialog_unclaimed_tip_subtitle">Order %1$s • +%2$d Points</string>
+    <string name="dialog_unclaimed_tip_message">Your tip has been confirmed! Do you already have an Anonymous Loyalty Pass, or would you like to generate a new one?</string>
+    <string name="dialog_unclaimed_tip_privacy_note">100% Anonymous: We do not collect or store any personal data, email, Google account, or device identifier.</string>
+    <string name="dialog_unclaimed_tip_btn_generate">Generate New Loyalty Pass</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">Connect to Existing Loyalty ID</string>
+    <string name="dialog_unclaimed_tip_btn_skip">Skip for Now</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">Your Loyalty Pass</string>
+    <string name="dialog_pass_creds_subtitle">Credentials generated securely</string>
+    <string name="dialog_pass_creds_id_label">ANONYMOUS LOYALTY ID</string>
+    <string name="dialog_pass_creds_passkey_label">RECOVERY PASSKEY</string>
+    <string name="dialog_pass_creds_notice">Save your Passkey in a safe place. Because we do not store personal details or email addresses, your Passkey is the only key to restore your points on a new device.</string>
+    <string name="dialog_pass_creds_btn_copy">Copy to Clipboard</string>
+    <string name="dialog_pass_creds_btn_done">I Have Saved My Passkey</string>
+    <string name="dialog_pass_creds_copied">Loyalty credentials copied to clipboard</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">Claim Past Tip</string>
+    <string name="dialog_claim_gpa_subtitle">Enter Google Play Order ID</string>
+    <string name="dialog_claim_gpa_hint">GPA.0000-0000-0000-00000</string>
+    <string name="dialog_claim_gpa_helper">Found on your Google Play purchase receipt email.</string>
+    <string name="dialog_claim_gpa_btn_claim">Verify &amp; Claim</string>
+    <string name="dialog_claim_gpa_btn_cancel">Cancel</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">Restore Loyalty Pass</string>
+    <string name="dialog_restore_pass_subtitle">Enter Loyalty ID or past GPA number and Passkey</string>
+    <string name="dialog_restore_pass_id_hint">Loyalty ID (XXX-XXX-XXX-XXX) or GPA</string>
+    <string name="dialog_restore_pass_key_hint">Recovery Passkey</string>
+    <string name="dialog_restore_pass_btn_restore">Unlock &amp; Restore</string>
+    <string name="dialog_restore_pass_success">Loyalty Pass restored! %1$d points synced.</string>
+    <string name="dialog_restore_pass_not_found">Order or Loyalty ID not found.</string>
+    <string name="dialog_restore_pass_claimed_already">This Order ID has already been claimed by a Loyalty Pass.</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">Connect to Existing Pass</string>
+    <string name="dialog_connect_existing_subtitle">Link this order to your existing Loyalty ID</string>
+    <string name="dialog_connect_existing_id_hint">Existing Loyalty ID (XXX-XXX-XXX-XXX)</string>
+    <string name="dialog_connect_existing_key_hint">Passkey</string>
+    <string name="dialog_connect_existing_btn_connect">Link Order &amp; Merge Points</string>
 </resources>
 
 

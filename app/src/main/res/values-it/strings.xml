@@ -17791,6 +17791,150 @@ Maneggio
     <string name="toast_local_network_permission_required">
 Per questa operazione è necessaria l\'autorizzazione della rete locale
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+Carta Fedeltà anonima
+</string>
+    <string name="loyalty_pass_card_subtitle">
+Ripristina e sincronizza i tuoi punti sostenitore su tutti i dispositivi
+</string>
+    <string name="loyalty_pass_privacy_badge">
+Zero dati personali catturati • 100% anonimo
+</string>
+    <string name="loyalty_pass_id_label">
+ID fedeltà
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d Punti sincronizzati
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+Reclama l\'ordine passato
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+Visualizza chiave di accesso/backup
+</string>
+    <string name="loyalty_pass_btn_restore">
+Ripristina il Pass Fedeltà
+</string>
+    <string name="loyalty_pass_btn_switch">
+Cambia/Ripristina passaggio
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+Nessun Pass Fedeltà connesso ancora. I tuoi punti possono essere sincronizzati e conservati in modo anonimo quando dai una mancia o richiedi un ordine.
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+Rilevata mancia non reclamata
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+Ordina %1$s • +%2$d punti
+</string>
+    <string name="dialog_unclaimed_tip_message">
+Il tuo suggerimento è stato confermato! Hai già una Carta Fedeltà Anonima o vorresti generarne una nuova?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100% anonimo: non raccogliamo né archiviamo dati personali, e-mail, account Google o identificatore del dispositivo.
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+Genera un nuovo pass fedeltà
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+Connettiti all\'ID fedeltà esistente
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+Salta per ora
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+La tua carta fedeltà
+</string>
+    <string name="dialog_pass_creds_subtitle">
+Credenziali generate in modo sicuro
+</string>
+    <string name="dialog_pass_creds_id_label">
+ID FEDELTÀ ANONIMO
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+CHIAVE DI RECUPERO
+</string>
+    <string name="dialog_pass_creds_notice">
+Conserva la tua passkey in un luogo sicuro. Poiché non memorizziamo dettagli personali o indirizzi e-mail, la tua Passkey è l\'unica chiave per ripristinare i tuoi punti su un nuovo dispositivo.
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+Copia negli appunti
+</string>
+    <string name="dialog_pass_creds_btn_done">
+Ho salvato la mia passkey
+</string>
+    <string name="dialog_pass_creds_copied">
+Credenziali fedeltà copiate negli appunti
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+Richiedi la mancia passata
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Inserisci l\'ID dell\'ordine di Google Play
+</string>
+    <string name="dialog_claim_gpa_hint">
+GPA.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+Trovato nell\'e-mail della ricevuta di acquisto di Google Play.
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+Verifica e rivendica
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+Cancellare
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+Ripristina il Pass Fedeltà
+</string>
+    <string name="dialog_restore_pass_subtitle">
+Inserisci l\'ID fedeltà o il numero GPA precedente e la passkey
+</string>
+    <string name="dialog_restore_pass_id_hint">
+ID fedeltà (XXX-XXX-XXX-XXX) o GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+Chiave di ripristino
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+Sblocca e ripristina
+</string>
+    <string name="dialog_restore_pass_success">
+Pass Fedeltà ripristinato! %1$d punti sincronizzati.
+</string>
+    <string name="dialog_restore_pass_not_found">
+Ordine o ID fedeltà non trovato.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+Questo ID ordine è già stato richiesto da un pass fedeltà.
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+Connetti al pass esistente
+</string>
+    <string name="dialog_connect_existing_subtitle">
+Collega questo ordine al tuo ID fedeltà esistente
+</string>
+    <string name="dialog_connect_existing_id_hint">
+ID fedeltà esistente (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+Chiave di accesso
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+Ordine di collegamento e unione di punti
+</string>
 </resources>
 
 

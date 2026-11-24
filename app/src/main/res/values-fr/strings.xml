@@ -17831,6 +17831,150 @@ Gérer
     <string name="toast_local_network_permission_required">
 L\'autorisation du réseau local est requise pour cette opération
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+Pass de fidélité anonyme
+</string>
+    <string name="loyalty_pass_card_subtitle">
+Restaurez et synchronisez vos points de supporter sur tous les appareils
+</string>
+    <string name="loyalty_pass_privacy_badge">
+Zéro donnée personnelle capturée • 100% anonyme
+</string>
+    <string name="loyalty_pass_id_label">
+Identifiant de fidélité
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d Points synchronisés
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+Réclamer une commande passée
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+Afficher la clé d\'accès/la sauvegarde
+</string>
+    <string name="loyalty_pass_btn_restore">
+Restaurer le pass de fidélité
+</string>
+    <string name="loyalty_pass_btn_switch">
+Changer/Restaurer le Pass
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+Aucun Pass Fidélité connecté pour l\'instant. Vos points peuvent être synchronisés et conservés de manière anonyme lorsque vous donnez un pourboire ou réclamez une commande.
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+Pourboire non réclamé détecté
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+Commandez %1$s • +%2$d points
+</string>
+    <string name="dialog_unclaimed_tip_message">
+Votre astuce a été confirmée ! Vous possédez déjà un Pass Fidélité Anonyme, ou vous souhaitez en générer un nouveau ?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100 % anonyme : nous ne collectons ni ne stockons aucune donnée personnelle, e-mail, compte Google ou identifiant d\'appareil.
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+Générer un nouveau pass de fidélité
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+Connectez-vous à un identifiant de fidélité existant
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+Passer pour l\'instant
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+Votre Pass Fidélité
+</string>
+    <string name="dialog_pass_creds_subtitle">
+Identifiants générés en toute sécurité
+</string>
+    <string name="dialog_pass_creds_id_label">
+ID DE FIDÉLITÉ ANONYME
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+CLÉ DE RÉCUPÉRATION
+</string>
+    <string name="dialog_pass_creds_notice">
+Enregistrez votre mot de passe dans un endroit sûr. Parce que nous ne stockons pas de données personnelles ni d\'adresses e-mail, votre clé d\'accès est la seule clé pour restaurer vos points sur un nouvel appareil.
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+Copier dans le Presse-papiers
+</string>
+    <string name="dialog_pass_creds_btn_done">
+J\'ai enregistré mon mot de passe
+</string>
+    <string name="dialog_pass_creds_copied">
+Identifiants de fidélité copiés dans le presse-papiers
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+Réclamez le pourboire passé
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Saisissez l\'ID de commande Google Play
+</string>
+    <string name="dialog_claim_gpa_hint">
+GPA.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+Trouvé sur votre e-mail de reçu d\'achat Google Play.
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+Vérifier et réclamer
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+Annuler
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+Restaurer le pass de fidélité
+</string>
+    <string name="dialog_restore_pass_subtitle">
+Entrez l\'ID de fidélité ou l\'ancien numéro GPA et la clé d\'accès
+</string>
+    <string name="dialog_restore_pass_id_hint">
+Identifiant de fidélité (XXX-XXX-XXX-XXX) ou GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+Clé d\'accès de récupération
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+Déverrouiller et restaurer
+</string>
+    <string name="dialog_restore_pass_success">
+Pass de fidélité restauré ! %1$d points synchronisés.
+</string>
+    <string name="dialog_restore_pass_not_found">
+Numéro de commande ou de fidélité introuvable.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+Cet ID de commande a déjà été réclamé par un Pass de fidélité.
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+Se connecter au pass existant
+</string>
+    <string name="dialog_connect_existing_subtitle">
+Associez cette commande à votre identifiant de fidélité existant
+</string>
+    <string name="dialog_connect_existing_id_hint">
+Identifiant de fidélité existant (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+Clé d\'accès
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+Ordre des liens et points de fusion
+</string>
 </resources>
 
 

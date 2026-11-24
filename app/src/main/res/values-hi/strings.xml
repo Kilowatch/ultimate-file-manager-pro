@@ -17809,6 +17809,150 @@ Android 17 स्थानीय नेटवर्क सुरक्षा अ
     <string name="toast_local_network_permission_required">
 इस ऑपरेशन के लिए स्थानीय नेटवर्क की अनुमति आवश्यक है
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+अनाम लॉयल्टी पास
+</string>
+    <string name="loyalty_pass_card_subtitle">
+सभी डिवाइसों पर अपने समर्थक बिंदुओं को पुनर्स्थापित और सिंक करें
+</string>
+    <string name="loyalty_pass_privacy_badge">
+शून्य व्यक्तिगत डेटा कैप्चर किया गया • 100% गुमनाम
+</string>
+    <string name="loyalty_pass_id_label">
+वफादारी आईडी
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d समन्वयित बिंदु
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+पिछले आदेश का दावा करें
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+पासकी/बैकअप देखें
+</string>
+    <string name="loyalty_pass_btn_restore">
+लॉयल्टी पास बहाल करें
+</string>
+    <string name="loyalty_pass_btn_switch">
+पास को स्विच/पुनर्स्थापित करें
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+अभी तक कोई लॉयल्टी पास कनेक्ट नहीं हुआ है. जब आप टिप देते हैं या किसी ऑर्डर पर दावा करते हैं तो आपके पॉइंट को गुमनाम रूप से सिंक और संरक्षित किया जा सकता है।
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+लावारिस टिप का पता चला
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+आदेश %1$s • +%2$d अंक
+</string>
+    <string name="dialog_unclaimed_tip_message">
+आपकी टिप की पुष्टि हो गई है! क्या आपके पास पहले से ही एक अज्ञात लॉयल्टी पास है, या आप एक नया लॉयल्टी पास बनाना चाहेंगे?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100% गुमनाम: हम कोई व्यक्तिगत डेटा, ईमेल, Google खाता या डिवाइस पहचानकर्ता एकत्र या संग्रहीत नहीं करते हैं।
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+नया लॉयल्टी पास जनरेट करें
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+मौजूदा लॉयल्टी आईडी से कनेक्ट करें
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+अभी के लिए छोड़ दे
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+आपका लॉयल्टी पास
+</string>
+    <string name="dialog_pass_creds_subtitle">
+क्रेडेंशियल सुरक्षित रूप से तैयार किए गए
+</string>
+    <string name="dialog_pass_creds_id_label">
+अनाम लॉयल्टी आईडी
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+पुनर्प्राप्ति पासकी
+</string>
+    <string name="dialog_pass_creds_notice">
+अपने पासकी को सुरक्षित स्थान पर सहेजें। क्योंकि हम व्यक्तिगत विवरण या ईमेल पते संग्रहीत नहीं करते हैं, आपका पासकी एक नए डिवाइस पर आपके अंक पुनर्स्थापित करने की एकमात्र कुंजी है।
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+क्लिपबोर्ड पर कॉपी करें
+</string>
+    <string name="dialog_pass_creds_btn_done">
+मैंने अपना पासकी सहेज लिया है
+</string>
+    <string name="dialog_pass_creds_copied">
+वफ़ादारी क्रेडेंशियल क्लिपबोर्ड पर कॉपी किए गए
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+पिछली युक्ति का दावा करें
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Google Play ऑर्डर आईडी दर्ज करें
+</string>
+    <string name="dialog_claim_gpa_hint">
+GPA.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+आपके Google Play खरीदारी रसीद ईमेल पर पाया गया।
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+सत्यापित करें और दावा करें
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+रद्द करना
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+लॉयल्टी पास बहाल करें
+</string>
+    <string name="dialog_restore_pass_subtitle">
+लॉयल्टी आईडी या पिछला जीपीए नंबर और पासकी दर्ज करें
+</string>
+    <string name="dialog_restore_pass_id_hint">
+लॉयल्टी आईडी (XXX-XXX-XXX-XXX) या GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+पुनर्प्राप्ति पासकी
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+अनलॉक करें और पुनर्स्थापित करें
+</string>
+    <string name="dialog_restore_pass_success">
+लॉयल्टी पास बहाल! %1$d अंक समन्वयित हुए।
+</string>
+    <string name="dialog_restore_pass_not_found">
+ऑर्डर या लॉयल्टी आईडी नहीं मिला.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+इस ऑर्डर आईडी पर पहले ही लॉयल्टी पास द्वारा दावा किया जा चुका है।
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+मौजूदा पास से कनेक्ट करें
+</string>
+    <string name="dialog_connect_existing_subtitle">
+इस ऑर्डर को अपनी मौजूदा लॉयल्टी आईडी से लिंक करें
+</string>
+    <string name="dialog_connect_existing_id_hint">
+मौजूदा लॉयल्टी आईडी (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+सर्व-कुंजी
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+लिंक ऑर्डर और मर्ज पॉइंट
+</string>
 </resources>
 
 

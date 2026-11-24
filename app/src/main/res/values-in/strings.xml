@@ -17831,6 +17831,150 @@ Mengelola
     <string name="toast_local_network_permission_required">
 Izin jaringan lokal diperlukan untuk operasi ini
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+Tiket Loyalitas Anonim
+</string>
+    <string name="loyalty_pass_card_subtitle">
+Pulihkan &amp; sinkronkan poin pendukung Anda di seluruh perangkat
+</string>
+    <string name="loyalty_pass_privacy_badge">
+Tidak ada data pribadi yang diambil • 100% anonim
+</string>
+    <string name="loyalty_pass_id_label">
+ID Loyalitas
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d Poin yang Disinkronkan
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+Klaim Pesanan Sebelumnya
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+Lihat Kunci Sandi / Cadangan
+</string>
+    <string name="loyalty_pass_btn_restore">
+Pulihkan Loyalitas Pass
+</string>
+    <string name="loyalty_pass_btn_switch">
+Ganti / Pulihkan Pass
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+Belum ada Loyalty Pass yang terhubung. Poin Anda dapat disinkronkan dan disimpan secara anonim saat Anda memberi tip atau mengklaim pesanan.
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+Tip yang Tidak Diklaim Terdeteksi
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+Pesanan %1$s • +%2$d Poin
+</string>
+    <string name="dialog_unclaimed_tip_message">
+Tip Anda telah dikonfirmasi! Apakah Anda sudah memiliki Loyalty Pass Anonim, atau Anda ingin membuat yang baru?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100% Anonim: Kami tidak mengumpulkan atau menyimpan data pribadi, email, akun Google, atau pengenal perangkat apa pun.
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+Hasilkan Loyalty Pass Baru
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+Hubungkan ke ID Loyalitas yang Ada
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+Lewati untuk Saat Ini
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+Kartu Loyalitas Anda
+</string>
+    <string name="dialog_pass_creds_subtitle">
+Kredensial dihasilkan dengan aman
+</string>
+    <string name="dialog_pass_creds_id_label">
+ID LOYALITAS ANONIM
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+KUNCI PEMULIHAN
+</string>
+    <string name="dialog_pass_creds_notice">
+Simpan Kunci Sandi Anda di tempat yang aman. Karena kami tidak menyimpan detail pribadi atau alamat email, Kunci Sandi Anda adalah satu-satunya kunci untuk memulihkan poin Anda di perangkat baru.
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+Salin ke Papan Klip
+</string>
+    <string name="dialog_pass_creds_btn_done">
+Saya Telah Menyimpan Kunci Sandi Saya
+</string>
+    <string name="dialog_pass_creds_copied">
+Kredensial loyalitas disalin ke papan klip
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+Klaim Tip Sebelumnya
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Masukkan ID Pesanan Google Play
+</string>
+    <string name="dialog_claim_gpa_hint">
+IPK.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+Ditemukan di email tanda terima pembelian Google Play Anda.
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+Verifikasi &amp; Klaim
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+Membatalkan
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+Pulihkan Loyalitas Pass
+</string>
+    <string name="dialog_restore_pass_subtitle">
+Masukkan ID Loyalitas atau nomor IPK sebelumnya dan Kunci Sandi
+</string>
+    <string name="dialog_restore_pass_id_hint">
+ID Loyalitas (XXX-XXX-XXX-XXX) atau IPK
+</string>
+    <string name="dialog_restore_pass_key_hint">
+Kunci Sandi Pemulihan
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+Buka kunci &amp; Pulihkan
+</string>
+    <string name="dialog_restore_pass_success">
+Loyalitas Pass dipulihkan! %1$d poin disinkronkan.
+</string>
+    <string name="dialog_restore_pass_not_found">
+ID Pesanan atau Loyalitas tidak ditemukan.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+ID Pesanan ini telah diklaim oleh Loyalty Pass.
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+Hubungkan ke Pass yang Ada
+</string>
+    <string name="dialog_connect_existing_subtitle">
+Tautkan pesanan ini ke ID Loyalitas Anda yang sudah ada
+</string>
+    <string name="dialog_connect_existing_id_hint">
+ID Loyalitas yang Ada (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+Kunci pas
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+Tautkan Urutan &amp; Gabungkan Poin
+</string>
 </resources>
 
 

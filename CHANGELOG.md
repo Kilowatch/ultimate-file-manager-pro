@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.2.8] — 2026-11-20
 
 ### Added
+- **Anonymous Loyalty Pass & Central GPA Verification (`SupporterLoyaltyActivity`, `LoyaltyPassManager`, `GpaInputFormatter`)**:
+  - **Anonymous Loyalty Pass**: Privacy-first supporter loyalty system for Google Mobile builds, allowing supporters to securely back up, sync, and restore tip points and milestone badges across device reinstalls without requiring personal accounts, emails, phone numbers, or device identifiers.
+  - **Central Order Verification & Ingestion Backend**: Centralized repository and real-time Google Play Pub/Sub RTDN ingestion ($1 = 10 points) mapping verified orders (`GPA.xxxx-xxxx-xxxx-xxxxx`) to anonymous passes, powered by sliding-window rate limiting, timing-safe jitter, and bcrypt-hashed passkeys.
+  - **UFMStandard Frosted Glass Modals**: Interactive glass dialogs for unclaimed tip detection, credential backup (`dialog_loyalty_pass_credentials.xml`), pass restoration, and manual order claiming with fixed non-editable `GPA.` prefix and auto-hyphenation (`XXXX-XXXX-XXXX-XXXXX`).
 - **Custom App Icon & Supporter Milestone Badges (`SupporterLoyaltyActivity`, `CustomIconManager`, `ActiveBadgeIconHelper`)**:
   - **Custom App Icon**: Select any photo or image from device storage using UFM file browsing to create a personalized home screen app icon (unlocks at the 10 loyalty points tier). Includes automatic 1:1 square center-cropping, 512×512 scaling, and permanent caching in app internal storage so icons persist even if source files are deleted.
   - **Supporter Milestone Badges**: 10 progressive loyalty tiers (5 to 1,000 points) in "Fuel the Developer" allowing supporters to unlock and apply custom milestone emblem icons as their home screen launcher icon.

@@ -17832,6 +17832,150 @@ Android 17 のローカル ネットワーク保護権限を管理する
     <string name="toast_local_network_permission_required">
 この操作にはローカル ネットワークの許可が必要です
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+匿名ロイヤルティパス
+</string>
+    <string name="loyalty_pass_card_subtitle">
+サポーター ポイントをデバイス間で復元して同期する
+</string>
+    <string name="loyalty_pass_privacy_badge">
+個人データの取得はゼロ • 100% 匿名
+</string>
+    <string name="loyalty_pass_id_label">
+ロイヤルティ ID
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d 同期ポイント
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+過去の注文を請求する
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+パスキー/バックアップの表示
+</string>
+    <string name="loyalty_pass_btn_restore">
+ロイヤルティパスを復元する
+</string>
+    <string name="loyalty_pass_btn_switch">
+パスの切り替え/復元
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+ロイヤルティ パスがまだ接続されていません。ポイントは、チップを渡すか注文を受け取るときに匿名で同期および保存できます。
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+請求されていないチップが検出されました
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+%1$s を注文 • +%2$d ポイント
+</string>
+    <string name="dialog_unclaimed_tip_message">
+あなたのチップが確認されました！すでに匿名ロイヤルティ パスをお持ちですか、それとも新しいものを生成しますか?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100% 匿名: 当社は個人データ、電子メール、Google アカウント、デバイス識別子を収集または保存しません。
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+新しいロイヤルティ パスを生成する
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+既存のロイヤルティ ID に接続する
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+今はスキップしてください
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+あなたのロイヤルティパス
+</string>
+    <string name="dialog_pass_creds_subtitle">
+安全に生成された認証情報
+</string>
+    <string name="dialog_pass_creds_id_label">
+匿名のロイヤルティ ID
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+リカバリパスキー
+</string>
+    <string name="dialog_pass_creds_notice">
+パスキーを安全な場所に保存してください。当社では個人情報や電子メール アドレスを保存しないため、新しいデバイスでポイントを復元するための唯一のキーはパスキーです。
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+クリップボードにコピー
+</string>
+    <string name="dialog_pass_creds_btn_done">
+パスキーを保存しました
+</string>
+    <string name="dialog_pass_creds_copied">
+ロイヤリティ認証情報がクリップボードにコピーされました
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+過去のチップを請求する
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Google Play注文IDを入力してください
+</string>
+    <string name="dialog_claim_gpa_hint">
+GPA.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+Google Play の購入領収書メールに記載されています。
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+確認と請求
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+キャンセル
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+ロイヤルティパスを復元する
+</string>
+    <string name="dialog_restore_pass_subtitle">
+ロイヤルティ ID または過去の GPA 番号とパスキーを入力してください
+</string>
+    <string name="dialog_restore_pass_id_hint">
+ロイヤルティ ID (XXX-XXX-XXX-XXX) または GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+リカバリパスキー
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+ロック解除と復元
+</string>
+    <string name="dialog_restore_pass_success">
+ロイヤルティパスが復活しました！ %1$d ポイントが同期されました。
+</string>
+    <string name="dialog_restore_pass_not_found">
+注文またはロイヤルティ ID が見つかりません。
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+この注文 ID はすでにロイヤルティ パスによって要求されています。
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+既存のパスに接続する
+</string>
+    <string name="dialog_connect_existing_subtitle">
+この注文を既存のロイヤルティ ID にリンクします
+</string>
+    <string name="dialog_connect_existing_id_hint">
+既存のロイヤルティ ID (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+パスキー
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+リンク順序とマージポイント
+</string>
 </resources>
 
 

@@ -17817,6 +17817,150 @@ Verwalten
     <string name="toast_local_network_permission_required">
 Für diesen Vorgang ist eine lokale Netzwerkberechtigung erforderlich
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+Anonymer Treuepass
+</string>
+    <string name="loyalty_pass_card_subtitle">
+Stellen Sie Ihre Supporter-Punkte geräteübergreifend wieder her und synchronisieren Sie sie
+</string>
+    <string name="loyalty_pass_privacy_badge">
+Es werden keine personenbezogenen Daten erfasst. • 100 % anonym
+</string>
+    <string name="loyalty_pass_id_label">
+Treue-ID
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d Synchronisierte Punkte
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+Fordern Sie frühere Bestellungen an
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+Passkey/Backup anzeigen
+</string>
+    <string name="loyalty_pass_btn_restore">
+Treuepass wiederherstellen
+</string>
+    <string name="loyalty_pass_btn_switch">
+Pass wechseln / wiederherstellen
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+Noch kein Treuepass verbunden. Ihre Punkte können synchronisiert und anonym gespeichert werden, wenn Sie Trinkgeld geben oder eine Bestellung anfordern.
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+Nicht abgeholtes Trinkgeld erkannt
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+Bestellen Sie %1$s • +%2$d Punkte
+</string>
+    <string name="dialog_unclaimed_tip_message">
+Ihr Tipp wurde bestätigt! Besitzen Sie bereits einen Anonymous Loyalty Pass oder möchten Sie einen neuen generieren?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100 % anonym: Wir erfassen oder speichern keine persönlichen Daten, E-Mail-Adressen, Google-Konten oder Gerätekennungen.
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+Generieren Sie einen neuen Treuepass
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+Stellen Sie eine Verbindung zur vorhandenen Treue-ID her
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+Vorerst überspringen
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+Ihr Treuepass
+</string>
+    <string name="dialog_pass_creds_subtitle">
+Anmeldeinformationen sicher generiert
+</string>
+    <string name="dialog_pass_creds_id_label">
+ANONYME TREUE-ID
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+WIEDERHERSTELLUNGSSCHLÜSSEL
+</string>
+    <string name="dialog_pass_creds_notice">
+Bewahren Sie Ihren Passkey an einem sicheren Ort auf. Da wir keine persönlichen Daten oder E-Mail-Adressen speichern, ist Ihr Passkey der einzige Schlüssel zum Wiederherstellen Ihrer Punkte auf einem neuen Gerät.
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+In die Zwischenablage kopieren
+</string>
+    <string name="dialog_pass_creds_btn_done">
+Ich habe meinen Passkey gespeichert
+</string>
+    <string name="dialog_pass_creds_copied">
+Treue-Zugangsdaten in die Zwischenablage kopiert
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+Fordern Sie das bisherige Trinkgeld an
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Geben Sie die Google Play-Bestell-ID ein
+</string>
+    <string name="dialog_claim_gpa_hint">
+GPA.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+Finden Sie in der E-Mail Ihres Google Play-Kaufbelegs.
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+Überprüfen und beanspruchen
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+Stornieren
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+Treuepass wiederherstellen
+</string>
+    <string name="dialog_restore_pass_subtitle">
+Geben Sie die Treue-ID oder die frühere GPA-Nummer und den Passkey ein
+</string>
+    <string name="dialog_restore_pass_id_hint">
+Treue-ID (XXX-XXX-XXX-XXX) oder GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+Wiederherstellungsschlüssel
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+Entsperren und wiederherstellen
+</string>
+    <string name="dialog_restore_pass_success">
+Treuepass wiederhergestellt! %1$d Punkte synchronisiert.
+</string>
+    <string name="dialog_restore_pass_not_found">
+Bestell- oder Treue-ID nicht gefunden.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+Diese Bestell-ID wurde bereits durch einen Treuepass beansprucht.
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+Mit vorhandenem Pass verbinden
+</string>
+    <string name="dialog_connect_existing_subtitle">
+Verknüpfen Sie diese Bestellung mit Ihrer bestehenden Treue-ID
+</string>
+    <string name="dialog_connect_existing_id_hint">
+Vorhandene Treue-ID (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+Hauptschlüssel
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+Reihenfolge verknüpfen und Punkte zusammenführen
+</string>
 </resources>
 
 

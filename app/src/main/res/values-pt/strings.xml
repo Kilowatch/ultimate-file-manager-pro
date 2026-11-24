@@ -17831,6 +17831,150 @@ Gerenciar
     <string name="toast_local_network_permission_required">
 É necessária permissão de rede local para esta operação
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+Passe de fidelidade anônimo
+</string>
+    <string name="loyalty_pass_card_subtitle">
+Restaure e sincronize seus pontos de apoio entre dispositivos
+</string>
+    <string name="loyalty_pass_privacy_badge">
+Nenhum dado pessoal capturado • 100% anônimo
+</string>
+    <string name="loyalty_pass_id_label">
+ID de fidelidade
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d Pontos sincronizados
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+Reivindicar pedido anterior
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+Ver senha/backup
+</string>
+    <string name="loyalty_pass_btn_restore">
+Restaurar passe de fidelidade
+</string>
+    <string name="loyalty_pass_btn_switch">
+Passagem de troca/restauração
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+Nenhum Loyalty Pass conectado ainda. Seus pontos podem ser sincronizados e preservados anonimamente quando você dá uma gorjeta ou reivindica um pedido.
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+Gorjeta não reclamada detectada
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+Pedido %1$s • +%2$d Pontos
+</string>
+    <string name="dialog_unclaimed_tip_message">
+Sua dica foi confirmada! Você já possui um Passe de Fidelidade Anônimo ou gostaria de gerar um novo?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100% Anônimo: Não coletamos nem armazenamos quaisquer dados pessoais, e-mail, conta do Google ou identificador de dispositivo.
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+Gerar novo passe de fidelidade
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+Conecte-se ao ID de fidelidade existente
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+Pular por agora
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+Seu passe de fidelidade
+</string>
+    <string name="dialog_pass_creds_subtitle">
+Credenciais geradas com segurança
+</string>
+    <string name="dialog_pass_creds_id_label">
+ID ANÔNIMO DE LEALDADE
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+SENHA DE RECUPERAÇÃO
+</string>
+    <string name="dialog_pass_creds_notice">
+Salve sua chave de acesso em um local seguro. Como não armazenamos dados pessoais ou endereços de e-mail, sua senha é a única chave para restaurar seus pontos em um novo dispositivo.
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+Copiar para a área de transferência
+</string>
+    <string name="dialog_pass_creds_btn_done">
+Salvei minha senha
+</string>
+    <string name="dialog_pass_creds_copied">
+Credenciais de fidelidade copiadas para a área de transferência
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+Reivindique dica anterior
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Insira o ID do pedido do Google Play
+</string>
+    <string name="dialog_claim_gpa_hint">
+GPA.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+Encontrado no seu e-mail de recibo de compra do Google Play.
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+Verificar e reivindicar
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+Cancelar
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+Restaurar passe de fidelidade
+</string>
+    <string name="dialog_restore_pass_subtitle">
+Insira o ID de fidelidade ou o número GPA e a chave de acesso
+</string>
+    <string name="dialog_restore_pass_id_hint">
+ID de fidelidade (XXX-XXX-XXX-XXX) ou GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+Senha de recuperação
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+Desbloquear e restaurar
+</string>
+    <string name="dialog_restore_pass_success">
+Passe de fidelidade restaurado! %1$d pontos sincronizados.
+</string>
+    <string name="dialog_restore_pass_not_found">
+Pedido ou ID de fidelidade não encontrado.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+Este ID de pedido já foi reivindicado por um Loyalty Pass.
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+Conecte-se ao passe existente
+</string>
+    <string name="dialog_connect_existing_subtitle">
+Vincule este pedido ao seu ID de fidelidade existente
+</string>
+    <string name="dialog_connect_existing_id_hint">
+ID de fidelidade existente (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+Chave de acesso
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+Ordem de link e pontos de mesclagem
+</string>
 </resources>
 
 

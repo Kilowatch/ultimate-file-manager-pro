@@ -17833,6 +17833,150 @@ Bookmark Hub
     <string name="toast_local_network_permission_required">
 مطلوب إذن الشبكة المحلية لهذه العملية
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+بطاقة الولاء المجهولة
+</string>
+    <string name="loyalty_pass_card_subtitle">
+استعادة ومزامنة نقاط الداعم الخاصة بك عبر الأجهزة
+</string>
+    <string name="loyalty_pass_privacy_badge">
+لم يتم التقاط أي بيانات شخصية • مجهول بنسبة 100%
+</string>
+    <string name="loyalty_pass_id_label">
+معرف الولاء
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d النقاط التي تمت مزامنتها
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+المطالبة بالطلب السابق
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+عرض مفتاح المرور / النسخ الاحتياطي
+</string>
+    <string name="loyalty_pass_btn_restore">
+استعادة بطاقة الولاء
+</string>
+    <string name="loyalty_pass_btn_switch">
+التبديل / استعادة المرور
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+لم يتم توصيل بطاقة الولاء حتى الآن. يمكن مزامنة نقاطك وحفظها بشكل مجهول عند تقديم إكرامية أو المطالبة بطلب.
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+تم اكتشاف نصيحة لم يطالب بها أحد
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+اطلب %1$s • +%2$d نقاط
+</string>
+    <string name="dialog_unclaimed_tip_message">
+لقد تم تأكيد نصيحتك! هل لديك بالفعل بطاقة ولاء مجهولة، أم ترغب في إنشاء واحدة جديدة؟
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+مجهول بنسبة 100%: نحن لا نجمع أو نخزن أي بيانات شخصية أو بريد إلكتروني أو حساب Google أو معرف الجهاز.
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+إنشاء بطاقة ولاء جديدة
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+الاتصال بمعرف الولاء الموجود
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+تخطي الآن
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+بطاقة الولاء الخاصة بك
+</string>
+    <string name="dialog_pass_creds_subtitle">
+تم إنشاء بيانات الاعتماد بشكل آمن
+</string>
+    <string name="dialog_pass_creds_id_label">
+معرف الولاء المجهول
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+مفتاح مرور الاسترداد
+</string>
+    <string name="dialog_pass_creds_notice">
+احفظ مفتاح المرور الخاص بك في مكان آمن. نظرًا لأننا لا نقوم بتخزين تفاصيل شخصية أو عناوين بريد إلكتروني، فإن مفتاح المرور الخاص بك هو المفتاح الوحيد لاستعادة نقاطك على جهاز جديد.
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+نسخ إلى الحافظة
+</string>
+    <string name="dialog_pass_creds_btn_done">
+لقد قمت بحفظ مفتاح المرور الخاص بي
+</string>
+    <string name="dialog_pass_creds_copied">
+تم نسخ بيانات اعتماد الولاء إلى الحافظة
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+المطالبة نصيحة الماضي
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+أدخل معرف طلب Google Play
+</string>
+    <string name="dialog_claim_gpa_hint">
+المعدل التراكمي.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+تم العثور عليه في البريد الإلكتروني الخاص بإيصال الشراء على Google Play.
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+التحقق والمطالبة
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+يلغي
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+استعادة بطاقة الولاء
+</string>
+    <string name="dialog_restore_pass_subtitle">
+أدخل معرف الولاء أو رقم المعدل التراكمي السابق ومفتاح المرور
+</string>
+    <string name="dialog_restore_pass_id_hint">
+معرف الولاء (XXX-XXX-XXX-XXX) أو المعدل التراكمي
+</string>
+    <string name="dialog_restore_pass_key_hint">
+مفتاح مرور الاسترداد
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+فتح واستعادة
+</string>
+    <string name="dialog_restore_pass_success">
+تمت استعادة بطاقة الولاء! %1$d تمت مزامنة النقاط.
+</string>
+    <string name="dialog_restore_pass_not_found">
+لم يتم العثور على الطلب أو معرف الولاء.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+تمت المطالبة بمعرف الطلب هذا بالفعل بواسطة بطاقة الولاء.
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+الاتصال بالممر الحالي
+</string>
+    <string name="dialog_connect_existing_subtitle">
+قم بربط هذا الطلب بمعرف الولاء الحالي الخاص بك
+</string>
+    <string name="dialog_connect_existing_id_hint">
+معرف الولاء الحالي (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+مفتاح المرور
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+ربط النظام ودمج النقاط
+</string>
 </resources>
 
 

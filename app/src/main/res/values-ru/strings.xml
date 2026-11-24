@@ -17831,6 +17831,150 @@ Ultimate File Manager Pro использует вашу локальную се�
     <string name="toast_local_network_permission_required">
 Для этой операции требуется разрешение локальной сети.
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+Анонимный пропуск лояльности
+</string>
+    <string name="loyalty_pass_card_subtitle">
+Восстановите и синхронизируйте свои баллы поддержки на разных устройствах.
+</string>
+    <string name="loyalty_pass_privacy_badge">
+Никакие личные данные не сохраняются • 100 % анонимность
+</string>
+    <string name="loyalty_pass_id_label">
+Идентификатор лояльности
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d Синхронизированные баллы
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+Заявить прошлый заказ
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+Просмотр пароля/резервной копии
+</string>
+    <string name="loyalty_pass_btn_restore">
+Восстановить пропуск лояльности
+</string>
+    <string name="loyalty_pass_btn_switch">
+Переключить/восстановить пропуск
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+Программа лояльности пока не подключена. Ваши баллы могут быть синхронизированы и сохранены анонимно, когда вы оставляете чаевые или запрашиваете заказ.
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+Обнаружен невостребованный совет
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+Закажите %1$s • +%2$d баллов
+</string>
+    <string name="dialog_unclaimed_tip_message">
+Your tip has been confirmed! У вас уже есть анонимный пропуск лояльности или вы хотите создать новый?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100% анонимность: мы не собираем и не храним никаких личных данных, электронной почты, учетной записи Google или идентификатора устройства.
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+Создать новый пропуск лояльности
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+Подключиться к существующему идентификатору лояльности
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+Пропустить сейчас
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+Ваш пропуск лояльности
+</string>
+    <string name="dialog_pass_creds_subtitle">
+Учетные данные генерируются безопасно
+</string>
+    <string name="dialog_pass_creds_id_label">
+АНОНИМНЫЙ ИДЕНТИФИКАТОР ЛОЯЛЬНОСТИ
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+КЛЮЧ ВОССТАНОВЛЕНИЯ
+</string>
+    <string name="dialog_pass_creds_notice">
+Сохраните свой пароль в надежном месте. Поскольку мы не храним личные данные или адреса электронной почты, ваш пароль является единственным ключом для восстановления ваших баллов на новом устройстве.
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+Копировать в буфер обмена
+</string>
+    <string name="dialog_pass_creds_btn_done">
+Я сохранил свой пароль
+</string>
+    <string name="dialog_pass_creds_copied">
+Данные лояльности скопированы в буфер обмена.
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+Заявить прошлый совет
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Введите идентификатор заказа Google Play
+</string>
+    <string name="dialog_claim_gpa_hint">
+ГПД.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+Находится в электронном письме с квитанцией о покупке в Google Play.
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+Подтвердить и подать заявку
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+Отмена
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+Восстановить пропуск лояльности
+</string>
+    <string name="dialog_restore_pass_subtitle">
+Введите идентификатор лояльности или предыдущий номер GPA и пароль.
+</string>
+    <string name="dialog_restore_pass_id_hint">
+Идентификатор лояльности (XXX-XXX-XXX-XXX) или GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+Ключ восстановления
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+Разблокировать и восстановить
+</string>
+    <string name="dialog_restore_pass_success">
+Пропуск лояльности восстановлен! Синхронизировано %1$d баллов.
+</string>
+    <string name="dialog_restore_pass_not_found">
+Идентификатор заказа или программы лояльности не найден.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+Этот идентификатор заказа уже востребован в рамках программы лояльности.
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+Подключиться к существующему пропуску
+</string>
+    <string name="dialog_connect_existing_subtitle">
+Свяжите этот заказ с существующим идентификатором лояльности.
+</string>
+    <string name="dialog_connect_existing_id_hint">
+Существующий идентификатор программы лояльности (XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+Ключ доступа
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+Порядок ссылок и точки слияния
+</string>
 </resources>
 
 

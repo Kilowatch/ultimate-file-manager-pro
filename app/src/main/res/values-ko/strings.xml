@@ -17831,6 +17831,150 @@ Android 17 로컬 네트워크 보호 권한 관리
     <string name="toast_local_network_permission_required">
 이 작업에는 로컬 네트워크 권한이 필요합니다
 </string>
+
+    <!-- Anonymous Loyalty Pass & GPA Order Verification (Google Mobile Only) -->
+    <string name="loyalty_pass_card_title">
+익명 로열티 패스
+</string>
+    <string name="loyalty_pass_card_subtitle">
+여러 기기에서 서포터 포인트를 복원하고 동기화하세요
+</string>
+    <string name="loyalty_pass_privacy_badge">
+수집된 개인 데이터 없음 • 100% 익명
+</string>
+    <string name="loyalty_pass_id_label">
+로열티 ID
+</string>
+    <string name="loyalty_pass_points_format">
+%1$d 동기화된 포인트
+</string>
+    <string name="loyalty_pass_btn_claim_gpa">
+과거 주문 청구
+</string>
+    <string name="loyalty_pass_btn_view_passkey">
+패스키/백업 보기
+</string>
+    <string name="loyalty_pass_btn_restore">
+로열티 패스 복원
+</string>
+    <string name="loyalty_pass_btn_switch">
+패스 전환/복원
+</string>
+    <string name="loyalty_pass_no_pass_desc">
+아직 연결된 로열티 패스가 없습니다. 팁을 주거나 주문을 청구할 때 포인트가 익명으로 동기화되고 보존될 수 있습니다.
+</string>
+
+    <!-- Dialog: Unclaimed Tip Detected -->
+    <string name="dialog_unclaimed_tip_title">
+청구되지 않은 팁이 감지되었습니다.
+</string>
+    <string name="dialog_unclaimed_tip_subtitle">
+주문 %1$s • +%2$d 포인트
+</string>
+    <string name="dialog_unclaimed_tip_message">
+귀하의 팁이 확인되었습니다! 이미 익명 로열티 패스가 있습니까, 아니면 새 패스를 생성하시겠습니까?
+</string>
+    <string name="dialog_unclaimed_tip_privacy_note">
+100% 익명: 당사는 개인 데이터, 이메일, Google 계정 또는 장치 식별자를 수집하거나 저장하지 않습니다.
+</string>
+    <string name="dialog_unclaimed_tip_btn_generate">
+새로운 로열티 패스 생성
+</string>
+    <string name="dialog_unclaimed_tip_btn_connect_existing">
+기존 로열티 ID에 연결
+</string>
+    <string name="dialog_unclaimed_tip_btn_skip">
+지금은 건너뛰기
+</string>
+
+    <!-- Dialog: Loyalty Pass Credentials Modal -->
+    <string name="dialog_pass_creds_title">
+귀하의 로열티 패스
+</string>
+    <string name="dialog_pass_creds_subtitle">
+안전하게 생성된 자격 증명
+</string>
+    <string name="dialog_pass_creds_id_label">
+익명의 로열티 ID
+</string>
+    <string name="dialog_pass_creds_passkey_label">
+복구 패스키
+</string>
+    <string name="dialog_pass_creds_notice">
+패스키를 안전한 곳에 보관하세요. 우리는 개인 정보나 이메일 주소를 저장하지 않기 때문에 귀하의 패스키는 새 장치에서 포인트를 복원하는 유일한 열쇠입니다.
+</string>
+    <string name="dialog_pass_creds_btn_copy">
+클립보드에 복사
+</string>
+    <string name="dialog_pass_creds_btn_done">
+내 패스키를 저장했습니다
+</string>
+    <string name="dialog_pass_creds_copied">
+포인트 자격 증명이 클립보드에 복사되었습니다.
+</string>
+
+    <!-- Dialog: Claim Past GPA -->
+    <string name="dialog_claim_gpa_title">
+과거 팁 청구
+</string>
+    <string name="dialog_claim_gpa_subtitle">
+Google Play 주문 ID를 입력하세요.
+</string>
+    <string name="dialog_claim_gpa_hint">
+GPA.0000-0000-0000-00000
+</string>
+    <string name="dialog_claim_gpa_helper">
+Google Play 구매 영수증 이메일에서 확인하실 수 있습니다.
+</string>
+    <string name="dialog_claim_gpa_btn_claim">
+확인 및 청구
+</string>
+    <string name="dialog_claim_gpa_btn_cancel">
+취소
+</string>
+
+    <!-- Dialog: Restore Loyalty Pass -->
+    <string name="dialog_restore_pass_title">
+로열티 패스 복원
+</string>
+    <string name="dialog_restore_pass_subtitle">
+로열티 ID 또는 과거 GPA 번호와 비밀번호를 입력하세요.
+</string>
+    <string name="dialog_restore_pass_id_hint">
+로열티 ID(XXX-XXX-XXX-XXX) 또는 GPA
+</string>
+    <string name="dialog_restore_pass_key_hint">
+복구 패스키
+</string>
+    <string name="dialog_restore_pass_btn_restore">
+잠금 해제 및 복원
+</string>
+    <string name="dialog_restore_pass_success">
+로열티 패스가 복원되었습니다! %1$d 포인트가 동기화되었습니다.
+</string>
+    <string name="dialog_restore_pass_not_found">
+주문 또는 포인트 ID를 찾을 수 없습니다.
+</string>
+    <string name="dialog_restore_pass_claimed_already">
+이 주문 ID는 로열티 패스에서 이미 요청되었습니다.
+</string>
+
+    <!-- Dialog: Connect to Existing Pass -->
+    <string name="dialog_connect_existing_title">
+기존 패스에 연결
+</string>
+    <string name="dialog_connect_existing_subtitle">
+이 주문을 기존 로열티 ID에 연결하세요.
+</string>
+    <string name="dialog_connect_existing_id_hint">
+기존 로열티 ID(XXX-XXX-XXX-XXX)
+</string>
+    <string name="dialog_connect_existing_key_hint">
+곁쇠
+</string>
+    <string name="dialog_connect_existing_btn_connect">
+링크 순서 및 병합 포인트
+</string>
 </resources>
 
 

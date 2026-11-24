@@ -38,7 +38,7 @@ object BadgeIconManager {
     )
 
     fun getTotalTippedPoints(context: Context): Int {
-        return LoyaltyPrefs.getTotalTipped(context) * POINTS_PER_DOLLAR
+        return LoyaltyPassManager.getTotalPoints(context)
     }
 
     fun isBadgeUnlocked(context: Context, points: Int): Boolean {
