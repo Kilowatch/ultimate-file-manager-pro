@@ -554,6 +554,91 @@ Ultimate_Backup_Archive_2026_Final_v2.tar.gz
     <string name="onboarding_preview_privacy_badge">
 100% 匿名 • 零个人数据 • 零文件跟踪
 </string>
+    <string name="onboarding_tv_section_scale">
+选择比例
+</string>
+    <string name="onboarding_tv_section_duration">
+选择持续时间
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+选择删除政策
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+可见度政策
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+认证政策
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+诊断报告
+</string>
+    <string name="onboarding_tv_section_privacy">
+隐私和透明度
+</string>
+    <string name="onboarding_tv_live_badge">
+居住
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+实时互动测试
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+实时安全预览
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+按住\n
+进行测试
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+按住方向键中心按钮进行测试
+</string>
+    <string name="onboarding_tv_hidden_badge">
+隐
+</string>
+    <string name="onboarding_tv_sample_photo">
+假日照片_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+Financial_Report_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+绕过回收站。文件将被立即永久删除。
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+零收集个人数据或用户身份
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+零文件跟踪、索引或分析
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+开放获取（即时启动）
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+打开UFM时无需身份验证
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+打开
+</string>
+    <string name="onboarding_tv_storage_internal">
+内部存储
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+内部的
+</string>
+    <string name="onboarding_tv_storage_sd">
+SD卡
+</string>
+    <string name="onboarding_tv_storage_apps">
+应用程序
+</string>
+    <string name="onboarding_tv_storage_manager">
+经理
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+网络
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

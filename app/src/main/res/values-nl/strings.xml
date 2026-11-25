@@ -548,6 +548,91 @@ Direct verwijderen actief: bestanden permanent gewist
     <string name="onboarding_preview_privacy_badge">
 100% anoniem • Geen persoonlijke gegevens • Geen bestandstracking
 </string>
+    <string name="onboarding_tv_section_scale">
+SELECTEER SCHAAL
+</string>
+    <string name="onboarding_tv_section_duration">
+KIES DUUR
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+SELECTEER VERWIJDERBELEID
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+ZICHTBAARHEIDSBELEID
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+AUTHENTICATIEBELEID
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+DIAGNOSTISCHE RAPPORTAGE
+</string>
+    <string name="onboarding_tv_section_privacy">
+PRIVACY &amp; TRANSPARANTIE
+</string>
+    <string name="onboarding_tv_live_badge">
+LIVE
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+LIVE INTERACTIEVE TEST
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+LIVE VEILIGHEIDSVOORBEELD
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+Houd ingedrukt\n
+om te testen
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+Houd de middelste knop van het D-pad ingedrukt om te testen
+</string>
+    <string name="onboarding_tv_hidden_badge">
+VERBORGEN
+</string>
+    <string name="onboarding_tv_sample_photo">
+Vakantie_foto_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+Financieel_Verslag_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+Omzeilt de Prullenbak. Bestanden worden permanent en onmiddellijk gewist.
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+Geen persoonlijke gegevens of gebruikersidentiteit verzameld
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+Geen bestandstracking, indexering of analyse
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+Open Access (onmiddellijke lancering)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+Geen authenticatie vereist bij het openen van UFM
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+OPEN
+</string>
+    <string name="onboarding_tv_storage_internal">
+Interne opslag
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+Intern
+</string>
+    <string name="onboarding_tv_storage_sd">
+SD-kaart
+</string>
+    <string name="onboarding_tv_storage_apps">
+Apps
+</string>
+    <string name="onboarding_tv_storage_manager">
+Manager
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+Netwerk
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

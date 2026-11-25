@@ -554,6 +554,91 @@ Hapus Langsung Aktif: File terhapus secara permanen
     <string name="onboarding_preview_privacy_badge">
 100% Anonim • Tanpa Data Pribadi • Tanpa Pelacakan File
 </string>
+    <string name="onboarding_tv_section_scale">
+PILIH SKALA
+</string>
+    <string name="onboarding_tv_section_duration">
+PILIH DURASI
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+PILIH KEBIJAKAN PENGHAPUSAN
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+KEBIJAKAN VISIBILITAS
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+KEBIJAKAN AUTHENTIKASI
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+PELAPORAN DIAGNOSTIK
+</string>
+    <string name="onboarding_tv_section_privacy">
+PRIVASI &amp; TRANSPARANSI
+</string>
+    <string name="onboarding_tv_live_badge">
+HIDUP
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+UJI INTERAKTIF LANGSUNG
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+PREVIEW KESELAMATAN LANGSUNG
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+Tekan &amp; Tahan\n
+untuk Menguji
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+Tekan dan tahan tombol D-pad Center untuk menguji
+</string>
+    <string name="onboarding_tv_hidden_badge">
+TERSEMBUNYI
+</string>
+    <string name="onboarding_tv_sample_photo">
+Liburan_Foto_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+Laporan_Keuangan_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+Melewati Recycle Bin. File secara permanen dan segera dihapus.
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+Tidak Ada Data Pribadi atau Identitas Pengguna yang Dikumpulkan
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+Nol Pelacakan File, Pengindeksan, atau Analisis
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+Akses Terbuka (Peluncuran Instan)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+Tidak diperlukan otentikasi saat membuka UFM
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+MEMBUKA
+</string>
+    <string name="onboarding_tv_storage_internal">
+Penyimpanan Internal
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+Intern
+</string>
+    <string name="onboarding_tv_storage_sd">
+Kartu SD
+</string>
+    <string name="onboarding_tv_storage_apps">
+Aplikasi
+</string>
+    <string name="onboarding_tv_storage_manager">
+Manajer
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+Jaringan
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

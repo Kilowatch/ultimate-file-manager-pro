@@ -50,7 +50,16 @@ class OnboardingHiddenFilesActivity : BaseOnboardingStepActivity() {
         cardHide.setOnClickListener { setShowHiddenState(false) }
         cardShow.setOnClickListener { setShowHiddenState(true) }
 
+        if (isTv) {
+            setupTvCardFocus(cardHide) { !showHidden }
+            setupTvCardFocus(cardShow) { showHidden }
+        }
+
         updateUI()
+
+        if (isTv) {
+            requestInitialTvFocus(if (showHidden) cardShow else cardHide)
+        }
     }
 
     private fun setShowHiddenState(show: Boolean) {
@@ -65,11 +74,16 @@ class OnboardingHiddenFilesActivity : BaseOnboardingStepActivity() {
         radioHide.isChecked = !showHidden
         radioShow.isChecked = showHidden
 
-        cardHide.strokeWidth = if (!showHidden) dpToPx(2) else dpToPx(1)
-        cardHide.strokeColor = if (!showHidden) activeColor else inactiveStroke
+        if (isTv) {
+            applyCardSelectionStroke(cardHide, !showHidden)
+            applyCardSelectionStroke(cardShow, showHidden)
+        } else {
+            cardHide.strokeWidth = if (!showHidden) dpToPx(2) else dpToPx(1)
+            cardHide.strokeColor = if (!showHidden) activeColor else inactiveStroke
 
-        cardShow.strokeWidth = if (showHidden) dpToPx(2) else dpToPx(1)
-        cardShow.strokeColor = if (showHidden) activeColor else inactiveStroke
+            cardShow.strokeWidth = if (showHidden) dpToPx(2) else dpToPx(1)
+            cardShow.strokeColor = if (showHidden) activeColor else inactiveStroke
+        }
 
         previewHiddenItem.visibility = if (showHidden) View.VISIBLE else View.GONE
     }

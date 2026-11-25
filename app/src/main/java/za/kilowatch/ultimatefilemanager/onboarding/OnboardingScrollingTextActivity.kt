@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.onboarding
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -12,6 +13,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.FileNameDisplayHelper
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextHelper
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextPreferenceManager
+import za.kilowatch.ultimatefilemanager.util.TvFocusHelper
 
 /**
  * Onboarding Step 3: Scrolling Text / File Name Display.
@@ -182,16 +184,38 @@ class OnboardingScrollingTextActivity : BaseOnboardingStepActivity() {
         }
 
         if (isTv) {
-            setupTvOptionFocus(cardMarquee)
-            setupTvOptionFocus(card2Lines)
-            setupTvOptionFocus(card3Lines)
-            setupTvOptionFocus(cardUnlimited)
-            setupTvOptionFocus(cardTruncate)
-            setupTvOptionFocus(cardTruncateMiddle)
+            setupTvCardFocus(cardMarquee) { selectedMode == ScrollingTextPreferenceManager.MODE_MARQUEE }
+            setupTvCardFocus(card2Lines) { selectedMode == ScrollingTextPreferenceManager.MODE_MULTILINE_2 }
+            setupTvCardFocus(card3Lines) { selectedMode == ScrollingTextPreferenceManager.MODE_MULTILINE_3 }
+            setupTvCardFocus(cardUnlimited) { selectedMode == ScrollingTextPreferenceManager.MODE_MULTILINE_UNLIMITED }
+            setupTvCardFocus(cardTruncate) { selectedMode == ScrollingTextPreferenceManager.MODE_TRUNCATE }
+            setupTvCardFocus(cardTruncateMiddle) { selectedMode == ScrollingTextPreferenceManager.MODE_TRUNCATE_MIDDLE }
+
+            val focusColors = TvFocusHelper.colors(this)
+            val focusStrokePx = maxOf(3f * resources.displayMetrics.density, focusColors.strokeWidthPx)
+            listOf(
+                chipSpeedSlow, chipSpeedNormal, chipSpeedFast,
+                chipLoopOneShot, chipLoopContinuous,
+                chipScopeAll, chipScopeFocused
+            ).forEach { chip ->
+                setupTvChipFocus(chip, focusColors, focusStrokePx)
+            }
         }
 
         updateUI()
         updatePreview(selectedMode)
+
+        if (isTv) {
+            val initialCard = when (selectedMode) {
+                ScrollingTextPreferenceManager.MODE_MULTILINE_2 -> card2Lines
+                ScrollingTextPreferenceManager.MODE_MULTILINE_3 -> card3Lines
+                ScrollingTextPreferenceManager.MODE_MULTILINE_UNLIMITED -> cardUnlimited
+                ScrollingTextPreferenceManager.MODE_TRUNCATE -> cardTruncate
+                ScrollingTextPreferenceManager.MODE_TRUNCATE_MIDDLE -> cardTruncateMiddle
+                else -> cardMarquee
+            }
+            requestInitialTvFocus(initialCard)
+        }
     }
 
     override fun onResume() {
@@ -243,8 +267,12 @@ class OnboardingScrollingTextActivity : BaseOnboardingStepActivity() {
         activeColor: Int,
         inactiveStroke: Int
     ) {
-        card.strokeWidth = if (isSelected) dpToPx(2) else dpToPx(1)
-        card.strokeColor = if (isSelected) activeColor else inactiveStroke
+        if (isTv) {
+            applyCardSelectionStroke(card, isSelected)
+        } else {
+            card.strokeWidth = if (isSelected) dpToPx(2) else dpToPx(1)
+            card.strokeColor = if (isSelected) activeColor else inactiveStroke
+        }
         check.visibility = if (isSelected) View.VISIBLE else View.GONE
     }
 
@@ -295,15 +323,22 @@ class OnboardingScrollingTextActivity : BaseOnboardingStepActivity() {
         }
     }
 
-    private fun setupTvOptionFocus(card: MaterialCardView) {
-        val yellowFill = za.kilowatch.ultimatefilemanager.settings.ColorblindPalette.focusFill(this)
-        val glassColor = getColor(R.color.tv_glass_white_10)
-
-        card.setOnFocusChangeListener { _, hasFocus ->
+    private fun setupTvChipFocus(
+        chip: Chip,
+        focusColors: TvFocusHelper.FocusColors,
+        focusStrokePx: Float
+    ) {
+        val defaultStrokeWidth = chip.chipStrokeWidth
+        val defaultStrokeColor = chip.chipStrokeColor
+        chip.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                card.setCardBackgroundColor(yellowFill)
+                chip.chipStrokeWidth = focusStrokePx
+                chip.chipStrokeColor = ColorStateList.valueOf(focusColors.stroke)
+                chip.animate().scaleX(1.06f).scaleY(1.06f).setDuration(120).start()
             } else {
-                card.setCardBackgroundColor(glassColor)
+                chip.chipStrokeWidth = defaultStrokeWidth
+                chip.chipStrokeColor = defaultStrokeColor
+                chip.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
             }
         }
     }

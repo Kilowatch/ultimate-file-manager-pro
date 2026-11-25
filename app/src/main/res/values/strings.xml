@@ -206,6 +206,34 @@
     <string name="onboarding_preview_safe_badge">Recycle Bin Active: Files can be recovered</string>
     <string name="onboarding_preview_warn_badge">Direct Delete Active: Files permanently erased</string>
     <string name="onboarding_preview_privacy_badge">100% Anonymous • Zero Personal Data • Zero File Tracking</string>
+    <string name="onboarding_tv_section_scale">SELECT SCALE</string>
+    <string name="onboarding_tv_section_duration">CHOOSE DURATION</string>
+    <string name="onboarding_tv_section_deletion_policy">SELECT DELETION POLICY</string>
+    <string name="onboarding_tv_section_visibility_policy">VISIBILITY POLICY</string>
+    <string name="onboarding_tv_section_auth_policy">AUTHENTICATION POLICY</string>
+    <string name="onboarding_tv_section_diagnostics">DIAGNOSTIC REPORTING</string>
+    <string name="onboarding_tv_section_privacy">PRIVACY &amp; TRANSPARENCY</string>
+    <string name="onboarding_tv_live_badge">LIVE</string>
+    <string name="onboarding_tv_live_interactive_test">LIVE INTERACTIVE TEST</string>
+    <string name="onboarding_tv_live_safety_preview">LIVE SAFETY PREVIEW</string>
+    <string name="onboarding_tv_hold_test_prompt">Press &amp; Hold\nto Test</string>
+    <string name="onboarding_tv_hold_test_hint">Press and hold the D-pad Center button to test</string>
+    <string name="onboarding_tv_hidden_badge">HIDDEN</string>
+    <string name="onboarding_tv_sample_photo">Holiday_Photo_2026.jpg</string>
+    <string name="onboarding_tv_sample_report">Financial_Report_Q4_2026.pdf</string>
+    <string name="onboarding_tv_recycle_permanent_desc">Bypasses the Recycle Bin. Files are permanently and immediately erased.</string>
+    <string name="onboarding_tv_diagnostics_no_personal">Zero Personal Data or User Identity Collected</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">Zero File Tracking, Indexing, or Analytics</string>
+    <string name="onboarding_tv_app_lock_open_title">Open Access (Instant Launch)</string>
+    <string name="onboarding_tv_app_lock_open_desc">No authentication required when opening UFM</string>
+    <string name="onboarding_tv_app_lock_open_badge">OPEN</string>
+    <string name="onboarding_tv_storage_internal">Internal Storage</string>
+    <string name="onboarding_tv_storage_internal_short">Internal</string>
+    <string name="onboarding_tv_storage_sd">SD Card</string>
+    <string name="onboarding_tv_storage_apps">Apps</string>
+    <string name="onboarding_tv_storage_manager">Manager</string>
+    <string name="onboarding_tv_storage_usb">USB</string>
+    <string name="onboarding_tv_storage_network">Network</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">Notifications</string>

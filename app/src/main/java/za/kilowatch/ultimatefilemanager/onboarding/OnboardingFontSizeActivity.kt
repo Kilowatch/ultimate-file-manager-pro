@@ -58,7 +58,22 @@ class OnboardingFontSizeActivity : BaseOnboardingStepActivity() {
         cardMedium.setOnClickListener { selectSize(FontSizeHelper.FONT_NORMAL) }
         cardLarge.setOnClickListener { selectSize(FontSizeHelper.FONT_LARGE) }
 
+        if (isTv) {
+            setupTvCardFocus(cardSmall) { selectedSize == FontSizeHelper.FONT_SMALL }
+            setupTvCardFocus(cardMedium) { selectedSize == FontSizeHelper.FONT_NORMAL }
+            setupTvCardFocus(cardLarge) { selectedSize == FontSizeHelper.FONT_LARGE }
+        }
+
         updateUI()
+
+        if (isTv) {
+            val initialCard = when (selectedSize) {
+                FontSizeHelper.FONT_SMALL -> cardSmall
+                FontSizeHelper.FONT_LARGE -> cardLarge
+                else -> cardMedium
+            }
+            requestInitialTvFocus(initialCard)
+        }
     }
 
     private fun selectSize(size: Int) {
@@ -74,14 +89,20 @@ class OnboardingFontSizeActivity : BaseOnboardingStepActivity() {
         radioMedium.isChecked = (selectedSize == FontSizeHelper.FONT_NORMAL)
         radioLarge.isChecked = (selectedSize == FontSizeHelper.FONT_LARGE)
 
-        cardSmall.strokeWidth = if (radioSmall.isChecked) dpToPx(2) else dpToPx(1)
-        cardSmall.strokeColor = if (radioSmall.isChecked) activeColor else inactiveStroke
+        if (isTv) {
+            applyCardSelectionStroke(cardSmall, radioSmall.isChecked)
+            applyCardSelectionStroke(cardMedium, radioMedium.isChecked)
+            applyCardSelectionStroke(cardLarge, radioLarge.isChecked)
+        } else {
+            cardSmall.strokeWidth = if (radioSmall.isChecked) dpToPx(2) else dpToPx(1)
+            cardSmall.strokeColor = if (radioSmall.isChecked) activeColor else inactiveStroke
 
-        cardMedium.strokeWidth = if (radioMedium.isChecked) dpToPx(2) else dpToPx(1)
-        cardMedium.strokeColor = if (radioMedium.isChecked) activeColor else inactiveStroke
+            cardMedium.strokeWidth = if (radioMedium.isChecked) dpToPx(2) else dpToPx(1)
+            cardMedium.strokeColor = if (radioMedium.isChecked) activeColor else inactiveStroke
 
-        cardLarge.strokeWidth = if (radioLarge.isChecked) dpToPx(2) else dpToPx(1)
-        cardLarge.strokeColor = if (radioLarge.isChecked) activeColor else inactiveStroke
+            cardLarge.strokeWidth = if (radioLarge.isChecked) dpToPx(2) else dpToPx(1)
+            cardLarge.strokeColor = if (radioLarge.isChecked) activeColor else inactiveStroke
+        }
 
         val (nameSp, metaSp, pathSp) = when (selectedSize) {
             FontSizeHelper.FONT_SMALL -> Triple(14f, 11f, 10f)

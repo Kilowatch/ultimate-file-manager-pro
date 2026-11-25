@@ -552,6 +552,91 @@ Direkt radering aktiv: Filer raderas permanent
     <string name="onboarding_preview_privacy_badge">
 100 % anonym • Noll personuppgifter • Noll filspårning
 </string>
+    <string name="onboarding_tv_section_scale">
+VÄLJ SKALA
+</string>
+    <string name="onboarding_tv_section_duration">
+VÄLJ VARAKTIGHET
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+VÄLJ RADERINGSPOLICY
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+SYNLIGHETSPOLICY
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+AUTENTICERINGSPOLICY
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+DIAGNOSTISK RAPPORTERING
+</string>
+    <string name="onboarding_tv_section_privacy">
+SEKRETESS OCH ÖPPENHET
+</string>
+    <string name="onboarding_tv_live_badge">
+BO
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+LIVE INTERAKTIVT TEST
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+FÖRHANDSVISNING FÖR SÄKERHET
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+Tryck och håll ned\n
+för att testa
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+Tryck och håll ned D-pad Center-knappen för att testa
+</string>
+    <string name="onboarding_tv_hidden_badge">
+DOLD
+</string>
+    <string name="onboarding_tv_sample_photo">
+Holiday_Photo_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+Finansiell_rapport_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+Går förbi papperskorgen. Filer raderas permanent och omedelbart.
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+Noll personuppgifter eller användaridentitet insamlad
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+Noll filspårning, indexering eller analys
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+Öppen åtkomst (direktstart)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+Ingen autentisering krävs när du öppnar UFM
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+ÖPPNA
+</string>
+    <string name="onboarding_tv_storage_internal">
+Intern lagring
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+Inre
+</string>
+    <string name="onboarding_tv_storage_sd">
+SD-kort
+</string>
+    <string name="onboarding_tv_storage_apps">
+Appar
+</string>
+    <string name="onboarding_tv_storage_manager">
+Chef
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+Nätverk
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

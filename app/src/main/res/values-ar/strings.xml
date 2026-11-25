@@ -554,6 +554,91 @@ Ultimate_Backup_Archive_2026_Final_v2.tar.gz
     <string name="onboarding_preview_privacy_badge">
 مجهول بنسبة 100% • صفر بيانات شخصية • صفر تتبع للملفات
 </string>
+    <string name="onboarding_tv_section_scale">
+حدد المقياس
+</string>
+    <string name="onboarding_tv_section_duration">
+اختر المدة
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+حدد سياسة الحذف
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+سياسة الرؤية
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+سياسة المصادقة
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+التقارير التشخيصية
+</string>
+    <string name="onboarding_tv_section_privacy">
+الخصوصية والشفافية
+</string>
+    <string name="onboarding_tv_live_badge">
+يعيش
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+اختبار تفاعلي مباشر
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+معاينة حية للسلامة
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+اضغط مع الاستمرار\n
+للاختبار
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+اضغط مع الاستمرار على زر D-pad Center للاختبار
+</string>
+    <string name="onboarding_tv_hidden_badge">
+مختفي
+</string>
+    <string name="onboarding_tv_sample_photo">
+Holiday_Photo_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+التقرير المالي_الربع الرابع_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+يتجاوز سلة المحذوفات. يتم مسح الملفات بشكل دائم وعلى الفور.
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+لم يتم جمع أية بيانات شخصية أو هوية مستخدم
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+صفر تتبع الملفات أو الفهرسة أو التحليلات
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+الوصول المفتوح (الإطلاق الفوري)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+لا توجد مصادقة مطلوبة عند فتح UFM
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+يفتح
+</string>
+    <string name="onboarding_tv_storage_internal">
+التخزين الداخلي
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+داخلي
+</string>
+    <string name="onboarding_tv_storage_sd">
+بطاقة SD
+</string>
+    <string name="onboarding_tv_storage_apps">
+تطبيقات
+</string>
+    <string name="onboarding_tv_storage_manager">
+مدير
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+شبكة
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

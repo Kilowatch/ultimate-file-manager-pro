@@ -554,6 +554,91 @@ Eliminación directa activa: archivos borrados permanentemente
     <string name="onboarding_preview_privacy_badge">
 100% anónimo • Cero datos personales • Cero seguimiento de archivos
 </string>
+    <string name="onboarding_tv_section_scale">
+SELECCIONAR ESCALA
+</string>
+    <string name="onboarding_tv_section_duration">
+ELEGIR DURACIÓN
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+SELECCIONAR POLÍTICA DE ELIMINACIÓN
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+POLÍTICA DE VISIBILIDAD
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+POLÍTICA DE AUTENTICACIÓN
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+INFORMES DE DIAGNÓSTICO
+</string>
+    <string name="onboarding_tv_section_privacy">
+PRIVACIDAD Y TRANSPARENCIA
+</string>
+    <string name="onboarding_tv_live_badge">
+VIVIR
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+PRUEBA INTERACTIVA EN VIVO
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+VISTA PREVIA DE SEGURIDAD EN VIVO
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+Mantenga presionado\n
+para probar
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+Mantenga presionado el botón central del D-pad para probar
+</string>
+    <string name="onboarding_tv_hidden_badge">
+OCULTO
+</string>
+    <string name="onboarding_tv_sample_photo">
+Foto_de_vacaciones_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+Informe_financiero_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+Omite la papelera de reciclaje. Los archivos se borran permanente e inmediatamente.
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+Cero datos personales o identidad de usuario recopilados
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+Seguimiento, indexación o análisis de archivos cero
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+Acceso abierto (lanzamiento instantáneo)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+No se requiere autenticación al abrir UFM
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+ABIERTO
+</string>
+    <string name="onboarding_tv_storage_internal">
+Almacenamiento interno
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+Interno
+</string>
+    <string name="onboarding_tv_storage_sd">
+Tarjeta SD
+</string>
+    <string name="onboarding_tv_storage_apps">
+Aplicaciones
+</string>
+    <string name="onboarding_tv_storage_manager">
+Gerente
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+Red
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

@@ -554,6 +554,91 @@ Eliminazione diretta attiva: file cancellati in modo permanente
     <string name="onboarding_preview_privacy_badge">
 100% anonimo • Zero dati personali • Zero tracciamento dei file
 </string>
+    <string name="onboarding_tv_section_scale">
+SELEZIONA SCALA
+</string>
+    <string name="onboarding_tv_section_duration">
+SCEGLI LA DURATA
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+SELEZIONA POLITICA DI ELIMINAZIONE
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+POLITICA DELLA VISIBILITÀ
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+POLITICA DI AUTENTICAZIONE
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+REPORT DIAGNOSTICI
+</string>
+    <string name="onboarding_tv_section_privacy">
+PRIVACY E TRASPARENZA
+</string>
+    <string name="onboarding_tv_live_badge">
+VIVERE
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+PROVA INTERATTIVA DAL VIVO
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+ANTEPRIMA DELLA SICUREZZA DAL VIVO
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+Tieni premuto\n
+Test
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+Tieni premuto il pulsante centrale del D-pad per testare
+</string>
+    <string name="onboarding_tv_hidden_badge">
+NASCOSTO
+</string>
+    <string name="onboarding_tv_sample_photo">
+Vacanza_Foto_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+Rapporto_finanziario_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+Ignora il Cestino. I file vengono cancellati in modo permanente e immediato.
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+Nessun dato personale o identità dell\'utente raccolti
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+Nessun tracciamento, indicizzazione o analisi dei file
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+Accesso aperto (lancio istantaneo)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+Nessuna autenticazione richiesta all\'apertura di UFM
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+APRIRE
+</string>
+    <string name="onboarding_tv_storage_internal">
+Archiviazione interna
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+Interno
+</string>
+    <string name="onboarding_tv_storage_sd">
+Scheda SD
+</string>
+    <string name="onboarding_tv_storage_apps">
+App
+</string>
+    <string name="onboarding_tv_storage_manager">
+Manager
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+Rete
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

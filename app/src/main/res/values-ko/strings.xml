@@ -554,6 +554,91 @@ Ultimate_Backup_Archive_2026_Final_v2.tar.gz
     <string name="onboarding_preview_privacy_badge">
 100% 익명 • 개인 데이터 없음 • 파일 추적 없음
 </string>
+    <string name="onboarding_tv_section_scale">
+규모 선택
+</string>
+    <string name="onboarding_tv_section_duration">
+기간 선택
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+삭제 정책 선택
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+가시성 정책
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+인증 정책
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+진단 보고
+</string>
+    <string name="onboarding_tv_section_privacy">
+개인정보 보호 및 투명성
+</string>
+    <string name="onboarding_tv_live_badge">
+살다
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+실시간 대화형 테스트
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+실시간 안전 미리보기
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+테스트하려면\n
+길게 누르세요.
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+테스트하려면 D 패드 중앙 버튼을 길게 누르세요.
+</string>
+    <string name="onboarding_tv_hidden_badge">
+숨겨진
+</string>
+    <string name="onboarding_tv_sample_photo">
+휴일_사진_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+Financial_Report_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+휴지통을 우회합니다. 파일은 영구적으로 즉시 삭제됩니다.
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+수집된 개인 데이터 또는 사용자 신원 없음
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+제로 파일 추적, 인덱싱 또는 분석
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+오픈 액세스(즉시 실행)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+UFM을 열 때 인증이 필요하지 않습니다
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+열려 있는
+</string>
+    <string name="onboarding_tv_storage_internal">
+내부 저장소
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+내부
+</string>
+    <string name="onboarding_tv_storage_sd">
+SD 카드
+</string>
+    <string name="onboarding_tv_storage_apps">
+앱
+</string>
+    <string name="onboarding_tv_storage_manager">
+관리자
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+회로망
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

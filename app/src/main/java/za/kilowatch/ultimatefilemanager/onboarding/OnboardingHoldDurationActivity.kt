@@ -70,8 +70,23 @@ class OnboardingHoldDurationActivity : BaseOnboardingStepActivity() {
         cardNormal.setOnClickListener { selectStep(LongPressDurationManager.DEFAULT_STEP) }
         cardLong.setOnClickListener { selectStep(5) }
 
+        if (isTv) {
+            setupTvCardFocus(cardShort) { selectedStepIndex == 0 }
+            setupTvCardFocus(cardNormal) { selectedStepIndex != 0 && selectedStepIndex != 5 }
+            setupTvCardFocus(cardLong) { selectedStepIndex == 5 }
+        }
+
         setupInteractiveHold()
         updateUI()
+
+        if (isTv) {
+            val initialCard = when (selectedStepIndex) {
+                0 -> cardShort
+                5 -> cardLong
+                else -> cardNormal
+            }
+            requestInitialTvFocus(initialCard)
+        }
     }
 
     private fun getDurationMs(): Long {
@@ -164,14 +179,20 @@ class OnboardingHoldDurationActivity : BaseOnboardingStepActivity() {
         radioNormal.isChecked = isNormal
         radioLong.isChecked = isLong
 
-        cardShort.strokeWidth = if (isShort) dpToPx(2) else dpToPx(1)
-        cardShort.strokeColor = if (isShort) activeColor else inactiveStroke
+        if (isTv) {
+            applyCardSelectionStroke(cardShort, isShort)
+            applyCardSelectionStroke(cardNormal, isNormal)
+            applyCardSelectionStroke(cardLong, isLong)
+        } else {
+            cardShort.strokeWidth = if (isShort) dpToPx(2) else dpToPx(1)
+            cardShort.strokeColor = if (isShort) activeColor else inactiveStroke
 
-        cardNormal.strokeWidth = if (isNormal) dpToPx(2) else dpToPx(1)
-        cardNormal.strokeColor = if (isNormal) activeColor else inactiveStroke
+            cardNormal.strokeWidth = if (isNormal) dpToPx(2) else dpToPx(1)
+            cardNormal.strokeColor = if (isNormal) activeColor else inactiveStroke
 
-        cardLong.strokeWidth = if (isLong) dpToPx(2) else dpToPx(1)
-        cardLong.strokeColor = if (isLong) activeColor else inactiveStroke
+            cardLong.strokeWidth = if (isLong) dpToPx(2) else dpToPx(1)
+            cardLong.strokeColor = if (isLong) activeColor else inactiveStroke
+        }
     }
 
     private fun dpToPx(dp: Int): Int {

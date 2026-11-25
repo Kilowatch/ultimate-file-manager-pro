@@ -1,152 +1,46 @@
-# Specification: Milestone Badges & Dynamic App Icon Switcher
+# Specification: Android TV Onboarding Screens Redesign & D-Pad Navigation Fix
 
 ## Overview
-
-In Ultimate File Manager Pro (UFM), the "Fuel the Developer" Tip Jar screen serves as the community support hub. This specification establishes a dedicated **Badges** section within "Fuel the Developer" exclusively for the **Google Mobile** variant.
-
-Users can browse milestone achievement badges (from 5 to 1,000 total points), view prominent, high-resolution badge artwork, and select any badge to immediately update the mobile home screen app launcher icon. The architecture is engineered for seamless runtime icon switching via Android `activity-alias` components and is modularly prepared for future expansions (such as progressive unlock tiers, point milestones, and additional asset packs).
-
----
-
-## Target Audience & Platform Boundary
-
-### Platform Constraints (Strict)
-- **Included**: Google Play Mobile builds (`mobileGoogle` flavor, phone and tablet form factors, where `DeviceUtils.isTvDevice(this) == false`).
-- **Excluded**:
-  - **Android TV / Leanback**: The Badges section is completely hidden (`View.GONE`) on TV devices.
-  - **Amazon Appstore (`amazon` flavor)**: Excluded; no Badges section or aliases present.
-  - **FOSS (`foss` flavor)**: Excluded; no Badges section or aliases present.
-
----
+Redesign all 8 Android TV onboarding setup screens (View Density, Font Size, Scrolling Text, Hold Duration, Recycle Bin, Hidden Files, App Lock, and Diagnostics) so each screen fits cleanly within TV safe margins with balanced proportions, professional visual hierarchy, and effortless remote-control navigation. Fix D-pad focus visibility across all interactive controls (including the Next, Skip, and Back buttons) and resolve the focus-trapping issue in the Scrolling Text screen's Marquee Scroll sub-options so users can focus and select every individual sub-option.
 
 ## User Stories
-
-- **As a Google Mobile user**, I want to browse all 10 milestone badges in a dedicated "Badges" section inside "Fuel the Developer" with large, high-detail previews so that I can appreciate the artwork.
-- **As a supporter**, I want to tap any badge to immediately set it as my mobile app icon on my phone's home screen.
-- **As a user**, I want the badges listed vertically in ascending order (smallest 5 points first, up to 1,000 points last) with clear point values and tier titles.
-- **As a user**, I want an option to restore the default UFM app icon at any time.
-- **As an Android user**, I want the updated app icon to conform to modern Adaptive Icon standards (emblem cutout on matching color radial gradient background) so it respects my launcher's mask shape (circle, squircle, rounded rectangle) without edge clipping.
-- **As a developer**, I want the badge data model and manager to be cleanly decoupled so that future expansions (point unlocks, seasonal badges, custom themes) can be added with zero architectural friction.
-
----
+- As an Android TV user setting up the app for the first time (or reconfiguring from Settings), I want all 8 onboarding screens to fit comfortably on my TV screen without awkward scrolling, clipped elements, or wasted empty space so the setup feels polished and intentional.
+- As an Android TV user navigating with a D-pad remote, I want to clearly see which button, card, or chip currently has focus—especially the Next, Skip, and Back buttons—so I never lose track of where my cursor is.
+- As an Android TV user on the Scrolling Text onboarding step, I want to navigate into the Marquee Scroll sub-options (Scroll Speed, Loop Mode, and Scroll Scope) and select individual items instead of only being able to highlight the entire Marquee block.
+- As an Android TV user stepping through onboarding, I want initial focus to land on the currently selected option (or first option) with predictable Up/Down/Left/Right movement to reach all options, Skip, Next, and Back without getting stuck.
 
 ## Functional Requirements
+- **FR-01 (Consistent 2-Column TV Layout & Fit)**: All 8 TV onboarding screens must use a balanced two-column layout (options on the left, live preview or contextual visual on the right) within TV overscan safe margins, sized and spaced so each screen's content fits cleanly on standard 1080p and 720p TV displays without awkward dead space or cramped controls.
+- **FR-02 (Per-Screen Visual Balance)**:
+  - Binary or 2–3 option screens (Hold Duration, Recycle Bin, Hidden Files, Diagnostics, Font Size) must vertically center or evenly distribute their option cards and align their right-hand preview panels so they do not leave large empty gaps.
+  - Dense multi-option screens (View Density with view mode + item size/columns, Scrolling Text with 6 display modes + Marquee sub-options, and App Lock with authentication policies) must use compact, well-proportioned cards and spacing so options remain easy to scan and navigate on TV.
+- **FR-03 (Distinct Focus vs. Selected Visual States)**: Every focusable control across all 8 TV screens—including option cards, sub-option chips/buttons, Next/Start Browsing button, Skip button, and Back button—must display a high-contrast, unmistakable focus indicator (e.g., bright focus ring/border and subtle highlight or scale) that is visually distinct from the active/selected state (e.g., checkmark, radio indicator, or accent badge).
+- **FR-04 (Header & Footer Button Focus Visibility)**: The footer Next / Start Browsing button, Skip button, and header Back button must all show clear focus states when highlighted via D-pad, ensuring users can immediately tell when Next or Skip is focused before pressing OK/Select.
+- **FR-05 (Marquee Sub-Options Individual D-Pad Selection)**: On Step 3 (Scrolling Text), the Marquee Scroll sub-options (Scroll Speed: Slow/Normal/Fast; Loop Mode: One-Shot/Continuous; Scroll Scope: All Visible/Focused Only) must be placed as independent focusable items below the Marquee mode card—never trapped inside a single parent focusable card—so users can navigate to and select each individual chip with the D-pad.
+- **FR-06 (Contextual Visibility of Marquee Sub-Options)**: On Step 3 (Scrolling Text), the Marquee sub-options section must be visible and focusable when Marquee Auto-Scroll is selected, and hidden or collapsed when any non-Marquee mode is selected so D-pad navigation skips irrelevant controls.
+- **FR-07 (Predictable Initial Focus & D-Pad Traversal)**: When each TV onboarding screen opens, initial D-pad focus must land on the currently selected option card (or the first option if none is selected). D-pad directional navigation must allow smooth movement between option cards, sub-options (when visible), the footer Skip and Next buttons, and the header Back button (when visible on steps 2–8).
+- **FR-08 (Live Preview Parity)**: Each screen's right-hand preview panel must accurately reflect the user's current selection (including Marquee speed, loop, and scope changes in real time on Step 3) and remain legible from a 10-foot TV viewing distance.
 
-### FR-01: Dedicated "Badges" Section Header
-- **Placement**: Directly below the coffee tipping products in `activity_supporter_loyalty.xml` (mobile layout).
-- **Header Card**:
-  - Title: **Badges** (`@string/badge_section_title`).
-  - Explanatory Subtitle: *"Unlock and set these milestone badges as your custom app icon on your home screen. Celebrate your achievements with prestigious themes."* (`@string/badge_section_subtitle`).
-  - Active Icon Showcase: A circular highlight ring displaying the currently active badge cutout thumbnail.
-- **Visibility**: Defaults to `View.GONE` in XML; set to `View.VISIBLE` programmatically **only** when running on Google Mobile (`!isTv && !isAmazonDevice`).
+## Non-Functional Requirements
+- **NFR-01 (10-Foot Readability & Overscan Safety)**: All text, icons, badges, and interactive targets must respect TV overscan safe padding and use 10-foot-friendly typography and contrast against the dark TV background.
+- **NFR-02 (Localization)**: All visible section headers and labels on the 8 TV onboarding screens must use localized string resources rather than hardcoded text.
+- **NFR-03 (Touch/Mobile Isolation)**: Mobile/tablet onboarding layouts and behavior must remain unchanged; all layout and navigation improvements target the TV experience.
+- **NFR-04 (Smooth Focus Transitions)**: Focus state changes and scroll-into-view behavior on D-pad movement must feel responsive without lag or jarring layout jumps.
 
-### FR-02: Prominent "Nice and Big" Badge Item Cards
-- Each badge in the vertical selection list is presented in an elevated, rounded card (`MaterialCardView`):
-  - **Large Square Preview**: Sized at **72×72 dp** (with rounded corners) displaying the full radial gradient badge from `app_icons_square` (`app_icon_points_{pts}.webp`), ensuring numerals, laurel leaves, ribbons, and crystal facets are crisp and legible.
-  - **Cutout Accent**: Displays the transparent emblem cutout thumbnail (`badge_points_{pts}.webp`) beside the points label.
-  - **Tier Title**: Bold title (e.g., *"10 Points Bronze Supporter"*).
-  - **Points Metric**: Clear points display (e.g., *"10 Points"*).
-  - **Selection Indicator**: Prominent checkmark circle (`ic_check_circle`) and an **"Active"** badge chip shown only on the currently active icon.
+## Edge Cases & Error States
+- **App Lock availability on TV**: When the TV device does not support a secure lock screen, Step 7 (App Lock) is skipped automatically, and Step 6 (Hidden Files) advances directly to Step 8 (Diagnostics) with step numbering and Back navigation remaining consistent.
+- **Reconfigure Mode from Settings**: When launching onboarding in reconfigure mode from Settings, previously saved selections must be pre-selected and focused on each screen, and completing or skipping must return cleanly to Settings.
+- **Switching away from Marquee on Step 3**: If a user selects a non-Marquee mode (e.g., 2 Lines or Truncate) while Marquee sub-options were previously visible, the sub-options collapse cleanly without leaving D-pad focus stranded on a hidden view.
+- **Long translated strings**: Localized labels inside option cards, chips, and footer buttons must wrap or size gracefully without clipping or overlapping on narrow TV viewports (720p).
 
-### FR-03: Vertical Ordering & Tier Mapping
-Badges are listed vertically in strict ascending order:
-1. **Default App Icon**: Standard UFM launcher icon (reset option)
-2. **5 Points**: Supporter (`app_icon_points_5`)
-3. **10 Points**: Bronze Supporter (`app_icon_points_10`)
-4. **20 Points**: Silver Supporter (`app_icon_points_20`)
-5. **50 Points**: Gold Supporter (`app_icon_points_50`)
-6. **100 Points**: Ultimate Supporter (`app_icon_points_100`)
-7. **200 Points**: Platinum Supporter (`app_icon_points_200`)
-8. **300 Points**: Diamond Supporter (`app_icon_points_300`)
-9. **500 Points**: Royal Supporter (`app_icon_points_500`)
-10. **750 Points**: Legendary Supporter (`app_icon_points_750`)
-11. **1,000 Points**: Supreme Supporter (`app_icon_points_1000`)
+## Out of Scope
+- Mobile and tablet onboarding layouts.
+- Changing the number of TV onboarding steps (8 steps) or their underlying preference defaults.
+- Modifying the post-onboarding main file browser or Settings screens.
 
-### FR-04: Dynamic Launcher Icon Switching
-- **Activity Alias Architecture**: 10 `<activity-alias>` elements declared in `app/src/google/AndroidManifest.xml` targeting `.onboarding.LanguageWelcomeActivity`.
-- **Runtime Component State**:
-  - Managed via `BadgeIconManager.setSelectedBadge(context, points)`.
-  - When a badge is selected:
-    1. The target alias `.BadgeIcon{points}` is enabled (`COMPONENT_ENABLED_STATE_ENABLED`).
-    2. The default component (`LanguageWelcomeActivity`) is disabled (`COMPONENT_ENABLED_STATE_DISABLED`).
-    3. All other 9 badge aliases are disabled (`COMPONENT_ENABLED_STATE_DISABLED`).
-    4. Uses `PackageManager.DONT_KILL_APP` to prevent launcher crashes or disruptive app restarts.
-  - When "Default UFM Icon" is selected:
-    1. The default component (`LanguageWelcomeActivity`) is re-enabled.
-    2. All 10 badge aliases are disabled.
-- **Persistence**: Active selection saved in `SharedPreferences` (`ufm_badge_prefs` -> `selected_badge_points`).
-
-### FR-05: Icon Asset Format & Cutouts
-- **Adaptive Icon XML (`mipmap-anydpi-v26/ic_launcher_points_{pts}.xml`)**:
-  - `<background android:drawable="@mipmap/ic_launcher_points_{pts}_background" />` (matching color radial gradient).
-  - `<foreground android:drawable="@mipmap/ic_launcher_points_{pts}_foreground" />` (transparent emblem cutout strictly padded to the 66.67% safe circle).
-- **Density Buckets**: Installed across `mipmap-mdpi`, `mipmap-hdpi`, `mipmap-xhdpi`, `mipmap-xxhdpi`, and `mipmap-xxxhdpi` for universal device compatibility.
-
-### FR-06: Tipping-to-Points Conversion & Progressive Unlocking
-- **Formula**: Every **$1 spent** in the Tip Jar grants **10 Points**:
-  - **Ristretto Shot ($1)**: 10 Points -> Unlocks 5, 10 Point tiers.
-  - **A Quick Espresso ($3)**: 30 Points -> Unlocks 20 Point tier.
-  - **The Cappuccino ($5)**: 50 Points -> Unlocks 50 Point tier.
-  - **The Full Latte ($10)**: 100 Points -> Unlocks 100 Point tier.
-  - **The Coffee Bean Bag ($25)**: 250 Points -> Unlocks 200 Point tier.
-  - Higher tiers unlock through cumulative points over time:
-    - 300 Points ($30 cumulative tips).
-    - 500 Points ($50 cumulative tips).
-    - 750 Points ($75 cumulative tips).
-    - 1,000 Points ($100 cumulative tips).
-- **Cumulative Persistence**: Points accumulate across all tip purchases via `LoyaltyPrefs` (`total_tipped * 10`).
-
-### FR-07: Locked Badge Appearance
-- **Visual Presentation**:
-  - The badge art remains visible under a subtle translucent dimming layer.
-  - A small lock badge (`ic_lock`) is displayed.
-  - A clear progress indicator shows points progress toward that milestone (e.g., *"15 / 50 pts — Need 35 more pts"*).
-- **Interactive Behavior**:
-  - Tapping a locked badge opens an informational preview dialog displaying the badge and offering a direct shortcut to the coffee tipping buttons.
-
-### FR-08: Selection Confirmation Dialog
-- Upon selecting an unlocked badge or restoring the default icon:
-  - Displays a modal Material dialog showcasing the newly applied app icon preview.
-  - Dialog Title: *"App Icon Updated!"*
-  - Dialog Message: *"Your home screen icon has been updated to [Badge Name]. Note: Some home screen launchers may take a few seconds to refresh the icon."*
-  - Action Button: *"OK"* (dismisses the dialog).
-
----
-
-## Technical Architecture & File Layout
-
-```
-app/
-├── src/
-│   ├── google/
-│   │   ├── AndroidManifest.xml              # 10 <activity-alias> declarations
-│   │   ├── java/.../billing/
-│   │   │   ├── BadgeIconManager.kt          # Alias switching & preference persistence
-│   │   │   └── SupporterLoyaltyActivity.kt  # Binds and populates Badges section on Mobile
-│   │   └── res/
-│   │       ├── drawable-nodpi/              # 512px WebP previews (app_icon_points_*, badge_points_*)
-│   │       ├── mipmap-anydpi-v26/           # Adaptive icon XMLs (foreground cutout + background)
-│   │       └── mipmap-{m,h,xh,xxh,xxxh}dpi/ # Scaled launcher icon layers
-│   └── main/
-│       └── res/
-│           ├── layout/
-│           │   ├── activity_supporter_loyalty.xml # Contains cardBadgesSection (gone by default)
-│           │   └── item_supporter_badge.xml       # Large badge card layout
-│           └── values/
-│               └── strings.xml                    # Translatable titles and descriptions
-```
-
----
-
-## Verification & Acceptance Criteria
-
-1. **Platform Isolation**: On Android TV (`isTv == true`), Amazon, and FOSS builds, `cardBadgesSection` is completely invisible and no badge aliases exist.
-2. **Visual Prominence**: Badge icons in the list are rendered large (**72×72 dp**), visually sharp, with both the radial gradient square and emblem cutout visible.
-3. **Ordering**: Badges appear in strict ascending order from 5 points to 1,000 points.
-4. **Instant Update**: Selecting any badge row:
-   - Updates the selection highlight and checkmark immediately.
-   - Updates the header icon to the selected cutout badge.
-   - Shows a Toast confirmation (`App icon updated to ...!`).
-   - Updates the launcher icon on the device home screen upon returning to launcher.
-5. **Restoration**: Selecting "Default App Icon" restores the original launcher icon.
-6. **Zero Regressions**: `mobileGoogleDebug` compiles with zero errors or resource conflicts.
+## Success Criteria
+- [ ] All 8 TV onboarding screens render with balanced two-column proportions, clean alignment, and no awkward dead space or clipped content on both 720p and 1080p TV screens.
+- [ ] Focusing the Next, Skip, and Back buttons with a D-pad produces an unmistakable visual focus state.
+- [ ] Every option card and sub-option chip across all 8 screens has a clear focus indicator distinct from its selected indicator.
+- [ ] On Step 3 (Scrolling Text), users can D-pad into the Marquee sub-options and individually focus and select Speed, Loop Mode, and Scroll Scope items, with the live preview updating immediately.
+- [ ] Initial focus lands on the active/first option on each screen, and users can traverse all interactive elements and complete or skip onboarding using only a TV remote D-pad.

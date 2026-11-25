@@ -7,21 +7,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:paddingHorizontal="@dimen/tv_safe_horizontal"
-    android:paddingTop="20dp"
-    android:paddingBottom="12dp">
+    android:paddingTop="22dp"
+    android:paddingBottom="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <ImageButton
             android:id="@+id/btnOnboardingBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/selector_tv_icon_btn"
+            android:padding="10dp"
             android:src="@drawable/ic_arrow_back"
             android:contentDescription="@string/onboarding_btn_back"
             android:focusable="true"
@@ -29,14 +35,15 @@
 
         <TextView
             android:id="@+id/txtOnboardingStep"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:background="@drawable/bg_pill_selected"
             android:textColor="@color/tv_accent"
-            android:textSize="13sp"
-            android:fontFamily="sans-serif-bold"
-            android:letterSpacing="0.06"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.08"
             tools:text="STEP 1 OF 8" />
 
     </LinearLayout>
@@ -47,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textColor="@color/tv_text_primary"
-        android:textSize="22sp"
+        android:textSize="24sp"
         android:fontFamily="sans-serif-black"
         tools:text="Step Title" />
 
@@ -55,7 +62,7 @@
         android:id="@+id/txtStepDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:textColor="@color/tv_text_secondary"
         android:textSize="14sp"
         android:fontFamily="sans-serif"

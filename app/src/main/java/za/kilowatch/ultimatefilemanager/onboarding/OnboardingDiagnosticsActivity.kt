@@ -43,7 +43,16 @@ class OnboardingDiagnosticsActivity : BaseOnboardingStepActivity() {
         cardEnabled.setOnClickListener { setEnabledState(true) }
         cardDisabled.setOnClickListener { setEnabledState(false) }
 
+        if (isTv) {
+            setupTvCardFocus(cardEnabled) { isDiagnosticsEnabled }
+            setupTvCardFocus(cardDisabled) { !isDiagnosticsEnabled }
+        }
+
         updateUI()
+
+        if (isTv) {
+            requestInitialTvFocus(if (isDiagnosticsEnabled) cardEnabled else cardDisabled)
+        }
     }
 
     private fun setEnabledState(enabled: Boolean) {
@@ -58,11 +67,16 @@ class OnboardingDiagnosticsActivity : BaseOnboardingStepActivity() {
         radioEnabled.isChecked = isDiagnosticsEnabled
         radioDisabled.isChecked = !isDiagnosticsEnabled
 
-        cardEnabled.strokeWidth = if (isDiagnosticsEnabled) dpToPx(2) else dpToPx(1)
-        cardEnabled.strokeColor = if (isDiagnosticsEnabled) activeColor else inactiveStroke
+        if (isTv) {
+            applyCardSelectionStroke(cardEnabled, isDiagnosticsEnabled)
+            applyCardSelectionStroke(cardDisabled, !isDiagnosticsEnabled)
+        } else {
+            cardEnabled.strokeWidth = if (isDiagnosticsEnabled) dpToPx(2) else dpToPx(1)
+            cardEnabled.strokeColor = if (isDiagnosticsEnabled) activeColor else inactiveStroke
 
-        cardDisabled.strokeWidth = if (!isDiagnosticsEnabled) dpToPx(2) else dpToPx(1)
-        cardDisabled.strokeColor = if (!isDiagnosticsEnabled) activeColor else inactiveStroke
+            cardDisabled.strokeWidth = if (!isDiagnosticsEnabled) dpToPx(2) else dpToPx(1)
+            cardDisabled.strokeColor = if (!isDiagnosticsEnabled) activeColor else inactiveStroke
+        }
     }
 
     private fun dpToPx(dp: Int): Int {

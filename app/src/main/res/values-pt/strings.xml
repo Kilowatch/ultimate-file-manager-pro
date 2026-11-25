@@ -554,6 +554,90 @@ Exclusão direta ativa: arquivos apagados permanentemente
     <string name="onboarding_preview_privacy_badge">
 100% anônimo • Zero dados pessoais • Zero rastreamento de arquivos
 </string>
+    <string name="onboarding_tv_section_scale">
+SELECIONE ESCALA
+</string>
+    <string name="onboarding_tv_section_duration">
+ESCOLHA A DURAÇÃO
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+SELECIONE POLÍTICA DE EXCLUSÃO
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+POLÍTICA DE VISIBILIDADE
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+POLÍTICA DE AUTENTICAÇÃO
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+RELATÓRIO DE DIAGNÓSTICO
+</string>
+    <string name="onboarding_tv_section_privacy">
+PRIVACIDADE E TRANSPARÊNCIA
+</string>
+    <string name="onboarding_tv_live_badge">
+AO VIVO
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+TESTE INTERATIVO AO VIVO
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+PRÉVIA DE SEGURANÇA AO VIVO
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+Pressione e segure\para testar
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+Pressione e segure o botão central do D-pad para testar
+</string>
+    <string name="onboarding_tv_hidden_badge">
+ESCONDIDO
+</string>
+    <string name="onboarding_tv_sample_photo">
+Feriado_Foto_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+Relatório Financeiro_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+Ignora a Lixeira. Os arquivos são apagados permanente e imediatamente.
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+Nenhum dado pessoal ou identidade do usuário coletado
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+Zero rastreamento, indexação ou análise de arquivos
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+Acesso aberto (lançamento instantâneo)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+Nenhuma autenticação necessária ao abrir o UFM
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+ABRIR
+</string>
+    <string name="onboarding_tv_storage_internal">
+Armazenamento Interno
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+Interno
+</string>
+    <string name="onboarding_tv_storage_sd">
+Cartão SD
+</string>
+    <string name="onboarding_tv_storage_apps">
+Aplicativos
+</string>
+    <string name="onboarding_tv_storage_manager">
+Gerente
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+Rede
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

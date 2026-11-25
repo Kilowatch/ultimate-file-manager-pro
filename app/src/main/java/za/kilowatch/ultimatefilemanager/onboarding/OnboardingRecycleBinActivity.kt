@@ -55,7 +55,16 @@ class OnboardingRecycleBinActivity : BaseOnboardingStepActivity() {
         cardPermanent.setOnClickListener { setRecycleState(false) }
         cardSafe.setOnClickListener { setRecycleState(true) }
 
+        if (isTv) {
+            setupTvCardFocus(cardPermanent) { !isRecycleEnabled }
+            setupTvCardFocus(cardSafe) { isRecycleEnabled }
+        }
+
         updateUI()
+
+        if (isTv) {
+            requestInitialTvFocus(if (isRecycleEnabled) cardSafe else cardPermanent)
+        }
     }
 
     private fun setRecycleState(enabled: Boolean) {
@@ -70,11 +79,16 @@ class OnboardingRecycleBinActivity : BaseOnboardingStepActivity() {
         radioPermanent.isChecked = !isRecycleEnabled
         radioSafe.isChecked = isRecycleEnabled
 
-        cardPermanent.strokeWidth = if (!isRecycleEnabled) dpToPx(2) else dpToPx(1)
-        cardPermanent.strokeColor = if (!isRecycleEnabled) activeColor else inactiveStroke
+        if (isTv) {
+            applyCardSelectionStroke(cardPermanent, !isRecycleEnabled)
+            applyCardSelectionStroke(cardSafe, isRecycleEnabled)
+        } else {
+            cardPermanent.strokeWidth = if (!isRecycleEnabled) dpToPx(2) else dpToPx(1)
+            cardPermanent.strokeColor = if (!isRecycleEnabled) activeColor else inactiveStroke
 
-        cardSafe.strokeWidth = if (isRecycleEnabled) dpToPx(2) else dpToPx(1)
-        cardSafe.strokeColor = if (isRecycleEnabled) activeColor else inactiveStroke
+            cardSafe.strokeWidth = if (isRecycleEnabled) dpToPx(2) else dpToPx(1)
+            cardSafe.strokeColor = if (isRecycleEnabled) activeColor else inactiveStroke
+        }
 
         if (isRecycleEnabled) {
             imgPreviewShield.setImageResource(R.drawable.ic_shield_check)

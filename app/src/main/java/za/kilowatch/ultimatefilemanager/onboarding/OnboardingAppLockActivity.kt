@@ -260,14 +260,18 @@ class OnboardingAppLockActivity : BaseOnboardingStepActivity() {
         }
 
         if (isTv) {
-            setupTvOptionFocus(cardOpen)
-            setupTvOptionFocus(cardProtected)
+            setupTvCardFocus(cardOpen) { !isProtected }
+            setupTvCardFocus(cardProtected) { isProtected }
             setupTvViewFocus(cardSecurityMethod)
             setupTvViewFocus(cardChangeCredential)
             setupTvViewFocus(cardAutoLockTimeout)
         }
 
         updateUI()
+
+        if (isTv) {
+            requestInitialTvFocus(if (isProtected) cardProtected else cardOpen)
+        }
     }
 
     private fun showLockTimeoutDialog() {
@@ -331,12 +335,16 @@ class OnboardingAppLockActivity : BaseOnboardingStepActivity() {
         val secManager = AppSecurityManager.getInstance(this)
 
         // 1. Update Main Cards
-        cardOpen.strokeWidth = if (!isProtected) dpToPx(2) else dpToPx(1)
-        cardOpen.strokeColor = if (!isProtected) activeColor else inactiveStroke
+        if (isTv) {
+            applyCardSelectionStroke(cardOpen, !isProtected)
+            applyCardSelectionStroke(cardProtected, isProtected)
+        } else {
+            cardOpen.strokeWidth = if (!isProtected) dpToPx(2) else dpToPx(1)
+            cardOpen.strokeColor = if (!isProtected) activeColor else inactiveStroke
+            cardProtected.strokeWidth = if (isProtected) dpToPx(2) else dpToPx(1)
+            cardProtected.strokeColor = if (isProtected) activeColor else inactiveStroke
+        }
         checkOptionOpen.visibility = if (!isProtected) View.VISIBLE else View.GONE
-
-        cardProtected.strokeWidth = if (isProtected) dpToPx(2) else dpToPx(1)
-        cardProtected.strokeColor = if (isProtected) activeColor else inactiveStroke
         checkOptionProtected.visibility = if (isProtected) View.VISIBLE else View.GONE
 
         // 2. Update Protected Sub-Options Visibility & Content

@@ -554,6 +554,91 @@ Doğrudan Silme Etkin: Dosyalar kalıcı olarak silindi
     <string name="onboarding_preview_privacy_badge">
 %100 Anonim • Sıfır Kişisel Veri • Sıfır Dosya Takibi
 </string>
+    <string name="onboarding_tv_section_scale">
+ÖLÇEK SEÇİN
+</string>
+    <string name="onboarding_tv_section_duration">
+SÜRE SEÇİN
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+SİLME POLİTİKASINI SEÇİN
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+GÖRÜNÜRLÜK POLİTİKASI
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+DOĞRULAMA POLİTİKASI
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+TEŞHİS RAPORLAMA
+</string>
+    <string name="onboarding_tv_section_privacy">
+GİZLİLİK &amp; ŞEFFAFLIK
+</string>
+    <string name="onboarding_tv_live_badge">
+CANLI
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+CANLI İNTERAKTİF TEST
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+CANLI GÜVENLİK ÖNİZLEMESİ
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+Test Etmek İçin\n
+Basılı Tutun
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+Test etmek için D-pad Merkezi düğmesini basılı tutun
+</string>
+    <string name="onboarding_tv_hidden_badge">
+GİZLENMİŞ
+</string>
+    <string name="onboarding_tv_sample_photo">
+Holiday_Photo_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+Financial_Report_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+Geri Dönüşüm Kutusu\'nu atlar. Dosyalar kalıcı olarak ve anında silinir.
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+Sıfır Kişisel Veri veya Kullanıcı Kimliği Toplandı
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+Sıfır Dosya Takibi, Dizine Ekleme veya Analiz
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+Açık Erişim (Anında Başlatma)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+UFM\'yi açarken kimlik doğrulama gerekmez
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+AÇIK
+</string>
+    <string name="onboarding_tv_storage_internal">
+Dahili Depolama
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+Dahili
+</string>
+    <string name="onboarding_tv_storage_sd">
+SD Kart
+</string>
+    <string name="onboarding_tv_storage_apps">
+Uygulamalar
+</string>
+    <string name="onboarding_tv_storage_manager">
+Müdür
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+Ağ
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

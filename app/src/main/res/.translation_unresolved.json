@@ -151,7 +151,12 @@
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
         "onboarding_categorized_sub": "eef6c7f6ddd4067eb8afcea1a2104116ed5c09287b11433ed96a2b3c47cbb55c",
         "onboarding_columns_3_sub": "ef6691545d2c5523efed00424407cb261aeb0037d165ca5792f7f8bac3381362",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_live_badge": "35e0d0360a0af6d115f9df30e1b00b5b544ebf4bb93272aa02cd5d64b064a64b",
+        "onboarding_tv_sample_photo": "d44de35d773a214185f27782c960f4a97a4c1f87b6a310044cc3b61ab1fd2a15",
+        "onboarding_tv_storage_apps": "89dd748442c194857825848e1500abbbc5f52fb067ad27fb05dc9fb23eebba3b",
+        "onboarding_tv_storage_manager": "8b2085f74dfa9c78a23b7d573c23d27d6d0b0e50c82a9b13138b193325be3814",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -316,7 +321,8 @@
         "onboarding_columns_3_sub": "ef6691545d2c5523efed00424407cb261aeb0037d165ca5792f7f8bac3381362",
         "badge_points_format": "2ad19966c0f84b074738bb62e24adac415ea382c36f5de46ebeb702d8ce2086f",
         "custom_icon_points_format": "fdc8cd86ebde3699c7a4a1d3e1078746a4023aec6191997722a5ebe69bd1c6f1",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -420,7 +426,8 @@
         "fav_protocol_local": "8c31e6e7223097e2e4847773c47a4efab6aaf79deeecc92a7759891c74976dde",
         "onboarding_hold_normal": "89c10e9e7744762aa07da38ceaa97e0cf56f8fec40382309e60976e3e601fef2",
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -536,7 +543,9 @@
         "quick_access_mode_title": "6b0e69764f3696c1532e6f9d4578dadf6b067e39859cb191d083acd9b16a06c1",
         "quick_access_mode_subtitle": "ff6788aa8706f929541bdf33066e7d9227f6e84dc5021b028ec5114e87a13ceb",
         "quick_access_mode_disabled": "75081b593d15cf6e631971bc6768723f593b88b172477e40ae7d363e4829816d",
-        "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e"
+        "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
+        "onboarding_tv_sample_photo": "d44de35d773a214185f27782c960f4a97a4c1f87b6a310044cc3b61ab1fd2a15",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_contact_email": "0db175d5669fe7db35d2c597adb0b43e844eb84f3061ded107dbf4c6dd4d2b26",
@@ -661,7 +670,8 @@
         "properties_sparse_badge": "ebd93bca6f156173134fb59ae5eb5cbc1f7f8d3c0e7a24b59810f84c7a955f7b",
         "properties_sparse_allocated_pct": "79c4d1cf953cc0bc684ed03310002ceaeab385f1b86d745af01a85381eba717a",
         "music_tag_btn_search_online_cover": "15452e9a03d7f8bf6fd59df1fb309a917362820afb6c628ae2de3ed5e954f023",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_play_store_url": "f492aeea982e6bef3764b81b7d33b2b1138ecf7d84cbd878dfd53e76dffdc233",
@@ -752,7 +762,8 @@
         "language_hindi": "6d6d1adcfe531ef6c3384f1c4421834c83df8ef64ff300c92542e4d71299c826",
         "exif_has_gps_badge": "d8c3cc94f3797da38138a97b6bf07e15c05759a9b674373fae119888c4f4e041",
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
-        "onboarding_categorized_sub": "eef6c7f6ddd4067eb8afcea1a2104116ed5c09287b11433ed96a2b3c47cbb55c"
+        "onboarding_categorized_sub": "eef6c7f6ddd4067eb8afcea1a2104116ed5c09287b11433ed96a2b3c47cbb55c",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -890,7 +901,8 @@
         "language_hindi": "6d6d1adcfe531ef6c3384f1c4421834c83df8ef64ff300c92542e4d71299c826",
         "exif_has_gps_badge": "d8c3cc94f3797da38138a97b6bf07e15c05759a9b674373fae119888c4f4e041",
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
-        "onboarding_categorized_sub": "eef6c7f6ddd4067eb8afcea1a2104116ed5c09287b11433ed96a2b3c47cbb55c"
+        "onboarding_categorized_sub": "eef6c7f6ddd4067eb8afcea1a2104116ed5c09287b11433ed96a2b3c47cbb55c",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -1018,7 +1030,9 @@
         "file": "50009ce1da4d15e1c4a04024df691eed5f0d598e2c4c67092f205366d0adf99e",
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
         "onboarding_columns_3_sub": "ef6691545d2c5523efed00424407cb261aeb0037d165ca5792f7f8bac3381362",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_storage_manager": "8b2085f74dfa9c78a23b7d573c23d27d6d0b0e50c82a9b13138b193325be3814",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -1168,7 +1182,9 @@
         "checksum_compare_sparse_size_subtitle": "ae7a393c38e8259521cdff2ce6ff9310352f37ae820005869aadd3d608c181ce",
         "saf_file_action_remember": "974bad034f90115332d1f891ed1b3f428af82934efa39be578c4d19ac77fefe5",
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_sample_report": "c5eb2e2f45c1c04755f38ac41245b057f5a81267509556d6d541a45e3a49e8fd",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_play_store_url": "f492aeea982e6bef3764b81b7d33b2b1138ecf7d84cbd878dfd53e76dffdc233",
@@ -1217,7 +1233,9 @@
         "sort_order_z_to_a": "2d4cf32407574cf40a923ed7878b6a530535ec9de714d0df0a59b3d472a45d5a",
         "exif_has_gps_badge": "d8c3cc94f3797da38138a97b6bf07e15c05759a9b674373fae119888c4f4e041",
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_sample_report": "c5eb2e2f45c1c04755f38ac41245b057f5a81267509556d6d541a45e3a49e8fd",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_play_store_url": "f492aeea982e6bef3764b81b7d33b2b1138ecf7d84cbd878dfd53e76dffdc233",
@@ -1363,7 +1381,12 @@
         "onboarding_categorized_sub": "eef6c7f6ddd4067eb8afcea1a2104116ed5c09287b11433ed96a2b3c47cbb55c",
         "onboarding_spacing_compact": "99452646e34b69704c9134a093d5ce5af823cc6d4ed3566fe8ad3ba1555057ae",
         "onboarding_columns_4_sub": "99452646e34b69704c9134a093d5ce5af823cc6d4ed3566fe8ad3ba1555057ae",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_live_badge": "35e0d0360a0af6d115f9df30e1b00b5b544ebf4bb93272aa02cd5d64b064a64b",
+        "onboarding_tv_app_lock_open_badge": "6e10953f3e4ca159285c03a116d60c5086727c958dc25b31c39848ffea1dcdfe",
+        "onboarding_tv_storage_manager": "8b2085f74dfa9c78a23b7d573c23d27d6d0b0e50c82a9b13138b193325be3814",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408",
+        "onboarding_tv_storage_apps": "89dd748442c194857825848e1500abbbc5f52fb067ad27fb05dc9fb23eebba3b"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -1473,7 +1496,8 @@
         "fav_protocol_local": "8c31e6e7223097e2e4847773c47a4efab6aaf79deeecc92a7759891c74976dde",
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
         "onboarding_preview_sample_hidden_name": "56d33966a076ac92d08050c7b00d77c395866d09571c0b885da2aafbc21f729d",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -1522,7 +1546,10 @@
         "download_enter_url_hint": "8fd99122428f003b73b3b4ba1bc73602ccbc46bf467401a1f980c180cae3ed25",
         "bookmark_group_whatsapp": "6a40edf1fc87a29f243a7eefdbed57d19bfe16ab2e039d7ae1a44c097297e2f3",
         "exif_has_gps_badge": "d8c3cc94f3797da38138a97b6bf07e15c05759a9b674373fae119888c4f4e041",
-        "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e"
+        "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
+        "onboarding_tv_sample_photo": "d44de35d773a214185f27782c960f4a97a4c1f87b6a310044cc3b61ab1fd2a15",
+        "onboarding_tv_sample_report": "c5eb2e2f45c1c04755f38ac41245b057f5a81267509556d6d541a45e3a49e8fd",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_play_store_url": "f492aeea982e6bef3764b81b7d33b2b1138ecf7d84cbd878dfd53e76dffdc233",
@@ -1727,7 +1754,9 @@
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
         "onboarding_categorized_sub": "eef6c7f6ddd4067eb8afcea1a2104116ed5c09287b11433ed96a2b3c47cbb55c",
         "onboarding_columns_3_sub": "ef6691545d2c5523efed00424407cb261aeb0037d165ca5792f7f8bac3381362",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_sample_photo": "d44de35d773a214185f27782c960f4a97a4c1f87b6a310044cc3b61ab1fd2a15",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -1836,7 +1865,10 @@
         "onboarding_hold_normal": "89c10e9e7744762aa07da38ceaa97e0cf56f8fec40382309e60976e3e601fef2",
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
         "onboarding_categorized_sub": "eef6c7f6ddd4067eb8afcea1a2104116ed5c09287b11433ed96a2b3c47cbb55c",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_sample_report": "c5eb2e2f45c1c04755f38ac41245b057f5a81267509556d6d541a45e3a49e8fd",
+        "onboarding_tv_sample_photo": "d44de35d773a214185f27782c960f4a97a4c1f87b6a310044cc3b61ab1fd2a15",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_play_store_url": "f492aeea982e6bef3764b81b7d33b2b1138ecf7d84cbd878dfd53e76dffdc233",
@@ -1932,7 +1964,9 @@
         "bookmark_group_reddit": "eb0050f72303bcdbbdc071e2a3bf810c903be8d05cdf09f7c3106f2b6f9878bf",
         "exif_has_gps_badge": "d8c3cc94f3797da38138a97b6bf07e15c05759a9b674373fae119888c4f4e041",
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_sample_photo": "d44de35d773a214185f27782c960f4a97a4c1f87b6a310044cc3b61ab1fd2a15",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_company": "b230a67db21b4d0319e1837d1eb41a398ef995ef38ae67b754e942fc264c6737",
@@ -1999,7 +2033,9 @@
         "sort_order_a_to_z": "2d8f7bc890ed7c7c1d3372fa7525681ae9b11f26453e763c8156b25ae8af337b",
         "sort_order_z_to_a": "2d4cf32407574cf40a923ed7878b6a530535ec9de714d0df0a59b3d472a45d5a",
         "onboarding_preview_sample_long_name": "abf61bee048a7b27c5a4f189202ef05108e6b1a4b188e4c184e5a78dfd1db98e",
-        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e"
+        "dialog_claim_gpa_hint": "66e724a6f0441c1390fa8cc188d5657a5f0f8f6dc3a64bb5379484983170191e",
+        "onboarding_tv_sample_report": "c5eb2e2f45c1c04755f38ac41245b057f5a81267509556d6d541a45e3a49e8fd",
+        "onboarding_tv_storage_usb": "61f0acff1735aac46ba11f249dd555a22fd09193d54e6383809d3cce12780408"
       },
       "strings_policy.xml": {
         "policy_play_store_url": "f492aeea982e6bef3764b81b7d33b2b1138ecf7d84cbd878dfd53e76dffdc233",

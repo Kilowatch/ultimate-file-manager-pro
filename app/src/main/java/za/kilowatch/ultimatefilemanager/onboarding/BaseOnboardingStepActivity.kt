@@ -3,14 +3,18 @@ package za.kilowatch.ultimatefilemanager.onboarding
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.recycle.RecycleBinSettingsManager
 import za.kilowatch.ultimatefilemanager.security.AppSecurityManager
@@ -25,6 +29,7 @@ import za.kilowatch.ultimatefilemanager.storage.QuickAccessManager
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.support.CrashReportManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.TvFocusHelper
 
 /**
  * Base Activity coordinator for all 10 dedicated onboarding setup screens.
@@ -112,6 +117,114 @@ abstract class BaseOnboardingStepActivity : AppCompatActivity() {
             btnSkip?.text = getString(R.string.onboarding_btn_skip_remaining)
         }
         btnSkip?.setOnClickListener { skipRemainingAndFinish() }
+
+        if (isTv) {
+            setupTvFooterAndHeaderFocus(btnBack as? ImageButton, btnSkip, btnNext)
+        }
+    }
+
+    /**
+     * Applies unmistakable D-pad focus visuals (fill, stroke, text contrast, and subtle scale)
+     * to the TV onboarding header Back button and footer Skip / Next buttons.
+     */
+    private fun setupTvFooterAndHeaderFocus(
+        btnBack: ImageButton?,
+        btnSkip: MaterialButton?,
+        btnNext: MaterialButton?
+    ) {
+        val focusColors = TvFocusHelper.colors(this)
+        val strokePx = maxOf((2.5f * resources.displayMetrics.density).toInt(), focusColors.strokeWidthPx.toInt())
+
+        btnNext?.setOnFocusChangeListener { v, hasFocus ->
+            val btn = v as MaterialButton
+            if (hasFocus) {
+                btn.backgroundTintList = ColorStateList.valueOf(focusColors.fill)
+                btn.setTextColor(focusColors.onFill)
+                btn.iconTint = ColorStateList.valueOf(focusColors.onFill)
+                btn.strokeColor = ColorStateList.valueOf(focusColors.stroke)
+                btn.strokeWidth = strokePx
+                btn.animate().scaleX(1.05f).scaleY(1.05f).setDuration(120).start()
+            } else {
+                btn.backgroundTintList = ColorStateList.valueOf(getColor(R.color.tv_accent))
+                btn.setTextColor(Color.WHITE)
+                btn.iconTint = ColorStateList.valueOf(Color.WHITE)
+                btn.strokeWidth = 0
+                btn.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
+            }
+        }
+
+        btnSkip?.setOnFocusChangeListener { v, hasFocus ->
+            val btn = v as MaterialButton
+            if (hasFocus) {
+                btn.backgroundTintList = ColorStateList.valueOf(focusColors.fill)
+                btn.setTextColor(focusColors.onFill)
+                btn.strokeColor = ColorStateList.valueOf(focusColors.stroke)
+                btn.strokeWidth = strokePx
+                btn.animate().scaleX(1.04f).scaleY(1.04f).setDuration(120).start()
+            } else {
+                btn.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
+                btn.setTextColor(getColor(R.color.tv_text_secondary))
+                btn.strokeWidth = 0
+                btn.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
+            }
+        }
+
+        btnBack?.setOnFocusChangeListener { v, hasFocus ->
+            val btn = v as ImageButton
+            if (hasFocus) {
+                btn.imageTintList = ColorStateList.valueOf(focusColors.onFill)
+                btn.animate().scaleX(1.08f).scaleY(1.08f).setDuration(120).start()
+            } else {
+                btn.imageTintList = ColorStateList.valueOf(getColor(R.color.tv_icon_tint))
+                btn.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
+            }
+        }
+    }
+
+    /**
+     * Attaches a TV D-pad focus listener to [card] using [TvFocusHelper] so focused state
+     * is visually distinct from selected state and never clobbered on blur.
+     */
+    protected fun setupTvCardFocus(card: MaterialCardView?, isSelected: () -> Boolean) {
+        if (!isTv || card == null) return
+        val focusColors = TvFocusHelper.colors(this)
+        val density = resources.displayMetrics.density
+        val focusStrokePx = maxOf((3 * density).toInt(), focusColors.strokeWidthPx.toInt())
+
+        card.setOnFocusChangeListener { _, hasFocus ->
+            TvFocusHelper.applyMarker(card, hasFocus)
+            if (hasFocus) {
+                card.strokeWidth = focusStrokePx
+                card.strokeColor = focusColors.stroke
+                card.cardElevation = 8f * density
+                card.animate().scaleX(1.02f).scaleY(1.02f).setDuration(120).start()
+            } else {
+                val selected = isSelected()
+                card.strokeWidth = if (selected) (2 * density).toInt() else (1 * density).toInt()
+                card.strokeColor = if (selected) getActiveAccentColor() else getInactiveStrokeColor()
+                card.cardElevation = 0f
+                card.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
+            }
+        }
+    }
+
+    /**
+     * Updates resting selection stroke on [card] without overwriting an active TV focus ring.
+     */
+    protected fun applyCardSelectionStroke(card: MaterialCardView?, isSelected: Boolean) {
+        if (card == null) return
+        if (isTv && card.isFocused) return
+        val density = resources.displayMetrics.density
+        card.strokeWidth = if (isSelected) (2 * density).toInt() else (1 * density).toInt()
+        card.strokeColor = if (isSelected) getActiveAccentColor() else getInactiveStrokeColor()
+    }
+
+    /**
+     * Requests initial D-pad focus on [view] when running on Android TV.
+     */
+    protected fun requestInitialTvFocus(view: View?) {
+        if (!isTv || view == null) return
+        view.post { view.requestFocus() }
     }
 
     protected abstract fun onSaveCurrentSelection()

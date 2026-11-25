@@ -554,6 +554,90 @@ Ultimate File Manager Pro में आपका स्वागत है
     <string name="onboarding_preview_privacy_badge">
 100% गुमनाम • शून्य व्यक्तिगत डेटा • शून्य फ़ाइल ट्रैकिंग
 </string>
+    <string name="onboarding_tv_section_scale">
+स्केल चुनें
+</string>
+    <string name="onboarding_tv_section_duration">
+अवधि चुनें
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+विलोपन नीति का चयन करें
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+दृश्यता नीति
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+प्रमाणीकरण नीति
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+डायग्नोस्टिक रिपोर्टिंग
+</string>
+    <string name="onboarding_tv_section_privacy">
+गोपनीयता और पारदर्शिता
+</string>
+    <string name="onboarding_tv_live_badge">
+रहना
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+लाइव इंटरएक्टिव टेस्ट
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+लाइव सुरक्षा पूर्वावलोकन
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+परीक्षण करने के लिए दबाकर रखें
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+परीक्षण करने के लिए डी-पैड सेंटर बटन को दबाकर रखें
+</string>
+    <string name="onboarding_tv_hidden_badge">
+छिपा हुआ
+</string>
+    <string name="onboarding_tv_sample_photo">
+हॉलिडे_फोटो_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+वित्तीय_रिपोर्ट_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+रीसायकल बिन को बायपास करता है। फ़ाइलें स्थायी रूप से और तुरंत मिटा दी जाती हैं।
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+शून्य व्यक्तिगत डेटा या उपयोगकर्ता पहचान एकत्र की गई
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+शून्य फ़ाइल ट्रैकिंग, अनुक्रमणिका, या विश्लेषण
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+ओपन एक्सेस (तत्काल लॉन्च)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+UFM खोलते समय किसी प्रमाणीकरण की आवश्यकता नहीं है
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+खुला
+</string>
+    <string name="onboarding_tv_storage_internal">
+आंतरिक स्टोरेज
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+आंतरिक
+</string>
+    <string name="onboarding_tv_storage_sd">
+एसडी कार्ड
+</string>
+    <string name="onboarding_tv_storage_apps">
+ऐप्स
+</string>
+    <string name="onboarding_tv_storage_manager">
+प्रबंधक
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+नेटवर्क
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

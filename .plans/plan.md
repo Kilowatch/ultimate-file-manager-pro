@@ -1,260 +1,87 @@
-# Implementation Plan: Anonymous Loyalty Pass & GPA Tip Verification System
+# Implementation Plan: Android TV Onboarding Screens Redesign & D-Pad Navigation Fix
 
-**Target Environments**:
-- Backend PHP APIs: `F:\APK\api\`
-- MySQL Database: `kilowatc_ufm_tips`
-- Android Application: `za.kilowatch.ultimatefilemanager.billing`
+## Goals
+Deliver all requirements in [spec.md](file:///F:/Share/UFM/.plans/spec.md):
+1. Redesign all 8 Android TV onboarding layouts (`*_tv.xml`) plus shared TV header/footer (`layout_onboarding_header_tv.xml`, `layout_onboarding_footer_tv.xml`) so every screen fits cleanly within TV overscan safe margins on 720p and 1080p displays with balanced two-column proportions and zero dead space or clipped content.
+2. Add unmistakable, consistent D-pad focus states across all interactive TV controls (Next/Start Browsing, Skip, Back, option cards, and sub-option chips) using the app's existing `TvFocusHelper` and TV focus selectors, clearly distinct from the active/selected state.
+3. Fix Step 3 (`OnboardingScrollingTextActivity` + `activity_onboarding_scrolling_text_tv.xml`) so Marquee sub-options (Scroll Speed, Loop Mode, Scroll Scope) sit outside `cardOptionMarquee` as independent focusable chips, visible/focusable only when Marquee is selected.
+4. Set initial D-pad focus on the currently selected (or first) option card on every TV onboarding screen and ensure predictable D-pad traversal between options, sub-options, Skip, Next, and Back.
+5. Replace hardcoded English labels in the 8 TV onboarding layouts with string resources in `values/strings.xml`.
 
----
+## Architecture Overview
+- **Shared TV Focus & Navigation Coordinator (`BaseOnboardingStepActivity.kt`)**:
+  - Add a shared TV focus helper method `setupTvCardFocus(card, isSelectedProvider)` powered by `TvFocusHelper.colors(this)` and `TvFocusHelper.applyMarker(card, hasFocus)`. On focus, cards get the unified TV focus stroke/fill/marker and subtle `1.02f` scale; on blur, they restore their selected vs. unselected stroke (`getActiveAccentColor()` vs. `getInactiveStrokeColor()`).
+  - Add `setupTvFooterAndHeaderFocus()` in `setupCommonViews()` (when `isTv == true`) so `btnOnboardingNext`, `btnOnboardingSkip`, and `btnOnboardingBack` receive unmistakable focus visuals (bright focus fill/ring, text contrast, and subtle scale-up) using `TvFocusHelper` / `selector_tv_icon_btn` / `selector_tv_button`.
+  - Add `requestInitialTvFocus(defaultView: View?)` helper called by each subclass after initial state is bound, ensuring focus lands on the currently selected option card on TV.
+- **Step 3 Marquee Sub-Options Restructure (`activity_onboarding_scrolling_text_tv.xml` + `OnboardingScrollingTextActivity.kt`)**:
+  - Move `layoutMarqueeSubOptions` out of `cardOptionMarquee` into the parent `LinearLayout` immediately below `cardOptionMarquee`.
+  - Style each `Chip` (`chipSpeedSlow/Normal/Fast`, `chipLoopOneShot/Continuous`, `chipScopeAll/Focused`) with `android:focusable="true"`, TV-friendly touch/focus sizing, and explicit `TvFocusHelper`-backed focus styling so D-pad focus is unmistakable on each chip.
+  - Wire explicit `nextFocusUp` / `nextFocusDown` / `nextFocusRight` relationships in `OnboardingScrollingTextActivity` / XML so D-pad moves smoothly: `cardOptionMarquee` → `chipSpeed*` → `chipLoop*` → `chipScope*` → `cardOption2Lines` → ... → `btnOnboardingNext` / `btnOnboardingSkip`.
+  - When a non-Marquee mode is selected, collapse `layoutMarqueeSubOptions` (`View.GONE`) so D-pad skips it cleanly without stranding focus.
+- **Per-Screen TV Layout Redesign (8 `*_tv.xml` + Header/Footer)**:
+  - Standardize `layout_onboarding_header_tv.xml` (step badge pill, title, subtitle, `selector_tv_icon_btn` Back button) and `layout_onboarding_footer_tv.xml` (glass divider/bar, high-contrast focusable Skip and Next/Start Browsing buttons).
+  - Balance the 2-column split (`48%` options / `52%` preview or `50/50` with `16dp–24dp` gutter) per screen:
+    - **Binary / 2–3 option screens** (`font_size`, `hold_duration`, `recycle_bin`, `hidden_files`, `diagnostics`, `app_lock`): Center the option stack vertically in the left column and match the right preview card height/alignment so there is no awkward empty void.
+    - **Dense screens** (`view_density`, `scrolling_text`): Use compact card padding, clear section headers, and smooth scroll-into-view on D-pad focus.
 
-## Goal Description
-Build an authoritative, privacy-first, central repository for Google Play tip orders (GPA numbers) and loyalty points ($1 = 10 points) that completely replaces device-local `SharedPreferences` point storage. 
+## Files to Create
+None. All changes reuse existing activities, layouts, `TvFocusHelper`, and drawable selectors.
 
-This enables supporters to retain, aggregate, and restore their points and unlocked badge tiers across devices and app reinstalls without requiring any personal data (no names, emails, Google accounts, or device identifiers).
+## Files to Modify
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/onboarding/BaseOnboardingStepActivity.kt`
+- **What:** Add shared TV focus styling for footer/header buttons (`btnOnboardingNext`, `btnOnboardingSkip`, `btnOnboardingBack`), shared `setupTvCardFocus(...)` helper using `TvFocusHelper`, and `requestInitialTvFocus(...)`.
+- **Key details:** Guard all TV focus/scale treatments behind `if (isTv)`. Ensure `btnOnboardingNext` and `btnOnboardingSkip` show high-contrast `ufmFocusFill` / `ufmFocusFillText` / stroke glow on focus so focused state is unmistakable.
 
----
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/onboarding/OnboardingScrollingTextActivity.kt`
+- **What:** Wire `setupTvCardFocus` for the 6 mode cards, add TV focus styling for the 8 Marquee sub-option chips (`cgSpeed`, `cgLoop`, `cgScope`), set initial focus to the active mode card on TV, and ensure collapsing `layoutMarqueeSubOptions` never strands focus.
+- **Key details:** When `layoutMarqueeSubOptions` is hidden, update `nextFocusDown` on `cardOptionMarquee` (or let Android's focus finder skip `GONE` views) and ensure `cardOptionMarquee` -> `chipSpeedNormal` -> `chipLoopOneShot` -> `chipScopeAll` -> `cardOption2Lines` works seamlessly.
 
-## User Review Required
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/onboarding/OnboardingViewDensityActivity.kt`
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/onboarding/OnboardingFontSizeActivity.kt`
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/onboarding/OnboardingHoldDurationActivity.kt`
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/onboarding/OnboardingRecycleBinActivity.kt`
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/onboarding/OnboardingHiddenFilesActivity.kt`
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/onboarding/OnboardingAppLockActivity.kt`
+### `app/src/main/java/za/kilowatch/ultimatefilemanager/onboarding/OnboardingDiagnosticsActivity.kt`
+- **What:** Apply `setupTvCardFocus` to each screen's interactive `MaterialCardView` options and call `requestInitialTvFocus` on the currently selected option card when `isTv` is true.
+- **Key details:** Keep mobile behavior 100% unchanged. In `updateUI()`, ensure focused cards retain their focus stroke/marker rather than being overwritten by `updateUI()`.
 
-> [!IMPORTANT]
-> **Zero Personal Data & Anonymous Terminology**:
-> In accordance with privacy requirements, the concept of "accounts" has been strictly replaced by **"Loyalty Pass"**, **"Loyalty ID"** (`XXX-XXX-XXX-XXX`), and **"Passkey"**. No personal data is captured or stored anywhere.
+### `app/src/main/res/layout/layout_onboarding_header_tv.xml`
+### `app/src/main/res/layout/layout_onboarding_footer_tv.xml`
+- **What:** Redesign TV onboarding header and footer for 10-foot polish and unmistakable focus visibility (`selector_tv_icon_btn` on Back, clear focusable button styling on Skip and Next/Start Browsing, clean top/bottom safe padding).
 
-> [!NOTE]
-> **Historical Backfill**:
-> A standalone migration script (`backfill_gpa_orders.php`) will parse all historical tip events from the existing `event_log` table (over 300 records as seen in `sql.PNG`) to populate `gpa_orders` with initial `points = ROUND(tip_amount * 10)`.
+### `app/src/main/res/layout/activity_onboarding_view_density_tv.xml`
+### `app/src/main/res/layout/activity_onboarding_font_size_tv.xml`
+### `app/src/main/res/layout/activity_onboarding_scrolling_text_tv.xml`
+### `app/src/main/res/layout/activity_onboarding_hold_duration_tv.xml`
+### `app/src/main/res/layout/activity_onboarding_recycle_bin_tv.xml`
+### `app/src/main/res/layout/activity_onboarding_hidden_files_tv.xml`
+### `app/src/main/res/layout/activity_onboarding_app_lock_tv.xml`
+### `app/src/main/res/layout/activity_onboarding_diagnostics_tv.xml`
+- **What:** Redesign each of the 8 TV layouts for balanced 2-column proportions, vertical centering on sparse screens, compact card spacing on dense screens, `layoutMarqueeSubOptions` moved outside `cardOptionMarquee` in `scrolling_text_tv.xml`, and localized string references replacing hardcoded English text.
 
----
+### `app/src/main/res/values/strings.xml`
+- **What:** Add new string resources for any currently hardcoded section headers/preview labels in the 8 `*_tv.xml` layouts (without modifying existing keys unless necessary; if any existing key is modified, delete it from `values-*/strings.xml` per project rules).
 
-## Proposed Changes
+## Data Model
+No preference keys, storage schemas, or data models are changed. All existing preference managers (`MainMenuViewModeManager`, `FontSizeHelper`, `ScrollingTextPreferenceManager`, `LongPressDurationManager`, `RecycleBinSettingsManager`, `HiddenFilesManager`, `AppSecurityManager`, `CrashReportManager`) remain unchanged.
 
-```mermaid
-flowchart TD
-    subgraph MySQL Database: kilowatc_ufm_tips
-        TablePasses[loyalty_passes Table<br/>id, loyalty_id, passkey_hash, total_points]
-        TableOrders[gpa_orders Table<br/>id, pass_id, loyalty_id, order_id, tip_amount, points, call_count]
-        TableEventLog[event_log Table<br/>historical records]
-    end
+## Dependencies
+- Existing `TvFocusHelper` (`za.kilowatch.ultimatefilemanager.util.TvFocusHelper`) and existing TV focus theme attributes (`ufmFocusFill`, `ufmFocusFillText`, `ufmFocusGlow`, `ufmFocusStrokeColor`, `ufmFocusStrokeWidth`, `ufmFocusAccent`).
+- Existing drawable selectors (`selector_tv_icon_btn.xml`, `selector_tv_button.xml`, `selector_tv_card.xml`).
+- No new third-party libraries.
 
-    subgraph Backend PHP: F:\APK\api
-        Backfill[backfill_gpa_orders.php] -->|Parse historical tips| TableOrders
-        RTDN[rtdn.php update] -->|Real-time tip ingestion| TableOrders
-        RateLimit[RateLimiter.php] -->|DDoS & Brute-Force Shield| VerifyAPI
-        VerifyAPI[verify_gpa.php] -->|CRUD & Sync| TablePasses
-        VerifyAPI -->|Link GPA & Atomic Counter| TableOrders
-    end
+## Test Plan
+- **Build verification**: Run `./gradlew assembleMobileGoogleDebug` after all edits to confirm zero compilation/resource/layout errors.
+- **Automated / Unit checks**: Run existing unit tests (`./gradlew testMobileGoogleDebugUnitTest`) to ensure no regressions.
+- **Manual TV / Emulator Verification** (covering all FRs):
+  1. Launch onboarding on an Android TV emulator/device (720p & 1080p) and step through all 8 screens (1 → 8) using only D-pad Up/Down/Left/Right/Center/Back.
+  2. Verify on every screen that initial focus lands on the selected option, and that moving focus to **Next / Start Browsing**, **Skip**, and **Back** shows an unmistakable focus state.
+  3. Verify on Step 3 (Scrolling Text) that selecting **Marquee Auto-Scroll** reveals Speed, Loop, and Scope chips below the card, and D-pad can focus and toggle every individual chip with live preview updates; verify switching to **2 Lines** hides the sub-options cleanly.
+  4. Verify Reconfigure Mode from Settings pre-selects and focuses saved preferences and returns cleanly to Settings.
+  5. Verify Mobile layout (`assembleMobileGoogleDebug` on phone) is visually and behaviorally unchanged.
 
-    subgraph Android App: za.kilowatch.ultimatefilemanager
-        AppBilling[BillingManager / SupporterLoyaltyActivity] -->|Complete Tip / Enter GPA| PassMgr[LoyaltyPassManager.kt]
-        PassMgr -->|HTTPS JSON| VerifyAPI
-        PassMgr -->|Prompts & Backup| Dialogs[UFMStandard Glass Dialogs]
-        Dialogs -->|Fixed GPA. & Auto-Hyphen| Formatter[GpaInputFormatter.kt]
-    end
-```
-
----
-
-### Component 1: Database Migration Scripts
-
-#### [NEW] `F:\APK\api\schema_loyalty_system.sql`
-Creates the two relational tables with strict constraints and indexes:
-
-```sql
--- 1. Anonymous Loyalty Passes Table
-CREATE TABLE IF NOT EXISTS `loyalty_passes` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `loyalty_id` VARCHAR(19) NOT NULL,
-    `passkey_hash` VARCHAR(255) NOT NULL,
-    `total_points` INT UNSIGNED NOT NULL DEFAULT 0,
-    `total_amount_usd` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-    `failed_attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-    `locked_until` DATETIME DEFAULT NULL,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uq_loyalty_id` (`loyalty_id`),
-    KEY `idx_total_points` (`total_points`),
-    KEY `idx_created_at` (`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- 2. GPA Orders Table
-CREATE TABLE IF NOT EXISTS `gpa_orders` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `pass_id` BIGINT UNSIGNED DEFAULT NULL,
-    `loyalty_id` VARCHAR(19) DEFAULT NULL,
-    `order_id` VARCHAR(64) NOT NULL,
-    `product_id` VARCHAR(64) DEFAULT NULL,
-    `tip_amount` DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-    `currency` VARCHAR(3) NOT NULL DEFAULT 'USD',
-    `points` INT UNSIGNED NOT NULL DEFAULT 0,
-    `call_count` INT UNSIGNED NOT NULL DEFAULT 0,
-    `last_called_at` DATETIME DEFAULT NULL,
-    `claimed_at` DATETIME DEFAULT NULL,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uq_order_id` (`order_id`),
-    KEY `fk_gpa_pass_id` (`pass_id`),
-    KEY `idx_loyalty_id` (`loyalty_id`),
-    KEY `idx_call_count` (`call_count`),
-    KEY `idx_created_at` (`created_at`),
-    CONSTRAINT `fk_gpa_orders_pass` 
-        FOREIGN KEY (`pass_id`) REFERENCES `loyalty_passes` (`id`) 
-        ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-```
-
----
-
-### Component 2: Backend Historical Backfill & RTDN Real-Time Ingestion
-
-#### [NEW] `F:\APK\api\backfill_gpa_orders.php`
-- Connects via `Database::getInstance()->getConnection()`.
-- Queries `event_log` where `message LIKE 'Tip processed:%GPA.%'`.
-- Regex extraction: `/Tip processed:\s*\$([0-9.]+)\s*USD\s*\(product:\s*([^,]+),\s*order:\s*(GPA\.\d{4}-\d{4}-\d{4}-\d{5})\)/i`.
-- Computes `points = ROUND(amount * 10)`.
-- Batch inserts into `gpa_orders` with `ON DUPLICATE KEY UPDATE updated_at = NOW()`.
-- Outputs CLI execution report (rows scanned, inserted, skipped).
-
-#### [MODIFY] `F:\APK\api\rtdn.php`
-- In step 7d of `rtdn.php` (where tips are processed), add atomic ingestion to `gpa_orders`:
-  ```php
-  if (!empty($orderId) && preg_match('/^GPA\.\d{4}-\d{4}-\d{4}-\d{5}$/i', $orderId)) {
-      $points = (int) round($usdAmount * 10);
-      $stmtGpa = $pdo->prepare(
-          'INSERT INTO gpa_orders (order_id, product_id, tip_amount, currency, points, call_count, created_at, updated_at)
-           VALUES (:order_id, :product_id, :amount, :currency, :points, 0, NOW(), NOW())
-           ON DUPLICATE KEY UPDATE
-               tip_amount = VALUES(tip_amount),
-               points     = VALUES(points),
-               product_id = VALUES(product_id),
-               updated_at = NOW()'
-      );
-      $stmtGpa->execute([
-          ':order_id'   => strtoupper($orderId),
-          ':product_id' => $productId,
-          ':amount'     => $usdAmount,
-          ':currency'   => 'USD',
-          ':points'     => $points,
-      ]);
-  }
-  ```
-
----
-
-### Component 3: Backend Security & Verification API
-
-#### [NEW] `F:\APK\api\RateLimiter.php`
-- File-based sliding window rate limiter:
-  - Global IP Limit: 30 requests/minute.
-  - Failure/Brute-Force Limit: 5 failed passkey attempts locks the Loyalty ID for 15 minutes.
-  - Returns remaining attempts, lockout status, and `Retry-After` headers.
-
-#### [NEW] `F:\APK\api\verify_gpa.php`
-Implements the 4 core actions (all case-insensitive for GPA numbers and Loyalty IDs):
-- **Case-Insensitive Normalization**:
-  All input identifiers are normalized on ingest:
-  `$orderId = strtoupper(trim($input['order_id'] ?? ''))`
-  `$loyaltyId = strtoupper(trim($input['loyalty_id'] ?? ''))`
-- Database collation `utf8mb4_unicode_ci` inherently guarantees case-insensitive comparisons.
-1. `check_gpa`:
-   - Validates regex `/^GPA\.\d{4}-\d{4}-\d{4}-\d{5}$/i`.
-   - Checks if order exists in `gpa_orders`.
-   - Returns `{ success: true, status: "unclaimed" }` or `{ success: true, status: "already_claimed", loyalty_id_masked: "B4K-***-***-8R1" }`.
-2. `create_pass`:
-   - **Guaranteed Unique Loyalty ID Generation**:
-     Generates a random `XXX-XXX-XXX-XXX` Loyalty ID using cryptographically secure `random_int`.
-     Checks `SELECT 1 FROM loyalty_passes WHERE loyalty_id = :id` in a retry loop (up to 10 attempts) to guarantee that the generated Loyalty ID does **NOT** already exist.
-     Enforced by `UNIQUE KEY uq_loyalty_id` at the MySQL engine level with `PDOException` (SQLState 23000) retry handling.
-   - Generates 16-character secure random Passkey (`random_bytes`).
-   - Hashes with `password_hash($passkey, PASSWORD_BCRYPT, ['cost' => 12])`.
-   - Inserts row into `loyalty_passes` and updates `gpa_orders` (`pass_id`, `loyalty_id`, `claimed_at = NOW()`).
-   - Returns Loyalty ID, raw Passkey, points, and tip history.
-3. `claim_to_existing`:
-   - Validates Loyalty ID and verifies `password_verify($passkey, $row['passkey_hash'])`.
-   - Attaches unclaimed GPA to the Loyalty Pass.
-   - Recalculates `total_points = SUM(points)` in `gpa_orders` and updates `loyalty_passes`.
-   - Returns all tips and updated total points.
-4. `restore`:
-   - Resolves Loyalty ID (from direct ID or previous GPA lookup, case-insensitively).
-   - Verifies passkey.
-   - Returns full tip history and cumulative points for local delta sync.
-
----
-
-### Component 4: Android Client Integration (UFM Pro)
-
-#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/billing/GpaInputFormatter.kt`
-- **Fixed `GPA.` Prefix**:
-  - Attached via `TextInputLayout.prefixText = "GPA."` with distinct accent styling.
-  - Non-editable: User cannot backspace or erase the prefix.
-- **Smart Auto-Hyphen Formatter (`TextWatcher`)**:
-  - Automatically formats raw digits as the user types into:
-    `XXXX-XXXX-XXXX-XXXXX` (4 digits, hyphen, 4 digits, hyphen, 4 digits, hyphen, 5 digits).
-  - Handles backspacing smoothly without cursor jumping or getting trapped on hyphens.
-  - **Paste-Aware Sanitization**:
-    If a user pastes from their email receipt (e.g., `GPA.3398-3263-8701-36162`, `gpa.33983263870136162`, or `3398-3263-8701-36162`), it automatically strips any leading `GPA.` or `gpa.`, extracts the 17 digits, and applies the hyphen format automatically.
-- **Case-Insensitive Loyalty ID Formatter**:
-  - Automatically converts all characters to uppercase as typed.
-  - Automatically inserts hyphens for `XXX-XXX-XXX-XXX` format.
-
-#### [NEW] `app/src/main/java/za/kilowatch/ultimatefilemanager/billing/LoyaltyPassManager.kt`
-- Manages local storage of `active_loyalty_id` and passkey in encrypted shared preferences.
-- Performs async network calls to `verify_gpa.php` using standard `HttpURLConnection` / coroutines.
-- Computes delta sync: receives full tip list from server, checks local database, inserts missing entries, and synchronizes `total_points`.
-- Exposes `claimGpaOrder(gpa, callback)`, `restorePass(identifier, passkey, callback)`, and `syncPass(callback)`.
-
-#### [NEW] Layouts for UFMStandard Dialogs:
-All dialogs strictly adhere to **UFMStandard Dialog Architecture**:
-- Root layout: `@drawable/bg_dialog_glass`, `24dp` padding, transparent dialog window (`ColorDrawable(Color.TRANSPARENT)`).
-- Header: Centered 56×56dp frosted squircle icon (`@drawable/bg_btn_icon_frosted`) with 28×28dp themed vector icon.
-- Typography: 20sp `sans-serif-black` title (`@color/mobile_text_primary`) and 13sp `sans-serif-medium` subtitle (`@color/mobile_text_secondary`).
-- Content Cards: `@color/mobile_glass_card` with `@color/mobile_glass_stroke` (1dp stroke, 16dp corner radius).
-- Vertical Button Stack:
-  - Primary: `@style/Widget.Material3Expressive.Button`, 48dp height, 12dp corner radius, bold text, `?attr/colorPrimary`.
-  - Secondary/Dismiss: `@style/Widget.Material3.Button.TextButton` or TonalButton, 48dp height, 12dp corner radius.
-
-Files to implement:
-- `dialog_unclaimed_tip_prompt.xml`: Notifies of unclaimed tip and asks if the user already has a Loyalty ID.
-- `dialog_loyalty_pass_credentials.xml`: Displays newly generated Loyalty ID and Passkey with "Copy to Clipboard", "I Have Saved My Passkey", and the 100% Anonymous disclosure.
-- `dialog_loyalty_pass_restore.xml`: Input for Loyalty ID / previous GPA and Passkey to restore points on a clean install. Uses `GpaInputFormatter` for fixed `GPA.` prefix and auto-hyphenation.
-- `dialog_claim_past_gpa.xml`: Input dialog for existing supporters to paste historical GPA order numbers. Uses `GpaInputFormatter` for fixed `GPA.` prefix and auto-hyphenation.
-
-#### [MODIFY] `app/src/google/java/za/kilowatch/ultimatefilemanager/billing/SupporterLoyaltyActivity.kt`
-- Adds a **Loyalty Pass Card** in the UI:
-  - If no pass active: Shows "Anonymous Loyalty Pass • Tap to Restore or Create" and "Claim Past Tip".
-  - If pass active: Displays masked Loyalty ID (`B4K-***-***-8R1`), points total, "View / Backup Pass", and "Claim Past Tip".
-- On billing completion (`onPurchaseSuccess`), automatically queries `check_gpa` to guide the user into auto-attach or the decision modal.
-- Integrates `BadgeIconManager.getTotalTippedPoints` with `LoyaltyPassManager` verified points.
-
----
-
-## Verification Plan
-
-### Automated Tests
-1. **PHP Syntax & Linter Verification**:
-   ```powershell
-   php -l F:\APK\api\schema_loyalty_system.sql
-   php -l F:\APK\api\RateLimiter.php
-   php -l F:\APK\api\verify_gpa.php
-   php -l F:\APK\api\backfill_gpa_orders.php
-   php -l F:\APK\api\rtdn.php
-   ```
-2. **Android Compilation & Dex Verification**:
-   ```powershell
-   ./gradlew compileMobileGoogleDebugKotlin
-   ./gradlew assembleMobileGoogleDebug
-   ```
-
-### Manual Verification
-1. **Backfill Execution**: Run `backfill_gpa_orders.php` and verify rows are populated in `gpa_orders` from `event_log` with correct points ($1 = 10 pts).
-2. **API Verification via cURL / PowerShell**:
-   - `check_gpa`: Test valid GPA returns `unclaimed`.
-   - `create_pass`: Verify new Loyalty ID + Passkey generation and database link.
-   - `claim_to_existing`: Verify second GPA merges into the same Loyalty ID and combines points.
-   - `restore`: Verify entering GPA + Passkey restores the full tip list.
-   - Brute-force test: 5 bad passkeys trigger HTTP 423 lockout.
-3. **App UI Walkthrough**:
-   - Verify fixed `GPA.` prefix and auto-hyphen formatting when typing or pasting.
-   - Test "Claim Past Tip" in "Fuel the Developer" on mobile device.
-   - Verify UFMStandard glass dialogs and credentials clipboard copying.
+## Risks & Mitigations
+- **`updateUI()` overwriting focus border**: Calling `card.strokeColor = ...` inside `updateUI()` when a card is currently focused could erase its focus border. → *Mitigation*: In `BaseOnboardingStepActivity.setupTvCardFocus` / `applyCardVisualState`, check `card.isFocused` before applying unselected/selected resting stroke so focused state always wins.
+- **ScrollView swallowing focus or clipping scale**: Scaling focused cards (`1.02f`) inside a `LinearLayout`/`ScrollView` can clip at container edges. → *Mitigation*: Set `android:clipChildren="false"` and `android:clipToPadding="false"` on card containers and give horizontal/vertical padding (`4dp–8dp`) inside `ScrollView`.
+- **String translation rule**: Modifying existing English strings requires deleting those keys from `values-*/strings.xml`. → *Mitigation*: Only *add* new string keys for previously hardcoded English text in `*_tv.xml` layouts; do not modify existing translated keys.

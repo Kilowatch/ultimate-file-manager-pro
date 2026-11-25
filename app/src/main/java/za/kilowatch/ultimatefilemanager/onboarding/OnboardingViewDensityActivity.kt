@@ -179,15 +179,19 @@ class OnboardingViewDensityActivity : BaseOnboardingStepActivity() {
         cardColumns4.setOnClickListener { selectColumnCount(4) }
 
         if (isTv) {
-            setupTvOptionFocus(cardList)
-            setupTvOptionFocus(cardGrid)
-            setupTvOptionFocus(cardListCompact)
-            setupTvOptionFocus(cardListComfortable)
-            setupTvOptionFocus(cardColumns3)
-            setupTvOptionFocus(cardColumns4)
+            setupTvCardFocus(cardList) { selectedMode == ViewMode.LIST }
+            setupTvCardFocus(cardGrid) { selectedMode == ViewMode.GRID }
+            setupTvCardFocus(cardListCompact) { selectedItemSize == ItemSize.SMALL }
+            setupTvCardFocus(cardListComfortable) { selectedItemSize == ItemSize.MEDIUM || selectedItemSize == ItemSize.LARGE }
+            setupTvCardFocus(cardColumns3) { selectedColumnCount == 3 }
+            setupTvCardFocus(cardColumns4) { selectedColumnCount == 4 }
         }
 
         updateUI()
+
+        if (isTv) {
+            requestInitialTvFocus(if (selectedMode == ViewMode.GRID) cardGrid else cardList)
+        }
     }
 
     private fun selectMode(mode: ViewMode) {
@@ -219,13 +223,17 @@ class OnboardingViewDensityActivity : BaseOnboardingStepActivity() {
         badgeModernSelected?.visibility = if (isModern) View.VISIBLE else View.GONE
         txtModernSub?.visibility = if (isModern) View.GONE else View.VISIBLE
 
-        cardList.strokeWidth = if (isList) dpToPx(2) else dpToPx(1)
-        cardList.strokeColor = if (isList) activeColor else inactiveStroke
+        if (isTv) {
+            applyCardSelectionStroke(cardList, isList)
+            applyCardSelectionStroke(cardGrid, isGrid)
+        } else {
+            cardList.strokeWidth = if (isList) dpToPx(2) else dpToPx(1)
+            cardList.strokeColor = if (isList) activeColor else inactiveStroke
+            cardGrid.strokeWidth = if (isGrid) dpToPx(2) else dpToPx(1)
+            cardGrid.strokeColor = if (isGrid) activeColor else inactiveStroke
+        }
         badgeListSelected.visibility = if (isList) View.VISIBLE else View.GONE
         txtListSub.visibility = if (isList) View.GONE else View.VISIBLE
-
-        cardGrid.strokeWidth = if (isGrid) dpToPx(2) else dpToPx(1)
-        cardGrid.strokeColor = if (isGrid) activeColor else inactiveStroke
         badgeGridSelected.visibility = if (isGrid) View.VISIBLE else View.GONE
         txtGridSub.visibility = if (isGrid) View.GONE else View.VISIBLE
 
@@ -244,21 +252,29 @@ class OnboardingViewDensityActivity : BaseOnboardingStepActivity() {
         cardSpacingComfortable?.strokeWidth = if (isComfortable) dpToPx(2) else dpToPx(1)
         cardSpacingComfortable?.strokeColor = if (isComfortable) activeColor else inactiveStroke
 
-        cardListCompact.strokeWidth = if (isCompact) dpToPx(2) else dpToPx(1)
-        cardListCompact.strokeColor = if (isCompact) activeColor else inactiveStroke
-
-        cardListComfortable.strokeWidth = if (isComfortable) dpToPx(2) else dpToPx(1)
-        cardListComfortable.strokeColor = if (isComfortable) activeColor else inactiveStroke
+        if (isTv) {
+            applyCardSelectionStroke(cardListCompact, isCompact)
+            applyCardSelectionStroke(cardListComfortable, isComfortable)
+        } else {
+            cardListCompact.strokeWidth = if (isCompact) dpToPx(2) else dpToPx(1)
+            cardListCompact.strokeColor = if (isCompact) activeColor else inactiveStroke
+            cardListComfortable.strokeWidth = if (isComfortable) dpToPx(2) else dpToPx(1)
+            cardListComfortable.strokeColor = if (isComfortable) activeColor else inactiveStroke
+        }
 
         // 4. Update Grid Column cards (3 vs 4)
         val isCol3 = (selectedColumnCount == 3)
         val isCol4 = (selectedColumnCount == 4)
 
-        cardColumns3.strokeWidth = if (isCol3) dpToPx(2) else dpToPx(1)
-        cardColumns3.strokeColor = if (isCol3) activeColor else inactiveStroke
-
-        cardColumns4.strokeWidth = if (isCol4) dpToPx(2) else dpToPx(1)
-        cardColumns4.strokeColor = if (isCol4) activeColor else inactiveStroke
+        if (isTv) {
+            applyCardSelectionStroke(cardColumns3, isCol3)
+            applyCardSelectionStroke(cardColumns4, isCol4)
+        } else {
+            cardColumns3.strokeWidth = if (isCol3) dpToPx(2) else dpToPx(1)
+            cardColumns3.strokeColor = if (isCol3) activeColor else inactiveStroke
+            cardColumns4.strokeWidth = if (isCol4) dpToPx(2) else dpToPx(1)
+            cardColumns4.strokeColor = if (isCol4) activeColor else inactiveStroke
+        }
 
         // 5. Update Live Preview
         updatePreview()
@@ -331,19 +347,6 @@ class OnboardingViewDensityActivity : BaseOnboardingStepActivity() {
             previewModernDivider?.visibility = View.GONE
             previewModernChild2?.visibility = View.GONE
             imgStorageChevron?.setImageResource(R.drawable.ic_expand_more)
-        }
-    }
-
-    private fun setupTvOptionFocus(card: MaterialCardView) {
-        val yellowFill = za.kilowatch.ultimatefilemanager.settings.ColorblindPalette.focusFill(this)
-        val glassColor = getColor(R.color.tv_glass_white_10)
-
-        card.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                card.setCardBackgroundColor(yellowFill)
-            } else {
-                card.setCardBackgroundColor(glassColor)
-            }
         }
     }
 

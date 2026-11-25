@@ -554,6 +554,91 @@ Ultimate_Backup_Archive_2026_Final_v2.tar.gz
     <string name="onboarding_preview_privacy_badge">
 100% 匿名 • 個人データゼロ • ファイル追跡ゼロ
 </string>
+    <string name="onboarding_tv_section_scale">
+スケールの選択
+</string>
+    <string name="onboarding_tv_section_duration">
+期間を選択してください
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+削除ポリシーの選択
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+可視性ポリシー
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+認証ポリシー
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+診断レポート
+</string>
+    <string name="onboarding_tv_section_privacy">
+プライバシーと透明性
+</string>
+    <string name="onboarding_tv_live_badge">
+ライブ
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+ライブインタラクティブテスト
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+ライブセーフティプレビュー
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+長押し\n
+テスト
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+D-パッドの中央ボタンを押したままにしてテストします
+</string>
+    <string name="onboarding_tv_hidden_badge">
+隠れた
+</string>
+    <string name="onboarding_tv_sample_photo">
+ホリデーフォト_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+Financial_Report_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+ごみ箱をバイパスします。ファイルは即座に永久に消去されます。
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+個人データやユーザー ID は収集されません
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+ファイル追跡、インデックス作成、または分析が不要
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+オープンアクセス (即時起動)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+UFMを開くときに認証は必要ありません
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+開ける
+</string>
+    <string name="onboarding_tv_storage_internal">
+内部ストレージ
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+内部
+</string>
+    <string name="onboarding_tv_storage_sd">
+SDカード
+</string>
+    <string name="onboarding_tv_storage_apps">
+アプリ
+</string>
+    <string name="onboarding_tv_storage_manager">
+マネージャー
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+ネットワーク
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">

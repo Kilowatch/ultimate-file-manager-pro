@@ -554,6 +554,91 @@ Ultimate_Backup_Archive_2026_Final_v2.tar.gz
     <string name="onboarding_preview_privacy_badge">
 100% анонимность • Никакие личные данные • Никакое отслеживание файлов
 </string>
+    <string name="onboarding_tv_section_scale">
+ВЫБЕРИТЕ МАСШТАБ
+</string>
+    <string name="onboarding_tv_section_duration">
+ВЫБЕРИТЕ ПРОДОЛЖИТЕЛЬНОСТЬ
+</string>
+    <string name="onboarding_tv_section_deletion_policy">
+ВЫБЕРИТЕ ПОЛИТИКУ УДАЛЕНИЯ
+</string>
+    <string name="onboarding_tv_section_visibility_policy">
+ПОЛИТИКА ВИДИМОСТИ
+</string>
+    <string name="onboarding_tv_section_auth_policy">
+ПОЛИТИКА АУТЕНТИФИКАЦИИ
+</string>
+    <string name="onboarding_tv_section_diagnostics">
+ДИАГНОСТИЧЕСКИЙ ОТЧЕТ
+</string>
+    <string name="onboarding_tv_section_privacy">
+КОНФИДЕНЦИАЛЬНОСТЬ И ПРОЗРАЧНОСТЬ
+</string>
+    <string name="onboarding_tv_live_badge">
+ЖИТЬ
+</string>
+    <string name="onboarding_tv_live_interactive_test">
+ЖИВОЙ ИНТЕРАКТИВНЫЙ ТЕСТ
+</string>
+    <string name="onboarding_tv_live_safety_preview">
+ОБЗОР ЖИВОЙ БЕЗОПАСНОСТИ
+</string>
+    <string name="onboarding_tv_hold_test_prompt">
+Нажмите и удерживайте\n
+чтобы проверить
+</string>
+    <string name="onboarding_tv_hold_test_hint">
+Нажмите и удерживайте центральную кнопку D-pad, чтобы проверить
+</string>
+    <string name="onboarding_tv_hidden_badge">
+СКРЫТЫЙ
+</string>
+    <string name="onboarding_tv_sample_photo">
+Holiday_Photo_2026.jpg
+</string>
+    <string name="onboarding_tv_sample_report">
+Financial_Report_Q4_2026.pdf
+</string>
+    <string name="onboarding_tv_recycle_permanent_desc">
+Обходит корзину. Файлы безвозвратно и немедленно удаляются.
+</string>
+    <string name="onboarding_tv_diagnostics_no_personal">
+Никакие персональные данные или идентификационные данные пользователя не собираются.
+</string>
+    <string name="onboarding_tv_diagnostics_no_tracking">
+Нулевое отслеживание, индексирование или аналитика файлов
+</string>
+    <string name="onboarding_tv_app_lock_open_title">
+Открытый доступ (мгновенный запуск)
+</string>
+    <string name="onboarding_tv_app_lock_open_desc">
+При открытии UFM аутентификация не требуется.
+</string>
+    <string name="onboarding_tv_app_lock_open_badge">
+ОТКРЫТЬ
+</string>
+    <string name="onboarding_tv_storage_internal">
+Внутреннее хранилище
+</string>
+    <string name="onboarding_tv_storage_internal_short">
+Внутренний
+</string>
+    <string name="onboarding_tv_storage_sd">
+SD-карта
+</string>
+    <string name="onboarding_tv_storage_apps">
+Приложения
+</string>
+    <string name="onboarding_tv_storage_manager">
+Менеджер
+</string>
+    <string name="onboarding_tv_storage_usb">
+USB
+</string>
+    <string name="onboarding_tv_storage_network">
+Сеть
+</string>
 
     <!-- Permission Titles -->
     <string name="perm_notifications_title">
