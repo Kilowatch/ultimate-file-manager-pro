@@ -25,6 +25,7 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
@@ -123,10 +124,15 @@ class IconPackExportActivity : AppCompatActivity() {
         categories.add(CategorySelection(
             "toolbar", getString(R.string.category_toolbar),
             listOf("toolbar_create_new", "toolbar_copy", "toolbar_move", "toolbar_rename", "toolbar_share",
-                "toolbar_copy_encrypt", "toolbar_move_encrypt", "toolbar_favorite",
-                "toolbar_hide", "toolbar_unhide", "toolbar_select_all", "toolbar_invert_selection", "toolbar_compress", "toolbar_extract",
-                "toolbar_image_compress", "toolbar_create_gif", "toolbar_delete", "toolbar_pin", "toolbar_unpin", "toolbar_duplicate_finder",
-                "toolbar_set_home_wallpaper", "toolbar_set_lock_wallpaper", "toolbar_set_ringtone", "toolbar_set_notification", "toolbar_set_alarm",
+                "toolbar_open_with", "toolbar_open_as", "toolbar_upload_other_storage",
+                "toolbar_copy_encrypt", "toolbar_move_encrypt", "toolbar_protect", "toolbar_unprotect",
+                "toolbar_favorite", "toolbar_hide", "toolbar_unhide", "toolbar_select_all",
+                "toolbar_invert_selection", "toolbar_compress", "toolbar_extract",
+                "toolbar_image_compress", "toolbar_retrigger_thumbnails", "toolbar_create_gif",
+                "toolbar_delete", "toolbar_pin", "toolbar_unpin", "toolbar_duplicate_finder",
+                "toolbar_large_files_finder", "toolbar_extract_subtitles", "toolbar_extract_audio",
+                "toolbar_convert_to_mp4", "toolbar_set_home_wallpaper", "toolbar_set_lock_wallpaper",
+                "toolbar_set_ringtone", "toolbar_set_notification", "toolbar_set_alarm",
                 "toolbar_exif_cleaner", "toolbar_checksum", "toolbar_music_tagger")
         ))
 
@@ -140,23 +146,33 @@ class IconPackExportActivity : AppCompatActivity() {
         // Settings
         val settingsKeys = mutableListOf(
             "settings_search_bar", "settings_default_start_screen", "settings_language", "settings_appearance",
-            "settings_icons", "settings_backup_restore", "settings_main_menu_layout",
+            "settings_folder_transitions", "settings_icons", "settings_default_icon_colors",
+            "settings_backup_restore", "settings_auto_backup", "settings_main_menu_layout",
             "settings_twin_window_layout", "settings_twin_window_startup",
-            "settings_side_by_side_video", "settings_side_by_side_video_show_controls_on_repeat", "settings_breadcrumbs", "settings_default_apps",
-            "settings_font_size", "settings_apk_extract", "settings_long_press",
-            "settings_colorblind",
-            "settings_controls_timeout",
-            "settings_toolbar_icons", "settings_favorites", "settings_custom_drive_names",
-            "settings_file_server_tiles", "settings_hidden_files", "settings_recycle_bin",
-            "settings_media_thumbnails", "settings_video_thumbnail_time",
+            "settings_side_by_side_video", "settings_side_by_side_video_show_controls_on_repeat",
+            "settings_autoplay_next", "settings_background_video", "settings_mini_player",
+            "settings_resume_interruption", "settings_skip_length", "settings_subtitle_style",
+            "settings_breadcrumbs", "settings_default_apps",
+            "settings_font_size", "settings_scrolling_text", "settings_grid_indicators",
+            "settings_grid_text_position", "settings_apk_extract", "settings_search_limit",
+            "settings_saf_file_action", "settings_saf_copy_destination", "settings_long_press",
+            "settings_colorblind", "settings_controls_timeout",
+            "settings_toolbar_icons", "settings_favorites", "settings_folder_sort",
+            "settings_custom_drive_names", "settings_duplicate_retention",
+            "settings_file_server_tiles", "settings_hidden_files", "settings_flat_view",
+            "settings_recycle_bin", "settings_media_thumbnails", "settings_video_thumbnail_time",
             "settings_network_thumbnails", "settings_cache_copy", "settings_quick_transfer",
-            "settings_network_open_cache", "settings_storage_indexer", "settings_root_access", "settings_analytics"
+            "settings_download_manager", "settings_network_open_cache", "settings_storage_indexer",
+            "settings_root_access", "settings_analytics", "settings_tip_jar_popup"
         )
         if (!isTv) {
             settingsKeys.add("settings_security")
         }
         if (isTv) {
             settingsKeys.add("settings_tv_background_server")
+        }
+        if (BuildConfig.IS_FOSS) {
+            settingsKeys.add("settings_foss_update")
         }
         categories.add(CategorySelection(
             "settings", getString(R.string.category_settings),

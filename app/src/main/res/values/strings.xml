@@ -4174,6 +4174,25 @@
     <string name="icon_settings_tv_background_server">Background TV Sharing</string>
     <string name="icon_settings_storage_indexer">Storage Indexer</string>
     <string name="icon_settings_analytics">Analytics</string>
+    <string name="icon_settings_folder_transitions">Folder Transitions</string>
+    <string name="icon_settings_default_icon_colors">Default Icon Colors</string>
+    <string name="icon_settings_search_limit">Search Results Limit</string>
+    <string name="icon_settings_saf_file_action">SAF File Open Action</string>
+    <string name="icon_settings_saf_copy_destination">SAF Copy Destination</string>
+    <string name="icon_settings_folder_sort">Folder Sort</string>
+    <string name="icon_settings_duplicate_retention">Duplicate Retention</string>
+    <string name="icon_settings_flat_view">Flat View</string>
+    <string name="icon_settings_download_manager">Download Manager</string>
+    <string name="icon_settings_autoplay_next">Autoplay Next</string>
+    <string name="icon_settings_background_video">Background Video</string>
+    <string name="icon_settings_mini_player">Mini Player</string>
+    <string name="icon_settings_resume_interruption">Resume After Interruption</string>
+    <string name="icon_settings_skip_length">Skip Length</string>
+    <string name="icon_settings_subtitle_style">Subtitle Style</string>
+    <string name="icon_settings_scrolling_text">Scrolling Text</string>
+    <string name="icon_settings_grid_indicators">Grid Indicators</string>
+    <string name="icon_settings_grid_text_position">Grid Text Position</string>
+    <string name="icon_settings_tip_jar_popup">Tip Jar Popup</string>
 
     <!-- Icon feature tile labels -->
     <string name="icon_tile_indexed_badge">Indexed Badge</string>

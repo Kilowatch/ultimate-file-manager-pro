@@ -49,6 +49,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Replaced purple accents with electric cyan glow highlights, cyan-accented month title, and gradient progress indicator.
   - Updated the "Fuel it!" action button to a frosted glass pill with subtle cyan outline border.
 
+### Fixed
+- **Customize Icons Missing Options (`IconCustomizationActivity`, `IconPackExportActivity`)**:
+  - Updated the **Main Menu Tiles** dropdown section to load all known tiles from `StorageBrowserActivity.buildAllKnownTiles()`, including **Remote** (`remote_tile`), Downloads Manager, Paired Devices, Shizuku, Root Storage, Online Storages, Add Storage Location, Other Storage, Support, Favorites, standalone SAF locations, APK Extracts, Recycle Bin, and user-created Custom Tiles, while fixing `tv_remote_tile` to appear on mobile only (`!isTv`).
+  - Added 11 missing **Toolbar Actions** (`toolbar_open_with`, `toolbar_open_as`, `toolbar_upload_other_storage`, `toolbar_protect`, `toolbar_unprotect`, `toolbar_retrigger_thumbnails`, `toolbar_duplicate_finder`, `toolbar_large_files_finder`, `toolbar_extract_subtitles`, `toolbar_extract_audio`, `toolbar_convert_to_mp4`) and 21 missing **Settings** card icons (`settings_folder_transitions`, `settings_default_icon_colors`, `settings_auto_backup`, `settings_search_limit`, `settings_saf_file_action`, `settings_saf_copy_destination`, `settings_folder_sort`, `settings_duplicate_retention`, `settings_flat_view`, `settings_download_manager`, `settings_autoplay_next`, `settings_background_video`, `settings_mini_player`, `settings_resume_interruption`, `settings_skip_length`, `settings_subtitle_style`, `settings_scrolling_text`, `settings_grid_indicators`, `settings_grid_text_position`, `settings_tip_jar_popup`, and FOSS-gated `settings_foss_update`), plus `network_dlna` in Utility.
+  - Synchronized `IconPackExportActivity` category icon lists with `IconCustomizationActivity`.
+
 ## [2.2.7] — 2026-11-17
 
 ### Added

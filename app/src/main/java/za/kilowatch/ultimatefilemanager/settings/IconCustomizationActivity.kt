@@ -18,8 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.ColorblindPalette
+import za.kilowatch.ultimatefilemanager.storage.CustomTileManager
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.TileColorBottomSheet
@@ -417,41 +419,64 @@ class IconCustomizationActivity : AppCompatActivity() {
             IconItemData("settings_default_start_screen", getString(R.string.icon_settings_default_start_screen), R.drawable.ic_storage_internal, emptyList()),
             IconItemData("settings_language", getString(R.string.icon_settings_language), R.drawable.ic_language, emptyList()),
             IconItemData("settings_appearance", getString(R.string.icon_settings_appearance), R.drawable.ic_theme, emptyList()),
+            IconItemData("settings_folder_transitions", getString(R.string.icon_settings_folder_transitions), R.drawable.ic_transitions, emptyList()),
             IconItemData("settings_icons", getString(R.string.icon_settings_icons), R.drawable.ic_palette, emptyList()),
+            IconItemData("settings_default_icon_colors", getString(R.string.icon_settings_default_icon_colors), R.drawable.ic_tune, emptyList()),
             IconItemData("settings_backup_restore", getString(R.string.icon_settings_backup_restore), R.drawable.ic_export, emptyList()),
+            IconItemData("settings_auto_backup", getString(R.string.icon_settings_auto_backup), R.drawable.ic_cloud, emptyList()),
             IconItemData("settings_main_menu_layout", getString(R.string.icon_settings_main_menu_layout), R.drawable.ic_view_list, emptyList()),
             IconItemData("settings_twin_window_layout", getString(R.string.icon_settings_twin_window_layout), R.drawable.ic_view_list, emptyList()),
             IconItemData("settings_twin_window_startup", getString(R.string.icon_settings_twin_window_startup), R.drawable.ic_view_list, emptyList()),
             IconItemData("settings_side_by_side_video", getString(R.string.icon_settings_side_by_side_video), R.drawable.ic_play, emptyList()),
             IconItemData("settings_side_by_side_video_show_controls_on_repeat", getString(R.string.icon_settings_side_by_side_video_show_controls_on_repeat), R.drawable.ic_repeat, emptyList()),
+            IconItemData("settings_autoplay_next", getString(R.string.icon_settings_autoplay_next), R.drawable.ic_play, emptyList()),
+            IconItemData("settings_background_video", getString(R.string.icon_settings_background_video), R.drawable.ic_play, emptyList()),
+            IconItemData("settings_mini_player", getString(R.string.icon_settings_mini_player), R.drawable.ic_list_view_custom, emptyList()),
+            IconItemData("settings_resume_interruption", getString(R.string.icon_settings_resume_interruption), R.drawable.ic_phone, emptyList()),
+            IconItemData("settings_skip_length", getString(R.string.icon_settings_skip_length), R.drawable.ic_skip_forward, emptyList()),
+            IconItemData("settings_subtitle_style", getString(R.string.icon_settings_subtitle_style), R.drawable.ic_subtitles, emptyList()),
             IconItemData("settings_breadcrumbs", getString(R.string.icon_settings_breadcrumbs), R.drawable.ic_home, emptyList()),
             IconItemData("settings_default_apps", getString(R.string.icon_settings_default_apps), R.drawable.ic_apps, emptyList()),
             IconItemData("settings_font_size", getString(R.string.icon_settings_font_size), R.drawable.ic_font_size, emptyList()),
+            IconItemData("settings_scrolling_text", getString(R.string.icon_settings_scrolling_text), R.drawable.ic_font_size, emptyList()),
+            IconItemData("settings_grid_indicators", getString(R.string.icon_settings_grid_indicators), R.drawable.ic_view_list, emptyList()),
+            IconItemData("settings_grid_text_position", getString(R.string.icon_settings_grid_text_position), R.drawable.ic_view_grid_medium, emptyList()),
             IconItemData("settings_colorblind", getString(R.string.icon_settings_colorblind), R.drawable.ic_colorblind, emptyList()),
             IconItemData("settings_apk_extract", getString(R.string.icon_settings_apk_extract), R.drawable.ic_file_apk, emptyList()),
+            IconItemData("settings_search_limit", getString(R.string.icon_settings_search_limit), R.drawable.ic_search, emptyList()),
+            IconItemData("settings_saf_file_action", getString(R.string.icon_settings_saf_file_action), R.drawable.ic_folder, emptyList()),
+            IconItemData("settings_saf_copy_destination", getString(R.string.icon_settings_saf_copy_destination), R.drawable.ic_download, emptyList()),
             IconItemData("settings_long_press", getString(R.string.icon_settings_long_press), R.drawable.ic_long_press, emptyList()),
             IconItemData("settings_controls_timeout", getString(R.string.icon_settings_controls_timeout), R.drawable.ic_controls_timeout, emptyList()),
             IconItemData("settings_toolbar_icons", getString(R.string.icon_settings_toolbar_icons), R.drawable.ic_star, emptyList()),
             IconItemData("settings_favorites", getString(R.string.icon_settings_favorites), R.drawable.ic_star, emptyList()),
+            IconItemData("settings_folder_sort", getString(R.string.icon_settings_folder_sort), R.drawable.ic_sort, emptyList()),
             IconItemData("settings_custom_drive_names", getString(R.string.icon_settings_custom_drive_names), R.drawable.ic_edit, emptyList()),
+            IconItemData("settings_duplicate_retention", getString(R.string.icon_settings_duplicate_retention), R.drawable.ic_duplicate, emptyList()),
             IconItemData("settings_file_server_tiles", getString(R.string.icon_settings_file_server_tiles), R.drawable.ic_ufm_ftp, emptyList()),
             IconItemData("settings_hidden_files", getString(R.string.icon_settings_hidden_files), R.drawable.ic_eye, emptyList()),
+            IconItemData("settings_flat_view", getString(R.string.icon_settings_flat_view), R.drawable.ic_flat_view, emptyList()),
             IconItemData("settings_recycle_bin", getString(R.string.icon_settings_recycle_bin), R.drawable.ic_delete, emptyList()),
             IconItemData("settings_media_thumbnails", getString(R.string.icon_settings_media_thumbnails), R.drawable.ic_photo_video, emptyList()),
             IconItemData("settings_video_thumbnail_time", getString(R.string.icon_settings_video_thumbnail_time), R.drawable.ic_photo_video, emptyList()),
             IconItemData("settings_network_thumbnails", getString(R.string.icon_settings_network_thumbnails), R.drawable.ic_cloud, emptyList()),
             IconItemData("settings_cache_copy", getString(R.string.icon_settings_cache_copy), R.drawable.ic_copy, emptyList()),
             IconItemData("settings_quick_transfer", getString(R.string.icon_settings_quick_transfer), R.drawable.ic_copy, emptyList()),
+            IconItemData("settings_download_manager", getString(R.string.icon_settings_download_manager), R.drawable.ic_download, emptyList()),
             IconItemData("settings_network_open_cache", getString(R.string.icon_settings_network_open_cache), R.drawable.ic_cloud, emptyList()),
             IconItemData("settings_storage_indexer", getString(R.string.icon_settings_storage_indexer), R.drawable.ic_storage_internal, emptyList()),
             IconItemData("settings_root_access", getString(R.string.icon_settings_root_access), R.drawable.ic_root_storage, emptyList()),
-            IconItemData("settings_analytics", getString(R.string.icon_settings_analytics), R.drawable.ic_tune, emptyList())
+            IconItemData("settings_analytics", getString(R.string.icon_settings_analytics), R.drawable.ic_tune, emptyList()),
+            IconItemData("settings_tip_jar_popup", getString(R.string.icon_settings_tip_jar_popup), R.drawable.ic_tip_jar_glow, emptyList())
         )
         if (!isTv) {
             settingsIcons.add(IconItemData("settings_security", getString(R.string.icon_settings_security), R.drawable.ic_security_lock, emptyList()))
         }
         if (isTv) {
             settingsIcons.add(IconItemData("settings_tv_background_server", getString(R.string.icon_settings_tv_background_server), R.drawable.ic_tv, emptyList()))
+        }
+        if (BuildConfig.IS_FOSS) {
+            settingsIcons.add(IconItemData("settings_foss_update", getString(R.string.icon_settings_foss_update), R.drawable.ic_install, emptyList()))
         }
         categories.add(IconCategoryData(
             "settings", getString(R.string.category_settings), settingsIcons
@@ -489,7 +514,8 @@ class IconCustomizationActivity : AppCompatActivity() {
                 IconItemData("action_crop", getString(R.string.icon_action_crop), R.drawable.ic_crop, emptyList()),
                 IconItemData("action_zoom_in", getString(R.string.icon_action_zoom_in), R.drawable.ic_zoom_in, emptyList()),
                 IconItemData("action_zoom_out", getString(R.string.icon_action_zoom_out), R.drawable.ic_zoom_out, emptyList()),
-                IconItemData("action_fit_screen", getString(R.string.icon_action_fit_screen), R.drawable.ic_fit_screen, emptyList())
+                IconItemData("action_fit_screen", getString(R.string.icon_action_fit_screen), R.drawable.ic_fit_screen, emptyList()),
+                IconItemData("network_dlna", getString(R.string.icon_network_dlna), R.drawable.ic_network, emptyList())
             )
         ))
 
@@ -575,8 +601,13 @@ class IconCustomizationActivity : AppCompatActivity() {
             IconItemData("toolbar_move", getString(R.string.icon_toolbar_move), R.drawable.ic_move, emptyList()),
             IconItemData("toolbar_rename", getString(R.string.icon_toolbar_rename), R.drawable.ic_edit, emptyList()),
             IconItemData("toolbar_share", getString(R.string.icon_toolbar_share), R.drawable.ic_share, emptyList()),
+            IconItemData("toolbar_open_with", getString(R.string.toolbar_open_with), R.drawable.ic_apps, emptyList()),
+            IconItemData("toolbar_open_as", getString(R.string.toolbar_open_as), R.drawable.ic_apps, emptyList()),
+            IconItemData("toolbar_upload_other_storage", getString(R.string.action_upload_other_storage), R.drawable.ic_cloud, emptyList()),
             IconItemData("toolbar_copy_encrypt", getString(R.string.icon_toolbar_copy_encrypt), R.drawable.ic_copy, emptyList()),
             IconItemData("toolbar_move_encrypt", getString(R.string.icon_toolbar_move_encrypt), R.drawable.ic_move, emptyList()),
+            IconItemData("toolbar_protect", getString(R.string.protect), R.drawable.ic_shield_protected, emptyList()),
+            IconItemData("toolbar_unprotect", getString(R.string.unprotect), R.drawable.ic_shield_unprotected, emptyList()),
             IconItemData("toolbar_favorite", getString(R.string.icon_toolbar_favorite), R.drawable.ic_star, emptyList()),
             IconItemData("toolbar_hide", getString(R.string.icon_toolbar_hide), R.drawable.ic_eye_off, emptyList()),
             IconItemData("toolbar_unhide", getString(R.string.icon_toolbar_unhide), R.drawable.ic_eye, emptyList()),
@@ -584,6 +615,7 @@ class IconCustomizationActivity : AppCompatActivity() {
             IconItemData("toolbar_invert_selection", getString(R.string.icon_toolbar_invert_selection), R.drawable.ic_invert_selection, emptyList()),
             IconItemData("toolbar_compress", getString(R.string.icon_toolbar_compress), R.drawable.ic_compress, emptyList()),
             IconItemData("toolbar_image_compress", getString(R.string.icon_toolbar_image_compress), R.drawable.ic_compress_image, emptyList()),
+            IconItemData("toolbar_retrigger_thumbnails", getString(R.string.action_retrigger_thumbnails), R.drawable.ic_photo_video, emptyList()),
             IconItemData("toolbar_create_gif", getString(R.string.icon_toolbar_create_gif), R.drawable.ic_gif, emptyList()),
             IconItemData("toolbar_delete", getString(R.string.icon_toolbar_delete), R.drawable.ic_delete, emptyList()),
             IconItemData("toolbar_pin", getString(R.string.icon_toolbar_pin), R.drawable.ic_paperclip, emptyList()),
@@ -594,69 +626,46 @@ class IconCustomizationActivity : AppCompatActivity() {
             IconItemData("toolbar_set_notification", getString(R.string.icon_toolbar_set_notification), R.drawable.ic_notification_sound, emptyList()),
             IconItemData("toolbar_set_alarm", getString(R.string.icon_toolbar_set_alarm), R.drawable.ic_alarm_sound, emptyList()),
             IconItemData("toolbar_exif_cleaner", getString(R.string.icon_toolbar_exif_cleaner), R.drawable.ic_exif_cleaner, emptyList()),
+            IconItemData("toolbar_duplicate_finder", getString(R.string.action_duplicate_finder), R.drawable.ic_duplicate_finder, emptyList()),
+            IconItemData("toolbar_large_files_finder", getString(R.string.action_large_files_finder), R.drawable.ic_folder_large_files, emptyList()),
+            IconItemData("toolbar_extract_subtitles", getString(R.string.toolbar_extract_subtitles), R.drawable.ic_subtitles, emptyList()),
+            IconItemData("toolbar_extract_audio", getString(R.string.toolbar_extract_audio), R.drawable.ic_audio_track, emptyList()),
+            IconItemData("toolbar_convert_to_mp4", getString(R.string.toolbar_convert_to_mp4), R.drawable.ic_convert_video, emptyList()),
             IconItemData("toolbar_checksum", getString(R.string.icon_toolbar_checksum), R.drawable.ic_checksum, emptyList()),
             IconItemData("toolbar_music_tagger", getString(R.string.icon_toolbar_music_tagger), R.drawable.ic_music_tag, emptyList())
         )
     }
 
     private fun buildMainMenuTiles(): List<IconItemData> {
-        val items = mutableListOf<IconItemData>()
+        val itemsById = LinkedHashMap<String, IconItemData>()
 
-        // Physical storages + network shares + paired devices from StorageBrowserActivity
-        val connectedStorages = StorageBrowserActivity.getConnectedStorages(this)
-        for (storage in connectedStorages) {
-            val effectiveRes = TileIconManager.getTileIconRes(this, storage.id)
-                .takeIf { it != 0 } ?: storage.iconRes
-            items.add(IconItemData(
-                id = "tile_${storage.id}",
-                label = storage.label,
+        fun addTile(id: String, label: String, defaultIconRes: Int) {
+            if (itemsById.containsKey(id)) return
+            val effectiveRes = TileIconManager.getTileIconRes(this, id)
+                .takeIf { it != 0 } ?: defaultIconRes
+            itemsById[id] = IconItemData(
+                id = "tile_$id",
+                label = label,
                 defaultRes = effectiveRes,
                 builtinAlternatives = emptyList()
-            ))
+            )
         }
 
-        // Feature tiles
-        data class FeatureTile(val id: String, val labelRes: Int, val iconRes: Int)
-
-        val featureTiles = mutableListOf(
-            FeatureTile("twin_window_tile", R.string.twin_window_title, R.drawable.ic_twin_window),
-            FeatureTile("recent_files_tile", R.string.recent_files_title, R.drawable.ic_history),
-            FeatureTile("notepad_tile", R.string.notepad, R.drawable.ic_notepad),
-            FeatureTile("scanner_tile", R.string.scanner_title, R.drawable.ic_scanner),
-            FeatureTile("apps_tile", R.string.perm_query_apps_title, R.drawable.ic_apps),
-            FeatureTile("search_tile", R.string.search_title, R.drawable.ic_search),
-            FeatureTile("analyzer_tile", R.string.analyzer_title, R.drawable.ic_analyzer),
-            FeatureTile("vault_tile", R.string.vault_title, R.drawable.ic_lock),
-            FeatureTile("settings_tile", R.string.settings, R.drawable.ic_settings),
-            FeatureTile("recycle_bin_tile", R.string.recycle_bin_title, R.drawable.ic_delete),
-            FeatureTile("file_server_tile", R.string.file_server_title, R.drawable.ic_ufm_ftp),
-            FeatureTile("sync_tile", R.string.sync_title, R.drawable.ic_sync),
-            FeatureTile("advanced_sync_tile", R.string.advanced_sync_title, R.drawable.ic_sync_advanced),
-            FeatureTile("smart_sort_tile", R.string.smart_sort_title, R.drawable.ic_sort),
-            FeatureTile("bookmark_hub_tile", R.string.bookmark_hub_title, R.drawable.ic_bookmark_hub),
-            FeatureTile("terminal_tile", R.string.adb_terminal_title, R.drawable.ic_terminal),
-            FeatureTile("network_tile", R.string.network_tile_title, R.drawable.ic_network),
-            FeatureTile("about_tile", R.string.about_title, R.drawable.ic_about),
-            FeatureTile("rate_us_tile", R.string.rate_us_title, R.drawable.ic_star),
-            FeatureTile("tip_jar_tile", R.string.tip_jar_title, R.drawable.ic_home),
-            FeatureTile("legal_tile", R.string.policy_selection_title, R.drawable.ic_policy)
-        )
-        if (isTv) {
-            featureTiles.add(FeatureTile("tv_remote_tile", R.string.tv_remote, R.drawable.ic_remote_manage))
+        // All known storages, network/cloud/paired/favorite/SAF/feature tiles (includes remote_tile)
+        for (tile in StorageBrowserActivity.buildAllKnownTiles(this)) {
+            addTile(tile.id, tile.label, tile.iconRes)
         }
 
-        for (tile in featureTiles) {
-            val effectiveRes = TileIconManager.getTileIconRes(this, tile.id)
-                .takeIf { it != 0 } ?: tile.iconRes
-            items.add(IconItemData(
-                id = "tile_${tile.id}",
-                label = getString(tile.labelRes),
-                defaultRes = effectiveRes,
-                builtinAlternatives = emptyList()
-            ))
+        // Always expose conditional feature tiles so users can customize them anytime
+        addTile("extracts_tile", getString(R.string.apk_xapk_extracts), R.drawable.ic_apps)
+        addTile("recycle_bin_tile", getString(R.string.recycle_bin_title), R.drawable.ic_delete)
+
+        // Include user-created Custom Tiles
+        for (customTile in CustomTileManager.loadCustomTiles(this)) {
+            addTile(customTile.id, customTile.title, customTile.iconRes)
         }
 
-        return items
+        return itemsById.values.toList()
     }
 
     private fun setupTvIconFocus(view: View) {

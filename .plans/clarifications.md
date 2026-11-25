@@ -1,26 +1,23 @@
-# Clarifications: Android TV Onboarding Screens Redesign & D-Pad Navigation Fix
+# Clarifications: Complete Icon Options Across All Sections in Customize Icons
 
 ## Status
-Answers received — ready for `/tasks`
+Answers received — ready for /tasks
 
 ## Questions and Answers
 
-### UI and Layout
-**Q1.** What overall layout direction should the 8 TV onboarding screens use?
-**A:** Keep the two-column split (options on the left, live preview on the right) and fix proportions, spacing, and vertical fit per screen so all 8 fit cleanly without awkward scrolling or dead space.
+### Business Logic and Edge Cases
+**Q1.** In `StorageBrowserActivity.buildAllKnownTiles()`, `extracts_tile` is only included when `UFM-Extracted` is non-empty and `recycle_bin_tile` is only included when Recycle Bin is enabled. In **Customize Icons -> Main Menu Tiles**, should `extracts_tile` and `recycle_bin_tile` always be listed (even when empty/disabled), or should they match `buildAllKnownTiles()` and only appear when active?
+**A:** Always list both `extracts_tile` and `recycle_bin_tile` so users can customize them anytime.
 
-### TV-Specific
-**Q2.** How should D-pad focus be visually indicated across the TV onboarding screens?
-**A:** Use a distinct focus state (bright focus ring + subtle scale/highlight via `TvFocusHelper` and TV focus selectors) separate from the selected state, applied consistently to Back, Skip, Next, option cards, and chips.
+**Q2.** `SettingsActivity` hides `cardFossUpdateCheck` (`settings_foss_update`) on non-FOSS builds (Google Play / Amazon). Should `settings_foss_update` only appear in **Customize Icons -> Settings** on FOSS builds, or be listed on all builds?
+**A:** Only show `settings_foss_update` on FOSS builds (matching `SettingsActivity`).
 
-**Q3.** For Step 3 (Scrolling Text), how should the Marquee Scroll sub-options be structured for D-pad navigation?
-**A:** Place Marquee sub-options (Speed, Loop, Scope) as independent focusable items below the Marquee card, visible/enabled only when Marquee is selected.
-
-**Q4.** When a TV onboarding screen opens, where should initial D-pad focus land?
-**A:** Land initial focus on the currently selected option card (or first option), with predictable D-pad navigation to Skip, Next, and Back.
+**Q3.** Should user-created Custom Tiles (folder/group tiles created on the Main Menu) also be listed in **Customize Icons -> Main Menu Tiles**, or should the list only include the tiles from `StorageBrowserActivity.buildAllKnownTiles()`?
+**A:** Include user-created Custom Tiles in Main Menu Tiles if they have customizable icons.
 
 ## Spec / Plan Impact
-None — `spec.md` and `plan.md` already incorporate all four confirmed decisions and align with the existing `TvFocusHelper` and `BaseOnboardingStepActivity` architecture.
+- **FR-01 (Main Menu Tiles Completeness & Remote Tile)** in `.plans/spec.md`: Clarified that `extracts_tile` and `recycle_bin_tile` are always listed in Customize Icons (even when `UFM-Extracted` is empty or Recycle Bin is disabled), and user-created Custom Tiles (if customizable via `TileIconManager`) are also included alongside `StorageBrowserActivity.buildAllKnownTiles(this)`.
+- **FR-03 (Settings Icons Completeness)** in `.plans/spec.md`: Clarified that `settings_foss_update` is gated to FOSS builds (`!isTv` / FOSS flavor check matching `SettingsActivity`), just as `settings_security` is gated to `!isTv` and `settings_tv_background_server` is gated to `isTv`.
 
 ## Confirmed — Ready for /tasks
-All questions are answered and no spec or plan changes are outstanding. Proceed to `/tasks`.
+All questions are answered and recorded. You can proceed to `/plan` or `/tasks`.
