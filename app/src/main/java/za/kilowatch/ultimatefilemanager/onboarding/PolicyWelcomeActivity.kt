@@ -103,19 +103,39 @@ class PolicyWelcomeActivity : AppCompatActivity() {
         }
 
         if (isTv) {
-            val yellowText = ColorblindPalette.focusFillText(this)
-            val whiteText  = getColor(R.color.tv_text_primary)
-            val yellowCsl  = android.content.res.ColorStateList.valueOf(
-                ColorblindPalette.focusFill(this)
-            )
-            val glassCsl   = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+            val focusColors = za.kilowatch.ultimatefilemanager.util.TvFocusHelper.colors(this)
+            val density = resources.displayMetrics.density
+            val focusStrokePx = maxOf((2.5f * density).toInt(), focusColors.strokeWidthPx.toInt())
+            val whiteText = getColor(R.color.tv_text_primary)
+            val focusCsl = android.content.res.ColorStateList.valueOf(focusColors.fill)
+            val glassCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_glass_white_10))
 
             btnContinue.backgroundTintList = glassCsl
-
             btnContinue.setOnFocusChangeListener { _, hasFocus ->
-                btnContinue.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                btnContinue.setTextColor(if (hasFocus) yellowText else whiteText)
+                if (hasFocus) {
+                    btnContinue.backgroundTintList = focusCsl
+                    btnContinue.setTextColor(focusColors.onFill)
+                    btnContinue.strokeColor = android.content.res.ColorStateList.valueOf(focusColors.stroke)
+                    btnContinue.strokeWidth = focusStrokePx
+                    btnContinue.animate().scaleX(1.04f).scaleY(1.04f).setDuration(120).start()
+                } else {
+                    btnContinue.backgroundTintList = glassCsl
+                    btnContinue.setTextColor(whiteText)
+                    btnContinue.strokeWidth = 0
+                    btnContinue.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
+                }
             }
+
+            listOf(cardTerms, cardPrivacy).forEach { card ->
+                card.setOnFocusChangeListener { v, hasFocus ->
+                    za.kilowatch.ultimatefilemanager.util.TvFocusHelper.applyMarker(v, hasFocus)
+                    v.animate().scaleX(if (hasFocus) 1.03f else 1.0f)
+                        .scaleY(if (hasFocus) 1.03f else 1.0f)
+                        .setDuration(120).start()
+                }
+            }
+
+            cardTerms.post { cardTerms.requestFocus() }
         }
     }
 

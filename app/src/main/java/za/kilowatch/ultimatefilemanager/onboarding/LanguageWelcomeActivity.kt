@@ -219,31 +219,43 @@ class LanguageWelcomeActivity : AppCompatActivity() {
     }
 
     private fun setupTvFocus() {
-        val yellowBg = ColorStateList.valueOf(ColorblindPalette.focusFill(this))
-        val glassBg  = ColorStateList.valueOf(getColor(R.color.tv_glass_white_10))
-        val yellowText = ColorblindPalette.focusFillText(this)
-        val whiteText  = getColor(R.color.tv_text_primary)
-        val imgChevron = findViewById<ImageView>(R.id.imgChevron)
-        val flagContainer = findViewById<FrameLayout>(R.id.flagContainer)
-        val chevronContainer = findViewById<FrameLayout>(R.id.chevronContainer)
-        
+        val focusColors = za.kilowatch.ultimatefilemanager.util.TvFocusHelper.colors(this)
+        val density = resources.displayMetrics.density
+        val focusStrokePx = maxOf((3 * density).toInt(), focusColors.strokeWidthPx.toInt())
+        val defaultStroke = getColor(R.color.tv_glass_border)
+        val accentCsl = ColorStateList.valueOf(getColor(R.color.tv_accent))
+        val whiteCsl = ColorStateList.valueOf(Color.WHITE)
+
         val btn = btnSetDefault as? com.google.android.material.button.MaterialButton
         btn?.setOnFocusChangeListener { _, hasFocus ->
-            btn.backgroundTintList = if (hasFocus) yellowBg else glassBg
-            btn.setTextColor(if (hasFocus) yellowText else whiteText)
-            btn.iconTint = ColorStateList.valueOf(if (hasFocus) yellowText else whiteText)
-        }
-        
-        cardLanguageSelector.setOnFocusChangeListener { _, hasFocus ->
-            cardLanguageSelector.setCardBackgroundColor(if (hasFocus) ColorblindPalette.focusFill(this) else getColor(R.color.tv_glass_white_10))
-            txtSelectedLanguage.setTextColor(if (hasFocus) yellowText else whiteText)
-            imgChevron?.imageTintList = ColorStateList.valueOf(if (hasFocus) yellowText else whiteText)
             if (hasFocus) {
-                flagContainer?.setBackgroundColor(Color.parseColor("#1A000000"))
-                chevronContainer?.setBackgroundColor(Color.parseColor("#1A000000"))
+                btn.backgroundTintList = ColorStateList.valueOf(focusColors.fill)
+                btn.setTextColor(focusColors.onFill)
+                btn.iconTint = ColorStateList.valueOf(focusColors.onFill)
+                btn.strokeColor = ColorStateList.valueOf(focusColors.stroke)
+                btn.strokeWidth = focusStrokePx
+                btn.animate().scaleX(1.04f).scaleY(1.04f).setDuration(120).start()
             } else {
-                flagContainer?.setBackgroundResource(R.drawable.bg_tv_card_glass)
-                chevronContainer?.setBackgroundResource(R.drawable.bg_tv_card_glass)
+                btn.backgroundTintList = accentCsl
+                btn.setTextColor(Color.WHITE)
+                btn.iconTint = whiteCsl
+                btn.strokeWidth = 0
+                btn.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
+            }
+        }
+
+        cardLanguageSelector.setOnFocusChangeListener { _, hasFocus ->
+            za.kilowatch.ultimatefilemanager.util.TvFocusHelper.applyMarker(cardLanguageSelector, hasFocus)
+            if (hasFocus) {
+                cardLanguageSelector.strokeWidth = focusStrokePx
+                cardLanguageSelector.strokeColor = focusColors.stroke
+                cardLanguageSelector.cardElevation = 8f * density
+                cardLanguageSelector.animate().scaleX(1.02f).scaleY(1.02f).setDuration(120).start()
+            } else {
+                cardLanguageSelector.strokeWidth = (1 * density).toInt()
+                cardLanguageSelector.strokeColor = defaultStroke
+                cardLanguageSelector.cardElevation = 0f
+                cardLanguageSelector.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
             }
         }
     }

@@ -83,43 +83,48 @@ class PermissionAdapter(
             }
 
             if (isTv) {
-                val focusYellow = ColorblindPalette.focusFill(context)
+                val focusColors = za.kilowatch.ultimatefilemanager.util.TvFocusHelper.colors(context)
+                val focusStrokePx = maxOf((3 * density).toInt(), focusColors.strokeWidthPx.toInt())
                 val defaultBorder = context.getColor(R.color.tv_glass_border)
-                val defaultBg = context.getColor(R.color.tv_glass_white_10)
-                val yellowText = ColorblindPalette.focusFillText(context)
                 val whiteText = context.getColor(R.color.tv_text_primary)
-                val secText = context.getColor(R.color.tv_text_secondary)
-                val accentCyan = context.getColor(R.color.tv_accent)
 
                 card.isFocusable = true
                 card.isClickable = true
 
                 card.setOnFocusChangeListener { _, hasFocus ->
+                    za.kilowatch.ultimatefilemanager.util.TvFocusHelper.applyMarker(card, hasFocus)
                     if (hasFocus) {
-                        card.strokeColor = focusYellow
-                        card.strokeWidth = (2 * density).toInt()
-                        card.setCardBackgroundColor(focusYellow)
-                        txtTitle.setTextColor(yellowText)
-                        txtDesc.setTextColor(Color.parseColor("#88000000"))
-                        imgIcon.imageTintList = ColorStateList.valueOf(yellowText)
+                        card.strokeColor = focusColors.stroke
+                        card.strokeWidth = focusStrokePx
+                        card.cardElevation = 8f * density
+                        card.animate().scaleX(1.02f).scaleY(1.02f).setDuration(120).start()
                     } else {
                         card.strokeColor = defaultBorder
                         card.strokeWidth = (1 * density).toInt()
-                        card.setCardBackgroundColor(defaultBg)
-                        txtTitle.setTextColor(whiteText)
-                        txtDesc.setTextColor(secText)
-                        imgIcon.imageTintList = ColorStateList.valueOf(accentCyan)
+                        card.cardElevation = 0f
+                        card.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
                     }
                 }
 
-                val yellowCsl = ColorStateList.valueOf(focusYellow)
-                val glassCsl = ColorStateList.valueOf(0x26FFFFFF)
+                val focusCsl = ColorStateList.valueOf(focusColors.fill)
+                val glassCsl = ColorStateList.valueOf(context.getColor(R.color.tv_glass_white_10))
 
                 btnGrant.backgroundTintList = glassCsl
                 btnGrant.setOnFocusChangeListener { _, hasFocus ->
-                    btnGrant.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-                    btnGrant.setTextColor(if (hasFocus) yellowText else whiteText)
-                    btnGrant.iconTint = ColorStateList.valueOf(if (hasFocus) yellowText else whiteText)
+                    if (hasFocus) {
+                        btnGrant.backgroundTintList = focusCsl
+                        btnGrant.setTextColor(focusColors.onFill)
+                        btnGrant.iconTint = ColorStateList.valueOf(focusColors.onFill)
+                        btnGrant.strokeColor = ColorStateList.valueOf(focusColors.stroke)
+                        btnGrant.strokeWidth = maxOf((2 * density).toInt(), focusColors.strokeWidthPx.toInt())
+                        btnGrant.animate().scaleX(1.04f).scaleY(1.04f).setDuration(120).start()
+                    } else {
+                        btnGrant.backgroundTintList = glassCsl
+                        btnGrant.setTextColor(whiteText)
+                        btnGrant.iconTint = ColorStateList.valueOf(whiteText)
+                        btnGrant.strokeWidth = 0
+                        btnGrant.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).start()
+                    }
                 }
             }
 

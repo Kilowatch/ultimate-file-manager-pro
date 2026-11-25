@@ -116,6 +116,7 @@
         android:id="@+id/recyclerPermissions"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clipChildren="false"
         android:clipToPadding="false"
         android:paddingHorizontal="@dimen/tv_safe_horizontal"
         android:paddingVertical="@dimen/margin_sm"
